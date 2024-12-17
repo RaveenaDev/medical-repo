@@ -7,9 +7,7 @@ import UpdatePassword from './pages/login/updatePassword';
 import Logo from './components/Logo';
 import Receptionist from './pages/receptionist'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Faq from './pages/receptionist/Settings/Faq'
 import Settings from './pages/receptionist/Settings/Settings';
-import PrivacyPolicy from './pages/receptionist/Settings/PrivacyPolicy';
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -18,7 +16,7 @@ function App() {
     <>
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
         <div className={styles.logo}>
-        <Logo/>
+        {/* <Logo/> */}
         </div>
         {/* if login or register page is actiive, add this class ${styles.loginPageActive} */}
         {/* <div className={`${styles.register} ${isSignUpOrLogin ? styles.loginPageActive : styles.otherPages}`}>
@@ -33,7 +31,7 @@ function App() {
           </Router>
         </div> */}
         <div className="">
-          <Faq/>
+          <Settings/>
         </div>
       </div>
     </>

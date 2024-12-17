@@ -11,7 +11,10 @@ import { Box, Typography, Container } from "@mui/material";
 export default function AccordionUsage() {
   return (
     <div>
-<Container maxWidth="md"  sx={{ mb: 4, color: "#838383" }}>
+<Container maxWidth="md"  sx={{  color: "#838383" }}>
+  <Typography variant="h6" sx={{ color: '#000', fontWeight: 500 }} gutterBottom>
+  Frequently Asked Questions
+          </Typography>
 
       <Accordion defaultExpanded>
         <AccordionSummary

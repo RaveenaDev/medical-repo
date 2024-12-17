@@ -1,10 +1,15 @@
 import React from 'react'
 import { Box, Typography } from "@mui/material";
+import PrivacyPolicy from './PrivacyPolicy';
+import Faq from './Faq'
+import styles from './Settings.module.scss'
 
 
 const Settings = () => {
   return (
-    <div className='settings'>
+    <div className= {styles.settings}>
+      <div className=  {styles.side_panel}>
+
       <Box sx={{ padding: 3 }}>
       <Typography variant="h6" gutterBottom>
         Settings
@@ -21,6 +26,12 @@ const Settings = () => {
         Logout
       </Typography>
     </Box>
+    </div>
+    <div className={styles.component_panel}>
+      <PrivacyPolicy/>
+
+
+    </div>
       
     </div>
   )

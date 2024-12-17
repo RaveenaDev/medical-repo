@@ -1,0 +1,27 @@
+.settings {
+    display: flex; 
+    height: 100vh; 
+    // position: relative;
+}
+  
+    .side_panel {
+      width: 20%; 
+      padding: 20px;
+      background-color: #ffffff; 
+      display: flex;
+      flex-direction: column;
+      gap: 20px; 
+    }
+  
+    .component_panel {
+        display: flex;
+        justify-content: start;
+        // position: absolute;
+        // top: 0;
+        // right: 0;
+         width: 80%;
+        height: 100%; 
+        padding: 20px;
+        background-color: #f4f4f4;
+        overflow-y: auto; 
+    }
