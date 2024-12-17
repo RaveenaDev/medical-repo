@@ -8,6 +8,8 @@ import Logo from './components/Logo';
 import Receptionist from './pages/receptionist'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Faq from './pages/receptionist/Settings/Faq'
+import Settings from './pages/receptionist/Settings/Settings';
+import PrivacyPolicy from './pages/receptionist/Settings/PrivacyPolicy';
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
