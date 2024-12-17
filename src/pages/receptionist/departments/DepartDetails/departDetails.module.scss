@@ -1,0 +1,17 @@
+$blue : #25307f;
+
+.boxContainer{
+  background-color: white;
+  padding: 10px 40px;
+  .heading{
+    color: $blue;
+  }
+  .pro{
+    display: flex;
+    border: 1px solid gray;
+    padding: 0px 10px;
+    .name{
+      color: #1a1a1a;
+    }
+  }
+}

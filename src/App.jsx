@@ -7,6 +7,8 @@ import UpdatePassword from './pages/login/updatePassword';
 import Logo from './components/Logo';
 import Receptionist from './pages/receptionist'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Departments from "./pages/receptionist/departments/Departments.jsx";
+import DepartDetails from "./pages/receptionist/departments/DepartDetails/DepartDetails.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -26,6 +28,8 @@ function App() {
               <Route path="/recovery-link" element={<RecoveryLink setIsSignUpOrLogin={setIsSignUpOrLogin} />} />
               <Route path="/update-password" element={<UpdatePassword setIsSignUpOrLogin={setIsSignUpOrLogin} />} />
               <Route path="/receptionist" element={<Receptionist setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
+              <Route path="/departments" element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/departmentDetails" element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
             </Routes>
           </Router>
         </div>
