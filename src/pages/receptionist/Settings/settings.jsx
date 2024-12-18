@@ -1,11 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Typography } from "@mui/material";
 import PrivacyPolicy from './PrivacyPolicy';
 import Faq from './Faq'
 import styles from './Settings.module.scss'
+import Logout from './Logout'
 
 
 const Settings = () => {
+
+  const [isLogout , setIsLogout] = useState(false);
+
+
+
+  const handlelogout = () => {
+    setIsLogout((prev) => (!prev))
+  }
+
+
   return (
     <div className= {styles.settings}>
       <div className=  {styles.side_panel}>
@@ -22,16 +33,21 @@ const Settings = () => {
       <Typography variant="body1" gutterBottom>
         Privacy Policy
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" gutterBottom>
+        Help & Support 
+      </Typography>
+      <Typography variant="body1" onClick={handlelogout}>
         Logout
       </Typography>
     </Box>
     </div>
     <div className={styles.component_panel}>
-      <PrivacyPolicy/>
+      <Faq/>
+
 
 
     </div>
+     {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout}/>}
       
     </div>
   )

@@ -24,4 +24,8 @@
         padding: 20px;
         background-color: #f4f4f4;
         overflow-y: auto; 
+
+        &::-webkit-scrollbar {
+            display: none;
+          }
     }
