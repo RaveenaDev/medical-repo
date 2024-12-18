@@ -13,6 +13,8 @@ import Select from '@mui/material/Select';
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 const DepartDetails = (props) => {
 
@@ -52,6 +54,15 @@ const DepartDetails = (props) => {
                                  <div className={avi.pro}>
                                      <img className={avi.img} src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg" alt=""/>
                                      <p className={avi.name}>Dr. [Name of the Deparment Head]</p>
+                                 </div>
+
+                                 <div className={avi.icons}>
+                                    <span className={avi.message}>
+                                    <EmailIcon/>
+                                    </span>
+                                    <span className={avi.phone}>
+                                    <PhoneIcon/>
+                                    </span>
                                  </div>
 
                                  <div className={avi.section1}>
