@@ -14,7 +14,7 @@ const logout = ({ isLogout, setIsLogout }) => {
         <Typography variant="h6" sx={{marginTop: 2}} gutterBottom>
           Are you sure you want to logout?
         </Typography>
-        <Box sx={{ display: 'flex' ,flexDirection: "column", justifyContent: 'space-between', marginTop: 5, gap: 2 }}>
+        <Box sx={{ display: 'flex' ,flexDirection: "column", marginTop: 5, gap: 2 }}>
           <Button variant="outlined" onClick={handleClose} sx={{color:"#878787", backgroundColor: "white", borderColor: "#25037F"}}>
           No, Keep In
           </Button>

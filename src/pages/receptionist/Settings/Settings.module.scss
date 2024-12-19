@@ -1,12 +1,17 @@
 .settings {
     display: flex; 
     height: 100vh; 
-    // position: relative;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
 }
   
     .side_panel {
       width: 20%; 
-      padding: 20px;
+      margin-top: 7rem;
+      margin-left: 1rem;
       background-color: #ffffff; 
       display: flex;
       flex-direction: column;
@@ -14,16 +19,17 @@
     }
   
     .component_panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+
         display: flex;
         justify-content: start;
-        // position: absolute;
-        // top: 0;
-        // right: 0;
-         width: 80%;
-        height: 100%; 
+        width: 80%;
+        height: 120vh; 
         padding: 20px;
         background-color: #f4f4f4;
-        overflow-y: auto; 
+        // overflow-y: auto; 
 
         &::-webkit-scrollbar {
             display: none;

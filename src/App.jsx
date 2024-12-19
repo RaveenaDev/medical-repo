@@ -16,7 +16,7 @@ function App() {
     <>
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
         <div className={styles.logo}>
-        {/* <Logo/> */}
+        <Logo/>
         </div>
         {/* if login or register page is actiive, add this class ${styles.loginPageActive} */}
         {/* <div className={`${styles.register} ${isSignUpOrLogin ? styles.loginPageActive : styles.otherPages}`}>
