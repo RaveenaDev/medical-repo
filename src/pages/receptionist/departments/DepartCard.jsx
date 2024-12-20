@@ -14,6 +14,17 @@ const DepartCard = () => {
         // Redirect to the specific page
         navigate('/departmentDetails');
     }
+
+    const handleClickMessage = (e) => {
+        e.stopPropagation(); // Prevent navigation from firing
+        // You can add further functionality here
+    }
+
+    const handleClickContact = (e) => {
+        e.stopPropagation(); // Prevent navigation from firing
+        // You can add further functionality here
+    }
+
     return (
         <Box className={styles.cardContainer} onClick={handleClick}>
             <div className={styles.cardHeader}>
@@ -24,6 +35,7 @@ const DepartCard = () => {
                 </span>
                 <div className={styles.icons}>
                     <Button className={styles.message}
+                            onClick={handleClickMessage}
                             sx={{ outline: 'none', boxShadow: 'none', '&:focus': { outline: 'none' },borderRadius: '12px',padding:"6px 10px" ,
                                 minWidth: 'auto',  // Remove default minWidth
                                 width: '40px',     // Custom width
@@ -33,6 +45,7 @@ const DepartCard = () => {
                         <EmailIcon/>
                     </Button>
                     <Button className={styles.phone}
+                            onClick={handleClickContact}
                             sx={{ outline: 'none', boxShadow: 'none', '&:focus': { outline: 'none' },borderRadius: '12px',padding: "6px 10px",
                                 minWidth: 'auto',  // Remove default minWidth
                                 width: '40px',     // Custom width
