@@ -15,8 +15,11 @@ import Stack from "@mui/material/Stack";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
+import {useNavigate} from "react-router-dom";
 
 const DepartDetails = (props) => {
+
+    const navigate = useNavigate();
 
     const [tableIndex, setTableIndex] = useState(null);
     useEffect(() => {
@@ -29,15 +32,24 @@ const DepartDetails = (props) => {
         setAge(event.target.value);
     };
 
+    const handleClick = () => {
+        navigate('/departments')
+    }
     return (
         <>
                 <div className={styles.receptionist}>
                     {!props.entity ?
                         <>
                         <div className={ayu.headerContainer}>
-                            <button className={ayu.backButton}>
+                            <Button
+                                sx={{ outline: 'none', boxShadow: 'none', '&:focus': { outline: 'none' },borderRadius: '12px',padding:"6px 10px" ,
+                                minWidth: 'auto',  // Remove default minWidth
+                                width: '40px',     // Custom width
+                                height: '30px',    // Custom height
+                            }}
+                                className={ayu.backButton} onClick={handleClick} style={{marginBottom: '5px'}}>
                                 <ArrowBackIosIcon/>
-                            </button>
+                            </Button>
                             <h2 className={ayu.departmentTitle1}>Department</h2>
                             <span className={ayu.forwardButton}>
                                 <ArrowForwardIosIcon/>
@@ -57,12 +69,16 @@ const DepartDetails = (props) => {
                                  </div>
 
                                  <div className={avi.icons}>
-                                    <span className={avi.message}>
+                                    <Button className={avi.message}
+                                            sx={{ outline: 'none', boxShadow: 'none', '&:focus': { outline: 'none' },borderRadius: '12px',padding:"8px 2px" }}
+                                    >
                                     <EmailIcon/>
-                                    </span>
-                                    <span className={avi.phone}>
+                                    </Button>
+                                    <Button className={avi.phone}
+                                            sx={{ outline: 'none', boxShadow: 'none', '&:focus': { outline: 'none' },borderRadius: '12px',padding: "8px 2px" }}
+                                    >
                                     <PhoneIcon/>
-                                    </span>
+                                    </Button>
                                  </div>
 
                                  <div className={avi.section1}>

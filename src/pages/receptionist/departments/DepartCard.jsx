@@ -1,13 +1,21 @@
 import React from 'react'
-import {Box} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import styles from './departments.module.scss'
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
+import avi from "./DepartDetails/departDetails.module.scss";
+import {useNavigate} from "react-router-dom";
 
 const DepartCard = () => {
+
+    const navigate = useNavigate()
+    const handleClick = () => {
+        // Redirect to the specific page
+        navigate('/departmentDetails');
+    }
     return (
-        <Box className={styles.cardContainer}>
+        <Box className={styles.cardContainer} onClick={handleClick}>
             <div className={styles.cardHeader}>
                 <div className={styles.circle}></div>
                 <h2 className={styles.title}>Cardiology</h2>
@@ -15,12 +23,24 @@ const DepartCard = () => {
                     <ArrowForwardIosIcon fontSize="small" />
                 </span>
                 <div className={styles.icons}>
-                    <span className={styles.message}>
-                    <EmailIcon/>
-                    </span>
-                    <span className={styles.phone}>
-                    <PhoneIcon/>
-                    </span>
+                    <Button className={styles.message}
+                            sx={{ outline: 'none', boxShadow: 'none', '&:focus': { outline: 'none' },borderRadius: '12px',padding:"6px 10px" ,
+                                minWidth: 'auto',  // Remove default minWidth
+                                width: '40px',     // Custom width
+                                height: '30px',    // Custom height
+                            }}
+                    >
+                        <EmailIcon/>
+                    </Button>
+                    <Button className={styles.phone}
+                            sx={{ outline: 'none', boxShadow: 'none', '&:focus': { outline: 'none' },borderRadius: '12px',padding: "6px 10px",
+                                minWidth: 'auto',  // Remove default minWidth
+                                width: '40px',     // Custom width
+                                height: '30px',    // Custom height
+                            }}
+                    >
+                        <PhoneIcon/>
+                    </Button>
                 </div>
             </div>
 

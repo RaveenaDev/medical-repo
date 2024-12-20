@@ -53,6 +53,13 @@ $blue : #25307f;
   height: 225px;
   padding: 1.5rem 1rem; // px-4 py-6
   border-radius: 12px;
+  cursor: pointer;
+  border: 2px solid transparent; // Start with no visible border
+  transition: border-color 0.3s ease; // Smooth transition for border color
+
+  &:hover {
+    border-color: black; // Change border color to black on hover
+  }
 
   .cardHeader {
     display: flex;
@@ -80,15 +87,15 @@ $blue : #25307f;
     }
 
     .icons{
-      margin-top: 0.4rem;
-      margin-left: 3.5rem;
+      margin-top: 0.3rem;
+      margin-left: 3rem;
 
       .message{
         color: #25307f;
       }
 
       .phone{
-        margin-left: 20px;
+        //margin-left: 20px;
         color: green;
       }
     }
@@ -96,9 +103,11 @@ $blue : #25307f;
 
   .detailsContainer{
     margin-left: 40px;
+    margin-top: 15px;
     .details{
       display:flex;
-      height: 30px;
+      height: 26px;
+      font-weight: 500;
       .name{
         color: black;
         padding: 0;
