@@ -9,12 +9,12 @@ import { Typography, Container } from "@mui/material";
 const Faq =( ) => {
   return (
     <div>
-<Container maxWidth="md"  sx={{  color: "#838383" , padding: 0 }}>
+<Container maxWidth="md"  sx={{  color: "#838383" , padding: 0 , marginTop:"2rem"}}>
   <Typography variant="h6" sx={{ color: '#000', fontWeight: 500 }} gutterBottom>
   Frequently Asked Questions
           </Typography>
 
-      <Accordion defaultExpanded  sx={{ width: '100%', display: 'block', boxShadow: 'none' }}>
+      <Accordion >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1-content"

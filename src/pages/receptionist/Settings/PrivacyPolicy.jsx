@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
     <div>
       
 
-<Container maxWidth="md" sx={{ color: "#838383" }}>
+<Container maxWidth="md" sx={{ color: "#838383",marginTop:"2rem" }}>
       <Typography variant="h6" sx={{ color: '#000', fontWeight: 600 }} gutterBottom>
           Privacy Policy
         </Typography>

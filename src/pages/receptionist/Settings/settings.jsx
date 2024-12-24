@@ -20,7 +20,7 @@ const Settings = () => {
 
   return (
     <div className= {styles.settings}>
-      <div className=  {styles.side_panel}>
+      {/* <div className=  {styles.side_panel}>
 
       <Box sx={{ padding: 3}}>
       <Typography variant="h6" gutterBottom>
@@ -41,9 +41,9 @@ const Settings = () => {
         Logout
       </Typography>
     </Box>
-    </div>
+    </div> */}
     <div className={styles.component_panel}>
-      <PrivacyPolicy/>
+      <Faq/>
 
 
 
