@@ -12,7 +12,6 @@ const sideOptions = [
 const Sidebar = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const navigate = useNavigate();
-
     const handleClick = (index,option) => {
         setActiveIndex(index);
         navigate(`${option.path}`)
