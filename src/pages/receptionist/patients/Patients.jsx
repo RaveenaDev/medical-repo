@@ -3,15 +3,21 @@ import styles from "../styles.module.scss";
 
 
 
-const Patients = () =>{
+function Patients() {
 
+
+    return (
 <>
-<div>
-    hello
-</div>
-</>
+    <div>
+        hello
+    </div>
+    </>
 
-}
+
+
+    );
+    
+};
 
 
 export default Patients;
