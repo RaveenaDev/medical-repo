@@ -10,6 +10,7 @@ import {BrowserRouter as Router, Routes, Route, useLocation} from 'react-router-
 import Departments from "./pages/receptionist/departments/Departments.jsx";
 import DepartDetails from "./pages/receptionist/departments/DepartDetails/DepartDetails.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
+import Admin from "./pages/admin/index.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -50,6 +51,10 @@ function App() {
                                            entity={entity}/>}/>
               <Route path="/departmentDetails"
                      element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
+                                             entity={entity}/>}/>
+
+              <Route path="/admin"
+                     element={<Admin setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                              entity={entity}/>}/>
             </Routes>
           </div>
