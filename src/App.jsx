@@ -11,6 +11,7 @@ import Departments from "./pages/receptionist/departments/Departments.jsx";
 import DepartDetails from "./pages/receptionist/departments/DepartDetails/DepartDetails.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import Patients from './pages/receptionist/patients/Patients.jsx';
+import Profile from './pages/receptionist/patients/profile/Profile.jsx';
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -49,6 +50,10 @@ function App() {
 
             <Route path="/patients"
               element={<Patients setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
+                entity={entity} />} />
+
+            <Route path="/profile"
+              element={<Profile setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                 entity={entity} />} />
             <Route path="/departments"
               element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
