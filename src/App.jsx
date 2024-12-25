@@ -11,13 +11,29 @@ import Departments from "./pages/receptionist/departments/Departments.jsx";
 import DepartDetails from "./pages/receptionist/departments/DepartDetails/DepartDetails.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import Admin from "./pages/admin/index.jsx";
+import Settings from './pages/receptionist/Settings/Settings';
+import Reception from "./pages/admin/reception/Reception.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
   const [entity, setEntity] = useState("");
+  const [role, setRole] = useState(""); // Role state
 
   // Hook to get the current location
   const location = useLocation();
+
+  // Determine role based on the route
+  useEffect(() => {
+    if (location.pathname.startsWith("/admin")) {
+      setRole("admin");
+    } else if (location.pathname.startsWith("/receptionist")) {
+      setRole("receptionist");
+    } else if (location.pathname.startsWith("/patient")) {
+      setRole("patient");
+    } else {
+      setRole(""); // Default or no role
+    }
+  }, [location.pathname]);
 
   // Determine if the current path is a login or signup page
   const isLoginPage = ["/", "/password-reset", "/recovery-link", "/update-password"].includes(location.pathname);
@@ -31,7 +47,7 @@ function App() {
             {
               !isLoginPage && (
                     <div>
-                      <Sidebar/>
+                      <Sidebar role={role}/>
                     </div>
                 )
             }
@@ -46,18 +62,28 @@ function App() {
               <Route path="/receptionist"
                      element={<Receptionist setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                             entity={entity}/>}/>
-              <Route path="/departments"
+              <Route path="/receptionist/departments"
                      element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                            entity={entity}/>}/>
-              <Route path="/departmentDetails"
+
+              <Route path="/receptionist/departmentDetails"
                      element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                              entity={entity}/>}/>
+
+              <Route path="/receptionist/settings" element={<Settings/>}/>
 
               <Route path="/admin"
                      element={<Admin setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                              entity={entity}/>}/>
+
+              <Route path="/admin/reception"
+                     element={<Reception setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
+                                     entity={entity}/>}/>
             </Routes>
           </div>
+        {/*<div className="">*/}
+        {/*  <Settings/>*/}
+        {/*</div>*/}
         </div>
     </>
   );
