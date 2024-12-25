@@ -1,0 +1,128 @@
+$blue : #25307f;
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+
+  .backButton {
+    margin-right: 8px;  // Space between button and h2
+    margin-top: 10px;
+    color: #25307f;
+    background-color: #F1F1F1;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 0;
+  }
+
+  .departmentTitle {
+    margin: 0;  // Remove default margin of h2
+    color: $blue;
+    font-weight: 500;
+  }
+
+  .departmentTitle1 {
+    margin: 0;  // Remove default margin of h2
+    color: $blue;
+    font-weight: 500;
+    opacity: 0.5;  // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
+  }
+
+  .forwardButton{
+    margin-left: 14px;  // Space between button and h2
+    margin-top: 10px;
+    color: #25307f;
+    background-color: #F1F1F1;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 0;
+  }
+
+  .departmentTitleDetails {
+    margin: 0;  // Remove default margin of h2
+    color: $blue;
+    font-weight: 500;
+    margin-left: 12px;
+  }
+}
+
+.cardContainer {
+  background-color: white;
+  width: 325px;
+  height: 225px;
+  padding: 1.5rem 1rem; // px-4 py-6
+  border-radius: 12px;
+  cursor: pointer;
+  border: 2px solid transparent; // Start with no visible border
+  transition: border-color 0.3s ease; // Smooth transition for border color
+
+  &:hover {
+    border-color: black; // Change border color to black on hover
+  }
+
+  .cardHeader {
+    display: flex;
+    gap: 0.4rem; // gap-2
+
+    .circle {
+      background-color: #c8dfe4;
+      width: 1.45rem; // w-5
+      height: 1.45rem; // h-5
+      border-radius: 50%; // rounded-full
+      margin-top: 0.5rem; // mt-[3px]
+      margin-right: 0.6rem; // Add this margin to increase the space between circle and title
+    }
+
+    .title {
+      color: #25307f;
+      font-weight: 600; // font-semibold
+      padding: 0;
+      margin: 0;
+    }
+
+    .arrow {
+      color: #25307f;
+      margin-top: 0.6rem;
+    }
+
+    .icons{
+      margin-top: 0.3rem;
+      margin-left: 3rem;
+
+      .message{
+        color: #25307f;
+      }
+
+      .phone{
+        //margin-left: 20px;
+        color: green;
+      }
+    }
+  }
+
+  .detailsContainer{
+    margin-left: 40px;
+    margin-top: 15px;
+    .details{
+      display:flex;
+      height: 26px;
+      font-weight: 500;
+      .name{
+        color: black;
+        padding: 0;
+      }
+
+      .value{
+        color:gray;
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+.superCardContainer{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}

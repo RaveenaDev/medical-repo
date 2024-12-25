@@ -1,0 +1,22 @@
+*{
+  padding: 0;
+  margin: 0
+}
+
+.sidebar{
+  .sideElement{
+    color: black;
+    padding: 22px;
+    //border: 1px solid black;
+    cursor: pointer;
+  }
+
+  .sideElement:hover{
+    background-color: lightgray;
+  }
+
+  .active{
+    background-color: #25307F;
+    color: white;
+  }
+}

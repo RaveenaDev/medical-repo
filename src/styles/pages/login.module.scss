@@ -1,0 +1,31 @@
+.login {
+    border: 1px solid #6E6E6E45;
+    padding: 20px 40px;
+    width: 500px;
+    &__title, &__passwordResetTitle {
+        color: #0150EA;
+        font-size: 28px;
+        font-weight: 600;
+    }
+    &__title{
+        margin: 0 0 20px 0;
+    }
+    &__passwordResetTitle{
+        margin: 0;
+    }
+    &__recoveryLinkMsg{
+        color: #0150EA;
+        font-size: 25px;
+        font-weight:500;
+    }
+    input {
+        font-size: 20px;
+    }
+    &__errormsg{
+        margin: 0px!important;
+        color: red;
+    }
+    &__passwordReset{
+        font-weight:500;
+    }
+}

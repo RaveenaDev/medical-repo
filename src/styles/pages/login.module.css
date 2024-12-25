@@ -1,0 +1,31 @@
+.login {
+  border: 1px solid rgba(110, 110, 110, 0.2705882353);
+  padding: 20px 40px;
+  width: 500px;
+}
+.login__title, .login__passwordResetTitle {
+  color: #0150EA;
+  font-size: 28px;
+  font-weight: 600;
+}
+.login__title {
+  margin: 0 0 20px 0;
+}
+.login__passwordResetTitle {
+  margin: 0;
+}
+.login__recoveryLinkMsg {
+  color: #0150EA;
+  font-size: 25px;
+  font-weight: 500;
+}
+.login input {
+  font-size: 20px;
+}
+.login__errormsg {
+  margin: 0px !important;
+  color: red;
+}
+.login__passwordReset {
+  font-weight: 500;
+}/*# sourceMappingURL=login.module.css.map */

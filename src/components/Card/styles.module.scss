@@ -1,0 +1,33 @@
+.card {
+    background-color: #ffffff;
+    &__contentWrap {
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+    }
+    &__left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &__rect {
+        width: 26px;
+        height: 26px;
+        border-radius: 5px;
+        background-color: #25307F;
+        margin-right: 10px;
+    } 
+    &__title {
+        font-size: 14px;
+        color: #878787;
+        font-weight: 500;
+        margin: 0;
+    }
+    &__subtitle {
+        font-size: 20px;
+        color: #3C3C3C;
+        font-weight: 500;
+        margin: 0;
+    }
+}
