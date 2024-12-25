@@ -1,0 +1,7 @@
+.patients .patientHeader {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 2px;
+  gap: 10px;
+}/*# sourceMappingURL=patients.module.css.map */
