@@ -1,5 +1,7 @@
+$blue : #25307F;
+
 .name {
-    color: #25307F;
+    color: $blue;
     font-size: 18px;
     font-weight: 500;
 }
@@ -21,7 +23,7 @@
     text-align: center;
 
     h5 {
-        color: #25307F;
+        color: $blue;
         font-size: 20px;
     }
 
@@ -30,4 +32,24 @@
         font-size: 13px;
     }
 
+}
+
+
+.title{
+    color: $blue;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+ul {
+    padding: 6px 0px; 
+    margin: 0;
+    list-style-position: inside; 
+}
+
+ul li {
+    color: #1A1A1A;
+    font-weight: 500;
+    font-size: 13px;
+    padding: 3px 0px; 
 }
