@@ -1,0 +1,33 @@
+.name {
+    color: #25307F;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+
+.email {
+    color: #878787;
+    font-size: 14px;
+}
+
+.styling {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 0px;
+    width: 100%;
+    text-align: center;
+
+    h5 {
+        color: #25307F;
+        font-size: 20px;
+    }
+
+    p {
+        color: #878787;
+        font-size: 13px;
+    }
+
+}

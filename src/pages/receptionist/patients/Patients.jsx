@@ -7,6 +7,8 @@ import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 
+
+
 const Patients = (props) => {
   const [tableIndex, setTableIndex] = useState(null);
   const navigate = useNavigate();
