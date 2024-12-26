@@ -4,9 +4,12 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import styles from "./profile.module.scss";
 import Button from '@mui/material/Button';
+import PersonalInfo from './PersonalInfo';
 
 
 const Profile = () => {
+   
+
     return (
         <Grid container spacing={2}>
             {/* Box 1 */}
@@ -23,20 +26,20 @@ const Profile = () => {
                     <Box
                         sx={{
                             display: "flex",
-                            flexDirection: "column", // Stack children vertically
-                            justifyContent: "center", // Center horizontally
-                            alignItems: "center", // Center vertically
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
                             margin: 0,
                         }}
                     >
                         <Avatar
-                            src="https://via.placeholder.com/150" // Replace with your image URL
+                            src="https://via.placeholder.com/150"
                             alt="Profile Image"
                             sx={{
-                                width: 80, // Set width of the image
-                                height: 80, // Set height of the image
-                                borderRadius: "50%", // Make the image circular
-                                marginBottom: "8px" // Add spacing between the image and text
+                                width: 80,
+                                height: 80,
+                                borderRadius: "50%",
+                                marginBottom: "8px"
                             }}
                         />
 
@@ -47,42 +50,27 @@ const Profile = () => {
                             sx={{
                                 display: "flex",
                                 flexDirection: "row",
-                                justifyContent: "space-around", // Center horizontally
-                                alignItems: "center", // Center vertically
+                                justifyContent: "space-around",
+                                alignItems: "center",
                                 width: "100%",
-
                             }}
                         >
-
                             <div className={styles.styling}>
-
                                 <div>
-                                    <h5>
-                                        8
-                                    </h5>
-                                    <p>
-                                        Past Visits
-                                    </p>
-
-
-
-
+                                    <h5>8</h5>
+                                    <p>Past Visits</p>
                                 </div>
                                 <div>
-                                    <h5>
-                                        2
-                                    </h5>
-                                    <p>
-                                        Upcoming
-                                    </p>
+                                    <h5>2</h5>
+                                    <p>Upcoming</p>
                                 </div>
                             </div>
                         </Box>
 
                         <Button variant="outlined"
                             sx={{
-                                margin: "16px", // Adds margin around the button
-                                padding: "12px 24px", // Adds padding inside the button
+                                margin: "16px",
+                                padding: "12px 24px",
                                 width: "100%",
                                 borderColor: "#25307F",
                                 color: "#25307F",
@@ -102,14 +90,11 @@ const Profile = () => {
             <Grid item xs={5}>
                 <Box
                     sx={{
-                        backgroundColor: "lightgreen",
-                        height: "150px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
+                        backgroundColor: "#ffffff",
+                        padding: "8px",
                     }}
                 >
-                    Box 2
+                  <PersonalInfo />
                 </Box>
             </Grid>
             {/* Box 3 */}
