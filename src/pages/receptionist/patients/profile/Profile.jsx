@@ -132,6 +132,8 @@ const Profile = () => {
                     <MedicalInfo
                         medicalHistory={medicalHistory}
                         currentMedications={currentMedications}
+                        showSymptoms={false} // Hide Symptoms section
+                        showHistory={false}   // Hide Social History section
                     />
                 </Box>
             </Grid>
