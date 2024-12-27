@@ -12,7 +12,7 @@ const DepartCard = () => {
     const navigate = useNavigate()
     const handleClick = () => {
         // Redirect to the specific page
-        navigate('/departmentDetails');
+        navigate('/receptionist/departments/departmentDetails');
     }
 
     const handleClickMessage = (e) => {

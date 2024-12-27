@@ -12,6 +12,7 @@ import {
 import styles from './receptionPage.module.scss'
 import ayu from "../departments/departments.module.scss";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import {useNavigate} from "react-router-dom";
 
 function createData(name, appointmentWith, typeVisit, branch, tokenNumber) {
     return { name, appointmentWith, typeVisit, branch, tokenNumber };
@@ -33,13 +34,17 @@ const truncateText = (text, maxLength) => {
 };
 
 const ReceptionPage = () => {
+    const navigate = useNavigate()
+    const handleAppointments = () => {
+        navigate('/admin/reception/appointments')
+    }
     return (
         <Grid container spacing={2}>
             <Grid size={8.5}>
                 <Grid container direction="column" spacing={2}>
                     {/* First vertically stacked item */}
                     <Grid className={styles.container1}>
-                        <div className={styles.heading1}>
+                        <div className={styles.heading1} onClick={handleAppointments}>
                             <h3>Appointments</h3>
                             <span className={ayu.forwardButton}>
                                 <ArrowForwardIosIcon/>

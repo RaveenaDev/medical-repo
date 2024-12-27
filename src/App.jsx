@@ -66,7 +66,7 @@ function App() {
                      element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                            entity={entity}/>}/>
 
-              <Route path="/receptionist/departmentDetails"
+              <Route path="/receptionist/departments/departmentDetails"
                      element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                              entity={entity}/>}/>
 
