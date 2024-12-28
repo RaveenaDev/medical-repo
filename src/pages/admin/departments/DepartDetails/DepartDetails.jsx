@@ -33,7 +33,7 @@ const DepartDetails = (props) => {
     };
 
     const handleClick = () => {
-        navigate('/departments')
+        navigate('/receptionist/departments')
     }
     return (
         <>

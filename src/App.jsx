@@ -13,6 +13,7 @@ import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import Admin from "./pages/admin/index.jsx";
 import Settings from './pages/receptionist/Settings/Settings';
 import Reception from "./pages/admin/reception/Reception.jsx";
+import Appointments from "./pages/admin/reception/appointments/Appointments.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -79,6 +80,10 @@ function App() {
               <Route path="/admin/reception"
                      element={<Reception setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
                                      entity={entity}/>}/>
+
+              <Route path="/admin/reception/appointments"
+                     element={<Appointments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
+                                         entity={entity}/>}/>
             </Routes>
           </div>
         {/*<div className="">*/}
