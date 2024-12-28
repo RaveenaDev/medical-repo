@@ -16,6 +16,33 @@ export const Table = ({ tab }) => {
                 return '';
         }
     };
+    const getRowClassWhiteBg = () => {
+        return 'white-bg';
+    };
+
+    const getHeaderStyles = () => {
+        if (tab?.headerStyle) {
+            return tab.headerStyle
+        } else {
+            return {
+                color: '#000000',
+                fontWeight: '500',
+                fontSize: '16px',
+                backgroundColor: '#FFFFFF',
+                display: 'flex',
+                justifyContent: 'center'
+            }
+        }
+    }
+    const getHeaderContainerTopStyles = () => {
+        if (tab?.headerContainerTopStyle) {
+            return tab.headerContainerTopStyle
+        } else {
+            return {
+                backgroundColor: '#FFFFFF'
+            }
+        }
+    }
     return (
         <DataGrid
             rows={tab?.rows}
@@ -42,15 +69,11 @@ export const Table = ({ tab }) => {
                     position: 'relative',
                     width: 'calc(100% + 40px)'
                 },
-                '& .MuiDataGrid-topContainer': {
-                    color: '#000000',
-                    fontWeight: '500',
-                    fontSize: '16px',
-                    backgroundColor: '#FFFFFF'
-                },
+                '& .MuiDataGrid-topContainer': getHeaderStyles(),
+                '& .MuiDataGrid-container--top [role=row]': getHeaderContainerTopStyles(),
                 '& .MuiDataGrid-columnHeaders': {
                     width: 'calc(100% - 40px)',
-                    margin: '0 auto'
+                    // margin: '0 auto'
                 },
                 '& .status-ongoing': {
                     backgroundColor: 'var(--color-ongoing)',
@@ -60,6 +83,9 @@ export const Table = ({ tab }) => {
                 },
                 '& .status-cancelled': {
                     backgroundColor: 'lightcoral',
+                },
+                '& .white-bg': {
+                    backgroundColor: '#ffffff',
                 },
                 '& .MuiDataGrid-row:before': {
                     content: '""',
@@ -72,7 +98,7 @@ export const Table = ({ tab }) => {
                 },
                 border: 'none'
             }}
-            getRowClassName={getRowClassName}
+            getRowClassName={tab.rowBgWhite ? getRowClassWhiteBg : getRowClassName}
         />
     );
 };

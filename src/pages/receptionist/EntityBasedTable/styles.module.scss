@@ -5,3 +5,27 @@
         color: #000000;
     }
 }
+.status {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    &_content {
+        margin: 0 10px;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    &__bullet {
+        width: 11px;
+        height: 11px;
+        background-color: #3DB461;
+        display: inline-block;
+        border-radius: 50%;
+    }
+    &__title {
+        color: #747474;
+        font-size: 16px;
+        font-weight: 600;
+        margin-left: 6px;
+    }
+}
