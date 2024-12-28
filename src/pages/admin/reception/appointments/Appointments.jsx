@@ -11,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ayu from "../../departments/departments.module.scss";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 function Appointments(props) {
     const [tableIndex, setTableIndex] = useState(null);
@@ -103,24 +105,60 @@ function Appointments(props) {
                 </Grid>
                 {!props.entity ? <>
                     <div className={styles.appointmentBlock}>
-                        <Grid container spacing={2} justifyContent="space-between" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
+                        <Grid container spacing={2} justifyContent="space-between" alignItems="center"
+                              flexDirection={{md: 'row'}} size={12} sx={{margin: '0 0 20px 0'}}>
                             <Grid size={3}>
-                                <Button variant="text" sx={{fontSize: "22px", color: "#0150EA", textTransform: "capitalize", padding: "0px"}} onClick={handleCalendar}>Today</Button>
+                                <Button variant="text" sx={{
+                                    fontSize: "22px",
+                                    color: "#0150EA",
+                                    textTransform: "capitalize",
+                                    padding: "0px"
+                                }} onClick={handleCalendar}>Today</Button>
                             </Grid>
                             <Grid size={9} sx={{display: "flex", justifyContent: "flex-end"}}>
                                 {/*<Button variant="contained" sx={{fontSize: "20px", color: "#878787", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#fff", marginRight: "22px"}} onClick={handleAppointmentRequests}><img src="src/assets/account_circle.svg" className={styles.appointmentBlock__accountIcon}/>Appointment Requests</Button>*/}
                                 {/*<Button variant="contained" sx={{fontSize: "20px", color: "#878787", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#fff", marginRight: "22px"}} onClick={handleBilling}><img src="src/assets/payments.svg" className={styles.appointmentBlock__paymentIcon}/>Billing</Button>*/}
                                 {/*<Button variant="contained" sx={{fontSize: "20px", color: "#ffffff", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#25307F"}} onClick={handleBookAppointment}><img src="src/assets/plus.svg" className={styles.appointmentBlock__plusIcon}/>Book Appointment</Button>*/}
-                                <Button variant="contained" sx={{fontSize: "16px", color: "#878787", textTransform: "capitalize", padding: "0px 8px", backgroundColor: "#fff", marginRight: "22px"}}><LocalAtmIcon sx={{color: "#25307f"}}/> <span style={{marginLeft: "14px",marginRight: "8px",marginTop: "2px"}}>Billing</span></Button>
-                                <Button variant="contained" sx={{fontSize: "16px", color: "#878787", textTransform: "capitalize", padding: "0px 8px", backgroundColor: "#fff", marginRight: "22px"}}>
-                                    <div style={{height:"8px",width:"8px",borderRadius:"50%",backgroundColor:"red",position:"absolute",left:"31px",top:"6px"}}></div>
+                                <Button variant="contained" sx={{
+                                    fontSize: "16px",
+                                    color: "#878787",
+                                    textTransform: "capitalize",
+                                    padding: "0px 8px",
+                                    backgroundColor: "#fff",
+                                    marginRight: "22px"
+                                }}><LocalAtmIcon sx={{color: "#25307f"}}/> <span style={{
+                                    marginLeft: "14px",
+                                    marginRight: "8px",
+                                    marginTop: "2px"
+                                }}>Billing</span></Button>
+                                <Button variant="contained" sx={{
+                                    fontSize: "16px",
+                                    color: "#878787",
+                                    textTransform: "capitalize",
+                                    padding: "0px 8px",
+                                    backgroundColor: "#fff",
+                                    marginRight: "22px"
+                                }}>
+                                    <div style={{
+                                        height: "8px",
+                                        width: "8px",
+                                        borderRadius: "50%",
+                                        backgroundColor: "red",
+                                        position: "absolute",
+                                        left: "31px",
+                                        top: "6px"
+                                    }}></div>
                                     {circle}
-                                    <span style={{marginLeft: "16px",marginRight: "8px",marginTop: "2px"}}>Request</span></Button>
+                                    <span style={{
+                                        marginLeft: "16px",
+                                        marginRight: "8px",
+                                        marginTop: "2px"
+                                    }}>Request</span></Button>
 
-                                <FormControl sx={{ minWidth: 150, position: 'relative' }} size="small">
+                                <FormControl sx={{minWidth: 150, position: 'relative'}} size="small">
                                     <InputLabel
                                         id="demo-select-small-label"
-                                        sx={{ color: 'white', marginLeft: '22px' }} // White label text
+                                        sx={{color: 'white', marginLeft: '22px'}} // White label text
                                     >
                                         All Branches
                                     </InputLabel>
@@ -161,15 +199,22 @@ function Appointments(props) {
                                             // Trigger the dropdown programmatically
                                             const selectElement = document.getElementById('demo-select-small');
                                             if (selectElement) {
-                                                selectElement.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+                                                selectElement.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
                                             }
                                         }}
                                     />
                                 </FormControl>
-
                             </Grid>
                         </Grid>
                     </div>
+
+                    <div className={ayu.headerContainer} style={{position: "absolute",left:"315px"}}>
+                        <button className={ayu.backButton}>
+                            <ArrowBackIosIcon/>
+                        </button>
+                        <h2 className={ayu.departmentTitle}>Department</h2>
+                    </div>
+
                     <Dashboard/>
                 </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
             </div>
