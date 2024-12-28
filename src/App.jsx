@@ -14,6 +14,9 @@ import Admin from "./pages/admin/index.jsx";
 import Settings from './pages/receptionist/Settings/Settings';
 import Reception from "./pages/admin/reception/Reception.jsx";
 import Appointments from "./pages/admin/reception/appointments/Appointments.jsx";
+import Patients from "./pages/receptionist/patients/Patients.jsx";
+import MoreInfo from "./pages/receptionist/patients/profile/MoreInfo.jsx";
+import Profile from "./pages/receptionist/patients/profile/Profile.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -60,30 +63,15 @@ function App() {
               <Route path="/password-reset" element={<PasswordReset setIsSignUpOrLogin={setIsSignUpOrLogin}/>}/>
               <Route path="/recovery-link" element={<RecoveryLink setIsSignUpOrLogin={setIsSignUpOrLogin}/>}/>
               <Route path="/update-password" element={<UpdatePassword setIsSignUpOrLogin={setIsSignUpOrLogin}/>}/>
-              <Route path="/receptionist"
-                     element={<Receptionist setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
-                                            entity={entity}/>}/>
-              <Route path="/receptionist/departments"
-                     element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
-                                           entity={entity}/>}/>
-
-              <Route path="/receptionist/departments/departmentDetails"
-                     element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
-                                             entity={entity}/>}/>
-
+              <Route path="/receptionist" element={<Receptionist setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/receptionist/patients" element={<Patients setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity} />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/receptionist/departments" element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/receptionist/departments/departmentDetails" element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/settings" element={<Settings/>}/>
-
-              <Route path="/admin"
-                     element={<Admin setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
-                                             entity={entity}/>}/>
-
-              <Route path="/admin/reception"
-                     element={<Reception setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
-                                     entity={entity}/>}/>
-
-              <Route path="/admin/reception/appointments"
-                     element={<Appointments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity}
-                                         entity={entity}/>}/>
+              <Route path="/admin" element={<Admin setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/admin/reception" element={<Reception setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/><Route path="/admin/reception/appointments" element={<Appointments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/more-info" element={<MoreInfo />} />
             </Routes>
           </div>
         {/*<div className="">*/}

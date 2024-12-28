@@ -1,0 +1,33 @@
+.card {
+  background-color: #ffffff;
+}
+.card__contentWrap {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.card__left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card__rect {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  background-color: #25307F;
+  margin-right: 10px;
+}
+.card__title {
+  font-size: 14px;
+  color: #878787;
+  font-weight: 500;
+  margin: 0;
+}
+.card__subtitle {
+  font-size: 20px;
+  color: #3C3C3C;
+  font-weight: 500;
+  margin: 0;
+}/*# sourceMappingURL=styles.module.css.map */

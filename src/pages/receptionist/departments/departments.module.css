@@ -1,0 +1,110 @@
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+}
+.headerContainer .backButton {
+  margin-right: 8px;
+  margin-top: 10px;
+  color: #25307f;
+  background-color: #F1F1F1;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 0;
+}
+.headerContainer .departmentTitle {
+  margin: 0;
+  color: #25307f;
+  font-weight: 500;
+}
+.headerContainer .departmentTitle1 {
+  margin: 0;
+  color: #25307f;
+  font-weight: 500;
+  opacity: 0.5;
+}
+.headerContainer .forwardButton {
+  margin-left: 14px;
+  margin-top: 10px;
+  color: #25307f;
+  background-color: #F1F1F1;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 0;
+}
+.headerContainer .departmentTitleDetails {
+  margin: 0;
+  color: #25307f;
+  font-weight: 500;
+  margin-left: 12px;
+}
+
+.cardContainer {
+  background-color: white;
+  width: 325px;
+  height: 225px;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+.cardContainer:hover {
+  border-color: black;
+}
+.cardContainer .cardHeader {
+  display: flex;
+  gap: 0.4rem;
+}
+.cardContainer .cardHeader .circle {
+  background-color: #c8dfe4;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  margin-top: 0.5rem;
+  margin-right: 0.6rem;
+}
+.cardContainer .cardHeader .title {
+  color: #25307f;
+  font-weight: 600;
+  padding: 0;
+  margin: 0;
+}
+.cardContainer .cardHeader .arrow {
+  color: #25307f;
+  margin-top: 0.6rem;
+}
+.cardContainer .cardHeader .icons {
+  margin-top: 0.3rem;
+  margin-left: 3rem;
+}
+.cardContainer .cardHeader .icons .message {
+  color: #25307f;
+}
+.cardContainer .cardHeader .icons .phone {
+  color: green;
+}
+.cardContainer .detailsContainer {
+  margin-left: 40px;
+  margin-top: 15px;
+}
+.cardContainer .detailsContainer .details {
+  display: flex;
+  height: 26px;
+  font-weight: 500;
+}
+.cardContainer .detailsContainer .details .name {
+  color: black;
+  padding: 0;
+}
+.cardContainer .detailsContainer .details .value {
+  color: gray;
+  margin-left: 4px;
+}
+
+.superCardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}/*# sourceMappingURL=departments.module.css.map */

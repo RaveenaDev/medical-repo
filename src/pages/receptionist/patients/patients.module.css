@@ -1,0 +1,21 @@
+.patients .patientHeader {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 2px;
+  gap: 10px;
+}
+.patients .cardhandling {
+  padding-top: 10px;
+}
+.patients .cardhandling .heading {
+  color: #000000;
+  font-size: 23px;
+  font-weight: 700;
+  padding: 4px 0px;
+}
+.patients .section .title {
+  color: #000000;
+  font-size: 24px;
+  font-weight: 600;
+}/*# sourceMappingURL=patients.module.css.map */
