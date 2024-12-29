@@ -5,6 +5,7 @@ import Faq from './Faq'
 import styles from './Settings.module.scss'
 import Logout from './Logout'
 import Help from './Help';
+import Index from '../index'
 
 
 const Settings = () => {
@@ -44,6 +45,7 @@ const Settings = () => {
     </div> */}
     <div className={styles.component_panel}>
       <Faq/>
+      {/* <Index/> */}
 
 
 

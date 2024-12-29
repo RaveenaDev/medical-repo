@@ -7,7 +7,9 @@ import UpdatePassword from './pages/login/updatePassword';
 import Logo from './components/Logo';
 import Receptionist from './pages/receptionist'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Settings from './pages/receptionist/Settings/Settings';
+import PatientPanel from './pages/admin/PatientPanel'
+import PatientDetails from './pages/admin/PatientDetail'
+
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -31,7 +33,8 @@ function App() {
           </Router>
         </div> */}
         <div className="">
-          <Settings/>
+          <PatientPanel/>
+          <PatientDetails/>
         </div>
       </div>
     </>
