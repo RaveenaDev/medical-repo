@@ -1,5 +1,6 @@
 {
   "name": "crm-vite",
+  "homepage": "https://AyushMer44.github.io/medical-repo/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -30,6 +31,7 @@
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
+    "gh-pages": "^6.2.0",
     "globals": "^15.9.0",
     "sass": "^1.83.0",
     "sass-loader": "^16.0.4",
