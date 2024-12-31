@@ -5,6 +5,7 @@
   
   .sidebar .sideElement {
     color: black;
+    height: 100vh;
     padding: 22px;
     cursor: pointer;
   }
