@@ -1,0 +1,49 @@
+.billingContainer {
+    padding: 20px;
+    background-color: #fff; 
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .billingHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .paymentText {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    gap: 10px;
+    
+  }
+  
+  .refundButton,
+  .addPaymentButton {
+    background-color: white;
+    color: grey;
+    border: 1px solid grey;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .refundButton:hover,
+  .addPaymentButton:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .closeIcon {
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  
+  
