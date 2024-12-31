@@ -5,18 +5,15 @@ import PasswordReset from './pages/passwordReset';
 import RecoveryLink from './pages/recoveryLink';
 import UpdatePassword from './pages/updatePassword';
 import Logo from './components/Logo';
+import History from './pages/admin/History';
 
 function App() {
 
   return (
     <>
-      <Logo/>
-        <div className={`${styles.register}`}>
-          {/* <Login/> */}
-          {/* <PasswordReset/> */}
-          {/* <RecoveryLink/> */}
-          <UpdatePassword/>
-        </div>
+      {/* <Logo/> */}
+      {/* <History/> */}
+        
     </>
   );
 }
