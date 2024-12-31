@@ -9,6 +9,7 @@ import History from "./pages/admin/History";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import styles2 from "./App2.module.scss";
+import PatientPanel from "./pages/admin/PatientPanel";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
 
 
           <div className={styles2.right}>
+            <PatientPanel/>
             
 
 
