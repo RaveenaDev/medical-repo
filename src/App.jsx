@@ -34,7 +34,7 @@ function App() {
         </div> */}
         <div className="">
           <PatientPanel/>
-          <PatientDetails/>
+          {/* <PatientDetails/> */}
         </div>
       </div>
     </>
