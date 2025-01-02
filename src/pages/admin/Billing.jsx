@@ -29,7 +29,7 @@ const Billing = () => {
       sx={{
         padding: 2,
         position: "absolute",
-        top: "15%",
+        top: "10%",
         left: "30%",
         width: "900px",
         backgroundColor: "#FFFFFF",

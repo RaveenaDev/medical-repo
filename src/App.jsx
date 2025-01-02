@@ -5,12 +5,12 @@ import PasswordReset from "./pages/passwordReset";
 import RecoveryLink from "./pages/recoveryLink";
 import UpdatePassword from "./pages/updatePassword";
 import Logo from "./components/Logo";
-import History from "./pages/admin/History";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import styles2 from "./App2.module.scss";
 import PatientPanel from "./pages/admin/PatientPanel";
-import Billing from './pages/admin/Billing'
+import Tracking from './pages/admin/Tracking'
+import PatientDetails from "./pages/admin/PatientDetails";
 
 function App() {
   return (
@@ -27,7 +27,8 @@ function App() {
 
           <div className={styles2.right}>
             {/* <PatientPanel/> */}
-            <Billing/>
+            <PatientDetails/>
+
 
             
 
