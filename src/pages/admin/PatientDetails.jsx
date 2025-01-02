@@ -10,7 +10,16 @@ import {
   Paper,
   Typography,
   Box,
+  List,
+  ListItem,
 } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {  useNavigate , Link} from "react-router-dom";
+
+
+
+
 
 const data = [
   {
@@ -44,14 +53,16 @@ const data = [
 ];
 
 const PatientDetails = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
         
         <Container  
       maxWidth={false} 
-      sx={{ height: '50vh', width: '90%', margin: '2rem auto', display: 'flex' , position:"relative"}}
+      sx={{ height: '50vh', width: '95%', margin: '2rem auto', display: 'flex' , position:"relative", }}
     >
-      <Grid container sx={{ height: '100%'}}>
+      <Grid container sx={{ height: '100%', width:"100%"}}>
         {/* Left Box */}
         <Grid 
           item 
@@ -59,6 +70,12 @@ const PatientDetails = () => {
           sx={{ bgcolor: 'white',textAlign:"center", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           <Box>
+
+         <Link to={"/"}>
+         <Box sx={{ position: 'absolute', top: '1.5rem', left: '3rem' }}>
+            <ArrowBackIcon />
+          </Box>
+         </Link>
 
           <Typography variant="h5" component="div" >
            Jasmine Kaur
@@ -87,9 +104,51 @@ const PatientDetails = () => {
         <Grid 
           item 
           xs={12} sm={6} 
-          sx={{bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          sx={{bgcolor: 'white', display: 'flex',flexDirection:"column", alignItems: 'center', justifyContent: 'center',  }}
         >
-          <Box>Middle Box</Box>
+          <Box sx={{display:"flex", textAlign:"left", justifyContent: 'space-between' ,width:"90%", margin:"1rem", borderBottom:"1px solid grey"}}>
+          <Typography sx={{fontSize:"16px"}} gutterBottom>
+              Gender <br /> Female
+      </Typography>
+      <Typography sx={{fontSize:"16px"}} gutterBottom>
+      Birthday <br /> Feb 24th, 1997
+      </Typography>
+      <Typography sx={{fontSize:"16px"}} gutterBottom>
+      Phone Number <br /> +91 79327728
+      </Typography>
+
+          </Box>
+
+
+          <Box sx={{display:"flex", textAlign:"left", justifyContent: 'space-between' ,width:"90%", margin:"1rem",borderBottom:"1px solid grey" }}>
+          <Typography sx={{fontSize:"16px"}} gutterBottom>
+          Adress <br /> XXXXXXX
+      </Typography>
+      <Typography sx={{fontSize:"16px"}} gutterBottom>
+      Case Id <br /> XXXXXXX
+      </Typography>
+      <Typography sx={{fontSize:"16px"}} gutterBottom>
+      Assessed by <br /> Dr. XXXXXXX
+      </Typography>
+
+          </Box>
+
+
+
+          <Box sx={{display:"flex", textAlign:"left", justifyContent: 'space-between' ,width:"90%", margin:"1rem", }}>
+          <Typography sx={{fontSize:"16px"}} gutterBottom>
+          Member status <br /> Active Member
+      </Typography>
+      <Typography sx={{fontSize:"16px"}} gutterBottom>
+      Registered Date <br /> June 24th, 2024
+      </Typography>
+      {/* <Typography sx={{fontSize:"16px"}} gutterBottom>
+      Phone Number <br /> +91 79327728
+      </Typography> */}
+
+          </Box>
+
+
         </Grid>
 
         {/* Right Box */}
@@ -98,7 +157,57 @@ const PatientDetails = () => {
           xs={12} sm={3} 
           sx={{ bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          <Box>Right Box</Box>
+          <Box>
+
+          <Grid container spacing={2} direction="column">
+        <Grid item>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+            Medical History
+          </Typography>
+          <List disablePadding sx={{ listStyleType: 'disc', pl: 2 }}>
+            <ListItem sx={{ py: 0, pl: 0, fontSize: '0.875rem', display: 'list-item' }}>
+              Type 2 diabetes diagnosed 5 years ago
+            </ListItem>
+            <ListItem sx={{ py: 0, pl: 0, fontSize: '0.875rem', display: 'list-item' }}>
+              Hypertension diagnosed 3 years ago
+            </ListItem>
+            <ListItem sx={{ py: 0, pl: 0, fontSize: '0.875rem', display: 'list-item' }}>
+              Family history of heart disease (father)
+            </ListItem>
+          </List>
+        </Grid>
+
+        <Grid item>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+            Current Medications
+          </Typography>
+          <List disablePadding sx={{ listStyleType: 'disc', pl: 2 }}>
+            <ListItem sx={{ py: 0, pl: 0, fontSize: '0.875rem', display: 'list-item' }}>
+              Metformin (for diabetes)
+            </ListItem>
+            <ListItem sx={{ py: 0, pl: 0, fontSize: '0.875rem', display: 'list-item' }}>
+              Lisinopril (for hypertension)
+            </ListItem>
+            <ListItem sx={{ py: 0, pl: 0, fontSize: '0.875rem', display: 'list-item' }}>
+              Aspirin (for heart health)
+            </ListItem>
+          </List>
+        </Grid>
+
+        <Grid item>
+          <Box textAlign="center">
+          <Button
+              variant="contained"
+              color="primary"
+              endIcon={<ArrowForwardIcon />}
+              sx={{ borderRadius: 6, textTransform: 'none', width:"150px",marginTop:"2rem" }}
+            >
+              More
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+          </Box>
         </Grid>
       </Grid>
     </Container>

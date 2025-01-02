@@ -19,11 +19,13 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import FilterBox from "./Components/FilterBox";
+import { Link} from "react-router-dom";
+
 
 const PatientPanel = () => {
 
   const[showFilter, setShowFilter] = useState(false);
-
+  
   return (
     <Box
       sx={{
@@ -127,6 +129,8 @@ const PatientPanel = () => {
             {[...Array(9)].map((_, index) => (
               <TableRow
                 key={index}
+
+                
                 sx={{
                   backgroundColor: "#FFFFFF",
                   marginBottom: 2,
@@ -137,12 +141,14 @@ const PatientPanel = () => {
               >
                 <TableCell>XXXXXXXX</TableCell>
                 <TableCell>
+                  <Link to={"/PatientDetails"}>
                   <Typography
                     variant="body2"
                     sx={{ fontWeight: "bold", color: "#111827" }}
                   >
                     {index % 2 === 0 ? "Jasimine Kaur" : "Amit Tripathi"}
                   </Typography>
+                  </Link>
                   <Typography variant="body2" sx={{ color: "#6B7280" }}>
                     example@gmail.com
                   </Typography>
