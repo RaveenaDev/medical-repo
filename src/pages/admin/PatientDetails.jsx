@@ -16,7 +16,7 @@ import {
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {  useNavigate , Link} from "react-router-dom";
-
+import Topbar from './Components/Topbar'
 
 
 
@@ -57,6 +57,8 @@ const PatientDetails = () => {
 
   return (
     <div>
+
+      <Topbar/>
         
         <Container  
       maxWidth={false} 

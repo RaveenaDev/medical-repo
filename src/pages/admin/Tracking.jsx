@@ -11,12 +11,16 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link} from "react-router-dom";
+import Topbar from './Components/Topbar'
+
 
 
 const Tracking = () => {
     return (
         <div>
-            <Container maxWidth="md" sx={{ padding: 2 }}>
+                  <Topbar/>
+
+            <Container  sx={{ padding: 2 }}>
                 {/* Back Arrow */}
                <Link to={"/PatientDetails"}>
                <IconButton sx={{ marginBottom: 2 }}>

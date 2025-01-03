@@ -16,6 +16,9 @@ import { FaTimes } from 'react-icons/fa';
 import styles from './Billing.module.scss';
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Link} from "react-router-dom";
+
+
 
 const Billing = () => {
 
@@ -51,8 +54,9 @@ const Billing = () => {
           <Button component={Paper} className={styles.refundButton}>Refund</Button>
           <Button component={Paper} className={styles.addPaymentButton}>Add Advance Payment</Button>
         </div>
-
+        <Link to={"/PatientDetails"}>
         <FaTimes className={styles.closeIcon} onClick={handleClose} />
+        </Link>
   </div>
 
 

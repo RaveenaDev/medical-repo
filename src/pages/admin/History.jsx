@@ -17,11 +17,15 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link} from "react-router-dom";
+import Topbar from './Components/Topbar'
+
 
 
 const MedicalHistory = () => {
   return (
-    <Container maxWidth="lg" sx={{ padding: 2 }}>
+    <Container  sx={{ padding: 2,width:"100%" }}>
+      <Topbar/>
+
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
         {/* Left Section */}
         <Box flex={1}>
