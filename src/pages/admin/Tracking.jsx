@@ -10,15 +10,19 @@ import {
     IconButton,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Link} from "react-router-dom";
 
-const PatientPanel = () => {
+
+const Tracking = () => {
     return (
         <div>
             <Container maxWidth="md" sx={{ padding: 2 }}>
                 {/* Back Arrow */}
-                <IconButton sx={{ marginBottom: 2 }}>
+               <Link to={"/PatientDetails"}>
+               <IconButton sx={{ marginBottom: 2 }}>
                     <ArrowBackIcon />
                 </IconButton>
+               </Link>
 
                 {/* Title */}
                 <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ fontSize: '16px', lineHeight: '0' }}>
@@ -83,4 +87,4 @@ const PatientPanel = () => {
     );
 };
 
-export default PatientPanel;
+export default Tracking;

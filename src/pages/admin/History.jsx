@@ -16,6 +16,8 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Link} from "react-router-dom";
+
 
 const MedicalHistory = () => {
   return (
@@ -23,9 +25,11 @@ const MedicalHistory = () => {
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
         {/* Left Section */}
         <Box flex={1}>
+          <Link to={"/PatientDetails"}>
           <IconButton sx={{ marginBottom: 1 }}>
             <ArrowBackIcon />
           </IconButton>
+          </Link>
 
           <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ fontSize: '16px', lineHeight: '1.3' }}>
             Medical History

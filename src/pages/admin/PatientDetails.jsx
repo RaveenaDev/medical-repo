@@ -195,6 +195,7 @@ const PatientDetails = () => {
         </Grid>
 
         <Grid item>
+          <Link to={"/History"}>
           <Box textAlign="center">
           <Button
               variant="contained"
@@ -205,6 +206,7 @@ const PatientDetails = () => {
               More
             </Button>
           </Box>
+          </Link>
         </Grid>
       </Grid>
           </Box>
@@ -218,6 +220,8 @@ const PatientDetails = () => {
         Progress Tracker
       </Typography>
       <TableContainer component={Paper} >
+      <Link to={"/Tracking"}> 
+
         <Table>
           <TableHead>
             <TableRow >
@@ -241,6 +245,8 @@ const PatientDetails = () => {
                 <TableCell>{row.date}</TableCell>
                 <TableCell>{row.responsible}</TableCell>
                 <TableCell>{row.progress}</TableCell>
+                 
+
                 <TableCell
                   sx={{
                     color:
@@ -252,10 +258,13 @@ const PatientDetails = () => {
                 >
                   {row.status}
                 </TableCell>
+
+
               </TableRow>
             ))}
           </TableBody>
         </Table>
+            </Link>
       </TableContainer>
     </Box>
 
