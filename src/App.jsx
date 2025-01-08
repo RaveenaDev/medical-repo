@@ -5,6 +5,7 @@ import PasswordReset from './pages/passwordReset';
 import RecoveryLink from './pages/recoveryLink';
 import UpdatePassword from './pages/updatePassword';
 import Logo from './components/Logo';
+import Notification from './components/Notification/Notification';
 
 function App() {
 
@@ -15,7 +16,8 @@ function App() {
           {/* <Login/> */}
           {/* <PasswordReset/> */}
           {/* <RecoveryLink/> */}
-          <UpdatePassword/>
+          {/* <UpdatePassword/> */}
+          <Notification/>
         </div>
     </>
   );
