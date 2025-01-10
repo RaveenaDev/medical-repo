@@ -4,9 +4,11 @@
 }
 
 .sidebar{
+  min-width: 300px;
   .sideElement{
     color: black;
     padding: 22px;
+    padding-left: 30px;
     //border: 1px solid black;
     cursor: pointer;
   }

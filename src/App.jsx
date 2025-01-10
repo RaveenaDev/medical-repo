@@ -19,6 +19,8 @@ import Profile from "./pages/receptionist/patients/profile/Profile.jsx";
 import Settings from "./pages/receptionist/Settings/Settings.jsx";
 import Departments1 from "./pages/admin/departments/Departments1.jsx";
 import DepartDetails1 from "./pages/admin/departments/DepartDetails/DepartDetails1.jsx";
+import PrivacyPolicy from "./pages/receptionist/Settings/PrivacyPolicy.jsx";
+import Help from "./pages/receptionist/Settings/Help.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -71,7 +73,9 @@ function App() {
               <Route path="/receptionist/patients/profile/more-info" element={<MoreInfo setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
               <Route path="/receptionist/departments" element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/departments/departmentDetails" element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
-              <Route path="/receptionist/settings" element={<Settings/>}/>
+              <Route path="/receptionist/settings" element={<Settings setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/receptionist/settings/privacyPolicy" element={<PrivacyPolicy setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/receptionist/settings/helpAndSupport" element={<Help setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/admin" element={<Admin setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/admin/reception" element={<Reception setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/admin/reception/appointments" element={<Appointments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>

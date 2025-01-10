@@ -46,7 +46,6 @@ const Profile = (props) => {
     }, []);
 
     return (
-
     <>
         <div className={rav.receptionist}>
             {!props.entity ?
