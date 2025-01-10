@@ -51,8 +51,8 @@ const Billing = () => {
       </div>
 
         <div className={styles.buttonGroup}>
-          <Button component={Paper} className={styles.refundButton}>Refund</Button>
-          <Button component={Paper} className={styles.addPaymentButton}>Add Advance Payment</Button>
+          <Button component={Paper} className={styles.refundButton} sx={{color:"#25307F",}}>Refund</Button>
+          <Button component={Paper} className={styles.addPaymentButton } sx={{color:"#25307F"}}>Add Advance Payment</Button>
         </div>
         <Link to={"/PatientDetails"}>
         <FaTimes className={styles.closeIcon} onClick={handleClose} />

@@ -12,11 +12,13 @@ import {
   Box,
   List,
   ListItem,
+  Avatar
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {  useNavigate , Link} from "react-router-dom";
 import Topbar from './Components/Topbar'
+import ProfileImg from '../../assets/image.png'
 
 
 
@@ -62,14 +64,14 @@ const PatientDetails = () => {
         
         <Container  
       maxWidth={false} 
-      sx={{ height: '50vh', width: '95%', margin: '2rem auto', display: 'flex' , position:"relative", }}
+      sx={{ height: '50vh', width: '100%', margin: '2rem auto', display: 'flex' , position:"relative", }}
     >
       <Grid container sx={{ height: '100%', width:"100%"}}>
         {/* Left Box */}
         <Grid 
           item 
           xs={12} sm={3} 
-          sx={{ bgcolor: 'white',textAlign:"center", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          sx={{ bgcolor: 'white',textAlign:"center", display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight:"5px solid #F1F1F1" }}
         >
           <Box>
 
@@ -79,7 +81,20 @@ const PatientDetails = () => {
           </Box>
          </Link>
 
-          <Typography variant="h5" component="div" >
+         <Avatar
+        alt="Jasmine Kaur"
+        src= {ProfileImg} 
+        sx={{
+          width: 100,
+          height: 100,
+          position:"absolute",
+          top:"10%",
+          left:"10%",
+          marginBottom: '1rem', 
+        }}
+      />
+
+          <Typography variant="h5" component="div" sx={{marginTop:"3rem"}} >
            Jasmine Kaur
       </Typography>
 
@@ -87,7 +102,7 @@ const PatientDetails = () => {
            jasminekaur@gmail.com
       </Typography>
 
-      <Box  sx={{display:"flex", gap:"1rem", marginTop:"1.5rem", justifyContent:"center"}}>
+      <Box  sx={{display:"flex", gap:"1rem", marginTop:"1rem", justifyContent:"center"}}>
       <Typography variant="p" component="div" >
            8 <br /> Past visits
       </Typography>
@@ -97,7 +112,7 @@ const PatientDetails = () => {
       </Box>
 
 
-      <Button sx={{marginTop:"2.5rem",left:"9%", position:"absolute"}}>Send Message</Button>
+      <Button sx={{marginTop:"1.5rem",left:"9%", position:"absolute", color: "#25307F", border:"2px solid #25307F", outline:"none"}}>Send Message</Button>
 
           </Box>
         </Grid>
@@ -106,7 +121,7 @@ const PatientDetails = () => {
         <Grid 
           item 
           xs={12} sm={6} 
-          sx={{bgcolor: 'white', display: 'flex',flexDirection:"column", alignItems: 'center', justifyContent: 'center',  }}
+          sx={{bgcolor: 'white', display: 'flex',flexDirection:"column", alignItems: 'center', justifyContent: 'center',borderRight:"5px solid #F1F1F1" ,borderLeft:"5px solid #F1F1F1"   }}
         >
           <Box sx={{display:"flex", textAlign:"left", justifyContent: 'space-between' ,width:"90%", margin:"1rem", borderBottom:"1px solid grey"}}>
           <Typography sx={{fontSize:"16px"}} gutterBottom>
@@ -157,7 +172,7 @@ const PatientDetails = () => {
         <Grid 
           item 
           xs={12} sm={3} 
-          sx={{ bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          sx={{ bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',borderLeft:"5px solid #F1F1F1" , paddingLeft:"1.2rem" }}
         >
           <Box>
 
