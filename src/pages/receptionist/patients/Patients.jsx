@@ -91,7 +91,7 @@ const Patients = (props) => {
           <p className={styles.title}>
             Patient List
           </p>
-          <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>
+          <button onClick={() => navigate('/receptionist/patients/profile')} style={{backgroundColor: "white"}}>
             Click here to view the profile
           </button>
         </div>

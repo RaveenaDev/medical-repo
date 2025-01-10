@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from "react"; // Import useState and useEffect
-import { Grid, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
+import Grid from "@mui/material/Grid2";
 import MedicalInfo from "./MedicalInfo";
+import rav from "../../styles.module.scss";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import styles from "./profile.module.scss";
+import Button from "@mui/material/Button";
+import PersonalInfo from "./PersonalInfo.jsx";
+import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 
-const MoreInfo = () => {
+const MoreInfo = (props) => {
     const [medicalHistory, setMedicalHistory] = useState([]);
     const [currentMedications, setCurrentMedications] = useState([]);
     const [symptoms, setSymptoms] = useState([]); // State for symptoms
     const [socialHistory, setSocialHistory] = useState([]); // State for social history
+
+    const [tableIndex, setTableIndex] = useState(null);
+    useEffect(() => {
+        props?.setIsSignUpOrLogin(false);
+    }, []);
 
     useEffect(() => {
         // Simulate fetching data from the backend
@@ -48,48 +61,53 @@ const MoreInfo = () => {
     }, []);
 
     return (
-        <>
-            <Grid
-                container
-                spacing={2}
-                style={{
-                    height: '100vh', // Full viewport height
-                    padding: '20px'
-                }}
-            >
-                <Grid item xs={6}>
-                    <Paper
-                        elevation={3}
+    <>
+        <div className={rav.receptionist}>
+            {!props.entity ?
+                <>
+                    <Grid
+                        container
+                        spacing={2}
                         style={{
-                            height: '100%', // Full height of the grid item
-                            padding: '20px',
-                            textAlign: 'left'
+                            height: '100vh', // Full viewport height
+                            padding: '20px'
                         }}
                     >
-                        <MedicalInfo
-                            medicalHistory={medicalHistory}
-                            currentMedications={currentMedications}
-                            symptoms={symptoms}
-                            history={socialHistory}
-                            showButton={false} // Hide the button
-                        />
+                        <Grid item xs={6}>
+                            <Paper
+                                elevation={3}
+                                style={{
+                                    height: '100%', // Full height of the grid item
+                                    padding: '20px',
+                                    textAlign: 'left'
+                                }}
+                            >
+                                <MedicalInfo
+                                    medicalHistory={medicalHistory}
+                                    currentMedications={currentMedications}
+                                    symptoms={symptoms}
+                                    history={socialHistory}
+                                    showButton={false} // Hide the button
+                                />
 
-                    </Paper>
-                </Grid>
-                <Grid item xs={6}>
-                    <Paper
-                        elevation={3}
-                        style={{
-                            height: '100%', // Full height of the grid item
-                            padding: '20px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        Box 2
-                    </Paper>
-                </Grid>
-            </Grid>
-        </>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Paper
+                                elevation={3}
+                                style={{
+                                    height: '100%', // Full height of the grid item
+                                    padding: '20px',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                Box 2
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
+        </div>
+    </>
     );
 };
 

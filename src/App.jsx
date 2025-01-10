@@ -67,8 +67,8 @@ function App() {
               <Route path="/update-password" element={<UpdatePassword setIsSignUpOrLogin={setIsSignUpOrLogin}/>}/>
               <Route path="/receptionist" element={<Receptionist setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/patients" element={<Patients setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity} />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/more-info" element={<MoreInfo />} />
+              <Route path="/receptionist/patients/profile" element={<Profile setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
+              <Route path="/receptionist/patients/profile/more-info" element={<MoreInfo setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
               <Route path="/receptionist/departments" element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/departments/departmentDetails" element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/settings" element={<Settings/>}/>

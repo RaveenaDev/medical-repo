@@ -32,7 +32,7 @@ const MedicalInfo = ({
     const navigate = useNavigate();
 
     const handleMoreClick = () => {
-        navigate("/more-info"); // Redirects to the MoreInfo page
+        navigate("/receptionist/patients/profile/more-info"); // Redirects to the MoreInfo page
     };
 
     return (

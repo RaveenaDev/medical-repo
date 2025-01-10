@@ -62,7 +62,7 @@ const DepartDetails = (props) => {
                         {/*<hr style={{border: '1px solid #d3d3d3', margin: '20px 0'}} />*/}
 
                          <Box className={avi.boxContainer}>
-                             <div>
+
                                  <h3 className={avi.heading}>Specific Branch Name</h3>
                                  <div className={avi.pro}>
                                      <img className={avi.img} src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg" alt=""/>
@@ -342,7 +342,6 @@ const DepartDetails = (props) => {
                                          </Grid>
                                      </Grid>
                                  </div>
-                             </div>
                          </Box>
 
                         </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
