@@ -49,7 +49,7 @@ $blue : #25307f;
 
 .cardContainer {
   background-color: white;
-  width: 325px;
+  width: 100%; // Ensuring it takes full width within its parent container
   height: 225px;
   padding: 1.5rem 1rem; // px-4 py-6
   border-radius: 12px;
@@ -59,6 +59,7 @@ $blue : #25307f;
 
   &:hover {
     border-color: black; // Change border color to black on hover
+    transform: scale(1.02); // Slight zoom effect
   }
 
   .cardHeader {
@@ -77,6 +78,7 @@ $blue : #25307f;
     .title {
       color: #25307f;
       font-weight: 600; // font-semibold
+      //font-size: 1.4rem; // Set default font size
       padding: 0;
       margin: 0;
     }
@@ -88,7 +90,9 @@ $blue : #25307f;
 
     .icons{
       margin-top: 0.3rem;
-      margin-left: 3rem;
+      //margin-left: 2rem;
+      position: relative;
+      left: 46px;
 
       .message{
         color: #25307f;
@@ -119,10 +123,155 @@ $blue : #25307f;
       }
     }
   }
+
+  // Responsive Adjustments for Card
+  @media (max-width: 1446px) {
+
+    .cardHeader {
+      .circle {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+
+      .title {
+        font-size: 1.2rem;
+      }
+
+      .arrow {
+        font-size: 0.9rem;
+      }
+    }
+
+    .detailsContainer {
+      margin-left: 30px;
+      .details {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  @media (max-width: 1300px) {
+
+    .cardHeader {
+      .circle {
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+
+      .title {
+        font-size: 1.1rem;
+        margin-top: 2.5px;
+      }
+
+      .arrow {
+        font-size: 0.8rem;
+        position: relative;
+        bottom: 2px;
+      }
+
+      .icons{
+        margin-top: 0.3rem;
+        //margin-left: 2rem;
+        position: relative;
+        left: 20px;
+        bottom: 2px;
+
+        .message{
+          color: #25307f;
+          //font-size: 1rem;
+        }
+
+        .phone{
+          //margin-left: 20px;
+          color: green;
+        }
+      }
+    }
+
+    .detailsContainer {
+      margin-left: 20px;
+      .details {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+
+    .cardHeader {
+      .circle {
+        width: 1rem;
+        height: 1rem;
+      }
+
+      .title {
+        font-size: 1rem;
+      }
+
+      .arrow {
+        font-size: 0.8rem;
+      }
+    }
+
+    .detailsContainer {
+      margin-left: 20px;
+      .details {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+
+    .cardHeader {
+      .circle {
+        width: 0.8rem;
+        height: 0.8rem;
+      }
+
+      .title {
+        font-size: 0.9rem;
+      }
+
+      .arrow {
+        font-size: 0.7rem;
+      }
+    }
+
+    .detailsContainer {
+      margin-left: 10px;
+      .details {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
 }
 
 .superCardContainer{
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  justify-content: space-between;
+
+  .cardContainer {
+    width: 28%; // Ensure 3 cards fit in a row
+
+    @media (max-width: 1446px) {
+      width: 28%; // Keep 3 cards per row even on widths below 1446px
+    }
+
+    @media (max-width: 1300px) {
+      width: 27%; // Keep 3 cards per row even on widths below 1446px
+      height: 200px;
+    }
+
+    @media (max-width: 1024px) {
+      width: 48%; // 2 cards per row on tablets
+    }
+
+    @media (max-width: 768px) {
+      width: 100%; // 1 card per row on mobile
+    }
+  }
 }

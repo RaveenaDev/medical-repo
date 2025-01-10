@@ -17,7 +17,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import {useNavigate} from "react-router-dom";
 
-const DepartDetails = (props) => {
+const DepartDetails1 = (props) => {
 
     const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ const DepartDetails = (props) => {
     };
 
     const handleClick = () => {
-        navigate('/receptionist/departments')
+        navigate('/admin/departments')
     }
     return (
         <>
@@ -349,4 +349,4 @@ const DepartDetails = (props) => {
         </>
     )
 }
-export default DepartDetails
+export default DepartDetails1

@@ -4,13 +4,15 @@ import ayu from './departments.module.scss'
 import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import {Button} from "@mui/material";
-import Dashboard from "../dashboard.jsx";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import DepartCard from "./DepartCard.jsx";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import {useNavigate} from "react-router-dom";
 
-const Departments = (props) => {
+const Departments1 = (props) => {
     const [tableIndex, setTableIndex] = useState(null);
+    const navigate = useNavigate()
+
     useEffect(() => {
         props?.setIsSignUpOrLogin(false);
     }, []);
@@ -34,15 +36,11 @@ const Departments = (props) => {
     const handleCalendar = () => {
         console.log("handleCalendar");
     }
-    const handleAppointmentRequests = () => {
-        console.log("handleAppointmentRequests");
+
+    const handleBack = () => {
+        navigate('/admin')
     }
-    const handleBilling = () => {
-        console.log("handleBilling");
-    }
-    const handleBookAppointment = () => {
-        console.log("handleBookAppointment");
-    }
+
     return (
         <>
             <div>
@@ -50,8 +48,8 @@ const Departments = (props) => {
                     <Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
                         <Grid size={3}>
                             <Card
-                                title="Total Patient"
-                                subtitle="200+"
+                                title="Total Earning"
+                                subtitle="85000"
                                 handleClickCb={(e) => cardClickhandler(e, "patient")}
                             />
                         </Grid>
@@ -96,7 +94,7 @@ const Departments = (props) => {
                         </div>
 
                         <div className={ayu.headerContainer}>
-                            <button className={ayu.backButton}>
+                            <button className={ayu.backButton} onClick={handleBack}>
                                 <ArrowBackIosIcon/>
                             </button>
                             <h2 className={ayu.departmentTitle}>Department</h2>
@@ -122,4 +120,4 @@ const Departments = (props) => {
         </>
     )
 }
-export default Departments
+export default Departments1

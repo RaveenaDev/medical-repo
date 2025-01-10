@@ -4,7 +4,6 @@ import ayu from './departments.module.scss'
 import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import {Button} from "@mui/material";
-import Dashboard from "../dashboard.jsx";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import DepartCard from "./DepartCard.jsx";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';

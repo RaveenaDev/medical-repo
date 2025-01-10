@@ -12,10 +12,13 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ayu from "../../departments/departments.module.scss";
+import avi from "./appointments.module.scss"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import {useNavigate} from "react-router-dom";
 
 function Appointments(props) {
     const [tableIndex, setTableIndex] = useState(null);
+    const navigate = useNavigate()
     useEffect(() => {
         props?.setIsSignUpOrLogin(false);
     }, []);
@@ -45,6 +48,10 @@ function Appointments(props) {
     const handleChange = (event) => {
         setAge(event.target.value);
     };
+
+    const handleBack = () => {
+        navigate('/admin/reception')
+    }
 
     const shapeStyles = { bgcolor: '#25307f', width: 30, height: 26 };
     const shapeCircleStyles = { borderRadius: '50%' };
@@ -208,11 +215,11 @@ function Appointments(props) {
                         </Grid>
                     </div>
 
-                    <div className={ayu.headerContainer} style={{position: "absolute",left:"315px"}}>
-                        <button className={ayu.backButton}>
+                    <div className={avi.headerContainer} style={{position: "absolute",left:"315px"}}>
+                        <button className={avi.icon} onClick={handleBack}>
                             <ArrowBackIosIcon/>
                         </button>
-                        <h2 className={ayu.departmentTitle}>Department</h2>
+                        <h2 className={avi.departmentTitle}>Appointments</h2>
                     </div>
 
                     <Dashboard/>

@@ -27,7 +27,7 @@ const roleOptions = {
 // const sideOptions = [
 //     {title:"Overview",path:"/receptionist"},
 //     {title:"Patients",path:"patients"},
-//     {title:"Departments",path:"/departments"},
+//     {title:"Departments1",path:"/departments"},
 //     {title:"Settings",path:"/settings"}
 // ]
 
