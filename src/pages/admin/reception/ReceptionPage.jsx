@@ -39,7 +39,11 @@ const ReceptionPage = () => {
         navigate('/admin/reception/appointments')
     }
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{
+            minWidth: '1160px', // Set a fixed minimum width for the entire grid
+            // flexWrap: 'nowrap', // Prevent wrapping of child grids
+            // overflowX: 'auto', // Allow horizontal scrolling if content overflows
+        }}>
             <Grid size={8.5}>
                 <Grid container direction="column" spacing={2}>
                     {/* First vertically stacked item */}
@@ -53,7 +57,7 @@ const ReceptionPage = () => {
 
                         <div>
                             <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650,
+                                <Table sx={{ minWidth: 780,
                                     borderCollapse: "separate", // Ensure border-spacing works
                                     borderSpacing: "0 4px", // Adds vertical spacing between rows
                                 }} aria-label="simple table">
@@ -169,7 +173,7 @@ const ReceptionPage = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid size={3.5} className={styles.container1} sx={{ maxHeight: 'calc(110vh - 150px)', overflowY: 'auto' }}>
+            <Grid size={3.5} className={styles.container1} sx={{ maxHeight: 'calc(110vh - 150px)', overflowY: 'auto',position:'relative' }}>
                 <div>
                     <div className={styles.heading1}>
                         <h3>Appointment Requests (8)</h3>

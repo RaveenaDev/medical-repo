@@ -6,6 +6,7 @@ $blue : #25307f;
   padding: 0;
 }
 .boxContainer{
+  position: relative;
   background-color: white;
   padding: 10px 40px;
   .heading{
@@ -17,8 +18,8 @@ $blue : #25307f;
     position: absolute;
     margin-top: 0.4rem;
     margin-left: 3.5rem;
-    right: 100px;
-    top: 95px;
+    top: 5vh; /* Use viewport height for vertical positioning */
+    right: 2vw; /* Use viewport width for horizontal positioning */
 
     .message{
       color: #25307f;

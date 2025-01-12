@@ -65,7 +65,7 @@ const Sidebar = ({role}) => {
         setIsLogout((prev) => (!prev))
     }
     return (
-        <div className={styles.sidebar}>
+        <div className={styles.sidebar} style={{width:'270px',minWidth:'270px'}}>
             <>
                 {
                     sideOptions.map((option, index) => (

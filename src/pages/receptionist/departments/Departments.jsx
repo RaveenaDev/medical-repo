@@ -44,7 +44,7 @@ const Departments = (props) => {
     }
     return (
         <>
-            <div>
+            <div style={{minWidth:'1160px'}}>
                 <div className={styles.receptionist}>
                     <Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
                         <Grid size={3}>

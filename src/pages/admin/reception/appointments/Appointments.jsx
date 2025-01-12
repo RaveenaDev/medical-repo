@@ -215,12 +215,12 @@ function Appointments(props) {
                         </Grid>
                     </div>
 
-                    <div className={avi.headerContainer} style={{position: "absolute",left:"315px"}}>
+                    <Box className={avi.headerContainer} style={{position:"relative",top:"52px",left:"12px"}}>
                         <button className={avi.icon} onClick={handleBack}>
                             <ArrowBackIosIcon/>
                         </button>
                         <h2 className={avi.departmentTitle}>Appointments</h2>
-                    </div>
+                    </Box>
 
                     <Dashboard/>
                 </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
