@@ -23,7 +23,7 @@ import { Link} from "react-router-dom";
 const Billing = () => {
 
   const handleClose = () => {
-    // Logic to close the billing container, you can modify this based on your app's state
+    
     console.log('Billing container closed');
   };
 

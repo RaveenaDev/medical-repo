@@ -5,7 +5,6 @@ import PasswordReset from "./pages/passwordReset";
 import RecoveryLink from "./pages/recoveryLink";
 import UpdatePassword from "./pages/updatePassword";
 import Logo from "./components/Logo";
-import Sidebar from "./components/Sidebar/Sidebar";
 import { BrowserRouter as Router, Route, Routes, Link, BrowserRouter } from "react-router-dom";
 import styles2 from "./App2.module.scss";
 import PatientPanel from "./pages/admin/PatientPanel";
@@ -23,7 +22,7 @@ function App() {
       <div className={styles2.main}>
           <div className={styles2.left}>
             <Logo />
-            <Sidebar role="admin" />
+            
           </div>
 
           <div className={styles2.right}>
