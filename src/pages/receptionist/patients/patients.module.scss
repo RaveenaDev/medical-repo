@@ -1,0 +1,32 @@
+.patients {
+
+
+    .patientHeader {
+      display: flex; // Enables flexbox layout
+      justify-content: flex-end; // Aligns items to the right
+      align-items: center; // Vertically centers items
+      padding: 2px; // Optional: Add padding for spacing
+      gap: 10px; // Optional: Add space between Searchbar and NotificationIcon
+    }
+
+    .cardhandling{
+      padding-top: 10px;
+
+      .heading{
+        color: #000000;
+        font-size: 23px;
+        font-weight: 700;
+        padding: 4px 0px;
+      }
+    }
+
+    .section{
+
+      .title{
+        color: #000000;
+        font-size: 24px;
+        font-weight: 600;
+      }
+    }
+  }
+  

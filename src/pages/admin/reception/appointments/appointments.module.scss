@@ -1,0 +1,27 @@
+$blue : #25307f;
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.headerContainer{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  //margin-bottom: 5px;
+  margin-top: 14px;
+  .icon{
+    //padding: 0;
+    padding: 4px 0 0 8px;
+    margin-top: 2px;
+    background-color: white;
+    color: #25307f;
+  }
+
+  .departmentTitle {
+    margin: 0;  // Remove default margin of h2
+    color: $blue;
+    font-weight: 500;
+  }
+}

@@ -1,0 +1,17 @@
+.receptionist {
+    // border: 1px solid black;
+    &__selectWrap {
+        margin-bottom: 10px;
+    }
+}
+.appointmentBlock {
+    &__accountIcon {
+        margin-right: 10px;
+    }
+    &__paymentIcon {
+        margin-right: 10px;
+    }
+    &__plusIcon {
+        margin-right: 10px;
+    }
+}

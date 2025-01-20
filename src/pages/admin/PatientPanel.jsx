@@ -109,7 +109,7 @@ const PatientPanel = () => {
         {showFilter && <FilterBox setShowFilter={setShowFilter} />}
 
 
-      {/* Table Section */}
+      
       <TableContainer component={Paper} sx={{ borderRadius: "8px", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)" }}>
         <Table>
           <TableHead sx={{ backgroundColor: "#F3F4F6" }}>
@@ -141,7 +141,7 @@ const PatientPanel = () => {
               >
                 <TableCell>XXXXXXXX</TableCell>
                 <TableCell>
-                  <Link to={"/PatientDetails"}>
+                  <Link to={"/admin/reception/patients/PatientDetails"}>
                   <Typography
                     variant="body2"
                     sx={{ fontWeight: "bold", color: "#111827" }}

@@ -1,0 +1,38 @@
+.settings {
+    display: flex; 
+    height: 100vh; 
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+}
+  
+    .side_panel {
+      background-color: #EEF8F1;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      color: #747474;
+      padding-left: 2rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+  
+    .component_panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+
+        display: flex;
+        justify-content: start;
+        width: 80%;
+        height: 120vh; 
+        padding: 20px;
+        background-color: #f4f4f4;
+        // overflow-y: auto; 
+
+        &::-webkit-scrollbar {
+            display: none;
+          }
+    }

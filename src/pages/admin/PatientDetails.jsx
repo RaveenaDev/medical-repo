@@ -212,7 +212,7 @@ const PatientDetails = () => {
         </Grid>
 
         <Grid item>
-          <Link to={"/History"}>
+          <Link to={"/admin/reception/patients/History"}>
           <Box textAlign="center">
           <Button
               variant="contained"

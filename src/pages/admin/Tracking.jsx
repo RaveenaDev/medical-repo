@@ -22,7 +22,7 @@ const Tracking = () => {
 
             <Container  sx={{ padding: 2 }}>
                 {/* Back Arrow */}
-               <Link to={"/PatientDetails"}>
+               <Link to={"/admin/reception/patients/PatientDetails"}>
                <IconButton sx={{ marginBottom: 2 }}>
                     <ArrowBackIcon />
                 </IconButton>

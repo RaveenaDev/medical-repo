@@ -1,0 +1,17 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .sideElement {
+  color: black;
+  padding: 22px;
+  cursor: pointer;
+}
+.sidebar .sideElement:hover {
+  background-color: lightgray;
+}
+.sidebar .active {
+  background-color: #25307F;
+  color: white;
+}/*# sourceMappingURL=sidebar.module.css.map */
