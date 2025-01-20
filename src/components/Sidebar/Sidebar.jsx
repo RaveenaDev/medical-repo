@@ -59,7 +59,18 @@ const Sidebar = ({role}) => {
     }
 
     const handleSubClick = (path) => {
-        navigate(`/receptionist/settings/${path}`)
+        if(role === 'admin'){
+            navigate(`/admin/settings/${path}`)
+        }
+
+        else if(role === 'receptionist'){
+            navigate(`/receptionist/settings/${path}`)
+        }
+
+        else{
+            navigate(`/doctor/settings/${path}`)
+        }
+
     }
     const handlelogout = () => {
         setIsLogout((prev) => (!prev))
