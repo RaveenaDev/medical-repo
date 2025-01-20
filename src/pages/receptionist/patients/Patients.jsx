@@ -6,6 +6,7 @@ import NotificationIcon from '../../../components/Notification';
 import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
+import PatientList from './PatientList.jsx';
 
 
 
@@ -91,9 +92,13 @@ const Patients = (props) => {
           <p className={styles.title}>
             Patient List
           </p>
-          <button onClick={() => navigate('/receptionist/patients/profile')} style={{backgroundColor: "white"}}>
+
+          <PatientList />
+
+
+          {/* <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>
             Click here to view the profile
-          </button>
+          </button> */}
         </div>
       ) : (
         <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />

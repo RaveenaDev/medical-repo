@@ -21,7 +21,7 @@ import Departments1 from "./pages/admin/departments/Departments1.jsx";
 import DepartDetails1 from "./pages/admin/departments/DepartDetails/DepartDetails1.jsx";
 import PrivacyPolicy from "./pages/receptionist/Settings/PrivacyPolicy.jsx";
 import Help from "./pages/receptionist/Settings/Help.jsx";
-
+import ProgressReport from './pages/receptionist/patients/profile/ProgressReport.jsx';
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
   const [entity, setEntity] = useState("");
@@ -71,6 +71,7 @@ function App() {
               <Route path="/receptionist/patients" element={<Patients setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity} />} />
               <Route path="/receptionist/patients/profile" element={<Profile setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
               <Route path="/receptionist/patients/profile/more-info" element={<MoreInfo setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
+              <Route path="/progressreport" element={<ProgressReport />} />
               <Route path="/receptionist/departments" element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/departments/departmentDetails" element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/settings" element={<Settings setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>

@@ -9,6 +9,7 @@ import styles from "./profile.module.scss";
 import Button from "@mui/material/Button";
 import PersonalInfo from "./PersonalInfo.jsx";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
+import FileDocuments from "./FileDocuments";
 
 const MoreInfo = (props) => {
     const [medicalHistory, setMedicalHistory] = useState([]);
@@ -61,53 +62,53 @@ const MoreInfo = (props) => {
     }, []);
 
     return (
-    <>
-        <div className={rav.receptionist}>
-            {!props.entity ?
-                <>
-                    <Grid
-                        container
-                        spacing={2}
-                        style={{
-                            height: '100vh', // Full viewport height
-                            padding: '20px'
-                        }}
-                    >
-                        <Grid item xs={6}>
-                            <Paper
-                                elevation={3}
-                                style={{
-                                    height: '100%', // Full height of the grid item
-                                    padding: '20px',
-                                    textAlign: 'left'
-                                }}
-                            >
-                                <MedicalInfo
-                                    medicalHistory={medicalHistory}
-                                    currentMedications={currentMedications}
-                                    symptoms={symptoms}
-                                    history={socialHistory}
-                                    showButton={false} // Hide the button
-                                />
+        <>
+            <div className={rav.receptionist}>
+                {!props.entity ?
+                    <>
+                        <Grid
+                            container
+                            spacing={2}
+                            style={{
+                                height: '100vh', // Full viewport height
+                                padding: '20px'
+                            }}
+                        >
+                            <Grid item xs={6}>
+                                <Paper
+                                    elevation={3}
+                                    style={{
+                                        height: '100%', // Full height of the grid item
+                                        padding: '20px',
+                                        textAlign: 'left'
+                                    }}
+                                >
+                                    <MedicalInfo
+                                        medicalHistory={medicalHistory}
+                                        currentMedications={currentMedications}
+                                        symptoms={symptoms}
+                                        history={socialHistory}
+                                        showButton={false} // Hide the button
+                                    />
 
-                            </Paper>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Paper
+                                    elevation={3}
+                                    style={{
+                                        height: '100%', // Full height of the grid item
+                                        padding: '20px',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    <FileDocuments />
+                                </Paper>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                            <Paper
-                                elevation={3}
-                                style={{
-                                    height: '100%', // Full height of the grid item
-                                    padding: '20px',
-                                    textAlign: 'center'
-                                }}
-                            >
-                                Box 2
-                            </Paper>
-                        </Grid>
-                    </Grid>
-                </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
-        </div>
-    </>
+                    </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />}
+            </div>
+        </>
     );
 };
 

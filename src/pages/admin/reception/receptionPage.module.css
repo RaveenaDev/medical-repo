@@ -1,0 +1,61 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.container1 {
+  padding: 5px 12px;
+  background-color: white;
+}
+.container1 .heading1 {
+  display: flex;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+.container1 .heading1 h3 {
+  color: #25307f;
+  font-weight: 600;
+  font-size: 1.2em;
+}
+.container1 .heading1 span {
+  color: #25307f;
+  margin-top: 4px;
+  margin-left: 2px;
+}
+.container1 .heading2 {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 2px;
+}
+.container1 .heading2 h3 {
+  color: #F14400;
+  font-weight: 600;
+  font-size: 1.2em;
+}
+.container1 .heading2 span {
+  color: #25307f;
+  margin-top: 4px;
+  margin-left: 2px;
+}
+.container1 .items {
+  display: flex;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.container1 .items .circle {
+  background-color: #D9D9D9;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  margin-top: 0.4rem;
+  margin-right: 0.6rem;
+}
+.container1 .items h4 {
+  color: black;
+  font-weight: 500;
+}
+.container1 .items p {
+  color: #747474;
+  font-size: 13px;
+}/*# sourceMappingURL=receptionPage.module.css.map */
