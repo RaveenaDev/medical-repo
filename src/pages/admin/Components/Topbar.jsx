@@ -39,7 +39,7 @@ const Topbar = () => {
           Print
         </Button>
         
-        <Link to={"/Billing"}>
+        <Link to={"/admin/reception/patients/Billing"}>
 
         <Button
           variant="contained"
