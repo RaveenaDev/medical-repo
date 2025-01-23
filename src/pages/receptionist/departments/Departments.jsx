@@ -7,6 +7,14 @@ import {Button} from "@mui/material";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import DepartCard from "./DepartCard.jsx";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import {useDispatch, useSelector} from "react-redux";
+import {
+    getAllDepartments,
+    getDoctors,
+    getPatients,
+    getRooms,
+    getStaffs
+} from "../../../components/State/Receptionist/Action.js";
 
 const Departments = (props) => {
     const [tableIndex, setTableIndex] = useState(null);
@@ -42,6 +50,27 @@ const Departments = (props) => {
     const handleBookAppointment = () => {
         console.log("handleBookAppointment");
     }
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPatients());
+        dispatch(getDoctors());
+        dispatch(getStaffs());
+        dispatch(getRooms());
+        dispatch(getAllDepartments());
+    }, [dispatch]);
+
+    const receptionist = useSelector(store => store.receptionist)
+
+    const noOfPatients = receptionist.totalPatients;
+    const patients = receptionist.patients;
+
+    const noOfDoctors = receptionist.totalDoctors;
+    const doctors = receptionist.doctors;
+
+    const allDepartments = receptionist.departments;
+
     return (
         <>
             <div style={{minWidth:'1160px'}}>
@@ -50,7 +79,7 @@ const Departments = (props) => {
                         <Grid size={3}>
                             <Card
                                 title="Total Patient"
-                                subtitle="200+"
+                                subtitle={noOfPatients}
                                 handleClickCb={(e) => cardClickhandler(e, "patient")}
                             />
                         </Grid>
@@ -60,7 +89,7 @@ const Departments = (props) => {
                                     backgroundColor: "#EAA000"
                                 }}
                                 title="Total Doctors"
-                                subtitle="8"
+                                subtitle={noOfDoctors}
                                 handleClickCb={(e) => cardClickhandler(e, "doctor")}
                             />
                         </Grid>
@@ -107,12 +136,17 @@ const Departments = (props) => {
                         {/* Cards */}
 
                         <div className={ayu.superCardContainer}>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
+                            {
+                                allDepartments.map((department,index) => (
+                                    <DepartCard key={index} department={department}/>
+                                ))
+                            }
+
+                            {/*<DepartCard/>*/}
+                            {/*<DepartCard/>*/}
+                            {/*<DepartCard/>*/}
+                            {/*<DepartCard/>*/}
+                            {/*<DepartCard/>*/}
                         </div>
 
                     </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}

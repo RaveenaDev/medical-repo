@@ -18,7 +18,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 
-const PatientList = () => {
+const PatientList = ({allPatients}) => {
     const [sortOrder, setSortOrder] = useState("Newest to Oldest");
     const [selectedRow, setSelectedRow] = useState(null);
     const [patients, setPatients] = useState([
@@ -118,7 +118,7 @@ const PatientList = () => {
                             variant="h4"
                             sx={{ fontWeight: "bold", display: "inline", mr: 1 }}
                         >
-                            56
+                            {allPatients?.noOfPatients}
                         </Typography>
                         <Typography variant="body1" sx={{ display: "inline" }}>
                             Patients

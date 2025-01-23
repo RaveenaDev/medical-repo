@@ -28,6 +28,7 @@ import PatientDetails from "./pages/admin/PatientDetails";
 import Billing from "./pages/admin/Billing";
 import History from "./pages/admin/History";
 import Tracking from "./pages/admin/Tracking";
+
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
   const [entity, setEntity] = useState("");
@@ -79,7 +80,7 @@ function App() {
               <Route path="/receptionist/patients/profile/more-info" element={<MoreInfo setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
               <Route path="/progressreport" element={<ProgressReport />} />
               <Route path="/receptionist/departments" element={<Departments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
-              <Route path="/receptionist/departments/departmentDetails" element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/receptionist/departments/:departmentId" element={<DepartDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/settings" element={<Settings setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/settings/privacyPolicy" element={<PrivacyPolicy setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/settings/helpAndSupport" element={<Help setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>

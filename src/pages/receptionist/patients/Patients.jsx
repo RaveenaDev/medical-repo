@@ -7,6 +7,8 @@ import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import PatientList from './PatientList.jsx';
+import {useDispatch, useSelector} from "react-redux";
+import {getDoctors, getPatients, getRooms, getStaffs} from "../../../components/State/Receptionist/Action.js";
 
 
 
@@ -35,6 +37,23 @@ const Patients = (props) => {
     props?.setEntity(entity);
   };
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPatients());
+    dispatch(getDoctors());
+    dispatch(getStaffs());
+    dispatch(getRooms());
+  }, [dispatch]);
+
+  const receptionist = useSelector(store => store.receptionist)
+
+  const noOfPatients = receptionist.totalPatients;
+  const patients = receptionist.patients;
+
+  const noOfDoctors = receptionist.totalDoctors;
+  const doctors = receptionist.doctors;
+
   return (
     <div className={styles.patients}>
       <div className={styles.patientHeader}>
@@ -50,7 +69,7 @@ const Patients = (props) => {
           <Grid size={3}>
             <Card
               title="Total Patient"
-              subtitle="200+"
+              subtitle={noOfPatients}
               handleClickCb={(e) => cardClickhandler(e, "patient")}
             />
           </Grid>
@@ -60,7 +79,7 @@ const Patients = (props) => {
                 backgroundColor: "#EAA000"
               }}
               title="Total Doctors"
-              subtitle="8"
+              subtitle={noOfDoctors}
               handleClickCb={(e) => cardClickhandler(e, "doctor")}
             />
           </Grid>
@@ -93,7 +112,7 @@ const Patients = (props) => {
             Patient List
           </p>
 
-          <PatientList />
+          <PatientList allPatients={{noOfPatients,patients}}/>
 
 
           {/* <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>

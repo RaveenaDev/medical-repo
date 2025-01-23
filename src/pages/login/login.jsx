@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from '../../styles/pages/login.module.scss';
 import TextFieldHiddenLabel from '../../components/TextInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -10,22 +10,49 @@ import Grid from '@mui/material/Grid2';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
+import TextField from "@mui/material/TextField";
+import {useDispatch, useSelector} from "react-redux";
+import {login} from "../../components/State/Authentication/Action.js";
 
 const Login = (props) => {
+
+    const [userDetails, setUserDetails] = useState({
+        email: '',
+        password: '',
+        role: 'HospitalAdmin'
+    });
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {event.preventDefault();};
     const handleMouseUpPassword = (event) => {event.preventDefault();};
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const handleChange = (e) => {
+        const {name , value} = e.target;
+
+        setUserDetails({
+            ...userDetails,
+            [name] : value
+        });
+    };
+
     const handleLoginClick = () => {
-        //validation for user login & write an api call for user login 
-        navigate('/receptionist'); //add path of receptionist dashboard overview page
+        //validation for user login & write an api call for user login
+        console.log("Submitted Login ",userDetails)
+        dispatch(login(userDetails))
+        // navigate('/receptionist'); //add path of receptionist dashboard overview page
     };
     const handleForgetPassword = () => {navigate('/password-reset')};
 
     useEffect(() => {
       props?.setIsSignUpOrLogin(true);
     }, []);
+
+    const auth = useSelector(store => store.authentication.user)
+
+    if(auth){
+        navigate('/receptionist');
+    }
 
     return (
         <div className={styles.login}>
@@ -36,9 +63,16 @@ const Login = (props) => {
                 noValidate
                 autoComplete="off"
             >
-                <TextFieldHiddenLabel name="User Id" id="user_id" placeholder="Enter ID" />
+                <TextField id="user_id" placeholder="Enter ID"
+                    name='email'
+                    value={userDetails.email}
+                    onChange={handleChange}
+                />
                 {/* <TextFieldHiddenLabel name="Password" id="password" type="password" placeholder="Enter Password" /> */}
                 <OutlinedInput placeholder="Enter Password" id="outlined-adornment-password" type={showPassword ? 'text' : 'password'}
+                               name='password'
+                               value={userDetails.password}
+                               onChange={handleChange}
                     endAdornment={
                         <InputAdornment position="end">
                             <IconButton

@@ -5,6 +5,8 @@ import styles from './styles.module.scss';
 import Grid from '@mui/material/Grid2';
 import EntityBasedTable from './EntityBasedTable';
 import { Button } from '@mui/material';
+import {useDispatch, useSelector} from "react-redux";
+import {getDoctors, getPatients, getRooms, getStaffs} from "../../components/State/Receptionist/Action.js";
 
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
@@ -40,6 +42,26 @@ function Receptionist(props) {
   const handleBookAppointment = () => {
     console.log("handleBookAppointment");
   }
+
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPatients());
+        dispatch(getDoctors());
+        dispatch(getStaffs());
+        dispatch(getRooms());
+    }, [dispatch]);
+
+    const receptionist = useSelector(store => store.receptionist)
+
+    const noOfPatients = receptionist.totalPatients;
+    const patients = receptionist.patients;
+
+    const noOfDoctors = receptionist.totalDoctors;
+    const doctors = receptionist.doctors;
+
+    // console.log(noOfPatients)
+
   return (
     <>
 			<div className={styles.receptionist}>
@@ -47,7 +69,7 @@ function Receptionist(props) {
 					<Grid size={3}>
             <Card 
               title="Total Patient"
-              subtitle="200+"
+              subtitle={noOfPatients}
               handleClickCb={(e) => cardClickhandler(e, "patient")}
             />
           </Grid>
@@ -57,7 +79,7 @@ function Receptionist(props) {
                 backgroundColor: "#EAA000"
               }}
               title="Total Doctors"
-              subtitle="8"
+              subtitle={noOfDoctors}
               handleClickCb={(e) => cardClickhandler(e, "doctor")}
             />
           </Grid>
