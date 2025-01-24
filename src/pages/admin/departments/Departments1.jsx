@@ -8,6 +8,14 @@ import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import DepartCard from "./DepartCard.jsx";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    getAllDepartments,
+    getDoctors,
+    getEarnings,
+    getRooms,
+    getStaffs
+} from "../../../components/State/Admin/Action.js";
 
 const Departments1 = (props) => {
     const [tableIndex, setTableIndex] = useState(null);
@@ -41,6 +49,23 @@ const Departments1 = (props) => {
         navigate('/admin')
     }
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        // dispatch(getEarnings());
+        dispatch(getDoctors());
+        dispatch(getStaffs());
+        dispatch(getRooms());
+        dispatch(getAllDepartments());
+    }, [dispatch]);
+
+    const admin = useSelector(store => store.admin)
+
+    const noOfDoctors = admin.totalDoctors;
+    const doctors = admin.doctors;
+
+    const allDepartments = admin.departments;
+
     return (
         <>
             <div style={{minWidth:'1160px'}}>
@@ -59,7 +84,7 @@ const Departments1 = (props) => {
                                     backgroundColor: "#EAA000"
                                 }}
                                 title="Total Doctors"
-                                subtitle="8"
+                                subtitle={noOfDoctors}
                                 handleClickCb={(e) => cardClickhandler(e, "doctor")}
                             />
                         </Grid>
@@ -106,12 +131,11 @@ const Departments1 = (props) => {
                         {/* Cards */}
 
                         <div className={ayu.superCardContainer}>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
+                            {
+                                allDepartments.map((department,index) => (
+                                    <DepartCard key={index} department={department}/>
+                                ))
+                            }
                         </div>
 
                     </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}

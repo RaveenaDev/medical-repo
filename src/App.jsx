@@ -88,7 +88,7 @@ function App() {
               <Route path="/admin/reception" element={<Reception setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/admin/reception/appointments" element={<Appointments setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/admin/departments" element={<Departments1 setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
-              <Route path="/admin/departments/departmentDetails" element={<DepartDetails1 setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+              <Route path="/admin/departments/:departmentId" element={<DepartDetails1 setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/admin/reception/patients" element={<PatientPanel setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}></Route>
             <Route path="/admin/reception/patients/PatientDetails" element={<PatientDetails setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}></Route>
             <Route path="/admin/reception/patients/Billing" element={ <Billing setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/> }></Route>

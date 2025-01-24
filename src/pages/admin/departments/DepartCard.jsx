@@ -7,12 +7,12 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import avi from "./DepartDetails/departDetails.module.scss";
 import {useNavigate} from "react-router-dom";
 
-const DepartCard = () => {
+const DepartCard = ({department}) => {
 
     const navigate = useNavigate()
-    const handleClick = () => {
+    const handleClick = (departmentId) => {
         // Redirect to the specific page
-        navigate('/admin/departments/departmentDetails');
+        navigate(`/admin/departments/${departmentId}`);
     }
 
     const handleClickMessage = (e) => {
@@ -26,10 +26,10 @@ const DepartCard = () => {
     }
 
     return (
-        <Box className={styles.cardContainer} onClick={handleClick}>
+        <Box className={styles.cardContainer} onClick={() => handleClick(department.departmentId)}>
             <div className={styles.cardHeader}>
                 <div className={styles.circle}></div>
-                <h2 className={styles.title}>Cardiology</h2>
+                <h2 className={styles.title}>{department.departmentName}</h2>
                 <span className={styles.arrow}>
                     <ArrowForwardIosIcon fontSize="small" />
                 </span>
@@ -60,27 +60,27 @@ const DepartCard = () => {
             <div className={styles.detailsContainer}>
                 <div className={styles.details}>
                     <p className={styles.name}>Department Head:</p>
-                    <p className={styles.value}>Dr. S. Balkrishna</p>
+                    <p className={styles.value}>{department.departmentHead}</p>
                 </div>
                 <div className={styles.details}>
                     <p className={styles.name}>Patients Present:</p>
-                    <p className={styles.value}>10</p>
+                    <p className={styles.value}>{department.totalPatients}</p>
                 </div>
                 <div className={styles.details}>
                     <p className={styles.name}>Total Doctors:</p>
-                    <p className={styles.value}>10</p>
+                    <p className={styles.value}>{department.Docs}</p>
                 </div>
                 <div className={styles.details}>
                     <p className={styles.name}>Specialist Doctors:</p>
-                    <p className={styles.value}>01</p>
+                    <p className={styles.value}>{department.specialistDocs}</p>
                 </div>
                 <div className={styles.details}>
                     <p className={styles.name}>Total Nurses:</p>
-                    <p className={styles.value}>18</p>
+                    <p className={styles.value}>{department.totalNurses}</p>
                 </div>
                 <div className={styles.details}>
                     <p className={styles.name}>Active Services:</p>
-                    <p className={styles.value}>ECG, Cardio, etc</p>
+                    <p className={styles.value}>{department.activeServices}</p>
                 </div>
             </div>
         </Box>

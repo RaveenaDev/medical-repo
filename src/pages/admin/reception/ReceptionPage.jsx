@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Grid from "@mui/material/Grid2";
 import {
     Paper,
@@ -13,18 +13,25 @@ import styles from './receptionPage.module.scss'
 import ayu from "../departments/departments.module.scss";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    getAppointmentRequests,
+    getAppointments,
+    getPatients,
+    getRejectedAppointments
+} from "../../../components/State/Admin/Action.js";
 
 function createData(name, appointmentWith, typeVisit, branch, tokenNumber) {
     return { name, appointmentWith, typeVisit, branch, tokenNumber };
 }
 
-const rows = [
-    createData('Jasmin Kaur', 'Miss Gitanjali', 'Walk-in', 'Therapy', 2),
-    createData('Amit Tripath', 'Miss Ananya Pandey', 'Referral', 'Therapy', 1),
-    createData('Arvind Sharma', '+91 7245674634', 'Walk-in', 'Therapy', 2),
-    createData('Kumari Sneha', '+91 7245674634', 'Online', 'Cardiology', 3),
-    createData('Neeraj Tomar', '+91 7245674634', 'Online', 'Cardiology', 2),
-];
+// const rows = [
+//     createData('Jasmin Kaur', 'Miss Gitanjali', 'Walk-in', 'Therapy', 2),
+//     createData('Amit Tripath', 'Miss Ananya Pandey', 'Referral', 'Therapy', 1),
+//     createData('Arvind Sharma', '+91 7245674634', 'Walk-in', 'Therapy', 2),
+//     createData('Kumari Sneha', '+91 7245674634', 'Online', 'Cardiology', 3),
+//     createData('Neeraj Tomar', '+91 7245674634', 'Online', 'Cardiology', 2),
+// ];
 
 const appointmentRequests = [1,1,1,1,1,1,1,1]
 
@@ -42,6 +49,25 @@ const ReceptionPage = () => {
     const handlePatients = () => {
         navigate('/admin/reception/patients')
     }
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getAppointments());
+        dispatch(getAppointmentRequests());
+        dispatch(getRejectedAppointments());
+        dispatch(getPatients());
+    }, [dispatch]);
+
+    const admin = useSelector((store) => store.admin)
+
+    const totalAppointments = admin.totalAppointments
+    const totalPatients = admin.patients
+    const totalAppointmentRequests = admin.appointmentRequests
+    const totalRejectedAppointments = admin.rejectedAppointments
+
+    // console.log("Total Appointments : ",totalAppointments)
+    // console.log("Total Patients : ",totalPatients)
 
     return (
         <Grid container spacing={2} sx={{
@@ -78,7 +104,7 @@ const ReceptionPage = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {rows.map((row) => (
+                                        {totalAppointments.length > 0 ?totalAppointments.map((row) => (
                                             <TableRow
                                                 key={row.name}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } , backgroundColor: '#EEF8F1'
@@ -88,12 +114,12 @@ const ReceptionPage = () => {
                                                     XXXXXXXX
                                                 </TableCell>
                                                 <TableCell component="th" scope="row" sx={{color: '#25307f',border:'none'}}>
-                                                    {truncateText(row.name,13)}
+                                                    {truncateText(row.patient.name,13)}
                                                 </TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>{truncateText(row.appointmentWith,14)}</TableCell>
+                                                <TableCell align="center" sx={{border:'none'}}>{truncateText(row.doctor.name,14)}</TableCell>
                                                 <TableCell align="center" sx={{border:'none'}}>{row.typeVisit}</TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>{row.branch}</TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>{row.tokenNumber}</TableCell>
+                                                <TableCell align="center" sx={{border:'none'}}>{row.type}</TableCell>
+                                                <TableCell align="center" sx={{border:'none'}}>{row.tokenDate}</TableCell>
                                                 <TableCell align="center" sx={{border:'none'}}>
                                                     <span
                                                         style={{
@@ -109,7 +135,9 @@ const ReceptionPage = () => {
                                                      </span>
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                        )) :
+                                            <p>No appointments found.</p>
+                                        }
                                     </TableBody>
                                 </Table>
                             </TableContainer>
@@ -140,7 +168,7 @@ const ReceptionPage = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {rows.map((row) => (
+                                        {totalPatients.length > 0 ? totalPatients.map((row) => (
                                             <TableRow
                                                 key={row.name}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } , backgroundColor: '#EEF8F1'
@@ -150,10 +178,10 @@ const ReceptionPage = () => {
                                                     {truncateText(row.name,13)}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row" sx={{border:'none',padding: '14px 14px'}}>
-                                                    {truncateText(row.name,13)}
+                                                    {truncateText(row.doctors[0],13)}
                                                 </TableCell>
-                                                <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{truncateText(row.appointmentWith,14)}</TableCell>
-                                                <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{row.typeVisit}</TableCell>
+                                                <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{truncateText(row.role,14)}</TableCell>
+                                                <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{row.gender}</TableCell>
                                                 <TableCell align="center" sx={{border:'none',padding: '14px 14px'}}>
                                                     <span
                                                         style={{
@@ -170,7 +198,9 @@ const ReceptionPage = () => {
                                                      </span>
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                        )) :
+                                            <p>No patients found.</p>
+                                        }
                                     </TableBody>
                                 </Table>
                             </TableContainer>
@@ -181,16 +211,17 @@ const ReceptionPage = () => {
             <Grid size={3.5} className={styles.container1} sx={{ maxHeight: 'calc(110vh - 150px)', overflowY: 'auto',position:'relative' }}>
                 <div>
                     <div className={styles.heading1}>
-                        <h3>Appointment Requests (8)</h3>
+                        <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>
                     </div>
 
                     {
-                        appointmentRequests.map((req, index) => (
+                        totalAppointmentRequests.map((req, index) => (
                             <div key={index} className={styles.items}>
                                 <div className={styles.circle}></div>
                                 <div>
-                                    <h4>Mohan Sharma</h4>
-                                    <p>Appointment for ENT, 28 September</p>
+                                    <h4>{req.patient.name}</h4>
+                                    <p>{req.note}</p>
+                                    {/*<p>Appointment for ENT, 28 September</p>*/}
                                 </div>
                             </div>
                         ))
@@ -199,16 +230,17 @@ const ReceptionPage = () => {
 
                 <div>
                     <div className={styles.heading2}>
-                        <h3>Canceled (4)</h3>
+                        <h3>Canceled ({totalRejectedAppointments.length})</h3>
                     </div>
 
                     {
-                        appointmentRequests.map((req, index) => (
+                        totalRejectedAppointments.map((req, index) => (
                             <div key={index} className={styles.items}>
                                 <div className={styles.circle}></div>
                                 <div>
-                                    <h4>Mohan Sharma</h4>
-                                    <p>Appointment for ENT, 28 September</p>
+                                    <h4>{req.patient.name}</h4>
+                                    <p>{req.dateRejected}</p>
+                                    {/*<p>Appointment for ENT, 28 September</p>*/}
                                 </div>
                             </div>
                         ))

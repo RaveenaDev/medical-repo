@@ -15,7 +15,9 @@ import Stack from "@mui/material/Stack";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getDepartmentById} from "../../../../components/State/Admin/Action.js";
 
 const DepartDetails1 = (props) => {
 
@@ -35,6 +37,17 @@ const DepartDetails1 = (props) => {
     const handleClick = () => {
         navigate('/admin/departments')
     }
+
+    const {departmentId} = useParams();
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getDepartmentById(departmentId))
+    }, [dispatch,departmentId]);
+
+    const department = useSelector((store) => store.admin.department)
+
     return (
         <>
                 <div className={styles.receptionist}>
@@ -54,7 +67,7 @@ const DepartDetails1 = (props) => {
                             <span className={ayu.forwardButton}>
                                 <ArrowForwardIosIcon/>
                             </span>
-                            <h2 className={ayu.departmentTitleDetails}>Cardiology</h2>
+                            <h2 className={ayu.departmentTitleDetails}>{department?.departmentName}</h2>
                         </div>
 
                         {/*/!* Horizontal line *!/*/}
@@ -65,7 +78,7 @@ const DepartDetails1 = (props) => {
                                  <h3 className={avi.heading}>Specific Branch Name</h3>
                                  <div className={avi.pro}>
                                      <img className={avi.img} src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg" alt=""/>
-                                     <p className={avi.name}>Dr. [Name of the Deparment Head]</p>
+                                     <p className={avi.name}>{department?.departmentHead}</p>
                                  </div>
 
                                  <div className={avi.icons}>
@@ -97,7 +110,7 @@ const DepartDetails1 = (props) => {
                                                                  marginLeft: '1px',
                                                                  position: 'relative',
                                                                  top: '1px' // Adjust this value to shift it further down
-                                                             }}>03</span></InputLabel>
+                                                             }}>{department?.totalDoctors.length}</span></InputLabel>
                                                              <Select
                                                                  labelId="demo-simple-select-label"
                                                                  id="demo-simple-select"
@@ -111,9 +124,11 @@ const DepartDetails1 = (props) => {
                                                                      },
                                                                  }}
                                                              >
-                                                                 <MenuItem value={10}>Doctor1</MenuItem>
-                                                                 <MenuItem value={20}>Doctor2</MenuItem>
-                                                                 <MenuItem value={30}>Doctor3</MenuItem>
+                                                                 {
+                                                                     department?.totalDoctors.map((doctor) => (
+                                                                         <MenuItem value={doctor}>{doctor}</MenuItem>
+                                                                     ))
+                                                                 }
                                                              </Select>
                                                          </FormControl>
 
@@ -124,7 +139,7 @@ const DepartDetails1 = (props) => {
                                                                      marginLeft: '1px',
                                                                      position: 'relative',
                                                                      top: '1px'
-                                                                    }}>04</span></InputLabel>
+                                                                    }}>{department?.totalNurses.length}</span></InputLabel>
                                                              <Select
                                                                  labelId="demo-simple-select-label"
                                                                  id="demo-simple-select"
@@ -139,9 +154,11 @@ const DepartDetails1 = (props) => {
                                                                      },
                                                                  }}
                                                              >
-                                                                 <MenuItem value={10}>Doctor1</MenuItem>
-                                                                 <MenuItem value={20}>Doctor2</MenuItem>
-                                                                 <MenuItem value={30}>Doctor3</MenuItem>
+                                                                 {
+                                                                     department?.totalNurses.map((nurse) => (
+                                                                         <MenuItem value={nurse}>{nurse}</MenuItem>
+                                                                     ))
+                                                                 }
                                                              </Select>
                                                          </FormControl>
 
@@ -152,18 +169,20 @@ const DepartDetails1 = (props) => {
                                                                  paddingLeft: '10px',
                                                                  color: 'black'
                                                              }}>
-                                                                 <li style={{color: 'black', listStyle: 'none'}}>
-                                                                     <span style={{color: 'black'}}>• </span>
-                                                                     Dr. [Name] - Cardiothoracic Surgeon
-                                                                 </li>
-                                                                 <li style={{color: 'black', listStyle: 'none'}}>
-                                                                     <span style={{color: 'black'}}>• </span>
-                                                                     Dr. [Name] - Interventional Cardiologist
-                                                                 </li>
-                                                                 <li style={{color: 'black', listStyle: 'none'}}>
-                                                                     <span style={{color: 'black'}}>• </span>
-                                                                     Dr. [Name] - Electrophysiologist
-                                                                 </li>
+                                                                 {
+                                                                     department?.specialistDoctors.length > 0 ?
+                                                                         department.specialistDoctors.map((specialistDoctor) => (
+                                                                             <li style={{
+                                                                                 color: 'black',
+                                                                                 listStyle: 'none'
+                                                                             }}>
+                                                                                 <span style={{color: 'black'}}>• </span>
+                                                                                 Dr. [Name] - Cardiothoracic Surgeon
+                                                                             </li>
+                                                                         )) :
+
+                                                                         <p>No Specialist Found</p>
+                                                                 }
                                                              </ul>
                                                          </div>
                                                      </Stack>

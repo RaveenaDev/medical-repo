@@ -46,7 +46,7 @@ function Admin(props) {
 				<Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
 					<Grid size={3}>
             <Card 
-              title="Total Patient"
+              title="Total Earning"
               subtitle="200+"
               handleClickCb={(e) => cardClickhandler(e, "patient")}
             />
