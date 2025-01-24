@@ -4,6 +4,7 @@
 }
 
 .boxContainer {
+  position: relative;
   background-color: white;
   padding: 10px 40px;
 }
@@ -15,8 +16,8 @@
   position: absolute;
   margin-top: 0.4rem;
   margin-left: 3.5rem;
-  right: 100px;
-  top: 95px;
+  top: 5vh; /* Use viewport height for vertical positioning */
+  right: 2vw; /* Use viewport width for horizontal positioning */
 }
 .boxContainer .icons .message {
   color: #25307f;

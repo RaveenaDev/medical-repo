@@ -14,6 +14,9 @@ import { Typography } from "@mui/material";
 
 
 const Profile = (props) => {
+    
+
+    const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
     const [medicalHistory, setMedicalHistory] = useState([]);
     const [currentMedications, setCurrentMedications] = useState([]);
 
