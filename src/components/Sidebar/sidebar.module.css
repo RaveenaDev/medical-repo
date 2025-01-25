@@ -6,6 +6,7 @@
 .sidebar .sideElement {
   color: black;
   padding: 22px;
+  padding-left: 30px;
   cursor: pointer;
 }
 .sidebar .sideElement:hover {

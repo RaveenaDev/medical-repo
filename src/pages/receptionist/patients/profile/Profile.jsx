@@ -10,10 +10,14 @@ import rav from "../../styles.module.scss";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ProgressTracker from "./ProgressTracker";
 import { Typography } from "@mui/material";
+import {useLocation} from "react-router-dom";
 
 
 
 const Profile = (props) => {
+    
+
+    const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
     const [medicalHistory, setMedicalHistory] = useState([]);
     const [currentMedications, setCurrentMedications] = useState([]);
 

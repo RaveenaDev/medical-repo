@@ -11,6 +11,9 @@ import PersonalInfo from "./PersonalInfo.jsx";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import FileDocuments from "./FileDocuments";
 
+
+
+
 const MoreInfo = (props) => {
     const [medicalHistory, setMedicalHistory] = useState([]);
     const [currentMedications, setCurrentMedications] = useState([]);
