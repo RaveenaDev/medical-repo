@@ -35,6 +35,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import {useNavigate} from "react-router-dom";
 
 const PatientList = () => {
     const [sortOrder, setSortOrder] = useState("Newest to Oldest");
@@ -127,6 +128,11 @@ const PatientList = () => {
         );
         handleEditDialogClose();
     };
+
+    const navigate = useNavigate()
+    const handleClick = () => {
+        navigate(`/receptionist/patients/profile`)
+    }
 
     return (
         <Box sx={{ padding: 2 }}>
@@ -223,7 +229,7 @@ const PatientList = () => {
                             >
                                 <TableCell>{patient.id}</TableCell>
                                 <TableCell>
-                                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                                    <Typography variant="body1" sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={handleClick}>
                                         {patient.name}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">

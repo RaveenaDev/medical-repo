@@ -59,7 +59,7 @@ const ProgressTracker = () => {
               <TableRow
                 key={index}
                 style={{ backgroundColor: step.status === "Ongoing" ? "#e8f5e9" : "inherit" }}
-                onClick={() => navigate("/progressreport")}
+                onClick={() => navigate("/receptionist/patients/profile/progressReport")}
                 sx={{
                   cursor: "pointer",
                   transition: "background-color 0.3s",

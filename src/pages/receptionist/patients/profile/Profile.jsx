@@ -10,6 +10,7 @@ import rav from "../../styles.module.scss";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ProgressTracker from "./ProgressTracker";
 import { Typography } from "@mui/material";
+import {useLocation} from "react-router-dom";
 
 
 
