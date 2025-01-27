@@ -27,7 +27,11 @@ import PatientPanel from "./pages/admin/PatientPanel";
 import PatientDetails from "./pages/admin/PatientDetails";
 import Billing from "./pages/admin/Billing";
 import History from "./pages/admin/History";
-import Tracking from "./pages/admin/Tracking";
+import Tracking from "./pages/admin/Tracking";import Notification from './components/NotificationFunc/Notification';
+import Appointment from './components/Buttons/Appointment';
+import BookAppointmentButton from './components/Buttons/BookApp';
+import BillingButton from './components/Buttons/Billing';
+
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
   const [entity, setEntity] = useState("");
