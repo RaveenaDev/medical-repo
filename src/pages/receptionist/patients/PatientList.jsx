@@ -130,9 +130,13 @@ const PatientList = ({allPatients}) => {
     };
 
     const navigate = useNavigate()
-    const handleClick = () => {
-        navigate(`/receptionist/patients/profile`)
+    const handleClick = (patient) => {
+        navigate(`/receptionist/patients/profile`,{state: {patient}})
     }
+
+    // console.log("Patt :",allPatients.patients)
+
+    const totalPatients = allPatients.patients;
 
     return (
         <Box sx={{ padding: 2 }}>
@@ -158,14 +162,7 @@ const PatientList = ({allPatients}) => {
                             marginRight: 2,
                         }}
                     >
-                        {patients.length}{" "}
-                        <Typography
-                            component="span"
-                            variant="body1"
-                            sx={{ fontWeight: "normal" }}
-                        >
-                            {allPatients?.noOfPatients}
-                        </Typography>
+                        {allPatients?.noOfPatients}{" "}
                         <Typography variant="body1" sx={{ display: "inline" }}>
                             Patients
                         </Typography>
@@ -215,7 +212,7 @@ const PatientList = ({allPatients}) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {patients.map((patient) => (
+                        {totalPatients.map((patient) => (
                             <TableRow
                                 key={patient.id}
                                 sx={{
@@ -230,19 +227,19 @@ const PatientList = ({allPatients}) => {
                                     },
                                 }}
                             >
-                                <TableCell>{patient.id}</TableCell>
+                                <TableCell>{patient._id}</TableCell>
                                 <TableCell>
-                                    <Typography variant="body1" sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={handleClick}>
+                                    <Typography variant="body1" sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => handleClick(patient)}>
                                         {patient.name}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        {patient.email}
+                                        {patient.socialHistory}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>{patient.phone}</TableCell>
-                                <TableCell>{patient.type}</TableCell>
-                                <TableCell>{patient.branch}</TableCell>
-                                <TableCell>{patient.date}</TableCell>
+                                <TableCell>{patient.appointments[0].typeVisit}</TableCell>
+                                <TableCell>{patient.appointments[0].branch}</TableCell>
+                                <TableCell>{patient.registrationDate}</TableCell>
                                 <TableCell>
                                     <Chip
                                         label={patient.status}

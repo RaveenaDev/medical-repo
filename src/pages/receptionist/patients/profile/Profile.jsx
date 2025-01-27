@@ -15,9 +15,16 @@ import {useLocation} from "react-router-dom";
 
 
 const Profile = (props) => {
-    
+    // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
+    const location = useLocation();
+    const patient = location.state?.patient;
 
-    const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
+    if (!patient) {
+        return <p>No patient data found!</p>;
+    }
+
+    console.log("Patient Details",patient)
+
     const [medicalHistory, setMedicalHistory] = useState([]);
     const [currentMedications, setCurrentMedications] = useState([]);
 
@@ -88,7 +95,7 @@ const Profile = (props) => {
                                                 marginBottom: "8px",
                                             }}
                                         />
-                                        <h4 className={styles.name}>Jasmine Kaur</h4>
+                                        <h4 className={styles.name}>{patient.name}</h4>
                                         <p className={styles.email}>Jaisminekaur@gmail.com</p>
                                         <Box
                                             sx={{
