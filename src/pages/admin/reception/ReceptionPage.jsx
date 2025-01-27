@@ -38,6 +38,11 @@ const ReceptionPage = () => {
     const handleAppointments = () => {
         navigate('/admin/reception/appointments')
     }
+
+    const handlePatients = () => {
+        navigate('/admin/reception/patients')
+    }
+
     return (
         <Grid container spacing={2} sx={{
             minWidth: '1160px', // Set a fixed minimum width for the entire grid
@@ -112,7 +117,7 @@ const ReceptionPage = () => {
                     </Grid>
                     {/* Second vertically stacked item */}
                     <Grid className={styles.container1}>
-                        <div className={styles.heading1}>
+                        <div className={styles.heading1} onClick={handlePatients}>
                             <h3>Patients</h3>
                             <span className={ayu.forwardButton}>
                                 <ArrowForwardIosIcon/>
