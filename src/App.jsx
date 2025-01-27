@@ -5,7 +5,7 @@ import PasswordReset from './pages/passwordReset';
 import RecoveryLink from './pages/recoveryLink';
 import UpdatePassword from './pages/updatePassword';
 import Logo from './components/Logo';
-import Notification from './components/Notification/Notification';
+import Notification from './components/NotificationFunc/Notification';
 import Appointment from './components/Buttons/Appointment';
 import BookAppointmentButton from './components/Buttons/BookApp';
 import BillingButton from './components/Buttons/Billing';
@@ -24,6 +24,7 @@ function App() {
           <Appointment/>
           <BookAppointmentButton/>
           <BillingButton/>
+          
         </div>
     </>
   );

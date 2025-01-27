@@ -7,7 +7,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[1],
   borderRadius: "8px",
-  color: theme.palette.text.primary,
   padding: "8px 16px",
   color: "#878787",
   "&:hover": {
