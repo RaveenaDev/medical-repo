@@ -4,15 +4,19 @@ import {
     GET_APPOINTMENTS,
     GET_DEPARTMENT_BY_ID,
     GET_DOCTORS,
-    GET_PATIENTS, GET_REJECTED_APPOINTMENTS
+    GET_PATIENTS, GET_REJECTED_APPOINTMENTS, GET_ROOMS, GET_STAFFS
 } from "./ActionType.js";
 
 const inititalState = {
     totalPatients: null,
     totalDoctors: null,
+    totalStaffs: null,
+    totalRooms: null,
     patient: null,
     patients: [],
     doctors: [],
+    staffs: [],
+    rooms: [],
     departments: [],
     department: null,
     totalAppointments: [],
@@ -55,6 +59,20 @@ export const adminReducer = (state = inititalState,action) => {
             return{
                 ...state,
                 patients: action.payload.patients
+            }
+
+        case GET_STAFFS:
+            return{
+                ...state,
+                totalStaffs: action.payload.length,
+                staffs: action.payload
+            }
+
+        case GET_ROOMS:
+            return{
+                ...state,
+                totalRooms: action.payload.rooms.length,
+                rooms: action.payload.rooms
             }
 
         case GET_APPOINTMENT_REQUESTS:

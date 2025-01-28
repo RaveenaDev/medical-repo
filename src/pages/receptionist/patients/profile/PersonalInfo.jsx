@@ -10,21 +10,21 @@ import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 
 
-const PersonalInfo = () => {
+const PersonalInfo = ({patient}) => {
 
 
     const tables = [
         {
             headers: ["Gender", "Birthday", "Phone Number"],
-            data: ["Female", "Feb 24th, 1997", "+91 79327728"]
+            data: [patient.gender, patient.birthday, patient.phone]
         },
         {
             headers: ["Address", "Case ID", "Assessed by"],
-            data: ["Data A", "Data B", "Dr. Arunita"]
+            data: ["Data A", patient._id, "Dr. Arunita"]
         },
         {
             headers: ["Member status", "Registered Date"],
-            data: ["Active Member", "June 24th, 2024"]
+            data: [patient.status, patient.registrationDate]
         }
     ];
 

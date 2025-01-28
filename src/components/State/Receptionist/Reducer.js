@@ -4,15 +4,19 @@ import {
     GET_PATIENTS,
     GET_RECEPTIONIST_OVERVIEW_REQUEST,
     GET_RECEPTIONIST_OVERVIEW_SUCCESS,
-    GET_RECEPTIONIST_PATIENTS_REQUEST, GET_RECEPTIONIST_PATIENTS_SUCCESS
+    GET_RECEPTIONIST_PATIENTS_REQUEST, GET_RECEPTIONIST_PATIENTS_SUCCESS, GET_ROOMS, GET_STAFFS
 } from "./ActionType.js";
 
 const inititalState = {
     totalPatients: null,
     totalDoctors: null,
+    totalStaffs: null,
+    totalRooms: null,
     patient: null,
     patients: [],
     doctors: [],
+    staffs: [],
+    rooms: [],
     departments: [],
     department: null,
     isLoading:true,
@@ -55,6 +59,20 @@ export const receptionistReducer = (state=inititalState,action) => {
                 ...state,
                 totalDoctors: action.payload.count,
                 doctors: action.payload.doctors
+            }
+
+        case GET_STAFFS:
+            return{
+                ...state,
+                totalStaffs: action.payload.length,
+                staffs: action.payload
+            }
+
+        case GET_ROOMS:
+            return{
+                ...state,
+                totalRooms: action.payload.rooms.length,
+                rooms: action.payload.rooms
             }
 
 

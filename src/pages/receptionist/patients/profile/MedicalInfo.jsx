@@ -21,6 +21,7 @@ const ListSection = ({ title, items, emptyMessage }) => (
 );
 
 const MedicalInfo = ({
+    patient,
     medicalHistory = [],
     currentMedications = [],
     symptoms = [],
@@ -32,8 +33,10 @@ const MedicalInfo = ({
     const navigate = useNavigate();
 
     const handleMoreClick = () => {
-        navigate("/receptionist/patients/profile/more-info"); // Redirects to the MoreInfo page
+        navigate("/receptionist/patients/profile/more-info",{state: {patient}}); // Redirects to the MoreInfo page
     };
+
+    console.log("KUROSAKI ICHIGO...",patient)
 
     return (
         <>

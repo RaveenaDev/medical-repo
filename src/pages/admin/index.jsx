@@ -5,6 +5,8 @@ import styles from './styles.module.scss';
 import Grid from '@mui/material/Grid2';
 import EntityBasedTable from './EntityBasedTable';
 import { Button } from '@mui/material';
+import {useDispatch, useSelector} from "react-redux";
+import {getDoctors, getPatients, getRooms, getStaffs} from "../../components/State/Receptionist/Action.js";
 
 function Admin(props) {
   const [tableIndex, setTableIndex] = useState(null);
@@ -40,6 +42,31 @@ function Admin(props) {
   const handleBookAppointment = () => {
     console.log("handleBookAppointment");
   }
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPatients());
+        dispatch(getDoctors());
+        dispatch(getStaffs());
+        dispatch(getRooms());
+    }, [dispatch]);
+
+    const admin = useSelector(store => store.admin)
+
+    const noOfPatients = admin.totalPatients;
+    const patients = admin.patients;
+
+    const noOfDoctors = admin.totalDoctors;
+    const doctors = admin.doctors;
+
+    const noOfStaffs = admin.totalStaffs
+    const staffs = admin.staffs
+
+    const noOfRooms = admin.totalRooms
+    const rooms = admin.rooms
+
+    // console.log("Rooms",noOfRooms);
   return (
     <>
 			<div className={styles.receptionist}>
@@ -57,7 +84,7 @@ function Admin(props) {
                 backgroundColor: "#EAA000"
               }}
               title="Total Doctors"
-              subtitle="8"
+              subtitle={noOfDoctors}
               handleClickCb={(e) => cardClickhandler(e, "doctor")}
             />
           </Grid>
@@ -67,7 +94,7 @@ function Admin(props) {
                 backgroundColor: "#2E823B"
               }}
               title="Total Staffs"
-              subtitle="250"
+              subtitle={noOfStaffs}
               handleClickCb={(e) => cardClickhandler(e, "staff")}
             />
           </Grid>
@@ -77,7 +104,7 @@ function Admin(props) {
                 backgroundColor: "#66A7B4"
               }}
               title="Total Rooms"
-              subtitle="80"
+              subtitle={noOfRooms}
               handleClickCb={(e) => cardClickhandler(e, "room")}
             />
           </Grid>

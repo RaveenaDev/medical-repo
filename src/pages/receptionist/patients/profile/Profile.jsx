@@ -38,20 +38,22 @@ const Profile = (props) => {
         const fetchData = async () => {
             // backend response structure
             const response = {
-                medicalHistory: [
-                    "Type 2 diabetes diagnosed 5 years ago",
-                    "Hypertension diagnosed 3 years ago",
-                    "Family history of heart disease (father)",
-                ],
-                currentMedications: [
-                    "Metformin (for diabetes)",
-                    "Lisinopril (for hypertension)",
-                    "Aspirin (for heart health)",
-                ],
+                // medicalHistory: [
+                //     "Type 2 diabetes diagnosed 5 years ago",
+                //     "Hypertension diagnosed 3 years ago",
+                //     "Family history of heart disease (father)",
+                // ],
+                medicalHistory: patient.medicalHistory,
+                currentMedications: patient.currentMedication
+                // currentMedications: [
+                //     "Metformin (for diabetes)",
+                //     "Lisinopril (for hypertension)",
+                //     "Aspirin (for heart health)",
+                // ],
             };
 
             // Simulating an API call delay
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
 
             setMedicalHistory(response.medicalHistory);
             setCurrentMedications(response.currentMedications);
@@ -59,6 +61,9 @@ const Profile = (props) => {
 
         fetchData();
     }, []);
+
+    const upcoming = patient.appointments?.filter((app) => app.status === "Scheduled").length;
+    const completed = patient.appointments?.filter((app) => app.status === "Completed").length;
 
     return (
         <>
@@ -106,11 +111,11 @@ const Profile = (props) => {
                                         >
                                             <div className={styles.styling}>
                                                 <div>
-                                                    <h5>8</h5>
+                                                    <h5>{completed}</h5>
                                                     <p>Past Visits</p>
                                                 </div>
                                                 <div>
-                                                    <h5>2</h5>
+                                                    <h5>{upcoming}</h5>
                                                     <p>Upcoming</p>
                                                 </div>
                                             </div>
@@ -143,7 +148,7 @@ const Profile = (props) => {
                                         padding: "8px",
                                     }}
                                 >
-                                    <PersonalInfo />
+                                    <PersonalInfo patient={patient} />
                                 </Box>
                             </Grid>
                             {/* Box 3 */}
@@ -156,6 +161,7 @@ const Profile = (props) => {
                                     }}
                                 >
                                     <MedicalInfo
+                                        patient = {patient}
                                         medicalHistory={medicalHistory}
                                         currentMedications={currentMedications}
                                         showSymptoms={false} // Hide Symptoms section

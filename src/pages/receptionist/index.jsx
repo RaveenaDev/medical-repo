@@ -60,7 +60,13 @@ function Receptionist(props) {
     const noOfDoctors = receptionist.totalDoctors;
     const doctors = receptionist.doctors;
 
-    // console.log(noOfPatients)
+    const noOfStaffs = receptionist.totalStaffs
+    const staffs = receptionist.staffs
+
+    const noOfRooms = receptionist.totalRooms
+    const rooms = receptionist.rooms
+
+    // console.log("Rooms",noOfRooms);
 
   return (
     <>
@@ -89,7 +95,7 @@ function Receptionist(props) {
                 backgroundColor: "#2E823B"
               }}
               title="Total Staffs"
-              subtitle="250"
+              subtitle={noOfStaffs}
               handleClickCb={(e) => cardClickhandler(e, "staff")}
             />
           </Grid>
@@ -99,7 +105,7 @@ function Receptionist(props) {
                 backgroundColor: "#66A7B4"
               }}
               title="Total Rooms"
-              subtitle="80"
+              subtitle={noOfRooms}
               handleClickCb={(e) => cardClickhandler(e, "room")}
             />
           </Grid>
