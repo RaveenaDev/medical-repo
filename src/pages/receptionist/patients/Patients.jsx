@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import PatientList from './PatientList.jsx';
+import CommonPanel from "../components/CommonPanel.jsx";
 
 
 
@@ -37,55 +38,7 @@ const Patients = (props) => {
 
   return (
     <div className={styles.patients}>
-      <div className={styles.patientHeader}>
-        <Searchbar />
-        <NotificationIcon />
-      </div>
-
-      <div className={styles.cardhandling}>
-        <h3 className={styles.heading}>
-          Dashboard Overview
-        </h3>
-        <Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{ margin: '0 0 20px 0' }}>
-          <Grid size={3}>
-            <Card
-              title="Total Patient"
-              subtitle="200+"
-              handleClickCb={(e) => cardClickhandler(e, "patient")}
-            />
-          </Grid>
-          <Grid size={3}>
-            <Card
-              customStyle={{
-                backgroundColor: "#EAA000"
-              }}
-              title="Total Doctors"
-              subtitle="8"
-              handleClickCb={(e) => cardClickhandler(e, "doctor")}
-            />
-          </Grid>
-          <Grid size={3}>
-            <Card
-              customStyle={{
-                backgroundColor: "#2E823B"
-              }}
-              title="Total Staffs"
-              subtitle="250"
-              handleClickCb={(e) => cardClickhandler(e, "staff")}
-            />
-          </Grid>
-          <Grid size={3}>
-            <Card
-              customStyle={{
-                backgroundColor: "#66A7B4"
-              }}
-              title="Total Rooms"
-              subtitle="80"
-              handleClickCb={(e) => cardClickhandler(e, "room")}
-            />
-          </Grid>
-        </Grid>
-      </div>
+      <CommonPanel/>
 
       {!props.entity ? (
         <div className={styles.section}>

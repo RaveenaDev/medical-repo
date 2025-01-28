@@ -9,7 +9,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: "5px",
   color: theme.palette.text.primary,
   padding: "8px 16px",
-  color: "#878787",
+  // color: "#878787",
   "&:hover": {
     backgroundColor: theme.palette.grey[200],
   },

@@ -7,6 +7,10 @@ import {Button} from "@mui/material";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import DepartCard from "./DepartCard.jsx";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import CommonPanel from "../components/CommonPanel.jsx";
+import accountCircle from '../../../assets/account_circle.svg';
+import billingDetails from "../../../assets/payments.svg";
+import addAppointments from "../../../assets/plus.svg";
 
 const Departments = (props) => {
     const [tableIndex, setTableIndex] = useState(null);
@@ -46,50 +50,43 @@ const Departments = (props) => {
         <>
             <div style={{minWidth:'1160px'}}>
                 <div className={styles.receptionist}>
-                    <Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
-                        <Grid size={3}>
-                            <Card
-                                title="Total Patient"
-                                subtitle="200+"
-                                handleClickCb={(e) => cardClickhandler(e, "patient")}
-                            />
-                        </Grid>
-                        <Grid size={3}>
-                            <Card
-                                customStyle={{
-                                    backgroundColor: "#EAA000"
-                                }}
-                                title="Total Doctors"
-                                subtitle="8"
-                                handleClickCb={(e) => cardClickhandler(e, "doctor")}
-                            />
-                        </Grid>
-                        <Grid size={3}>
-                            <Card
-                                customStyle={{
-                                    backgroundColor: "#2E823B"
-                                }}
-                                title="Total Staffs"
-                                subtitle="250"
-                                handleClickCb={(e) => cardClickhandler(e, "staff")}
-                            />
-                        </Grid>
-                        <Grid size={3}>
-                            <Card
-                                customStyle={{
-                                    backgroundColor: "#66A7B4"
-                                }}
-                                title="Total Rooms"
-                                subtitle="80"
-                                handleClickCb={(e) => cardClickhandler(e, "room")}
-                            />
-                        </Grid>
-                    </Grid>
+                    <CommonPanel/>
+
                     {!props.entity ? <>
                         <div className={styles.appointmentBlock}>
                             <Grid container spacing={2} justifyContent="space-between" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
                                 <Grid size={3}>
                                     <Button variant="text" sx={{fontSize: "22px", color: "#0150EA", textTransform: "capitalize", padding: "0px"}} onClick={handleCalendar}>Today</Button>
+                                </Grid>
+                                <Grid size={9} sx={{display: "flex", justifyContent: "flex-end"}}>
+                                    <Button variant="contained" sx={{
+                                        fontSize: "20px",
+                                        color: "#878787",
+                                        textTransform: "capitalize",
+                                        padding: "0px 14px",
+                                        backgroundColor: "#fff",
+                                        marginRight: "22px"
+                                    }} onClick={handleAppointmentRequests}><img src={accountCircle}
+                                                                                className={styles.appointmentBlock__accountIcon}/>Appointment
+                                        Requests</Button>
+                                    <Button variant="contained" sx={{
+                                        fontSize: "20px",
+                                        color: "#878787",
+                                        textTransform: "capitalize",
+                                        padding: "0px 14px",
+                                        backgroundColor: "#fff",
+                                        marginRight: "22px"
+                                    }} onClick={handleBilling}><img src={billingDetails}
+                                                                    className={styles.appointmentBlock__paymentIcon}/>Billing</Button>
+                                    <Button variant="contained" sx={{
+                                        fontSize: "20px",
+                                        color: "#ffffff",
+                                        textTransform: "capitalize",
+                                        padding: "0px 14px",
+                                        backgroundColor: "#25307F"
+                                    }} onClick={handleBookAppointment}><img src={addAppointments}
+                                                                            className={styles.appointmentBlock__plusIcon}/>Book
+                                        Appointment</Button>
                                 </Grid>
                             </Grid>
                         </div>
