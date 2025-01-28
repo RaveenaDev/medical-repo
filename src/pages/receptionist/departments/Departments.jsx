@@ -17,23 +17,6 @@ const Departments = (props) => {
     useEffect(() => {
         props?.setIsSignUpOrLogin(false);
     }, []);
-
-    const cardClickhandler = (e, entity) => {
-        console.log("jhgfcg", e, entity);
-        if(entity === "patient") {
-            setTableIndex(0);
-        }
-        if(entity === "doctor") {
-            setTableIndex(1);
-        }
-        if(entity === "staff") {
-            setTableIndex(2);
-        }
-        if(entity === "room") {
-            setTableIndex(3);
-        }
-        props?.setEntity(entity);
-    }
     const handleCalendar = () => {
         console.log("handleCalendar");
     }

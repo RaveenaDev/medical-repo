@@ -4,8 +4,10 @@ import Searchbar from "../../../components/Searchbar/index.jsx";
 import NotificationIcon from "../../../components/Notification/index.jsx";
 import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
+import {useNavigate} from "react-router-dom";
 
 const CommonPanel = () => {
+    const navigate = useNavigate();
     return (
         <div className={ayu.patients}>
             <div className={ayu.patientHeader}>
@@ -25,6 +27,7 @@ const CommonPanel = () => {
                     <Card
                         title="Total Patient"
                         subtitle="200+"
+                        handleClickCb={() => navigate(`/receptionist/patients`)}
                     />
                 </Grid>
                 <Grid size={3}>
@@ -34,6 +37,7 @@ const CommonPanel = () => {
                         }}
                         title="Total Doctors"
                         subtitle="8"
+                        handleClickCb={() => navigate(`/receptionist/doctors`)}
                     />
                 </Grid>
                 <Grid size={3}>
@@ -43,6 +47,7 @@ const CommonPanel = () => {
                         }}
                         title="Total Staffs"
                         subtitle="250"
+                        handleClickCb={() => navigate(`/receptionist/staffs`)}
                     />
                 </Grid>
                 <Grid size={3}>
@@ -52,6 +57,7 @@ const CommonPanel = () => {
                         }}
                         title="Total Rooms"
                         subtitle="80"
+                        handleClickCb={() => navigate(`/receptionist/rooms`)}
                     />
                 </Grid>
             </Grid>
