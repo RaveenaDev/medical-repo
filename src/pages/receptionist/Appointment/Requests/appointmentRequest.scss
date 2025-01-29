@@ -17,6 +17,15 @@
     padding-top: 20px;
     overflow-y: auto; // Allows scrolling if content overflows
 
+    // Initial off-screen position
+    transform: translateX(100%);
+    transition: transform 1s ease-in-out; // Transition for sliding effect
+
+    // When modal is open, slide it in
+    &.open {
+      transform: translateX(0);
+    }
+
     .modal-header {
       display: flex;
       align-items: center;
