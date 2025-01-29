@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import styles from "../styles.module.scss";
 import addIcon from "../../../assets/plus.svg";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 
 const Doctors = (props) => {
