@@ -7,9 +7,15 @@ import EntityBasedTable from "./EntityBasedTable";
 import { Button } from "@mui/material";
 import CommonPanel from "./components/CommonPanel.jsx";
 import AppointmentRequestModal from "./Appointment/Requests/AppointmentRequest.jsx";
+import BookAppointment from "./Appointment/Book/BookAppointment.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBookAppointment, setIsBookAppointment] = useState(false); // State to toggle between components
+  const navigate = useNavigate();
 
   const dummyRequests = [
     {
@@ -52,12 +58,13 @@ function Receptionist(props) {
   };
   const handleBilling = () => {
     console.log("handleBilling");
+    navigate("/receptionist/billing");
   };
   const handleBookAppointment = () => {
     console.log("handleBookAppointment");
+    setIsBookAppointment(true); // Set the state to show BookAppointment component
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
       <div className={ayu.patients}>
@@ -156,10 +163,31 @@ function Receptionist(props) {
                 </Grid>
               </Grid>
             </div>
-            <Dashboard />
+            {/* Conditionally render BookAppointment or Dashboard based on state */}
+            {isBookAppointment ? (
+              <BookAppointment
+                isOpen={isBookAppointment}
+                onClose={() => setIsBookAppointment(false)}
+              />
+            ) : (
+              <Dashboard />
+            )}
           </>
         ) : (
-          <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
+          <>
+            {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
+            {isBookAppointment ? (
+              <BookAppointment
+                isBookAppointment={isBookAppointment}
+                onClose={() => setIsBookAppointment(false)}
+              />
+            ) : (
+              <EntityBasedTable
+                entity={props?.entity}
+                tableIndex={tableIndex}
+              />
+            )}
+          </>
         )}
       </div>
     </>

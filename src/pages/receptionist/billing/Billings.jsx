@@ -7,6 +7,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
 
 import arrowBack from "../../../assets/arrow_back.svg"; // Import the SVG
 import BillingModal from "./modal/BillingModal";
+import { useNavigate } from "react-router-dom";
 
 const dummyData = [
   {
@@ -68,6 +69,10 @@ const Billings = (props) => {
     setOpenModal(false);
     setSelectedBill(null);
   };
+  const navigate = useNavigate();
+  const handleClose = () => {
+    navigate("/receptionist");
+  };
 
   return (
     <div className="billings-container">
@@ -77,7 +82,7 @@ const Billings = (props) => {
       </div>
 
       <div className="billings-header">
-        <button className="back-btn">
+        <button onClick={() => handleClose()} className="back-btn">
           <img src={arrowBack} alt="Back" />
         </button>
         <h2>Billings</h2>
