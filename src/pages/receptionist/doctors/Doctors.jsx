@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import CommonPanel from "../components/CommonPanel.jsx";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import ayu from "./doctors.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Grid from "@mui/material/Grid2";
@@ -20,6 +20,7 @@ import {
 import styles from "../styles.module.scss";
 import addIcon from "../../../assets/plus.svg";
 import Avatar from "@mui/material/Avatar";
+import {useDispatch} from "react-redux";
 
 const Doctors = (props) => {
 
@@ -47,6 +48,11 @@ const Doctors = (props) => {
             status: "On Leave",
         },
     ]);
+
+    const location = useLocation();
+    const doctors = location.state?.doctors;
+
+    console.log("COMING ",doctors)
 
     return (
         <>
@@ -105,7 +111,7 @@ const Doctors = (props) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {patients.map((patient) => (
+                        {doctors.map((patient) => (
                             <TableRow
                                 key={patient.id}
                                 sx={{
@@ -129,7 +135,7 @@ const Doctors = (props) => {
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body1" sx={{ fontWeight: "bold"}}>
-                                        {patient.doctorId}
+                                        {patient._id}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>

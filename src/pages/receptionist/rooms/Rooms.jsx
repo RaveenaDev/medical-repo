@@ -30,6 +30,7 @@ import Avatar from "@mui/material/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {useLocation} from "react-router-dom";
 
 const Rooms = (props) => {
 
@@ -103,6 +104,11 @@ const Rooms = (props) => {
         console.log("Patient Edited Successfully")
         handleEditDialogClose();
     };
+
+    const location = useLocation()
+    const rooms = location.state?.rooms;
+
+    console.log("ROOMS COMING:",rooms)
 
     return (
         <>
@@ -178,7 +184,7 @@ const Rooms = (props) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {patients.map((patient) => (
+                        {rooms.map((patient) => (
                             <TableRow
                                 key={patient.id}
                                 sx={{
@@ -193,7 +199,7 @@ const Rooms = (props) => {
                                     },
                                 }}
                             >
-                                <TableCell sx={{color: "#25307F",fontWeight:"bold"}}>{patient.roomId}</TableCell>
+                                <TableCell sx={{color: "#25307F",fontWeight:"bold"}}>{patient.roomID}</TableCell>
                                 <TableCell align='center' sx={{pl:8}}>
                                     <Typography variant="body1" sx={{ fontWeight: "bold",color:"#25307F", cursor: "pointer" }}>
                                         {patient.name}
@@ -217,7 +223,7 @@ const Rooms = (props) => {
                                         {patient.status}
                                     </Box>
                                 </TableCell>
-                                <TableCell align='center'>{patient.doctorAssigned}</TableCell>
+                                <TableCell align='center'>{patient.assignedDoctor.name}</TableCell>
 
                                 <TableCell align='right'>
                                     <IconButton

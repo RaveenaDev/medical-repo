@@ -30,6 +30,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Avatar from "@mui/material/Avatar";
 import addIcon from "../../../assets/plus.svg";
 import styles from "../styles.module.scss";
+import {useLocation} from "react-router-dom";
 
 const Staffs = (props) => {
     useEffect(() => {
@@ -103,6 +104,11 @@ const Staffs = (props) => {
         handleEditDialogClose();
     };
 
+    const location = useLocation()
+    const staffs = location.state?.staffs;
+
+    console.log("STAFFS COMING:",staffs)
+
     return (
         <>
             <CommonPanel/>
@@ -144,7 +150,7 @@ const Staffs = (props) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {patients.map((patient) => (
+                        {staffs.map((patient) => (
                             <TableRow
                                 key={patient.id}
                                 sx={{
@@ -166,14 +172,14 @@ const Staffs = (props) => {
                                         sx={{ width: 40, height: 40 }} // Adjust size
                                     />
                                 </TableCell>
-                                <TableCell sx={{color: "#25307F",fontWeight:"bold"}}>{patient.staffId}</TableCell>
+                                <TableCell sx={{color: "#25307F",fontWeight:"bold"}}>{patient.staff_id}</TableCell>
                                 <TableCell>
                                     <Typography variant="body1" sx={{ fontWeight: "bold",color:"#25307F", cursor: "pointer" }}>
                                         {patient.name}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>{patient.phone}</TableCell>
-                                <TableCell>{patient.department}</TableCell>
+                                <TableCell>{patient.department.name}</TableCell>
                                 <TableCell>{patient.designation}</TableCell>
                                 <TableCell>
                                     <Chip

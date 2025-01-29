@@ -65,7 +65,7 @@ const CommonPanel = () => {
                         }}
                         title="Total Doctors"
                         subtitle={noOfDoctors}
-                        handleClickCb={() => navigate(`/receptionist/doctors`)}
+                        handleClickCb={() => navigate(`/receptionist/doctors`,{state: {doctors}})}
                     />
                 </Grid>
                 <Grid size={3}>
@@ -75,7 +75,7 @@ const CommonPanel = () => {
                         }}
                         title="Total Staffs"
                         subtitle={noOfStaffs}
-                        handleClickCb={() => navigate(`/receptionist/staffs`)}
+                        handleClickCb={() => navigate(`/receptionist/staffs`,{state: {staffs}})}
                     />
                 </Grid>
                 <Grid size={3}>
@@ -85,7 +85,7 @@ const CommonPanel = () => {
                         }}
                         title="Total Rooms"
                         subtitle={noOfRooms}
-                        handleClickCb={() => navigate(`/receptionist/rooms`)}
+                        handleClickCb={() => navigate(`/receptionist/rooms`,{state: {rooms}})}
                     />
                 </Grid>
             </Grid>
