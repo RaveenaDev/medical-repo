@@ -2,7 +2,7 @@ import React from "react";
 import "./appointmentRequest.scss";
 import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import arrowBack from "../../../assets/arrow_back.svg"; // Import the SVG as a React component
+import arrowBack from "../../../../assets/arrow_back.svg"; // Import the SVG as a React component
 
 const AppointmentRequestModal = ({ isOpen, onClose, requests }) => {
   if (!isOpen) return null;
@@ -45,9 +45,7 @@ const AppointmentRequestModal = ({ isOpen, onClose, requests }) => {
                   sx={{
                     backgroundColor: "white",
                     color: "red",
-
                     border: "2px solid red" /* Red border */,
-
                     ".MuiSvgIcon-root": {
                       color: "red" /* Ensures the cross icon is red */,
                     },

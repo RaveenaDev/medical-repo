@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid2";
 import EntityBasedTable from "./EntityBasedTable";
 import { Button } from "@mui/material";
 import CommonPanel from "./components/CommonPanel.jsx";
-import AppointmentRequestModal from "./Appointment/AppointmentRequest.jsx";
+import AppointmentRequestModal from "./Appointment/Requests/AppointmentRequest.jsx";
 
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
