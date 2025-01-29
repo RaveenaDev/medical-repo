@@ -27,7 +27,13 @@ import PatientPanel from "./pages/admin/PatientPanel";
 import PatientDetails from "./pages/admin/PatientDetails";
 import Billing from "./pages/admin/Billing";
 import History from "./pages/admin/History";
-import Tracking from "./pages/admin/Tracking";
+import Tracking from "./pages/admin/Tracking";import Notification from './components/NotificationFunc/Notification';
+import Appointment from './components/Buttons/Appointment';
+import BookAppointmentButton from './components/Buttons/BookApp';
+import BillingButton from './components/Buttons/Billing';
+import Doctors from "./pages/receptionist/doctors/Doctors.jsx";
+import Staffs from "./pages/receptionist/staffs/Staffs.jsx";
+import Rooms from "./pages/receptionist/rooms/Rooms.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -76,6 +82,9 @@ function App() {
               <Route path="/update-password" element={<UpdatePassword setIsSignUpOrLogin={setIsSignUpOrLogin}/>}/>
               <Route path="/receptionist" element={<Receptionist setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
               <Route path="/receptionist/patients" element={<Patients setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity} />} />
+              <Route path="/receptionist/doctors" element={<Doctors setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity} />} />
+              <Route path="/receptionist/staffs" element={<Staffs setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity} />} />
+              <Route path="/receptionist/rooms" element={<Rooms setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity} />} />
               <Route path="/receptionist/patients/profile" element={<Profile setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
               <Route path="/receptionist/patients/profile/more-info" element={<MoreInfo setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>} />
               <Route path="/receptionist/patients/profile/progressReport" element={<ProgressReport />} />

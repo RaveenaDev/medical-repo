@@ -1,131 +1,195 @@
-import React, { useEffect, useState } from 'react';
-import Dashboard from './dashboard';
-import Card from '../../components/Card';
-import styles from './styles.module.scss';
-import Grid from '@mui/material/Grid2';
-import EntityBasedTable from './EntityBasedTable';
-import { Button } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import Dashboard from "./dashboard";
+import styles from "./styles.module.scss";
+import ayu from "./patients/patients.module.scss";
+import Grid from "@mui/material/Grid2";
+import EntityBasedTable from "./EntityBasedTable";
+import { Button } from "@mui/material";
+import CommonPanel from "./components/CommonPanel.jsx";
+import AppointmentRequestModal from "./Appointment/AppointmentRequest.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {getDoctors, getPatients, getRooms, getStaffs} from "../../components/State/Receptionist/Action.js";
 
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
+
+  const dummyRequests = [
+    {
+      id: 1,
+      name: "Rahul Sharma",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/men/1.jpg",
+    },
+    {
+      id: 2,
+      name: "Sneha Kapoor",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/women/2.jpg",
+    },
+    {
+      id: 3,
+      name: "Amit Verma",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/men/3.jpg",
+    },
+    {
+      id: 4,
+      name: "Priya Singh",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/women/4.jpg",
+    },
+  ];
+
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const cardClickhandler = (e, entity) => {
-    console.log("jhgfcg", e, entity);
-    if(entity === "patient") {
-        setTableIndex(0);
-    }
-    if(entity === "doctor") {
-        setTableIndex(1);
-    }
-    if(entity === "staff") {
-        setTableIndex(2);
-    }
-    if(entity === "room") {
-        setTableIndex(3);
-    }
-    props?.setEntity(entity);
-  }
   const handleCalendar = () => {
     console.log("handleCalendar");
-  }
+  };
   const handleAppointmentRequests = () => {
     console.log("handleAppointmentRequests");
-  }
+    // Any other logic before opening the modal
+    setIsModalOpen(true);
+  };
   const handleBilling = () => {
     console.log("handleBilling");
-  }
+  };
   const handleBookAppointment = () => {
     console.log("handleBookAppointment");
-  }
+  };
 
-  const dispatch = useDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        dispatch(getPatients());
-        dispatch(getDoctors());
-        dispatch(getStaffs());
-        dispatch(getRooms());
-    }, [dispatch]);
+  // const dispatch = useDispatch();
+  //
+  //   useEffect(() => {
+  //       dispatch(getPatients());
+  //       dispatch(getDoctors());
+  //       dispatch(getStaffs());
+  //       dispatch(getRooms());
+  //   }, [dispatch]);
+  //
+  //   const receptionist = useSelector(store => store.receptionist)
 
-    const receptionist = useSelector(store => store.receptionist)
-
-    const noOfPatients = receptionist.totalPatients;
-    const patients = receptionist.patients;
-
-    const noOfDoctors = receptionist.totalDoctors;
-    const doctors = receptionist.doctors;
-
-    const noOfStaffs = receptionist.totalStaffs
-    const staffs = receptionist.staffs
-
-    const noOfRooms = receptionist.totalRooms
-    const rooms = receptionist.rooms
+    // const noOfPatients = receptionist.totalPatients;
+    // const patients = receptionist.patients;
+    //
+    // const noOfDoctors = receptionist.totalDoctors;
+    // const doctors = receptionist.doctors;
+    //
+    // const noOfStaffs = receptionist.totalStaffs
+    // const staffs = receptionist.staffs
+    //
+    // const noOfRooms = receptionist.totalRooms
+    // const rooms = receptionist.rooms
 
     // console.log("Rooms",noOfRooms);
 
   return (
     <>
-			<div className={styles.receptionist}>
-				<Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
-					<Grid size={3}>
-            <Card 
-              title="Total Patient"
-              subtitle={noOfPatients}
-              handleClickCb={(e) => cardClickhandler(e, "patient")}
-            />
-          </Grid>
-					<Grid size={3}>
-            <Card 
-              customStyle={{
-                backgroundColor: "#EAA000"
-              }}
-              title="Total Doctors"
-              subtitle={noOfDoctors}
-              handleClickCb={(e) => cardClickhandler(e, "doctor")}
-            />
-          </Grid>
-					<Grid size={3}>
-            <Card 
-              customStyle={{
-                backgroundColor: "#2E823B"
-              }}
-              title="Total Staffs"
-              subtitle={noOfStaffs}
-              handleClickCb={(e) => cardClickhandler(e, "staff")}
-            />
-          </Grid>
-					<Grid size={3}>
-            <Card 
-              customStyle={{
-                backgroundColor: "#66A7B4"
-              }}
-              title="Total Rooms"
-              subtitle={noOfRooms}
-              handleClickCb={(e) => cardClickhandler(e, "room")}
-            />
-          </Grid>
-        </Grid>
-        {!props.entity ? <>
-          <div className={styles.appointmentBlock}>
-            <Grid container spacing={2} justifyContent="space-between" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
-              <Grid size={3}>
-                <Button variant="text" sx={{fontSize: "22px", color: "#0150EA", textTransform: "capitalize", padding: "0px"}} onClick={handleCalendar}>Today</Button>
+      <div className={ayu.patients}>
+        <CommonPanel />
+        {!props.entity ? (
+          <>
+            <div className={styles.appointmentBlock}>
+              <Grid
+                container
+                spacing={2}
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection={{ md: "row" }}
+                size={12}
+                sx={{ margin: "0 0 20px 0" }}
+              >
+                <Grid size={3}>
+                  <Button
+                    variant="text"
+                    sx={{
+                      fontSize: "22px",
+                      color: "#0150EA",
+                      textTransform: "capitalize",
+                      padding: "0px",
+                    }}
+                    onClick={handleCalendar}
+                  >
+                    Today
+                  </Button>
+                </Grid>
+                <Grid
+                  size={9}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{
+                      fontSize: "20px",
+                      color: "#878787",
+                      textTransform: "capitalize",
+                      padding: "0px 14px",
+                      backgroundColor: "#fff",
+                      marginRight: "22px",
+                    }}
+                    onClick={handleAppointmentRequests}
+                  >
+                    <img
+                      src="src/assets/account_circle.svg"
+                      className={styles.appointmentBlock__accountIcon}
+                    />
+                    Appointment Requests
+                  </Button>
+                  {/* Modal Component */}
+                  <AppointmentRequestModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    requests={dummyRequests}
+                  >
+                    <p>This is where appointment requests will appear.</p>
+                  </AppointmentRequestModal>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      fontSize: "20px",
+                      color: "#878787",
+                      textTransform: "capitalize",
+                      padding: "0px 14px",
+                      backgroundColor: "#fff",
+                      marginRight: "22px",
+                    }}
+                    onClick={handleBilling}
+                  >
+                    <img
+                      src="src/assets/payments.svg"
+                      className={styles.appointmentBlock__paymentIcon}
+                    />
+                    Billing
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      fontSize: "20px",
+                      color: "#ffffff",
+                      textTransform: "capitalize",
+                      padding: "0px 14px",
+                      backgroundColor: "#25307F",
+                    }}
+                    onClick={handleBookAppointment}
+                  >
+                    <img
+                      src="src/assets/plus.svg"
+                      className={styles.appointmentBlock__plusIcon}
+                    />
+                    Book Appointment
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid size={9} sx={{display: "flex", justifyContent: "flex-end"}}>
-                <Button variant="contained" sx={{fontSize: "20px", color: "#878787", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#fff", marginRight: "22px"}} onClick={handleAppointmentRequests}><img src="src/assets/account_circle.svg" className={styles.appointmentBlock__accountIcon}/>Appointment Requests</Button>
-                <Button variant="contained" sx={{fontSize: "20px", color: "#878787", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#fff", marginRight: "22px"}} onClick={handleBilling}><img src="src/assets/payments.svg" className={styles.appointmentBlock__paymentIcon}/>Billing</Button>
-                <Button variant="contained" sx={{fontSize: "20px", color: "#ffffff", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#25307F"}} onClick={handleBookAppointment}><img src="src/assets/plus.svg" className={styles.appointmentBlock__plusIcon}/>Book Appointment</Button>
-              </Grid>
-            </Grid>
-          </div>
-          <Dashboard/>
-        </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
-			</div>
+            </div>
+            <Dashboard />
+          </>
+        ) : (
+          <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
+        )}
+      </div>
     </>
   );
 }
