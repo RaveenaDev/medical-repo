@@ -87,12 +87,15 @@ const NotificationPopup = ({ onClose }) => {
         right: 0,
         bottom: 0,
         width: "450px",
-        height: "1117px",
+        height: "100vh",
         backgroundColor: "#F1F1F1",
         boxShadow: "-2px 0px 10px rgba(0,0,0,0.1)",
         zIndex: 1200,
+        display: "flex",
+        flexDirection: "column",
       }}
     >
+      {/* Header */}
       <Box sx={{ display: "flex", alignItems: "center", padding: "16px" }}>
         <IconButton onClick={onClose}>
           <img src={arrowBack} alt="Back" />
@@ -102,7 +105,8 @@ const NotificationPopup = ({ onClose }) => {
         </Typography>
       </Box>
       <Divider />
-      <Box sx={{ padding: "18px" }}>
+      {/* Notification List - Takes up remaining space */}
+      <Box sx={{ flex: 1, overflowY: "auto", padding: "18px" }}>
         {notifications.map((notification) => (
           <Paper
             key={notification.id}
@@ -119,10 +123,15 @@ const NotificationPopup = ({ onClose }) => {
           </Paper>
         ))}
       </Box>
+
+      {/* Footer - Sticks to the bottom */}
       <Typography
         sx={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
           textAlign: "center",
-          padding: "16px",
+          padding: "20px",
           color: "gray",
           fontWeight: "bold",
         }}
