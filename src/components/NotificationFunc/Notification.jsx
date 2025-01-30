@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import arrowBack from "../../assets/arrow_back.svg"; // Import the SVG as a React component
@@ -40,6 +40,21 @@ const NotificationButton = ({ onClick, badgeContent }) => {
 };
 
 const NotificationPopup = ({ onClose }) => {
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
   const notifications = [
     {
       id: 1,
@@ -65,6 +80,7 @@ const NotificationPopup = ({ onClose }) => {
 
   return (
     <Box
+      ref={popupRef}
       sx={{
         position: "fixed",
         top: 0,
