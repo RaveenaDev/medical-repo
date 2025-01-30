@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid2";
 import Select from "../../../components/Select/index.jsx";
 import {
     Box,
-    Button, Chip, IconButton,
+    Button, Chip,
     Paper,
     Table,
     TableBody,
@@ -20,7 +20,7 @@ import {
 import styles from "../styles.module.scss";
 import addIcon from "../../../assets/plus.svg";
 import Avatar from "@mui/material/Avatar";
-import {useDispatch} from "react-redux";
+
 
 const Doctors = (props) => {
 
