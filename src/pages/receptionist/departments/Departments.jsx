@@ -1,104 +1,226 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from "react";
 import styles from "../styles.module.scss";
-import ayu from './departments.module.scss'
+import ayu from "./departments.module.scss";
 import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import DepartCard from "./DepartCard.jsx";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CommonPanel from "../components/CommonPanel.jsx";
-import accountCircle from '../../../assets/account_circle.svg';
+import accountCircle from "../../../assets/account_circle.svg";
 import billingDetails from "../../../assets/payments.svg";
 import addAppointments from "../../../assets/plus.svg";
+import { useNavigate } from "react-router-dom";
+import AppointmentRequestModal from "../Appointment/Requests/AppointmentRequest.jsx";
+import BookAppointment from "../Appointment/Book/BookAppointment.jsx";
 
 const Departments = (props) => {
-    const [tableIndex, setTableIndex] = useState(null);
-    useEffect(() => {
-        props?.setIsSignUpOrLogin(false);
-    }, []);
-    const handleCalendar = () => {
-        console.log("handleCalendar");
-    }
-    const handleAppointmentRequests = () => {
-        console.log("handleAppointmentRequests");
-    }
-    const handleBilling = () => {
-        console.log("handleBilling");
-    }
-    const handleBookAppointment = () => {
-        console.log("handleBookAppointment");
-    }
-    return (
-        <>
-            <div style={{minWidth:'1160px'}}>
-                <div className={styles.receptionist}>
-                    <CommonPanel/>
+  const [tableIndex, setTableIndex] = useState(null);
 
-                    {!props.entity ? <>
-                        <div className={styles.appointmentBlock}>
-                            <Grid container spacing={2} justifyContent="space-between" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
-                                <Grid size={3}>
-                                    <Button variant="text" sx={{fontSize: "22px", color: "#0150EA", textTransform: "capitalize", padding: "0px"}} onClick={handleCalendar}>Today</Button>
-                                </Grid>
-                                <Grid size={9} sx={{display: "flex", justifyContent: "flex-end"}}>
-                                    <Button variant="contained" sx={{
-                                        fontSize: "20px",
-                                        color: "#878787",
-                                        textTransform: "capitalize",
-                                        padding: "0px 14px",
-                                        backgroundColor: "#fff",
-                                        marginRight: "22px"
-                                    }} onClick={handleAppointmentRequests}><img src={accountCircle}
-                                                                                className={styles.appointmentBlock__accountIcon}/>Appointment
-                                        Requests</Button>
-                                    <Button variant="contained" sx={{
-                                        fontSize: "20px",
-                                        color: "#878787",
-                                        textTransform: "capitalize",
-                                        padding: "0px 14px",
-                                        backgroundColor: "#fff",
-                                        marginRight: "22px"
-                                    }} onClick={handleBilling}><img src={billingDetails}
-                                                                    className={styles.appointmentBlock__paymentIcon}/>Billing</Button>
-                                    <Button variant="contained" sx={{
-                                        fontSize: "20px",
-                                        color: "#ffffff",
-                                        textTransform: "capitalize",
-                                        padding: "0px 14px",
-                                        backgroundColor: "#25307F"
-                                    }} onClick={handleBookAppointment}><img src={addAppointments}
-                                                                            className={styles.appointmentBlock__plusIcon}/>Book
-                                        Appointment</Button>
-                                </Grid>
-                            </Grid>
-                        </div>
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBookAppointment, setIsBookAppointment] = useState(false); // State to toggle between components
+  const navigate = useNavigate();
 
-                        <div className={ayu.headerContainer}>
-                            <button className={ayu.backButton}>
-                                <ArrowBackIosIcon/>
-                            </button>
-                            <h2 className={ayu.departmentTitle}>Department</h2>
-                        </div>
+  useEffect(() => {
+    props?.setIsSignUpOrLogin(false);
+  }, []);
+  const handleCalendar = () => {
+    console.log("handleCalendar");
+  };
+  const handleAppointmentRequests = () => {
+    console.log("handleAppointmentRequests");
+    setIsModalOpen(true);
+  };
+  const handleBilling = () => {
+    console.log("handleBilling");
+    navigate("/receptionist/billing");
+  };
+  const handleBookAppointment = () => {
+    console.log("handleBookAppointment");
+    setIsBookAppointment(true);
+  };
 
-                        {/* Horizontal line */}
-                        <hr style={{border: '1px solid #d3d3d3', margin: '20px 0'}} />
+  const dummyRequests = [
+    {
+      id: 1,
+      name: "Rahul Sharma",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/men/1.jpg",
+    },
+    {
+      id: 2,
+      name: "Sneha Kapoor",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/women/2.jpg",
+    },
+    {
+      id: 3,
+      name: "Amit Verma",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/men/3.jpg",
+    },
+    {
+      id: 4,
+      name: "Priya Singh",
+      detail: "Appointment for ENT, 28 September",
+      img: "https://randomuser.me/api/portraits/women/4.jpg",
+    },
+  ];
 
-                        {/* Cards */}
+  return (
+    <>
+      <div style={{ minWidth: "1160px" }}>
+        <div className={styles.receptionist}>
+          <CommonPanel />
 
-                        <div className={ayu.superCardContainer}>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                            <DepartCard/>
-                        </div>
+          {!props.entity ? (
+            <>
+              <div className={styles.appointmentBlock}>
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  flexDirection={{ md: "row" }}
+                  size={12}
+                  sx={{ margin: "0 0 20px 0" }}
+                >
+                  <Grid size={3}>
+                    <Button
+                      variant="text"
+                      sx={{
+                        fontSize: "22px",
+                        color: "#0150EA",
+                        textTransform: "capitalize",
+                        padding: "0px",
+                      }}
+                      onClick={handleCalendar}
+                    >
+                      Today
+                    </Button>
+                  </Grid>
+                  <Grid
+                    size={9}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    <Button
+                      variant="contained"
+                      sx={{
+                        fontSize: "20px",
+                        color: "#878787",
+                        textTransform: "capitalize",
+                        padding: "0px 14px",
+                        backgroundColor: "#fff",
+                        marginRight: "22px",
+                      }}
+                      onClick={handleAppointmentRequests}
+                    >
+                      <img
+                        src={accountCircle}
+                        className={styles.appointmentBlock__accountIcon}
+                      />
+                      Appointment Requests
+                    </Button>
+                    <AppointmentRequestModal
+                      isOpen={isModalOpen}
+                      onClose={() => setIsModalOpen(false)}
+                      requests={dummyRequests}
+                    >
+                      <p>This is where appointment requests will appear.</p>
+                    </AppointmentRequestModal>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        fontSize: "20px",
+                        color: "#878787",
+                        textTransform: "capitalize",
+                        padding: "0px 14px",
+                        backgroundColor: "#fff",
+                        marginRight: "22px",
+                      }}
+                      onClick={handleBilling}
+                    >
+                      <img
+                        src={billingDetails}
+                        className={styles.appointmentBlock__paymentIcon}
+                      />
+                      Billing
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        fontSize: "20px",
+                        color: "#ffffff",
+                        textTransform: "capitalize",
+                        padding: "0px 14px",
+                        backgroundColor: "#25307F",
+                      }}
+                      onClick={handleBookAppointment}
+                    >
+                      <img
+                        src={addAppointments}
+                        className={styles.appointmentBlock__plusIcon}
+                      />
+                      Book Appointment
+                    </Button>
+                  </Grid>
+                </Grid>
+              </div>
+              {/* Main Table */}
 
-                    </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
+              {/* Conditionally render BookAppointment or Dashboard based on state */}
+              {isBookAppointment ? (
+                <BookAppointment
+                  isOpen={isBookAppointment}
+                  onClose={() => setIsBookAppointment(false)}
+                />
+              ) : (
+                <div className="departments">
+                  <div className={ayu.headerContainer}>
+                    <button className={ayu.backButton}>
+                      <ArrowBackIosIcon />
+                    </button>
+                    <h2 className={ayu.departmentTitle}>Department</h2>
+                  </div>
+
+                  {/* Horizontal line */}
+                  <hr
+                    style={{ border: "1px solid #d3d3d3", margin: "20px 0" }}
+                  />
+
+                  {/* Cards */}
+
+                  <div className={ayu.superCardContainer}>
+                    <DepartCard />
+                    <DepartCard />
+                    <DepartCard />
+                    <DepartCard />
+                    <DepartCard />
+                    <DepartCard />
+                  </div>
                 </div>
-            </div>
-        </>
-    )
-}
-export default Departments
+              )}
+            </>
+          ) : (
+            <>
+              {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
+              {isBookAppointment ? (
+                <BookAppointment
+                  isBookAppointment={isBookAppointment}
+                  onClose={() => setIsBookAppointment(false)}
+                />
+              ) : (
+                <EntityBasedTable
+                  entity={props?.entity}
+                  tableIndex={tableIndex}
+                />
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+export default Departments;
