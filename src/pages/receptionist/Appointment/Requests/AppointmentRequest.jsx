@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./appointmentRequest.scss";
 import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import arrowBack from "../../../assets/arrow_back.svg"; // Import the SVG as a React component
+import arrowBack from "../../../../assets/arrow_back.svg"; // Import the SVG as a React component
 
 const AppointmentRequestModal = ({ isOpen, onClose, requests }) => {
+  useEffect(() => {
+    // Disable scrolling on the body when the modal is open
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    // Clean up when the component is unmounted or modal is closed
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`modal-content ${isOpen ? "open" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           <Button className="close-btn" onClick={onClose}>
             <img src={arrowBack} alt="Back" />
@@ -45,9 +61,7 @@ const AppointmentRequestModal = ({ isOpen, onClose, requests }) => {
                   sx={{
                     backgroundColor: "white",
                     color: "red",
-
                     border: "2px solid red" /* Red border */,
-
                     ".MuiSvgIcon-root": {
                       color: "red" /* Ensures the cross icon is red */,
                     },
