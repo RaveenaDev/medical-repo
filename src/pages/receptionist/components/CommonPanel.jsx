@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react'
 import ayu from "../patients/patients.module.scss";
 import Searchbar from "../../../components/Searchbar/index.jsx";
-import NotificationIcon from "../../../components/Notification/index.jsx";
 import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getDoctors, getPatients, getRooms, getStaffs} from "../../../components/State/Receptionist/Action.js";
+import Notifications from "../../../components/NotificationFunc/Notification.jsx";
 
 const CommonPanel = () => {
     const navigate = useNavigate();
@@ -40,14 +40,12 @@ const CommonPanel = () => {
         <div className={ayu.patients}>
             <div className={ayu.patientHeader}>
                 <Searchbar/>
-                <NotificationIcon/>
+                <Notifications/>
             </div>
 
-            <div className={ayu.cardhandling}>
-                <h3 className={ayu.heading}>
-                    Dashboard Overview
-                </h3>
-            </div>
+      <div className={ayu.cardhandling}>
+        <h3 className={ayu.heading}>Dashboard Overview</h3>
+      </div>
 
             <Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{md: 'row'}}
                   size={12} sx={{margin: '0 0 20px 0'}}>
