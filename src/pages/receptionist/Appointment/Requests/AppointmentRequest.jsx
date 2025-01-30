@@ -4,7 +4,7 @@ import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import arrowBack from "../../../../assets/arrow_back.svg"; // Import the SVG as a React component
 
-const AppointmentRequestModal = ({ isOpen, onClose, requests }) => {
+const AppointmentRequestModal = ({ isOpen, onClose, requests,appointmentRequests }) => {
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
     if (isOpen) {
@@ -31,20 +31,20 @@ const AppointmentRequestModal = ({ isOpen, onClose, requests }) => {
             <img src={arrowBack} alt="Back" />
           </Button>
           <h2>Appointment Requests </h2>
-          <span className="request-count">({requests.length})</span>
+          <span className="request-count">({appointmentRequests.length})</span>
         </div>
         <div className="modal-body">
-          {requests.map((request, index) => (
+          {appointmentRequests.map((request, index) => (
             <div key={index} className="request-item">
               <div className="request-info">
                 <img
                   src={request.img}
-                  alt={request.name}
+                  alt={request.patient.name}
                   className="request-img"
                 />
                 <div className="request-text">
-                  <p className="request-name">{request.name}</p>
-                  <p className="request-detail">{request.detail}</p>
+                  <p className="request-name">{request.patient.name}</p>
+                  <p className="request-detail">{request.note}</p>
                 </div>
               </div>
 

@@ -2,9 +2,19 @@ import React, { useEffect } from "react";
 import { Modal, Box, Typography, Button } from "@mui/material";
 import "./BillingModal.scss"; // Ensure this file exists
 
-import arrowBack from "../../../../assets/arrow_back.svg"; // Import the SVG as a React component
+import arrowBack from "../../../../assets/arrow_back.svg";
+import {useDispatch} from "react-redux";
+import {getBillById} from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 
 const BillingModal = ({ open, bill, onClose }) => {
+  const billId = bill?._id;
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getBillById(billId))
+  }, [dispatch,billId]);
+
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
     if (open) {
@@ -19,6 +29,8 @@ const BillingModal = ({ open, bill, onClose }) => {
     };
   }, [open]);
   if (!bill) return null; // Avoid rendering if no bill is selected
+
+
 
   return (
     <div
@@ -35,7 +47,7 @@ const BillingModal = ({ open, bill, onClose }) => {
               <img src={arrowBack} alt="Back" />
             </button>
             <h2>
-              Billing Details: <span>{bill.name}</span>
+              Billing Details: <span>{bill.patient.name}</span>
             </h2>
           </div>
           <Button className="print-btn">Print</Button>
@@ -45,33 +57,37 @@ const BillingModal = ({ open, bill, onClose }) => {
             <div className="billing-no">
               <div>
                 <span className="bold">Invoice Number</span>
-                <span>INV20240919-VC-73</span>
+                <span>{bill.invoiceNumber}</span>
               </div>
               <div>
                 <span className="bold">Invoice Date</span>
-                <span>{bill.date}</span>
+                <span>{bill.invoiceDate}</span>
               </div>
             </div>
             <div className="billing-divider"></div>
             <div className="billing-invoice-amount">
-              <div className="billing-desc">
-                <div>
-                  <span className="bold">Description</span>
-                  <span>Therapy Session</span>
-                </div>
-                <div>
-                  <span className="bold">Quantity</span>
-                  <span className="center">1</span>
-                </div>
-                <div>
-                  <span className="bold">Price</span>
-                  <span> {bill.amount}</span>
-                </div>
-              </div>
+              {
+                bill?.services.map((service) => (
+                    <div className="billing-desc">
+                      <div>
+                        <span className="bold">Description</span>
+                        <span>{service.service.name}</span>
+                      </div>
+                      <div>
+                        <span className="bold">Quantity</span>
+                        <span className="center">{service.quantity}</span>
+                      </div>
+                      <div>
+                        <span className="bold">Price</span>
+                        <span> {bill.amount}</span>
+                      </div>
+                    </div>
+                ))
+              }
               <div className="billing-divider"></div>
               <div className="billing-total">
                 <div className="bold">Total</div>
-                <div className="bold">{bill.amount}</div>
+                <div className="bold">{bill.totalAmount}</div>
               </div>
             </div>
           </div>
@@ -79,15 +95,15 @@ const BillingModal = ({ open, bill, onClose }) => {
             <div className="billing-amount-details">
               <div>
                 <div className="bold">Total Amount</div>
-                <div>{bill.amount}</div>
+                <div>{bill.totalAmount}</div>
               </div>
               <div>
                 <div className="bold">Paid</div>
-                <div>{bill.amount}</div>
+                <div>{bill.paidAmount}</div>
               </div>
               <div>
                 <div className="bold ">Outstanding</div>
-                <div className="center">$0</div>
+                <div className="center">{bill.outstanding}</div>
               </div>
               <div>
                 <div className="bold">Status</div>
@@ -99,11 +115,11 @@ const BillingModal = ({ open, bill, onClose }) => {
               <div className="bold">Payment History</div>
               <div className="billing-summary">
                 <p>
-                  Amount Paid: <span> {bill.amount}</span>
+                  Amount Paid: <span> {bill.paidAmount}</span>
                 </p>
                 <p>Mode: Cash</p>
                 <p>
-                  Date: <span>{bill.date}</span>
+                  Date: <span>{bill.updatedAt}</span>
                 </p>
               </div>
             </div>

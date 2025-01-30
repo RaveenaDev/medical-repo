@@ -1,26 +1,38 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { TextField, MenuItem, Button, Divider } from "@mui/material";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./BookAppointment.scss";
 import arrowBack from "../../../../assets/arrow_back.svg";
+import {useDispatch, useSelector} from "react-redux";
+import {
+  bookAppointment,
+  getAllDepartments,
+  getDoctors,
+  getPatients
+} from "../../../../components/State/Receptionist/Action.js";
 
 const BookAppointment = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
   const [formData, setFormData] = useState({
-    name: "",
-    mobile: "",
+    patientName: "",
+    mobileNumber: "",
     email: "",
     appointmentType: "",
-    branchType: "",
-    doctor: "",
+    departmentName: "",
+    doctorEmail: "",
     note: "",
+    date: new Date()
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleDateChange = (date) => {
+    setFormData({...formData,date});
   };
 
   const renderRequiredLabel = (label) => (
@@ -28,6 +40,22 @@ const BookAppointment = ({ isOpen, onClose }) => {
       {label} <span style={{ color: "red" }}>*</span>
     </span>
   );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getDoctors())
+    dispatch(getAllDepartments())
+    dispatch(getPatients())
+  }, [dispatch]);
+
+  const doctors = useSelector(store => store.receptionist.doctors)
+  const departments = useSelector(store => store.receptionist.departments)
+
+  const handleClick = () => {
+    console.log(formData)
+    dispatch(bookAppointment(formData))
+  }
 
   return (
     <div className="book-appointment">
@@ -42,7 +70,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
       <div className="content">
         <div className="left-panel">
           <h3>Select Date</h3>
-          <Calendar onChange={setDate} value={date} />
+          <Calendar onChange={handleDateChange} name="date" value={formData.date} />
           <h3>Note</h3>
           <TextField
             name="note"
@@ -58,8 +86,8 @@ const BookAppointment = ({ isOpen, onClose }) => {
           <p>{renderRequiredLabel("Patient Name")}</p>
           <TextField
             label="Patient Name"
-            name="name"
-            value={formData.name}
+            name="patientName"
+            value={formData.patientName}
             onChange={handleChange}
             fullWidth
           />
@@ -72,39 +100,48 @@ const BookAppointment = ({ isOpen, onClose }) => {
             onChange={handleChange}
             fullWidth
           >
-            <MenuItem value="General Checkup">General Checkup</MenuItem>
-            <MenuItem value="Follow Up">Follow Up</MenuItem>
+            <MenuItem value="Follow up">Follow up</MenuItem>
             <MenuItem value="Consultation">Consultation</MenuItem>
+            <MenuItem value="Vaccination">Vaccination</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
           </TextField>
           <p>{renderRequiredLabel("Select Branch")}</p>
           <TextField
             select
             label="Select Branch"
-            name="branchType"
-            value={formData.branchType}
+            name="departmentName"
+            value={formData.departmentName}
             onChange={handleChange}
             fullWidth
           >
-            <MenuItem value="Therapy">Therapy</MenuItem>
-            <MenuItem value="ENT">ENT</MenuItem>
+            {
+              departments.map((department,index) => (
+                  <MenuItem key={index} value={department.departmentName}>{department.departmentName}</MenuItem>
+              ))
+            }
+            {/*<MenuItem value="ENT">ENT</MenuItem>*/}
           </TextField>
           <p>{renderRequiredLabel("Select Doctor")}</p>
           <TextField
             select
             label="Select Doctor"
-            name="doctor"
-            value={formData.doctor}
+            name="doctorEmail"
+            value={formData.doctorEmail}
             onChange={handleChange}
             fullWidth
           >
-            <MenuItem value="Dr. Smith">Dr. Smith</MenuItem>
-            <MenuItem value="Dr. Johnson">Dr. Johnson</MenuItem>
+            {
+              doctors.map((doctor,index) => (
+                  <MenuItem key={index} value={doctor.email}>{doctor.name}</MenuItem>
+              ))
+            }
+            {/*<MenuItem value="Dr. Johnson">Dr. Johnson</MenuItem>*/}
           </TextField>
           <p>{renderRequiredLabel("Mobile Number")}</p>
           <TextField
             label="Mobile Number"
-            name="mobile"
-            value={formData.mobile}
+            name="mobileNumber"
+            value={formData.mobileNumber}
             onChange={handleChange}
             fullWidth
           />
@@ -117,7 +154,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
             fullWidth
           />
 
-          <Button variant="contained" className="submit-btn" fullWidth>
+          <Button variant="contained" className="submit-btn" fullWidth onClick={handleClick}>
             Confirm
           </Button>
         </div>

@@ -1,10 +1,9 @@
 import {
-    GET_ALL_DEPARTMENTS, GET_DEPARTMENT_BY_ID,
+    GET_ALL_DEPARTMENTS, GET_APPOINTMENT_REQUESTS, GET_APPOINTMENTS, GET_BILL_BY_ID, GET_BILLS, GET_DEPARTMENT_BY_ID,
     GET_DOCTORS,
     GET_PATIENTS,
-    GET_RECEPTIONIST_OVERVIEW_REQUEST,
     GET_RECEPTIONIST_OVERVIEW_SUCCESS,
-    GET_RECEPTIONIST_PATIENTS_REQUEST, GET_RECEPTIONIST_PATIENTS_SUCCESS, GET_ROOMS, GET_STAFFS
+    GET_RECEPTIONIST_PATIENTS_SUCCESS, GET_ROOMS, GET_STAFFS
 } from "./ActionType.js";
 
 const inititalState = {
@@ -12,6 +11,7 @@ const inititalState = {
     totalDoctors: null,
     totalStaffs: null,
     totalRooms: null,
+    totalAppointments: null,
     patient: null,
     patients: [],
     doctors: [],
@@ -19,6 +19,10 @@ const inititalState = {
     rooms: [],
     departments: [],
     department: null,
+    appointments: [],
+    appointmentRequests: [],
+    allBills: [],
+    bill: null,
     isLoading:true,
     error:null,
     success:null
@@ -27,14 +31,6 @@ const inititalState = {
 export const receptionistReducer = (state=inititalState,action) => {
 
     switch (action.type) {
-        case GET_RECEPTIONIST_OVERVIEW_REQUEST :
-        case GET_RECEPTIONIST_PATIENTS_REQUEST:
-            return{
-                ...state,
-                isLoading: true,
-                error: null,
-                success: null
-            }
 
         case GET_RECEPTIONIST_OVERVIEW_SUCCESS:
         case GET_RECEPTIONIST_PATIENTS_SUCCESS:
@@ -86,6 +82,30 @@ export const receptionistReducer = (state=inititalState,action) => {
             return{
                 ...state,
                 department: action.payload
+            }
+
+        case GET_APPOINTMENTS:
+            return{
+                ...state,
+                totalAppointments: action.payload.count,
+                appointments: action.payload.appointments
+            }
+
+        case GET_APPOINTMENT_REQUESTS:
+            return{
+                ...state,
+                appointmentRequests: action.payload.appointments
+            }
+
+        case GET_BILLS:
+            return{
+                ...state,
+                allBills: action.payload.bills
+            }
+
+        case GET_BILL_BY_ID:
+            return{
+                ...state,
             }
 
         default:

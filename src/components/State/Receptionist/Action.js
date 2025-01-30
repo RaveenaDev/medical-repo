@@ -1,31 +1,14 @@
 import {
-    GET_ALL_DEPARTMENTS, GET_DEPARTMENT_BY_ID,
+    BOOK_APPOINTMENT,
+    GET_ALL_DEPARTMENTS, GET_APPOINTMENT_REQUESTS, GET_APPOINTMENTS, GET_BILL_BY_ID, GET_BILLS, GET_DEPARTMENT_BY_ID,
     GET_DOCTORS,
     GET_PATIENTS,
-    GET_RECEPTIONIST_OVERVIEW_FAILURE,
-    GET_RECEPTIONIST_OVERVIEW_REQUEST,
-    GET_RECEPTIONIST_OVERVIEW_SUCCESS,
-    GET_RECEPTIONIST_PATIENTS_FAILURE,
-    GET_RECEPTIONIST_PATIENTS_REQUEST,
-    GET_RECEPTIONIST_PATIENTS_SUCCESS, GET_ROOMS, GET_STAFFS
+    GET_ROOMS,
+    GET_STAFFS
 } from "./ActionType.js";
 import axios from "axios";
 import {API_URL} from "../../Config/api.js";
 
-export const getOverviewOfReceptionist = () => async(dispatch) => {
-    dispatch({type:GET_RECEPTIONIST_OVERVIEW_REQUEST})
-    try {
-        const response = await axios.get(`${API_URL}/getOverview`)
-
-        dispatch({type:GET_RECEPTIONIST_OVERVIEW_SUCCESS,payload:response})
-
-    }
-
-    catch (error){
-        console.log(error)
-        dispatch({type:GET_RECEPTIONIST_OVERVIEW_FAILURE,payload:error})
-    }
-}
 
 export const getPatients = () => async(dispatch) => {
     try {
@@ -141,16 +124,98 @@ export const getDepartmentById = (departmentId) => async(dispatch) => {
     }
 }
 
-export const getReceptionistPatients = () => async(dispatch) => {
-    dispatch({type:GET_RECEPTIONIST_PATIENTS_REQUEST})
+export const bookAppointment = (appData) => async(dispatch) => {
     try {
-        const response = await axios.get(`${API_URL}/getPatients`)
+        const token = localStorage.getItem('jwt');
 
-        dispatch({type:GET_RECEPTIONIST_PATIENTS_SUCCESS,payload:response})
+        const {data} = await axios.post(`${API_URL}/bookAppointment`,appData,{
+            headers:{
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            }
+        })
+
+        dispatch({type:BOOK_APPOINTMENT,payload:data})
+        console.log("Appointment Booked Successfully :",data)
     }
 
     catch (error){
         console.log(error)
-        dispatch({type:GET_RECEPTIONIST_PATIENTS_FAILURE,payload:error})
+    }
+}
+
+export const getAppointments = (activeLabel) => async(dispatch) => {
+    try {
+        const token = localStorage.getItem('jwt');
+
+        const {data} = await axios.get(`${API_URL}/getAppointmentsByStatus`,{
+            params: { status: activeLabel }, // Sending status as a query parameter
+            headers:{
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            }
+        })
+
+        dispatch({type:GET_APPOINTMENTS,payload:data})
+        console.log("Appointments route working :",data)
+    }
+
+    catch (error){
+        console.log(error)
+    }
+}
+
+export const getRequestedAppointments = () => async(dispatch) => {
+    try {
+        const token = localStorage.getItem('jwt');
+
+        const {data} = await axios.get(`${API_URL}/getRequestedAppointments`,{
+            headers:{
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            }
+        })
+
+        dispatch({type:GET_APPOINTMENT_REQUESTS,payload:data})
+        console.log("Appointment Requests route working :",data)
+    }
+
+    catch (error){
+        console.log(error)
+    }
+}
+
+export const getBills = () => async(dispatch) => {
+    try {
+        const token = localStorage.getItem('jwt');
+
+        const {data} = await axios.get(`${API_URL}/getAllBills`,{
+            headers:{
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            }
+        })
+
+        dispatch({type:GET_BILLS,payload:data})
+        console.log("Bills route working :",data)
+    }
+
+    catch (error){
+        console.log(error)
+    }
+}
+
+export const getBillById = (billId) => async(dispatch) => {
+    try {
+        const token = localStorage.getItem('jwt');
+
+        const {data} = await axios.get(`${API_URL}/getBillDetails/${billId}`,{
+            headers:{
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            }
+        })
+
+        dispatch({type:GET_BILL_BY_ID,payload:data})
+        console.log("Bill by Id route working :",data)
+    }
+
+    catch (error){
+        console.log(error)
     }
 }

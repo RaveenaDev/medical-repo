@@ -41,6 +41,8 @@ import Select from "../../components/Select/index.jsx";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {useDispatch, useSelector} from "react-redux";
+import {getAppointments, getRequestedAppointments} from "../../components/State/Receptionist/Action.js";
 
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
@@ -118,39 +120,13 @@ function Receptionist(props) {
     { id: 4, label: "Completed", count: 5 },
   ];
 
+  const activeLabel = boxData.find(box => box.id === activeBox)?.label;
+  // console.log("Active Label",activeLabel);
+
+
   const handleBoxClick = (id) => {
     setActiveBox(id);
   };
-
-  const [appointments, setAppointments] = useState([
-    {
-      id: "1",
-      name: "Jasmin Kaur",
-      appointmentWith: "jasmin@gmail.com",
-      typeVisit: "Walk In",
-      branch: "Cardiology",
-      tokenNo: "2024-10-08",
-      status: "Ongoing",
-    },
-    {
-      id: "2",
-      name: "Amit Tripathi",
-      appointmentWith: "amittripathi@gmail.com",
-      typeVisit: "Referral",
-      branch: "Cardiology",
-      tokenNo: "2024-10-08",
-      status: "Waiting",
-    },
-    {
-      id: "3",
-      name: "Amit Tripathi",
-      appointmentWith: "amittripathi@gmail.com",
-      typeVisit: "Referral",
-      branch: "Cardiology",
-      tokenNo: "2024-10-08",
-      status: "Completed",
-    },
-  ]);
 
   // Handle Menu Open
   const handleMenuOpen = (event, patient) => {
@@ -184,13 +160,26 @@ function Receptionist(props) {
 
   // Handle Save Edited Patient
   const handleSaveEditedPatient = () => {
-    setAppointments((prev) =>
-      prev.map((patient) =>
-        patient.id === editedPatient.id ? editedPatient : patient
-      )
-    );
+    // setAppointments((prev) =>
+    //   prev.map((patient) =>
+    //     patient.id === editedPatient.id ? editedPatient : patient
+    //   )
+    // );
     handleEditDialogClose();
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAppointments(activeLabel));
+  }, [dispatch,activeLabel]);
+
+  useEffect(() => {
+    dispatch(getRequestedAppointments());
+  }, [dispatch]);
+
+  const appointments = useSelector(store => store.receptionist.appointments)
+  const appointmentRequests = useSelector(store => store.receptionist.appointmentRequests)
 
   return (
     <>
@@ -249,6 +238,7 @@ function Receptionist(props) {
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     requests={dummyRequests}
+                    appointmentRequests={appointmentRequests}
                   >
                     <p>This is where appointment requests will appear.</p>
                   </AppointmentRequestModal>
@@ -406,13 +396,13 @@ function Receptionist(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {appointments.map((patient) => (
+                      {appointments.map((appointment) => (
                         <TableRow
-                          key={patient.id}
+                          key={appointment._id}
                           sx={{
                             background: "#fff",
                             bgcolor:
-                              patient.status === "Ongoing"
+                              appointment.status === "Ongoing"
                                 ? "#EEF8F1"
                                 : "white",
                             boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
@@ -425,39 +415,37 @@ function Receptionist(props) {
                             },
                           }}
                         >
-                          <TableCell>{patient.id}</TableCell>
+                          <TableCell>{appointment.caseId}</TableCell>
                           <TableCell>
                             <Typography
                               variant="body1"
                               sx={{ fontWeight: "bold", cursor: "pointer" }}
                             >
-                              {patient.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {patient.appointmentWith}
+                              {appointment.patient.name}
                             </Typography>
                           </TableCell>
-                          <TableCell>{patient.typeVisit}</TableCell>
-                          <TableCell>{patient.branch}</TableCell>
-                          <TableCell>{patient.tokenNo}</TableCell>
+                          <TableCell>{appointment.doctor.name}</TableCell>
+                          <TableCell>{appointment.typeVisit}</TableCell>
+                          <TableCell>{appointment.department}</TableCell>
+                          <TableCell>{appointment.tokenDate}</TableCell>
                           <TableCell>
                             <Chip
-                              label={patient.status}
-                              color={
-                                patient.status === "Active"
-                                  ? "success"
-                                  : "default"
-                              }
+                              label={appointment.status}
+                              // color={
+                              //   appointment.status === "Active"
+                              //     ? "success"
+                              //     : "default"
+                              // }
                               size="small"
                               sx={{
                                 bgcolor:
-                                  patient.status === "Ongoing"
+                                  appointment.status === "Ongoing"
                                     ? "#3DB461"
                                     : "white",
                                 color:
-                                  patient.status === "Ongoing"
+                                  appointment.status === "Ongoing"
                                     ? "white"
-                                    : patient.status === "Completed"
+                                    : appointment.status === "Completed"
                                     ? "orange"
                                     : "#757575",
                                 fontWeight: "bold",
@@ -468,7 +456,7 @@ function Receptionist(props) {
                           <TableCell>
                             <IconButton
                               onClick={(event) =>
-                                handleMenuOpen(event, patient)
+                                handleMenuOpen(event, appointment)
                               }
                             >
                               <MoreVertIcon />

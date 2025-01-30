@@ -8,49 +8,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
 import arrowBack from "../../../assets/arrow_back.svg"; // Import the SVG
 import BillingModal from "./modal/BillingModal";
 import { useNavigate } from "react-router-dom";
-
-const dummyData = [
-  {
-    id: "C001231",
-    name: "John Doe",
-    phone: "9876543210",
-    date: "11-12-2024",
-    amount: "$250",
-    status: "Paid",
-  },
-  {
-    id: "C002123",
-    name: "Jane Smith",
-    phone: "8765432109",
-    date: "11-10-2024",
-    amount: "$400",
-    status: "Unpaid",
-  },
-  {
-    id: "C003302",
-    name: "Aiditi",
-    phone: "7654321098",
-    date: "11-08-2024",
-    amount: "$150",
-    status: "Paid",
-  },
-  {
-    id: "C004456",
-    name: "Amit verma",
-    phone: "6543210987",
-    date: "21-01-2025",
-    amount: "$1300",
-    status: "Unpaid",
-  },
-  {
-    id: "C005567",
-    name: "Aditya Soni",
-    phone: "5432109876",
-    date: "11-01-2025",
-    amount: "$1200",
-    status: "Paid",
-  },
-];
+import {useDispatch, useSelector} from "react-redux";
+import {getBills} from "../../../components/State/Receptionist/Action.js";
 
 const Billings = (props) => {
   const [selectedBill, setSelectedBill] = useState(null);
@@ -73,6 +32,14 @@ const Billings = (props) => {
   const handleClose = () => {
     navigate("/receptionist");
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBills());
+  }, [dispatch]);
+
+  const allBills = useSelector(store => store.receptionist.allBills)
 
   return (
     <div className="billings-container">
@@ -101,13 +68,13 @@ const Billings = (props) => {
           <span>Actions</span>
         </div>
 
-        {dummyData.map((item) => (
-          <div className="table-row" key={item.id}>
-            <span className="blue">{item.id}</span>
-            <span className="blue">{item.name}</span>
-            <span className="grey">{item.phone}</span>
-            <span className="grey">{item.date}</span>
-            <span className="grey"> {item.amount}</span>
+        {allBills.map((item) => (
+          <div className="table-row" key={item._id}>
+            <span className="blue">{item.caseId}</span>
+            <span className="blue">{item.patient.name}</span>
+            <span className="grey">{item.patient.phone}</span>
+            <span className="grey">{item.updatedAt}</span>
+            <span className="grey"> {item.totalAmount}</span>
             <span className={`status ${item.status.toLowerCase()}`}>
               {item.status}
             </span>
