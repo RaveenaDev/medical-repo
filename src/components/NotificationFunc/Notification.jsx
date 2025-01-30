@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import arrowBack from "../../assets/arrow_back.svg"; // Import the SVG as a React component
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -10,41 +10,57 @@ import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import DescriptionIcon from "@mui/icons-material/Description";
+import Badge from "@mui/material/Badge";
 
 const CircularButton = styled(Button)(({ theme }) => ({
-  width: "56px", 
+  width: "56px",
   height: "56px",
   borderRadius: "50%",
   minWidth: "unset",
-  position:"absolute",
-  top:"5%",
-  right:"3%",
-  padding: 0,
-  backgroundColor: theme.palette.grey[200], 
-  boxShadow: theme.shadows[3], 
-  '&:hover': {
-    backgroundColor: theme.palette.grey[300], 
+  padding: "10px",
+  backgroundColor: theme.palette.grey[200],
+  boxShadow: theme.shadows[3],
+  "&:hover": {
+    backgroundColor: theme.palette.grey[300],
   },
-  '&:focus': {
-    outline: "none", 
-    boxShadow: "none", 
+  "&:focus": {
+    outline: "none",
+    boxShadow: "none",
   },
 }));
 
-const NotificationButton = ({ onClick }) => {
+const NotificationButton = ({ onClick, badgeContent }) => {
   return (
     <CircularButton onClick={onClick}>
-      <NotificationsIcon style={{ color: "#003366" }} />
+      <Badge badgeContent={badgeContent} color="error">
+        <NotificationsIcon style={{ color: "#003366" }} />
+      </Badge>
     </CircularButton>
   );
 };
 
 const NotificationPopup = ({ onClose }) => {
   const notifications = [
-    { id: 1, icon: <PushPinIcon />, text: "You have a follow up with Karan Choudhary on Friday, 27 Sept at 10:00 AM." },
-    { id: 2, icon: <DescriptionIcon />, text: "You have a follow up with Karan Choudhary on Friday, 27 Sept at 10:00 AM." },
-    { id: 3, icon: <DescriptionIcon />, text: "You have a follow up with Karan Choudhary on Friday, 27 Sept at 10:00 AM." },
-    { id: 4, icon: <PushPinIcon />, text: "You have a follow up with Karan Choudhary on Friday, 27 Sept at 10:00 AM." },
+    {
+      id: 1,
+      icon: <PushPinIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
+    {
+      id: 2,
+      icon: <DescriptionIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
+    {
+      id: 3,
+      icon: <DescriptionIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
+    {
+      id: 4,
+      icon: <PushPinIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
   ];
 
   return (
@@ -55,31 +71,45 @@ const NotificationPopup = ({ onClose }) => {
         right: 0,
         bottom: 0,
         width: "450px",
-        height:"1117px",
+        height: "1117px",
         backgroundColor: "#F1F1F1",
         boxShadow: "-2px 0px 10px rgba(0,0,0,0.1)",
         zIndex: 1200,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", padding: "16px",  }}>
+      <Box sx={{ display: "flex", alignItems: "center", padding: "16px" }}>
         <IconButton onClick={onClose}>
-          <ArrowBackIcon />
+          <img src={arrowBack} alt="Back" />
         </IconButton>
-        <Typography variant="h6" sx={{ marginLeft: "8px" }}>
+        <Typography variant="h6" sx={{ marginLeft: "8px", color: "#000" }}>
           Notifications
         </Typography>
       </Box>
       <Divider />
       <Box sx={{ padding: "18px" }}>
         {notifications.map((notification) => (
-          <Paper key={notification.id} sx={{ padding: "18px", marginBottom: "1px", display: "flex", alignItems: "center", gap:"1rem" }}>
+          <Paper
+            key={notification.id}
+            sx={{
+              padding: "18px",
+              marginBottom: "1px",
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
             <Box sx={{ marginRight: "8px" }}>{notification.icon}</Box>
             <Typography>{notification.text}</Typography>
           </Paper>
         ))}
       </Box>
       <Typography
-        sx={{ textAlign: "center", padding: "16px", color: "gray", fontWeight: "bold" }}
+        sx={{
+          textAlign: "center",
+          padding: "16px",
+          color: "gray",
+          fontWeight: "bold",
+        }}
       >
         {notifications.length} New Notifications
       </Typography>
@@ -89,6 +119,28 @@ const NotificationPopup = ({ onClose }) => {
 
 const Notifications = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const notifications = [
+    {
+      id: 1,
+      icon: <PushPinIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
+    {
+      id: 2,
+      icon: <DescriptionIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
+    {
+      id: 3,
+      icon: <DescriptionIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
+    {
+      id: 4,
+      icon: <PushPinIcon />,
+      text: "You have a follow-up with Karan Choudhary on Friday, 27 Sept at 10:00 AM.",
+    },
+  ];
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -100,7 +152,12 @@ const Notifications = () => {
 
   return (
     <>
-      {!isOpen && <NotificationButton onClick={handleOpen} />}
+      {!isOpen && (
+        <NotificationButton
+          onClick={handleOpen}
+          badgeContent={notifications.length}
+        />
+      )}
       {isOpen && <NotificationPopup onClose={handleClose} />}
     </>
   );

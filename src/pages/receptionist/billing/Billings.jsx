@@ -8,6 +8,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
 import arrowBack from "../../../assets/arrow_back.svg"; // Import the SVG
 import BillingModal from "./modal/BillingModal";
 import { useNavigate } from "react-router-dom";
+import Notifications from "../../../components/NotificationFunc/Notification";
 
 const dummyData = [
   {
@@ -78,7 +79,7 @@ const Billings = (props) => {
     <div className="billings-container">
       <div className="header">
         <Searchbar />
-        <NotificationIcon />
+        <Notifications />
       </div>
 
       <div className="billings-header">
