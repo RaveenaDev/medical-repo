@@ -41,9 +41,15 @@ import Select from "../../components/Select/index.jsx";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
+
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -209,18 +215,25 @@ function Receptionist(props) {
                 sx={{ margin: "0 0 20px 0" }}
               >
                 <Grid size={3}>
-                  <Button
-                    variant="text"
-                    sx={{
-                      fontSize: "22px",
-                      color: "#0150EA",
-                      textTransform: "capitalize",
-                      padding: "0px",
-                    }}
-                    onClick={handleCalendar}
-                  >
-                    Today
-                  </Button>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Box
+                      sx={{
+                        backgroundColor: "white",
+                        boxShadow: 3,
+                        p: 1,
+                        borderRadius: 1,
+
+                        textAlign: "center",
+                      }}
+                    >
+                      {/* Calendar Picker */}
+                      <DatePicker
+                        value={selectedDate}
+                        onChange={(newValue) => setSelectedDate(newValue)}
+                        sx={{ width: "100%" }} // Adjust width to fit box
+                      />
+                    </Box>
+                  </LocalizationProvider>
                 </Grid>
                 <Grid
                   size={9}
