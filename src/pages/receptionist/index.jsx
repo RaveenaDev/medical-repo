@@ -46,6 +46,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import accountCircle from "../../assets/account_circle.svg";
+import billingDetails from "../../assets/payments.svg";
+import addAppointments from "../../assets/plus.svg";
+
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
 
@@ -252,7 +256,7 @@ function Receptionist(props) {
                     onClick={handleAppointmentRequests}
                   >
                     <img
-                      src="src/assets/account_circle.svg"
+                      src={accountCircle}
                       className={styles.appointmentBlock__accountIcon}
                     />
                     Appointment Requests
@@ -278,7 +282,7 @@ function Receptionist(props) {
                     onClick={handleBilling}
                   >
                     <img
-                      src="src/assets/payments.svg"
+                      src={billingDetails}
                       className={styles.appointmentBlock__paymentIcon}
                     />
                     Billing
@@ -295,7 +299,7 @@ function Receptionist(props) {
                     onClick={handleBookAppointment}
                   >
                     <img
-                      src="src/assets/plus.svg"
+                      src={addAppointments}
                       className={styles.appointmentBlock__plusIcon}
                     />
                     Book Appointment

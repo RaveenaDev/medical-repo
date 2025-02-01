@@ -103,6 +103,20 @@ const Staffs = (props) => {
         handleEditDialogClose();
     };
 
+    const [addDialogOpen, setAddDialogOpen] = useState(false);
+    const [newStaff, setNewStaff] = useState({
+        profile: "",
+        name: "",
+        phone: "",
+        department: "",
+        designation: "",
+        status: "",
+    });
+
+    const handleSubmit = () => {
+        console.log("New Staff Data:",newStaff)
+    }
+
     return (
         <>
             <CommonPanel/>
@@ -116,18 +130,114 @@ const Staffs = (props) => {
                     <h2 className={ayu.departmentTitleDetails}>200+</h2>
 
                     <div style={{marginLeft: 'auto'}}>
-                        <Button variant="contained" sx={{
-                            fontSize: "20px",
-                            color: "#ffffff",
-                            textTransform: "capitalize",
-                            padding: "2px 18px",
-                            backgroundColor: "#25307F"
-                        }}><img src={addIcon}
-                                className={styles.appointmentBlock__plusIcon}/>Add
+                        <Button
+                            variant="contained"
+                            sx={{
+                                fontSize: "20px",
+                                color: "#ffffff",
+                                textTransform: "capitalize",
+                                padding: "2px 18px",
+                                backgroundColor: "#25307F",
+                            }}
+                            onClick={() => setAddDialogOpen(true)} // Open the modal
+                        >
+                            <img src={addIcon} className={styles.appointmentBlock__plusIcon} />
+                            Add
                         </Button>
+
                     </div>
                 </div>
             </Box>
+
+            <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)}>
+                <DialogTitle>Add New Staff</DialogTitle>
+                <DialogContent>
+
+                    {/* Profile Icon Input */}
+                    <Avatar
+                        src={newStaff.profile}
+                        alt="Profile"
+                        sx={{width: 60, height: 60, cursor: "pointer", marginBottom: 2}}
+                        onClick={() => {
+                            // Handle file input or image picker
+                            alert('Open file picker to select profile picture');
+                        }}
+                    />
+
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Name"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={newStaff.name}
+                        onChange={(e) => setNewStaff({...newStaff, name: e.target.value})}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Phone"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={newStaff.phone}
+                        onChange={(e) => setNewStaff({...newStaff, phone: e.target.value})}
+                    />
+
+                    <TextField
+                        select
+                        label="Department"
+                        name="department"
+                        value={newStaff.department}
+                        onChange={(e) => setNewStaff({...newStaff,department: e.target.value})}
+                        fullWidth
+                        margin="dense"
+                    >
+                        <MenuItem value="General Checkup">General Checkup</MenuItem>
+                        <MenuItem value="Follow Up">Follow Up</MenuItem>
+                        <MenuItem value="Consultation">Consultation</MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        label="Designation"
+                        name="designation"
+                        value={newStaff.designation}
+                        onChange={(e) => setNewStaff({...newStaff,designation: e.target.value})}
+                        fullWidth
+                        margin="dense"
+                    >
+                        <MenuItem value="General Checkup">General Checkup</MenuItem>
+                        <MenuItem value="Follow Up">Follow Up</MenuItem>
+                        <MenuItem value="Consultation">Consultation</MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        label="Status"
+                        name="status"
+                        value={newStaff.status}
+                        onChange={(e) => setNewStaff({...newStaff,status: e.target.value})}
+                        fullWidth
+                        margin="dense"
+                    >
+                        <MenuItem value="Available">Available</MenuItem>
+                        <MenuItem value="On Leave">On Leave</MenuItem>
+                    </TextField>
+
+                </DialogContent>
+                <DialogActions sx={{ justifyContent: "center" }}>
+                    {/*<Button onClick={handleAddDialogClose}>Cancel</Button>*/}
+                    <Button
+                        onClick={handleSubmit}
+                        variant="contained"
+                        sx={{ width: "200px", backgroundColor: "#25307F", "&:hover": { backgroundColor: "green" } }}
+                    >
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
 
             {/* Table Section */}
             <TableContainer component={Paper}>
