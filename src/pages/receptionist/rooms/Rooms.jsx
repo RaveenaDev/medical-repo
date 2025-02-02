@@ -30,6 +30,9 @@ import Avatar from "@mui/material/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Grid from "@mui/material/Grid2";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 import {useLocation} from "react-router-dom";
 
 const Rooms = (props) => {
@@ -42,6 +45,8 @@ const Rooms = (props) => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [editedPatient, setEditedPatient] = useState({});
+    const [addDialogOpen, setAddDialogOpen] = useState(false);
+
 
     const [patients, setPatients] = useState([
         {
@@ -105,6 +110,25 @@ const Rooms = (props) => {
         handleEditDialogClose();
     };
 
+    const handleAddDialogOpen = () => setAddDialogOpen(true);
+    const handleAddDialogClose = () => {
+        console.log("Form Data: ",formData)
+        setAddDialogOpen(false)
+    };
+
+    const [formData, setFormData] = useState({
+        roomId: "",
+        roomName: "",
+        status: "",
+        doctorAssigned: ""
+    });
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+
+
     const location = useLocation()
     const rooms = location.state?.rooms;
 
@@ -159,18 +183,112 @@ const Rooms = (props) => {
                     </Box>
 
                     <div style={{marginLeft: 'auto'}}>
-                        <Button variant="contained" sx={{
-                            fontSize: "20px",
-                            color: "#ffffff",
-                            textTransform: "capitalize",
-                            padding: "2px 18px",
-                            backgroundColor: "#25307F"
-                        }}><img src={addIcon}
-                                className={styles.appointmentBlock__plusIcon}/>Add
+                        <Button variant="contained"
+                                sx={{
+                                    fontSize: "20px",
+                                    color: "#ffffff",
+                                    textTransform: "capitalize",
+                                    padding: "2px 18px",
+                                    backgroundColor: "#25307F"
+                                }}
+                                onClick={handleAddDialogOpen}  // Open modal on click
+                        >
+                            <img src={addIcon} className={styles.appointmentBlock__plusIcon} />
+                            Add
                         </Button>
+
                     </div>
+
+                    <Dialog open={addDialogOpen} onClose={handleAddDialogClose} maxWidth="md" fullWidth sx={{
+                        '& .MuiDialog-paper': {
+                            maxWidth: '65%', // This will reduce the max width between md and lg.
+                        },
+                    }}>
+                        <DialogTitle>Add Room</DialogTitle>
+                        <DialogContent>
+                            <Box sx={{ width: "100%" }}> {/* Fix width issue */}
+                                <Grid container spacing={2}>
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            autoFocus
+                                            margin="dense"
+                                            label="Room ID"
+                                            name="roomId"
+                                            value={formData.roomId}
+                                            onChange={handleChange}
+                                            type="text"
+                                            fullWidth
+                                            variant="outlined"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            margin="dense"
+                                            label="Room Name"
+                                            name="roomName"
+                                            value={formData.roomName}
+                                            onChange={handleChange}
+                                            type="text"
+                                            fullWidth
+                                            variant="outlined"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={3} sx={{ padding: 0, width: '22%' }}>
+                                        <FormControl fullWidth margin="dense">
+                                            <InputLabel id="status-select-label">Status</InputLabel>
+                                            <Select
+                                                labelId="status-select-label"
+                                                id="status-select"
+                                                name="status"
+                                                value={formData.status}
+                                                // onChange={(e) => setStatus(e.target.value)}
+                                                onChange={handleChange}
+                                                label="Status"
+                                                variant="outlined"
+                                                sx={{ width: '100%' }}
+                                            >
+                                                <MenuItem value="Available">Available</MenuItem>
+                                                <MenuItem value="Occupied">Occupied</MenuItem>
+                                                <MenuItem value="Under Maintenance">Under Maintenance</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+
+
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            margin="dense"
+                                            label="Doctor Assigned"
+                                            name="doctorAssigned"
+                                            value={formData.doctorAssigned}
+                                            onChange={handleChange}
+                                            type="text"
+                                            fullWidth
+                                            variant="outlined"
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </DialogContent>
+
+
+                        <DialogActions sx={{ justifyContent: "center" }}>
+                            {/*<Button onClick={handleAddDialogClose}>Cancel</Button>*/}
+                            <Button
+                                onClick={handleAddDialogClose}
+                                variant="contained"
+                                sx={{ width: "200px", backgroundColor: "#25307F", "&:hover": { backgroundColor: "green" } }}
+                            >
+                                Save
+                            </Button>
+                        </DialogActions>
+
+                    </Dialog>
+
                 </div>
             </Box>
+
 
             {/* Table Section */}
             <TableContainer component={Paper}>

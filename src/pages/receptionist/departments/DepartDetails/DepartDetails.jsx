@@ -48,6 +48,8 @@ const DepartDetails = (props) => {
 
     const department = useSelector((store) => store.receptionist.department)
 
+    console.log("DEP:",department)
+
     return (
         <>
                 <div className={styles.receptionist}>
@@ -142,7 +144,7 @@ const DepartDetails = (props) => {
                                                                      marginLeft: '1px',
                                                                      position: 'relative',
                                                                      top: '1px'
-                                                                    }}>{department?.totalNurses.length}</span></InputLabel>
+                                                                    }}>{department?.totalNurses}</span></InputLabel>
                                                              <Select
                                                                  labelId="demo-simple-select-label"
                                                                  id="demo-simple-select"
@@ -160,7 +162,7 @@ const DepartDetails = (props) => {
                                                                  {/*<MenuItem value={10}>Doctor1</MenuItem>*/}
                                                                  {/*<MenuItem value={20}>Doctor2</MenuItem>*/}
                                                                  {
-                                                                     department?.totalNurses.map((nurse) => (
+                                                                     department?.specialistDoctors.map((nurse) => (
                                                                          <MenuItem value={nurse}>{nurse}</MenuItem>
                                                                      ))
                                                                  }
@@ -266,47 +268,31 @@ const DepartDetails = (props) => {
                                                          paddingLeft: '10px',
                                                          color: "#727272"
                                                      }}>
-                                                         <li>
-                                                             <span style={{color: '#727272'}}>• </span>
-                                                             Electrocardiogram (ECG)
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Angiography
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Angioplasty
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Cardiac Catheterization
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Echocardiography (Echo)
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Heart Valve Surgery
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Coronary Artery Bypass Grafting (CABG)
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Pacemaker Implantation
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Cardiac Rehabilitation
-                                                         </li>
+                                                         {
+                                                             department?.availableServices.map((av) => (
+                                                                 <li>
+                                                                     <span style={{color: '#727272'}}>• </span>
+                                                                     {av}
+                                                                 </li>
+                                                             ))
+                                                         }
                                                      </ul>
                                                  </div>
 
                                                  <div>
-                                                     <h4>Specialized Procedures</h4>
+                                                 <h4>Specialized Procedures</h4>
                                                      <ul style={{
                                                          listStyleType: 'none',
                                                          paddingLeft: '10px',
                                                          color: "#727272"
                                                      }}>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             TAVR (Transcatheter Aortic Valve Replacement)
-                                                         </li>
+                                                         {
+                                                             department?.specializedProcedures.map((spec) => (
+                                                                 <li><span style={{color: '#727272'}}>• </span>
+                                                                     {spec}
+                                                                 </li>
+                                                             ))
+                                                         }
                                                      </ul>
                                                  </div>
                                              </div>
@@ -322,24 +308,13 @@ const DepartDetails = (props) => {
                                                          paddingLeft: '10px',
                                                          color: "#727272"
                                                      }}>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Cardiac Catheterization Lab: Operational
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             ECG Machines: 5 Available
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Heart-Lung Machines: 2 Available
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Pacemakers: X Available
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Defibrillators: 3 Available
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             Stress Test Machines: 2 Available
-                                                         </li>
+                                                         {
+                                                             department?.criticalEquipment.map((crit) => (
+                                                                 <li><span style={{color: '#727272'}}>• </span>
+                                                                     {crit}
+                                                                 </li>
+                                                             ))
+                                                         }
                                                      </ul>
                                                  </div>
 
@@ -350,15 +325,18 @@ const DepartDetails = (props) => {
                                                          paddingLeft: '10px',
                                                          color: "#727272"
                                                      }}>
-                                                         <li style={{display: 'flex'}}><span style={{color: '#727272'}}>• </span>
-                                                             <div style={{marginLeft: '4px'}}>
-                                                                 Cath Lab 2: Under maintenance (Expected to be operational
-                                                                 by [Date])
-                                                             </div>
-                                                         </li>
-                                                         <li><span style={{color: '#727272'}}>• </span>
-                                                             ECG Machine 4: Malfunction reported
-                                                         </li>
+                                                         {
+                                                             department?.equipmentMaintenance.map((eq) => (
+                                                                 <li style={{display: 'flex'}}><span
+                                                                     style={{color: '#727272'}}>• </span>
+                                                                     <div style={{marginLeft: '4px'}}>
+                                                                         {
+                                                                             eq
+                                                                         }
+                                                                     </div>
+                                                                 </li>
+                                                             ))
+                                                         }
                                                      </ul>
                                                  </div>
                                              </div>
