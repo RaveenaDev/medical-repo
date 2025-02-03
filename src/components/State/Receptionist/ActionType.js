@@ -5,6 +5,7 @@ export const GET_PATIENTS = 'GET_PATIENTS';
 export const GET_DOCTORS = 'GET_DOCTORS';
 export const GET_STAFFS = 'GET_STAFFS';
 export const GET_ROOMS = 'GET_ROOMS';
+export const ADD_ROOM = 'ADD_ROOM'
 
 export const GET_ALL_DEPARTMENTS = 'GET_ALL_DEPARTMENTS'
 

@@ -1,4 +1,6 @@
 import {
+    ADD_ROOM,
+    BOOK_APPOINTMENT,
     GET_ALL_DEPARTMENTS, GET_APPOINTMENT_REQUESTS, GET_APPOINTMENTS, GET_BILL_BY_ID, GET_BILLS, GET_DEPARTMENT_BY_ID,
     GET_DOCTORS,
     GET_PATIENTS,
@@ -71,6 +73,12 @@ export const receptionistReducer = (state=inititalState,action) => {
                 rooms: action.payload.rooms
             }
 
+        case ADD_ROOM:
+            return{
+                ...state,
+                rooms: [...state.rooms,action.payload.room]
+            }
+
 
         case GET_ALL_DEPARTMENTS:
             return{
@@ -89,6 +97,13 @@ export const receptionistReducer = (state=inititalState,action) => {
                 ...state,
                 totalAppointments: action.payload.count,
                 appointments: action.payload.appointments
+            }
+
+        case BOOK_APPOINTMENT:
+            return{
+                ...state,
+                totalAppointments: action.payload.updatedPatientAppointments.length,
+                appointments: [...state.appointments,action.payload.appointment]
             }
 
         case GET_APPOINTMENT_REQUESTS:

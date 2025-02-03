@@ -1,4 +1,5 @@
 import {
+    ADD_ROOM,
     BOOK_APPOINTMENT,
     GET_ALL_DEPARTMENTS, GET_APPOINTMENT_REQUESTS, GET_APPOINTMENTS, GET_BILL_BY_ID, GET_BILLS, GET_DEPARTMENT_BY_ID,
     GET_DOCTORS,
@@ -8,6 +9,8 @@ import {
 } from "./ActionType.js";
 import axios from "axios";
 import {API_URL} from "../../Config/api.js";
+import { toast } from 'react-toastify';
+
 
 
 export const getPatients = () => async(dispatch) => {
@@ -86,6 +89,26 @@ export const getRooms = () => async(dispatch) => {
     }
 }
 
+export const addRoom = (roomData) => async(dispatch) => {
+    try {
+        const token = localStorage.getItem('jwt');
+
+        const {data} = await axios.post(`${API_URL}/addRoom`,roomData,{
+            headers:{
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            }
+        })
+
+        dispatch({type:ADD_ROOM,payload:data})
+        console.log("Room creation route working :",data)
+
+    }
+
+    catch (error){
+        console.log(error)
+    }
+}
+
 export const getAllDepartments = () => async(dispatch) => {
     try {
         const token = localStorage.getItem('jwt');
@@ -124,7 +147,7 @@ export const getDepartmentById = (departmentId) => async(dispatch) => {
     }
 }
 
-export const bookAppointment = (appData) => async(dispatch) => {
+export const bookAppointment = (appData,onClose) => async(dispatch) => {
     try {
         const token = localStorage.getItem('jwt');
 
@@ -136,10 +159,22 @@ export const bookAppointment = (appData) => async(dispatch) => {
 
         dispatch({type:BOOK_APPOINTMENT,payload:data})
         console.log("Appointment Booked Successfully :",data)
+
+        // Show success toast
+        toast.success('Appointment Booked successfully!', {
+            position: "bottom-right",  // Use string for position
+            autoClose: 3000,
+        });
+
+        onClose();
     }
 
     catch (error){
         console.log(error)
+        toast.error('Failed to book appointment. Please try again!', {
+            position: "bottom-right",  // Use string for position
+            autoClose: 3000,
+        });
     }
 }
 

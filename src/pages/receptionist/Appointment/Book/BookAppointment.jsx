@@ -11,8 +11,10 @@ import {
   getDoctors,
   getPatients
 } from "../../../../components/State/Receptionist/Action.js";
+import {useNavigate} from "react-router-dom";
 
 const BookAppointment = ({ isOpen, onClose }) => {
+  const navigate = useNavigate()
   if (!isOpen) return null;
 
   // const [date, setDate] = useState(new Date());
@@ -54,7 +56,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
 
   const handleClick = () => {
     console.log(formData)
-    dispatch(bookAppointment(formData))
+    dispatch(bookAppointment(formData,onClose))
   }
 
   return (

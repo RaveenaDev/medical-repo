@@ -36,6 +36,8 @@ import Doctors from "./pages/receptionist/doctors/Doctors.jsx";
 import Staffs from "./pages/receptionist/staffs/Staffs.jsx";
 import Rooms from "./pages/receptionist/rooms/Rooms.jsx";
 import Billings from "./pages/receptionist/billing/Billings.jsx";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';  // Import the CSS for the toast notifications
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -67,6 +69,7 @@ function App() {
   ].includes(location.pathname);
   return (
     <>
+        <ToastContainer/>
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
         <div style={{ width: "270px" }}>
           <div className={styles.logo}>

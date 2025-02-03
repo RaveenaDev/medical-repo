@@ -34,6 +34,8 @@ import Grid from "@mui/material/Grid2";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import {useLocation} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {addRoom} from "../../../components/State/Receptionist/Action.js";
 
 const Rooms = (props) => {
 
@@ -110,8 +112,11 @@ const Rooms = (props) => {
         handleEditDialogClose();
     };
 
+    const dispatch = useDispatch();
+
     const handleAddDialogOpen = () => setAddDialogOpen(true);
     const handleAddDialogClose = () => {
+        dispatch(addRoom(formData))
         console.log("Form Data: ",formData)
         setAddDialogOpen(false)
     };
