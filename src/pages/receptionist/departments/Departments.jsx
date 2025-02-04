@@ -74,7 +74,7 @@ const Departments = (props) => {
 
   return (
     <>
-      <div style={{ minWidth: "1160px" }}>
+      <div>
         <div className={styles.receptionist}>
           <CommonPanel />
 
