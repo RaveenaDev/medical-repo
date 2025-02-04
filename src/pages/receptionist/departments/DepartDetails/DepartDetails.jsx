@@ -93,7 +93,7 @@ const DepartDetails = (props) => {
                                                          <FormControl fullWidth>
                                                              <InputLabel id="demo-simple-select-label"
                                                                          // sx={{ fontWeight: 'bold' }} // Makes the label text bold
-                                                             >Total Doctors: <span style={{
+                                                             >Total AdminDoctors: <span style={{
                                                                  fontWeight: 'bold', fontSize: '1.1em',
                                                                  marginLeft: '1px',
                                                                  position: 'relative',
@@ -103,7 +103,7 @@ const DepartDetails = (props) => {
                                                                  labelId="demo-simple-select-label"
                                                                  id="demo-simple-select"
                                                                  value={age}
-                                                                 label="Total Doctors: 03"
+                                                                 label="Total AdminDoctors: 03"
                                                                  onChange={handleChange}
                                                                  IconComponent={KeyboardArrowDownIcon} // Use ArrowDownwardIcon as the dropdown icon
                                                                  sx={{
@@ -147,7 +147,7 @@ const DepartDetails = (props) => {
                                                          </FormControl>
 
                                                          <div className={avi.details}>
-                                                             <h3>Specialist Doctors:</h3>
+                                                             <h3>Specialist AdminDoctors:</h3>
                                                              <ul style={{
                                                                  listStyleType: 'disc',
                                                                  paddingLeft: '10px',

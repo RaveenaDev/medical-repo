@@ -95,9 +95,6 @@ function Receptionist(props) {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const handleCalendar = () => {
-    console.log("handleCalendar");
-  };
   const handleAppointmentRequests = () => {
     console.log("handleAppointmentRequests");
     // Any other logic before opening the modal
