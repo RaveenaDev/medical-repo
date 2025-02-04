@@ -17,7 +17,8 @@ import {
     YAxis
 } from "recharts";
 import Select from "../../components/Select/index.jsx";
-import DonutChart from "./Components/DonutChart.jsx"; // Use Grid from MUI instead
+import DonutChart from "./Components/DonutChart.jsx";
+import {useNavigate} from "react-router-dom"; // Use Grid from MUI instead
 
 function Admin(props) {
 
@@ -150,6 +151,7 @@ function Admin(props) {
         },
     ];
 
+    const navigate = useNavigate();
 
     return (
         <>
@@ -207,10 +209,10 @@ function Admin(props) {
                                             width: 10,
                                             height: 10,
                                             borderRadius: "50%",
-                                            backgroundColor: "green",
+                                            backgroundColor: "#8884d8",
                                         }}
                                     />
-                                    Available
+                                    Appointments
                                 </Box>
                                 <Box display="flex" alignItems="center" gap={1} sx={{color: 'white'}}>
                                     <Box
@@ -218,10 +220,10 @@ function Admin(props) {
                                             width: 10,
                                             height: 10,
                                             borderRadius: "50%",
-                                            backgroundColor: "orange",
+                                            backgroundColor: "#82ca9d",
                                         }}
                                     />
-                                    Occupied
+                                    Completed
                                 </Box>
                                 <Box display="flex" alignItems="center" gap={1} sx={{color: 'white'}}>
                                     <Box
@@ -229,10 +231,10 @@ function Admin(props) {
                                             width: 10,
                                             height: 10,
                                             borderRadius: "50%",
-                                            backgroundColor: "skyblue",
+                                            backgroundColor: "#EAA000",
                                         }}
                                     />
-                                    Under Maintenance
+                                    Canceled
                                 </Box>
                             </Box>
 
@@ -277,9 +279,17 @@ function Admin(props) {
                                 }}
                             >
                                 <CartesianGrid vertical={false} />
-                                <XAxis dataKey="name"/>
-                                <YAxis />
-                                <Tooltip/>
+                                <XAxis dataKey="name" tick={{ fill: "#fff" }}/>
+                                <YAxis tick={{ fill: "#fff" }}/>
+                                {/* Customize the Tooltip */}
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: '#333',  // Dark background for the tooltip
+                                        color: '#fff',            // White text color
+                                        borderRadius: '5px',      // Optional: for rounded corners
+                                        padding: '10px'           // Optional: for more spacing inside the tooltip
+                                    }}
+                                />
                                 {/* Remove the Legend for clarity */}
                                 <Bar dataKey="pv" fill="#8884d8" radius={[10, 10, 0, 0]} barSize={15} />
                                 <Bar dataKey="uv" fill="#82ca9d" radius={[10, 10, 0, 0]} barSize={15} />
@@ -294,7 +304,7 @@ function Admin(props) {
                 <Grid container item xs={12} spacing={2}>
                     {/* Left half of the bottom grid */}
                     <Grid item xs={8}>
-                        <Box sx={{width: '100%', backgroundColor: "white", py: 2, borderRadius: "0.4rem"}}>
+                        <Box onClick={() => navigate(`/admin/earnings`)} sx={{width: '100%', backgroundColor: "white", py: 2, borderRadius: "0.4rem",cursor:"pointer"}}>
 
                             <div style={{color:"#25307F",paddingTop: "0.4rem", marginLeft: "1.8rem", marginBottom: "1.5rem"}}>
                                 <h3>Revenue
@@ -335,7 +345,9 @@ function Admin(props) {
                     <Grid item xs={4}>
                         <Box sx={{width: '100%', backgroundColor: "white", py: 2, borderRadius: "0.4rem"}}>
 
-                            <div style={{
+                            <div onClick={() => navigate(`/admin/departments`)}
+                                style={{
+                                cursor: "pointer",
                                 color: "#25307F",
                                 paddingTop: "0.4rem",
                                 marginLeft: "1.8rem",

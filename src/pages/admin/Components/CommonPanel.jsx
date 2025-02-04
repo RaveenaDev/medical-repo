@@ -17,7 +17,6 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const CommonPanel = () => {
     const navigate = useNavigate();
@@ -26,7 +25,6 @@ const CommonPanel = () => {
 
     // Define the routes where you want to hide the div
     const excludedRoutes = [
-        '/admin/earnings',
         '/admin/doctors',
         '/admin/staffs',
         '/admin/rooms',
