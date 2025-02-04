@@ -6,14 +6,14 @@
 }
 .register.otherPages {
   flex-basis: 80%;
-  background-color: #F1F1F1;
+  background-color: #f1f1f1;
   padding: 30px 60px 40px 18px;
 }
 
 .logo {
-  margin: 0 0 20px 40px;
+  margin: 0 0 15px 30px;
 }
 
 .crmApp {
   display: flex;
-}/*# sourceMappingURL=App.module.css.map */
+} /*# sourceMappingURL=App.module.css.map */

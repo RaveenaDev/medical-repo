@@ -204,7 +204,7 @@ function Receptionist(props) {
 
   return (
     <>
-      <div className={ayu.patients}>
+      <div>
         <CommonPanel />
         {!props.entity ? (
           <>
@@ -343,7 +343,7 @@ function Receptionist(props) {
                 </div>
                 <Grid
                   container
-                  spacing={8}
+                  spacing={4}
                   justifyContent="center"
                   sx={{ mb: 1 }}
                 >

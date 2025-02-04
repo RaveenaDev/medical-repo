@@ -68,7 +68,7 @@ function App() {
   return (
     <>
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
-        <div style={{ width: "270px" }}>
+        <div style={{ width: "20%" }}>
           <div className={styles.logo}>
             <Logo />
           </div>
