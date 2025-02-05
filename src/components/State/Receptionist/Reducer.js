@@ -121,6 +121,7 @@ export const receptionistReducer = (state=inititalState,action) => {
         case GET_BILL_BY_ID:
             return{
                 ...state,
+                bill: action.payload
             }
 
         default:

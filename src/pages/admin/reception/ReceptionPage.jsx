@@ -178,7 +178,7 @@ const ReceptionPage = () => {
                                                     {truncateText(row.name,13)}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row" sx={{border:'none',padding: '14px 14px'}}>
-                                                    {truncateText(row.doctors[0],13)}
+                                                    {truncateText(row.doctors[0].name,13)}
                                                 </TableCell>
                                                 <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{truncateText(row.role,14)}</TableCell>
                                                 <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{row.gender}</TableCell>

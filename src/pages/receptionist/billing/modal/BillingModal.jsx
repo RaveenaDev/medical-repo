@@ -3,7 +3,7 @@ import { Modal, Box, Typography, Button } from "@mui/material";
 import "./BillingModal.scss"; // Ensure this file exists
 
 import arrowBack from "../../../../assets/arrow_back.svg";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getBillById} from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 
 const BillingModal = ({ open, bill, onClose }) => {
@@ -14,6 +14,8 @@ const BillingModal = ({ open, bill, onClose }) => {
   useEffect(() => {
     dispatch(getBillById(billId))
   }, [dispatch,billId]);
+
+  const billByID = useSelector(store => store.receptionist.bill)
 
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
@@ -30,8 +32,6 @@ const BillingModal = ({ open, bill, onClose }) => {
   }, [open]);
   if (!bill) return null; // Avoid rendering if no bill is selected
 
-
-
   return (
     <div
       className={`billing-modal-overlay ${open ? "open" : ""}`}
@@ -47,7 +47,7 @@ const BillingModal = ({ open, bill, onClose }) => {
               <img src={arrowBack} alt="Back" />
             </button>
             <h2>
-              Billing Details: <span>{bill.patient.name}</span>
+              Billing Details: <span>{billByID?.patient.name}</span>
             </h2>
           </div>
           <Button className="print-btn">Print</Button>
@@ -57,57 +57,74 @@ const BillingModal = ({ open, bill, onClose }) => {
             <div className="billing-no">
               <div>
                 <span className="bold">Invoice Number</span>
-                <span>{bill.invoiceNumber}</span>
+                <span>{billByID?.invoiceNumber}</span>
               </div>
               <div>
                 <span className="bold">Invoice Date</span>
-                <span>{bill.invoiceDate}</span>
+                <span>{billByID?.invoiceDate}</span>
               </div>
             </div>
             <div className="billing-divider"></div>
             <div className="billing-invoice-amount">
               {
-                bill?.services.map((service) => (
-                    <div className="billing-desc">
-                      <div>
-                        <span className="bold">Description</span>
-                        <span>{service.service.name}</span>
+                billByID?.services.map((service) => (
+                    <>
+                      <h3>{service.name}</h3>
+                      <div >
+                        {
+                          service.categories.map((cat,index) => (
+                              <div key={index} className="billing-desc">
+                                <div>
+                                  <span className="bold">Description</span>
+                                  <span>{cat.category}</span>
+                                </div>
+                                <div>
+                                  <span className="bold">Quantity</span>
+                                  <span className="center">{cat.quantity}</span>
+                                </div>
+                                <div>
+                                  <span className="bold">Price</span>
+                                  <span> {cat.rate}</span>
+                                </div>
+                              </div>
+                          ))
+                        }
                       </div>
-                      <div>
-                        <span className="bold">Quantity</span>
-                        <span className="center">{service.quantity}</span>
+
+                      <div className="billing-divider"></div>
+                      <div className="billing-total">
+                        <div className="bold">Total</div>
+                        <div className="bold">
+                          {
+                            service.categories.reduce((acc, cat) => acc + (cat.rate * cat.quantity), 0).toFixed(2)
+                            // Calculate the total sum of all item totals and format it
+                          }
+                        </div>
                       </div>
-                      <div>
-                        <span className="bold">Price</span>
-                        <span> {bill.amount}</span>
-                      </div>
-                    </div>
+
+                    </>
                 ))
               }
-              <div className="billing-divider"></div>
-              <div className="billing-total">
-                <div className="bold">Total</div>
-                <div className="bold">{bill.totalAmount}</div>
-              </div>
+
             </div>
           </div>
           <div className="billing-amount">
             <div className="billing-amount-details">
               <div>
                 <div className="bold">Total Amount</div>
-                <div>{bill.totalAmount}</div>
+                <div>{billByID.totalAmount}</div>
               </div>
               <div>
                 <div className="bold">Paid</div>
-                <div>{bill.paidAmount}</div>
+                <div>{billByID.paidAmount}</div>
               </div>
               <div>
                 <div className="bold ">Outstanding</div>
-                <div className="center">{bill.outstanding}</div>
+                <div className="center">{billByID.outstanding}</div>
               </div>
               <div>
                 <div className="bold">Status</div>
-                <div className="center">{bill.status}</div>
+                <div className="center">{billByID.status}</div>
               </div>
             </div>
             <div className="billing-divider"></div>
@@ -115,11 +132,11 @@ const BillingModal = ({ open, bill, onClose }) => {
               <div className="bold">Payment History</div>
               <div className="billing-summary">
                 <p>
-                  Amount Paid: <span> {bill.paidAmount}</span>
+                  Amount Paid: <span> {billByID.paidAmount}</span>
                 </p>
                 <p>Mode: Cash</p>
                 <p>
-                  Date: <span>{bill.updatedAt}</span>
+                  Date: <span>{billByID.invoiceDate}</span>
                 </p>
               </div>
             </div>

@@ -38,6 +38,10 @@ import Rooms from "./pages/receptionist/rooms/Rooms.jsx";
 import Billings from "./pages/receptionist/billing/Billings.jsx";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';  // Import the CSS for the toast notifications
+import Earnings from "./pages/admin/earnings/Earnings.jsx";
+import AdminDoctors from "./pages/admin/doctors/AdminDoctors.jsx";
+import AdminStaffs from "./pages/admin/staffs/AdminStaffs.jsx";
+import AdminRooms from "./pages/admin/rooms/AdminRooms.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -252,6 +256,50 @@ function App() {
                 />
               }
             />
+
+              <Route
+                  path="/admin/earnings"
+                  element={
+                      <Earnings
+                          setIsSignUpOrLogin={setIsSignUpOrLogin}
+                          setEntity={setEntity}
+                          entity={entity}
+                      />
+                  }
+              />
+
+              <Route
+                  path="/admin/doctors"
+                  element={
+                      <AdminDoctors
+                          setIsSignUpOrLogin={setIsSignUpOrLogin}
+                          setEntity={setEntity}
+                          entity={entity}
+                      />
+                  }
+              />
+
+              <Route
+                  path="/admin/staffs"
+                  element={
+                      <AdminStaffs
+                          setIsSignUpOrLogin={setIsSignUpOrLogin}
+                          setEntity={setEntity}
+                          entity={entity}
+                      />
+                  }
+              />
+
+              <Route
+                  path="/admin/rooms"
+                  element={
+                      <AdminRooms
+                          setIsSignUpOrLogin={setIsSignUpOrLogin}
+                          setEntity={setEntity}
+                          entity={entity}
+                      />
+                  }
+              />
             <Route
               path="/admin/reception"
               element={

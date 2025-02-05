@@ -1,57 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import Dashboard from '../../dashboard.jsx';
-import Card from '../../../../components/Card';
-import styles from '../../styles.module.scss';
-import Grid from '@mui/material/Grid2';
-import EntityBasedTable from '../../EntityBasedTable';
-import {Badge, Box, Button} from '@mui/material';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import React, {useState} from "react";
+import ayu from "../../receptionist/patients/patients.module.scss";
+import Searchbar from "../../../components/Searchbar/index.jsx";
+import Grid from "@mui/material/Grid2";
+import Card from "../../../components/Card/index.jsx";
+import {useLocation, useNavigate} from "react-router-dom";
+import Notifications from "../../../components/NotificationFunc/Notification.jsx";
+import styles from "../../receptionist/styles.module.scss";
+import {Box, Button} from "@mui/material";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import ayu from "../../departments/departments.module.scss";
-import avi from "./appointments.module.scss"
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import {useNavigate} from "react-router-dom";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
-function Appointments(props) {
-    const [tableIndex, setTableIndex] = useState(null);
-    const navigate = useNavigate()
-    useEffect(() => {
-        props?.setIsSignUpOrLogin(false);
-    }, []);
+const CommonPanel = () => {
+    const navigate = useNavigate();
 
-    const cardClickhandler = (e, entity) => {
-        console.log("jhgfcg", e, entity);
-        if(entity === "patient") {
-            setTableIndex(0);
-        }
-        if(entity === "doctor") {
-            setTableIndex(1);
-        }
-        if(entity === "staff") {
-            setTableIndex(2);
-        }
-        if(entity === "room") {
-            setTableIndex(3);
-        }
-        props?.setEntity(entity);
-    }
-    const handleCalendar = () => {
-        console.log("handleCalendar");
-    }
+    const location = useLocation(); // Get the current route
+
+    // Define the routes where you want to hide the div
+    const excludedRoutes = [
+        '/admin/doctors',
+        '/admin/staffs',
+        '/admin/rooms',
+    ];
+
+    // Check if the current route is in the excluded routes list
+    const shouldHideDiv = excludedRoutes.includes(location.pathname);
 
     const [age, setAge] = React.useState('');
+
+    const [selectedDate, setSelectedDate] = useState(dayjs());
 
     const handleChange = (event) => {
         setAge(event.target.value);
     };
-
-    const handleBack = () => {
-        navigate('/admin/reception')
-    }
 
     const shapeStyles = { bgcolor: '#25307f', width: 30, height: 26 };
     const shapeCircleStyles = { borderRadius: '50%' };
@@ -61,62 +49,98 @@ function Appointments(props) {
     );
     return (
         <>
-            <div className={styles.receptionist}>
-                <Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{ md: 'row' }} size={12} sx={{margin: '0 0 20px 0'}}>
+            <div className={ayu.patients}>
+                <div className={ayu.patientHeader}>
+                    <Searchbar/>
+                    <Notifications/>
+                </div>
+
+                <div className={ayu.cardhandling}>
+                    <h3 className={ayu.heading}>Dashboard Overview</h3>
+                </div>
+
+                <Grid
+                    container
+                    spacing={2}
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    flexDirection={{md: "row"}}
+                    size={12}
+                    sx={{margin: "0 0 20px 0"}}
+                >
                     <Grid size={3}>
                         <Card
-                            title="Total Patient"
-                            subtitle="200+"
-                            handleClickCb={(e) => cardClickhandler(e, "patient")}
+                            title="Total Earnings"
+                            subtitle="80000"
+                            handleClickCb={() => navigate(`/admin/earnings`)}
                         />
                     </Grid>
                     <Grid size={3}>
                         <Card
                             customStyle={{
-                                backgroundColor: "#EAA000"
+                                backgroundColor: "#EAA000",
                             }}
-                            title="Total AdminDoctors"
+                            title="Total Doctors"
                             subtitle="8"
-                            handleClickCb={(e) => cardClickhandler(e, "doctor")}
+                            handleClickCb={() => navigate(`/admin/doctors`)}
                         />
                     </Grid>
                     <Grid size={3}>
                         <Card
                             customStyle={{
-                                backgroundColor: "#2E823B"
+                                backgroundColor: "#2E823B",
                             }}
-                            title="Total AdminStaffs"
+                            title="Total Staffs"
                             subtitle="250"
-                            handleClickCb={(e) => cardClickhandler(e, "staff")}
+                            handleClickCb={() => navigate(`/admin/staffs`)}
                         />
                     </Grid>
                     <Grid size={3}>
                         <Card
                             customStyle={{
-                                backgroundColor: "#66A7B4"
+                                backgroundColor: "#66A7B4",
                             }}
-                            title="Total AdminRooms"
+                            title="Total Rooms"
                             subtitle="80"
-                            handleClickCb={(e) => cardClickhandler(e, "room")}
+                            handleClickCb={() => navigate(`/admin/rooms`)}
                         />
                     </Grid>
                 </Grid>
-                {!props.entity ? <>
+            </div>
+
+            {
+                !shouldHideDiv && (
                     <div className={styles.appointmentBlock}>
                         <Grid container spacing={2} justifyContent="space-between" alignItems="center"
                               flexDirection={{md: 'row'}} size={12} sx={{margin: '0 0 20px 0'}}>
-                            <Grid size={3}>
-                                <Button variant="text" sx={{
-                                    fontSize: "22px",
-                                    color: "#0150EA",
-                                    textTransform: "capitalize",
-                                    padding: "0px"
-                                }} onClick={handleCalendar}>Today</Button>
+                            <Grid size={4} sx={{display: "flex", alignItems: "center"}}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <Box
+                                        sx={{
+                                            backgroundColor: "white",
+                                            boxShadow: 3,
+                                            borderRadius: 1,
+                                            width: 180, // Adjust width here
+                                            textAlign: "center",
+                                            // padding: "4px", // Reduce padding to make the container smaller
+                                        }}
+                                    >
+                                        <DatePicker
+                                            value={selectedDate}
+                                            onChange={(newValue) => setSelectedDate(newValue)}
+                                            sx={{
+                                                width: "100%", // Ensure the date picker takes up 100% of the container's width
+                                                fontSize: "24px", // Adjust font size inside the date picker
+                                                input: {
+                                                    fontSize: "14px", // Adjust input field font size if needed
+                                                    padding: "10px", // Adjust input field padding to make it smaller
+                                                }
+                                            }}
+                                        />
+                                    </Box>
+                                </LocalizationProvider>
                             </Grid>
-                            <Grid size={9} sx={{display: "flex", justifyContent: "flex-end"}}>
-                                {/*<Button variant="contained" sx={{fontSize: "20px", color: "#878787", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#fff", marginRight: "22px"}} onClick={handleAppointmentRequests}><img src="src/assets/account_circle.svg" className={styles.appointmentBlock__accountIcon}/>Appointment Requests</Button>*/}
-                                {/*<Button variant="contained" sx={{fontSize: "20px", color: "#878787", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#fff", marginRight: "22px"}} onClick={handleBilling}><img src="src/assets/payments.svg" className={styles.appointmentBlock__paymentIcon}/>Billing</Button>*/}
-                                {/*<Button variant="contained" sx={{fontSize: "20px", color: "#ffffff", textTransform: "capitalize", padding: "0px 14px", backgroundColor: "#25307F"}} onClick={handleBookAppointment}><img src="src/assets/plus.svg" className={styles.appointmentBlock__plusIcon}/>Book Appointment</Button>*/}
+                            <Grid size={8} sx={{display: "flex", justifyContent: "flex-end"}}>
                                 <Button variant="contained" sx={{
                                     fontSize: "16px",
                                     color: "#878787",
@@ -205,19 +229,10 @@ function Appointments(props) {
                             </Grid>
                         </Grid>
                     </div>
-
-                    <Box className={avi.headerContainer} style={{position:"relative",top:"52px",left:"12px"}}>
-                        <button className={avi.icon} onClick={handleBack}>
-                            <ArrowBackIosIcon/>
-                        </button>
-                        <h2 className={avi.departmentTitle}>Appointments</h2>
-                    </Box>
-
-                    <Dashboard/>
-                </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>}
-            </div>
+                )
+            }
         </>
-    );
-}
 
-export default Appointments;
+    );
+};
+export default CommonPanel;
