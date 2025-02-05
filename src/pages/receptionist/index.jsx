@@ -443,7 +443,7 @@ function Receptionist(props) {
                           </TableCell>
                           <TableCell>{appointment.doctor.name}</TableCell>
                           <TableCell>{appointment.typeVisit}</TableCell>
-                          <TableCell>{appointment.department}</TableCell>
+                          <TableCell>{appointment.department.name}</TableCell>
                           <TableCell>{appointment.tokenDate}</TableCell>
                           <TableCell>
                             <Chip
