@@ -67,7 +67,7 @@ const MoreInfo = (props) => {
               spacing={2}
               style={{
                 height: "100vh", // Full viewport height
-                padding: "20px",
+                padding: "1rem",
               }}
             >
               <Grid item xs={6}>
@@ -96,7 +96,7 @@ const MoreInfo = (props) => {
                     height: "100%", // Full height of the grid item
                     padding: "20px",
                     textAlign: "center",
-                    width: "35vw",
+                    width: "30vw",
                   }}
                 >
                   <FileDocuments />
