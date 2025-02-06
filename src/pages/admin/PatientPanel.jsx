@@ -19,14 +19,11 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import FilterBox from "./Components/FilterBox";
-import { Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import rav from "../receptionist/styles.module.scss";
-import Avatar from "@mui/material/Avatar";
-import styles from "../receptionist/patients/profile/profile.module.scss";
-import PersonalInfo from "../receptionist/patients/profile/PersonalInfo.jsx";
-import MedicalInfo from "../receptionist/patients/profile/MedicalInfo.jsx";
-import ProgressTracker from "../receptionist/patients/profile/ProgressTracker.jsx";
 import EntityBasedTable from "../receptionist/EntityBasedTable/index.jsx";
+import CommonPanel from "./Components/CommonPanel.jsx";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 
 
 const PatientPanel = (props) => {
@@ -37,10 +34,111 @@ const PatientPanel = (props) => {
     useEffect(() => {
         props?.setIsSignUpOrLogin(false);
     }, []);
+
+  const [sortOrder, setSortOrder] = useState("Newest to Oldest");
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editedPatient, setEditedPatient] = useState({});
+
+  const [patients, setPatients] = useState([
+    {
+      id: "1",
+      name: "Jasmin Kaur",
+      email: "jasmin@gmail.com",
+      phone: "+91 79327728",
+      type: "Walk In",
+      branch: "Cardiology",
+      date: "2024-10-08",
+      status: "Active",
+    },
+    {
+      id: "2",
+      name: "Amit Tripathi",
+      email: "amittripathi@gmail.com",
+      phone: "+91 79327728",
+      type: "Referral",
+      branch: "Cardiology",
+      date: "2024-10-08",
+      status: "In-active",
+    },
+  ]);
+
+  const [filters, setFilters] = useState({
+    status: "All",
+    type: "All",
+  });
+
+  // Handle Sort Change
+  const handleSortChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+
+  // Handle Menu Open
+  const handleMenuOpen = (event, patient) => {
+    event.stopPropagation(); // Prevent interference with other clicks
+    setAnchorEl(event.currentTarget);
+    setSelectedPatient(patient);
+  };
+
+  // Handle Menu Close
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedPatient(null);
+  };
+
+  // Handle Edit Action
+  const handleEdit = () => {
+    setEditedPatient(selectedPatient); // Load selected patient into editedPatient
+    setEditDialogOpen(true);
+    handleMenuClose();
+  };
+
+  // Handle Delete Action
+  const handleDelete = () => {
+    setPatients((prev) =>
+        prev.filter((patient) => patient.id !== selectedPatient.id)
+    );
+    handleMenuClose();
+  };
+
+  // Handle Filter Changes
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle Search Results
+  const handleSearchResults = () => {
+    console.log("Filters Applied:", filters);
+    setFilterDrawerOpen(false);
+  };
+
+  // Handle Edit Dialog Close
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+  };
+
+  // Handle Save Edited Patient
+  const handleSaveEditedPatient = () => {
+    setPatients((prev) =>
+        prev.map((patient) =>
+            patient.id === editedPatient.id ? editedPatient : patient
+        )
+    );
+    handleEditDialogClose();
+  };
+
+    const navigate = useNavigate()
+  const handleBack = () => {
+    navigate('/admin/reception')
+  }
   
   return (
 
       <>
+        <CommonPanel/>
           <div className={rav.receptionist}>
               {!props.entity ?
                   <>
@@ -61,71 +159,74 @@ const PatientPanel = (props) => {
                                   marginBottom: 2,
                               }}
                           >
-                              <Box sx={{ display: "flex", alignItems: "center" }}>
-                                  <ArrowBackIosIcon sx={{ color: "#111827", marginRight: 1 }} />
-                                  <Typography variant="h6" sx={{ fontWeight: "bold", color: "#111827" }}>
+                              <Box sx={{ display: "flex", alignItems: "center",cursor:"pointer",color:"#25307F" }} onClick={handleBack}>
+                                  <ArrowBackIosIcon sx={{ marginRight: 0.2 }} />
+                                  <Typography variant="h6" sx={{ fontWeight: "bold"}}>
                                       Patient List
                                   </Typography>
                               </Box>
                           </Box>
 
-                          {/* Sort and Filter Section */}
-                          <Box
-                              sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
-                                  marginBottom: 2,
-                              }}
-                          >
-                              <Box sx={{ display: "flex", alignItems: "center" }}>
-                                  <Typography variant="body1" sx={{ color: "#6B7280", marginRight: 2 }}>
-                                      56 Patients
-                                  </Typography>
-                                  <Box>
-                                      <Typography
-                                          variant="body2"
-                                          sx={{ color: "#6B7280", marginRight: 1, display: "inline" }}
-                                      >
-                                          Sort by:
-                                      </Typography>
-                                      <Select
-                                          value={"Newest to Oldest"}
-                                          sx={{
-                                              height:"40px",
-                                              width:"200px",
-                                              outline:"none",
-                                              border: "none",
-                                              borderRadius: "8px",
-                                              padding: "2px",
-                                              backgroundColor: "#FFFFFF",
-                                          }}
-                                      >
-                                          <MenuItem value="Newest to Oldest">Newest to Oldest</MenuItem>
-                                          <MenuItem value="Oldest to Newest">Oldest to Newest</MenuItem>
-                                      </Select>
-                                  </Box>
-                              </Box>
-                              <Button
-                                  variant="outlined"
-                                  startIcon={<FilterListIcon />}
-                                  sx={{
-                                      textTransform: "none",
-                                      color: "#374151",
-                                      borderColor: "#D1D5DB",
-                                      backgroundColor: "#FFFFFF",
-                                  }}
-
-                                  onClick={()=> setShowFilter((prev) => !prev)}
+                        {/* Header Section */}
+                        <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderTop: "0.5px solid #4A4A4A8C",
+                              borderBottom: "0.5px solid #4A4A4A8C",
+                              paddingY: 2,
+                              marginBottom: 3,
+                            }}
+                        >
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            <Typography
+                                variant="h4"
+                                sx={{
+                                  fontWeight: "bold",
+                                  borderRight: "0.5px solid #4A4A4A8C",
+                                  paddingRight: 2,
+                                  marginRight: 2,
+                                  color: "#25307F"
+                                }}
+                            >
+                              {patients.length}{" "}
+                              <Typography
+                                  component="span"
+                                  variant="body1"
+                                  sx={{ fontWeight: "normal", color: "black" }}
                               >
-                                  Filter
-                              </Button>
+                                Patients
+                              </Typography>
+                            </Typography>
 
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <Typography variant="body1" sx={{ marginRight: 1, color: "black" }}>
+                                Sort by:
+                              </Typography>
+                              <Select
+                                  value={sortOrder}
+                                  onChange={handleSortChange}
+                                  size="small"
+                                  sx={{ minWidth: 160 }}
+                              >
+                                <MenuItem value="Newest to Oldest">Newest to Oldest</MenuItem>
+                                <MenuItem value="Oldest to Newest">Oldest to Newest</MenuItem>
+                              </Select>
+                            </Box>
                           </Box>
 
-                          {showFilter && <FilterBox setShowFilter={setShowFilter} />}
-
-
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Button
+                                variant="outlined"
+                                startIcon={<FilterAltOutlinedIcon />}
+                                sx={{ textTransform: "none" }}
+                                onClick={() => setFilterDrawerOpen(true)}
+                            >
+                              Filter
+                            </Button>
+                          </Box>
+                        </Box>
 
                           <TableContainer component={Paper} sx={{ borderRadius: "8px", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)" }}>
                               <Table>
