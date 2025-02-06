@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import PersonalInfo from "./PersonalInfo.jsx";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import FileDocuments from "./FileDocuments";
+import PatientHeader from "./components/PatientHeader.jsx";
 
 const MoreInfo = (props) => {
   const [medicalHistory, setMedicalHistory] = useState([]);
@@ -62,6 +63,7 @@ const MoreInfo = (props) => {
       <div className={rav.receptionist}>
         {!props.entity ? (
           <>
+            <PatientHeader showEditPatients={false} />
             <Grid
               container
               spacing={2}

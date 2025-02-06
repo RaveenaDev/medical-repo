@@ -11,6 +11,7 @@ import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ProgressTracker from "./ProgressTracker";
 import { Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import PatientHeader from "./components/PatientHeader.jsx";
 
 const Profile = (props) => {
   const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
@@ -54,6 +55,7 @@ const Profile = (props) => {
       <div className={rav.receptionist}>
         {!props.entity ? (
           <>
+            <PatientHeader />
             <Grid container spacing={2}>
               {/* Box 1 */}
               <Grid item xs={3}>
