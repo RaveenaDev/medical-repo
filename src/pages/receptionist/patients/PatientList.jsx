@@ -37,7 +37,7 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 
-const PatientList = ({allPatients}) => {
+const PatientList = ({ allPatients }) => {
   const [sortOrder, setSortOrder] = useState("Newest to Oldest");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -133,44 +133,48 @@ const PatientList = ({allPatients}) => {
     handleEditDialogClose();
   };
 
-    const navigate = useNavigate()
-    const handleClick = (patient) => {
-        navigate(`/receptionist/patients/profile`,{state: {patient}})
-    }
+  const navigate = useNavigate();
+  const handleClick = (patient) => {
+    navigate(`/receptionist/patients/profile`, { state: { patient } });
+  };
 
-    // console.log("Patt :",allPatients.patients)
+  // console.log("Patt :",allPatients.patients)
 
-    const totalPatients = allPatients.patients;
+  const totalPatients = allPatients.patients;
 
-    return (
-        <Box sx={{ padding: 2 }}>
-            {/* Header Section */}
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderTop: "0.5px solid #4A4A4A8C",
-                    borderBottom: "0.5px solid #4A4A4A8C",
-                    paddingY: 2,
-                    marginBottom: 3,
-                }}
+  return (
+    <Box sx={{ padding: 2 }}>
+      {/* Header Section */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderTop: "0.5px solid #4A4A4A8C",
+          borderBottom: "0.5px solid #4A4A4A8C",
+          paddingY: 2,
+          marginBottom: 3,
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              borderRight: "0.5px solid #4A4A4A8C",
+              paddingRight: 2,
+              marginRight: 2,
+              color: "black",
+            }}
+          >
+            {allPatients?.noOfPatients}{" "}
+            <Typography
+              variant="body1"
+              sx={{ display: "inline", color: "black" }}
             >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            fontWeight: "bold",
-                            borderRight: "0.5px solid #4A4A4A8C",
-                            paddingRight: 2,
-                            marginRight: 2,
-                        }}
-                    >
-                        {allPatients?.noOfPatients}{" "}
-                        <Typography variant="body1" sx={{ display: "inline" }}>
-                            Patients
-                        </Typography>
-                    </Typography>
+              Patients
+            </Typography>
+          </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography variant="body1" sx={{ marginRight: 1, color: "black" }}>

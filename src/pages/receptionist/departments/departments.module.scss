@@ -51,7 +51,7 @@ $blue: #25307f;
   background-color: white;
 
   height: 225px;
-  min-width: 306px;
+  min-width: 316px;
   padding: 1.5rem 1rem; // px-4 py-6
   border-radius: 12px;
   cursor: pointer;
@@ -65,15 +65,20 @@ $blue: #25307f;
 
   .cardHeader {
     display: flex;
-    gap: 0.4rem; // gap-2
+    justify-content: space-between;
+
+    .titleContainer {
+      display: flex;
+      gap: 8px;
+    }
 
     .circle {
       background-color: #c8dfe4;
-      width: 1.45rem; // w-5
-      height: 1.45rem; // h-5
+      width: 1.25rem; // w-5
+      height: 1.25rem; // h-5
       border-radius: 50%; // rounded-full
       margin-top: 0.5rem; // mt-[3px]
-      margin-right: 0.6rem; // Add this margin to increase the space between circle and title
+      // margin-right: 0.6rem; // Add this margin to increase the space between circle and title
     }
 
     .title {
@@ -92,8 +97,6 @@ $blue: #25307f;
     .icons {
       margin-top: 0.3rem;
       //margin-left: 2rem;
-      position: relative;
-      left: 46px;
 
       .message {
         color: #25307f;
