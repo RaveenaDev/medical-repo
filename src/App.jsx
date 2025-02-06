@@ -75,7 +75,7 @@ function App() {
     <>
         <ToastContainer/>
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
-        <div style={{ width: "270px" }}>
+        <div style={{ width: "20%", backgroundColor: "white" }}>
           <div className={styles.logo}>
             <Logo />
           </div>

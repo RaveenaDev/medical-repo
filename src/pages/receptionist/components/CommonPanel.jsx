@@ -48,7 +48,7 @@ const CommonPanel = () => {
       </div>
 
             <Grid container spacing={2} justifyContent="flex-end" alignItems="center" flexDirection={{md: 'row'}}
-                  size={12} sx={{margin: '0 0 20px 0'}}>
+                  size={10} sx={{margin: '0 0 18px 0'}}>
                 <Grid size={3}>
                     <Card
                         title="Total Patient"

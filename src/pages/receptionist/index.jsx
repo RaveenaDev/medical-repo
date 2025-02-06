@@ -190,7 +190,7 @@ function Receptionist(props) {
 
   return (
     <>
-      <div className={ayu.patients}>
+      <div>
         <CommonPanel />
         {!props.entity ? (
           <>
@@ -232,12 +232,19 @@ function Receptionist(props) {
                   <Button
                     variant="contained"
                     sx={{
-                      fontSize: "20px",
+                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
                       color: "#878787",
                       textTransform: "capitalize",
-                      padding: "0px 14px",
+                      padding: {
+                        xs: "0px 8px",
+                        sm: "0px 10px",
+                        md: "0px 10px",
+                      }, // Adjust padding
                       backgroundColor: "#fff",
-                      marginRight: "22px",
+                      marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
+                      display: "flex",
+                      alignItems: "center",
+                      gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
                     }}
                     onClick={handleAppointmentRequests}
                   >
@@ -259,12 +266,19 @@ function Receptionist(props) {
                   <Button
                     variant="contained"
                     sx={{
-                      fontSize: "20px",
+                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
                       color: "#878787",
                       textTransform: "capitalize",
-                      padding: "0px 14px",
+                      padding: {
+                        xs: "0px 8px",
+                        sm: "0px 10px",
+                        md: "0px 10px",
+                      }, // Adjust padding
                       backgroundColor: "#fff",
-                      marginRight: "22px",
+                      marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
+                      display: "flex",
+                      alignItems: "center",
+                      gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
                     }}
                     onClick={handleBilling}
                   >
@@ -277,10 +291,14 @@ function Receptionist(props) {
                   <Button
                     variant="contained"
                     sx={{
-                      fontSize: "20px",
+                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
                       color: "#ffffff",
                       textTransform: "capitalize",
-                      padding: "0px 14px",
+                      padding: {
+                        xs: "0px 8px",
+                        sm: "0px 10px",
+                        md: "0px 10px",
+                      }, // Adjust padding
                       backgroundColor: "#25307F",
                     }}
                     onClick={handleBookAppointment}
@@ -330,7 +348,7 @@ function Receptionist(props) {
                 </div>
                 <Grid
                   container
-                  spacing={8}
+                  spacing={4}
                   justifyContent="center"
                   sx={{ mb: 1 }}
                 >

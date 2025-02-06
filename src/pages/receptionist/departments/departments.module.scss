@@ -1,4 +1,4 @@
-$blue : #25307f;
+$blue: #25307f;
 
 .headerContainer {
   display: flex;
@@ -7,40 +7,40 @@ $blue : #25307f;
   margin-bottom: 5px;
 
   .backButton {
-    margin-right: 8px;  // Space between button and h2
+    margin-right: 8px; // Space between button and h2
     margin-top: 10px;
     color: #25307f;
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     font-weight: bold;
     font-size: 20px;
     padding: 0;
   }
 
   .departmentTitle {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
   }
 
   .departmentTitle1 {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
-    opacity: 0.5;  // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
+    opacity: 0.5; // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
   }
 
-  .forwardButton{
-    margin-left: 14px;  // Space between button and h2
+  .forwardButton {
+    margin-left: 14px; // Space between button and h2
     margin-top: 10px;
     color: #25307f;
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     font-weight: bold;
     font-size: 20px;
     padding: 0;
   }
 
   .departmentTitleDetails {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
     margin-left: 12px;
@@ -49,8 +49,9 @@ $blue : #25307f;
 
 .cardContainer {
   background-color: white;
-  width: 100%; // Ensuring it takes full width within its parent container
+
   height: 225px;
+  min-width: 306px;
   padding: 1.5rem 1rem; // px-4 py-6
   border-radius: 12px;
   cursor: pointer;
@@ -88,37 +89,37 @@ $blue : #25307f;
       margin-top: 0.6rem;
     }
 
-    .icons{
+    .icons {
       margin-top: 0.3rem;
       //margin-left: 2rem;
       position: relative;
       left: 46px;
 
-      .message{
+      .message {
         color: #25307f;
       }
 
-      .phone{
+      .phone {
         //margin-left: 20px;
         color: green;
       }
     }
   }
 
-  .detailsContainer{
+  .detailsContainer {
     margin-left: 40px;
     margin-top: 15px;
-    .details{
-      display:flex;
+    .details {
+      display: flex;
       height: 26px;
       font-weight: 500;
-      .name{
+      .name {
         color: black;
         padding: 0;
       }
 
-      .value{
-        color:gray;
+      .value {
+        color: gray;
         margin-left: 4px;
       }
     }
@@ -245,33 +246,28 @@ $blue : #25307f;
   //    }
   //  }
   //}
-
 }
 
-.superCardContainer{
+.superCardContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  justify-content: space-between;
-
-  .cardContainer {
-    width: 28%; // Ensure 3 cards fit in a row
-
-    //@media (max-width: 1446px) {
-    //  width: 28%; // Keep 3 cards per row even on widths below 1446px
-    //}
-    //
-    //@media (max-width: 1300px) {
-    //  width: 27%; // Keep 3 cards per row even on widths below 1446px
-    //  height: 200px;
-    //}
-    //
-    //@media (max-width: 1024px) {
-    //  width: 48%; // 2 cards per row on tablets
-    //}
-    //
-    //@media (max-width: 768px) {
-    //  width: 100%; // 1 card per row on mobile
-    //}
-  }
+  justify-content: space-evenly;
+  align-items: center;
+  //@media (max-width: 1446px) {
+  //  width: 28%; // Keep 3 cards per row even on widths below 1446px
+  //}
+  //
+  //@media (max-width: 1300px) {
+  //  width: 27%; // Keep 3 cards per row even on widths below 1446px
+  //  height: 200px;
+  //}
+  //
+  //@media (max-width: 1024px) {
+  //  width: 48%; // 2 cards per row on tablets
+  //}
+  //
+  //@media (max-width: 768px) {
+  //  width: 100%; // 1 card per row on mobile
+  //}
 }

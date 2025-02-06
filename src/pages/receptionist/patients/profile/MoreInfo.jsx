@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"; // Import useState and useEffect
-import { Paper } from '@mui/material';
+import { Paper } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import MedicalInfo from "./MedicalInfo";
 import rav from "../../styles.module.scss";
@@ -12,19 +12,16 @@ import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import FileDocuments from "./FileDocuments";
 import {useLocation} from "react-router-dom";
 
-
-
-
 const MoreInfo = (props) => {
-    const [medicalHistory, setMedicalHistory] = useState([]);
-    const [currentMedications, setCurrentMedications] = useState([]);
-    const [symptoms, setSymptoms] = useState([]); // State for symptoms
-    const [socialHistory, setSocialHistory] = useState([]); // State for social history
+  const [medicalHistory, setMedicalHistory] = useState([]);
+  const [currentMedications, setCurrentMedications] = useState([]);
+  const [symptoms, setSymptoms] = useState([]); // State for symptoms
+  const [socialHistory, setSocialHistory] = useState([]); // State for social history
 
-    const [tableIndex, setTableIndex] = useState(null);
-    useEffect(() => {
-        props?.setIsSignUpOrLogin(false);
-    }, []);
+  const [tableIndex, setTableIndex] = useState(null);
+  useEffect(() => {
+    props?.setIsSignUpOrLogin(false);
+  }, []);
 
     const location = useLocation();
     const patient = location.state?.patient
@@ -65,64 +62,68 @@ const MoreInfo = (props) => {
             // // Simulating an API call delay
             // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-            setMedicalHistory(response.medicalHistory);
-            setCurrentMedications(response.currentMedications);
-            setSymptoms(response.symptoms); // Set symptoms
-            setSocialHistory(response.socialHistory); // Set social history
-        };
+      setMedicalHistory(response.medicalHistory);
+      setCurrentMedications(response.currentMedications);
+      setSymptoms(response.symptoms); // Set symptoms
+      setSocialHistory(response.socialHistory); // Set social history
+    };
 
-        fetchData();
-    }, []);
+    fetchData();
+  }, []);
 
-    return (
-        <>
-            <div className={rav.receptionist}>
-                {!props.entity ?
-                    <>
-                        <Grid
-                            container
-                            spacing={2}
-                            style={{
-                                height: '100vh', // Full viewport height
-                                padding: '20px'
-                            }}
-                        >
-                            <Grid item xs={6}>
-                                <Paper
-                                    elevation={3}
-                                    style={{
-                                        height: '100%', // Full height of the grid item
-                                        padding: '20px',
-                                        textAlign: 'left'
-                                    }}
-                                >
-                                    <MedicalInfo
-                                        medicalHistory={medicalHistory}
-                                        currentMedications={currentMedications}
-                                        symptoms={symptoms}
-                                        history={socialHistory}
-                                        showButton={false} // Hide the button
-                                    />
-
-                                </Paper>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Paper
-                                    elevation={3}
-                                    style={{
-                                        height: '100%', // Full height of the grid item
-                                        padding: '20px',
-                                        textAlign: 'center'
-                                    }}
-                                >
-                                    <FileDocuments />
-                                </Paper>
-                            </Grid>
-                        </Grid>
-                    </> : <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />}
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className={rav.receptionist}>
+        {!props.entity ? (
+          <>
+            <Grid
+              container
+              spacing={2}
+              style={{
+                height: "100vh", // Full viewport height
+                padding: "1rem",
+              }}
+            >
+              <Grid item xs={6}>
+                <Paper
+                  elevation={3}
+                  style={{
+                    height: "100%", // Full height of the grid item
+                    padding: "20px",
+                    textAlign: "left",
+                    width: "30vw",
+                  }}
+                >
+                  <MedicalInfo
+                    medicalHistory={medicalHistory}
+                    currentMedications={currentMedications}
+                    symptoms={symptoms}
+                    history={socialHistory}
+                    showButton={false} // Hide the button
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={6}>
+                <Paper
+                  elevation={3}
+                  style={{
+                    height: "100%", // Full height of the grid item
+                    padding: "20px",
+                    textAlign: "center",
+                    width: "30vw",
+                  }}
+                >
+                  <FileDocuments />
+                </Paper>
+              </Grid>
+            </Grid>
+          </>
+        ) : (
+          <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
+        )}
+      </div>
+    </>
+  );
 };
 
 export default MoreInfo;
