@@ -1,28 +1,28 @@
 .headerContainer {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin-bottom: 5px;
 
   .backButton {
     //margin-right: 2px;  // Space between button and h2
     margin-top: 6px;
     color: black;
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     font-weight: bold;
     font-size: 20px;
     padding: 0;
   }
 
   .departmentTitle {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: black;
     font-weight: 500;
     margin-bottom: 1px;
   }
 
   .departmentTitleDetails {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: #747474;
     font-weight: 500;
     margin-left: 8px;
