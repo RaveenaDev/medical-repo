@@ -96,22 +96,22 @@ const Doctors = (props) => {
                         }
                     </div>
 
-                    <div style={{marginLeft: 'auto'}}>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                fontSize: "20px",
-                                color: "#ffffff",
-                                textTransform: "capitalize",
-                                padding: "2px 18px",
-                                backgroundColor: "#25307F",
-                            }}
-                            onClick={() => setAddDialogOpen(true)} // Open the modal
-                        >
-                            <img src={addIcon} className={styles.appointmentBlock__plusIcon} />
-                            Add
-                        </Button>
-                    </div>
+                    {/*<div style={{marginLeft: 'auto'}}>*/}
+                    {/*    <Button*/}
+                    {/*        variant="contained"*/}
+                    {/*        sx={{*/}
+                    {/*            fontSize: "20px",*/}
+                    {/*            color: "#ffffff",*/}
+                    {/*            textTransform: "capitalize",*/}
+                    {/*            padding: "2px 18px",*/}
+                    {/*            backgroundColor: "#25307F",*/}
+                    {/*        }}*/}
+                    {/*        onClick={() => setAddDialogOpen(true)} // Open the modal*/}
+                    {/*    >*/}
+                    {/*        <img src={addIcon} className={styles.appointmentBlock__plusIcon} />*/}
+                    {/*        Add*/}
+                    {/*    </Button>*/}
+                    {/*</div>*/}
                 </div>
             </Box>
 

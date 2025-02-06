@@ -135,23 +135,23 @@ const Staffs = (props) => {
                     <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
                     <h2 className={ayu.departmentTitleDetails}>200+</h2>
 
-                    <div style={{marginLeft: 'auto'}}>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                fontSize: "20px",
-                                color: "#ffffff",
-                                textTransform: "capitalize",
-                                padding: "2px 18px",
-                                backgroundColor: "#25307F",
-                            }}
-                            onClick={() => setAddDialogOpen(true)} // Open the modal
-                        >
-                            <img src={addIcon} className={styles.appointmentBlock__plusIcon} />
-                            Add
-                        </Button>
+                    {/*<div style={{marginLeft: 'auto'}}>*/}
+                    {/*    <Button*/}
+                    {/*        variant="contained"*/}
+                    {/*        sx={{*/}
+                    {/*            fontSize: "20px",*/}
+                    {/*            color: "#ffffff",*/}
+                    {/*            textTransform: "capitalize",*/}
+                    {/*            padding: "2px 18px",*/}
+                    {/*            backgroundColor: "#25307F",*/}
+                    {/*        }}*/}
+                    {/*        onClick={() => setAddDialogOpen(true)} // Open the modal*/}
+                    {/*    >*/}
+                    {/*        <img src={addIcon} className={styles.appointmentBlock__plusIcon} />*/}
+                    {/*        Add*/}
+                    {/*    </Button>*/}
 
-                    </div>
+                    {/*</div>*/}
                 </div>
             </Box>
 
@@ -304,13 +304,13 @@ const Staffs = (props) => {
                                     />
                                 </TableCell>
 
-                                <TableCell>
-                                    <IconButton
-                                        onClick={(event) => handleMenuOpen(event, patient)}
-                                    >
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                </TableCell>
+                                {/*<TableCell>*/}
+                                {/*    <IconButton*/}
+                                {/*        onClick={(event) => handleMenuOpen(event, patient)}*/}
+                                {/*    >*/}
+                                {/*        <MoreVertIcon />*/}
+                                {/*    </IconButton>*/}
+                                {/*</TableCell>*/}
                             </TableRow>
                         ))}
                     </TableBody>

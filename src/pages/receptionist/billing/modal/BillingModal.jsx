@@ -112,19 +112,19 @@ const BillingModal = ({ open, bill, onClose }) => {
             <div className="billing-amount-details">
               <div>
                 <div className="bold">Total Amount</div>
-                <div>{billByID.totalAmount}</div>
+                <div>{billByID?.totalAmount}</div>
               </div>
               <div>
                 <div className="bold">Paid</div>
-                <div>{billByID.paidAmount}</div>
+                <div>{billByID?.paidAmount}</div>
               </div>
               <div>
                 <div className="bold ">Outstanding</div>
-                <div className="center">{billByID.outstanding}</div>
+                <div className="center">{billByID?.outstanding}</div>
               </div>
               <div>
                 <div className="bold">Status</div>
-                <div className="center">{billByID.status}</div>
+                <div className="center">{billByID?.status}</div>
               </div>
             </div>
             <div className="billing-divider"></div>
@@ -132,11 +132,11 @@ const BillingModal = ({ open, bill, onClose }) => {
               <div className="bold">Payment History</div>
               <div className="billing-summary">
                 <p>
-                  Amount Paid: <span> {billByID.paidAmount}</span>
+                  Amount Paid: <span> {billByID?.paidAmount}</span>
                 </p>
                 <p>Mode: Cash</p>
                 <p>
-                  Date: <span>{billByID.invoiceDate}</span>
+                  Date: <span>{billByID?.invoiceDate}</span>
                 </p>
               </div>
             </div>
