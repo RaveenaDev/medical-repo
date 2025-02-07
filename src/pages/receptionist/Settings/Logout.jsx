@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button } from "@mui/material";
 import styles from './Logout.module.scss';
+import {useDispatch} from "react-redux";
+import {Logout} from "../../../components/State/Authentication/Action.js";
+import {useNavigate} from "react-router-dom";
 
 const logout = ({ isLogout, setIsLogout }) => {
 
     const handleClose = () => {
         setIsLogout(false);
-    }    
+    }
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        dispatch(Logout());
+        navigate('/')
+    }
 
   return (
     <div className={styles.popup_overlay}>
@@ -18,7 +29,7 @@ const logout = ({ isLogout, setIsLogout }) => {
           <Button variant="outlined" onClick={handleClose} sx={{color:"#878787", backgroundColor: "white", borderColor: "#25037F"}}>
           No, Keep In
           </Button>
-          <Button variant="contained" color="error" onClick={()=>{setIsLogout(false)}} sx={{color:"white", backgroundColor: "#25037F"}}>
+          <Button variant="contained" color="error" onClick={handleClick} sx={{color:"white", backgroundColor: "#25037F"}}>
           Yes, Log Out
           </Button>
         </Box>

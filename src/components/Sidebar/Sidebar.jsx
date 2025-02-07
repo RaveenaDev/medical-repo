@@ -27,13 +27,6 @@ const roleOptions = {
   ],
 };
 
-// const sideOptions = [
-//     {title:"Overview",path:"/receptionist"},
-//     {title:"Patients",path:"patients"},
-//     {title:"Departments1",path:"/departments"},
-//     {title:"Settings",path:"/settings"}
-// ]
-
 const Sidebar = ({ role }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();

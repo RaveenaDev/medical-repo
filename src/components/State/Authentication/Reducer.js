@@ -1,4 +1,4 @@
-import {LOGIN} from "./ActionType.js";
+import {LOGIN, LOGOUT} from "./ActionType.js";
 
 const initialState = {
     user: null,
@@ -15,6 +15,14 @@ export const authReducer = (state = initialState,action) => {
                 user: action.payload.userId,
                 jwt: action.payload.token,
                 role: action.payload.role
+            }
+
+        case LOGOUT:
+            return{
+                ...state,
+                user: null,
+                jwt:null,
+                role: null
             }
 
         default:
