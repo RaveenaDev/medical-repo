@@ -138,15 +138,18 @@ const Rooms = (props) => {
             <CommonPanel/>
 
             <Box>
-                <div className={ayu.headerContainer}>
-                    <div className={ayu.backButton} onClick={() => navigate(`/receptionist`)}>
-                        <ArrowBackIosIcon/>
+                <div className={ayu.headerContainer} style={{justifyContent:"space-between"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                        <div className={ayu.backButton} onClick={() => navigate(`/receptionist`)}>
+                            <ArrowBackIosIcon/>
+                        </div>
+                        <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
+                        <h2 className={ayu.departmentTitleDetails}>80</h2>
                     </div>
-                    <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-                    <h2 className={ayu.departmentTitleDetails}>80</h2>
 
-                    <Box sx={{ display: "flex", gap: 3 }}> {/* Adjust gap for spacing */}
-                        <Box display="flex" alignItems="center" gap={1} sx={{ ml: 60, color: 'black' }}>
+                    <div style={{display:"flex",alignItems:"center",gap:"2rem"}}>
+                    <Box sx={{display: "flex", gap: 3}}> {/* Adjust gap for spacing */}
+                        <Box display="flex" alignItems="center" gap={1} sx={{color: 'black'}}>
                             <Box
                                 sx={{
                                     width: 10,
@@ -200,6 +203,8 @@ const Rooms = (props) => {
                         Add
                       </Button>
                     </div>
+                </div>
+
                 </div>
 
                   <Dialog
