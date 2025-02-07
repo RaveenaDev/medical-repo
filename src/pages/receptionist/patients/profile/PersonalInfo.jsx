@@ -1,97 +1,79 @@
-
 import React from "react";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Divider from '@mui/material/Divider';
-
 
 const PersonalInfo = ({patient}) => {
+  const tables = [
+    {
+      labels: ["Gender", "Birthday", "Phone Number"],
+      values: [patient.gender, patient.birthday, patient.phone],
+    },
+    {
+      labels: ["Address", "Case ID", "Assessed by"],
+      values: ["Data A", "Data B", "Dr. Arunita"],
+    },
+    {
+      labels: ["Member status", "Registered Date"],
+      values: [patient.status, patient.registrationDate],
+    },
+  ];
 
-
-    const tables = [
-        {
-            headers: ["Gender", "Birthday", "Phone Number"],
-            data: [patient.gender, patient.birthday, patient.phone]
-        },
-        {
-            headers: ["Address", "Case ID", "Assessed by"],
-            data: ["Data A", patient._id, "Dr. Arunita"]
-        },
-        {
-            headers: ["Member status", "Registered Date"],
-            data: [patient.status, patient.registrationDate]
-        }
-    ];
-
-
-
-    return (
-
-        <>
-
-            {tables.map((table, index) => (
-                <React.Fragment key={index}>
-                    <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
-                        <Table sx={{ border: "none" }}>
-                            <TableHead>
-                                <TableRow>
-                                    {table.headers.map((header, i) => (
-                                        <TableCell
-                                            key={i}
-                                            align="center"
-                                            sx={{
-                                                borderBottom: "none",
-                                                padding: "4px 8px", // Reduced padding
-                                                fontSize: "14px",
-                                                color: "#4A4A4A",
-                                                fontWeight: "600"
-                                            }}
-                                        >
-                                            {header}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                    {table.data.map((cell, i) => (
-                                        <TableCell
-                                            key={i}
-                                            align="center"
-                                            sx={{
-                                                borderBottom: "none",
-                                                padding: "20.5px 8px", // Reduced padding
-                                                fontSize: "15px",
-                                                color: "#1A1A1A",
-                                                fontWeight: "700"
-                                            }}
-                                        >
-                                            {cell}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                    {index < tables.length - 1 && <Divider sx={{ margin: "0px 0" }} />}
-                </React.Fragment>
+  return (
+    <div style={{ padding: "2rem", maxWidth: "600px", margin: "auto" }}>
+      {tables.map((section, index) => (
+        <React.Fragment key={index}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              gap: "10px",
+              padding: "10px",
+              borderRadius: "8px",
+            }}
+          >
+            {section.labels.map((label, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  minWidth: "100px",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#4A4A4A",
+                    marginBottom: "5px",
+                  }}
+                >
+                  {label}
+                </p>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    fontWeight: "700",
+                    color: "#1A1A1A",
+                  }}
+                >
+                  {section.values[i]}
+                </p>
+              </div>
             ))}
-
-        </>
-
-
-    );
-
-
-
-
-}
-
+          </div>
+          {index < tables.length - 1 && (
+            <div
+              style={{
+                height: "1px",
+                backgroundColor: "#ddd",
+                margin: "10px 0",
+              }}
+            />
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
 
 export default PersonalInfo;

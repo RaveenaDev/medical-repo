@@ -30,6 +30,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Avatar from "@mui/material/Avatar";
 import addIcon from "../../../assets/plus.svg";
 import styles from "../styles.module.scss";
+import {useNavigate} from "react-router-dom";
 import {useLocation} from "react-router-dom";
 
 const Staffs = (props) => {
@@ -123,15 +124,16 @@ const Staffs = (props) => {
 
     console.log("STAFFS COMING:",staffs)
 
+    const navigate = useNavigate();
     return (
         <>
             <CommonPanel/>
 
             <Box>
                 <div className={ayu.headerContainer}>
-                    <button className={ayu.backButton}>
+                    <div className={ayu.backButton} onClick={() => navigate(`/receptionist`)}>
                         <ArrowBackIosIcon/>
-                    </button>
+                    </div>
                     <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
                     <h2 className={ayu.departmentTitleDetails}>200+</h2>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
+import PatientHeader from "./components/PatientHeader";
 
 const ProgressReport = () => {
   const sections = [
@@ -30,8 +31,12 @@ const ProgressReport = () => {
       title: "Goals",
       items: [
         { text: "Return to work within 4-6 weeks." },
-        { text: "Resume normal activities, including exercise, within 2-3 months." },
-        { text: "Improve overall heart health and prevent future cardiovascular events." },
+        {
+          text: "Resume normal activities, including exercise, within 2-3 months.",
+        },
+        {
+          text: "Improve overall heart health and prevent future cardiovascular events.",
+        },
       ],
     },
     {
@@ -39,53 +44,58 @@ const ProgressReport = () => {
       items: [
         { text: "Follow-up appointment with the cardiologist in 2 weeks." },
         { text: "Cardiac rehabilitation program starting in 3 weeks." },
-        { text: "Regular monitoring of blood pressure, blood sugar, and cholesterol levels." },
+        {
+          text: "Regular monitoring of blood pressure, blood sugar, and cholesterol levels.",
+        },
       ],
     },
   ];
 
   return (
-    <Box
-      sx={{
-        padding: "24px",
-        margin: "auto",
-        backgroundColor: "#fff",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      {sections.map((section, index) => (
-        <Box key={index} sx={{ marginBottom: "1px" }}>
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", color: "#25307F", marginBottom: "2px" }}
-          >
-            {section.title}
-          </Typography>
-          <List sx={{ paddingLeft: "16px" }}>
-            {section.items.map((item, itemIndex) => (
-              <ListItem
-                key={itemIndex}
-                sx={{
-                  display: "list-item",
-                  listStyleType: "disc",
-                  paddingLeft: "0",
-                  paddingBottom: "4px",
-                  paddingTop: "4px",
-                }}
-              >
-                <ListItemText
-                  secondary={item.text}
-                  secondaryTypographyProps={{
-                    sx: { fontSize: "14px", lineHeight: "1.5" },
+    <>
+      <PatientHeader showEditPatients={false} />
+      <Box
+        sx={{
+          padding: "24px",
+          margin: "auto",
+          backgroundColor: "#fff",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        {sections.map((section, index) => (
+          <Box key={index} sx={{ marginBottom: "1px" }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", color: "#25307F", marginBottom: "2px" }}
+            >
+              {section.title}
+            </Typography>
+            <List sx={{ paddingLeft: "16px" }}>
+              {section.items.map((item, itemIndex) => (
+                <ListItem
+                  key={itemIndex}
+                  sx={{
+                    display: "list-item",
+                    listStyleType: "disc",
+                    paddingLeft: "0",
+                    paddingBottom: "4px",
+                    paddingTop: "4px",
                   }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      ))}
-    </Box>
+                >
+                  <ListItemText
+                    secondary={item.text}
+                    secondaryTypographyProps={{
+                      sx: { fontSize: "14px", lineHeight: "1.5" },
+                    }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        ))}
+      </Box>
+    </>
   );
 };
 

@@ -197,7 +197,7 @@ function Admin(props) {
                 {/* Top grid (one large block) */}
                 <Grid item xs={12}>
 
-                    <Box sx={{width: '100%',backgroundColor:"#25307F",px:3,py:2,borderRadius:"0.4rem"}}>
+                    <Box sx={{width: '97%',backgroundColor:"#25307F",px:3,py:2,borderRadius:"0.4rem"}}>
 
                         <Box display="flex">
                             <div style={{paddingTop: "1rem", marginLeft: "1.8rem", marginBottom: "1.5rem"}}>

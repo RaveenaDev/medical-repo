@@ -11,6 +11,7 @@ import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ProgressTracker from "./ProgressTracker";
 import { Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import PatientHeader from "./components/PatientHeader.jsx";
 
 const Profile = (props) => {
     // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
@@ -68,21 +69,37 @@ const Profile = (props) => {
       <div className={rav.receptionist}>
         {!props.entity ? (
           <>
+            <PatientHeader />
             <Grid container spacing={2}>
-              {/* Box 1 */}
-              <Grid item xs={3}>
-                <Box
-                  sx={{
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "20px",
+                  padding: "20px",
+                  width: "100%",
+                }}
+              >
+                {/* Box 1 - Profile Card */}
+                <div
+                  style={{
+                    width: "25%",
+
                     backgroundColor: "#FFFFFF",
-                    height: "300px",
+                    height: "auto",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
                     padding: "16px 20px",
+                    borderRadius: "10px",
+                    boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
+                    textAlign: "center",
+                    color: "black",
                   }}
                 >
-                  <Box
-                    sx={{
+                  <div
+                    style={{
+                      width: "80%",
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
@@ -99,65 +116,92 @@ const Profile = (props) => {
                         marginBottom: "8px",
                       }}
                     />
-                    <h4 className={styles.name}>{patient.name}</h4>
-                    <p className={styles.email}>Jaisminekaur@gmail.com</p>
-                    <Box
-                      sx={{
+                    <h4
+                      style={{
+                        margin: "8px 0",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {patient.name}
+                    </h4>
+                    <p style={{ fontSize: "14px", color: "#555" }}>
+                      Jaisminekaur@gmail.com
+                    </p>
+
+                    <div
+                      style={{
                         display: "flex",
                         justifyContent: "space-around",
                         width: "100%",
+                        marginTop: "10px",
                       }}
                     >
-                      <div className={styles.styling}>
-                        <div>
-                          <h5>{completed}</h5>
-                          <p>Past Visits</p>
-                        </div>
-                        <div>
-                          <h5>{upcoming}</h5>
-                          <p>Upcoming</p>
-                        </div>
+                      <div>
+                        <h5 style={{ margin: "5px 0" }}>{completed}</h5>
+                        <p style={{ fontSize: "14px", color: "#777" }}>
+                          Past Visits
+                        </p>
                       </div>
-                    </Box>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        margin: "16px",
+                      <div>
+                        <h5 style={{ margin: "5px 0" }}>{upcoming}</h5>
+                        <p style={{ fontSize: "14px", color: "#777" }}>
+                          Upcoming
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      style={{
+                        marginTop: "16px",
                         padding: "12px 24px",
                         width: "100%",
-                        borderColor: "#25307F",
+                        border: "2px solid #25307F",
+                        backgroundColor: "transparent",
                         color: "#25307F",
-                        height: "40px",
-                        "&:hover": {
-                          backgroundColor: "#25307F",
-                          color: "#ffffff",
-                        },
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#25307F";
+                        e.target.style.color = "#ffffff";
+                      }}
+                      onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "#25307F";
                       }}
                     >
                       Send Message
-                    </Button>
-                  </Box>
-                </Box>
-              </Grid>
-              {/* Box 2 */}
-              <Grid item xs={5}>
-                <Box
-                  sx={{
+                    </button>
+                  </div>
+                </div>
+
+                {/* Box 2 - Personal Info (Middle Section) */}
+                <div
+                  style={{
+                    width: "50%",
+                    minWidth: "400px",
                     backgroundColor: "#ffffff",
-                    padding: "16px 20px",
-                    height: "300px",
+                    padding: "20px",
+                    borderRadius: "10px",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   }}
                 >
-                  <PersonalInfo patient={patient} />
-                </Box>
-              </Grid>
-              {/* Box 3 */}
-              <Grid item xs={4}>
-                <Box
-                  sx={{
+                  <PersonalInfo patient={patient}/>
+                </div>
+
+                {/* Box 3 - Medical Info */}
+                <div
+                  style={{
+                    width: "25%",
                     backgroundColor: "#ffffff",
-                    height: "300px",
+                    height: "auto",
                     padding: "16px 20px",
+                    borderRadius: "10px",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <MedicalInfo
@@ -167,8 +211,8 @@ const Profile = (props) => {
                     showSymptoms={false} // Hide Symptoms section
                     showHistory={false} // Hide Social History section
                   />
-                </Box>
-              </Grid>
+                </div>
+              </div>
 
               <Grid item xs={12}>
                 <Box

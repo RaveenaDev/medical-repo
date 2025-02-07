@@ -111,19 +111,26 @@ const Departments = (props) => {
                   <Grid size={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <Box
-                        sx={{
-                          backgroundColor: "white",
-                          boxShadow: 3,
-                          p: 1,
-                          borderRadius: 1,
-                          textAlign: "center",
-                        }}
+                          sx={{
+                            backgroundColor: "white",
+                            boxShadow: 3,
+                            borderRadius: 1,
+                            width: 180, // Adjust width here
+                            textAlign: "center",
+                            // padding: "4px", // Reduce padding to make the container smaller
+                          }}
                       >
-                        {/* Calendar Picker */}
                         <DatePicker
-                          value={selectedDate}
-                          onChange={(newValue) => setSelectedDate(newValue)}
-                          sx={{ width: "100%" }} // Adjust width to fit box
+                            value={selectedDate}
+                            onChange={(newValue) => setSelectedDate(newValue)}
+                            sx={{
+                              width: "100%", // Ensure the date picker takes up 100% of the container's width
+                              fontSize: "24px", // Adjust font size inside the date picker
+                              input: {
+                                fontSize: "14px", // Adjust input field font size if needed
+                                padding: "10px", // Adjust input field padding to make it smaller
+                              }
+                            }}
                         />
                       </Box>
                     </LocalizationProvider>
