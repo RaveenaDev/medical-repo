@@ -25,14 +25,6 @@ function createData(name, appointmentWith, typeVisit, branch, tokenNumber) {
     return { name, appointmentWith, typeVisit, branch, tokenNumber };
 }
 
-// const rows = [
-//     createData('Jasmin Kaur', 'Miss Gitanjali', 'Walk-in', 'Therapy', 2),
-//     createData('Amit Tripath', 'Miss Ananya Pandey', 'Referral', 'Therapy', 1),
-//     createData('Arvind Sharma', '+91 7245674634', 'Walk-in', 'Therapy', 2),
-//     createData('Kumari Sneha', '+91 7245674634', 'Online', 'Cardiology', 3),
-//     createData('Neeraj Tomar', '+91 7245674634', 'Online', 'Cardiology', 2),
-// ];
-
 const appointmentRequests = [1,1,1,1,1,1,1,1]
 
 // Utility function to truncate text
@@ -72,8 +64,6 @@ const ReceptionPage = () => {
     return (
         <Grid container spacing={2} sx={{
             minWidth: '1160px', // Set a fixed minimum width for the entire grid
-            // flexWrap: 'nowrap', // Prevent wrapping of child grids
-            // overflowX: 'auto', // Allow horizontal scrolling if content overflows
         }}>
             <Grid size={8.5}>
                 <Grid container direction="column" spacing={2}>
@@ -104,7 +94,7 @@ const ReceptionPage = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {totalAppointments.length > 0 ?totalAppointments.map((row) => (
+                                        {totalAppointments.length > 0 ?totalAppointments.slice(0,5).map((row) => (
                                             <TableRow
                                                 key={row.name}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } , backgroundColor: '#EEF8F1'
@@ -168,7 +158,7 @@ const ReceptionPage = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {totalPatients.length > 0 ? totalPatients.map((row) => (
+                                        {totalPatients.length > 0 ? totalPatients.slice(0,5).map((row) => (
                                             <TableRow
                                                 key={row.name}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } , backgroundColor: '#EEF8F1'

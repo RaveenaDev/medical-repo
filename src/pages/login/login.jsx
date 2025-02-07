@@ -40,7 +40,6 @@ const Login = (props) => {
         //validation for user login & write an api call for user login
         console.log("Submitted Login ",userDetails)
         dispatch(login(userDetails))
-        // navigate('/receptionist'); //add path of receptionist dashboard overview page
     };
     const handleForgetPassword = () => {navigate('/password-reset')};
 
@@ -48,10 +47,16 @@ const Login = (props) => {
       props?.setIsSignUpOrLogin(true);
     }, []);
 
-    const auth = useSelector(store => store.authentication.user)
+    const auth = useSelector(store => store.authentication)
 
-    if(auth){
+    console.log("ROLE:",auth)
+
+    if(auth?.role === "receptionist"){
         navigate('/receptionist');
+    }
+
+    else if(auth?.role === "HospitalAdmin"){
+        navigate('/admin')
     }
 
     return (

@@ -3,7 +3,8 @@ import {LOGIN} from "./ActionType.js";
 const initialState = {
     user: null,
     users: [],
-    jwt: null
+    jwt: null,
+    role: null
 }
 
 export const authReducer = (state = initialState,action) => {
@@ -12,7 +13,8 @@ export const authReducer = (state = initialState,action) => {
             return{
                 ...state,
                 user: action.payload.userId,
-                jwt: action.payload.token
+                jwt: action.payload.token,
+                role: action.payload.role
             }
 
         default:
