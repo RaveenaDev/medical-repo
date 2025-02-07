@@ -30,6 +30,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Avatar from "@mui/material/Avatar";
 import addIcon from "../../../assets/plus.svg";
 import styles from "../styles.module.scss";
+import {useNavigate} from "react-router-dom";
 
 const Staffs = (props) => {
     useEffect(() => {
@@ -117,35 +118,18 @@ const Staffs = (props) => {
         console.log("New Staff Data:",newStaff)
     }
 
+    const navigate = useNavigate();
     return (
         <>
             <CommonPanel/>
 
             <Box>
                 <div className={ayu.headerContainer}>
-                    <button className={ayu.backButton}>
+                    <div className={ayu.backButton} onClick={() => navigate(`/receptionist`)}>
                         <ArrowBackIosIcon/>
-                    </button>
+                    </div>
                     <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
                     <h2 className={ayu.departmentTitleDetails}>200+</h2>
-
-                    {/*<div style={{marginLeft: 'auto'}}>*/}
-                    {/*    <Button*/}
-                    {/*        variant="contained"*/}
-                    {/*        sx={{*/}
-                    {/*            fontSize: "20px",*/}
-                    {/*            color: "#ffffff",*/}
-                    {/*            textTransform: "capitalize",*/}
-                    {/*            padding: "2px 18px",*/}
-                    {/*            backgroundColor: "#25307F",*/}
-                    {/*        }}*/}
-                    {/*        onClick={() => setAddDialogOpen(true)} // Open the modal*/}
-                    {/*    >*/}
-                    {/*        <img src={addIcon} className={styles.appointmentBlock__plusIcon} />*/}
-                    {/*        Add*/}
-                    {/*    </Button>*/}
-
-                    {/*</div>*/}
                 </div>
             </Box>
 

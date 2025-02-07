@@ -62,15 +62,17 @@ const Doctors = (props) => {
         console.log("New Doctor Data:",newDoctor)
     }
 
+    const navigate = useNavigate();
+
     return (
         <>
             <CommonPanel/>
 
             <Box>
                 <div className={ayu.headerContainer}>
-                    <button className={ayu.backButton}>
+                    <div className={ayu.backButton} onClick={() => navigate(`/receptionist`)}>
                         <ArrowBackIosIcon/>
-                    </button>
+                    </div>
                     <h2 className={ayu.departmentTitle}>Total Doctors:</h2>
                     <h2 className={ayu.departmentTitleDetails}>8</h2>
 

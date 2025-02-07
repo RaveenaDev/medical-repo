@@ -33,6 +33,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Grid2";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
+import {useNavigate} from "react-router-dom";
 
 const Rooms = (props) => {
 
@@ -126,17 +127,16 @@ const Rooms = (props) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-
-
+    const navigate = useNavigate();
     return (
         <>
             <CommonPanel/>
 
             <Box>
                 <div className={ayu.headerContainer}>
-                    <button className={ayu.backButton}>
+                    <div className={ayu.backButton} onClick={() => navigate(`/receptionist`)}>
                         <ArrowBackIosIcon/>
-                    </button>
+                    </div>
                     <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
                     <h2 className={ayu.departmentTitleDetails}>80</h2>
 
