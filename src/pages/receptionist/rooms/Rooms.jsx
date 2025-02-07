@@ -40,6 +40,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Grid2";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
+import {useNavigate} from "react-router-dom";
 
 const Rooms = (props) => {
   useEffect(() => {
@@ -127,75 +128,58 @@ const Rooms = (props) => {
     doctorAssigned: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-  return (
-    <>
-      <CommonPanel />
+    const navigate = useNavigate();
+    return (
+        <>
+            <CommonPanel/>
 
-      <Box>
-        <div className={ayu.headerContainer}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <button className={ayu.backButton}>
-              <ArrowBackIosIcon />
-            </button>
-            <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-            <h2 className={ayu.departmentTitleDetails}>80</h2>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <Box sx={{ display: "flex", gap: 3 }}>
-              {/* Adjust gap for spacing */}
-              <Box
-                display="flex"
-                alignItems="center"
-                gap={1}
-                sx={{ color: "black" }}
-              >
-                <Box
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    backgroundColor: "green",
-                  }}
-                />
-                Available
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap={1}
-                sx={{ color: "black" }}
-              >
-                <Box
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    backgroundColor: "orange",
-                  }}
-                />
-                Occupied
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap={1}
-                sx={{ color: "black" }}
-              >
-                <Box
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    backgroundColor: "skyblue",
-                  }}
-                />
-                Under Maintenance
-              </Box>
-            </Box>
+            <Box>
+                <div className={ayu.headerContainer}>
+                    <div className={ayu.backButton} onClick={() => navigate(`/receptionist`)}>
+                        <ArrowBackIosIcon/>
+                    </div>
+                    <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
+                    <h2 className={ayu.departmentTitleDetails}>80</h2>
+
+                    <Box sx={{ display: "flex", gap: 3 }}> {/* Adjust gap for spacing */}
+                        <Box display="flex" alignItems="center" gap={1} sx={{ ml: 60, color: 'black' }}>
+                            <Box
+                                sx={{
+                                    width: 10,
+                                    height: 10,
+                                    borderRadius: "50%",
+                                    backgroundColor: "green",
+                                }}
+                            />
+                            Available
+                        </Box>
+                        <Box display="flex" alignItems="center" gap={1} sx={{ color: 'black' }}>
+                            <Box
+                                sx={{
+                                    width: 10,
+                                    height: 10,
+                                    borderRadius: "50%",
+                                    backgroundColor: "orange",
+                                }}
+                            />
+                            Occupied
+                        </Box>
+                        <Box display="flex" alignItems="center" gap={1} sx={{ color: 'black' }}>
+                            <Box
+                                sx={{
+                                    width: 10,
+                                    height: 10,
+                                    borderRadius: "50%",
+                                    backgroundColor: "skyblue",
+                                }}
+                            />
+                            Under Maintenance
+                        </Box>
+                    </Box>
 
             <div style={{ marginLeft: "auto" }}>
               <Button
