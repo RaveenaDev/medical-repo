@@ -40,6 +40,7 @@ import Earnings from "./pages/admin/earnings/Earnings.jsx";
 import AdminDoctors from "./pages/admin/doctors/AdminDoctors.jsx";
 import AdminStaffs from "./pages/admin/staffs/AdminStaffs.jsx";
 import AdminRooms from "./pages/admin/rooms/AdminRooms.jsx";
+import Expenses from "./pages/admin/expenses/Expenses.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -55,8 +56,8 @@ function App() {
       setRole("admin");
     } else if (location.pathname.startsWith("/receptionist")) {
       setRole("receptionist");
-    } else if (location.pathname.startsWith("/patient")) {
-      setRole("patient");
+    } else if (location.pathname.startsWith("/doctor")) {
+      setRole("doctor");
     } else {
       setRole(""); // Default or no role
     }
@@ -387,11 +388,41 @@ function App() {
                 />
               }
             ></Route>
+
+              <Route path="/admin/expenses" element={<Expenses setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+
+              <Route
+                  path="/admin/settings"
+                  element={
+                      <Settings
+                          setIsSignUpOrLogin={setIsSignUpOrLogin}
+                          setEntity={setEntity}
+                          entity={entity}
+                      />
+                  }
+              />
+              <Route
+                  path="/admin/settings/privacyPolicy"
+                  element={
+                      <PrivacyPolicy
+                          setIsSignUpOrLogin={setIsSignUpOrLogin}
+                          setEntity={setEntity}
+                          entity={entity}
+                      />
+                  }
+              />
+              <Route
+                  path="/admin/settings/helpAndSupport"
+                  element={
+                      <Help
+                          setIsSignUpOrLogin={setIsSignUpOrLogin}
+                          setEntity={setEntity}
+                          entity={entity}
+                      />
+                  }
+              />
           </Routes>
         </div>
-        {/*<div className="">*/}
-        {/*  <Settings/>*/}
-        {/*</div>*/}
       </div>
     </>
   );
