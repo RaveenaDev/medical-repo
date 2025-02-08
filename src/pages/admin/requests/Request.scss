@@ -15,7 +15,7 @@
   .content {
     padding: 1rem;
 
-    .tab-buttons {
+    .tabButtons {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
@@ -28,6 +28,7 @@
         background: #ffffff;
         color: #747474;
         border: none;
+        outline: none;
         cursor: pointer;
         width: 33%;
 
