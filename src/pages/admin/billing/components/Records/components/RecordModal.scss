@@ -1,0 +1,169 @@
+.billing-modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 80%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); // Dimmed background
+  display: flex;
+  justify-content: end;
+  z-index: 1000;
+  font-size: 16px;
+
+  .billing-modal-content {
+    position: relative;
+    width: 45%;
+    height: 100%;
+    background-color: #f1f1f1;
+    padding-top: 1rem;
+    overflow-y: auto; // Allows scrolling if content overflows
+
+    // Initial off-screen position
+    transform: translateX(100%);
+    transition: transform 0.5s ease-in-out; // Transition for sliding effect
+
+    // When modal is open, slide it in
+    &.open {
+      transform: translateX(0);
+    }
+
+    .billing-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: black;
+      padding: 1rem;
+
+      h2 {
+        font-weight: 600;
+        padding-bottom: 0.7rem;
+        span {
+          color: gray;
+        }
+      }
+
+      .header-content {
+        display: flex;
+      }
+
+      .close-btn {
+        padding-top: 6px;
+        margin-right: 8px;
+        background: none;
+        border: none;
+        max-width: 30px;
+      }
+
+      .print-btn {
+        padding: 6px 16px;
+        background-color: #25307f;
+        color: white;
+        text-transform: none;
+        border-radius: 1.5rem;
+      }
+
+      .print-btn:hover {
+        background-color: #1b2568;
+      }
+    }
+    .billing-divider {
+      width: 100%;
+      height: 0.5px;
+      background: #4a4a4a8c;
+    }
+    .center {
+      text-align: center;
+    }
+    .billing-modal-body {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 0 2rem;
+      gap: 2rem;
+
+      .billing-invoice-details {
+        background: white;
+
+        .bold {
+          font-weight: bold;
+        }
+
+        .billing-no {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          padding: 1.5rem;
+
+          div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+        }
+
+        .billing-invoice-amount {
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .billing-desc {
+          display: grid;
+          grid-template-columns: 2fr 1.5fr 1fr;
+          align-self: flex-start;
+          width: 100%;
+          gap: 0rem;
+
+          div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+        }
+
+        .billing-total {
+          display: flex;
+          justify-content: space-between;
+          gap: 0rem;
+        }
+      }
+
+      .billing-amount {
+        background: white;
+
+        .bold {
+          font-weight: bold;
+        }
+
+        .billing-amount-details {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          gap: 0rem;
+          padding: 1.5rem;
+          justify-items: center;
+
+          div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+        }
+
+        .billing-history {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          padding: 1.5rem;
+
+          .billing-summary {
+            display: flex;
+            gap: 1.5rem;
+          }
+        }
+      }
+    }
+  }
+  .status.paid {
+    color: #3db461;
+    font-weight: 600;
+  }
+}

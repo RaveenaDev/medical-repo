@@ -29,6 +29,7 @@ const CommonPanel = () => {
     "/admin/staffs",
     "/admin/rooms",
     "/admin/requests",
+    "/admin/billings",
   ];
 
   // Check if the current route is in the excluded routes list
@@ -163,6 +164,7 @@ const CommonPanel = () => {
             </Grid>
             <Grid size={8} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
+                onClick={() => navigate(`/admin/billings`)}
                 variant="contained"
                 sx={{
                   fontSize: "16px",
