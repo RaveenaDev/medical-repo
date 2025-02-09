@@ -42,6 +42,7 @@ import AdminStaffs from "./pages/admin/staffs/AdminStaffs.jsx";
 import AdminRooms from "./pages/admin/rooms/AdminRooms.jsx";
 import Expenses from "./pages/admin/expenses/Expenses.jsx";
 import RequestTabs from "./pages/admin/requests/Request.jsx";
+import BillingAdmin from "./pages/admin/billing/Billing.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -270,6 +271,16 @@ function App() {
               path="/admin/requests"
               element={
                 <RequestTabs
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/billings"
+              element={
+                <BillingAdmin
                   setIsSignUpOrLogin={setIsSignUpOrLogin}
                   setEntity={setEntity}
                   entity={entity}
