@@ -197,13 +197,13 @@ function Admin(props) {
 
                     <Box sx={{width: '97%',backgroundColor:"#25307F",px:3,py:2,borderRadius:"0.4rem"}}>
 
-                        <Box display="flex">
+                        <Box display="flex" style={{justifyContent:'space-between'}}>
                             <div style={{paddingTop: "1rem", marginLeft: "1.8rem", marginBottom: "1.5rem"}}>
                                 <h3>Appointment Statistics</h3>
                             </div>
 
                             <Box sx={{display: "flex", gap: 3}}> {/* Adjust gap for spacing */}
-                                <Box display="flex" alignItems="center" gap={1} sx={{ml: 20, color: 'white'}}>
+                                <Box display="flex" alignItems="center" gap={1} sx={{ color: 'white'}}>
                                     <Box
                                         sx={{
                                             width: 10,
@@ -242,12 +242,12 @@ function Admin(props) {
                                 {branches.length && (
                                     <Grid
                                         container
-                                        spacing={2}
                                         justifyContent="flex-end"
                                         alignItems="center"
                                         flexDirection={{md: "row"}}
                                         size={12}
-                                        sx={{margin: "10px 15rem 10px 0"}}
+                                        sx={{margin: "10px 0 1px 0"}}
+
                                     >
                                         <Grid size={3} sx={{backgroundColor: "white",borderRadius:"0.2rem"}}>
                                             <Select

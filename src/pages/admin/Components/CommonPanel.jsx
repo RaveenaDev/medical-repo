@@ -177,13 +177,7 @@ const CommonPanel = () => {
                                         marginTop: "2px"
                                     }}>Request</span></Button>
 
-                                <FormControl sx={{minWidth: 150, position: 'relative'}} size="small">
-                                    <InputLabel
-                                        id="demo-select-small-label"
-                                        sx={{color: 'white', marginLeft: '22px'}} // White label text
-                                    >
-                                        All Branches
-                                    </InputLabel>
+                                <FormControl sx={{width:150,height:40}} size="small">
                                     <Select
                                         labelId="demo-select-small-label"
                                         id="demo-select-small"
@@ -194,7 +188,6 @@ const CommonPanel = () => {
                                         sx={{
                                             backgroundColor: '#25307f', // Blue background
                                             color: 'white', // White text
-                                            paddingLeft: '32px', // Add padding for custom arrow on the left
                                         }}
                                     >
                                         <MenuItem value="">
@@ -205,12 +198,13 @@ const CommonPanel = () => {
                                         <MenuItem value={30}>Thirty</MenuItem>
                                     </Select>
                                     {/* Custom Arrow Icon */}
+
                                     <KeyboardArrowDownIcon
                                         sx={{
                                             position: 'absolute',
                                             left: 8, // Position the arrow on the left
-                                            top: '50%', // Center vertically
-                                            transform: 'translateY(-50%)',
+                                            top: '24%', // Center vertically
+                                            // transform: 'translateY(-50%)',
                                             pointerEvents: 'auto', // Ensure it's clickable
                                             color: 'white', // White arrow color
                                             cursor: 'pointer', // Show pointer cursor for interactivity
@@ -225,6 +219,17 @@ const CommonPanel = () => {
                                             }
                                         }}
                                     />
+                                    <InputLabel
+                                        id="demo-select-small-label"
+                                        sx={{
+                                            color: 'white',
+                                            top: '50%', // Vertically center the label
+                                            left: '25%',
+                                            transform: 'translateY(-50%)', // Correct the vertical alignment
+                                        }}
+                                    >
+                                        All Branches
+                                    </InputLabel>
                                 </FormControl>
                             </Grid>
                         </Grid>
