@@ -1,0 +1,32 @@
+.ongoingRequests {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .requestCard {
+    color: black !important;
+    background: white;
+    padding: 1rem;
+    border-radius: 5px;
+    display: flex;
+    gap: 1rem;
+    align-items: start;
+
+    .requestDetails {
+      width: 75%;
+    }
+
+    .progress {
+      button {
+        color: #25307f;
+        background: white;
+        border: 1px solid #25307f;
+        padding: 0.5rem 1.5rem;
+      }
+      button:hover {
+        color: white;
+        background: #25307f;
+      }
+    }
+  }
+}

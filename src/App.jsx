@@ -41,6 +41,8 @@ import AdminDoctors from "./pages/admin/doctors/AdminDoctors.jsx";
 import AdminStaffs from "./pages/admin/staffs/AdminStaffs.jsx";
 import AdminRooms from "./pages/admin/rooms/AdminRooms.jsx";
 import Expenses from "./pages/admin/expenses/Expenses.jsx";
+import RequestTabs from "./pages/admin/requests/Request.jsx";
+import BillingAdmin from "./pages/admin/billing/Billing.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -255,49 +257,69 @@ function App() {
               }
             />
 
-              <Route
-                  path="/admin/earnings"
-                  element={
-                      <Earnings
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/earnings"
+              element={
+                <Earnings
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/requests"
+              element={
+                <RequestTabs
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/billings"
+              element={
+                <BillingAdmin
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
 
-              <Route
-                  path="/admin/doctors"
-                  element={
-                      <AdminDoctors
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/doctors"
+              element={
+                <AdminDoctors
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
 
-              <Route
-                  path="/admin/staffs"
-                  element={
-                      <AdminStaffs
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/staffs"
+              element={
+                <AdminStaffs
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
 
-              <Route
-                  path="/admin/rooms"
-                  element={
-                      <AdminRooms
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/rooms"
+              element={
+                <AdminRooms
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
             <Route
               path="/admin/reception"
               element={
@@ -389,38 +411,47 @@ function App() {
               }
             ></Route>
 
-              <Route path="/admin/expenses" element={<Expenses setIsSignUpOrLogin={setIsSignUpOrLogin} setEntity={setEntity} entity={entity}/>}/>
+            <Route
+              path="/admin/expenses"
+              element={
+                <Expenses
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
 
-              <Route
-                  path="/admin/settings"
-                  element={
-                      <Settings
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
-              <Route
-                  path="/admin/settings/privacyPolicy"
-                  element={
-                      <PrivacyPolicy
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
-              <Route
-                  path="/admin/settings/helpAndSupport"
-                  element={
-                      <Help
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/settings"
+              element={
+                <Settings
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/settings/privacyPolicy"
+              element={
+                <PrivacyPolicy
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/settings/helpAndSupport"
+              element={
+                <Help
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
           </Routes>
         </div>
       </div>
