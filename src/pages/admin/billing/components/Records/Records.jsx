@@ -145,7 +145,18 @@ const Records = () => {
                 size="small"
                 sx={{ minWidth: 160 }}
               >
-                <MenuItem value="Monthly">Monthly</MenuItem>
+                <MenuItem
+                  value="Weekly"
+                  sx={{ borderBottom: "0.5px sloid black" }}
+                >
+                  Weekly
+                </MenuItem>
+                <MenuItem
+                  sx={{ borderBottom: "0.5px sloid black" }}
+                  value="Monthly"
+                >
+                  Monthly
+                </MenuItem>
                 <MenuItem value="Yearly">Yearly</MenuItem>
               </Select>
             </Box>

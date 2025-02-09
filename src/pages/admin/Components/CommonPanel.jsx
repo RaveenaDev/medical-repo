@@ -124,136 +124,165 @@ const CommonPanel = () => {
         </Grid>
       </div>
 
-            {
-                !shouldHideDiv && (
-                    <div className={styles.appointmentBlock}>
-                        <Grid container spacing={2} justifyContent="space-between" alignItems="center"
-                              flexDirection={{md: 'row'}} size={12} sx={{margin: '0 0 20px 0'}}>
-                            <Grid size={4} sx={{display: "flex", alignItems: "center"}}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <Box
-                                        sx={{
-                                            backgroundColor: "white",
-                                            boxShadow: 3,
-                                            borderRadius: 1,
-                                            width: 180, // Adjust width here
-                                            textAlign: "center",
-                                            // padding: "4px", // Reduce padding to make the container smaller
-                                        }}
-                                    >
-                                        <DatePicker
-                                            value={selectedDate}
-                                            onChange={(newValue) => setSelectedDate(newValue)}
-                                            sx={{
-                                                width: "100%", // Ensure the date picker takes up 100% of the container's width
-                                                fontSize: "24px", // Adjust font size inside the date picker
-                                                input: {
-                                                    fontSize: "14px", // Adjust input field font size if needed
-                                                    padding: "10px", // Adjust input field padding to make it smaller
-                                                }
-                                            }}
-                                        />
-                                    </Box>
-                                </LocalizationProvider>
-                            </Grid>
-                            <Grid size={8} sx={{display: "flex", justifyContent: "flex-end"}}>
-                                <Button variant="contained" sx={{
-                                    fontSize: "16px",
-                                    color: "#878787",
-                                    textTransform: "capitalize",
-                                    padding: "0px 8px",
-                                    backgroundColor: "#fff",
-                                    marginRight: "22px"
-                                }}><LocalAtmIcon sx={{color: "#25307f"}}/> <span style={{
-                                    marginLeft: "14px",
-                                    marginRight: "8px",
-                                    marginTop: "2px"
-                                }}>Billing</span></Button>
-                                <Button variant="contained" sx={{
-                                    fontSize: "16px",
-                                    color: "#878787",
-                                    textTransform: "capitalize",
-                                    padding: "0px 8px",
-                                    backgroundColor: "#fff",
-                                    marginRight: "22px"
-                                }}>
-                                    <div style={{
-                                        height: "8px",
-                                        width: "8px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "red",
-                                        position: "absolute",
-                                        left: "31px",
-                                        top: "6px"
-                                    }}></div>
-                                    {circle}
-                                    <span style={{
-                                        marginLeft: "16px",
-                                        marginRight: "8px",
-                                        marginTop: "2px"
-                                    }}>Request</span></Button>
+      {!shouldHideDiv && (
+        <div className={styles.appointmentBlock}>
+          <Grid
+            container
+            spacing={2}
+            justifyContent="space-between"
+            alignItems="center"
+            flexDirection={{ md: "row" }}
+            size={12}
+            sx={{ margin: "0 0 20px 0" }}
+          >
+            <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Box
+                  sx={{
+                    backgroundColor: "white",
+                    boxShadow: 3,
+                    borderRadius: 1,
+                    width: 180, // Adjust width here
+                    textAlign: "center",
+                    // padding: "4px", // Reduce padding to make the container smaller
+                  }}
+                >
+                  <DatePicker
+                    value={selectedDate}
+                    onChange={(newValue) => setSelectedDate(newValue)}
+                    sx={{
+                      width: "100%", // Ensure the date picker takes up 100% of the container's width
+                      fontSize: "24px", // Adjust font size inside the date picker
+                      input: {
+                        fontSize: "14px", // Adjust input field font size if needed
+                        padding: "10px", // Adjust input field padding to make it smaller
+                      },
+                    }}
+                  />
+                </Box>
+              </LocalizationProvider>
+            </Grid>
+            <Grid size={8} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="contained"
+                onClick={() => navigate(`/admin/billings`)}
+                sx={{
+                  fontSize: "16px",
+                  color: "#878787",
+                  textTransform: "capitalize",
+                  padding: "0px 8px",
+                  backgroundColor: "#fff",
+                  marginRight: "22px",
+                }}
+              >
+                <LocalAtmIcon sx={{ color: "#25307f" }} />{" "}
+                <span
+                  style={{
+                    marginLeft: "14px",
+                    marginRight: "8px",
+                    marginTop: "2px",
+                  }}
+                >
+                  Billing
+                </span>
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => navigate(`/admin/requests`)}
+                sx={{
+                  fontSize: "16px",
+                  color: "#878787",
+                  textTransform: "capitalize",
+                  padding: "0px 8px",
+                  backgroundColor: "#fff",
+                  marginRight: "22px",
+                }}
+              >
+                <div
+                  style={{
+                    height: "8px",
+                    width: "8px",
+                    borderRadius: "50%",
+                    backgroundColor: "red",
+                    position: "absolute",
+                    left: "31px",
+                    top: "6px",
+                  }}
+                ></div>
+                {circle}
+                <span
+                  style={{
+                    marginLeft: "16px",
+                    marginRight: "8px",
+                    marginTop: "2px",
+                  }}
+                >
+                  Request
+                </span>
+              </Button>
 
-                                <FormControl sx={{width:150,height:40}} size="small">
-                                    <Select
-                                        labelId="demo-select-small-label"
-                                        id="demo-select-small"
-                                        value={age}
-                                        label="All Branches is what it wants"
-                                        onChange={handleChange}
-                                        IconComponent={null} // Disable default icon
-                                        sx={{
-                                            backgroundColor: '#25307f', // Blue background
-                                            color: 'white', // White text
-                                        }}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                    {/* Custom Arrow Icon */}
+              <FormControl sx={{ width: 150, height: 40 }} size="small">
+                <Select
+                  labelId="demo-select-small-label"
+                  id="demo-select-small"
+                  value={age}
+                  label="All Branches is what it wants"
+                  onChange={handleChange}
+                  IconComponent={null} // Disable default icon
+                  sx={{
+                    backgroundColor: "#25307f", // Blue background
+                    color: "white", // White text
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+                {/* Custom Arrow Icon */}
 
-                                    <KeyboardArrowDownIcon
-                                        sx={{
-                                            position: 'absolute',
-                                            left: 8, // Position the arrow on the left
-                                            top: '24%', // Center vertically
-                                            // transform: 'translateY(-50%)',
-                                            pointerEvents: 'auto', // Ensure it's clickable
-                                            color: 'white', // White arrow color
-                                            cursor: 'pointer', // Show pointer cursor for interactivity
-                                        }}
-                                        onClick={(event) => {
-                                            // Stop propagation to ensure Select handles the click
-                                            event.stopPropagation();
-                                            // Trigger the dropdown programmatically
-                                            const selectElement = document.getElementById('demo-select-small');
-                                            if (selectElement) {
-                                                selectElement.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
-                                            }
-                                        }}
-                                    />
-                                    <InputLabel
-                                        id="demo-select-small-label"
-                                        sx={{
-                                            color: 'white',
-                                            top: '50%', // Vertically center the label
-                                            left: '25%',
-                                            transform: 'translateY(-50%)', // Correct the vertical alignment
-                                        }}
-                                    >
-                                        All Branches
-                                    </InputLabel>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                    </div>
-                )
-            }
-        </>
-
-    );
+                <KeyboardArrowDownIcon
+                  sx={{
+                    position: "absolute",
+                    left: 8, // Position the arrow on the left
+                    top: "24%", // Center vertically
+                    // transform: 'translateY(-50%)',
+                    pointerEvents: "auto", // Ensure it's clickable
+                    color: "white", // White arrow color
+                    cursor: "pointer", // Show pointer cursor for interactivity
+                  }}
+                  onClick={(event) => {
+                    // Stop propagation to ensure Select handles the click
+                    event.stopPropagation();
+                    // Trigger the dropdown programmatically
+                    const selectElement =
+                      document.getElementById("demo-select-small");
+                    if (selectElement) {
+                      selectElement.dispatchEvent(
+                        new MouseEvent("mousedown", { bubbles: true })
+                      );
+                    }
+                  }}
+                />
+                <InputLabel
+                  id="demo-select-small-label"
+                  sx={{
+                    color: "white",
+                    top: "50%", // Vertically center the label
+                    left: "25%",
+                    transform: "translateY(-50%)", // Correct the vertical alignment
+                  }}
+                >
+                  All Branches
+                </InputLabel>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </div>
+      )}
+    </>
+  );
 };
 export default CommonPanel;
