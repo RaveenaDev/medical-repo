@@ -17,80 +17,120 @@ const Earnings = (props) => {
         "2023",
     ]);
 
+    // Initial state where all bars are visible
+    const [visibleGraph, setVisibleGraph] = useState({
+        outpatient: true,
+        inpatient: true,
+        surgery: true,
+        diagnostics: true,
+    });
+
     const areaData = [
         {
             name: 'Jan',
             uv: 4000,
             pv: 2400,
             amt: 2400,
+            ayu: 2200
         },
         {
             name: 'Feb',
             uv: 3000,
             pv: 1398,
             amt: 2210,
+            ayu: 2100
         },
         {
             name: 'March',
             uv: 2000,
             pv: 9800,
             amt: 2290,
+            ayu: 2400
         },
         {
             name: 'April',
             uv: 2780,
             pv: 3908,
             amt: 2000,
+            ayu: 1200
         },
         {
             name: 'May',
             uv: 1890,
             pv: 4800,
             amt: 2181,
+            ayu: 3200
         },
         {
             name: 'June',
             uv: 2390,
             pv: 3800,
             amt: 2500,
+            ayu: 2600
         },
         {
             name: 'July',
             uv: 3490,
             pv: 4300,
             amt: 2100,
+            ayu: 2500
         },
         {
             name: 'August',
             uv: 3490,
             pv: 4300,
             amt: 2100,
+            ayu: 2300
         },
         {
             name: 'September',
             uv: 3490,
             pv: 4300,
             amt: 2100,
+            ayu: 2100
         },
         {
             name: 'October',
             uv: 3490,
             pv: 4300,
             amt: 2100,
+            ayu: 1800
         },
         {
             name: 'November',
             uv: 3490,
             pv: 4300,
             amt: 2100,
+            ayu: 1200
         },
         {
             name: 'December',
             uv: 3490,
             pv: 4300,
             amt: 2100,
+            ayu: 3200
         },
     ];
+
+    const handleGraphToggle = (bar) => {
+        // Set only the clicked bar to true, and the others to false
+        setVisibleGraph({
+            outpatient: bar === 'outpatient',
+            inpatient: bar === 'inpatient',
+            surgery: bar === 'surgery',
+            diagnostics: bar === 'diagnostics',
+        });
+    };
+
+    // Reset all bars to visible when "Appointment Statistics" is clicked
+    const handleResetGraph = () => {
+        setVisibleGraph({
+            outpatient: true,
+            inpatient: true,
+            surgery: true,
+            diagnostics: true,
+        });
+    };
     return (
         <>
             <CommonPanel/>
@@ -98,7 +138,8 @@ const Earnings = (props) => {
             <Box sx={{width: '100%', backgroundColor: "white", py: 2, borderRadius: "0.4rem"}}>
 
                 <Box display="flex" justifyContent="space-between">
-                    <div style={{
+                    <div onClick={handleResetGraph} style={{
+                        cursor:'pointer',
                         display: 'flex',
                         marginLeft: '1.4rem',
                         padding: '0.4rem',
@@ -139,7 +180,7 @@ const Earnings = (props) => {
                 </Box>
 
                 <Box sx={{ display: "flex", gap: 5,marginBottom:"3rem" }}> {/* Adjust gap for spacing */}
-                    <Box display="flex" alignItems="center" gap={1} sx={{ ml: 60, color: 'black' }}>
+                    <Box onClick={() => handleGraphToggle('outpatient')} display="flex" alignItems="center" gap={1} sx={{ ml: 60, color: 'black',cursor:'pointer'}}>
                         <Box
                             sx={{
                                 width: 15,
@@ -149,7 +190,7 @@ const Earnings = (props) => {
                         />
                         Outpatient Revenue
                     </Box>
-                    <Box display="flex" alignItems="center" gap={1} sx={{ color: 'black' }}>
+                    <Box onClick={() => handleGraphToggle('inpatient')} display="flex" alignItems="center" gap={1} sx={{ color: 'black',cursor:'pointer' }}>
                         <Box
                             sx={{
                                 width: 15,
@@ -159,7 +200,7 @@ const Earnings = (props) => {
                         />
                         Inpatient Revenue
                     </Box>
-                    <Box display="flex" alignItems="center" gap={1} sx={{ color: 'black' }}>
+                    <Box onClick={() => handleGraphToggle('surgery')} display="flex" alignItems="center" gap={1} sx={{ color: 'black',cursor:'pointer' }}>
                         <Box
                             sx={{
                                 width: 15,
@@ -169,7 +210,7 @@ const Earnings = (props) => {
                         />
                         Surgeries
                     </Box>
-                    <Box display="flex" alignItems="center" gap={1} sx={{ color: 'black' }}>
+                    <Box onClick={() => handleGraphToggle('diagnostics')} display="flex" alignItems="center" gap={1} sx={{ color: 'black',cursor:'pointer' }}>
                         <Box
                             sx={{
                                 width: 15,
@@ -200,10 +241,26 @@ const Earnings = (props) => {
                             <XAxis dataKey="name"/>
                             <YAxis/>
                             <Tooltip/>
-                            <Area type="monotone" dataKey="uv" stroke="#444FA2" fill="#444FA2"/>
-                            <Area type="monotone" dataKey="pv" stroke="#5765CA" fill="#5765CA"/>
-                            <Area type="monotone" dataKey="amt" stroke="#7A8AFF" fill="#7A8AFF"/>
-                            <Area type="monotone" dataKey="ayu" stroke="#D7DCFF" fill="#D7DCFF"/>
+                            {
+                                visibleGraph.inpatient && (
+                                    <Area type="monotone" dataKey="uv" stroke="#444FA2" fill="#444FA2"/>
+                                )
+                            }
+                            {
+                                visibleGraph.outpatient && (
+                                    <Area type="monotone" dataKey="pv" stroke="#5765CA" fill="#5765CA"/>
+                                )
+                            }
+                            {
+                                visibleGraph.surgery && (
+                                    <Area type="monotone" dataKey="amt" stroke="#7A8AFF" fill="#7A8AFF"/>
+                                )
+                            }
+                            {
+                                visibleGraph.diagnostics && (
+                                    <Area type="monotone" dataKey="ayu" stroke="#D7DCFF" fill="#D7DCFF"/>
+                                )
+                            }
                         </AreaChart>
                     </ResponsiveContainer>
                 </Box>

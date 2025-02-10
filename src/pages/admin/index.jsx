@@ -9,12 +9,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Legend,
-  Pie,
-  PieChart,
-  Rectangle,
   ResponsiveContainer,
-  Sector,
   Tooltip,
   XAxis,
   YAxis,
@@ -25,6 +20,13 @@ import { useNavigate } from "react-router-dom"; // Use Grid from MUI instead
 
 function Admin(props) {
   const [branches, setBranches] = useState(["Monthly", "Yearly"]);
+
+    // Initial state where all bars are visible
+    const [visibleBars, setVisibleBars] = useState({
+        appointments: true,
+        completed: true,
+        canceled: true,
+    });
 
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
@@ -152,6 +154,24 @@ function Admin(props) {
 
   const navigate = useNavigate();
 
+    const handleBarToggle = (bar) => {
+        // Set only the clicked bar to true, and the others to false
+        setVisibleBars({
+            appointments: bar === 'appointments',
+            completed: bar === 'completed',
+            canceled: bar === 'canceled',
+        });
+    };
+
+    // Reset all bars to visible when "Appointment Statistics" is clicked
+    const handleResetBars = () => {
+        setVisibleBars({
+            appointments: true,
+            completed: true,
+            canceled: true,
+        });
+    };
+
   return (
     <>
       <div className={ayu.patients} style={{ position: "relative" }}>
@@ -168,7 +188,7 @@ function Admin(props) {
             backgroundColor: "#fff",
             marginLeft: "16px",
             position: "absolute",
-            left: "16%",
+            left: "11.2rem", // % mai isliye nhi di because ye alag file mai hai toh iski position fixed honi jaruri hai during responsiveness
             top: "11.28rem",
           }}
         >
@@ -197,12 +217,14 @@ function Admin(props) {
                     <Box sx={{width: '97%',backgroundColor:"#25307F",px:3,py:2,borderRadius:"0.4rem"}}>
 
                         <Box display="flex" style={{justifyContent:'space-between'}}>
-                            <div style={{paddingTop: "1rem", marginLeft: "1.8rem", marginBottom: "1.5rem"}}>
+                            <div style={{paddingTop: "1rem", marginLeft: "1.8rem", marginBottom: "1.5rem",cursor:"pointer"}}
+                                 onClick={handleResetBars} // Clicking on Appointment Statistics resets the bars
+                            >
                                 <h3>Appointment Statistics</h3>
                             </div>
 
                             <Box sx={{display: "flex", gap: 3}}> {/* Adjust gap for spacing */}
-                                <Box display="flex" alignItems="center" gap={1} sx={{ color: 'white'}}>
+                                <Box display="flex" alignItems="center" gap={1} sx={{ cursor:'pointer'}} onClick={() => handleBarToggle('appointments')}>
                                     <Box
                                         sx={{
                                             width: 10,
@@ -213,7 +235,7 @@ function Admin(props) {
                                     />
                                     Appointments
                                 </Box>
-                                <Box display="flex" alignItems="center" gap={1} sx={{color: 'white'}}>
+                                <Box display="flex" alignItems="center" gap={1} sx={{cursor:'pointer'}} onClick={() => handleBarToggle('completed')}>
                                     <Box
                                         sx={{
                                             width: 10,
@@ -224,7 +246,7 @@ function Admin(props) {
                                     />
                                     Completed
                                 </Box>
-                                <Box display="flex" alignItems="center" gap={1} sx={{color: 'white'}}>
+                                <Box display="flex" alignItems="center" gap={1} sx={{cursor:'pointer'}} onClick={() => handleBarToggle('canceled')}>
                                     <Box
                                         sx={{
                                             width: 10,
@@ -290,24 +312,16 @@ function Admin(props) {
                   }}
                 />
                 {/* Remove the Legend for clarity */}
-                <Bar
-                  dataKey="pv"
-                  fill="#8884d8"
-                  radius={[10, 10, 0, 0]}
-                  barSize={15}
-                />
-                <Bar
-                  dataKey="uv"
-                  fill="#82ca9d"
-                  radius={[10, 10, 0, 0]}
-                  barSize={15}
-                />
-                <Bar
-                  dataKey="amt"
-                  fill="#EAA000"
-                  radius={[10, 10, 0, 0]}
-                  barSize={15}
-                />
+                  {/* Conditionally render bars based on state */}
+                  {visibleBars.appointments && (
+                      <Bar dataKey="pv" fill="#8884d8" radius={[10, 10, 0, 0]} barSize={15} />
+                  )}
+                  {visibleBars.completed && (
+                      <Bar dataKey="uv" fill="#82ca9d" radius={[10, 10, 0, 0]} barSize={15} />
+                  )}
+                  {visibleBars.canceled && (
+                      <Bar dataKey="amt" fill="#EAA000" radius={[10, 10, 0, 0]} barSize={15} />
+                  )}
               </BarChart>
             </ResponsiveContainer>
           </Box>
