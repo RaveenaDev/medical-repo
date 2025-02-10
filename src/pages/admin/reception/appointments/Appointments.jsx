@@ -145,13 +145,6 @@ function Appointments(props) {
             <CommonPanel/>
 
             <Box sx={{ backgroundColor: "white", pt: 0.7 }}>
-                {/*<Box className={avi.headerContainer} style={{position:"relative",top:"52px",left:"12px"}}>*/}
-                {/*    <button className={avi.icon} onClick={handleBack}>*/}
-                {/*        <ArrowBackIosIcon/>*/}
-                {/*    </button>*/}
-                {/*    <h2 className={avi.departmentTitle}>Appointments</h2>*/}
-                {/*</Box>*/}
-
                 <div>
                     {branches.length && (
                         <Grid
@@ -161,7 +154,7 @@ function Appointments(props) {
                             justifyContent="space-between"
                             alignItems="center"
                             flexDirection={{md: "row"}}
-                            size={12}
+                            // size={12}
                             sx={{margin: "10px 20px 10px 0"}}
                         >
                             <Grid size={3} pl={2}>
@@ -183,22 +176,21 @@ function Appointments(props) {
                         </Grid>
                     )}
                 </div>
-                <Grid
-                    container
-                    spacing={7}
-                    justifyContent="center"
-                    sx={{ mb: 1 }}
+                <div
+                    // sx={{ mb: 1,px: 2}}
+                    style={{marginBottom:"1rem",padding:"0 2rem",justifyContent:"space-between",display:"flex",gap:"1rem"}}
                 >
                     {boxData.map((box) => (
-                        <Grid item xs={3} key={box.id}>
+                        <div key={box.id}>
                             <Box
                                 sx={{
                                     backgroundColor:
                                         activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                                    width: 240,
+                                    px: {sm:3,md:3,lg:6},
                                     height: 55,
                                     display: "flex",
                                     alignItems: "center",
+                                    justifyContent: "center",
                                     borderRadius: 1,
                                     boxShadow: 1,
                                     cursor: "pointer",
@@ -213,8 +205,8 @@ function Appointments(props) {
                                         fontSize: "2.1rem",
                                         fontWeight: 600,
                                         color: "#25307F",
-                                        marginRight: "4px",
-                                        marginLeft: "42px",
+                                        // marginRight: "4px",
+                                        // marginLeft: "20%",
                                     }}
                                 >
                                     {box.count}
@@ -240,9 +232,9 @@ function Appointments(props) {
                                     {box.label}
                                 </p>
                             </Box>
-                        </Grid>
+                        </div>
                     ))}
-                </Grid>
+                </div>
 
                 {/* Table Section */}
                 <TableContainer component={Paper}>

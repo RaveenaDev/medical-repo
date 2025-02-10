@@ -179,8 +179,8 @@ const Earnings = (props) => {
                     </div>
                 </Box>
 
-                <Box sx={{ display: "flex", gap: 5,marginBottom:"3rem" }}> {/* Adjust gap for spacing */}
-                    <Box onClick={() => handleGraphToggle('outpatient')} display="flex" alignItems="center" gap={1} sx={{ ml: 60, color: 'black',cursor:'pointer'}}>
+                <Box sx={{ display: "flex", gap: 5,marginBottom:"3rem",marginRight:"2rem" }} justifyContent='flex-end'> {/* Adjust gap for spacing */}
+                    <Box onClick={() => handleGraphToggle('outpatient')} display="flex" alignItems="center" gap={1} sx={{ color: 'black',cursor:'pointer'}}>
                         <Box
                             sx={{
                                 width: 15,

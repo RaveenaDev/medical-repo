@@ -44,11 +44,7 @@ const ReceptionPage = () => {
     }
 
     return (
-        <Grid container spacing={2} sx={{
-            minWidth: '1160px', // Set a fixed minimum width for the entire grid
-            // flexWrap: 'nowrap', // Prevent wrapping of child grids
-            // overflowX: 'auto', // Allow horizontal scrolling if content overflows
-        }}>
+        <Grid container spacing={2}>
             <Grid size={8.5}>
                 <Grid container direction="column" spacing={2}>
                     {/* First vertically stacked item */}
@@ -62,8 +58,7 @@ const ReceptionPage = () => {
 
                         <div>
                             <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 780,
-                                    borderCollapse: "separate", // Ensure border-spacing works
+                                <Table sx={{borderCollapse: "separate", // Ensure border-spacing works
                                     borderSpacing: "0 4px", // Adds vertical spacing between rows
                                 }} aria-label="simple table">
                                     <TableHead>
@@ -126,8 +121,7 @@ const ReceptionPage = () => {
 
                         <div className={styles.body1}>
                             <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650,
-                                    borderCollapse: "separate", // Ensure border-spacing works
+                                <Table sx={{borderCollapse: "separate", // Ensure border-spacing works
                                     borderSpacing: "0 4px", // Adds vertical spacing between rows
                                 }} aria-label="simple table">
                                     <TableHead>
@@ -178,7 +172,7 @@ const ReceptionPage = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid size={3.5} className={styles.container1} sx={{ maxHeight: 'calc(110vh - 150px)', overflowY: 'auto',position:'relative' }}>
+            <Grid size={3.5} className={styles.container1} sx={{ maxHeight: 'calc(110vh - 150px)', overflowY: 'auto' }}>
                 <div>
                     <div className={styles.heading1}>
                         <h3>Appointment Requests (8)</h3>

@@ -240,7 +240,6 @@ const PatientPanel = (props) => {
                                           <TableCell sx={{ color: "#6B7280", fontWeight: "bold" }}>Branch</TableCell>
                                           <TableCell sx={{ color: "#6B7280", fontWeight: "bold" }}>Date</TableCell>
                                           <TableCell sx={{ color: "#6B7280", fontWeight: "bold" }}>Status</TableCell>
-                                          <TableCell sx={{ color: "#6B7280", fontWeight: "bold" }}></TableCell>
                                       </TableRow>
                                   </TableHead>
                                   <TableBody>
