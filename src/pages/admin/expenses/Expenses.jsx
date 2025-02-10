@@ -154,7 +154,7 @@ const Expenses = (props) => {
           </div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
-              <DatePicker sx={{ width: 200 }} />
+              <DatePicker />
             </DemoContainer>
           </LocalizationProvider>
         </div>
@@ -171,7 +171,7 @@ const Expenses = (props) => {
             }, // Adjust padding
             backgroundColor: "#25307F",
             height: "3.4rem",
-            width: { sm: "48%", md: "12rem" },
+            width: "12rem",
             marginTop: "1.9rem",
           }}
         >
