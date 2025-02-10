@@ -63,13 +63,13 @@ const ReceptionPage = () => {
                                 }} aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Case ID</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Name</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Appointment With</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Type Visit</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Branch</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Token&nbsp;Number</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Status</TableCell>
+                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Case ID</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Name</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Appointment With</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Type Visit</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Branch</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Token&nbsp;Number</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Status</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -119,18 +119,18 @@ const ReceptionPage = () => {
                             </span>
                         </div>
 
-                        <div className={styles.body1}>
+                        <div>
                             <TableContainer component={Paper}>
                                 <Table sx={{borderCollapse: "separate", // Ensure border-spacing works
                                     borderSpacing: "0 4px", // Adds vertical spacing between rows
                                 }} aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Name</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Responsible</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Phase</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Branch</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Status</TableCell>
+                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Name</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Responsible</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Phase</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Branch</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Status</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

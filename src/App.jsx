@@ -22,16 +22,10 @@ import DepartDetails1 from "./pages/admin/departments/DepartDetails/DepartDetail
 import PrivacyPolicy from "./pages/receptionist/Settings/PrivacyPolicy.jsx";
 import Help from "./pages/receptionist/Settings/Help.jsx";
 import ProgressReport from "./pages/receptionist/patients/profile/ProgressReport.jsx";
-import styles2 from "./App2.module.scss";
-import PatientPanel from "./pages/admin/PatientPanel";
-import PatientDetails from "./pages/admin/PatientDetails";
+import PatientPanel from "./pages/admin/patient/PatientPanel.jsx";
+import PatientDetails from "./pages/admin/patient/PatientDetails.jsx";
 import Billing from "./pages/admin/Billing";
-import History from "./pages/admin/History";
-import Tracking from "./pages/admin/Tracking";
-import Notification from "./components/NotificationFunc/Notification";
-import Appointment from "./components/Buttons/Appointment";
-import BookAppointmentButton from "./components/Buttons/BookApp";
-import BillingButton from "./components/Buttons/Billing";
+import History from "./pages/admin/patient/History.jsx";
 import Doctors from "./pages/receptionist/doctors/Doctors.jsx";
 import Staffs from "./pages/receptionist/staffs/Staffs.jsx";
 import Rooms from "./pages/receptionist/rooms/Rooms.jsx";
@@ -43,6 +37,7 @@ import AdminRooms from "./pages/admin/rooms/AdminRooms.jsx";
 import Expenses from "./pages/admin/expenses/Expenses.jsx";
 import RequestTabs from "./pages/admin/requests/Request.jsx";
 import BillingAdmin from "./pages/admin/billing/Billing.jsx";
+import Tracking from "./pages/admin/patient/Tracking.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
