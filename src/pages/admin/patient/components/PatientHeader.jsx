@@ -1,74 +1,81 @@
 import React from "react";
 import "./PatientHeader.scss";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import {useNavigate} from "react-router-dom";
 
 const PatientHeader = ({ showEditPatients = true }) => {
+  const navigate = useNavigate()
   return (
     <div className="patient-header">
       <div className="patient-info">
+        <span onClick={() => navigate(-1)}
+              style={{transform: 'translateY(4px)', color: '#25307F', cursor: 'pointer'}}>
+          <ArrowBackIosIcon/>
+        </span>
         <h2>Patient List</h2>
         <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <mask
-            id="mask0_405_1222"
-            mask-type="alpha"
-            maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
             width="24"
             height="24"
-          >
-            <rect
-              x="24"
-              y="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+          <mask
+              id="mask0_405_1222"
+              mask-type="alpha"
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
               width="24"
               height="24"
-              transform="rotate(-180 24 24)"
-              fill="#D9D9D9"
+          >
+            <rect
+                x="24"
+                y="24"
+                width="24"
+                height="24"
+                transform="rotate(-180 24 24)"
+                fill="#D9D9D9"
             />
           </mask>
           <g mask="url(#mask0_405_1222)">
             <path
-              d="M8 2L18 12L8 22L6.225 20.225L14.45 12L6.225 3.775L8 2Z"
-              fill="#878787"
+                d="M8 2L18 12L8 22L6.225 20.225L14.45 12L6.225 3.775L8 2Z"
+                fill="#878787"
             />
           </g>
         </svg>
 
         <p>Jasmine Kaur</p>
         <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <mask
-            id="mask0_405_1222"
-            mask-type="alpha"
-            maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
             width="24"
             height="24"
-          >
-            <rect
-              x="24"
-              y="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+          <mask
+              id="mask0_405_1222"
+              mask-type="alpha"
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
               width="24"
               height="24"
-              transform="rotate(-180 24 24)"
-              fill="#D9D9D9"
+          >
+            <rect
+                x="24"
+                y="24"
+                width="24"
+                height="24"
+                transform="rotate(-180 24 24)"
+                fill="#D9D9D9"
             />
           </mask>
           <g mask="url(#mask0_405_1222)">
             <path
-              d="M8 2L18 12L8 22L6.225 20.225L14.45 12L6.225 3.775L8 2Z"
-              fill="#878787"
+                d="M8 2L18 12L8 22L6.225 20.225L14.45 12L6.225 3.775L8 2Z"
+                fill="#878787"
             />
           </g>
         </svg>
@@ -78,10 +85,10 @@ const PatientHeader = ({ showEditPatients = true }) => {
       <div className="patient-actions">
         <div>
           <svg
-            width="42"
-            height="42"
-            viewBox="0 0 42 42"
-            fill="none"
+              width="42"
+              height="42"
+              viewBox="0 0 42 42"
+              fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <rect width="42" height="42" rx="5" fill="white" />

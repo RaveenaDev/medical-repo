@@ -1,10 +1,17 @@
 import React from "react";
 import "./PatientHeader.scss";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import {useNavigate} from "react-router-dom";
 
 const PatientHeader = ({ showEditPatients = true }) => {
+  const navigate = useNavigate()
   return (
     <div className="patient-header">
       <div className="patient-info">
+        <span onClick={() => navigate(-1)}
+              style={{transform:'translateY(4px)',color:'#25307F',cursor:'pointer'}}>
+          <ArrowBackIosIcon/>
+        </span>
         <h2>Patient List</h2>
         <svg
           width="24"
