@@ -18,6 +18,7 @@ import Select from "../../../components/Select/index.jsx";
 import addIcon from "../../../assets/plus.svg";
 import styles from "../../receptionist/styles.module.scss";
 import Avatar from "@mui/material/Avatar";
+import {useNavigate} from "react-router-dom";
 
 const AdminDoctors = (props) => {
     useEffect(() => {
@@ -58,6 +59,8 @@ const AdminDoctors = (props) => {
     const handleSubmit = () => {
         console.log("New Doctor Data:",newDoctor)
     }
+
+    const navigate = useNavigate()
     
     return (
         <>
@@ -65,9 +68,10 @@ const AdminDoctors = (props) => {
 
             <Box>
                 <div className={ayu.headerContainer}>
-                    <button className={ayu.backButton}>
+                    <span onClick={() => navigate(-1)}
+                          style={{transform: 'translateY(4px)', color: 'black', cursor: 'pointer'}}>
                         <ArrowBackIosIcon/>
-                    </button>
+                    </span>
                     <h2 className={ayu.departmentTitle}>Total Doctors:</h2>
                     <h2 className={ayu.departmentTitleDetails}>8</h2>
 

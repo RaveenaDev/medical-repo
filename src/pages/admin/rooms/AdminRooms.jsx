@@ -38,6 +38,7 @@ import Select from "@mui/material/Select";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {useNavigate} from "react-router-dom";
 
 const AdminRooms = (props) => {
   useEffect(() => {
@@ -129,6 +130,8 @@ const AdminRooms = (props) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const navigate = useNavigate()
+
   return (
     <>
       <CommonPanel />
@@ -139,14 +142,15 @@ const AdminRooms = (props) => {
           style={{ justifyContent: "space-between" }}
         >
           <div style={{ display: "flex" }}>
-            <button className={ayu.backButton}>
-              <ArrowBackIosIcon />
-            </button>
+             <span onClick={() => navigate(-1)}
+                   style={{transform: 'translateY(8px)', color: 'black', cursor: 'pointer'}}>
+                        <ArrowBackIosIcon/>
+                    </span>
             <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
             <h2 className={ayu.departmentTitleDetails}>80</h2>
           </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <Box sx={{ display: "flex", gap: 3 }}>
+          <div style={{display: "flex", gap: "1rem"}}>
+          <Box sx={{ display: "flex", gap: 3 }}>
               {/* Adjust gap for spacing */}
               <Box
                 display="flex"
