@@ -352,29 +352,29 @@ function Receptionist(props) {
                     </Grid>
                   )}
                 </div>
-                <Grid
-                  container
-                  spacing={4}
-                  justifyContent="center"
-                  sx={{ mb: 1 }}
+
+                <div
+                    // sx={{ mb: 1,px: 2}}
+                    style={{marginBottom:"1rem",padding:"0 2rem",justifyContent:"space-between",display:"flex",gap:"1rem"}}
                 >
                   {boxData.map((box) => (
-                    <Grid item xs={3} key={box.id}>
+                    <div key={box.id}>
                       <Box
-                        sx={{
-                          backgroundColor:
-                            activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                          width: 240,
-                          height: 55,
-                          display: "flex",
-                          alignItems: "center",
-                          borderRadius: 1,
-                          boxShadow: 1,
-                          cursor: "pointer",
-                          borderBottom:
-                            activeBox === box.id ? "4px solid #6A0DAD" : "none",
-                          transition: "all 0.3s ease-in-out",
-                        }}
+                          sx={{
+                            backgroundColor:
+                                activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
+                            px: {sm:3,md:3,lg:6},
+                            height: 55,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: 1,
+                            boxShadow: 1,
+                            cursor: "pointer",
+                            borderBottom:
+                                activeBox === box.id ? "4px solid #6A0DAD" : "none",
+                            transition: "all 0.3s ease-in-out",
+                          }}
                         onClick={() => handleBoxClick(box.id)}
                       >
                         <h2
@@ -382,8 +382,8 @@ function Receptionist(props) {
                             fontSize: "2.1rem",
                             fontWeight: 600,
                             color: "#25307F",
-                            marginRight: "4px",
-                            marginLeft: "42px",
+                            // marginRight: "4px",
+                            // marginLeft: "42px",
                           }}
                         >
                           {box.count}
@@ -409,9 +409,9 @@ function Receptionist(props) {
                           {box.label}
                         </p>
                       </Box>
-                    </Grid>
+                    </div>
                   ))}
-                </Grid>
+                </div>
 
                 {/* Table Section */}
                 <TableContainer component={Paper}>

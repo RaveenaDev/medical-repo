@@ -62,9 +62,7 @@ const ReceptionPage = () => {
     // console.log("Total Patients : ",totalPatients)
 
     return (
-        <Grid container spacing={2} sx={{
-            minWidth: '1160px', // Set a fixed minimum width for the entire grid
-        }}>
+        <Grid container spacing={2}>
             <Grid size={8.5}>
                 <Grid container direction="column" spacing={2}>
                     {/* First vertically stacked item */}
@@ -77,20 +75,19 @@ const ReceptionPage = () => {
                         </div>
 
                         <div>
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 780,
-                                    borderCollapse: "separate", // Ensure border-spacing works
+                            <TableContainer >
+                                <Table sx={{borderCollapse: "separate", // Ensure border-spacing works
                                     borderSpacing: "0 4px", // Adds vertical spacing between rows
-                                }} aria-label="simple table">
+                                }} >
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Case ID</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Name</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Appointment With</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Type Visit</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Branch</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Token&nbsp;Number</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Status</TableCell>
+                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none',px:0.6}}>Case ID</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none',px:0.6}}>Name</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none',px:0.6}}>Appointment With</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none',px:0.6}}>Type Visit</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none',px:0.6}}>Branch</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none',px:0.6}}>Token&nbsp;No.</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none',px:0.6}}>Status</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -100,17 +97,17 @@ const ReceptionPage = () => {
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } , backgroundColor: '#EEF8F1'
                                                 }}
                                             >
-                                                <TableCell component="th" scope="row" sx={{color: '#25307f',border:'none'}}>
+                                                <TableCell component="th" scope="row" sx={{color: '#25307f',border:'none',px:0.6,pl:2}}>
                                                     XXXXXXXX
                                                 </TableCell>
-                                                <TableCell component="th" scope="row" sx={{color: '#25307f',border:'none'}}>
-                                                    {truncateText(row.patient.name,13)}
+                                                <TableCell component="th" scope="row" sx={{color: '#25307f',border:'none',px:0.6}}>
+                                                    {truncateText(row.name,13)}
                                                 </TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>{truncateText(row.doctor.name,14)}</TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>{row.typeVisit}</TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>{row.type}</TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>{row.tokenDate}</TableCell>
-                                                <TableCell align="center" sx={{border:'none'}}>
+                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{truncateText(row.appointmentWith,14)}</TableCell>
+                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{row.typeVisit}</TableCell>
+                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{row.branch}</TableCell>
+                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{row.tokenNumber}</TableCell>
+                                                <TableCell align="center" sx={{border:'none',px:0.6,pr:2}}>
                                                     <span
                                                         style={{
                                                             color: 'white',
@@ -142,19 +139,18 @@ const ReceptionPage = () => {
                             </span>
                         </div>
 
-                        <div className={styles.body1}>
+                        <div>
                             <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650,
-                                    borderCollapse: "separate", // Ensure border-spacing works
+                                <Table sx={{borderCollapse: "separate", // Ensure border-spacing works
                                     borderSpacing: "0 4px", // Adds vertical spacing between rows
                                 }} aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Name</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Responsible</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Phase</TableCell>
-                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Branch</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '8px 14px',border:'none'}}>Status</TableCell>
+                                            <TableCell sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Name</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Responsible</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Phase</TableCell>
+                                            <TableCell align="left" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Branch</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '13px',color: '#959595',padding: '0.5 1',border:'none'}}>Status</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -198,7 +194,7 @@ const ReceptionPage = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid size={3.5} className={styles.container1} sx={{ maxHeight: 'calc(110vh - 150px)', overflowY: 'auto',position:'relative' }}>
+            <Grid size={3.5} className={styles.container1} sx={{ maxHeight: 'calc(110vh - 150px)', overflowY: 'auto' }}>
                 <div>
                     <div className={styles.heading1}>
                         <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>

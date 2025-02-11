@@ -22,16 +22,10 @@ import DepartDetails1 from "./pages/admin/departments/DepartDetails/DepartDetail
 import PrivacyPolicy from "./pages/receptionist/Settings/PrivacyPolicy.jsx";
 import Help from "./pages/receptionist/Settings/Help.jsx";
 import ProgressReport from "./pages/receptionist/patients/profile/ProgressReport.jsx";
-import styles2 from "./App2.module.scss";
-import PatientPanel from "./pages/admin/PatientPanel";
-import PatientDetails from "./pages/admin/PatientDetails";
+import PatientPanel from "./pages/admin/patient/PatientPanel.jsx";
+import PatientDetails from "./pages/admin/patient/PatientDetails.jsx";
 import Billing from "./pages/admin/Billing";
-import History from "./pages/admin/History";
-import Tracking from "./pages/admin/Tracking";
-import Notification from "./components/NotificationFunc/Notification";
-import Appointment from "./components/Buttons/Appointment";
-import BookAppointmentButton from "./components/Buttons/BookApp";
-import BillingButton from "./components/Buttons/Billing";
+import History from "./pages/admin/patient/History.jsx";
 import Doctors from "./pages/receptionist/doctors/Doctors.jsx";
 import Staffs from "./pages/receptionist/staffs/Staffs.jsx";
 import Rooms from "./pages/receptionist/rooms/Rooms.jsx";
@@ -42,6 +36,10 @@ import Earnings from "./pages/admin/earnings/Earnings.jsx";
 import AdminDoctors from "./pages/admin/doctors/AdminDoctors.jsx";
 import AdminStaffs from "./pages/admin/staffs/AdminStaffs.jsx";
 import AdminRooms from "./pages/admin/rooms/AdminRooms.jsx";
+import Expenses from "./pages/admin/expenses/Expenses.jsx";
+import RequestTabs from "./pages/admin/requests/Request.jsx";
+import BillingAdmin from "./pages/admin/billing/Billing.jsx";
+import Tracking from "./pages/admin/patient/Tracking.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -57,8 +55,8 @@ function App() {
       setRole("admin");
     } else if (location.pathname.startsWith("/receptionist")) {
       setRole("receptionist");
-    } else if (location.pathname.startsWith("/patient")) {
-      setRole("patient");
+    } else if (location.pathname.startsWith("/doctor")) {
+      setRole("doctor");
     } else {
       setRole(""); // Default or no role
     }
@@ -257,49 +255,69 @@ function App() {
               }
             />
 
-              <Route
-                  path="/admin/earnings"
-                  element={
-                      <Earnings
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/earnings"
+              element={
+                <Earnings
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/requests"
+              element={
+                <RequestTabs
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/billings"
+              element={
+                <BillingAdmin
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
 
-              <Route
-                  path="/admin/doctors"
-                  element={
-                      <AdminDoctors
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/doctors"
+              element={
+                <AdminDoctors
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
 
-              <Route
-                  path="/admin/staffs"
-                  element={
-                      <AdminStaffs
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/staffs"
+              element={
+                <AdminStaffs
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
 
-              <Route
-                  path="/admin/rooms"
-                  element={
-                      <AdminRooms
-                          setIsSignUpOrLogin={setIsSignUpOrLogin}
-                          setEntity={setEntity}
-                          entity={entity}
-                      />
-                  }
-              />
+            <Route
+              path="/admin/rooms"
+              element={
+                <AdminRooms
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
             <Route
               path="/admin/reception"
               element={
@@ -390,11 +408,50 @@ function App() {
                 />
               }
             ></Route>
+
+            <Route
+              path="/admin/expenses"
+              element={
+                <Expenses
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+
+            <Route
+              path="/admin/settings"
+              element={
+                <Settings
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/settings/privacyPolicy"
+              element={
+                <PrivacyPolicy
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/admin/settings/helpAndSupport"
+              element={
+                <Help
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
           </Routes>
         </div>
-        {/*<div className="">*/}
-        {/*  <Settings/>*/}
-        {/*</div>*/}
       </div>
     </>
   );

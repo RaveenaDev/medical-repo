@@ -1,0 +1,90 @@
+.billing-container {
+  background: #f1f1f1;
+  color: black;
+  padding: 0;
+
+  .header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 2px;
+    gap: 10px;
+  }
+
+  .divider {
+    width: 100%;
+    height: 0.5px;
+    background: #4a4a4a8c;
+    margin: 10px 0 20px 0;
+  }
+
+  .billings-table {
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .table-header,
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.25fr 1.5fr 1.5fr 1.25fr 1.25fr 1.25fr 1fr 0.5fr;
+      padding: 15px;
+
+      align-items: center;
+    }
+
+    .table-header {
+      font-size: 16px;
+      margin-left: 1.5rem;
+    }
+
+    .table-row {
+      font-size: 14px;
+      background: white;
+      margin-bottom: 0.5rem;
+      span {
+        padding-left: 1rem;
+      }
+
+      .view-btn {
+        background: white;
+        color: #25307f;
+        border-radius: 1.5rem;
+        border: 1px solid #25307f;
+        text-transform: none;
+        max-width: 60px;
+      }
+
+      .menu-btn {
+        color: #555;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .grey {
+        color: #747474;
+        font-weight: 600;
+      }
+
+      .blue {
+        color: #25307f;
+        font-weight: 600;
+      }
+      .status {
+        font-weight: bold;
+
+        text-align: center;
+        width: fit-content;
+      }
+
+      .status.paid {
+        color: #3db461;
+      }
+
+      .status.unpaid {
+        color: hsl(354, 90%, 51%);
+      }
+    }
+  }
+}

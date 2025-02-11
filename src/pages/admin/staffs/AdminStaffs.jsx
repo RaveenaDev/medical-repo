@@ -19,6 +19,7 @@ import Avatar from "@mui/material/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {useNavigate} from "react-router-dom";
 
 const AdminStaffs = (props) => {
     useEffect(() => {
@@ -106,20 +107,23 @@ const AdminStaffs = (props) => {
         console.log("New Staff Data:",newStaff)
     }
 
+    const navigate = useNavigate()
+
     return (
         <>
             <CommonPanel/>
 
             <Box>
                 <div className={ayu.headerContainer}>
-                    <button className={ayu.backButton}>
+                     <span onClick={() => navigate(-1)}
+                           style={{transform: 'translateY(4px)', color: 'black', cursor: 'pointer'}}>
                         <ArrowBackIosIcon/>
-                    </button>
+                    </span>
                     <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
                     <h2 className={ayu.departmentTitleDetails}>200+</h2>
 
                     <div style={{marginLeft: 'auto'}}>
-                        <Button
+                    <Button
                             variant="contained"
                             sx={{
                                 fontSize: "20px",

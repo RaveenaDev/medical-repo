@@ -1,0 +1,374 @@
+import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import "./Rate.scss";
+
+import RateModal from "./components/RateModal";
+
+const services = [
+  {
+    serviceName: "Consultation",
+    categories: [
+      {
+        name: "Doctor Consultations",
+        rateType: "Per Consultation",
+        currentRate: 1000,
+        amenities: "N/A",
+        effectiveDate: "11-01-2025",
+        lastUpdated: "11-01-2025",
+      },
+      {
+        name: "Specialist Consultation",
+        rateType: "Per Consultation",
+        currentRate: 1000,
+        amenities: "N/A",
+        effectiveDate: "11-01-2025",
+        lastUpdated: "11-01-2025",
+      },
+      {
+        name: "Emergency Consultation",
+        rateType: "Per Consultation",
+        currentRate: 2000,
+        amenities: "N/A",
+        effectiveDate: "11-01-2025",
+        lastUpdated: "11-01-2025",
+      },
+    ],
+  },
+  {
+    serviceName: "Room Charges",
+    categories: [
+      {
+        name: "Single Room",
+        rateType: "Per Day",
+        currentRate: 1000,
+        amenities: "Bed, Meals, A/C",
+        effectiveDate: "11-01-2025",
+        lastUpdated: "11-01-2025",
+      },
+      {
+        name: "Double Room",
+        rateType: "Per Day",
+        currentRate: 1500,
+        amenities: "Shared Bathroom, Bed",
+        effectiveDate: "11-01-2025",
+        lastUpdated: "11-01-2025",
+      },
+      {
+        name: "ICU",
+        rateType: "Per Day",
+        currentRate: 5000,
+        amenities: "Bed, Intensive Monitoring",
+        effectiveDate: "11-01-2025",
+        lastUpdated: "11-01-2025",
+      },
+      {
+        name: "Private Suite",
+        rateType: "Per Day",
+        currentRate: 8000,
+        amenities: "Bed, Private Room, A/C, Special Meals",
+        effectiveDate: "11-01-2025",
+        lastUpdated: "11-01-2025",
+      },
+    ],
+  },
+];
+
+const Rate = () => {
+  const [sortOrder, setSortOrder] = useState("Monthly");
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorE2, setAnchorE2] = useState(null);
+  const filterOptions = services.map((service) => service.serviceName);
+
+  const [modalOpen, setModalOpen] = useState(false); // State for modal
+
+  // Handle Sort Change
+  const handleSortChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleOpenMenu = (event) => {
+    setAnchorE2(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorE2(null);
+  };
+
+  const handleSelect = (option) => {
+    setSelectedFilter(option);
+    handleClose();
+  };
+  return (
+    <div className="rate-container">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderTop: "0.5px solid #4A4A4A8C",
+          borderBottom: "0.5px solid #4A4A4A8C",
+          paddingY: 2,
+          marginBottom: 3,
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              borderRight: "0.5px solid #4A4A4A8C",
+              paddingRight: 2,
+              marginRight: 2,
+              color: "black",
+            }}
+          >
+            {services.length}
+            <Typography
+              component="span"
+              variant="body1"
+              sx={{ fontWeight: "normal", color: "#878787", marginLeft: 1 }}
+            >
+              Services
+            </Typography>
+          </Typography>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography variant="body1" sx={{ marginRight: 1, color: "black" }}>
+              Sort by:
+            </Typography>
+            <Select
+              value={sortOrder}
+              onChange={handleSortChange}
+              size="small"
+              sx={{ minWidth: 160 }}
+            >
+              <MenuItem
+                value="Weekly"
+                sx={{ borderBottom: "0.5px sloid black" }}
+              >
+                Weekly
+              </MenuItem>
+              <MenuItem
+                sx={{ borderBottom: "0.5px sloid black" }}
+                value="Monthly"
+              >
+                Monthly
+              </MenuItem>
+              <MenuItem value="Yearly">Yearly</MenuItem>
+            </Select>
+          </Box>
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Button
+            variant="filled"
+            sx={{
+              textTransform: "none",
+              backgroundColor: "#25307F",
+              color: "white",
+            }}
+            onClick={() => setModalOpen(true)}
+          >
+            <svg
+              width="25"
+              height="25"
+              viewBox="0 0 25 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <mask
+                id="mask0_1313_1585"
+                mask-type="alpha"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="25"
+                height="25"
+              >
+                <rect
+                  x="0.347656"
+                  y="0.745117"
+                  width="24"
+                  height="24"
+                  fill="#D9D9D9"
+                />
+              </mask>
+              <g mask="url(#mask0_1313_1585)">
+                <path
+                  d="M11.3477 21.7451V13.7451H3.34766V11.7451H11.3477V3.74512H13.3477V11.7451H21.3477V13.7451H13.3477V21.7451H11.3477Z"
+                  fill="#D9D9D9"
+                />
+              </g>
+            </svg>
+            ADD SERVICE
+          </Button>
+          {/* Filter Button with Dropdown */}
+          <Button
+            variant="outlined"
+            startIcon={<FilterAltOutlinedIcon />}
+            sx={{ textTransform: "none" }}
+            onClick={handleOpen}
+          >
+            {selectedFilter ? `Filter: ${selectedFilter}` : "Filter"}
+          </Button>
+
+          {/* Dropdown Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            {filterOptions.map((option) => (
+              <MenuItem key={option} onClick={() => handleSelect(option)}>
+                {option}
+              </MenuItem>
+            ))}
+          </Menu>
+
+          {/* Selected Filter Chip */}
+          {selectedFilter && (
+            <Chip
+              label={selectedFilter}
+              onDelete={() => setSelectedFilter("")}
+              sx={{ bgcolor: "#e0e0e0" }}
+            />
+          )}
+        </Box>
+      </Box>
+      <div className="rate-table">
+        <div className="rate-table-header">
+          <span>Service Name</span>
+          <span>Category</span>
+          <span>Rate Type</span>
+          <span>Current Rate</span>
+          <span>Effective Date</span>
+          <span>Last Updated</span>
+          <span>Amenities</span>
+        </div>
+
+        {services
+          .filter(
+            (service) =>
+              !selectedFilter || service.serviceName === selectedFilter
+          )
+          .map((service) => (
+            <div key={service.serviceName} className="service-container">
+              {service.categories.map((category, index) => (
+                <div
+                  className="rate-table-row"
+                  key={`${service.serviceName}-${index}`}
+                >
+                  <span className="blue">
+                    {index === 0 ? service.serviceName : ""}
+                  </span>
+                  <span className="blue">{category.name}</span>
+                  <span>{category.rateType}</span>
+                  <span className="blue">₹{category.currentRate}</span>
+                  <span>{category.effectiveDate}</span>
+                  <span>{category.lastUpdated}</span>
+                  <span className="blue">{category.amenities}</span>
+                  <IconButton onClick={handleOpenMenu}>
+                    <MoreVertIcon />
+                  </IconButton>
+                  {/* Dropdown Menu */}
+                  <Menu
+                    anchorEl={anchorE2}
+                    open={Boolean(anchorE2)}
+                    onClose={handleCloseMenu}
+                  >
+                    <MenuItem
+                      value="edit"
+                      sx={{ display: "flex", gap: "4px" }}
+                      onClick={() => handleSelect(option)}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <mask
+                          id="mask0_1313_1066"
+                          mask-type="alpha"
+                          maskUnits="userSpaceOnUse"
+                          x="0"
+                          y="0"
+                          width="20"
+                          height="20"
+                        >
+                          <rect width="20" height="20" fill="#D9D9D9" />
+                        </mask>
+                        <g mask="url(#mask0_1313_1066)">
+                          <path
+                            d="M1.66699 20V16.6667H18.3337V20H1.66699ZM5.00033 13.3334H6.16699L12.667 6.85419L11.4795 5.66669L5.00033 12.1667V13.3334ZM3.33366 15V11.4584L12.667 2.14585C12.8198 1.99308 12.9969 1.87502 13.1982 1.79169C13.3996 1.70835 13.6114 1.66669 13.8337 1.66669C14.0559 1.66669 14.2712 1.70835 14.4795 1.79169C14.6878 1.87502 14.8753 2.00002 15.042 2.16669L16.1878 3.33335C16.3545 3.48613 16.476 3.66669 16.5524 3.87502C16.6288 4.08335 16.667 4.29863 16.667 4.52085C16.667 4.72919 16.6288 4.93405 16.5524 5.13544C16.476 5.33683 16.3545 5.52085 16.1878 5.68752L6.87533 15H3.33366Z"
+                            fill="#1C1B1F"
+                          />
+                        </g>
+                      </svg>
+                      Edit
+                    </MenuItem>
+
+                    <MenuItem
+                      value="delete"
+                      onClick={() => handleSelect(option)}
+                      sx={{ display: "flex", gap: "4px" }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <mask
+                          id="mask0_1313_1069"
+                          mask-type="alpha"
+                          maskUnits="userSpaceOnUse"
+                          x="0"
+                          y="0"
+                          width="20"
+                          height="20"
+                        >
+                          <rect width="20" height="20" fill="#D9D9D9" />
+                        </mask>
+                        <g mask="url(#mask0_1313_1069)">
+                          <path
+                            d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
+                            fill="#FF4800"
+                          />
+                        </g>
+                      </svg>
+                      Delete
+                    </MenuItem>
+                  </Menu>
+                </div>
+              ))}
+            </div>
+          ))}
+      </div>
+      {/* Use the separate BillingModal Component */}
+      <RateModal open={modalOpen} handleClose={() => setModalOpen(false)} />
+    </div>
+  );
+};
+
+export default Rate;

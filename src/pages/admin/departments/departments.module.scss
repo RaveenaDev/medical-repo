@@ -1,4 +1,4 @@
-$blue : #25307f;
+$blue: #25307f;
 
 .headerContainer {
   display: flex;
@@ -7,40 +7,40 @@ $blue : #25307f;
   margin-bottom: 5px;
 
   .backButton {
-    margin-right: 8px;  // Space between button and h2
+    margin-right: 8px; // Space between button and h2
     margin-top: 10px;
     color: #25307f;
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     font-weight: bold;
     font-size: 20px;
     padding: 0;
   }
 
   .departmentTitle {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
   }
 
   .departmentTitle1 {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
-    opacity: 0.5;  // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
+    opacity: 0.5; // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
   }
 
-  .forwardButton{
-    margin-left: 14px;  // Space between button and h2
+  .forwardButton {
+    margin-left: 14px; // Space between button and h2
     margin-top: 10px;
     color: #25307f;
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     font-weight: bold;
     font-size: 20px;
     padding: 0;
   }
 
   .departmentTitleDetails {
-    margin: 0;  // Remove default margin of h2
+    margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
     margin-left: 12px;
@@ -51,7 +51,7 @@ $blue : #25307f;
   background-color: white;
   width: 100%; // Ensuring it takes full width within its parent container
   height: 225px;
-  padding: 1.5rem 1rem; // px-4 py-6
+  padding: 1.5rem; // px-4 py-6
   border-radius: 12px;
   cursor: pointer;
   border: 2px solid transparent; // Start with no visible border
@@ -88,190 +88,50 @@ $blue : #25307f;
       margin-top: 0.6rem;
     }
 
-    .icons{
+    .icons {
       margin-top: 0.3rem;
       //margin-left: 2rem;
       position: relative;
       left: 46px;
 
-      .message{
+      .message {
         color: #25307f;
       }
 
-      .phone{
+      .phone {
         //margin-left: 20px;
         color: green;
       }
     }
   }
 
-  .detailsContainer{
+  .detailsContainer {
     margin-left: 40px;
     margin-top: 15px;
-    .details{
-      display:flex;
+    .details {
+      display: flex;
       height: 26px;
       font-weight: 500;
-      .name{
+      .name {
         color: black;
         padding: 0;
       }
 
-      .value{
-        color:gray;
+      .value {
+        color: gray;
         margin-left: 4px;
       }
     }
   }
-
-  //// Responsive Adjustments for Card
-  //@media (max-width: 1446px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 1.2rem;
-  //      height: 1.2rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 1.2rem;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.9rem;
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 30px;
-  //    .details {
-  //      font-size: 0.9rem;
-  //    }
-  //  }
-  //}
-  //
-  //@media (max-width: 1300px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 1.1rem;
-  //      height: 1.1rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 1.1rem;
-  //      margin-top: 2.5px;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.8rem;
-  //      position: relative;
-  //      bottom: 2px;
-  //    }
-  //
-  //    .icons{
-  //      margin-top: 0.3rem;
-  //      //margin-left: 2rem;
-  //      position: relative;
-  //      left: 20px;
-  //      bottom: 2px;
-  //
-  //      .message{
-  //        color: #25307f;
-  //        //font-size: 1rem;
-  //      }
-  //
-  //      .phone{
-  //        //margin-left: 20px;
-  //        color: green;
-  //      }
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 20px;
-  //    .details {
-  //      font-size: 0.8rem;
-  //    }
-  //  }
-  //}
-  //
-  //@media (max-width: 1024px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 1rem;
-  //      height: 1rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 1rem;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.8rem;
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 20px;
-  //    .details {
-  //      font-size: 0.8rem;
-  //    }
-  //  }
-  //}
-  //
-  //@media (max-width: 768px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 0.8rem;
-  //      height: 0.8rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 0.9rem;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.7rem;
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 10px;
-  //    .details {
-  //      font-size: 0.7rem;
-  //    }
-  //  }
-  //}
-
 }
 
-.superCardContainer{
+.superCardContainer {
   display: flex;
+  justify-content: space-evenly;
   flex-wrap: wrap;
   gap: 15px;
-  justify-content: space-between;
 
   .cardContainer {
-    width: 28%; // Ensure 3 cards fit in a row
-
-    //@media (max-width: 1446px) {
-    //  width: 28%; // Keep 3 cards per row even on widths below 1446px
-    //}
-    //
-    //@media (max-width: 1300px) {
-    //  width: 27%; // Keep 3 cards per row even on widths below 1446px
-    //  height: 200px;
-    //}
-    //
-    //@media (max-width: 1024px) {
-    //  width: 48%; // 2 cards per row on tablets
-    //}
-    //
-    //@media (max-width: 768px) {
-    //  width: 100%; // 1 card per row on mobile
-    //}
+    width: max-content;
   }
 }

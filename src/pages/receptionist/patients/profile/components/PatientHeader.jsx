@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import "./PatientHeader.scss";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { useNavigate } from "react-router-dom";
+import RecordModal from "./components/RecordsModal.jsx";
 
 const PatientHeader = ({ showEditPatients = true }) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedBill, setSelectedBill] = useState(null);
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedBill(null);
+  };
+  const handleViewClick = (bill) => {
+    setSelectedBill(bill);
+    setOpenModal(true);
+  };
+  const navigate = useNavigate();
   return (
     <div className="patient-header">
       <div className="patient-info">
+        <span
+          onClick={() => navigate(-1)}
+          style={{
+            transform: "translateY(4px)",
+            color: "#25307F",
+            cursor: "pointer",
+          }}
+        >
+          <ArrowBackIosIcon />
+        </span>
         <h2>Patient List</h2>
         <svg
           width="24"
@@ -75,7 +99,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
 
         <p>XXXXXX</p>
       </div>
-      <div className="patient-actions">
+      <div className="patient-actions" style={{cursor:'pointer'}}>
         <div>
           <svg
             width="42"
@@ -104,7 +128,20 @@ const PatientHeader = ({ showEditPatients = true }) => {
             </g>
           </svg>
         </div>
-        <div className="box">
+        <div
+          className="box"
+          style={{cursor:'pointer'}}
+          onClick={() =>
+            handleViewClick({
+              id: "C001231",
+              name: "John Doe",
+              phone: "9876543210",
+              date: "11-12-2024",
+              amount: "$250",
+              status: "Paid",
+            })
+          }
+        >
           <svg
             width="24"
             height="24"
@@ -165,6 +202,12 @@ const PatientHeader = ({ showEditPatients = true }) => {
           </div>
         )}
       </div>
+      {/* Use the separate BillingModal Component */}
+      <RecordModal
+        open={openModal}
+        bill={selectedBill}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
