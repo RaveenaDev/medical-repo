@@ -29,7 +29,7 @@ const appointmentRequests = [1,1,1,1,1,1,1,1]
 
 // Utility function to truncate text
 const truncateText = (text, maxLength) => {
-    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 };
 
 const ReceptionPage = () => {
