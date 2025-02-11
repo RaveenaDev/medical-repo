@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ayu from "../../receptionist/patients/patients.module.scss";
 import Searchbar from "../../../components/Searchbar/index.jsx";
 import Grid from "@mui/material/Grid2";
@@ -17,11 +17,34 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getDoctors,
+  getPatients,
+  getRooms,
+  getStaffs,
+} from "../../../components/State/Admin/Action.js";
 
 const CommonPanel = () => {
   const navigate = useNavigate();
 
   const location = useLocation(); // Get the current route
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPatients());
+    dispatch(getDoctors());
+    dispatch(getStaffs());
+    dispatch(getRooms());
+  }, [dispatch]);
+
+  const admin = useSelector((store) => store.admin);
+
+  const noOfDoctors = admin.totalDoctors;
+
+  const noOfStaffs = admin.totalStaffs;
+
+  const noOfRooms = admin.totalRooms;
 
   // Define the routes where you want to hide the div
   const excludedRoutes = [
@@ -97,7 +120,7 @@ const CommonPanel = () => {
                 backgroundColor: "#EAA000",
               }}
               title="Total Doctors"
-              subtitle="8"
+              subtitle={noOfDoctors}
               handleClickCb={() => navigate(`/admin/doctors`)}
             />
           </Grid>
@@ -107,7 +130,7 @@ const CommonPanel = () => {
                 backgroundColor: "#2E823B",
               }}
               title="Total Staffs"
-              subtitle="250"
+              subtitle={noOfStaffs}
               handleClickCb={() => navigate(`/admin/staffs`)}
             />
           </Grid>
@@ -117,7 +140,7 @@ const CommonPanel = () => {
                 backgroundColor: "#66A7B4",
               }}
               title="Total Rooms"
-              subtitle="80"
+              subtitle={noOfRooms}
               handleClickCb={() => navigate(`/admin/rooms`)}
             />
           </Grid>

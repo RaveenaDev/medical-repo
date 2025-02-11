@@ -38,7 +38,9 @@ import Select from "@mui/material/Select";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getRooms } from "../../../components/State/Admin/Action.js";
 
 const AdminRooms = (props) => {
   useEffect(() => {
@@ -130,7 +132,17 @@ const AdminRooms = (props) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getRooms());
+  }, [dispatch]);
+  const navigate = useNavigate();
+  const admin = useSelector((store) => store.admin);
+  const noOfRooms = admin.totalRooms;
+  const rooms = admin.rooms;
+
+  console.log("ROOMS:", rooms);
 
   return (
     <>
@@ -142,15 +154,21 @@ const AdminRooms = (props) => {
           style={{ justifyContent: "space-between" }}
         >
           <div style={{ display: "flex" }}>
-             <span onClick={() => navigate(-1)}
-                   style={{transform: 'translateY(8px)', color: 'black', cursor: 'pointer'}}>
-                        <ArrowBackIosIcon/>
-                    </span>
+            <span
+              onClick={() => navigate(-1)}
+              style={{
+                transform: "translateY(8px)",
+                color: "black",
+                cursor: "pointer",
+              }}
+            >
+              <ArrowBackIosIcon />
+            </span>
             <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-            <h2 className={ayu.departmentTitleDetails}>80</h2>
+            <h2 className={ayu.departmentTitleDetails}>{noOfRooms}</h2>
           </div>
-          <div style={{display: "flex", gap: "1rem"}}>
-          <Box sx={{ display: "flex", gap: 3 }}>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <Box sx={{ display: "flex", gap: 3 }}>
               {/* Adjust gap for spacing */}
               <Box
                 display="flex"
@@ -343,7 +361,7 @@ const AdminRooms = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {patients.map((patient) => (
+            {rooms.map((patient) => (
               <TableRow
                 key={patient.id}
                 sx={{
@@ -359,7 +377,7 @@ const AdminRooms = (props) => {
                 }}
               >
                 <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                  {patient.roomId}
+                  {patient.roomID}
                 </TableCell>
                 <TableCell align="center" sx={{ pl: 8 }}>
                   <Typography
@@ -398,7 +416,9 @@ const AdminRooms = (props) => {
                     {patient.status}
                   </Box>
                 </TableCell>
-                <TableCell align="center">{patient.doctorAssigned}</TableCell>
+                <TableCell align="center">
+                  {patient.assignedDoctor.name}
+                </TableCell>
 
                 <TableCell align="right">
                   <IconButton
