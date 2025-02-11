@@ -99,7 +99,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
 
         <p>XXXXXX</p>
       </div>
-      <div className="patient-actions">
+      <div className="patient-actions" style={{cursor:'pointer'}}>
         <div>
           <svg
             width="42"
@@ -130,6 +130,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
         </div>
         <div
           className="box"
+          style={{cursor:'pointer'}}
           onClick={() =>
             handleViewClick({
               id: "C001231",

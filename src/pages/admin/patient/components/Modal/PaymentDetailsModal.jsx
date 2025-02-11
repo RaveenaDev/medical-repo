@@ -38,6 +38,7 @@ const PaymentDetailsModal = ({ open, onClose }) => {
             <Button className="modal-btn blue">Refund</Button>
             <Button className="modal-btn blue">Add Advance Payment</Button>
             <svg
+                style={{cursor:'pointer'}}
               onClick={onClose}
               width="40"
               height="40"
