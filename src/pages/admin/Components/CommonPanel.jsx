@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ayu from "../../receptionist/patients/patients.module.scss";
 import Searchbar from "../../../components/Searchbar/index.jsx";
 import Grid from "@mui/material/Grid2";
@@ -17,11 +17,47 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getDoctors,
+  getPatients,
+  getRooms,
+  getStaffs,
+} from "../../../components/State/Admin/Action.js";
 
 const CommonPanel = () => {
   const navigate = useNavigate();
 
   const location = useLocation(); // Get the current route
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPatients());
+    dispatch(getDoctors());
+    dispatch(getStaffs());
+    dispatch(getRooms());
+  }, [dispatch]);
+
+  const admin = useSelector((store) => store.admin);
+
+  const noOfDoctors = admin.totalDoctors;
+  const doctors = admin.doctors;
+
+  const noOfStaffs = admin.totalStaffs;
+  const staffs = admin.staffs;
+
+  const noOfRooms = admin.totalRooms;
+  const rooms = admin.rooms;
+
+  const handleRoomClick = (rooms) => {
+    navigate(`/admin/rooms`, { state: { rooms } });
+  };
+  const handleDocClick = (doctors) => {
+    navigate(`/admin/doctors`, { state: { doctors } });
+  };
+  const handleStaffClick = (staffs) => {
+    navigate(`/admin/staffs`, { state: { staffs } });
+  };
 
   // Define the routes where you want to hide the div
   const excludedRoutes = [
@@ -97,8 +133,8 @@ const CommonPanel = () => {
                 backgroundColor: "#EAA000",
               }}
               title="Total Doctors"
-              subtitle="8"
-              handleClickCb={() => navigate(`/admin/doctors`)}
+              subtitle={noOfDoctors}
+              handleClickCb={() => handleDocClick(doctors)}
             />
           </Grid>
           <Grid size={3}>
@@ -107,8 +143,8 @@ const CommonPanel = () => {
                 backgroundColor: "#2E823B",
               }}
               title="Total Staffs"
-              subtitle="250"
-              handleClickCb={() => navigate(`/admin/staffs`)}
+              subtitle={noOfStaffs}
+              handleClickCb={() => handleStaffClick(staffs)}
             />
           </Grid>
           <Grid size={3}>
@@ -117,8 +153,8 @@ const CommonPanel = () => {
                 backgroundColor: "#66A7B4",
               }}
               title="Total Rooms"
-              subtitle="80"
-              handleClickCb={() => navigate(`/admin/rooms`)}
+              subtitle={noOfRooms}
+              handleClickCb={() => handleRoomClick(rooms)}
             />
           </Grid>
         </Grid>
