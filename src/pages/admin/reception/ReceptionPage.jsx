@@ -206,7 +206,7 @@ const ReceptionPage = () => {
                                 <div className={styles.circle}></div>
                                 <div>
                                     <h4>{req.patient.name}</h4>
-                                    <p>{req.note}</p>
+                                    <p>Appointment for {req.department.name},{req.tokenDate}</p>
                                     {/*<p>Appointment for ENT, 28 September</p>*/}
                                 </div>
                             </div>
@@ -225,7 +225,7 @@ const ReceptionPage = () => {
                                 <div className={styles.circle}></div>
                                 <div>
                                     <h4>{req.patient.name}</h4>
-                                    <p>Appointment for {req.doctor.specialization},DATE</p>
+                                    <p>Appointment for {req.doctor.specialization},{req.dateRejected}</p>
                                     {/*<p>Appointment for ENT, 28 September</p>*/}
                                 </div>
                             </div>
