@@ -41,10 +41,23 @@ const CommonPanel = () => {
   const admin = useSelector((store) => store.admin);
 
   const noOfDoctors = admin.totalDoctors;
+  const doctors = admin.doctors;
 
   const noOfStaffs = admin.totalStaffs;
+  const staffs = admin.staffs;
 
   const noOfRooms = admin.totalRooms;
+  const rooms = admin.rooms;
+
+  const handleRoomClick = (rooms) => {
+    navigate(`/admin/rooms`, { state: { rooms } });
+  };
+  const handleDocClick = (doctors) => {
+    navigate(`/admin/doctors`, { state: { doctors } });
+  };
+  const handleStaffClick = (staffs) => {
+    navigate(`/admin/staffs`, { state: { staffs } });
+  };
 
   // Define the routes where you want to hide the div
   const excludedRoutes = [
@@ -121,7 +134,7 @@ const CommonPanel = () => {
               }}
               title="Total Doctors"
               subtitle={noOfDoctors}
-              handleClickCb={() => navigate(`/admin/doctors`)}
+              handleClickCb={() => handleDocClick(doctors)}
             />
           </Grid>
           <Grid size={3}>
@@ -131,7 +144,7 @@ const CommonPanel = () => {
               }}
               title="Total Staffs"
               subtitle={noOfStaffs}
-              handleClickCb={() => navigate(`/admin/staffs`)}
+              handleClickCb={() => handleStaffClick(staffs)}
             />
           </Grid>
           <Grid size={3}>
@@ -141,7 +154,7 @@ const CommonPanel = () => {
               }}
               title="Total Rooms"
               subtitle={noOfRooms}
-              handleClickCb={() => navigate(`/admin/rooms`)}
+              handleClickCb={() => handleRoomClick(rooms)}
             />
           </Grid>
         </Grid>

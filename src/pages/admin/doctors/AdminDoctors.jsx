@@ -77,12 +77,12 @@ const AdminDoctors = (props) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getDoctors());
-  }, [dispatch]);
-  const admin = useSelector((store) => store.admin);
-  const noOfDoctors = admin.totalDoctors;
-  const doctors = admin.doctors;
+
+  const location = useLocation();
+  console.log("Location COMING:", location);
+  const doctors = location.state?.doctors;
+  const noOfDoctors = doctors.length;
+  console.log(doctors);
 
   return (
     <>
@@ -286,7 +286,7 @@ const AdminDoctors = (props) => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {patient.doctorId}
+                    {patient._id}
                   </Typography>
                 </TableCell>
                 <TableCell>

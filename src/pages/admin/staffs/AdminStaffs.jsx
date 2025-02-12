@@ -37,7 +37,7 @@ import Avatar from "@mui/material/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDoctors } from "../../../components/State/Admin/Action.js";
 
@@ -129,12 +129,12 @@ const AdminStaffs = (props) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getDoctors());
-  }, [dispatch]);
-  const admin = useSelector((store) => store.admin);
-  const noOfStaffs = admin.totalStaffs;
-  const staffs = admin.staffs;
+  const location = useLocation();
+
+  console.log("Location COMING:", location);
+
+  const staffs = location.state?.staffs;
+  const noOfStaffs = staffs.length;
 
   console.log("Staffs: ", staffs);
 

@@ -38,7 +38,7 @@ import Select from "@mui/material/Select";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getRooms } from "../../../components/State/Admin/Action.js";
 
@@ -134,13 +134,13 @@ const AdminRooms = (props) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getRooms());
-  }, [dispatch]);
   const navigate = useNavigate();
-  const admin = useSelector((store) => store.admin);
-  const noOfRooms = admin.totalRooms;
-  const rooms = admin.rooms;
+  const location = useLocation();
+
+  console.log("Location COMING:", location);
+
+  const rooms = location.state?.rooms;
+  const noOfRooms = rooms.length;
 
   console.log("ROOMS:", rooms);
 
