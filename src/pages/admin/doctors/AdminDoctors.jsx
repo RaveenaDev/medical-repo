@@ -42,25 +42,6 @@ const AdminDoctors = (props) => {
     "Dermatology",
   ]);
 
-  const [patients, setPatients] = useState([
-    {
-      profile: "1",
-      doctorId: "#2YY2LCGY",
-      name: "Jasmin Kaur",
-      phone: "+91 79327728",
-      specialization: "Cardiologist",
-      status: "Emergency Room",
-    },
-    {
-      profile: "2",
-      doctorId: "#2YY2LCGY",
-      name: "Amit Tripathi",
-      phone: "+91 79327728",
-      specialization: "Dentist",
-      status: "On Leave",
-    },
-  ]);
-
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newDoctor, setNewDoctor] = useState({
     profile: "",
@@ -84,6 +65,10 @@ const AdminDoctors = (props) => {
   const noOfDoctors = doctors.length;
   console.log(doctors);
 
+  const truncateText = (text, maxLength) => {
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
   return (
     <>
       <CommonPanel />
@@ -105,7 +90,7 @@ const AdminDoctors = (props) => {
 
           <div style={{ marginLeft: "25px" }}>
             {branches.length && (
-              <Grid item xs={3} spacing={2}>
+              <Grid xs={3}>
                 <Box sx={{ width: "200px" }}>
                   {" "}
                   {/* Adjust width here */}
@@ -262,9 +247,9 @@ const AdminDoctors = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {doctors.map((patient) => (
+            {doctors.map((patient,index) => (
               <TableRow
-                key={patient.id}
+                key={index}
                 sx={{
                   background: "#fff",
                   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
@@ -286,7 +271,7 @@ const AdminDoctors = (props) => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {patient._id}
+                    {truncateText(patient._id,13)}
                   </Typography>
                 </TableCell>
                 <TableCell>

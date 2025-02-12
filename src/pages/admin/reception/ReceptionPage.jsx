@@ -91,9 +91,9 @@ const ReceptionPage = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {totalAppointments.length > 0 ?totalAppointments.slice(0,5).map((row) => (
+                                        {totalAppointments.length > 0 ?totalAppointments.slice(0,5).map((row,index) => (
                                             <TableRow
-                                                key={row.name}
+                                                key={index}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } , backgroundColor: '#EEF8F1'
                                                 }}
                                             >
@@ -123,7 +123,11 @@ const ReceptionPage = () => {
                                                 </TableCell>
                                             </TableRow>
                                         )) :
-                                            <p>No appointments found.</p>
+                                            <TableRow>
+                                                <TableCell>
+                                                    No appointments found.
+                                                </TableCell>
+                                            </TableRow>
                                         }
                                     </TableBody>
                                 </Table>
@@ -154,9 +158,9 @@ const ReceptionPage = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {totalPatients.length > 0 ? totalPatients.slice(0,5).map((row) => (
+                                        {totalPatients.length > 0 ? totalPatients.slice(0,5).map((row,index) => (
                                             <TableRow
-                                                key={row.name}
+                                                key={index}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } , backgroundColor: '#EEF8F1'
                                                 }}
                                             >
@@ -185,7 +189,11 @@ const ReceptionPage = () => {
                                                 </TableCell>
                                             </TableRow>
                                         )) :
-                                            <p>No patients found.</p>
+                                            <TableRow>
+                                                <TableCell>
+                                                    No patients found.
+                                                </TableCell>
+                                            </TableRow>
                                         }
                                     </TableBody>
                                 </Table>

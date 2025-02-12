@@ -11,6 +11,7 @@ import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
+import Select1 from "../../../components/Select/index.jsx";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -27,6 +28,7 @@ import {
 
 const CommonPanel = () => {
   const navigate = useNavigate();
+  const [branches, setBranches] = useState(["All Branches", "Cardiology","Physiology"]);
 
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
@@ -71,13 +73,8 @@ const CommonPanel = () => {
   // Check if the current route is in the excluded routes list
   const shouldHideDiv = excludedRoutes.includes(location.pathname);
 
-  const [age, setAge] = React.useState("");
-
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
   const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
   const shapeCircleStyles = { borderRadius: "50%" };
@@ -257,63 +254,18 @@ const CommonPanel = () => {
                 </span>
               </Button>
 
-              <FormControl sx={{ width: 150, height: 40 }} size="small">
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={age}
-                  label="All Branches is what it wants"
-                  onChange={handleChange}
-                  IconComponent={null} // Disable default icon
-                  sx={{
-                    backgroundColor: "#25307f", // Blue background
-                    color: "white", // White text
-                  }}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-                {/* Custom Arrow Icon */}
-
-                <KeyboardArrowDownIcon
-                  sx={{
-                    position: "absolute",
-                    left: 8, // Position the arrow on the left
-                    top: "24%", // Center vertically
-                    // transform: 'translateY(-50%)',
-                    pointerEvents: "auto", // Ensure it's clickable
-                    color: "white", // White arrow color
-                    cursor: "pointer", // Show pointer cursor for interactivity
-                  }}
-                  onClick={(event) => {
-                    // Stop propagation to ensure Select handles the click
-                    event.stopPropagation();
-                    // Trigger the dropdown programmatically
-                    const selectElement =
-                      document.getElementById("demo-select-small");
-                    if (selectElement) {
-                      selectElement.dispatchEvent(
-                        new MouseEvent("mousedown", { bubbles: true })
-                      );
-                    }
-                  }}
-                />
-                <InputLabel
-                  id="demo-select-small-label"
-                  sx={{
-                    color: "white",
-                    top: "50%", // Vertically center the label
-                    left: "25%",
-                    transform: "translateY(-50%)", // Correct the vertical alignment
-                  }}
-                >
-                  All Branches
-                </InputLabel>
-              </FormControl>
+              <div style={{backgroundColor:'#25307F',color:'white !important',borderRadius: "5px",}}>
+                {branches.length && (
+                        <Select1
+                            inputId="input-department"
+                            selectId="select-department"
+                            label="Department"
+                            list={branches}
+                            size="small"
+                            color='white'
+                        />
+                )}
+              </div>
             </Grid>
           </Grid>
         </div>

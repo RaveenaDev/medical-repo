@@ -126,7 +126,6 @@ const DepartDetails1 = (props) => {
                   >
                     {/* Section 1 */}
                     <Grid
-                      item
                       xs={12}
                       sm={6}
                       sx={{
@@ -247,7 +246,6 @@ const DepartDetails1 = (props) => {
 
                     {/* Section 2 */}
                     <Grid
-                      item
                       xs={12}
                       sm={6}
                       sx={{ display: "flex", justifyContent: "center" }}
@@ -356,7 +354,7 @@ const DepartDetails1 = (props) => {
                     sx={{ width: "100%", justifyContent: "space-between" }}
                   >
                     {/* First Grid Item */}
-                    <Grid item xs={12} sm={6}>
+                    <Grid xs={12} sm={6}>
                       <div className={avi.box3} style={{ padding: "14px" }}>
                         <div style={{ marginBottom: "14px" }}>
                           <h4>Available services</h4>
@@ -425,7 +423,7 @@ const DepartDetails1 = (props) => {
                     </Grid>
 
                     {/* Second Grid Item */}
-                    <Grid item xs={12} sm={6}>
+                    <Grid xs={12} sm={6}>
                       <div className={avi.box4} style={{ padding: "14px" }}>
                         <div style={{ marginBottom: "14px" }}>
                           <h4>Critical Equipment</h4>

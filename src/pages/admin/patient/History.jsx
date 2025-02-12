@@ -64,7 +64,7 @@ const History = (props) => {
                       padding: "1rem",
                     }}
                 >
-                  <Grid item xs={6}>
+                  <Grid xs={6}>
                     <Paper
                         elevation={3}
                         style={{
@@ -83,7 +83,7 @@ const History = (props) => {
                       />
                     </Paper>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid xs={6}>
                     <Paper
                         elevation={3}
                         style={{

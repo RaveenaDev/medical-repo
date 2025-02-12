@@ -197,7 +197,7 @@ const PatientDetails = (props) => {
                     </div>
                   </div>
 
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <Box
                         sx={{
                           backgroundColor: "#FFFFFF", // Set the background color to white

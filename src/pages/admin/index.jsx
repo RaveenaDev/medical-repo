@@ -17,8 +17,6 @@ import {
 import Select from "../../components/Select/index.jsx";
 import DonutChart from "./Components/DonutChart.jsx";
 import { useNavigate } from "react-router-dom"; // Use Grid from MUI instead
-import {useDispatch, useSelector} from "react-redux";
-import {getDoctors, getPatients, getRooms, getStaffs} from "../../components/State/Receptionist/Action.js";
 
 function Admin(props) {
   const [branches, setBranches] = useState(["Monthly", "Yearly"]);
@@ -191,7 +189,7 @@ function Admin(props) {
             marginLeft: "16px",
             position: "absolute",
             left: "11.2rem", // % mai isliye nhi di because ye alag file mai hai toh iski position fixed honi jaruri hai during responsiveness
-            top: "11.28rem",
+            top: "10.68rem",
           }}
         >
           <span
