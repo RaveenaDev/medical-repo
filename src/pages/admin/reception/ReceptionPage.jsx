@@ -98,15 +98,15 @@ const ReceptionPage = () => {
                                                 }}
                                             >
                                                 <TableCell component="th" scope="row" sx={{color: '#25307f',border:'none',px:0.6,pl:2}}>
-                                                    XXXXXXXX
+                                                    {truncateText(row.caseId,13)}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row" sx={{color: '#25307f',border:'none',px:0.6}}>
-                                                    {truncateText(row.name,13)}
+                                                    {truncateText(row.patient.name,13)}
                                                 </TableCell>
-                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{truncateText(row.appointmentWith,14)}</TableCell>
+                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{truncateText(row.doctor.name,14)}</TableCell>
                                                 <TableCell align="center" sx={{border:'none',px:0.6}}>{row.typeVisit}</TableCell>
-                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{row.branch}</TableCell>
-                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{row.tokenNumber}</TableCell>
+                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{row.department.name}</TableCell>
+                                                <TableCell align="center" sx={{border:'none',px:0.6}}>{truncateText(row.tokenDate,13)}</TableCell>
                                                 <TableCell align="center" sx={{border:'none',px:0.6,pr:2}}>
                                                     <span
                                                         style={{
@@ -225,7 +225,7 @@ const ReceptionPage = () => {
                                 <div className={styles.circle}></div>
                                 <div>
                                     <h4>{req.patient.name}</h4>
-                                    <p>{req.dateRejected}</p>
+                                    <p>Appointment for {req.doctor.specialization},DATE</p>
                                     {/*<p>Appointment for ENT, 28 September</p>*/}
                                 </div>
                             </div>
