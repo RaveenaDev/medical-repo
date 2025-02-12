@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./pastRequests.scss";
+import "./PastRequests.scss";
 
 const PastRequests = () => {
   const ongoingRequests = [
