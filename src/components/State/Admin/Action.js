@@ -1,201 +1,248 @@
 import axios from "axios";
-import {API_URL} from "../../Config/api.js";
+import { API_URL } from "../../Config/api.js";
 import {
-    GET_ALL_DEPARTMENTS, GET_APPOINTMENT_REQUESTS, GET_APPOINTMENTS,
-    GET_DEPARTMENT_BY_ID,
-    GET_DOCTORS,
-    GET_EARNINGS, GET_PATIENTS, GET_REJECTED_APPOINTMENTS,
-    GET_ROOMS,
-    GET_STAFFS
+  ADD_ROOM,
+  DELETE_ROOM,
+  GET_ALL_DEPARTMENTS,
+  GET_APPOINTMENT_REQUESTS,
+  GET_APPOINTMENTS,
+  GET_DEPARTMENT_BY_ID,
+  GET_DOCTORS,
+  GET_EARNINGS,
+  GET_PATIENTS,
+  GET_REJECTED_APPOINTMENTS,
+  GET_ROOMS,
+  GET_STAFFS,
+  UPDATE_ROOM,
 } from "./ActionType.js";
 
-export const getEarnings = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+export const getEarnings = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-        const {data} = await axios.get(`${API_URL}/getDoctorsByHospital`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+    const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        dispatch({type:GET_EARNINGS,payload:data})
-        console.log("Earnings route working :",data)
-    }
+    dispatch({ type: GET_EARNINGS, payload: data });
+    console.log("Earnings route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    catch (error){
-        console.log(error)
-    }
-}
+export const getDoctors = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-export const getDoctors = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+    const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        const {data} = await axios.get(`${API_URL}/getDoctorsByHospital`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+    dispatch({ type: GET_DOCTORS, payload: data });
+    console.log("Doctor route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        dispatch({type:GET_DOCTORS,payload:data})
-        console.log("Doctor route working :",data)
-    }
+export const getStaffs = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-    catch (error){
-        console.log(error)
-    }
-}
+    const { data } = await axios.get(`${API_URL}/getStaff`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-export const getStaffs = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+    dispatch({ type: GET_STAFFS, payload: data });
+    console.log("Staff route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        const {data} = await axios.get(`${API_URL}/getStaff`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+export const getRooms = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-        dispatch({type:GET_STAFFS,payload:data})
-        console.log("Staff route working :",data)
-    }
+    const { data } = await axios.get(`${API_URL}/getRooms`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-    catch (error){
-        console.log(error)
-    }
-}
+    dispatch({ type: GET_ROOMS, payload: data });
+    console.log("Room route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const getRooms = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+export const getAllDepartments = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-        const {data} = await axios.get(`${API_URL}/getRooms`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+    const { data } = await axios.get(`${API_URL}/getAllDepartments`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        dispatch({type:GET_ROOMS,payload:data})
-        console.log("Room route working :",data)
-    }
+    dispatch({ type: GET_ALL_DEPARTMENTS, payload: data });
+    console.log("Departments route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    catch (error){
-        console.log(error)
-    }
-}
+export const getDepartmentById = (departmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-export const getAllDepartments = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+    const { data } = await axios.get(
+      `${API_URL}/getDepartments/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
-        const {data} = await axios.get(`${API_URL}/getAllDepartments`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+    dispatch({ type: GET_DEPARTMENT_BY_ID, payload: data });
+    console.log("Department by Id route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        dispatch({type:GET_ALL_DEPARTMENTS,payload:data})
-        console.log("Departments route working :",data)
-    }
+export const getAppointments = (activeLabel) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-    catch (error){
-        console.log(error)
-    }
-}
+    const { data } = await axios.get(`${API_URL}/getAppointmentsByStatus`, {
+      params: { status: activeLabel }, // Sending status as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-export const getDepartmentById = (departmentId) => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+    dispatch({ type: GET_APPOINTMENTS, payload: data });
+    console.log("Appointments by status route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        const {data} = await axios.get(`${API_URL}/getDepartments/${departmentId}`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+export const getAppointmentRequests = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-        dispatch({type:GET_DEPARTMENT_BY_ID,payload:data})
-        console.log("Department by Id route working :",data)
-    }
+    const { data } = await axios.get(`${API_URL}/getRequestedAppointments`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-    catch (error){
-        console.log(error)
-    }
-}
+    dispatch({ type: GET_APPOINTMENT_REQUESTS, payload: data });
+    console.log("Appointment Requests route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const getAppointments = (activeLabel) => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+export const getRejectedAppointments = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-        const {data} = await axios.get(`${API_URL}/getAppointmentsByStatus`,{
-            params: { status: activeLabel }, // Sending status as a query parameter
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+    const { data } = await axios.get(`${API_URL}/getRejectedAppointments`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        dispatch({type:GET_APPOINTMENTS,payload:data})
-        console.log("Appointments by status route working :",data)
-    }
+    dispatch({ type: GET_REJECTED_APPOINTMENTS, payload: data });
+    console.log("Rejected Appointment route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    catch (error){
-        console.log(error)
-    }
-}
+export const getPatients = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-export const getAppointmentRequests = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+    const { data } = await axios.get(`${API_URL}/getPatientsByHospital`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        const {data} = await axios.get(`${API_URL}/getRequestedAppointments`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+    dispatch({ type: GET_PATIENTS, payload: data });
+    console.log("Patients route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        dispatch({type:GET_APPOINTMENT_REQUESTS,payload:data})
-        console.log("Appointment Requests route working :",data)
-    }
+// ADD ROOMS
 
-    catch (error){
-        console.log(error)
-    }
-}
+export const addRoom = (roomData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Data from action to Backend", roomData);
 
-export const getRejectedAppointments = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
+    const { data } = await axios.post(`${API_URL}/addRoom`, roomData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        const {data} = await axios.get(`${API_URL}/getRejectedAppointments`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
+    dispatch({ type: ADD_ROOM, payload: data });
+    dispatch(getRooms());
+    console.log("Room creation route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+// Action to update a room
+export const updateRoom = (roomId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Editng room id: ", roomId);
+    const { data } = await axios.put(`${API_URL}/${roomId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: UPDATE_ROOM, payload: data });
+    console.log("Room EDIT route working :", data);
+    dispatch(getRooms());
+  } catch (error) {
+    console.error("Error updating room:", error);
+  }
+};
 
-        dispatch({type:GET_REJECTED_APPOINTMENTS,payload:data})
-        console.log("Rejected Appointment route working :",data)
-    }
+// Action to delete a room
+export const deleteRoom = (roomId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Deleting room id: ", roomId);
+    const { data } = await axios.delete(`${API_URL}/${roomId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-    catch (error){
-        console.log(error)
-    }
-}
-
-export const getPatients = () => async(dispatch) => {
-    try {
-        const token = localStorage.getItem('jwt');
-
-        const {data} = await axios.get(`${API_URL}/getPatientsByHospital`,{
-            headers:{
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            }
-        })
-
-        dispatch({type:GET_PATIENTS,payload:data})
-        console.log("Patients route working :",data)
-    }
-
-    catch (error){
-        console.log(error)
-    }
-}
+    dispatch({ type: DELETE_ROOM, payload: roomId });
+    console.log("Room DELETION route working :", data);
+    dispatch(getRooms());
+  } catch (error) {
+    console.error("Error deleting room:", error);
+  }
+};

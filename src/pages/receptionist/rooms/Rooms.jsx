@@ -87,6 +87,7 @@ const Rooms = (props) => {
   const handleSaveEditedRoom = () => {
     dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
     setEditDialogOpen(false);
+    console.log("Patient Edited Successfully");
   };
 
   // Handle Menu Open
@@ -105,7 +106,6 @@ const Rooms = (props) => {
   // Handle Delete Action
   const handleDelete = () => {
     dispatch(deleteRoom(selectedRoom._id)); // Dispatch delete action
-    // setPatients((prev) => prev.filter((patient) => patient.id !== selectedPatient.id));
     console.log("Patient Deleted");
     handleMenuClose();
   };
@@ -113,17 +113,6 @@ const Rooms = (props) => {
   // Handle Edit Dialog Close
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
-  };
-
-  // Handle Save Edited Patient
-  const handleSaveEditedPatient = () => {
-    // setPatients((prev) =>
-    //     prev.map((patient) => (patient.id === editedPatient.id ? editedPatient : patient))
-    // );
-    dispatch(updateRoom(editedRoom._id, editedRoom)); // Dispatch update action
-
-    console.log("Patient Edited Successfully");
-    handleEditDialogClose();
   };
 
   const dispatch = useDispatch();
@@ -295,7 +284,6 @@ const Rooms = (props) => {
                       id="status-select"
                       name="status"
                       value={formData.status}
-                      // onChange={(e) => setStatus(e.target.value)}
                       onChange={handleChange}
                       label="Status"
                       variant="outlined"
@@ -337,7 +325,6 @@ const Rooms = (props) => {
           </DialogContent>
 
           <DialogActions sx={{ justifyContent: "center" }}>
-            {/*<Button onClick={handleAddDialogClose}>Cancel</Button>*/}
             <Button
               onClick={handleAddDialogClose}
               variant="contained"
@@ -374,9 +361,9 @@ const Rooms = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rooms.map((patient) => (
+            {rooms.map((room) => (
               <TableRow
-                key={patient._id}
+                key={room._id}
                 sx={{
                   background: "#fff",
                   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
@@ -390,7 +377,7 @@ const Rooms = (props) => {
                 }}
               >
                 <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                  {patient.roomID}
+                  {room.roomID}
                 </TableCell>
                 <TableCell align="center" sx={{ pl: 8 }}>
                   <Typography
@@ -401,7 +388,7 @@ const Rooms = (props) => {
                       cursor: "pointer",
                     }}
                   >
-                    {patient.name}
+                    {room.name}
                   </Typography>
                 </TableCell>
                 <TableCell>
@@ -419,24 +406,20 @@ const Rooms = (props) => {
                         height: 10,
                         borderRadius: "50%",
                         backgroundColor:
-                          patient.status === "Available"
+                          room.status === "Available"
                             ? "green"
-                            : patient.status === "Occupied"
+                            : room.status === "Occupied"
                             ? "orange"
                             : "skyblue",
                       }}
                     />
-                    {patient.status}
+                    {room.status}
                   </Box>
                 </TableCell>
-                <TableCell align="center">
-                  {patient.assignedDoctor.name}
-                </TableCell>
+                <TableCell align="center">{room.assignedDoctor.name}</TableCell>
 
                 <TableCell align="right">
-                  <IconButton
-                    onClick={(event) => handleMenuOpen(event, patient)}
-                  >
+                  <IconButton onClick={(event) => handleMenuOpen(event, room)}>
                     <MoreVertIcon />
                   </IconButton>
                 </TableCell>
@@ -561,7 +544,6 @@ const Rooms = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      ;
     </>
   );
 };

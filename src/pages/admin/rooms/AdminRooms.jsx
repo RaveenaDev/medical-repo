@@ -40,7 +40,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getRooms } from "../../../components/State/Admin/Action.js";
+import {
+  addRoom,
+  deleteRoom,
+  getRooms,
+  updateRoom,
+} from "../../../components/State/Admin/Action.js";
 
 const AdminRooms = (props) => {
   useEffect(() => {
@@ -48,56 +53,59 @@ const AdminRooms = (props) => {
   }, []);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedPatient, setSelectedPatient] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editedPatient, setEditedPatient] = useState({});
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
-  const [patients, setPatients] = useState([
-    {
-      roomId: "XXXXXXXX",
-      name: "Jasmin Kaur",
-      status: "Available",
-      doctorAssigned: "Dr. Manoj Singh",
-    },
-    {
-      roomId: "XXXXXXXX",
-      name: "Amit Tripathi",
-      status: "Occupied",
-      doctorAssigned: "Dr. Sunil Sharma",
-    },
-    {
-      roomId: "XXXXXXXX",
-      name: "ICU",
-      status: "Under Maintenance",
-      doctorAssigned: "Dr. Arvind Kumar",
-    },
-  ]);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  // State for editing room
+  const [editedRoom, setEditedRoom] = useState({
+    roomID: "",
+    name: "",
+    doctorId: "",
+    status: "",
+    originalRoomID: "",
+  });
+
+  // Handle Edit Action
+  const handleEdit = () => {
+    if (selectedRoom) {
+      setEditedRoom({
+        roomID: selectedRoom.roomID,
+        name: selectedRoom.name,
+        doctorId: selectedRoom.assignedDoctor._id,
+        status: selectedRoom.status,
+        originalRoomID: selectedRoom._id,
+      });
+      setEditDialogOpen(true);
+      console.log("Edit room", editedRoom);
+    }
+    handleMenuClose();
+  };
+
+  // Handle Save Edited Room
+  const handleSaveEditedRoom = () => {
+    dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
+    setEditDialogOpen(false);
+    console.log("Patient Edited Successfully");
+  };
 
   // Handle Menu Open
-  const handleMenuOpen = (event, patient) => {
+  const handleMenuOpen = (event, room) => {
     event.stopPropagation(); // Prevent interference with other clicks
     setAnchorEl(event.currentTarget);
-    setSelectedPatient(patient);
+    setSelectedRoom(room);
   };
 
   // Handle Menu Close
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedPatient(null);
-  };
-
-  // Handle Edit Action
-  const handleEdit = () => {
-    setEditedPatient(selectedPatient); // Load selected patient into editedPatient
-    setEditDialogOpen(true);
-    handleMenuClose();
+    setSelectedRoom(null);
   };
 
   // Handle Delete Action
   const handleDelete = () => {
-    // setPatients((prev) => prev.filter((patient) => patient.id !== selectedPatient.id));
-    console.log("Patient Deleted");
+    dispatch(deleteRoom(selectedRoom._id));
+    console.log("Patient Deleted"); // Dispatch delete action    console.log("Patient Deleted");
     handleMenuClose();
   };
 
@@ -106,26 +114,18 @@ const AdminRooms = (props) => {
     setEditDialogOpen(false);
   };
 
-  // Handle Save Edited Patient
-  const handleSaveEditedPatient = () => {
-    // setPatients((prev) =>
-    //     prev.map((patient) => (patient.id === editedPatient.id ? editedPatient : patient))
-    // );
-    console.log("Patient Edited Successfully");
-    handleEditDialogClose();
-  };
-
   const handleAddDialogOpen = () => setAddDialogOpen(true);
   const handleAddDialogClose = () => {
+    dispatch(addRoom(formData));
     console.log("Form Data: ", formData);
     setAddDialogOpen(false);
   };
 
   const [formData, setFormData] = useState({
-    roomId: "",
-    roomName: "",
+    roomID: "",
+    name: "",
+    doctorId: "",
     status: "",
-    doctorAssigned: "",
   });
 
   const handleChange = (e) => {
@@ -135,14 +135,9 @@ const AdminRooms = (props) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  console.log("Location COMING:", location);
-
-  const rooms = location.state?.rooms;
-  const noOfRooms = rooms.length;
-
-  console.log("ROOMS:", rooms);
+  const rooms = useSelector((state) => state.receptionist.rooms);
+  const doctors = useSelector((state) => state.receptionist.doctors);
 
   return (
     <>
@@ -165,7 +160,7 @@ const AdminRooms = (props) => {
               <ArrowBackIosIcon />
             </span>
             <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-            <h2 className={ayu.departmentTitleDetails}>{noOfRooms}</h2>
+            <h2 className={ayu.departmentTitleDetails}>{rooms.length}</h2>
           </div>
           <div style={{ display: "flex", gap: "1rem" }}>
             <Box sx={{ display: "flex", gap: 3 }}>
@@ -262,8 +257,8 @@ const AdminRooms = (props) => {
                       autoFocus
                       margin="dense"
                       label="Room ID"
-                      name="roomId"
-                      value={formData.roomId}
+                      name="roomID"
+                      value={formData.roomID}
                       onChange={handleChange}
                       type="text"
                       fullWidth
@@ -274,8 +269,8 @@ const AdminRooms = (props) => {
                     <TextField
                       margin="dense"
                       label="Room Name"
-                      name="roomName"
-                      value={formData.roomName}
+                      name="name"
+                      value={formData.name}
                       onChange={handleChange}
                       type="text"
                       fullWidth
@@ -290,7 +285,6 @@ const AdminRooms = (props) => {
                         id="status-select"
                         name="status"
                         value={formData.status}
-                        // onChange={(e) => setStatus(e.target.value)}
                         onChange={handleChange}
                         label="Status"
                         variant="outlined"
@@ -305,24 +299,33 @@ const AdminRooms = (props) => {
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={3}>
-                    <TextField
-                      margin="dense"
-                      label="Doctor Assigned"
-                      name="doctorAssigned"
-                      value={formData.doctorAssigned}
-                      onChange={handleChange}
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                    />
+                  <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel id="doctor-select-label">
+                        Doctor Assigned
+                      </InputLabel>
+                      <Select
+                        labelId="doctor-select-label"
+                        id="doctor-select"
+                        name="doctorId"
+                        value={formData.doctorId}
+                        onChange={handleChange}
+                        label="Doctor Assigned"
+                        variant="outlined"
+                      >
+                        {doctors?.map((doctor) => (
+                          <MenuItem key={doctor._id} value={doctor._id}>
+                            {doctor.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
               </Box>
             </DialogContent>
 
             <DialogActions sx={{ justifyContent: "center" }}>
-              {/*<Button onClick={handleAddDialogClose}>Cancel</Button>*/}
               <Button
                 onClick={handleAddDialogClose}
                 variant="contained"
@@ -361,7 +364,7 @@ const AdminRooms = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rooms.map((patient,index) => (
+            {rooms.map((room, index) => (
               <TableRow
                 key={index}
                 sx={{
@@ -377,7 +380,7 @@ const AdminRooms = (props) => {
                 }}
               >
                 <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                  {patient.roomID}
+                  {room.roomID}
                 </TableCell>
                 <TableCell align="center" sx={{ pl: 8 }}>
                   <Typography
@@ -388,7 +391,7 @@ const AdminRooms = (props) => {
                       cursor: "pointer",
                     }}
                   >
-                    {patient.name}
+                    {room.name}
                   </Typography>
                 </TableCell>
                 <TableCell>
@@ -406,24 +409,20 @@ const AdminRooms = (props) => {
                         height: 10,
                         borderRadius: "50%",
                         backgroundColor:
-                          patient.status === "Available"
+                          room.status === "Available"
                             ? "green"
-                            : patient.status === "Occupied"
+                            : room.status === "Occupied"
                             ? "orange"
                             : "skyblue",
                       }}
                     />
-                    {patient.status}
+                    {room.status}
                   </Box>
                 </TableCell>
-                <TableCell align="center">
-                  {patient.assignedDoctor.name}
-                </TableCell>
+                <TableCell align="center">{room.assignedDoctor.name}</TableCell>
 
                 <TableCell align="right">
-                  <IconButton
-                    onClick={(event) => handleMenuOpen(event, patient)}
-                  >
+                  <IconButton onClick={(event) => handleMenuOpen(event, room)}>
                     <MoreVertIcon />
                   </IconButton>
                 </TableCell>
@@ -457,108 +456,97 @@ const AdminRooms = (props) => {
         </MenuItem>
       </Menu>
 
-      {/* Edit Patient Dialog */}
+      {/* Edit Room Dialog */}
       <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-        <DialogTitle>Edit Patient</DialogTitle>
+        <DialogTitle>Edit Room</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Modify the details of the patient.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.name}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, name: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.email}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, email: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Phone"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.phone}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, phone: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Type of Visit"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.type}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, type: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Branch"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.branch}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, branch: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Date"
-            type="date"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.date}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, date: e.target.value })
-            }
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <FormControl fullWidth margin="dense">
-            <FormLabel>Status</FormLabel>
-            <RadioGroup
-              name="status"
-              value={editedPatient.status}
-              onChange={(e) =>
-                setEditedPatient({ ...editedPatient, status: e.target.value })
-              }
-            >
-              <FormControlLabel
-                value="Active"
-                control={<Radio />}
-                label="Active"
-              />
-              <FormControlLabel
-                value="In-active"
-                control={<Radio />}
-                label="In-active"
-              />
-            </RadioGroup>
-          </FormControl>
+          <Box sx={{ width: "100%" }}>
+            <Grid container spacing={2}>
+              <Grid xs={3}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Room ID"
+                  name="roomID"
+                  value={editedRoom.roomID}
+                  onChange={(e) =>
+                    setEditedRoom({ ...editedRoom, roomID: e.target.value })
+                  }
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid xs={3}>
+                <TextField
+                  margin="dense"
+                  label="Room Name"
+                  name="name"
+                  value={editedRoom.name}
+                  onChange={(e) =>
+                    setEditedRoom({ ...editedRoom, name: e.target.value })
+                  }
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid xs={3}>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel id="status-select-label">Status</InputLabel>
+                  <Select
+                    labelId="status-select-label"
+                    id="status-select"
+                    name="status"
+                    value={editedRoom.status}
+                    onChange={(e) =>
+                      setEditedRoom({ ...editedRoom, status: e.target.value })
+                    }
+                    label="Status"
+                    variant="outlined"
+                  >
+                    <MenuItem value="Available">Available</MenuItem>
+                    <MenuItem value="Occupied">Occupied</MenuItem>
+                    <MenuItem value="Under Maintenance">
+                      Under Maintenance
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid xs={3}>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel id="doctor-select-label">
+                    Doctor Assigned
+                  </InputLabel>
+                  <Select
+                    labelId="doctor-select-label"
+                    id="doctor-select"
+                    name="doctorId"
+                    value={editedRoom.doctorId}
+                    onChange={(e) =>
+                      setEditedRoom({ ...editedRoom, doctorId: e.target.value })
+                    }
+                    label="Doctor Assigned"
+                    variant="outlined"
+                  >
+                    {doctors?.map((doctor) => (
+                      <MenuItem key={doctor._id} value={doctor._id}>
+                        {doctor.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Box>
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleEditDialogClose}>Cancel</Button>
-          <Button onClick={handleSaveEditedPatient}>Save</Button>
+          <Button onClick={handleSaveEditedRoom} variant="contained">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </>
