@@ -34,18 +34,11 @@ const truncateText = (text, maxLength) => {
 
 const ReceptionPage = () => {
     const navigate = useNavigate()
-    const handleAppointments = () => {
-        navigate('/admin/reception/appointments')
-    }
-
-    const handlePatients = () => {
-        navigate('/admin/reception/patients')
-    }
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getAppointments());
+        dispatch(getAppointments("Scheduled"));
         dispatch(getAppointmentRequests());
         dispatch(getRejectedAppointments());
         dispatch(getPatients());
@@ -60,6 +53,14 @@ const ReceptionPage = () => {
 
     // console.log("Total Appointments : ",totalAppointments)
     // console.log("Total Patients : ",totalPatients)
+
+    const handleAppointments = () => {
+        navigate('/admin/reception/appointments')
+    }
+
+    const handlePatients = () => {
+        navigate('/admin/reception/patients',{state: {totalPatients}})
+    }
 
     return (
         <Grid container spacing={2}>
@@ -165,7 +166,7 @@ const ReceptionPage = () => {
                                                 }}
                                             >
                                                 <TableCell component="th" scope="row" sx={{color: '#25307f',border: 'none',padding: '14px 14px'}}>
-                                                    {truncateText(row.name,13)}
+                                                    {row.name}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row" sx={{border:'none',padding: '14px 14px'}}>
                                                     {truncateText(row.doctors[0].name,13)}

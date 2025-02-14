@@ -123,12 +123,12 @@ export const getDepartmentById = (departmentId) => async(dispatch) => {
     }
 }
 
-export const getAppointments = () => async(dispatch) => {
+export const getAppointments = (activeLabel) => async(dispatch) => {
     try {
         const token = localStorage.getItem('jwt');
 
         const {data} = await axios.get(`${API_URL}/getAppointmentsByStatus`,{
-            params: { status: "Scheduled" }, // Sending status as a query parameter
+            params: { status: activeLabel }, // Sending status as a query parameter
             headers:{
                 Authorization: `Bearer ${token}`, // Includes the token in the authorization header
             }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import CommonPanel from "../../Components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
 import Select from "../../../../components/Select/index.jsx";
@@ -38,6 +38,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import {useDispatch, useSelector} from "react-redux";
+import {getAppointments} from "../../../../components/State/Admin/Action.js";
 
 function Appointments(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -74,6 +76,9 @@ function Appointments(props) {
   const handleBoxClick = (id) => {
     setActiveBox(id);
   };
+
+  const activeLabel = boxData.find(box => box.id === activeBox)?.label;
+  // console.log("Active Label",activeLabel);
 
   const [appointments, setAppointments] = useState([
     {
@@ -144,6 +149,18 @@ function Appointments(props) {
     );
     handleEditDialogClose();
   };
+
+  const truncateText = (text, maxLength) => {
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAppointments(activeLabel));
+  }, [dispatch,activeLabel]);
+
+  const totalAppointments = useSelector((store) => store.admin.totalAppointments)
 
   return (
     <>
@@ -262,9 +279,9 @@ function Appointments(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {appointments.map((patient) => (
+              {totalAppointments.map((patient,index) => (
                 <TableRow
-                  key={patient.id}
+                  key={index}
                   sx={{
                     background: "#fff",
                     bgcolor: patient.status === "Ongoing" ? "#EEF8F1" : "white",
@@ -278,21 +295,23 @@ function Appointments(props) {
                     },
                   }}
                 >
-                  <TableCell>{patient.id}</TableCell>
+                  <TableCell>{truncateText(patient.caseId,13)}</TableCell>
                   <TableCell>
                     <Typography
                       variant="body1"
                       sx={{ fontWeight: "bold", cursor: "pointer" }}
                     >
-                      {patient.name}
+                      {patient.patient.name}
                     </Typography>
+                  </TableCell>
+                  <TableCell>
                     <Typography variant="body2" color="text.secondary">
-                      {patient.appointmentWith}
+                      {patient.doctor.name}
                     </Typography>
                   </TableCell>
                   <TableCell>{patient.typeVisit}</TableCell>
-                  <TableCell>{patient.branch}</TableCell>
-                  <TableCell>{patient.tokenNo}</TableCell>
+                  <TableCell>{patient.department.name}</TableCell>
+                  <TableCell>{patient.tokenDate}</TableCell>
                   <TableCell>
                     <Chip
                       label={patient.status}

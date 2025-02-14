@@ -35,7 +35,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import CommonPanel from "../Components/CommonPanel.jsx";
 
 const PatientPanel = (props) => {
@@ -137,9 +137,18 @@ const PatientPanel = (props) => {
     handleEditDialogClose();
   };
 
+  const location = useLocation()
+  const totalPatients = location.state?.totalPatients
+
+  // console.log("PAT:",totalPatients)
+
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/admin/reception/patients/PatientDetails`);
+  };
+
+  const truncateText = (text, maxLength) => {
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
   return (
@@ -229,9 +238,9 @@ const PatientPanel = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {patients.map((patient) => (
+                {totalPatients.map((patient,index) => (
                     <TableRow
-                        key={patient.id}
+                        key={index}
                         sx={{
                           background: "#fff",
                           boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
@@ -244,7 +253,7 @@ const PatientPanel = (props) => {
                           },
                         }}
                     >
-                      <TableCell>{patient.id}</TableCell>
+                      <TableCell>{truncateText(patient._id,13)}</TableCell>
                       <TableCell>
                         <Typography
                             variant="body1"
@@ -260,7 +269,7 @@ const PatientPanel = (props) => {
                       <TableCell>{patient.phone}</TableCell>
                       <TableCell>{patient.type}</TableCell>
                       <TableCell>{patient.branch}</TableCell>
-                      <TableCell>{patient.date}</TableCell>
+                      <TableCell>{truncateText(patient.registrationDate,13)}</TableCell>
                       <TableCell>
                         <Chip
                             label={patient.status}
