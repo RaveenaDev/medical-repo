@@ -1,6 +1,7 @@
 import {
   ADD_ROOM,
   BOOK_APPOINTMENT,
+  DELETE_ROOM,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -13,6 +14,7 @@ import {
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS,
   GET_STAFFS,
+  UPDATE_ROOM,
 } from "./ActionType.js";
 
 const inititalState = {
@@ -82,6 +84,19 @@ export const receptionistReducer = (state = inititalState, action) => {
       return {
         ...state,
         rooms: [...state.rooms, action.payload.room],
+      };
+    case UPDATE_ROOM:
+      return {
+        ...state,
+        rooms: state.rooms.map((room) =>
+          room._id === action.payload._id ? action.payload : room
+        ),
+      };
+
+    case DELETE_ROOM:
+      return {
+        ...state,
+        rooms: state.rooms.filter((room) => room._id !== action.payload),
       };
 
     case GET_ALL_DEPARTMENTS:

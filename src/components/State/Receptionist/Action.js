@@ -1,6 +1,7 @@
 import {
   ADD_ROOM,
   BOOK_APPOINTMENT,
+  DELETE_ROOM,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -11,10 +12,48 @@ import {
   GET_PATIENTS,
   GET_ROOMS,
   GET_STAFFS,
+  UPDATE_ROOM,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import { toast } from "react-toastify";
+
+// Action to update a room
+export const updateRoom = (roomId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Editng room id: ", roomId);
+    const { data } = await axios.put(`${API_URL}/${roomId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: UPDATE_ROOM, payload: data });
+    console.log("Room EDIT route working :", data);
+    dispatch(getRooms());
+  } catch (error) {
+    console.error("Error updating room:", error);
+  }
+};
+
+// Action to delete a room
+export const deleteRoom = (roomId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Deleting room id: ", roomId);
+    const { data } = await axios.delete(`${API_URL}/${roomId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: DELETE_ROOM, payload: roomId });
+    console.log("Room DELETION route working :", data);
+    dispatch(getRooms());
+  } catch (error) {
+    console.error("Error deleting room:", error);
+  }
+};
 
 export const getPatients = () => async (dispatch) => {
   try {
