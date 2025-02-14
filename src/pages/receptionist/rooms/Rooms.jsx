@@ -42,7 +42,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addRoom } from "../../../components/State/Receptionist/Action.js";
 
 const Rooms = (props) => {
@@ -128,10 +128,10 @@ const Rooms = (props) => {
   };
 
   const [formData, setFormData] = useState({
-    roomId: "",
-    roomName: "",
+    roomID: "",
+    name: "",
+    doctorId: "",
     status: "",
-    doctorAssigned: "",
   });
 
   const handleChange = (e) => {
@@ -139,9 +139,8 @@ const Rooms = (props) => {
   };
 
   const navigate = useNavigate();
-  const location = useLocation();
-  console.log("Location COMING:", location);
-  const rooms = location.state?.rooms;
+  const rooms = useSelector((state) => state.receptionist.rooms);
+  const doctors = useSelector((state) => state.receptionist.doctors);
 
   return (
     <>
@@ -261,8 +260,8 @@ const Rooms = (props) => {
                     autoFocus
                     margin="dense"
                     label="Room ID"
-                    name="roomId"
-                    value={formData.roomId}
+                    name="roomID"
+                    value={formData.roomID}
                     onChange={handleChange}
                     type="text"
                     fullWidth
@@ -273,8 +272,8 @@ const Rooms = (props) => {
                   <TextField
                     margin="dense"
                     label="Room Name"
-                    name="roomName"
-                    value={formData.roomName}
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
                     type="text"
                     fullWidth
@@ -304,17 +303,27 @@ const Rooms = (props) => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={3}>
-                  <TextField
-                    margin="dense"
-                    label="Doctor Assigned"
-                    name="doctorAssigned"
-                    value={formData.doctorAssigned}
-                    onChange={handleChange}
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                  />
+                <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel id="doctor-select-label">
+                      Doctor Assigned
+                    </InputLabel>
+                    <Select
+                      labelId="doctor-select-label"
+                      id="doctor-select"
+                      name="doctorId"
+                      value={formData.doctorId}
+                      onChange={handleChange}
+                      label="Doctor Assigned"
+                      variant="outlined"
+                    >
+                      {doctors?.map((doctor) => (
+                        <MenuItem key={doctor._id} value={doctor._id}>
+                          {doctor.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
               </Grid>
             </Box>
@@ -361,7 +370,7 @@ const Rooms = (props) => {
           <TableBody>
             {rooms.map((patient) => (
               <TableRow
-                key={patient.id}
+                key={patient._id}
                 sx={{
                   background: "#fff",
                   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
