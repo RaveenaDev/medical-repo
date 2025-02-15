@@ -20,6 +20,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getAllDepartments,
   getDoctors,
   getPatients,
   getRooms,
@@ -28,7 +29,11 @@ import {
 
 const CommonPanel = () => {
   const navigate = useNavigate();
-  const [branches, setBranches] = useState(["All Branches", "Cardiology","Physiology"]);
+  const [branches, setBranches] = useState([
+    "All Branches",
+    "Cardiology",
+    "Physiology",
+  ]);
 
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
@@ -38,6 +43,7 @@ const CommonPanel = () => {
     dispatch(getDoctors());
     dispatch(getStaffs());
     dispatch(getRooms());
+    dispatch(getAllDepartments());
   }, [dispatch]);
 
   const admin = useSelector((store) => store.admin);
@@ -74,7 +80,6 @@ const CommonPanel = () => {
   const shouldHideDiv = excludedRoutes.includes(location.pathname);
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
-
 
   const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
   const shapeCircleStyles = { borderRadius: "50%" };
@@ -254,16 +259,22 @@ const CommonPanel = () => {
                 </span>
               </Button>
 
-              <div style={{backgroundColor:'#25307F',color:'white !important',borderRadius: "5px",}}>
+              <div
+                style={{
+                  backgroundColor: "#25307F",
+                  color: "white !important",
+                  borderRadius: "5px",
+                }}
+              >
                 {branches.length && (
-                        <Select1
-                            inputId="input-department"
-                            selectId="select-department"
-                            label="Department"
-                            list={branches}
-                            size="small"
-                            color='white'
-                        />
+                  <Select1
+                    inputId="input-department"
+                    selectId="select-department"
+                    label="Department"
+                    list={branches}
+                    size="small"
+                    color="white"
+                  />
                 )}
               </div>
             </Grid>

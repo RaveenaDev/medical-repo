@@ -19,3 +19,6 @@ export const GET_PATIENTS = "GET_PATIENTS";
 export const ADD_ROOM = "ADD_ROOM";
 export const UPDATE_ROOM = "UPDATE_ROOM";
 export const DELETE_ROOM = "DELETE_ROOM";
+
+export const ADD_STAFFS = "ADD_STAFFS";
+export const DELETE_STAFFS = "DELETE_STAFFS";

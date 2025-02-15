@@ -1,6 +1,8 @@
 import {
   ADD_ROOM,
+  ADD_STAFFS,
   DELETE_ROOM,
+  DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -72,6 +74,16 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         totalStaffs: action.payload.length,
         staffs: action.payload,
+      };
+    case ADD_STAFFS:
+      return {
+        ...state,
+        staffs: [...state.staffs, action.payload.staff],
+      };
+    case DELETE_STAFFS:
+      return {
+        ...state,
+        staffs: state.staffs.filter((staff) => staff._id !== action.payload),
       };
 
     case GET_ROOMS:

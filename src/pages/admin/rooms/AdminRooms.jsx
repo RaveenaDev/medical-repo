@@ -136,8 +136,8 @@ const AdminRooms = (props) => {
 
   const navigate = useNavigate();
 
-  const rooms = useSelector((state) => state.receptionist.rooms);
-  const doctors = useSelector((state) => state.receptionist.doctors);
+  const rooms = useSelector((state) => state.admin.rooms);
+  const doctors = useSelector((state) => state.admin.doctors);
 
   return (
     <>

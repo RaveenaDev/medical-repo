@@ -2,7 +2,9 @@ import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
   ADD_ROOM,
+  ADD_STAFFS,
   DELETE_ROOM,
+  DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -242,6 +244,45 @@ export const deleteRoom = (roomId) => async (dispatch) => {
     dispatch({ type: DELETE_ROOM, payload: roomId });
     console.log("Room DELETION route working :", data);
     dispatch(getRooms());
+  } catch (error) {
+    console.error("Error deleting room:", error);
+  }
+};
+
+// ADD STAFFS
+
+export const addStaff = (staffData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Data from action to Backend", staffData);
+
+    const { data } = await axios.post(`${API_URL}/addStaff`, staffData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: ADD_STAFFS, payload: data });
+    dispatch(getStaffs());
+    console.log("Staff creation route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+// Action to delete a STaFF
+export const deleteStaff = (StaffId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Deleting room id: ", StaffId);
+    const { data } = await axios.delete(`${API_URL}/${StaffId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: DELETE_STAFFS, payload: StaffId });
+    console.log("STAFF DELETION route working :", data);
+    dispatch(getStaffs());
   } catch (error) {
     console.error("Error deleting room:", error);
   }

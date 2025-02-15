@@ -39,7 +39,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getDoctors } from "../../../components/State/Admin/Action.js";
+import {
+  addStaff,
+  deleteStaff,
+  getDoctors,
+} from "../../../components/State/Admin/Action.js";
 
 const AdminStaffs = (props) => {
   useEffect(() => {
@@ -47,55 +51,58 @@ const AdminStaffs = (props) => {
   }, []);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedStaff, setSelectedStaff] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editedPatient, setEditedPatient] = useState({});
+  const [editedStaff, setEditedStaff] = useState({
+    staffId: "",
+    profile: "",
+    name: "",
+    phone: "",
+    department: "",
+    designation: "",
+    status: "",
+  });
+  // Handle Edit Action
+  const handleEdit = () => {
+    if (selectedStaff) {
+      setEditedStaff({
+        profile: selectedStaff.profile,
+        name: selectedStaff.name,
+        phone: selectedStaff.phone,
+        department: selectedStaff.department,
+        designation: selectedStaff.designation,
+        staffId: selectedStaff._id,
+      });
+      setEditDialogOpen(true);
+      console.log("Edit Staff", editedStaff);
+    }
+    handleMenuClose();
+  };
 
-  const [patients, setPatients] = useState([
-    {
-      profile: "1",
-      staffId: "XXXXXXXX",
-      name: "Jasmin Kaur",
-      phone: "+91 79327728",
-      department: "Walk In",
-      designation: "Cardiology",
-      status: "Available",
-    },
-    {
-      profile: "2",
-      staffId: "XXXXXXXX",
-      name: "Amit Tripathi",
-      phone: "+91 79327728",
-      department: "Referral",
-      designation: "Cardiology",
-      status: "On Leave",
-    },
-  ]);
+  // Handle Save Edited Room
+  const handleSaveEditedStaff = () => {
+    dispatch(updateStaff(editedStaff.staffId, editedStaff));
+    setEditDialogOpen(false);
+    console.log("Satff Edited Successfully");
+  };
 
   // Handle Menu Open
-  const handleMenuOpen = (event, patient) => {
+  const handleMenuOpen = (event, staff) => {
     event.stopPropagation(); // Prevent interference with other clicks
     setAnchorEl(event.currentTarget);
-    setSelectedPatient(patient);
+    setSelectedStaff(staff);
   };
 
   // Handle Menu Close
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedPatient(null);
-  };
-
-  // Handle Edit Action
-  const handleEdit = () => {
-    setEditedPatient(selectedPatient); // Load selected patient into editedPatient
-    setEditDialogOpen(true);
-    handleMenuClose();
+    setSelectedStaff(null);
   };
 
   // Handle Delete Action
   const handleDelete = () => {
-    // setPatients((prev) => prev.filter((patient) => patient.id !== selectedPatient.id));
-    console.log("Patient Deleted");
+    dispatch(deleteStaff(selectedStaff._id));
+    console.log("Staff Deleted");
     handleMenuClose();
   };
 
@@ -104,17 +111,9 @@ const AdminStaffs = (props) => {
     setEditDialogOpen(false);
   };
 
-  // Handle Save Edited Patient
-  const handleSaveEditedPatient = () => {
-    // setPatients((prev) =>
-    //     prev.map((patient) => (patient.id === editedPatient.id ? editedPatient : patient))
-    // );
-    console.log("Patient Edited Successfully");
-    handleEditDialogClose();
-  };
-
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newStaff, setNewStaff] = useState({
+    staff_id: "",
     profile: "",
     name: "",
     phone: "",
@@ -124,19 +123,31 @@ const AdminStaffs = (props) => {
   });
 
   const handleSubmit = () => {
+    dispatch(addStaff(newStaff));
     console.log("New Staff Data:", newStaff);
   };
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
-  console.log("Location COMING:", location);
-
-  const staffs = location.state?.staffs;
+  const staffs = useSelector((state) => state.admin.staffs);
   const noOfStaffs = staffs.length;
 
+  const departments = useSelector((state) => state.admin.departments);
+
   console.log("Staffs: ", staffs);
+  console.log("Departments: ", departments);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setNewStaff({ ...newStaff, profile: imageUrl });
+    } else {
+      // Handle the case when no file is selected
+      setNewStaff({ ...newStaff, profile: "" });
+    }
+  };
 
   return (
     <>
@@ -183,14 +194,32 @@ const AdminStaffs = (props) => {
         <DialogTitle>Add New Staff</DialogTitle>
         <DialogContent>
           {/* Profile Icon Input */}
-          <Avatar
-            src={newStaff.profile}
-            alt="Profile"
-            sx={{ width: 60, height: 60, cursor: "pointer", marginBottom: 2 }}
-            onClick={() => {
-              // Handle file input or image picker
-              alert("Open file picker to select profile picture");
-            }}
+          <input
+            type="file"
+            accept="image/*"
+            id="file-input"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+          <label htmlFor="file-input">
+            <Avatar
+              src={newStaff.profile}
+              alt="Profile"
+              sx={{ width: 60, height: 60, cursor: "pointer", marginBottom: 2 }}
+            />
+          </label>
+
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Staff Id"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={newStaff.staff_id}
+            onChange={(e) =>
+              setNewStaff({ ...newStaff, staff_id: e.target.value })
+            }
           />
 
           <TextField
@@ -226,9 +255,14 @@ const AdminStaffs = (props) => {
             fullWidth
             margin="dense"
           >
-            <MenuItem value="General Checkup">General Checkup</MenuItem>
-            <MenuItem value="Follow Up">Follow Up</MenuItem>
-            <MenuItem value="Consultation">Consultation</MenuItem>
+            {departments?.map((departments) => (
+              <MenuItem
+                key={departments.departmentId}
+                value={departments.departmentId}
+              >
+                {departments.departmentName}
+              </MenuItem>
+            ))}
           </TextField>
 
           <TextField
@@ -299,9 +333,9 @@ const AdminStaffs = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {staffs.map((patient) => (
+            {staffs.map((staff) => (
               <TableRow
-                key={patient._id}
+                key={staff?._id}
                 sx={{
                   background: "#fff",
                   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
@@ -316,13 +350,13 @@ const AdminStaffs = (props) => {
               >
                 <TableCell>
                   <Avatar
-                    src={patient.profile}
+                    src={staff?.profile}
                     alt="Profile"
                     sx={{ width: 40, height: 40 }} // Adjust size
                   />
                 </TableCell>
                 <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                  {patient.staff_id}
+                  {staff?.staff_id}
                 </TableCell>
                 <TableCell>
                   <Typography
@@ -333,19 +367,19 @@ const AdminStaffs = (props) => {
                       cursor: "pointer",
                     }}
                   >
-                    {patient.name}
+                    {staff?.name}
                   </Typography>
                 </TableCell>
-                <TableCell>{patient.phone}</TableCell>
-                <TableCell>{patient.department.name}</TableCell>
-                <TableCell>{patient.designation}</TableCell>
+                <TableCell>{staff?.phone}</TableCell>
+                <TableCell>{staff?.department.name}</TableCell>
+                <TableCell>{staff?.designation}</TableCell>
                 <TableCell>
                   <Chip
-                    label={patient.status}
+                    label={staff?.status}
                     size="small"
                     sx={{
                       backgroundColor: "transparent", // Removes background
-                      color: patient.status === "Available" ? "green" : "red", // Black for Available, Red otherwise
+                      color: staff?.status === "Available" ? "green" : "red", // Black for Available, Red otherwise
                       fontWeight: "bold",
                       border: "none", // Ensures no border appears
                     }}
@@ -353,9 +387,7 @@ const AdminStaffs = (props) => {
                 </TableCell>
 
                 <TableCell>
-                  <IconButton
-                    onClick={(event) => handleMenuOpen(event, patient)}
-                  >
+                  <IconButton onClick={(event) => handleMenuOpen(event, staff)}>
                     <MoreVertIcon />
                   </IconButton>
                 </TableCell>
@@ -391,10 +423,10 @@ const AdminStaffs = (props) => {
 
       {/* Edit Patient Dialog */}
       <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-        <DialogTitle>Edit Patient</DialogTitle>
+        <DialogTitle>Edit Staff</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Modify the details of the patient.
+            Modify the details of the Staff.
           </DialogContentText>
           <TextField
             autoFocus
@@ -403,9 +435,9 @@ const AdminStaffs = (props) => {
             type="text"
             fullWidth
             variant="outlined"
-            value={editedPatient.name}
+            value={editedStaff.name}
             onChange={(e) =>
-              setEditedPatient({ ...editedPatient, name: e.target.value })
+              setEditedStaff({ ...editedStaff, name: e.target.value })
             }
           />
           <TextField
@@ -414,9 +446,9 @@ const AdminStaffs = (props) => {
             type="email"
             fullWidth
             variant="outlined"
-            value={editedPatient.email}
+            value={editedStaff.email}
             onChange={(e) =>
-              setEditedPatient({ ...editedPatient, email: e.target.value })
+              setEditedStaff({ ...editedStaff, email: e.target.value })
             }
           />
           <TextField
@@ -425,9 +457,9 @@ const AdminStaffs = (props) => {
             type="text"
             fullWidth
             variant="outlined"
-            value={editedPatient.phone}
+            value={editedStaff.phone}
             onChange={(e) =>
-              setEditedPatient({ ...editedPatient, phone: e.target.value })
+              setEditedStaff({ ...editedStaff, phone: e.target.value })
             }
           />
           <TextField
@@ -436,9 +468,9 @@ const AdminStaffs = (props) => {
             type="text"
             fullWidth
             variant="outlined"
-            value={editedPatient.type}
+            value={editedStaff.type}
             onChange={(e) =>
-              setEditedPatient({ ...editedPatient, type: e.target.value })
+              setEditedStaff({ ...editedStaff, type: e.target.value })
             }
           />
           <TextField
@@ -447,9 +479,9 @@ const AdminStaffs = (props) => {
             type="text"
             fullWidth
             variant="outlined"
-            value={editedPatient.branch}
+            value={editedStaff.branch}
             onChange={(e) =>
-              setEditedPatient({ ...editedPatient, branch: e.target.value })
+              setEditedStaff({ ...editedStaff, branch: e.target.value })
             }
           />
           <TextField
@@ -458,9 +490,9 @@ const AdminStaffs = (props) => {
             type="date"
             fullWidth
             variant="outlined"
-            value={editedPatient.date}
+            value={editedStaff.date}
             onChange={(e) =>
-              setEditedPatient({ ...editedPatient, date: e.target.value })
+              setEditedStaff({ ...editedStaff, date: e.target.value })
             }
             InputLabelProps={{
               shrink: true,
@@ -470,9 +502,9 @@ const AdminStaffs = (props) => {
             <FormLabel>Status</FormLabel>
             <RadioGroup
               name="status"
-              value={editedPatient.status}
+              value={editedStaff.status}
               onChange={(e) =>
-                setEditedPatient({ ...editedPatient, status: e.target.value })
+                setEditedStaff({ ...editedStaff, status: e.target.value })
               }
             >
               <FormControlLabel
@@ -490,7 +522,7 @@ const AdminStaffs = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose}>Cancel</Button>
-          <Button onClick={handleSaveEditedPatient}>Save</Button>
+          <Button onClick={handleSaveEditedStaff}>Save</Button>
         </DialogActions>
       </Dialog>
     </>
