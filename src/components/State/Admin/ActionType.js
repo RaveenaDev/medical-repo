@@ -22,3 +22,4 @@ export const DELETE_ROOM = "DELETE_ROOM";
 
 export const ADD_STAFFS = "ADD_STAFFS";
 export const DELETE_STAFFS = "DELETE_STAFFS";
+export const UPDATE_STAFFS = "UPDATE_STAFFS";

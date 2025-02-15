@@ -16,6 +16,7 @@ import {
   GET_ROOMS,
   GET_STAFFS,
   UPDATE_ROOM,
+  UPDATE_STAFFS,
 } from "./ActionType.js";
 
 export const getEarnings = () => async (dispatch) => {
@@ -285,5 +286,23 @@ export const deleteStaff = (StaffId) => async (dispatch) => {
     dispatch(getStaffs());
   } catch (error) {
     console.error("Error deleting room:", error);
+  }
+};
+
+// Action to update a Staff
+export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Editng room id: ", StaffId);
+    const { data } = await axios.put(`${API_URL}/${StaffId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: UPDATE_STAFFS, payload: data });
+    console.log("Staff EDIT route working :", data);
+    dispatch(getStaffs());
+  } catch (error) {
+    console.error("Error updating room:", error);
   }
 };

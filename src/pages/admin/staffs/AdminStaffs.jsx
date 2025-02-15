@@ -43,6 +43,7 @@ import {
   addStaff,
   deleteStaff,
   getDoctors,
+  updateStaff,
 } from "../../../components/State/Admin/Action.js";
 
 const AdminStaffs = (props) => {
@@ -54,6 +55,7 @@ const AdminStaffs = (props) => {
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editedStaff, setEditedStaff] = useState({
+    staff_id: "",
     staffId: "",
     profile: "",
     name: "",
@@ -71,8 +73,11 @@ const AdminStaffs = (props) => {
         phone: selectedStaff.phone,
         department: selectedStaff.department,
         designation: selectedStaff.designation,
+        staff_id: selectedStaff.staff_id,
         staffId: selectedStaff._id,
+        status: selectedStaff.status,
       });
+
       setEditDialogOpen(true);
       console.log("Edit Staff", editedStaff);
     }
@@ -136,7 +141,6 @@ const AdminStaffs = (props) => {
   const departments = useSelector((state) => state.admin.departments);
 
   console.log("Staffs: ", staffs);
-  console.log("Departments: ", departments);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -425,9 +429,35 @@ const AdminStaffs = (props) => {
       <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
         <DialogTitle>Edit Staff</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Modify the details of the Staff.
-          </DialogContentText>
+          {/* Profile Icon Input */}
+          <input
+            type="file"
+            accept="image/*"
+            id="file-input"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+          <label htmlFor="file-input">
+            <Avatar
+              src={editedStaff.profile}
+              alt="Profile"
+              sx={{ width: 60, height: 60, cursor: "pointer", marginBottom: 2 }}
+            />
+          </label>
+
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Staff Id"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={editedStaff.staff_id}
+            onChange={(e) =>
+              setEditedStaff({ ...editedStaff, staff_id: e.target.value })
+            }
+          />
+
           <TextField
             autoFocus
             margin="dense"
@@ -442,17 +472,6 @@ const AdminStaffs = (props) => {
           />
           <TextField
             margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={editedStaff.email}
-            onChange={(e) =>
-              setEditedStaff({ ...editedStaff, email: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
             label="Phone"
             type="text"
             fullWidth
@@ -462,63 +481,58 @@ const AdminStaffs = (props) => {
               setEditedStaff({ ...editedStaff, phone: e.target.value })
             }
           />
+
           <TextField
-            margin="dense"
-            label="Type of Visit"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedStaff.type}
+            select
+            label="Department"
+            name="department"
+            value={editedStaff.department._id}
             onChange={(e) =>
-              setEditedStaff({ ...editedStaff, type: e.target.value })
+              setEditedStaff({ ...editedStaff, department: e.target.value })
             }
-          />
+            fullWidth
+            margin="dense"
+          >
+            {departments?.map((departments) => (
+              <MenuItem
+                key={departments.departmentId}
+                value={departments.departmentId}
+              >
+                {departments.departmentName}
+              </MenuItem>
+            ))}
+          </TextField>
+
           <TextField
-            margin="dense"
-            label="Branch"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedStaff.branch}
+            select
+            label="Designation"
+            name="designation"
+            value={editedStaff.designation}
             onChange={(e) =>
-              setEditedStaff({ ...editedStaff, branch: e.target.value })
+              setEditedStaff({ ...editedStaff, designation: e.target.value })
             }
-          />
+            fullWidth
+            margin="dense"
+          >
+            <MenuItem value="General Checkup">General Checkup</MenuItem>
+            <MenuItem value="Follow Up">Follow Up</MenuItem>
+            <MenuItem value="Consultation">Consultation</MenuItem>
+          </TextField>
+
           <TextField
-            margin="dense"
-            label="Date"
-            type="date"
-            fullWidth
-            variant="outlined"
-            value={editedStaff.date}
+            select
+            label="Status"
+            name="status"
+            value={editedStaff.status}
             onChange={(e) =>
-              setEditedStaff({ ...editedStaff, date: e.target.value })
+              setEditedStaff({ ...editedStaff, status: e.target.value })
             }
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <FormControl fullWidth margin="dense">
-            <FormLabel>Status</FormLabel>
-            <RadioGroup
-              name="status"
-              value={editedStaff.status}
-              onChange={(e) =>
-                setEditedStaff({ ...editedStaff, status: e.target.value })
-              }
-            >
-              <FormControlLabel
-                value="Active"
-                control={<Radio />}
-                label="Active"
-              />
-              <FormControlLabel
-                value="In-active"
-                control={<Radio />}
-                label="In-active"
-              />
-            </RadioGroup>
-          </FormControl>
+            fullWidth
+            margin="dense"
+          >
+            <MenuItem value="Available">Available</MenuItem>
+            <MenuItem value="On Leave">On Leave</MenuItem>
+          </TextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose}>Cancel</Button>

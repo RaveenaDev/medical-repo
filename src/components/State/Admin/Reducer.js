@@ -13,6 +13,7 @@ import {
   GET_ROOMS,
   GET_STAFFS,
   UPDATE_ROOM,
+  UPDATE_STAFFS,
 } from "./ActionType.js";
 
 const inititalState = {
@@ -84,6 +85,13 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         staffs: state.staffs.filter((staff) => staff._id !== action.payload),
+      };
+    case UPDATE_STAFFS:
+      return {
+        ...state,
+        staffs: state.staffs.map((staff) =>
+          staff._id === action.payload._id ? action.payload : staff
+        ),
       };
 
     case GET_ROOMS:
