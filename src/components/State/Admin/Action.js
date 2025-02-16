@@ -10,7 +10,7 @@ import {
   GET_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
-  GET_EARNINGS,
+  GET_EARNINGS, GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
@@ -304,5 +304,22 @@ export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
     dispatch(getStaffs());
   } catch (error) {
     console.error("Error updating room:", error);
+  }
+};
+
+export const getExpenses = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getExpenses`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_EXPENSES, payload: data });
+    console.log("Expenses route working :", data);
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -88,7 +88,7 @@ const AdminStaffs = (props) => {
   const handleSaveEditedStaff = () => {
     dispatch(updateStaff(editedStaff.staffId, editedStaff));
     setEditDialogOpen(false);
-    console.log("Satff Edited Successfully");
+    console.log("Expense Edited Successfully");
   };
 
   // Handle Menu Open

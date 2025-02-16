@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import CommonPanel from "../Components/CommonPanel.jsx";
 import {
-  Box,
-  Button,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+    Box,
+    Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ListItemIcon, ListItemText, Menu,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,6 +21,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import addAppointments from "../../../assets/plus.svg";
+import {useDispatch, useSelector} from "react-redux";
+import { getExpenses} from "../../../components/State/Admin/Action.js";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Avatar from "@mui/material/Avatar";
 
 const Expenses = (props) => {
   useEffect(() => {
@@ -60,6 +66,79 @@ const Expenses = (props) => {
   const truncateText = (text, maxLength) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedExpense, setSelectedExpense] = useState(null);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [editedExpense, setEditedExpense] = useState({
+        staff_id: "",
+        staffId: "",
+        profile: "",
+        name: "",
+        phone: "",
+        department: "",
+        designation: "",
+        status: "",
+    });
+
+    const handleMenuOpen = (event, row) => {
+        event.stopPropagation(); // Prevent interference with other clicks
+        setAnchorEl(event.currentTarget);
+        setSelectedExpense(row);
+    };
+
+    // Handle Menu Close
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedExpense(null);
+    };
+
+    const handleEdit = () => {
+        if (selectedExpense) {
+            // setEditedExpense({
+            //     profile: selectedStaff.profile,
+            //     name: selectedStaff.name,
+            //     phone: selectedStaff.phone,
+            //     department: selectedStaff.department,
+            //     designation: selectedStaff.designation,
+            //     staff_id: selectedStaff.staff_id,
+            //     staffId: selectedStaff._id,
+            //     status: selectedStaff.status,
+            // });
+
+            setEditDialogOpen(true);
+            console.log("Edit Expense", editedExpense);
+        }
+        handleMenuClose();
+    };
+
+    // Handle Delete Action
+    const handleDelete = () => {
+        console.log("Staff Deleted");
+        handleMenuClose();
+    };
+
+    // Handle Edit Dialog Close
+    const handleEditDialogClose = () => {
+        setEditDialogOpen(false);
+    };
+
+    // Handle Save Edited Room
+    const handleSaveEditedExpense = () => {
+        // dispatch(updateStaff(editedExpense.staffId, editedStaff));
+        setEditDialogOpen(false);
+        console.log("Expense Edited Successfully");
+    };
+
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getExpenses())
+    }, [dispatch]);
+
+    const expenses = useSelector((store) => store.admin.expenses)
+
+    console.log("EXP ",expenses)
 
   return (
     <>
@@ -259,7 +338,7 @@ const Expenses = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row,index) => (
+              {expenses.map((row,index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -272,32 +351,158 @@ const Expenses = (props) => {
                     scope="row"
                     sx={{ color: "#25307f", border: "none" }}
                   >
-                    XXXXXXXX
+                      {row.expenseType}
                   </TableCell>
                   <TableCell
                     component="th"
                     scope="row"
                     sx={{ color: "#25307f", border: "none" }}
                   >
-                    {truncateText(row.name, 13)}
+                    {truncateText(row.amount, 13)}
                   </TableCell>
                   <TableCell align="center" sx={{ border: "none" }}>
-                    {truncateText(row.appointmentWith, 14)}
+                    {truncateText(row.paidTo, 14)}
                   </TableCell>
                   <TableCell align="center" sx={{ border: "none" }}>
-                    {row.typeVisit}
+                    {row.details}
                   </TableCell>
                   <TableCell align="center" sx={{ border: "none" }}>
-                    {row.branch}
+                      {truncateText(row.date, 14)}
                   </TableCell>
-                  <TableCell align="center" sx={{ border: "none" }}>
-                    XXXXXX
-                  </TableCell>
+                    <TableCell>
+                        <IconButton onClick={(event) => handleMenuOpen(event, row)}>
+                            <MoreVertIcon />
+                        </IconButton>
+                    </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+
+          {/* Actions Menu */}
+          <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              PaperProps={{
+                  elevation: 2,
+                  sx: { padding: 1 },
+              }}
+          >
+              <MenuItem onClick={handleEdit}>
+                  <ListItemIcon>
+                      <EditIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Edit</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={handleDelete}>
+                  <ListItemIcon>
+                      <DeleteIcon fontSize="small" color="error" />
+                  </ListItemIcon>
+                  <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+              </MenuItem>
+          </Menu>
+
+          {/* Edit Patient Dialog */}
+          <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+              <DialogTitle>Edit Expense</DialogTitle>
+              <DialogContent>
+
+                  <TextField
+                      autoFocus
+                      margin="dense"
+                      label="Staff Id"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      value={editedExpense.staff_id}
+                      onChange={(e) =>
+                          setEditedExpense({ ...editedExpense, staff_id: e.target.value })
+                      }
+                  />
+
+                  <TextField
+                      autoFocus
+                      margin="dense"
+                      label="Name"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      value={editedExpense.name}
+                      onChange={(e) =>
+                          setEditedExpense({ ...editedExpense, name: e.target.value })
+                      }
+                  />
+                  <TextField
+                      margin="dense"
+                      label="Phone"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      value={editedExpense.phone}
+                      onChange={(e) =>
+                          setEditedExpense({ ...editedExpense, phone: e.target.value })
+                      }
+                  />
+
+                  {/*<TextField*/}
+                  {/*    select*/}
+                  {/*    label="Department"*/}
+                  {/*    name="department"*/}
+                  {/*    value={editedStaff.department._id}*/}
+                  {/*    onChange={(e) =>*/}
+                  {/*        setEditedStaff({ ...editedStaff, department: e.target.value })*/}
+                  {/*    }*/}
+                  {/*    fullWidth*/}
+                  {/*    margin="dense"*/}
+                  {/*>*/}
+                  {/*    {departments?.map((departments) => (*/}
+                  {/*        <MenuItem*/}
+                  {/*            key={departments.departmentId}*/}
+                  {/*            value={departments.departmentId}*/}
+                  {/*        >*/}
+                  {/*            {departments.departmentName}*/}
+                  {/*        </MenuItem>*/}
+                  {/*    ))}*/}
+                  {/*</TextField>*/}
+
+                  {/*<TextField*/}
+                  {/*    select*/}
+                  {/*    label="Designation"*/}
+                  {/*    name="designation"*/}
+                  {/*    value={editedStaff.designation}*/}
+                  {/*    onChange={(e) =>*/}
+                  {/*        setEditedStaff({ ...editedStaff, designation: e.target.value })*/}
+                  {/*    }*/}
+                  {/*    fullWidth*/}
+                  {/*    margin="dense"*/}
+                  {/*>*/}
+                  {/*    <MenuItem value="General Checkup">General Checkup</MenuItem>*/}
+                  {/*    <MenuItem value="Follow Up">Follow Up</MenuItem>*/}
+                  {/*    <MenuItem value="Consultation">Consultation</MenuItem>*/}
+                  {/*</TextField>*/}
+
+                  {/*<TextField*/}
+                  {/*    select*/}
+                  {/*    label="Status"*/}
+                  {/*    name="status"*/}
+                  {/*    value={editedStaff.status}*/}
+                  {/*    onChange={(e) =>*/}
+                  {/*        setEditedStaff({ ...editedStaff, status: e.target.value })*/}
+                  {/*    }*/}
+                  {/*    fullWidth*/}
+                  {/*    margin="dense"*/}
+                  {/*>*/}
+                  {/*    <MenuItem value="Available">Available</MenuItem>*/}
+                  {/*    <MenuItem value="On Leave">On Leave</MenuItem>*/}
+                  {/*</TextField>*/}
+              </DialogContent>
+              <DialogActions>
+                  <Button onClick={handleEditDialogClose}>Cancel</Button>
+                  <Button onClick={handleSaveEditedExpense}>Save</Button>
+              </DialogActions>
+          </Dialog>
       </div>
     </>
   );

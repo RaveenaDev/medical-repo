@@ -7,7 +7,7 @@ import {
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS,
+  GET_DOCTORS, GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
@@ -28,6 +28,7 @@ const inititalState = {
   rooms: [],
   departments: [],
   department: null,
+  expenses: [],
   totalAppointments: [],
   appointmentRequests: [],
   rejectedAppointments: [],
@@ -129,6 +130,12 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         rejectedAppointments: action.payload.rejectedAppointments,
       };
+
+    case GET_EXPENSES:
+      return{
+        ...state,
+        expenses: action.payload.expenses
+      }
 
     default:
       return state;
