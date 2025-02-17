@@ -1,7 +1,7 @@
 export const GET_EARNINGS = "GET_EARNINGS";
+
 export const GET_DOCTORS = "GET_DOCTORS";
-export const GET_STAFFS = "GET_STAFFS";
-export const GET_ROOMS = "GET_ROOMS";
+export const ADD_DOCTORS = "ADD_DOCTORS";
 
 export const GET_ALL_DEPARTMENTS = "GET_ALL_DEPARTMENTS";
 
@@ -16,10 +16,12 @@ export const GET_REJECTED_APPOINTMENTS = "GET_REJECTED_APPOINTMENTS";
 
 export const GET_PATIENTS = "GET_PATIENTS";
 
+export const GET_ROOMS = "GET_ROOMS";
 export const ADD_ROOM = "ADD_ROOM";
 export const UPDATE_ROOM = "UPDATE_ROOM";
 export const DELETE_ROOM = "DELETE_ROOM";
 
+export const GET_STAFFS = "GET_STAFFS";
 export const ADD_STAFFS = "ADD_STAFFS";
 export const DELETE_STAFFS = "DELETE_STAFFS";
 export const UPDATE_STAFFS = "UPDATE_STAFFS";

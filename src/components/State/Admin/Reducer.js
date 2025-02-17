@@ -1,4 +1,5 @@
 import {
+  ADD_DOCTORS,
   ADD_ROOM,
   ADD_STAFFS,
   DELETE_ROOM,
@@ -7,7 +8,8 @@ import {
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS, GET_EXPENSES,
+  GET_DOCTORS,
+  GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
@@ -45,6 +47,11 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         totalDoctors: action.payload.count,
         doctors: action.payload.doctors,
+      };
+    case ADD_DOCTORS:
+      return {
+        ...state,
+        doctors: [...state.doctors, action.payload.doctor],
       };
 
     case GET_ALL_DEPARTMENTS:
@@ -132,10 +139,10 @@ export const adminReducer = (state = inititalState, action) => {
       };
 
     case GET_EXPENSES:
-      return{
+      return {
         ...state,
-        expenses: action.payload.expenses
-      }
+        expenses: action.payload.expenses,
+      };
 
     default:
       return state;

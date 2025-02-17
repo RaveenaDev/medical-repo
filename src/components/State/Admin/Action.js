@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
+  ADD_DOCTORS,
   ADD_ROOM,
   ADD_STAFFS,
   DELETE_ROOM,
@@ -10,7 +11,8 @@ import {
   GET_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
-  GET_EARNINGS, GET_EXPENSES,
+  GET_EARNINGS,
+  GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
@@ -50,6 +52,33 @@ export const getDoctors = () => async (dispatch) => {
     console.log("Doctor route working :", data);
   } catch (error) {
     console.log(error);
+  }
+};
+export const addDoctor = (doctorData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      throw new Error("Authorization token is missing");
+    }
+
+    console.log("Sending doctor data to backend:", doctorData);
+
+    const response = await axios.post(`${API_URL}/register`, doctorData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch({ type: ADD_DOCTORS, payload: response.data });
+    dispatch(getDoctors());
+
+    console.log("Doctor successfully added:", response.data);
+  } catch (error) {
+    console.error(
+      "Error adding doctor:",
+      error.response?.data || error.message
+    );
   }
 };
 
