@@ -13,6 +13,11 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
 import RecordModal from "./components/RecordsModal.jsx";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getBillDetails,
+  getBillingRecords,
+} from "../../../../../components/State/Admin/Action.js";
 
 const Records = () => {
   const [selectedBill, setSelectedBill] = useState(null);
@@ -59,9 +64,21 @@ const Records = () => {
       status: "Paid",
     },
   ]);
+  const billingRecords = useSelector((store) => store.admin.billingRecords);
+  console.log("RECORDS", billingRecords);
+  const billDetails = useSelector((store) => store.admin.billingRecord);
+  console.log("BILL DETAILS", billDetails);
 
-  const handleViewClick = (bill) => {
-    setSelectedBill(bill);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!billingRecords || billingRecords.length === 0) {
+      dispatch(getBillingRecords());
+    }
+  }, [dispatch, billingRecords]);
+
+  const handleViewClick = (billId) => {
+    dispatch(getBillDetails(billId)); // Fetch bill details from API
+    setSelectedBill(billDetails);
     setOpenModal(true);
   };
 
@@ -71,7 +88,6 @@ const Records = () => {
   };
   const [sortOrder, setSortOrder] = useState("Monthly");
   const [selectedFilter, setSelectedFilter] = useState("");
-  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const filterOptions = [
     "Patient",
@@ -209,17 +225,22 @@ const Records = () => {
           <span>Actions</span>
         </div>
 
-        {patients.map((item) => (
-          <div className="table-row" key={item.id}>
-            <span className="blue">{item.id}</span>
-            <span className="blue">{item.name}</span>
-            <span className="grey">{item.phone}</span>
-            <span className="grey">{item.date}</span>
-            <span className="grey"> {item.amount}</span>
+        {billingRecords.map((item) => (
+          <div className="table-row" key={item._id}>
+            <span className="blue">{item.caseId}</span>
+            <span className="blue">{item.patient.name}</span>
+            <span className="grey">{item.patient.phone}</span>
+            <span className="grey">
+              {new Date(item.createdAt).toLocaleDateString()}
+            </span>
+            <span className="grey"> {item.totalAmount}</span>
             <span className={`status ${item.status.toLowerCase()}`}>
               {item.status}
             </span>
-            <Button onClick={() => handleViewClick(item)} className="view-btn">
+            <Button
+              onClick={() => handleViewClick(item._id)}
+              className="view-btn"
+            >
               View
             </Button>
 
