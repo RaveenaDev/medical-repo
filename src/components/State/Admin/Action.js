@@ -3,7 +3,7 @@ import { API_URL } from "../../Config/api.js";
 import {
   ADD_DOCTORS, ADD_EXPENSE,
   ADD_ROOM,
-  ADD_STAFFS,
+  ADD_STAFFS, DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
@@ -16,7 +16,7 @@ import {
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
-  GET_STAFFS,
+  GET_STAFFS, UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
 } from "./ActionType.js";
@@ -322,7 +322,7 @@ export const deleteStaff = (StaffId) => async (dispatch) => {
 export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Editng room id: ", StaffId);
+    console.log("Edited staff id: ", StaffId);
     const { data } = await axios.put(`${API_URL}/${StaffId}`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -369,5 +369,38 @@ export const addExpense = (exp) => async (dispatch) => {
 
   catch (error) {
     console.log(error);
+  }
+};
+
+export const updateExpense = (expenseId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Edited expense id: ", expenseId);
+    const { data } = await axios.put(`${API_URL}/${expenseId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: UPDATE_EXPENSE, payload: data });
+    console.log("Expense edit route working :", data);
+  } catch (error) {
+    console.error("Error updating expense:", error);
+  }
+};
+
+export const deleteExpense = (expenseId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Edited expense id: ", expenseId);
+    const { data } = await axios.delete(`${API_URL}/${expenseId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: DELETE_EXPENSE, payload: data });
+    console.log("Delete Expense route working :", data);
+    dispatch(getStaffs());
+  } catch (error) {
+    console.error("Error deleting expense:", error);
   }
 };

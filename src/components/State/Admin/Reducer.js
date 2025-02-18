@@ -13,7 +13,7 @@ import {
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
-  GET_STAFFS,
+  GET_STAFFS, UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
 } from "./ActionType.js";
@@ -148,6 +148,14 @@ export const adminReducer = (state = inititalState, action) => {
       return{
         ...state,
         expenses: [...state.expenses,action.payload.expense]
+      }
+
+    case UPDATE_EXPENSE:
+      return{
+        ...state,
+        expenses: state.expenses.map((expense) =>
+          expense._id === action.payload.resource._id ? action.payload.resource : expense
+        )
       }
 
     default:

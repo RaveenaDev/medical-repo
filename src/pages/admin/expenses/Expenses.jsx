@@ -22,7 +22,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import addAppointments from "../../../assets/plus.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {addExpense, getExpenses} from "../../../components/State/Admin/Action.js";
+import {addExpense, getExpenses, updateExpense} from "../../../components/State/Admin/Action.js";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -52,6 +52,7 @@ const Expenses = (props) => {
     const [selectedExpense, setSelectedExpense] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [editedExpense, setEditedExpense] = useState({
+        expenseId: "",
         expenseType: "",
         amount: "",
         paidTo: "",
@@ -59,10 +60,11 @@ const Expenses = (props) => {
         date: "",
     });
 
-    const handleMenuOpen = (event, row) => {
+    const handleMenuOpen = (event, expense) => {
         event.stopPropagation(); // Prevent interference with other clicks
         setAnchorEl(event.currentTarget);
-        setSelectedExpense(row);
+        setSelectedExpense(expense);
+        console.log("Selected Expense:",expense)
     };
 
     // Handle Menu Close
@@ -73,16 +75,14 @@ const Expenses = (props) => {
 
     const handleEdit = () => {
         if (selectedExpense) {
-            // setEditedExpense({
-            //     profile: selectedStaff.profile,
-            //     name: selectedStaff.name,
-            //     phone: selectedStaff.phone,
-            //     department: selectedStaff.department,
-            //     designation: selectedStaff.designation,
-            //     staff_id: selectedStaff.staff_id,
-            //     staffId: selectedStaff._id,
-            //     status: selectedStaff.status,
-            // });
+            setEditedExpense({
+                expenseId: selectedExpense._id,
+                expenseType: selectedExpense.expenseType,
+                amount: selectedExpense.amount,
+                paidTo: selectedExpense.paidTo,
+                details: selectedExpense.details,
+                date: selectedExpense.date
+            });
 
             setEditDialogOpen(true);
             console.log("Edit Expense", editedExpense);
@@ -103,9 +103,9 @@ const Expenses = (props) => {
 
     // Handle Save Edited Room
     const handleSaveEditedExpense = () => {
-        // dispatch(updateStaff(editedExpense.staffId, editedStaff));
+        dispatch(updateExpense(editedExpense.expenseId,editedExpense));
         setEditDialogOpen(false);
-        console.log("Expense Edited Successfully");
+        // console.log("Expense Edited Successfully",editedExpense);
     };
 
   const dispatch = useDispatch();
@@ -116,7 +116,7 @@ const Expenses = (props) => {
 
     const expenses = useSelector((store) => store.admin.expenses)
 
-    console.log("EXP ",expenses)
+    // console.log("EXP ",expenses)
 
     const handleClick = () => {
         console.log("Expense data: ",expenseData)
@@ -167,9 +167,6 @@ const Expenses = (props) => {
               label="Expense Type"
               onChange={handleChange}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
               <MenuItem value="salary">Salary</MenuItem>
               <MenuItem value="rent">Rent</MenuItem>
               <MenuItem value="utilities">Utilities</MenuItem>
@@ -413,95 +410,70 @@ const Expenses = (props) => {
           <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
               <DialogTitle>Edit Expense</DialogTitle>
               <DialogContent>
+                  <TextField
+                      select
+                      label="Expense Type"
+                      name="expenseType"
+                      value={editedExpense.expenseType}
+                      onChange={(e) =>
+                          setEditedExpense({ ...editedExpense, expenseType: e.target.value })
+                      }
+                      fullWidth
+                      margin="dense"
+                  >
+                      <MenuItem value="salary">Salary</MenuItem>
+                      <MenuItem value="rent">Rent</MenuItem>
+                      <MenuItem value="utilities">Utilities</MenuItem>
+                  </TextField>
 
                   <TextField
                       autoFocus
                       margin="dense"
-                      label="Staff Id"
+                      label="Amount"
                       type="text"
                       fullWidth
                       variant="outlined"
-                      value={editedExpense.staff_id}
+                      value={editedExpense.amount}
                       onChange={(e) =>
-                          setEditedExpense({ ...editedExpense, staff_id: e.target.value })
+                          setEditedExpense({ ...editedExpense, amount: e.target.value })
                       }
                   />
 
                   <TextField
                       autoFocus
                       margin="dense"
-                      label="Name"
+                      label="Paid To"
                       type="text"
                       fullWidth
                       variant="outlined"
-                      value={editedExpense.name}
+                      value={editedExpense.paidTo}
                       onChange={(e) =>
-                          setEditedExpense({ ...editedExpense, name: e.target.value })
+                          setEditedExpense({ ...editedExpense, paidTo: e.target.value })
                       }
                   />
                   <TextField
                       margin="dense"
-                      label="Phone"
+                      label="Details"
                       type="text"
                       fullWidth
                       variant="outlined"
-                      value={editedExpense.phone}
+                      value={editedExpense.details}
                       onChange={(e) =>
-                          setEditedExpense({ ...editedExpense, phone: e.target.value })
+                          setEditedExpense({ ...editedExpense, details: e.target.value })
                       }
                   />
 
-                  {/*<TextField*/}
-                  {/*    select*/}
-                  {/*    label="Department"*/}
-                  {/*    name="department"*/}
-                  {/*    value={editedStaff.department._id}*/}
-                  {/*    onChange={(e) =>*/}
-                  {/*        setEditedStaff({ ...editedStaff, department: e.target.value })*/}
-                  {/*    }*/}
-                  {/*    fullWidth*/}
-                  {/*    margin="dense"*/}
-                  {/*>*/}
-                  {/*    {departments?.map((departments) => (*/}
-                  {/*        <MenuItem*/}
-                  {/*            key={departments.departmentId}*/}
-                  {/*            value={departments.departmentId}*/}
-                  {/*        >*/}
-                  {/*            {departments.departmentName}*/}
-                  {/*        </MenuItem>*/}
-                  {/*    ))}*/}
-                  {/*</TextField>*/}
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
+                          <DatePicker name="date" value={dayjs(editedExpense.date)}
+                                      onChange={(newDate) =>
+                                          setEditedExpense({ ...editedExpense, date: dayjs(newDate).format("YYYY-MM-DD") })
+                                      }
+                          />
+                      </DemoContainer>
+                  </LocalizationProvider>
 
-                  {/*<TextField*/}
-                  {/*    select*/}
-                  {/*    label="Designation"*/}
-                  {/*    name="designation"*/}
-                  {/*    value={editedStaff.designation}*/}
-                  {/*    onChange={(e) =>*/}
-                  {/*        setEditedStaff({ ...editedStaff, designation: e.target.value })*/}
-                  {/*    }*/}
-                  {/*    fullWidth*/}
-                  {/*    margin="dense"*/}
-                  {/*>*/}
-                  {/*    <MenuItem value="General Checkup">General Checkup</MenuItem>*/}
-                  {/*    <MenuItem value="Follow Up">Follow Up</MenuItem>*/}
-                  {/*    <MenuItem value="Consultation">Consultation</MenuItem>*/}
-                  {/*</TextField>*/}
 
-                  {/*<TextField*/}
-                  {/*    select*/}
-                  {/*    label="Status"*/}
-                  {/*    name="status"*/}
-                  {/*    value={editedStaff.status}*/}
-                  {/*    onChange={(e) =>*/}
-                  {/*        setEditedStaff({ ...editedStaff, status: e.target.value })*/}
-                  {/*    }*/}
-                  {/*    fullWidth*/}
-                  {/*    margin="dense"*/}
-                  {/*>*/}
-                  {/*    <MenuItem value="Available">Available</MenuItem>*/}
-                  {/*    <MenuItem value="On Leave">On Leave</MenuItem>*/}
-                  {/*</TextField>*/}
               </DialogContent>
               <DialogActions>
                   <Button onClick={handleEditDialogClose}>Cancel</Button>
