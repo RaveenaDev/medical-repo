@@ -2,7 +2,7 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_ROOM,
-  ADD_STAFFS,
+  ADD_STAFFS, DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
@@ -163,6 +163,21 @@ export const adminReducer = (state = inititalState, action) => {
         expenses: [...state.expenses, action.payload.expense],
       };
 
+    case UPDATE_EXPENSE:
+      return{
+        ...state,
+        expenses: state.expenses.map((expense) =>
+            expense._id === action.payload.resource._id ? action.payload.resource : expense
+        )
+      }
+
+    case DELETE_EXPENSE:
+      return{
+        ...state,
+        expenses: state.expenses.filter((expense) =>
+          expense._id !== action.payload.resource._id
+        )
+      }
     case GET_BILLING_RECORDS:
       return {
         ...state,
@@ -173,14 +188,6 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         billingRecord: action.payload,
       };
-
-    case UPDATE_EXPENSE:
-      return{
-        ...state,
-        expenses: state.expenses.map((expense) =>
-          expense._id === action.payload.resource._id ? action.payload.resource : expense
-        )
-      }
 
     default:
       return state;

@@ -424,7 +424,7 @@ export const updateExpense = (expenseId, updatedData) => async (dispatch) => {
 export const deleteExpense = (expenseId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Edited expense id: ", expenseId);
+    console.log("Deleted expense id: ", expenseId);
     const { data } = await axios.delete(`${API_URL}/${expenseId}`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -432,8 +432,8 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
     });
     dispatch({ type: DELETE_EXPENSE, payload: data });
     console.log("Delete Expense route working :", data);
-    dispatch(getStaffs());
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error deleting expense:", error);
   }
 };

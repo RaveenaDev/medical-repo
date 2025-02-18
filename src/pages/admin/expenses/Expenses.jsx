@@ -22,7 +22,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import addAppointments from "../../../assets/plus.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {addExpense, getExpenses, updateExpense} from "../../../components/State/Admin/Action.js";
+import {addExpense, deleteExpense, getExpenses, updateExpense} from "../../../components/State/Admin/Action.js";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -92,6 +92,7 @@ const Expenses = (props) => {
 
     // Handle Delete Action
     const handleDelete = () => {
+        dispatch(deleteExpense(selectedExpense._id));
         console.log("Staff Deleted");
         handleMenuClose();
     };
