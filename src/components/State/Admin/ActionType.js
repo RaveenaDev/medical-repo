@@ -28,3 +28,6 @@ export const UPDATE_STAFFS = "UPDATE_STAFFS";
 
 export const GET_EXPENSES = "GET_EXPENSES";
 export const ADD_EXPENSE = "ADD_EXPENSE";
+
+export const GET_BILLING_RECORDS = "GET_BILLING_RECORDS";
+export const GET_BILL_DETAILS = "GET_BILL_DETAILS";

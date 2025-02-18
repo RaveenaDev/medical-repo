@@ -107,16 +107,22 @@
           gap: 1rem;
         }
         .billing-desc {
-          display: grid;
-          grid-template-columns: 2fr 1.5fr 1fr;
-          align-self: flex-start;
+          display: flex;
+          flex-direction: column;
           width: 100%;
           gap: 0rem;
 
           div {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 0.5rem;
+          }
+
+          .billing-category {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row;
           }
         }
 

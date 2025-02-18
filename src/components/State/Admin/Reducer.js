@@ -1,5 +1,6 @@
 import {
-  ADD_DOCTORS, ADD_EXPENSE,
+  ADD_DOCTORS,
+  ADD_EXPENSE,
   ADD_ROOM,
   ADD_STAFFS,
   DELETE_ROOM,
@@ -7,6 +8,8 @@ import {
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
+  GET_BILL_DETAILS,
+  GET_BILLING_RECORDS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_EXPENSES,
@@ -34,6 +37,8 @@ const inititalState = {
   totalAppointments: [],
   appointmentRequests: [],
   rejectedAppointments: [],
+  billingRecord: null,
+  billingRecords: [],
   noOfAppointments: null,
   isLoading: true,
   error: null,
@@ -92,13 +97,17 @@ export const adminReducer = (state = inititalState, action) => {
     case DELETE_STAFFS:
       return {
         ...state,
-        staffs: state.staffs.filter((staff) => staff._id !== action.payload),
+        staffs: state.staffs.filter(
+          (staff) => staff._id !== action.payload.resource._id
+        ),
       };
     case UPDATE_STAFFS:
       return {
         ...state,
         staffs: state.staffs.map((staff) =>
-          staff._id === action.payload._id ? action.payload : staff
+          staff._id === action.payload.resource._id
+            ? action.payload.resource
+            : staff
         ),
       };
 
@@ -123,14 +132,18 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         rooms: state.rooms.map((room) =>
-          room._id === action.payload._id ? action.payload : room
+          room._id === action.payload.resource._id
+            ? action.payload.resource._id
+            : room
         ),
       };
 
     case DELETE_ROOM:
       return {
         ...state,
-        rooms: state.rooms.filter((room) => room._id !== action.payload),
+        rooms: state.rooms.filter(
+          (room) => room._id !== action.payload.resource._id
+        ),
       };
     case GET_REJECTED_APPOINTMENTS:
       return {
@@ -145,10 +158,21 @@ export const adminReducer = (state = inititalState, action) => {
       };
 
     case ADD_EXPENSE:
-      return{
+      return {
         ...state,
-        expenses: [...state.expenses,action.payload.expense]
-      }
+        expenses: [...state.expenses, action.payload.expense],
+      };
+
+    case GET_BILLING_RECORDS:
+      return {
+        ...state,
+        billingRecords: action.payload.bills,
+      };
+    case GET_BILL_DETAILS:
+      return {
+        ...state,
+        billingRecord: action.payload,
+      };
 
     default:
       return state;

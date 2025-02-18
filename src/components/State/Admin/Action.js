@@ -1,7 +1,8 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
-  ADD_DOCTORS, ADD_EXPENSE,
+  ADD_DOCTORS,
+  ADD_EXPENSE,
   ADD_ROOM,
   ADD_STAFFS,
   DELETE_ROOM,
@@ -9,6 +10,8 @@ import {
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
+  GET_BILL_DETAILS,
+  GET_BILLING_RECORDS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_EARNINGS,
@@ -236,7 +239,7 @@ export const addRoom = (roomData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_ROOM, payload: data });
-    dispatch(getRooms());
+
     console.log("Room creation route working :", data);
   } catch (error) {
     console.log(error);
@@ -254,7 +257,6 @@ export const updateRoom = (roomId, updatedData) => async (dispatch) => {
     });
     dispatch({ type: UPDATE_ROOM, payload: data });
     console.log("Room EDIT route working :", data);
-    dispatch(getRooms());
   } catch (error) {
     console.error("Error updating room:", error);
   }
@@ -271,9 +273,8 @@ export const deleteRoom = (roomId) => async (dispatch) => {
       },
     });
 
-    dispatch({ type: DELETE_ROOM, payload: roomId });
+    dispatch({ type: DELETE_ROOM, payload: data });
     console.log("Room DELETION route working :", data);
-    dispatch(getRooms());
   } catch (error) {
     console.error("Error deleting room:", error);
   }
@@ -293,7 +294,7 @@ export const addStaff = (staffData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_STAFFS, payload: data });
-    dispatch(getStaffs());
+
     console.log("Staff creation route working :", data);
   } catch (error) {
     console.log(error);
@@ -310,9 +311,8 @@ export const deleteStaff = (StaffId) => async (dispatch) => {
       },
     });
 
-    dispatch({ type: DELETE_STAFFS, payload: StaffId });
+    dispatch({ type: DELETE_STAFFS, payload: data });
     console.log("STAFF DELETION route working :", data);
-    dispatch(getStaffs());
   } catch (error) {
     console.error("Error deleting room:", error);
   }
@@ -330,7 +330,6 @@ export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
     });
     dispatch({ type: UPDATE_STAFFS, payload: data });
     console.log("Staff EDIT route working :", data);
-    dispatch(getStaffs());
   } catch (error) {
     console.error("Error updating room:", error);
   }
@@ -357,7 +356,7 @@ export const addExpense = (exp) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/addExpense`,exp, {
+    const { data } = await axios.post(`${API_URL}/addExpense`, exp, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -365,9 +364,43 @@ export const addExpense = (exp) => async (dispatch) => {
 
     dispatch({ type: ADD_EXPENSE, payload: data });
     console.log("Add Expense route working :", data);
+  } catch (error) {
+    console.log(error);
   }
+};
 
-  catch (error) {
+// BILLING
+export const getBillingRecords = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getAllBills`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_BILLING_RECORDS, payload: data });
+    console.log("Billing Records route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// BILLING
+export const getBillDetails = (billId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getBillDetails/${billId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_BILL_DETAILS, payload: data });
+    console.log("Bill DETAILS route working :", data);
+  } catch (error) {
     console.log(error);
   }
 };

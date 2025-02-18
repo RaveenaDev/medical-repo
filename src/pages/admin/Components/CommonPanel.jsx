@@ -21,6 +21,7 @@ import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllDepartments,
+  getBillingRecords,
   getDoctors,
   getPatients,
   getRooms,
@@ -44,6 +45,7 @@ const CommonPanel = () => {
     dispatch(getStaffs());
     dispatch(getRooms());
     dispatch(getAllDepartments());
+    dispatch(getBillingRecords());
   }, [dispatch]);
 
   const admin = useSelector((store) => store.admin);
