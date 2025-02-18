@@ -172,7 +172,7 @@ const ReceptionPage = () => {
                                                     {truncateText(row.doctors[0].name,13)}
                                                 </TableCell>
                                                 <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{truncateText(row.role,14)}</TableCell>
-                                                <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{row.gender}</TableCell>
+                                                <TableCell align="left" sx={{border:'none',padding: '14px 14px'}}>{row.appointments[row.appointments.length - 1].branch}</TableCell>
                                                 <TableCell align="center" sx={{border:'none',padding: '14px 14px'}}>
                                                     <span
                                                         style={{

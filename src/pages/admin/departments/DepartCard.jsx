@@ -4,7 +4,6 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import styles from "./departments.module.scss";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import avi from "./DepartDetails/departDetails.module.scss";
 import { useNavigate } from "react-router-dom";
 
 const DepartCard = ({ department }) => {

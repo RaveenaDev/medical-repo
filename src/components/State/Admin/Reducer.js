@@ -1,5 +1,5 @@
 import {
-  ADD_DOCTORS,
+  ADD_DOCTORS, ADD_EXPENSE,
   ADD_ROOM,
   ADD_STAFFS,
   DELETE_ROOM,
@@ -143,6 +143,12 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         expenses: action.payload.expenses,
       };
+
+    case ADD_EXPENSE:
+      return{
+        ...state,
+        expenses: [...state.expenses,action.payload.expense]
+      }
 
     default:
       return state;

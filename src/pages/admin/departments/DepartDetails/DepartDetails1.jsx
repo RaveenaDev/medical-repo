@@ -46,6 +46,7 @@ const DepartDetails1 = (props) => {
     }, [dispatch,departmentId]);
 
     const department = useSelector((store) => store.admin.department)
+  console.log("DEP:",department)
 
   return (
     <>
@@ -89,7 +90,7 @@ const DepartDetails1 = (props) => {
                     src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
                     alt=""
                   />
-                  <p className={avi.name}>Dr. [Name of the Deparment Head]</p>
+                  <p className={avi.name}>{department?.departmentHead}</p>
                 </div>
 
                 <div className={avi.icons}>
@@ -145,7 +146,7 @@ const DepartDetails1 = (props) => {
                                 id="demo-simple-select-label"
                                 // sx={{ fontWeight: 'bold' }} // Makes the label text bold
                               >
-                                Total AdminDoctors:{" "}
+                                Total Doctors:{" "}
                                 <span
                                   style={{
                                     fontWeight: "bold",
@@ -155,14 +156,14 @@ const DepartDetails1 = (props) => {
                                     top: "1px", // Adjust this value to shift it further down
                                   }}
                                 >
-                                  03
+                                  {department?.totalDoctors.length}
                                 </span>
                               </InputLabel>
                               <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={age}
-                                label="Total AdminDoctors: 03"
+                                label="Total Doctors: 03"
                                 onChange={handleChange}
                                 IconComponent={KeyboardArrowDownIcon} // Use ArrowDownwardIcon as the dropdown icon
                                 sx={{
@@ -188,7 +189,7 @@ const DepartDetails1 = (props) => {
                                     top: "1px",
                                   }}
                                 >
-                                  04
+                                  {department?.totalNurses}
                                 </span>
                               </InputLabel>
                               <Select
@@ -211,33 +212,27 @@ const DepartDetails1 = (props) => {
                               </Select>
                             </FormControl>
                             <div className={avi.details}>
-                              <h3>Specialist AdminDoctors:</h3>
-                              <ul
-                                style={{
-                                  listStyleType: "disc",
-                                  paddingLeft: "10px",
-                                  color: "black",
-                                }}
-                              >
-                                <li
-                                  style={{ color: "black", listStyle: "none" }}
-                                >
-                                  <span style={{ color: "black" }}>• </span>
-                                  Dr. [Name] - Cardiothoracic Surgeon
-                                </li>
-                                <li
-                                  style={{ color: "black", listStyle: "none" }}
-                                >
-                                  <span style={{ color: "black" }}>• </span>
-                                  Dr. [Name] - Interventional Cardiologist
-                                </li>
-                                <li
-                                  style={{ color: "black", listStyle: "none" }}
-                                >
-                                  <span style={{ color: "black" }}>• </span>
-                                  Dr. [Name] - Electrophysiologist
-                                </li>
-                              </ul>
+                              <h3>Specialist Doctors:</h3>
+                              {
+                                department?.specialistDoctors.length > 0 ? department.specialistDoctors.map((doc,index) => (
+                                    <ul
+                                        key={index}
+                                        style={{
+                                          listStyleType: "disc",
+                                          paddingLeft: "10px",
+                                          color: "black",
+                                        }}
+                                    >
+                                      <li
+                                          style={{color: "black", listStyle: "none"}}
+                                      >
+                                        <span style={{color: "black"}}>• </span>
+                                        {doc}
+                                      </li>
+                                    </ul>
+                                )) :
+                                    <p style={{color:"black"}}>No specialist found.</p>
+                              }
                             </div>
                           </Stack>
                         </Box>
@@ -246,16 +241,16 @@ const DepartDetails1 = (props) => {
 
                     {/* Section 2 */}
                     <Grid
-                      xs={12}
-                      sm={6}
-                      sx={{ display: "flex", justifyContent: "center" }}
-                      className={avi.section2}
+                        xs={12}
+                        sm={6}
+                        sx={{display: "flex", justifyContent: "center"}}
+                        className={avi.section2}
                     >
                       <div
-                        style={{
-                          width: "100%",
-                          boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                          padding: "20px",
+                          style={{
+                            width: "100%",
+                            boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                            padding: "20px",
                           borderRadius: "8px",
                           border: "1px solid rgba(116, 116, 116, 0.3)",
                         }}
@@ -358,130 +353,89 @@ const DepartDetails1 = (props) => {
                       <div className={avi.box3} style={{ padding: "14px" }}>
                         <div style={{ marginBottom: "14px" }}>
                           <h4>Available services</h4>
-                          <ul
-                            style={{
-                              listStyleType: "none",
-                              paddingLeft: "10px",
-                              color: "#727272",
-                            }}
-                          >
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Electrocardiogram (ECG)
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Angiography
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Angioplasty
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Cardiac Catheterization
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Echocardiography (Echo)
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Heart Valve Surgery
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Coronary Artery Bypass Grafting (CABG)
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Pacemaker Implantation
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Cardiac Rehabilitation
-                            </li>
-                          </ul>
+                          {
+                            department?.availableServices.map((serv) => (
+                                <ul
+                                    style={{
+                                      listStyleType: "none",
+                                      paddingLeft: "10px",
+                                      color: "#727272",
+                                    }}
+                                >
+                                  <li>
+                                    <span style={{color: "#727272"}}>• </span>
+                                    {serv}
+                                  </li>
+                                </ul>
+                            ))
+                          }
                         </div>
 
                         <div>
                           <h4>Specialized Procedures</h4>
-                          <ul
-                            style={{
-                              listStyleType: "none",
-                              paddingLeft: "10px",
-                              color: "#727272",
-                            }}
-                          >
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              TAVR (Transcatheter Aortic Valve Replacement)
-                            </li>
-                          </ul>
+                          {
+                            department?.specializedProcedures.map((spec) => (
+                                <ul
+                                    style={{
+                                      listStyleType: "none",
+                                      paddingLeft: "10px",
+                                      color: "#727272",
+                                    }}
+                                >
+                                  <li>
+                                    <span style={{color: "#727272"}}>• </span>
+                                    {spec}
+                                  </li>
+                                </ul>
+                            ))
+                          }
                         </div>
                       </div>
                     </Grid>
 
                     {/* Second Grid Item */}
                     <Grid xs={12} sm={6}>
-                      <div className={avi.box4} style={{ padding: "14px" }}>
-                        <div style={{ marginBottom: "14px" }}>
+                      <div className={avi.box4} style={{padding: "14px"}}>
+                        <div style={{marginBottom: "14px"}}>
                           <h4>Critical Equipment</h4>
-                          <ul
-                            style={{
-                              listStyleType: "none",
-                              paddingLeft: "10px",
-                              color: "#727272",
-                            }}
-                          >
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Cardiac Catheterization Lab: Operational
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              ECG Machines: 5 Available
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Heart-Lung Machines: 2 Available
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Pacemakers: X Available
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Defibrillators: 3 Available
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              Stress Test Machines: 2 Available
-                            </li>
-                          </ul>
+                          {
+                            department?.criticalEquipment.map((cric) => (
+                                <ul
+                                    style={{
+                                      listStyleType: "none",
+                                      paddingLeft: "10px",
+                                      color: "#727272",
+                                    }}
+                                >
+                                  <li>
+                                    <span style={{color: "#727272"}}>• </span>
+                                    {cric}
+                                  </li>
+                                </ul>
+                            ))
+                          }
                         </div>
 
                         <div>
                           <h4>Equipment Maintenance</h4>
-                          <ul
-                            style={{
-                              listStyleType: "none",
-                              paddingLeft: "10px",
-                              color: "#727272",
-                            }}
-                          >
-                            <li style={{ display: "flex" }}>
-                              <span style={{ color: "#727272" }}>• </span>
-                              <div style={{ marginLeft: "4px" }}>
-                                Cath Lab 2: Under maintenance (Expected to be
-                                operational by [Date])
-                              </div>
-                            </li>
-                            <li>
-                              <span style={{ color: "#727272" }}>• </span>
-                              ECG Machine 4: Malfunction reported
-                            </li>
-                          </ul>
+                          {
+                            department?.equipmentMaintenance.map((eq) => (
+                                <ul
+                                    style={{
+                                      listStyleType: "none",
+                                      paddingLeft: "10px",
+                                      color: "#727272",
+                                    }}
+                                >
+                                  <li style={{display: "flex"}}>
+                                    <span style={{color: "#727272"}}>• </span>
+                                    <div style={{marginLeft: "4px"}}>
+                                      {eq}
+                                    </div>
+                                  </li>
+                                </ul>
+                            ))
+                          }
                         </div>
                       </div>
                     </Grid>
@@ -491,7 +445,7 @@ const DepartDetails1 = (props) => {
             </Box>
           </>
         ) : (
-          <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
+            <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>
         )}
       </div>
     </>

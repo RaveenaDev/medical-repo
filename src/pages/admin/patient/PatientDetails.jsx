@@ -13,11 +13,18 @@ import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
 
 const PatientDetails = (props) => {
-  const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
   const [medicalHistory, setMedicalHistory] = useState([]);
   const [currentMedications, setCurrentMedications] = useState([]);
 
-  const [tableIndex, setTableIndex] = useState(null);
+    const location = useLocation();
+    const patient = location.state?.patient;
+
+    if (!patient) {
+        return <p>No patient data found!</p>;
+    }
+
+    console.log("Patient Details",patient)
+
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
@@ -27,16 +34,8 @@ const PatientDetails = (props) => {
     const fetchData = async () => {
       // backend response structure
       const response = {
-        medicalHistory: [
-          "Type 2 diabetes diagnosed 5 years ago",
-          "Hypertension diagnosed 3 years ago",
-          "Family history of heart disease (father)",
-        ],
-        currentMedications: [
-          "Metformin (for diabetes)",
-          "Lisinopril (for hypertension)",
-          "Aspirin (for heart health)",
-        ],
+        medicalHistory: patient.medicalHistory,
+          currentMedications: patient.currentMedication
       };
 
       // Simulating an API call delay
@@ -53,7 +52,7 @@ const PatientDetails = (props) => {
       <>
         <div className={rav.receptionist}>
               <>
-                <PatientHeader />
+                <PatientHeader patient={patient}/>
                 <Grid container spacing={2}>
                   <div
                       style={{
@@ -107,10 +106,10 @@ const PatientDetails = (props) => {
                               fontWeight: "bold",
                             }}
                         >
-                          Jasmine Kaur
+                            {patient.name}
                         </h4>
                         <p style={{ fontSize: "14px", color: "#555" }}>
-                          Jaisminekaur@gmail.com
+                            {patient.email}
                         </p>
 
                         <div
@@ -174,7 +173,7 @@ const PatientDetails = (props) => {
                           boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                         }}
                     >
-                      <PersonalInfo />
+                      <PersonalInfo patient={patient}/>
                     </div>
 
                     {/* Box 3 - Medical Info */}

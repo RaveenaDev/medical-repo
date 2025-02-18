@@ -143,8 +143,8 @@ const PatientPanel = (props) => {
   // console.log("PAT:",totalPatients)
 
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/admin/reception/patients/PatientDetails`);
+  const handleClick = (patient) => {
+    navigate(`/admin/reception/patients/PatientDetails`,{state: {patient}});
   };
 
   const truncateText = (text, maxLength) => {
@@ -258,7 +258,7 @@ const PatientPanel = (props) => {
                         <Typography
                             variant="body1"
                             sx={{ fontWeight: "bold", cursor: "pointer" }}
-                            onClick={handleClick}
+                            onClick={() => handleClick(patient)}
                         >
                           {patient.name}
                         </Typography>
@@ -267,8 +267,8 @@ const PatientPanel = (props) => {
                         </Typography>
                       </TableCell>
                       <TableCell>{patient.phone}</TableCell>
-                      <TableCell>{patient.type}</TableCell>
-                      <TableCell>{patient.branch}</TableCell>
+                      <TableCell>{patient.appointments[patient.appointments.length - 1].typeVisit}</TableCell>
+                      <TableCell>{patient.appointments[patient.appointments.length - 1].branch}</TableCell>
                       <TableCell>{truncateText(patient.registrationDate,13)}</TableCell>
                       <TableCell>
                         <Chip

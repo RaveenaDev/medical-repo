@@ -22,46 +22,27 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import addAppointments from "../../../assets/plus.svg";
 import {useDispatch, useSelector} from "react-redux";
-import { getExpenses} from "../../../components/State/Admin/Action.js";
+import {addExpense, getExpenses} from "../../../components/State/Admin/Action.js";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Avatar from "@mui/material/Avatar";
+import dayjs from "dayjs";
 
 const Expenses = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const [age, setAge] = React.useState("");
+    const [date, setDate] = useState(dayjs());
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  const rows = [
-    {
-      name: "Jasmin Kaur",
-      appointmentWith: "Miss Gitanjali",
-      typeVisit: "Walk-in",
-      branch: "Therapy",
-      tokenNumber: 2,
-    },
-    {
-      name: "Jasmin Kaur",
-      appointmentWith: "Miss Gitanjali",
-      typeVisit: "Walk-in",
-      branch: "Therapy",
-      tokenNumber: 2,
-    },
-    {
-      name: "Jasmin Kaur",
-      appointmentWith: "Miss Gitanjali",
-      typeVisit: "Walk-in",
-      branch: "Therapy",
-      tokenNumber: 2,
-    },
-  ];
+    const [expenseData, setExpenseData] = useState({
+        expenseType: "",
+        amount: "",
+        paidTo: "",
+        details: "",
+        date: dayjs().format("YYYY-MM-DD")
+    })
 
   const truncateText = (text, maxLength) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -71,14 +52,11 @@ const Expenses = (props) => {
     const [selectedExpense, setSelectedExpense] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [editedExpense, setEditedExpense] = useState({
-        staff_id: "",
-        staffId: "",
-        profile: "",
-        name: "",
-        phone: "",
-        department: "",
-        designation: "",
-        status: "",
+        expenseType: "",
+        amount: "",
+        paidTo: "",
+        details: "",
+        date: "",
     });
 
     const handleMenuOpen = (event, row) => {
@@ -140,6 +118,24 @@ const Expenses = (props) => {
 
     console.log("EXP ",expenses)
 
+    const handleClick = () => {
+        console.log("Expense data: ",expenseData)
+        dispatch(addExpense(expenseData))
+    }
+
+    const handleChange = (e) => {
+        setExpenseData({ ...expenseData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleDateChange = (newDate) => {
+        setExpenseData({
+            ...expenseData,
+            date: dayjs(newDate).format("YYYY-MM-DD")
+        })
+    }
+
   return (
     <>
       <CommonPanel />
@@ -161,21 +157,22 @@ const Expenses = (props) => {
           </div>
           <FormControl sx={{ my: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-              Salaries
+              Expense Type
             </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
-              value={age}
-              label="Salaries"
+              name="expenseType"
+              value={expenseData.expenseType}
+              label="Expense Type"
               onChange={handleChange}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <MenuItem value="salary">Salary</MenuItem>
+              <MenuItem value="rent">Rent</MenuItem>
+              <MenuItem value="utilities">Utilities</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -193,6 +190,9 @@ const Expenses = (props) => {
             id="outlined-basic"
             label="Enter Amount"
             variant="outlined"
+            name="amount"
+            value={expenseData.amount}
+            onChange={handleChange}
           />
         </div>
         <div
@@ -206,7 +206,9 @@ const Expenses = (props) => {
           <div style={{ paddingLeft: "0.2rem" }}>
             <p style={{ color: "#25307F" }}>Paid To</p>
           </div>
-          <TextField id="outlined-basic" label="Paid To" variant="outlined" />
+          <TextField id="outlined-basic" label="Paid To" variant="outlined"
+                     name="paidTo"
+                     value={expenseData.paidTo} onChange={handleChange}/>
         </div>
         <div
           style={{
@@ -219,7 +221,9 @@ const Expenses = (props) => {
           <div style={{ paddingLeft: "0.2rem" }}>
             <p style={{ color: "#25307F" }}>Details</p>
           </div>
-          <TextField id="outlined-basic" label="Details" variant="outlined" />
+          <TextField id="outlined-basic" label="Details" variant="outlined"
+                     name="details"
+                     value={expenseData.details} onChange={handleChange}/>
         </div>
         <div
           style={{
@@ -233,12 +237,13 @@ const Expenses = (props) => {
           </div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
-              <DatePicker />
+              <DatePicker name="date" value={date} onChange={handleDateChange}/>
             </DemoContainer>
           </LocalizationProvider>
         </div>
         <Button
           variant="contained"
+          onClick={handleClick}
           sx={{
             fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
             color: "#ffffff",

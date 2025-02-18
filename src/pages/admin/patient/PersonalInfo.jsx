@@ -1,18 +1,18 @@
 import React from "react";
 
-const PersonalInfo = () => {
+const PersonalInfo = ({patient}) => {
   const tables = [
     {
       labels: ["Gender", "Birthday", "Phone Number"],
-      values: ["Female", "Feb 24th, 1997", "+91 79327728"],
+      values: [patient.gender, patient.birthday, patient.phone],
     },
     {
       labels: ["Address", "Case ID", "Assessed by"],
-      values: ["Data A", "Data B", "Dr. Arunita"],
+      values: [patient.address, patient.appointments[patient.appointments.length - 1].caseId, patient.appointments[patient.appointments.length - 1].doctorName],
     },
     {
       labels: ["Member status", "Registered Date"],
-      values: ["Active Member", "June 24th, 2024"],
+      values: [patient.status, patient.registrationDate],
     },
   ];
 
@@ -54,6 +54,7 @@ const PersonalInfo = () => {
                     fontSize: "15px",
                     fontWeight: "700",
                     color: "#1A1A1A",
+                    width: "7.8rem"
                   }}
                 >
                   {section.values[i]}

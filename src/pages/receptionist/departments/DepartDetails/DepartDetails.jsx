@@ -146,7 +146,7 @@ const DepartDetails = (props) => {
                               id="demo-simple-select-label"
                               // sx={{ fontWeight: 'bold' }} // Makes the label text bold
                             >
-                              Total AdminDoctors:{" "}
+                              Total Doctors:{" "}
                               <span
                                 style={{
                                   fontWeight: "bold",
@@ -163,7 +163,7 @@ const DepartDetails = (props) => {
                               labelId="demo-simple-select-label"
                               id="demo-simple-select"
                               value={age}
-                              label="Total AdminDoctors: 03"
+                              label="Total Doctors: 03"
                               onChange={handleChange}
                               IconComponent={KeyboardArrowDownIcon} // Use ArrowDownwardIcon as the dropdown icon
                               sx={{
@@ -212,7 +212,7 @@ const DepartDetails = (props) => {
                             </Select>
                           </FormControl>
                           <div className={avi.details}>
-                            <h3>Specialist AdminDoctors:</h3>
+                            <h3>Specialist Doctors:</h3>
                             <ul
                               style={{
                                 listStyleType: "disc",

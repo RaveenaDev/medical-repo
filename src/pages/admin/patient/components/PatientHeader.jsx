@@ -4,7 +4,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import PaymentDetailsModal from "./Modal/PaymentDetailsModal";
 
-const PatientHeader = ({ showEditPatients = true }) => {
+const PatientHeader = ({ showEditPatients = true,patient }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -56,7 +56,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
           </g>
         </svg>
 
-        <p>Jasmine Kaur</p>
+        <p>{patient.name}</p>
         <svg
           width="24"
           height="24"

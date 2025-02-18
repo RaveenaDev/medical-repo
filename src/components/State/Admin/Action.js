@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
-  ADD_DOCTORS,
+  ADD_DOCTORS, ADD_EXPENSE,
   ADD_ROOM,
   ADD_STAFFS,
   DELETE_ROOM,
@@ -349,6 +349,25 @@ export const getExpenses = () => async (dispatch) => {
     dispatch({ type: GET_EXPENSES, payload: data });
     console.log("Expenses route working :", data);
   } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addExpense = (exp) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addExpense`,exp, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: ADD_EXPENSE, payload: data });
+    console.log("Add Expense route working :", data);
+  }
+
+  catch (error) {
     console.log(error);
   }
 };
