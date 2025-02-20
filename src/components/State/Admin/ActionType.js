@@ -2,6 +2,7 @@ export const GET_EARNINGS = "GET_EARNINGS";
 
 export const GET_DOCTORS = "GET_DOCTORS";
 export const ADD_DOCTORS = "ADD_DOCTORS";
+export const DELETE_DOCTORS = "DELETE_DOCTORS";
 
 export const GET_ALL_DEPARTMENTS = "GET_ALL_DEPARTMENTS";
 

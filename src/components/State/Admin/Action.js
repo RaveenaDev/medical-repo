@@ -4,7 +4,9 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_ROOM,
-  ADD_STAFFS, DELETE_EXPENSE,
+  ADD_STAFFS,
+  DELETE_DOCTORS,
+  DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
@@ -19,7 +21,8 @@ import {
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
-  GET_STAFFS, UPDATE_EXPENSE,
+  GET_STAFFS,
+  UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
 } from "./ActionType.js";
@@ -74,7 +77,6 @@ export const addDoctor = (doctorData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_DOCTORS, payload: response.data });
-    dispatch(getDoctors());
 
     console.log("Doctor successfully added:", response.data);
   } catch (error) {
@@ -82,6 +84,21 @@ export const addDoctor = (doctorData) => async (dispatch) => {
       "Error adding doctor:",
       error.response?.data || error.message
     );
+  }
+};
+
+export const deleteDoctor = (doctorId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.delete(`${API_URL}/${doctorId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: DELETE_DOCTORS, payload: data });
+    console.log("Delete Doctor route working :", data);
+  } catch (error) {
+    console.error("Error deleting Doctor:", error);
   }
 };
 
@@ -432,8 +449,7 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
     });
     dispatch({ type: DELETE_EXPENSE, payload: data });
     console.log("Delete Expense route working :", data);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error deleting expense:", error);
   }
 };

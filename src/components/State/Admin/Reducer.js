@@ -2,7 +2,9 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_ROOM,
-  ADD_STAFFS, DELETE_EXPENSE,
+  ADD_STAFFS,
+  DELETE_DOCTORS,
+  DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
@@ -16,7 +18,8 @@ import {
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
-  GET_STAFFS, UPDATE_EXPENSE,
+  GET_STAFFS,
+  UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
 } from "./ActionType.js";
@@ -57,6 +60,13 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         doctors: [...state.doctors, action.payload.doctor],
+      };
+    case DELETE_DOCTORS:
+      return {
+        ...state,
+        doctors: state.doctors.filter(
+          (doctor) => doctor._id !== action.payload.resource._id
+        ),
       };
 
     case GET_ALL_DEPARTMENTS:
@@ -164,20 +174,22 @@ export const adminReducer = (state = inititalState, action) => {
       };
 
     case UPDATE_EXPENSE:
-      return{
+      return {
         ...state,
         expenses: state.expenses.map((expense) =>
-            expense._id === action.payload.resource._id ? action.payload.resource : expense
-        )
-      }
+          expense._id === action.payload.resource._id
+            ? action.payload.resource
+            : expense
+        ),
+      };
 
     case DELETE_EXPENSE:
-      return{
+      return {
         ...state,
-        expenses: state.expenses.filter((expense) =>
-          expense._id !== action.payload.resource._id
-        )
-      }
+        expenses: state.expenses.filter(
+          (expense) => expense._id !== action.payload.resource._id
+        ),
+      };
     case GET_BILLING_RECORDS:
       return {
         ...state,

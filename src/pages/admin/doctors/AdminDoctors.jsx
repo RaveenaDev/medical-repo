@@ -9,7 +9,10 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  InputLabel,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
   MenuItem,
   Paper,
   Table,
@@ -31,10 +34,16 @@ import Avatar from "@mui/material/Avatar";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   addDoctor,
+  deleteDoctor,
   getDoctors,
 } from "../../../components/State/Admin/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select1 from "@mui/material/Select";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import InputLabel from "@mui/material/InputLabel";
+
 const AdminDoctors = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
@@ -43,7 +52,6 @@ const AdminDoctors = (props) => {
   const dispatch = useDispatch();
 
   const doctors = useSelector((state) => state.admin.doctors);
-  const staffs = useSelector((state) => state.admin.staffs);
   const departments = useSelector((state) => state.admin.departments);
   const noOfDoctors = doctors.length;
   const [branches, setBranches] = useState([
@@ -77,14 +85,54 @@ const AdminDoctors = (props) => {
     setAddDialogOpen(false);
   };
 
-  console.log(doctors);
-  console.log("STAFFS", staffs);
-
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
-  console.log("Departments array:", departments);
-  console.log("First department object:", departments[0]);
+
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  // Handle Edit Action
+  const handleEdit = () => {
+    if (selectedRoom) {
+      setEditedRoom({
+        roomID: selectedRoom.roomID,
+        name: selectedRoom.name,
+        doctorId: selectedRoom.assignedDoctor._id,
+        status: selectedRoom.status,
+        originalRoomID: selectedRoom._id,
+      });
+      setEditDialogOpen(true);
+      console.log("Edit room", editedRoom);
+    }
+    handleMenuClose();
+  }; // Handle Save Edited Room
+  const handleSaveEditedRoom = () => {
+    dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
+    setEditDialogOpen(false);
+    console.log("Patient Edited Successfully");
+  };
+
+  const handleMenuOpen = (event, doctor) => {
+    event.stopPropagation(); // Prevents unwanted event bubbling
+    setAnchorEl(event.currentTarget);
+    setSelectedDoctor(doctor); // Correct reference
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedDoctor(null); // Fix: Clear selected doctor
+  };
+
+  // Handle Delete Action
+  const handleDelete = () => {
+    dispatch(deleteDoctor(selectedDoctor._id));
+    console.log("Doctor Deleted"); // Dispatch delete action    console.log("Patient Deleted");
+    handleMenuClose();
+  };
+
+  // Handle Edit Dialog Close
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+  };
 
   return (
     <>
@@ -302,7 +350,7 @@ const AdminDoctors = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {doctors?.map((patient, index) => (
+            {doctors?.map((doctor, index) => (
               <TableRow
                 key={index}
                 sx={{
@@ -319,51 +367,51 @@ const AdminDoctors = (props) => {
               >
                 <TableCell>
                   <Avatar
-                    src={patient?.profile}
+                    src={doctor?.profile}
                     alt="Profile"
                     sx={{ width: 40, height: 40 }} // Adjust size
                   />
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {truncateText(patient?._id, 13)}
+                    {truncateText(doctor?._id, 13)}
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1">{patient?.name}</Typography>
+                  <Typography variant="body1">{doctor?.name}</Typography>
                 </TableCell>
-                <TableCell>{patient?.phone}</TableCell>
-                <TableCell>{patient?.specialization}</TableCell>
+                <TableCell>{doctor?.phone}</TableCell>
+                <TableCell>{doctor?.specialization}</TableCell>
                 <TableCell align="center">
                   <Chip
-                    label={patient?.status}
-                    color={patient?.status === "Active" ? "success" : "default"}
+                    label={doctor?.status}
+                    color={doctor?.status === "Active" ? "success" : "default"}
                     size="small"
                     sx={{
                       bgcolor:
-                        patient?.status === "Emergency Room"
+                        doctor?.status === "Emergency Room"
                           ? "#d4edda"
-                          : patient?.status === "On Leave"
+                          : doctor?.status === "On Leave"
                           ? "#f8d7da"
-                          : patient?.status === "Idle"
+                          : doctor?.status === "Idle"
                           ? "#ffffff"
                           : undefined,
                       color:
-                        patient?.status === "Emergency Room"
+                        doctor?.status === "Emergency Room"
                           ? "#155724"
-                          : patient?.status === "On Leave"
+                          : doctor?.status === "On Leave"
                           ? "#721c24"
-                          : patient?.status === "Idle"
+                          : doctor?.status === "Idle"
                           ? "#000000"
                           : undefined,
 
-                      width: "9rem",
+                      width: "8rem",
                       border:
-                        patient?.status === "Emergency Room"
+                        doctor?.status === "Emergency Room"
                           ? "1px solid green"
-                          : patient?.status === "On Leave"
+                          : doctor?.status === "On Leave"
                           ? "1px solid red"
-                          : patient?.status === "Idle"
+                          : doctor?.status === "Idle"
                           ? "1px solid black"
                           : undefined,
 
@@ -390,11 +438,135 @@ const AdminDoctors = (props) => {
                     View Profile
                   </Button>
                 </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    onClick={(event) => handleMenuOpen(event, doctor)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      {/* Actions Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        PaperProps={{
+          elevation: 2,
+          sx: { padding: 1 },
+        }}
+      >
+        <MenuItem onClick={handleEdit}>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" color="error" />
+          </ListItemIcon>
+          <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
+
+      {/* Edit Room Dialog */}
+      {/* <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+        <DialogTitle>Edit Room</DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: "100%" }}>
+            <Grid container spacing={2}>
+              <Grid xs={3}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Room ID"
+                  name="roomID"
+                  value={editedRoom.roomID}
+                  onChange={(e) =>
+                    setEditedRoom({ ...editedRoom, roomID: e.target.value })
+                  }
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid xs={3}>
+                <TextField
+                  margin="dense"
+                  label="Room Name"
+                  name="name"
+                  value={editedRoom.name}
+                  onChange={(e) =>
+                    setEditedRoom({ ...editedRoom, name: e.target.value })
+                  }
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid xs={3}>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel id="status-select-label">Status</InputLabel>
+                  <Select
+                    labelId="status-select-label"
+                    id="status-select"
+                    name="status"
+                    value={editedRoom.status}
+                    onChange={(e) =>
+                      setEditedRoom({ ...editedRoom, status: e.target.value })
+                    }
+                    label="Status"
+                    variant="outlined"
+                  >
+                    <MenuItem value="Available">Available</MenuItem>
+                    <MenuItem value="Occupied">Occupied</MenuItem>
+                    <MenuItem value="Under Maintenance">
+                      Under Maintenance
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid xs={3}>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel id="doctor-select-label">
+                    Doctor Assigned
+                  </InputLabel>
+                  <Select
+                    labelId="doctor-select-label"
+                    id="doctor-select"
+                    name="doctorId"
+                    value={editedRoom.doctorId}
+                    onChange={(e) =>
+                      setEditedRoom({ ...editedRoom, doctorId: e.target.value })
+                    }
+                    label="Doctor Assigned"
+                    variant="outlined"
+                  >
+                    {doctors?.map((doctor) => (
+                      <MenuItem key={doctor._id} value={doctor._id}>
+                        {doctor.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleEditDialogClose}>Cancel</Button>
+          <Button onClick={handleSaveEditedRoom} variant="contained">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog> */}
     </>
   );
 };
