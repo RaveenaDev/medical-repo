@@ -4,7 +4,9 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_ROOM, ADD_SERVICE,
-  ADD_STAFFS, DELETE_EXPENSE,
+  ADD_STAFFS,
+  DELETE_DOCTORS,
+  DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
@@ -19,7 +21,9 @@ import {
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS, GET_SERVICES,
-  GET_STAFFS, UPDATE_EXPENSE,
+  GET_STAFFS,
+  UPDATE_DOCTORS,
+  UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
 } from "./ActionType.js";
@@ -74,7 +78,6 @@ export const addDoctor = (doctorData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_DOCTORS, payload: response.data });
-    dispatch(getDoctors());
 
     console.log("Doctor successfully added:", response.data);
   } catch (error) {
@@ -82,6 +85,37 @@ export const addDoctor = (doctorData) => async (dispatch) => {
       "Error adding doctor:",
       error.response?.data || error.message
     );
+  }
+};
+// Action to update a Doctor
+export const updateDoctor = (doctorId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Editng room id: ", doctorId);
+    const { data } = await axios.put(`${API_URL}/${doctorId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: UPDATE_DOCTORS, payload: data });
+    console.log("doctor EDIT route working :", data);
+  } catch (error) {
+    console.error("Error updating doctor:", error);
+  }
+};
+
+export const deleteDoctor = (doctorId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.delete(`${API_URL}/${doctorId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: DELETE_DOCTORS, payload: data });
+    console.log("Delete Doctor route working :", data);
+  } catch (error) {
+    console.error("Error deleting Doctor:", error);
   }
 };
 
@@ -466,8 +500,7 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
     });
     dispatch({ type: DELETE_EXPENSE, payload: data });
     console.log("Delete Expense route working :", data);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error deleting expense:", error);
   }
 };

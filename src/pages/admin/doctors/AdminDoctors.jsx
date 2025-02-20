@@ -9,7 +9,10 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  InputLabel,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
   MenuItem,
   Paper,
   Table,
@@ -31,10 +34,17 @@ import Avatar from "@mui/material/Avatar";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   addDoctor,
+  deleteDoctor,
   getDoctors,
+  updateDoctor,
 } from "../../../components/State/Admin/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select1 from "@mui/material/Select";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import InputLabel from "@mui/material/InputLabel";
+
 const AdminDoctors = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
@@ -43,7 +53,6 @@ const AdminDoctors = (props) => {
   const dispatch = useDispatch();
 
   const doctors = useSelector((state) => state.admin.doctors);
-  const staffs = useSelector((state) => state.admin.staffs);
   const departments = useSelector((state) => state.admin.departments);
   const noOfDoctors = doctors.length;
   const [branches, setBranches] = useState([
@@ -53,7 +62,9 @@ const AdminDoctors = (props) => {
     "Dermatology",
   ]);
 
-  const hospitalName = staffs[0].hospital.name;
+  const hospitalName = useSelector(
+    (state) => state.authentication.hospitalName
+  );
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newDoctor, setNewDoctor] = useState({
@@ -75,16 +86,83 @@ const AdminDoctors = (props) => {
     setAddDialogOpen(false);
   };
 
-  console.log(doctors);
-  console.log(Array.isArray(departments), departments);
-
-  console.log("STAFFS DETAILS", staffs[0].hospital.name);
-
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
-  console.log("Departments array:", departments);
-  console.log("First department object:", departments[0]);
+
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setNewStaff({ ...newStaff, profile: imageUrl });
+    } else {
+      // Handle the case when no file is selected
+      setNewStaff({ ...newStaff, profile: "" });
+    }
+  };
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editedDoctor, setEditedDoctor] = useState({
+    profile: "s",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    specialization: "",
+    status: "",
+    department: "",
+  });
+  // Handle Edit Action
+  const handleEdit = () => {
+    if (selectedDoctor) {
+      setEditedDoctor({
+        profile: selectedDoctor.profile,
+        name: selectedDoctor.name,
+        email: selectedDoctor.email,
+        password: selectedDoctor.password,
+        phone: selectedDoctor.phone,
+        specialization: selectedDoctor.specialization,
+        status: selectedDoctor.status,
+        department: selectedDoctor.department,
+        _id: selectedDoctor._id,
+      });
+      setEditDialogOpen(true);
+      console.log("Edit room", editedDoctor);
+    }
+    handleMenuClose();
+  };
+
+  // Handle Save Edited Doctor
+  const handleSaveEditedDoctor = () => {
+    dispatch(updateDoctor(editedDoctor._id, editedDoctor));
+    setEditDialogOpen(false);
+    console.log("Doctor Edited Successfully");
+  };
+
+  // Handle Edit Dialog Close
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+  };
+
+  const handleMenuOpen = (event, doctor) => {
+    event.stopPropagation(); // Prevents unwanted event bubbling
+    setAnchorEl(event.currentTarget);
+    setSelectedDoctor(doctor); // Correct reference
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedDoctor(null); // Fix: Clear selected doctor
+  };
+
+  // Handle Delete Action
+  const handleDelete = () => {
+    dispatch(deleteDoctor(selectedDoctor._id));
+    console.log("Doctor Deleted"); // Dispatch delete action    console.log("Patient Deleted");
+    handleMenuClose();
+  };
+
+  console.log("Doctors", doctors);
 
   return (
     <>
@@ -209,7 +287,7 @@ const AdminDoctors = (props) => {
           />
 
           <TextField
-            select
+            margin="dense"
             label="Specialization"
             name="specialization"
             value={newDoctor.specialization}
@@ -217,12 +295,9 @@ const AdminDoctors = (props) => {
               setNewDoctor({ ...newDoctor, specialization: e.target.value })
             }
             fullWidth
-            margin="dense"
-          >
-            <MenuItem value="General Checkup">General Checkup</MenuItem>
-            <MenuItem value="Follow Up">Follow Up</MenuItem>
-            <MenuItem value="Consultation">Consultation</MenuItem>
-          </TextField>
+            type="text"
+            variant="outlined"
+          />
           <FormControl fullWidth margin="dense">
             <InputLabel id="doctor-select-label">Department</InputLabel>
             <Select1
@@ -302,7 +377,7 @@ const AdminDoctors = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {doctors?.map((patient, index) => (
+            {doctors?.map((doctor, index) => (
               <TableRow
                 key={index}
                 sx={{
@@ -319,51 +394,51 @@ const AdminDoctors = (props) => {
               >
                 <TableCell>
                   <Avatar
-                    src={patient?.profile}
+                    src={doctor?.profile}
                     alt="Profile"
                     sx={{ width: 40, height: 40 }} // Adjust size
                   />
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {truncateText(patient?._id, 13)}
+                    {truncateText(doctor?._id, 13)}
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1">{patient?.name}</Typography>
+                  <Typography variant="body1">{doctor?.name}</Typography>
                 </TableCell>
-                <TableCell>{patient?.phone}</TableCell>
-                <TableCell>{patient?.specialization}</TableCell>
+                <TableCell>{doctor?.phone}</TableCell>
+                <TableCell>{doctor?.specialization}</TableCell>
                 <TableCell align="center">
                   <Chip
-                    label={patient?.status}
-                    color={patient?.status === "Active" ? "success" : "default"}
+                    label={doctor?.status}
+                    color={doctor?.status === "Active" ? "success" : "default"}
                     size="small"
                     sx={{
                       bgcolor:
-                        patient?.status === "Emergency Room"
+                        doctor?.status === "Emergency Room"
                           ? "#d4edda"
-                          : patient?.status === "On Leave"
+                          : doctor?.status === "On Leave"
                           ? "#f8d7da"
-                          : patient?.status === "Idle"
+                          : doctor?.status === "Idle"
                           ? "#ffffff"
                           : undefined,
                       color:
-                        patient?.status === "Emergency Room"
+                        doctor?.status === "Emergency Room"
                           ? "#155724"
-                          : patient?.status === "On Leave"
+                          : doctor?.status === "On Leave"
                           ? "#721c24"
-                          : patient?.status === "Idle"
+                          : doctor?.status === "Idle"
                           ? "#000000"
                           : undefined,
 
-                      width: "9rem",
+                      width: "8rem",
                       border:
-                        patient?.status === "Emergency Room"
+                        doctor?.status === "Emergency Room"
                           ? "1px solid green"
-                          : patient?.status === "On Leave"
+                          : doctor?.status === "On Leave"
                           ? "1px solid red"
-                          : patient?.status === "Idle"
+                          : doctor?.status === "Idle"
                           ? "1px solid black"
                           : undefined,
 
@@ -390,11 +465,173 @@ const AdminDoctors = (props) => {
                     View Profile
                   </Button>
                 </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    onClick={(event) => handleMenuOpen(event, doctor)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      {/* Actions Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        PaperProps={{
+          elevation: 2,
+          sx: { padding: 1 },
+        }}
+      >
+        <MenuItem onClick={handleEdit}>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" color="error" />
+          </ListItemIcon>
+          <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
+
+      {/* Edit Doctor Dialog */}
+      <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+        <DialogTitle>Edit Doctor</DialogTitle>
+        <DialogContent>
+          {/* Profile Icon Input */}
+          <input
+            type="file"
+            accept="image/*"
+            id="file-input"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+          <label htmlFor="file-input">
+            <Avatar
+              src={editedDoctor.profile}
+              alt="Profile"
+              sx={{ width: 60, height: 60, cursor: "pointer", marginBottom: 2 }}
+            />
+          </label>
+
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Email"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={editedDoctor.email}
+            onChange={(e) =>
+              setEditedDoctor({ ...editedDoctor, email: e.target.value })
+            }
+          />
+
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="outlined"
+            value={editedDoctor.password}
+            onChange={(e) =>
+              setEditedDoctor({ ...editedDoctor, password: e.target.value })
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={editedDoctor.name}
+            onChange={(e) =>
+              setEditedDoctor({ ...editedDoctor, name: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Phone"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={editedDoctor.phone}
+            onChange={(e) =>
+              setEditedDoctor({ ...editedDoctor, phone: e.target.value })
+            }
+          />
+
+          <TextField
+            type="text"
+            variant="outlined"
+            label="Specialization"
+            name="specialization"
+            value={editedDoctor.specialization}
+            onChange={(e) =>
+              setEditedDoctor({
+                ...editedDoctor,
+                specialization: e.target.value,
+              })
+            }
+            fullWidth
+            margin="dense"
+          ></TextField>
+          {/* <FormControl fullWidth margin="dense">
+            <InputLabel id="doctor-select-label">Department</InputLabel>
+            <Select1
+              labelId="doctor-select-label"
+              id="doctor-select"
+              name="Departments"
+              value={editedDoctor.department}
+              onChange={(e) =>
+                setEditedDoctor({ ...editedDoctor, department: e.target.value })
+              }
+              label="Department"
+              variant="outlined"
+            >
+              {departments?.map((department) => (
+                <MenuItem
+                  key={department.departmentId}
+                  value={department.departmentName}
+                >
+                  {department.departmentName}
+                </MenuItem>
+              ))}
+            </Select1>
+          </FormControl> */}
+
+          <TextField
+            select
+            label="Status"
+            name="status"
+            value={editedDoctor.status}
+            onChange={(e) =>
+              setEditedDoctor({ ...editedDoctor, status: e.target.value })
+            }
+            fullWidth
+            margin="dense"
+          >
+            <MenuItem value="Idle">Idle</MenuItem>
+            <MenuItem value="On Leave">On Leave</MenuItem>
+            <MenuItem value="Emergency Room">Emergency Room</MenuItem>
+            <MenuItem value="In Meeting">In Meeting</MenuItem>
+            <MenuItem value="With Patient">With Patient</MenuItem>
+          </TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose}>Cancel</Button>
+          <Button onClick={handleSaveEditedDoctor}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
