@@ -19,6 +19,7 @@ import {
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
   GET_STAFFS,
+  UPDATE_DOCTORS,
   UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
@@ -68,7 +69,15 @@ export const adminReducer = (state = inititalState, action) => {
           (doctor) => doctor._id !== action.payload.resource._id
         ),
       };
-
+    case UPDATE_DOCTORS:
+      return {
+        ...state,
+        doctors: state.doctors.map((doctor) =>
+          doctor._id === action.payload.resource._id
+            ? action.payload.resource
+            : doctor
+        ),
+      };
     case GET_ALL_DEPARTMENTS:
       return {
         ...state,

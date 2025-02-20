@@ -22,6 +22,7 @@ import {
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
   GET_STAFFS,
+  UPDATE_DOCTORS,
   UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
@@ -84,6 +85,22 @@ export const addDoctor = (doctorData) => async (dispatch) => {
       "Error adding doctor:",
       error.response?.data || error.message
     );
+  }
+};
+// Action to update a Doctor
+export const updateDoctor = (doctorId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Editng room id: ", doctorId);
+    const { data } = await axios.put(`${API_URL}/${doctorId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: UPDATE_DOCTORS, payload: data });
+    console.log("doctor EDIT route working :", data);
+  } catch (error) {
+    console.error("Error updating doctor:", error);
   }
 };
 
