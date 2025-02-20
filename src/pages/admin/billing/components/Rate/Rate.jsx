@@ -14,77 +14,101 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import "./Rate.scss";
 
 import RateModal from "./components/RateModal";
-
-const services = [
-  {
-    serviceName: "Consultation",
-    categories: [
-      {
-        name: "Doctor Consultations",
-        rateType: "Per Consultation",
-        currentRate: 1000,
-        amenities: "N/A",
-        effectiveDate: "11-01-2025",
-        lastUpdated: "11-01-2025",
-      },
-      {
-        name: "Specialist Consultation",
-        rateType: "Per Consultation",
-        currentRate: 1000,
-        amenities: "N/A",
-        effectiveDate: "11-01-2025",
-        lastUpdated: "11-01-2025",
-      },
-      {
-        name: "Emergency Consultation",
-        rateType: "Per Consultation",
-        currentRate: 2000,
-        amenities: "N/A",
-        effectiveDate: "11-01-2025",
-        lastUpdated: "11-01-2025",
-      },
-    ],
-  },
-  {
-    serviceName: "Room Charges",
-    categories: [
-      {
-        name: "Single Room",
-        rateType: "Per Day",
-        currentRate: 1000,
-        amenities: "Bed, Meals, A/C",
-        effectiveDate: "11-01-2025",
-        lastUpdated: "11-01-2025",
-      },
-      {
-        name: "Double Room",
-        rateType: "Per Day",
-        currentRate: 1500,
-        amenities: "Shared Bathroom, Bed",
-        effectiveDate: "11-01-2025",
-        lastUpdated: "11-01-2025",
-      },
-      {
-        name: "ICU",
-        rateType: "Per Day",
-        currentRate: 5000,
-        amenities: "Bed, Intensive Monitoring",
-        effectiveDate: "11-01-2025",
-        lastUpdated: "11-01-2025",
-      },
-      {
-        name: "Private Suite",
-        rateType: "Per Day",
-        currentRate: 8000,
-        amenities: "Bed, Private Room, A/C, Special Meals",
-        effectiveDate: "11-01-2025",
-        lastUpdated: "11-01-2025",
-      },
-    ],
-  },
-];
+import {useDispatch, useSelector} from "react-redux";
+import {getServices} from "../../../../../components/State/Admin/Action.js";
 
 const Rate = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getServices())
+    }, [dispatch]);
+
+    const reduxServices = useSelector((store) => store.admin.services)
+
+    console.log("Coming from redux: ",reduxServices)
+
+    const services = reduxServices.map(service => ({
+        serviceName: service.name,
+        categories: service.categories.map(category => ({
+            name: category.category,
+            rateType: category.rateType,
+            currentRate: category.rate,
+            amenities: category.amenities || "N/A",
+            effectiveDate: category.effectiveDate,
+            lastUpdated: "11-01-2025",
+        }))
+    }));
+
+    // const services = [
+    //     {
+    //         serviceName: "Consultation",
+    //         categories: [
+    //             {
+    //                 name: "Doctor Consultations",
+    //                 rateType: "Per Consultation",
+    //                 currentRate: 1000,
+    //                 amenities: "N/A",
+    //                 effectiveDate: "11-01-2025",
+    //                 lastUpdated: "11-01-2025",
+    //             },
+    //             {
+    //                 name: "Specialist Consultation",
+    //                 rateType: "Per Consultation",
+    //                 currentRate: 1000,
+    //                 amenities: "N/A",
+    //                 effectiveDate: "11-01-2025",
+    //                 lastUpdated: "11-01-2025",
+    //             },
+    //             {
+    //                 name: "Emergency Consultation",
+    //                 rateType: "Per Consultation",
+    //                 currentRate: 2000,
+    //                 amenities: "N/A",
+    //                 effectiveDate: "11-01-2025",
+    //                 lastUpdated: "11-01-2025",
+    //             },
+    //         ],
+    //     },
+    //     {
+    //         serviceName: "Room Charges",
+    //         categories: [
+    //             {
+    //                 name: "Single Room",
+    //                 rateType: "Per Day",
+    //                 currentRate: 1000,
+    //                 amenities: "Bed, Meals, A/C",
+    //                 effectiveDate: "11-01-2025",
+    //                 lastUpdated: "11-01-2025",
+    //             },
+    //             {
+    //                 name: "Double Room",
+    //                 rateType: "Per Day",
+    //                 currentRate: 1500,
+    //                 amenities: "Shared Bathroom, Bed",
+    //                 effectiveDate: "11-01-2025",
+    //                 lastUpdated: "11-01-2025",
+    //             },
+    //             {
+    //                 name: "ICU",
+    //                 rateType: "Per Day",
+    //                 currentRate: 5000,
+    //                 amenities: "Bed, Intensive Monitoring",
+    //                 effectiveDate: "11-01-2025",
+    //                 lastUpdated: "11-01-2025",
+    //             },
+    //             {
+    //                 name: "Private Suite",
+    //                 rateType: "Per Day",
+    //                 currentRate: 8000,
+    //                 amenities: "Bed, Private Room, A/C, Special Meals",
+    //                 effectiveDate: "11-01-2025",
+    //                 lastUpdated: "11-01-2025",
+    //             },
+    //         ],
+    //     },
+    // ];
+
   const [sortOrder, setSortOrder] = useState("Monthly");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);

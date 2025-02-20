@@ -15,7 +15,7 @@ import {
   GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
-  GET_ROOMS,
+  GET_ROOMS, GET_SERVICES,
   GET_STAFFS, UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
@@ -39,6 +39,7 @@ const inititalState = {
   rejectedAppointments: [],
   billingRecord: null,
   billingRecords: [],
+  services:[],
   noOfAppointments: null,
   isLoading: true,
   error: null,
@@ -188,6 +189,12 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         billingRecord: action.payload,
       };
+
+    case GET_SERVICES:
+      return{
+        ...state,
+        services: action.payload.services
+      }
 
     default:
       return state;

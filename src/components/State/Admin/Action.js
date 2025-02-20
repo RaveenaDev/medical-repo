@@ -3,7 +3,7 @@ import { API_URL } from "../../Config/api.js";
 import {
   ADD_DOCTORS,
   ADD_EXPENSE,
-  ADD_ROOM,
+  ADD_ROOM, ADD_SERVICE,
   ADD_STAFFS, DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_STAFFS,
@@ -18,7 +18,7 @@ import {
   GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
-  GET_ROOMS,
+  GET_ROOMS, GET_SERVICES,
   GET_STAFFS, UPDATE_EXPENSE,
   UPDATE_ROOM,
   UPDATE_STAFFS,
@@ -400,6 +400,40 @@ export const getBillDetails = (billId) => async (dispatch) => {
 
     dispatch({ type: GET_BILL_DETAILS, payload: data });
     console.log("Bill DETAILS route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getServices = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getServices`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_SERVICES, payload: data });
+    console.log("Rate Management get Services route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addService = (serviceData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addService`,serviceData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: ADD_SERVICE, payload: data });
+    console.log("Rate Management ADD Service route working :", data);
   } catch (error) {
     console.log(error);
   }
