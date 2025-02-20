@@ -53,7 +53,9 @@ const AdminDoctors = (props) => {
     "Dermatology",
   ]);
 
-  const hospitalName = staffs[0].hospital.name;
+  const hospitalName = useSelector(
+    (state) => state.authentication.hospitalName
+  );
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newDoctor, setNewDoctor] = useState({
@@ -77,8 +79,6 @@ const AdminDoctors = (props) => {
 
   console.log(doctors);
   console.log("STAFFS", staffs);
-
-  console.log("STAFFS DETAILS", staffs[0].hospital.name);
 
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
