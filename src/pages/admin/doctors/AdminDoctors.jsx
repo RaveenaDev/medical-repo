@@ -76,7 +76,7 @@ const AdminDoctors = (props) => {
   };
 
   console.log(doctors);
-  console.log(Array.isArray(departments), departments);
+  console.log("STAFFS", staffs);
 
   console.log("STAFFS DETAILS", staffs[0].hospital.name);
 

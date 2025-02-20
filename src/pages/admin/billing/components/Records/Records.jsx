@@ -66,8 +66,6 @@ const Records = () => {
   ]);
   const billingRecords = useSelector((store) => store.admin.billingRecords);
   console.log("RECORDS", billingRecords);
-  const billDetails = useSelector((store) => store.admin.billingRecord);
-  console.log("BILL DETAILS", billDetails);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -75,10 +73,13 @@ const Records = () => {
       dispatch(getBillingRecords());
     }
   }, [dispatch, billingRecords]);
-
+  const billDetails = useSelector((store) => store.admin.billingRecord);
+  console.log("BILL DETAILS", billDetails);
+  useEffect(() => {
+    setSelectedBill(billDetails);
+  }, [billDetails]);
   const handleViewClick = (billId) => {
     dispatch(getBillDetails(billId)); // Fetch bill details from API
-    setSelectedBill(billDetails);
     setOpenModal(true);
   };
 
