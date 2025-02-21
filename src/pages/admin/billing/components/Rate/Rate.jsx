@@ -30,9 +30,9 @@ const Rate = () => {
 
     const services = reduxServices.map(service => ({
         serviceName: service.name,
-        department: service.department[0],
+        department: service.department.name,
         categories: service.categories.map(category => ({
-            name: category.category,
+            name: category.subCategoryName,
             rateType: category.rateType,
             currentRate: category.rate,
             amenities: category.amenities || "N/A",
@@ -141,6 +141,11 @@ const Rate = () => {
     setSelectedFilter(option);
     handleClose();
   };
+
+    const truncateText = (text, maxLength) => {
+        return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+    };
+
   return (
     <div className="rate-container">
       <Box
@@ -281,7 +286,7 @@ const Rate = () => {
       <div className="rate-table">
         <div className="rate-table-header">
           <span>Service Name</span>
-            <span>Department</span>
+          <span>Department</span>
           <span>Category</span>
           <span>Rate Type</span>
           <span>Current Rate</span>
@@ -295,20 +300,20 @@ const Rate = () => {
             (service) =>
               !selectedFilter || service.serviceName === selectedFilter
           )
-          .map((service) => (
-            <div key={service.serviceName} className="service-container">
+          .map((service,ayu) => (
+            <div key={ayu} className="service-container">
               {service.categories.map((category, index) => (
                   <div
                       className="rate-table-row"
-                      key={`${service.serviceName}-${index}`}
+                      key={index}
                   >
                   <span className="blue">
-                    {index === 0 ? service.serviceName : ""}
+                    {index === 0 ? truncateText(service.serviceName,18) : ""}
                   </span>
                   <span className="blue">
-                    {index === 0 ? service.department : ""}
+                    {index === 0 ? truncateText(service.department,16) : ""}
                   </span>
-                      <span className="blue">{category.name}</span>
+                      <span className="blue">{truncateText(category.name,20)}</span>
                       <span>{category.rateType}</span>
                       <span className="blue">₹{category.currentRate}</span>
                       <span>{category.effectiveDate}</span>

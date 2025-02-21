@@ -1,18 +1,21 @@
-import { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   TextField,
   Button,
-  IconButton,
+  IconButton, MenuItem,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
+import {useDispatch, useSelector} from "react-redux";
+import {addService, getAllDepartments} from "../../../../../../components/State/Admin/Action.js";
 
 const RateModal = ({ open, handleClose}) => {
   const [serviceDetails, setServiceDetails] = useState({
     name: "",
-    category:"",
+    departmentName: "",
+    subCategoryName:"",
     rateType:"",
     rate:"",
     effectiveDate:"",
@@ -32,11 +35,12 @@ const RateModal = ({ open, handleClose}) => {
 
   const handleSubmit = () => {
     console.log("Service Details: ",serviceDetails)
-
+    dispatch(addService(serviceDetails))
     // Reset the form fields
     setServiceDetails({
       name: "",
-      category: "",
+      departmentName: "",
+      subCategoryName: "",
       rateType: "",
       rate: "",
       effectiveDate: "",
@@ -44,6 +48,16 @@ const RateModal = ({ open, handleClose}) => {
     });
     handleClose();
   };
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getAllDepartments());
+  }, [dispatch]);
+
+  const departments = useSelector(store => store.admin.departments)
+
+  console.log("DEPARTMENTS: ",departments)
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -58,6 +72,22 @@ const RateModal = ({ open, handleClose}) => {
           onChange={handleChange}
         />
 
+        <TextField
+            select
+            label="Deparment Name"
+            fullWidth
+            margin="dense"
+            name="departmentName"
+            value={serviceDetails.departmentName}
+            onChange={handleChange}
+        >
+          {
+            departments.map((department,index) => (
+                <MenuItem key={index} value={department.departmentName}>{department.departmentName}</MenuItem>
+            ))
+          }
+        </TextField>
+
           <div
             style={{
               display: "flex",
@@ -70,8 +100,8 @@ const RateModal = ({ open, handleClose}) => {
               label="Category Name"
               fullWidth
               margin="dense"
-              name="category"
-              value={serviceDetails.category}
+              name="subCategoryName"
+              value={serviceDetails.subCategoryName}
               onChange={handleChange}
             />
             <TextField
