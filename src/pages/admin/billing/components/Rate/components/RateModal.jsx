@@ -9,52 +9,38 @@ import {
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 
-const RateModal = ({ open, handleClose, addService }) => {
-  const [serviceName, setServiceName] = useState("");
-  const [categories, setCategories] = useState([
-    {
-      name: "",
-      rateType: "",
-      currentRate: "",
-      amenities: "",
-      effectiveDate: "",
-    },
-  ]);
+const RateModal = ({ open, handleClose}) => {
+  const [serviceDetails, setServiceDetails] = useState({
+    name: "",
+    category:"",
+    rateType:"",
+    rate:"",
+    effectiveDate:"",
+    amenities:"",
+  });
+
   const [lastUpdated, setLastUpdated] = useState(
     new Date().toISOString().split("T")[0]
   );
 
-  const handleCategoryChange = (index, field, value) => {
-    const updatedCategories = [...categories];
-    updatedCategories[index][field] = value;
-    setCategories(updatedCategories);
-  };
-
-  const addCategory = () => {
-    setCategories([
-      ...categories,
-      {
-        name: "",
-        rateType: "",
-        currentRate: "",
-        amenities: "",
-        effectiveDate: "",
-      },
-    ]);
-  };
-
-  const removeCategory = (index) => {
-    const updatedCategories = categories.filter((_, i) => i !== index);
-    setCategories(updatedCategories);
-  };
+  const handleChange = (e) => {
+    setServiceDetails({
+      ...serviceDetails,
+      [e.target.name] : e.target.value
+    })
+  }
 
   const handleSubmit = () => {
-    addService({
-      serviceName,
-      categories: categories.map((cat) => ({
-        ...cat,
-        lastUpdated,
-      })),
+    console.log("Service Details: ",serviceDetails)
+
+    // Reset the form fields
+    setServiceDetails({
+      name: "",
+      category: "",
+      rateType: "",
+      rate: "",
+      effectiveDate: "",
+      amenities: "",
     });
     handleClose();
   };
@@ -67,12 +53,12 @@ const RateModal = ({ open, handleClose, addService }) => {
           label="Service Name"
           fullWidth
           margin="dense"
-          value={serviceName}
-          onChange={(e) => setServiceName(e.target.value)}
+          name="name"
+          value={serviceDetails.name}
+          onChange={handleChange}
         />
-        {categories.map((category, index) => (
+
           <div
-            key={index}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -84,38 +70,34 @@ const RateModal = ({ open, handleClose, addService }) => {
               label="Category Name"
               fullWidth
               margin="dense"
-              value={category.name}
-              onChange={(e) =>
-                handleCategoryChange(index, "name", e.target.value)
-              }
+              name="category"
+              value={serviceDetails.category}
+              onChange={handleChange}
             />
             <TextField
               label="Rate Type"
               fullWidth
               margin="dense"
-              value={category.rateType}
-              onChange={(e) =>
-                handleCategoryChange(index, "rateType", e.target.value)
-              }
+              name="rateType"
+              value={serviceDetails.rateType}
+              onChange={handleChange}
             />
             <TextField
               label="Current Rate"
               fullWidth
               margin="dense"
               type="number"
-              value={category.currentRate}
-              onChange={(e) =>
-                handleCategoryChange(index, "currentRate", e.target.value)
-              }
+              name="rate"
+              value={serviceDetails.rate}
+              onChange={handleChange}
             />
             <TextField
               label="Amenities"
               fullWidth
               margin="dense"
-              value={category.amenities}
-              onChange={(e) =>
-                handleCategoryChange(index, "amenities", e.target.value)
-              }
+              name="amenities"
+              value={serviceDetails.amenities}
+              onChange={handleChange}
             />
             <TextField
               label="Effective Date"
@@ -123,30 +105,13 @@ const RateModal = ({ open, handleClose, addService }) => {
               margin="dense"
               InputLabelProps={{ shrink: true }}
               type="date"
-              value={category.effectiveDate}
-              onChange={(e) =>
-                handleCategoryChange(index, "effectiveDate", e.target.value)
-              }
+              name="effectiveDate"
+              value={serviceDetails.effectiveDate}
+              onChange={handleChange}
             />
-            {categories.length > 1 && (
-              <IconButton
-                onClick={() => removeCategory(index)}
-                color="secondary"
-              >
-                <Remove />
-              </IconButton>
-            )}
+
           </div>
-        ))}
-        <Button
-          onClick={addCategory}
-          startIcon={<Add />}
-          color="primary"
-          variant="outlined"
-          sx={{ marginBottom: 2 }}
-        >
-          Add Category
-        </Button>
+
         <TextField
           label="Last Updated"
           fullWidth
