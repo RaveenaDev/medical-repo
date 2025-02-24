@@ -62,9 +62,7 @@ const AdminDoctors = (props) => {
     "Dermatology",
   ]);
 
-  const hospitalName = useSelector(
-    (state) => state.authentication.hospitalName
-  );
+  const hospitalName = localStorage.getItem("hospitalName");
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newDoctor, setNewDoctor] = useState({

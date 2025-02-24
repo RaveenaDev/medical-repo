@@ -3,7 +3,8 @@ import { API_URL } from "../../Config/api.js";
 import {
   ADD_DOCTORS,
   ADD_EXPENSE,
-  ADD_ROOM, ADD_SERVICE,
+  ADD_ROOM,
+  ADD_SERVICE,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -20,7 +21,8 @@ import {
   GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
-  GET_ROOMS, GET_SERVICES,
+  GET_ROOMS,
+  GET_SERVICES,
   GET_STAFFS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
@@ -356,7 +358,7 @@ export const deleteStaff = (StaffId) => async (dispatch) => {
 export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Edited staff id: ", StaffId);
+    console.log("Edited staff DATA: ", updatedData);
     const { data } = await axios.put(`${API_URL}/${StaffId}`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -460,7 +462,7 @@ export const addService = (serviceData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/addService`,serviceData, {
+    const { data } = await axios.post(`${API_URL}/addService`, serviceData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },

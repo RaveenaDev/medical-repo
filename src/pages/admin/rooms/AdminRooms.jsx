@@ -61,6 +61,7 @@ const AdminRooms = (props) => {
   const [editedRoom, setEditedRoom] = useState({
     roomID: "",
     name: "",
+    assignedDoctor: "",
     doctorId: "",
     status: "",
     originalRoomID: "",
@@ -72,6 +73,7 @@ const AdminRooms = (props) => {
       setEditedRoom({
         roomID: selectedRoom.roomID,
         name: selectedRoom.name,
+        assignedDoctor: selectedRoom.assignedDoctor,
         doctorId: selectedRoom.assignedDoctor._id,
         status: selectedRoom.status,
         originalRoomID: selectedRoom._id,
@@ -138,6 +140,8 @@ const AdminRooms = (props) => {
 
   const rooms = useSelector((state) => state.admin.rooms);
   const doctors = useSelector((state) => state.admin.doctors);
+  console.log("ROOMS", rooms);
+  console.log("DOCTORS", doctors);
 
   return (
     <>
@@ -419,7 +423,9 @@ const AdminRooms = (props) => {
                     {room.status}
                   </Box>
                 </TableCell>
-                <TableCell align="center">{room.assignedDoctor.name}</TableCell>
+                <TableCell align="center">
+                  {room.assignedDoctor?.name}
+                </TableCell>
 
                 <TableCell align="right">
                   <IconButton onClick={(event) => handleMenuOpen(event, room)}>
@@ -523,7 +529,7 @@ const AdminRooms = (props) => {
                     labelId="doctor-select-label"
                     id="doctor-select"
                     name="doctorId"
-                    value={editedRoom.doctorId}
+                    value={editedRoom.assignedDoctor?.name}
                     onChange={(e) =>
                       setEditedRoom({ ...editedRoom, doctorId: e.target.value })
                     }

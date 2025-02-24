@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CommonPanel from "../../Components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
 import Select from "../../../../components/Select/index.jsx";
@@ -38,8 +38,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import {useDispatch, useSelector} from "react-redux";
-import {getAppointments} from "../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getAppointments } from "../../../../components/State/Admin/Action.js";
 
 function Appointments(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -77,7 +77,7 @@ function Appointments(props) {
     setActiveBox(id);
   };
 
-  const activeLabel = boxData.find(box => box.id === activeBox)?.label;
+  const activeLabel = boxData.find((box) => box.id === activeBox)?.label;
   // console.log("Active Label",activeLabel);
 
   const [appointments, setAppointments] = useState([
@@ -158,105 +158,126 @@ function Appointments(props) {
 
   useEffect(() => {
     dispatch(getAppointments(activeLabel));
-  }, [dispatch,activeLabel]);
+  }, [dispatch, activeLabel]);
 
-  const totalAppointments = useSelector((store) => store.admin.totalAppointments)
+  const totalAppointments = useSelector(
+    (store) => store.admin.totalAppointments
+  );
+  console.log("Total Appointments", totalAppointments);
 
   return (
     <>
       <CommonPanel />
 
-            <Box sx={{ backgroundColor: "white", pt: 0.7 }}>
-                <div>
-                    {branches.length && (
-                        <Grid
-                            container
-                            spacing={2}
-                            // justifyContent="flex-end"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            flexDirection={{md: "row"}}
-                            // size={12}
-                            sx={{margin: "10px 20px 10px 0"}}
-                        >
-                            <Grid size={3} pl={2}>
-                                <h3 style={{color:"#25307F",paddingBottom:"12px",cursor:"pointer"}} onClick={handleBack}>
-                                    <span style={{display:"inline-block", transform: 'translateY(5px)' }}
-
-                                    ><ArrowBackIosIcon/></span>
-                                    Appointments</h3>
-                            </Grid>
-                            <Grid size={3}>
-                                <Select
-                                    inputId="input-department"
-                                    selectId="select-department"
-                                    label="Department"
-                                    list={branches}
-                                    size="small"
-                                />
-                            </Grid>
-                        </Grid>
-                    )}
-                </div>
-                <div
-                    // sx={{ mb: 1,px: 2}}
-                    style={{marginBottom:"1rem",padding:"0 2rem",justifyContent:"space-between",display:"flex",gap:"1rem"}}
+      <Box sx={{ backgroundColor: "white", pt: 0.7 }}>
+        <div>
+          {branches.length && (
+            <Grid
+              container
+              spacing={2}
+              // justifyContent="flex-end"
+              justifyContent="space-between"
+              alignItems="center"
+              flexDirection={{ md: "row" }}
+              // size={12}
+              sx={{ margin: "10px 20px 10px 0" }}
+            >
+              <Grid size={3} pl={2}>
+                <h3
+                  style={{
+                    color: "#25307F",
+                    paddingBottom: "12px",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleBack}
                 >
-                    {boxData.map((box) => (
-                        <div key={box.id}>
-                            <Box
-                                sx={{
-                                    backgroundColor:
-                                        activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                                    px: {sm:3,md:3,lg:6},
-                                    height: 55,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRadius: 1,
-                                    boxShadow: 1,
-                                    cursor: "pointer",
-                                    borderBottom:
-                                        activeBox === box.id ? "4px solid #6A0DAD" : "none",
-                                    transition: "all 0.3s ease-in-out",
-                                }}
-                                onClick={() => handleBoxClick(box.id)}
-                            >
-                                <h2
-                                    style={{
-                                        fontSize: "2.1rem",
-                                        fontWeight: 600,
-                                        color: "#25307F",
-                                        // marginRight: "4px",
-                                        // marginLeft: "20%",
-                                    }}
-                                >
-                                    {box.count}
-                                </h2>
-                                <span
-                                    style={{
-                                        fontSize: "1.6rem",
-                                        fontWeight: 500,
-                                        color: "black",
-                                        marginRight: "4px",
-                                    }}
-                                >
-                          -
-                        </span>
-                                <p
-                                    style={{
-                                        fontSize: "1.1rem",
-                                        fontWeight: 500,
-                                        color: "black",
-                                        marginTop: "4px",
-                                    }}
-                                >
-                                    {box.label}
-                                </p>
-                            </Box>
-                        </div>
-                    ))}
-                </div>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      transform: "translateY(5px)",
+                    }}
+                  >
+                    <ArrowBackIosIcon />
+                  </span>
+                  Appointments
+                </h3>
+              </Grid>
+              <Grid size={3}>
+                <Select
+                  inputId="input-department"
+                  selectId="select-department"
+                  label="Department"
+                  list={branches}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+          )}
+        </div>
+        <div
+          // sx={{ mb: 1,px: 2}}
+          style={{
+            marginBottom: "1rem",
+            padding: "0 2rem",
+            justifyContent: "space-between",
+            display: "flex",
+            gap: "1rem",
+          }}
+        >
+          {boxData.map((box) => (
+            <div key={box.id}>
+              <Box
+                sx={{
+                  backgroundColor: activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
+                  px: { sm: 3, md: 3, lg: 6 },
+                  height: 55,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 1,
+                  boxShadow: 1,
+                  cursor: "pointer",
+                  borderBottom:
+                    activeBox === box.id ? "4px solid #6A0DAD" : "none",
+                  transition: "all 0.3s ease-in-out",
+                }}
+                onClick={() => handleBoxClick(box.id)}
+              >
+                <h2
+                  style={{
+                    fontSize: "2.1rem",
+                    fontWeight: 600,
+                    color: "#25307F",
+                    // marginRight: "4px",
+                    // marginLeft: "20%",
+                  }}
+                >
+                  {box.count}
+                </h2>
+                <span
+                  style={{
+                    fontSize: "1.6rem",
+                    fontWeight: 500,
+                    color: "black",
+                    marginRight: "4px",
+                  }}
+                >
+                  -
+                </span>
+                <p
+                  style={{
+                    fontSize: "1.1rem",
+                    fontWeight: 500,
+                    color: "black",
+                    marginTop: "4px",
+                  }}
+                >
+                  {box.label}
+                </p>
+              </Box>
+            </div>
+          ))}
+        </div>
 
         {/* Table Section */}
         <TableContainer component={Paper}>
@@ -279,7 +300,7 @@ function Appointments(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {totalAppointments.map((patient,index) => (
+              {totalAppointments.map((patient, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -295,7 +316,7 @@ function Appointments(props) {
                     },
                   }}
                 >
-                  <TableCell>{truncateText(patient.caseId,13)}</TableCell>
+                  <TableCell>{truncateText(patient.caseId, 13)}</TableCell>
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -306,7 +327,7 @@ function Appointments(props) {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="text.secondary">
-                      {patient.doctor.name}
+                      {patient.doctor?.name}
                     </Typography>
                   </TableCell>
                   <TableCell>{patient.typeVisit}</TableCell>
