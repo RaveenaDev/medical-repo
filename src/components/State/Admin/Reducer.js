@@ -63,7 +63,7 @@ export const adminReducer = (state = inititalState, action) => {
     case ADD_DOCTORS:
       return {
         ...state,
-        doctors: [...state.doctors, action.payload.doctor],
+        doctors: [...state.doctors, action.payload.newUser],
       };
     case DELETE_DOCTORS:
       return {

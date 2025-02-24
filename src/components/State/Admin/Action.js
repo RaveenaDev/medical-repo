@@ -142,7 +142,7 @@ export const getRooms = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getRooms`, {
+    const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
