@@ -140,9 +140,6 @@ const AdminStaffs = (props) => {
 
   const departments = useSelector((state) => state.admin.departments);
 
-  console.log("Staffs: ", staffs);
-  console.log("Departments", departments);
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {

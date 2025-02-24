@@ -62,7 +62,6 @@ const AdminRooms = (props) => {
     roomID: "",
     name: "",
     assignedDoctor: "",
-    doctorId: "",
     status: "",
     originalRoomID: "",
   });
@@ -73,8 +72,7 @@ const AdminRooms = (props) => {
       setEditedRoom({
         roomID: selectedRoom.roomID,
         name: selectedRoom.name,
-        assignedDoctor: selectedRoom.assignedDoctor,
-        doctorId: selectedRoom.assignedDoctor._id,
+        assignedDoctor: selectedRoom.assignedDoctor._id,
         status: selectedRoom.status,
         originalRoomID: selectedRoom._id,
       });
@@ -88,7 +86,7 @@ const AdminRooms = (props) => {
   const handleSaveEditedRoom = () => {
     dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
     setEditDialogOpen(false);
-    console.log("Patient Edited Successfully");
+    console.log("Room Edited Successfully");
   };
 
   // Handle Menu Open
@@ -141,7 +139,6 @@ const AdminRooms = (props) => {
   const rooms = useSelector((state) => state.admin.rooms);
   const doctors = useSelector((state) => state.admin.doctors);
   console.log("ROOMS", rooms);
-  console.log("DOCTORS", doctors);
 
   return (
     <>
@@ -529,9 +526,12 @@ const AdminRooms = (props) => {
                     labelId="doctor-select-label"
                     id="doctor-select"
                     name="doctorId"
-                    value={editedRoom.assignedDoctor?.name}
+                    value={editedRoom.assignedDoctor}
                     onChange={(e) =>
-                      setEditedRoom({ ...editedRoom, doctorId: e.target.value })
+                      setEditedRoom({
+                        ...editedRoom,
+                        assignedDoctor: e.target.value,
+                      })
                     }
                     label="Doctor Assigned"
                     variant="outlined"

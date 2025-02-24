@@ -285,13 +285,14 @@ export const addRoom = (roomData) => async (dispatch) => {
 export const updateRoom = (roomId, updatedData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Editng room id: ", roomId);
+    console.log("Editing ROOM data: ", updatedData);
     const { data } = await axios.put(`${API_URL}/${roomId}`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_ROOM, payload: data });
+    dispatch(getRooms());
+    // dispatch({ type: UPDATE_ROOM, payload: data });
     console.log("Room EDIT route working :", data);
   } catch (error) {
     console.error("Error updating room:", error);
@@ -364,7 +365,8 @@ export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_STAFFS, payload: data });
+    // dispatch({ type: UPDATE_STAFFS, payload: data });
+    dispatch(getStaffs());
     console.log("Staff EDIT route working :", data);
   } catch (error) {
     console.error("Error updating room:", error);

@@ -1,7 +1,8 @@
 import {
   ADD_DOCTORS,
   ADD_EXPENSE,
-  ADD_ROOM, ADD_SERVICE,
+  ADD_ROOM,
+  ADD_SERVICE,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -17,7 +18,8 @@ import {
   GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
-  GET_ROOMS, GET_SERVICES,
+  GET_ROOMS,
+  GET_SERVICES,
   GET_STAFFS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
@@ -43,7 +45,7 @@ const inititalState = {
   rejectedAppointments: [],
   billingRecord: null,
   billingRecords: [],
-  services:[],
+  services: [],
   noOfAppointments: null,
   isLoading: true,
   error: null,
@@ -121,15 +123,15 @@ export const adminReducer = (state = inititalState, action) => {
           (staff) => staff._id !== action.payload.resource._id
         ),
       };
-    case UPDATE_STAFFS:
-      return {
-        ...state,
-        staffs: state.staffs.map((staff) =>
-          staff._id === action.payload.resource._id
-            ? action.payload.resource
-            : staff
-        ),
-      };
+    // case UPDATE_STAFFS:
+    //   return {
+    //     ...state,
+    //     staffs: state.staffs.map((staff) =>
+    //       staff._id === action.payload.resource._id
+    //         ? action.payload.resource
+    //         : staff
+    //     ),
+    //   };
 
     case GET_ROOMS:
       return {
@@ -148,15 +150,15 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         rooms: [...state.rooms, action.payload.room],
       };
-    case UPDATE_ROOM:
-      return {
-        ...state,
-        rooms: state.rooms.map((room) =>
-          room._id === action.payload.resource._id
-            ? action.payload.resource._id
-            : room
-        ),
-      };
+    // case UPDATE_ROOM:
+    //   return {
+    //     ...state,
+    //     rooms: state.rooms.map((room) =>
+    //       room._id === action.payload.resource._id
+    //         ? action.payload.resource._id
+    //         : room
+    //     ),
+    //   };
 
     case DELETE_ROOM:
       return {
@@ -212,16 +214,16 @@ export const adminReducer = (state = inititalState, action) => {
       };
 
     case GET_SERVICES:
-      return{
+      return {
         ...state,
-        services: action.payload.services
-      }
+        services: action.payload.services,
+      };
 
     case ADD_SERVICE:
-      return{
+      return {
         ...state,
-        services: [...state.services,action.payload.service]
-      }
+        services: [...state.services, action.payload.service],
+      };
 
     default:
       return state;
