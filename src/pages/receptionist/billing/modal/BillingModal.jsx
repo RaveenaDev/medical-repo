@@ -77,7 +77,7 @@ const BillingModal = ({ open, bill, onClose }) => {
 
                   {service.categories.map((cat, index) => (
                     <div key={index} className="billing-category">
-                      <div>{cat.category}</div>
+                      <div>{cat.subCategoryName}</div>
                       <div>Qty: {cat.quantity}</div>
                       <div>Price: {cat.rate}</div>
                       <div>Total: {cat.total}</div>

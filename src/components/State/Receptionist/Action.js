@@ -189,7 +189,9 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
       },
     });
 
-    dispatch({ type: BOOK_APPOINTMENT, payload: data });
+    dispatch(getAppointments("Scheduled"));
+
+    // dispatch({ type: BOOK_APPOINTMENT, payload: data });
     console.log("Appointment Booked Successfully :", data);
 
     // Show success toast
