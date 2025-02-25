@@ -62,7 +62,7 @@ const Rooms = (props) => {
   const [editedRoom, setEditedRoom] = useState({
     roomID: "",
     name: "",
-    doctorId: "",
+    assignedDoctor: "",
     status: "",
     originalRoomID: "",
   });
@@ -73,7 +73,7 @@ const Rooms = (props) => {
       setEditedRoom({
         roomID: selectedRoom.roomID,
         name: selectedRoom.name,
-        doctorId: selectedRoom.assignedDoctor._id,
+        assignedDoctor: selectedRoom.assignedDoctor._id,
         status: selectedRoom.status,
         originalRoomID: selectedRoom._id,
       });
@@ -518,9 +518,12 @@ const Rooms = (props) => {
                     labelId="doctor-select-label"
                     id="doctor-select"
                     name="doctorId"
-                    value={editedRoom.doctorId}
+                    value={editedRoom.assignedDoctor}
                     onChange={(e) =>
-                      setEditedRoom({ ...editedRoom, doctorId: e.target.value })
+                      setEditedRoom({
+                        ...editedRoom,
+                        assignedDoctor: e.target.value,
+                      })
                     }
                     label="Doctor Assigned"
                     variant="outlined"

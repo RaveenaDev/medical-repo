@@ -41,8 +41,11 @@ import Select from "../../components/Select/index.jsx";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {useDispatch, useSelector} from "react-redux";
-import {getAppointments, getRequestedAppointments} from "../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAppointments,
+  getRequestedAppointments,
+} from "../../components/State/Receptionist/Action.js";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
@@ -127,9 +130,8 @@ function Receptionist(props) {
     { id: 4, label: "Completed", count: 5 },
   ];
 
-  const activeLabel = boxData.find(box => box.id === activeBox)?.label;
+  const activeLabel = boxData.find((box) => box.id === activeBox)?.label;
   // console.log("Active Label",activeLabel);
-
 
   const handleBoxClick = (id) => {
     setActiveBox(id);
@@ -179,14 +181,16 @@ function Receptionist(props) {
 
   useEffect(() => {
     dispatch(getAppointments(activeLabel));
-  }, [dispatch,activeLabel]);
+  }, [dispatch, activeLabel]);
 
   useEffect(() => {
     dispatch(getRequestedAppointments());
   }, [dispatch]);
 
-  const appointments = useSelector(store => store.receptionist.appointments)
-  const appointmentRequests = useSelector(store => store.receptionist.appointmentRequests)
+  const appointments = useSelector((store) => store.receptionist.appointments);
+  const appointmentRequests = useSelector(
+    (store) => store.receptionist.appointmentRequests
+  );
 
   return (
     <>
@@ -207,26 +211,26 @@ function Receptionist(props) {
                 <Grid size={3}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Box
-                        sx={{
-                          backgroundColor: "white",
-                          boxShadow: 3,
-                          borderRadius: 1,
-                          width: 180, // Adjust width here
-                          textAlign: "center",
-                          // padding: "4px", // Reduce padding to make the container smaller
-                        }}
+                      sx={{
+                        backgroundColor: "white",
+                        boxShadow: 3,
+                        borderRadius: 1,
+                        width: 180, // Adjust width here
+                        textAlign: "center",
+                        // padding: "4px", // Reduce padding to make the container smaller
+                      }}
                     >
                       <DatePicker
-                          value={selectedDate}
-                          onChange={(newValue) => setSelectedDate(newValue)}
-                          sx={{
-                            width: "100%", // Ensure the date picker takes up 100% of the container's width
-                            fontSize: "24px", // Adjust font size inside the date picker
-                            input: {
-                              fontSize: "14px", // Adjust input field font size if needed
-                              padding: "10px", // Adjust input field padding to make it smaller
-                            }
-                          }}
+                        value={selectedDate}
+                        onChange={(newValue) => setSelectedDate(newValue)}
+                        sx={{
+                          width: "100%", // Ensure the date picker takes up 100% of the container's width
+                          fontSize: "24px", // Adjust font size inside the date picker
+                          input: {
+                            fontSize: "14px", // Adjust input field font size if needed
+                            padding: "10px", // Adjust input field padding to make it smaller
+                          },
+                        }}
                       />
                     </Box>
                   </LocalizationProvider>
@@ -354,27 +358,33 @@ function Receptionist(props) {
                 </div>
 
                 <div
-                    // sx={{ mb: 1,px: 2}}
-                    style={{marginBottom:"1rem",padding:"0 2rem",justifyContent:"space-between",display:"flex",gap:"1rem"}}
+                  // sx={{ mb: 1,px: 2}}
+                  style={{
+                    marginBottom: "1rem",
+                    padding: "0 2rem",
+                    justifyContent: "space-between",
+                    display: "flex",
+                    gap: "1rem",
+                  }}
                 >
                   {boxData.map((box) => (
                     <div key={box.id}>
                       <Box
-                          sx={{
-                            backgroundColor:
-                                activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                            px: {sm:3,md:3,lg:6},
-                            height: 55,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderRadius: 1,
-                            boxShadow: 1,
-                            cursor: "pointer",
-                            borderBottom:
-                                activeBox === box.id ? "4px solid #6A0DAD" : "none",
-                            transition: "all 0.3s ease-in-out",
-                          }}
+                        sx={{
+                          backgroundColor:
+                            activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
+                          px: { sm: 3, md: 3, lg: 6 },
+                          height: 55,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          borderRadius: 1,
+                          boxShadow: 1,
+                          cursor: "pointer",
+                          borderBottom:
+                            activeBox === box.id ? "4px solid #6A0DAD" : "none",
+                          transition: "all 0.3s ease-in-out",
+                        }}
                         onClick={() => handleBoxClick(box.id)}
                       >
                         <h2
@@ -462,7 +472,7 @@ function Receptionist(props) {
                               {appointment.patient.name}
                             </Typography>
                           </TableCell>
-                          <TableCell>{appointment.doctor.name}</TableCell>
+                          <TableCell>{appointment.doctor?.name}</TableCell>
                           <TableCell>{appointment.typeVisit}</TableCell>
                           <TableCell>{appointment.department.name}</TableCell>
                           <TableCell>{appointment.tokenDate}</TableCell>

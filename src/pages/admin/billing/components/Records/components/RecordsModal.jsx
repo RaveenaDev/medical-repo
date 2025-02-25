@@ -104,7 +104,6 @@ const RecordModal = ({ open, bill, onClose }) => {
                 </p>
                 <p>Mode: {bill.mode}</p>
                 <p>
-                  Date:{" "}
                   <span>{new Date(bill.invoiceDate).toLocaleDateString()}</span>
                 </p>
               </div>

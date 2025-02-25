@@ -28,7 +28,7 @@ export const updateRoom = (roomId, updatedData) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_ROOM, payload: data });
+    // dispatch({ type: UPDATE_ROOM, payload: data });
     console.log("Room EDIT route working :", data);
     dispatch(getRooms());
   } catch (error) {
@@ -47,7 +47,7 @@ export const deleteRoom = (roomId) => async (dispatch) => {
       },
     });
 
-    dispatch({ type: DELETE_ROOM, payload: roomId });
+    // dispatch({ type: DELETE_ROOM, payload: roomId });
     console.log("Room DELETION route working :", data);
     dispatch(getRooms());
   } catch (error) {
