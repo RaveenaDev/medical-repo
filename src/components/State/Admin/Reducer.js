@@ -9,6 +9,7 @@ import {
   DELETE_ROOM,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
+  GET_APPOINTMENT_COUNTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_DETAILS,
@@ -33,6 +34,7 @@ const inititalState = {
   totalStaffs: null,
   totalRooms: null,
   patient: null,
+  appointmentCount: null,
   patients: [],
   doctors: [],
   staffs: [],
@@ -54,6 +56,11 @@ const inititalState = {
 
 export const adminReducer = (state = inititalState, action) => {
   switch (action.type) {
+    case GET_APPOINTMENT_COUNTS:
+      return {
+        ...state,
+        appointmentCount: action.payload,
+      };
     case GET_DOCTORS:
       return {
         ...state,

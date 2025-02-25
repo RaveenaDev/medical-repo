@@ -11,6 +11,7 @@ import {
   DELETE_ROOM,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
+  GET_APPOINTMENT_COUNTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_DETAILS,
@@ -506,5 +507,24 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
     console.log("Delete Expense route working :", data);
   } catch (error) {
     console.error("Error deleting expense:", error);
+  }
+};
+
+// GET APPOINTMENTS COUNTS FOR GRAPHS
+
+export const getAppointmentCounts = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getAppointmentCounts`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
+    console.log("Appointment Counts route working :", data);
+  } catch (error) {
+    console.log(error);
   }
 };
