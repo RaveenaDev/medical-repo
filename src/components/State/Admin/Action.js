@@ -8,7 +8,7 @@ import {
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
-  DELETE_ROOM,
+  DELETE_ROOM, DELETE_SERVICE, DELETE_SERVICE_CATEGORY,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
@@ -26,7 +26,7 @@ import {
   GET_STAFFS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
-  UPDATE_ROOM,
+  UPDATE_ROOM, UPDATE_SERVICE,
   UPDATE_STAFFS,
 } from "./ActionType.js";
 
@@ -405,6 +405,38 @@ export const addExpense = (exp) => async (dispatch) => {
   }
 };
 
+export const updateExpense = (expenseId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Edited expense id: ", expenseId);
+    const { data } = await axios.put(`${API_URL}/${expenseId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: UPDATE_EXPENSE, payload: data });
+    console.log("Expense edit route working :", data);
+  } catch (error) {
+    console.error("Error updating expense:", error);
+  }
+};
+
+export const deleteExpense = (expenseId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Deleted expense id: ", expenseId);
+    const { data } = await axios.delete(`${API_URL}/${expenseId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: DELETE_EXPENSE, payload: data });
+    console.log("Delete Expense route working :", data);
+  } catch (error) {
+    console.error("Error deleting expense:", error);
+  }
+};
+
 // BILLING
 export const getBillingRecords = () => async (dispatch) => {
   try {
@@ -475,34 +507,51 @@ export const addService = (serviceData) => async (dispatch) => {
   }
 };
 
-export const updateExpense = (expenseId, updatedData) => async (dispatch) => {
+export const updateService = (serviceId, updatedData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Edited expense id: ", expenseId);
-    const { data } = await axios.put(`${API_URL}/${expenseId}`, updatedData, {
+    console.log("Edited service id: ", serviceId);
+    const { data } = await axios.put(`${API_URL}/${serviceId}`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_EXPENSE, payload: data });
-    console.log("Expense edit route working :", data);
+    dispatch({ type: UPDATE_SERVICE, payload: data });
+    console.log("Service edit route working :", data);
   } catch (error) {
-    console.error("Error updating expense:", error);
+    console.error("Error updating service:", error);
   }
 };
 
-export const deleteExpense = (expenseId) => async (dispatch) => {
+export const deleteServiceCategory = (serviceId,categoryId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Deleted expense id: ", expenseId);
-    const { data } = await axios.delete(`${API_URL}/${expenseId}`, {
+    console.log("Deleted service id: ", serviceId);
+    console.log("Deleted category id: ", categoryId);
+    const { data } = await axios.delete(`${API_URL}/deleteSubcategory/${serviceId}/${categoryId}`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: DELETE_EXPENSE, payload: data });
-    console.log("Delete Expense route working :", data);
+    dispatch({ type: DELETE_SERVICE_CATEGORY, payload: data });
+    console.log("Delete Service Category route working :", data);
   } catch (error) {
-    console.error("Error deleting expense:", error);
+    console.error("Error deleting category service:", error);
+  }
+};
+
+export const deleteService = (serviceId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    console.log("Deleted service id: ", serviceId);
+    const { data } = await axios.delete(`${API_URL}/deleteService/delete/${serviceId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    dispatch({ type: DELETE_SERVICE, payload: serviceId });
+    console.log("Delete Service route working :", data);
+  } catch (error) {
+    console.error("Error deleting service:", error);
   }
 };

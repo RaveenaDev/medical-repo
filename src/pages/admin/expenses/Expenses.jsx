@@ -65,6 +65,7 @@ const Expenses = (props) => {
         setAnchorEl(event.currentTarget);
         setSelectedExpense(expense);
         console.log("Selected Expense:",expense)
+        console.log("GAMMA:",selectedExpense) // Ye toh previous value hi show krega because of async nature of react
     };
 
     // Handle Menu Close
