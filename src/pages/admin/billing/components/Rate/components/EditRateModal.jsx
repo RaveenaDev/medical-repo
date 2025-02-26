@@ -16,6 +16,7 @@ const EditRateModal = ({ open, handleClose,service}) => {
     const serviceId = service.service.serviceId;
     console.log("IDDDDDDDDDDDDD:",serviceId)
     const [serviceDetails, setServiceDetails] = useState({
+        serviceId: serviceId,
         name: service.service.serviceName,
         departmentName: service.service.department,
         subCategoryName:service.category.name,
@@ -24,6 +25,20 @@ const EditRateModal = ({ open, handleClose,service}) => {
         effectiveDate:service.category.effectiveDate,
         amenities:service.category.amenities,
     });
+
+    const pass = {
+        serviceId: serviceId,
+        name: service.service.serviceName,
+        departmentName: service.service.department,
+        categories: {
+            _id : service.category.categoryId,
+            subCategoryName:service.category.name,
+            rateType:service.category.rateType,
+            rate:service.category.currentRate,
+            effectiveDate:service.category.effectiveDate,
+            amenities:service.category.amenities,
+        }
+    }
 
     const [lastUpdated, setLastUpdated] = useState(
         new Date().toISOString().split("T")[0]
@@ -38,7 +53,7 @@ const EditRateModal = ({ open, handleClose,service}) => {
 
     const handleSubmit = () => {
         console.log("Edited Service Details: ",serviceDetails)
-        dispatch(updateService(serviceId,serviceDetails))
+        dispatch(updateService(pass))
         // Reset the form fields
         setServiceDetails({
             name: "",

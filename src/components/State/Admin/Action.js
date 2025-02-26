@@ -510,11 +510,10 @@ export const addService = (serviceData) => async (dispatch) => {
   }
 };
 
-export const updateService = (serviceId, updatedData) => async (dispatch) => {
+export const updateService = (updatedData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Edited service id: ", serviceId);
-    const { data } = await axios.put(`${API_URL}/${serviceId}`, updatedData, {
+    const { data } = await axios.put(`${API_URL}/editService/edit`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -536,7 +535,7 @@ export const deleteServiceCategory = (serviceId,categoryId) => async (dispatch) 
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: DELETE_SERVICE_CATEGORY, payload: data });
+    dispatch({ type: DELETE_SERVICE_CATEGORY, payload: {serviceId,categoryId} });
     console.log("Delete Service Category route working :", data);
   } catch (error) {
     console.error("Error deleting category service:", error);

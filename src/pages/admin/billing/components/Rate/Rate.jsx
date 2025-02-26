@@ -274,9 +274,10 @@ const Rate = () => {
                   </IconButton>
                   {/* Dropdown Menu */}
                   <Menu
-                    anchorEl={anchorE2}
-                    open={Boolean(anchorE2)}
-                    onClose={handleCloseMenu}
+                      key={`${service.serviceId}-${category.categoryId}`}
+                      anchorEl={anchorE2}
+                      open={Boolean(anchorE2 && selectedService?.category?.categoryId === category.categoryId)}
+                      onClose={handleCloseMenu}
                   >
                     <MenuItem
                       value="edit"
@@ -344,8 +345,9 @@ const Rate = () => {
                       Delete
                     </MenuItem>
 
+
                     {
-                      index === 0 && (
+                        index === 0 && (
                             <MenuItem
                                 value="delete"
                                 sx={{ display: "flex", gap: "4px" }}

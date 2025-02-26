@@ -25,6 +25,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
     appointmentType: "",
     departmentName: "",
     doctorEmail: "",
+    typeVisit: "Walk in",
     note: "",
     date: new Date()
   });
@@ -87,20 +88,20 @@ const BookAppointment = ({ isOpen, onClose }) => {
         <div className="right-panel">
           <p>{renderRequiredLabel("Patient Name")}</p>
           <TextField
-            label="Patient Name"
-            name="patientName"
-            value={formData.patientName}
-            onChange={handleChange}
-            fullWidth
+              label="Patient Name"
+              name="patientName"
+              value={formData.patientName}
+              onChange={handleChange}
+              fullWidth
           />
           <p>{renderRequiredLabel("Select Appointment Type")}</p>
           <TextField
-            select
-            label="Select Appointment Type"
-            name="appointmentType"
-            value={formData.appointmentType}
-            onChange={handleChange}
-            fullWidth
+              select
+              label="Select Appointment Type"
+              name="appointmentType"
+              value={formData.appointmentType}
+              onChange={handleChange}
+              fullWidth
           >
             <MenuItem value="Follow up">Follow up</MenuItem>
             <MenuItem value="Consultation">Consultation</MenuItem>
@@ -109,15 +110,15 @@ const BookAppointment = ({ isOpen, onClose }) => {
           </TextField>
           <p>{renderRequiredLabel("Select Branch")}</p>
           <TextField
-            select
-            label="Select Branch"
-            name="departmentName"
-            value={formData.departmentName}
-            onChange={handleChange}
-            fullWidth
+              select
+              label="Select Branch"
+              name="departmentName"
+              value={formData.departmentName}
+              onChange={handleChange}
+              fullWidth
           >
             {
-              departments.map((department,index) => (
+              departments.map((department, index) => (
                   <MenuItem key={index} value={department.departmentName}>{department.departmentName}</MenuItem>
               ))
             }
@@ -125,35 +126,48 @@ const BookAppointment = ({ isOpen, onClose }) => {
           </TextField>
           <p>{renderRequiredLabel("Select Doctor")}</p>
           <TextField
-            select
-            label="Select Doctor"
-            name="doctorEmail"
-            value={formData.doctorEmail}
-            onChange={handleChange}
-            fullWidth
+              select
+              label="Select Doctor"
+              name="doctorEmail"
+              value={formData.doctorEmail}
+              onChange={handleChange}
+              fullWidth
           >
             {
-              doctors.map((doctor,index) => (
+              doctors.map((doctor, index) => (
                   <MenuItem key={index} value={doctor.email}>{doctor.name}</MenuItem>
               ))
             }
             {/*<MenuItem value="Dr. Johnson">Dr. Johnson</MenuItem>*/}
           </TextField>
+
+          <p>{renderRequiredLabel("Type Visit")}</p>
+          <TextField
+              select
+              name="typeVisit"
+              value={formData.typeVisit}
+              onChange={handleChange}
+              fullWidth
+          >
+            <MenuItem value="Walk in">Walk In</MenuItem>
+            <MenuItem value="Referral">Referral</MenuItem>
+            <MenuItem value="Online">Online</MenuItem>
+          </TextField>
           <p>{renderRequiredLabel("Mobile Number")}</p>
           <TextField
-            label="Mobile Number"
-            name="mobileNumber"
-            value={formData.mobileNumber}
-            onChange={handleChange}
-            fullWidth
+              label="Mobile Number"
+              name="mobileNumber"
+              value={formData.mobileNumber}
+              onChange={handleChange}
+              fullWidth
           />
           <p>Email</p>
           <TextField
-            label="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            fullWidth
+              label="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              fullWidth
           />
 
           <Button variant="contained" className="submit-btn" fullWidth onClick={handleClick}>

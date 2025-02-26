@@ -6,7 +6,7 @@ import {
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
-  DELETE_ROOM, DELETE_SERVICE,
+  DELETE_ROOM, DELETE_SERVICE, DELETE_SERVICE_CATEGORY,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -251,6 +251,22 @@ export const adminReducer = (state = inititalState, action) => {
           service._id !== action.payload
         )
       }
+
+    case DELETE_SERVICE_CATEGORY:
+      return {
+        ...state,
+        services: state.services.map((service) =>
+            service._id === action.payload.serviceId
+                ? {
+                  ...service,
+                  categories: service.categories.filter(
+                      (category) => category._id !== action.payload.categoryId
+                  ),
+                }
+                : service
+        ),
+      };
+
     default:
       return state;
   }

@@ -439,8 +439,8 @@ function Receptionist(props) {
                         <TableCell>Appointment With</TableCell>
                         <TableCell>Type Visit</TableCell>
                         <TableCell>Branch</TableCell>
-                        <TableCell>Token Number</TableCell>
-                        <TableCell>Status</TableCell>
+                        <TableCell>Token No.</TableCell>
+                        <TableCell align='center'>Status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -475,7 +475,7 @@ function Receptionist(props) {
                           <TableCell>{appointment.doctor?.name}</TableCell>
                           <TableCell>{appointment.typeVisit}</TableCell>
                           <TableCell>{appointment.department.name}</TableCell>
-                          <TableCell>{appointment.tokenDate}</TableCell>
+                          <TableCell align='center'>{appointment?.tokenNumber}</TableCell>
                           <TableCell>
                             <Chip
                               label={appointment.status}
