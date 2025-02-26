@@ -9,8 +9,8 @@ import arrowBack from "../../../assets/arrow_back.svg"; // Import the SVG
 import BillingModal from "./modal/BillingModal";
 import { useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification";
-import {useDispatch, useSelector} from "react-redux";
-import {getBills} from "../../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getBills } from "../../../components/State/Receptionist/Action.js";
 
 const Billings = (props) => {
   const [selectedBill, setSelectedBill] = useState(null);
@@ -40,7 +40,7 @@ const Billings = (props) => {
     dispatch(getBills());
   }, [dispatch]);
 
-  const allBills = useSelector(store => store.receptionist.allBills)
+  const allBills = useSelector((store) => store.receptionist.allBills);
 
   return (
     <div className="billings-container">

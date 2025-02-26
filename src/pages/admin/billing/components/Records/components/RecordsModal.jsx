@@ -17,6 +17,8 @@ const RecordModal = ({ open, bill, onClose }) => {
 
   if (!bill) return null;
 
+  console.log("bill", bill);
+
   return (
     <div
       className={`billing-modal-overlay ${open ? "open" : ""}`}
@@ -59,7 +61,7 @@ const RecordModal = ({ open, bill, onClose }) => {
                   </div>
                   {service.categories.map((cat, i) => (
                     <div key={i} className="billing-category">
-                      <div>{cat.category}</div>
+                      <div>{cat.subCategoryName}</div>
                       <div>Qty: {cat.quantity}</div>
                       <div>Price: {cat.rate}</div>
                       <div>Total: {cat.total}</div>
@@ -104,7 +106,6 @@ const RecordModal = ({ open, bill, onClose }) => {
                 </p>
                 <p>Mode: {bill.mode}</p>
                 <p>
-                  Date:{" "}
                   <span>{new Date(bill.invoiceDate).toLocaleDateString()}</span>
                 </p>
               </div>

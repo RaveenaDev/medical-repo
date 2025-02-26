@@ -11,6 +11,7 @@ import {
   DELETE_ROOM, DELETE_SERVICE, DELETE_SERVICE_CATEGORY,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
+  GET_APPOINTMENT_COUNTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_DETAILS,
@@ -142,7 +143,7 @@ export const getRooms = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getRooms`, {
+    const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -285,13 +286,14 @@ export const addRoom = (roomData) => async (dispatch) => {
 export const updateRoom = (roomId, updatedData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    console.log("Editng room id: ", roomId);
+    console.log("Editing ROOM data: ", updatedData);
     const { data } = await axios.put(`${API_URL}/${roomId}`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_ROOM, payload: data });
+    dispatch(getRooms());
+    // dispatch({ type: UPDATE_ROOM, payload: data });
     console.log("Room EDIT route working :", data);
   } catch (error) {
     console.error("Error updating room:", error);
@@ -364,7 +366,8 @@ export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_STAFFS, payload: data });
+    // dispatch({ type: UPDATE_STAFFS, payload: data });
+    dispatch(getStaffs());
     console.log("Staff EDIT route working :", data);
   } catch (error) {
     console.error("Error updating room:", error);
@@ -553,5 +556,24 @@ export const deleteService = (serviceId) => async (dispatch) => {
     console.log("Delete Service route working :", data);
   } catch (error) {
     console.error("Error deleting service:", error);
+  }
+};
+
+// GET APPOINTMENTS COUNTS FOR GRAPHS
+
+export const getAppointmentCounts = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getAppointmentCounts`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
+    console.log("Appointment Counts route working :", data);
+  } catch (error) {
+    console.log(error);
   }
 };

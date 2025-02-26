@@ -17,95 +17,106 @@ import {
 import Select from "../../components/Select/index.jsx";
 import DonutChart from "./Components/DonutChart.jsx";
 import { useNavigate } from "react-router-dom"; // Use Grid from MUI instead
+import { useDispatch, useSelector } from "react-redux";
+import { getAppointmentCounts } from "../../components/State/Admin/Action.js";
 
 function Admin(props) {
   const [branches, setBranches] = useState(["Monthly", "Yearly"]);
 
-    // Initial state where all bars are visible
-    const [visibleBars, setVisibleBars] = useState({
-        appointments: true,
-        completed: true,
-        canceled: true,
-    });
+  // Initial state where all bars are visible
+  const [visibleBars, setVisibleBars] = useState({
+    appointments: true,
+    completed: true,
+    canceled: true,
+  });
 
+  const dispatch = useDispatch();
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
+    dispatch(getAppointmentCounts());
   }, []);
 
-  const data = [
-    {
-      name: "January",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "February",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "March",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "April",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "May",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "June",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "July",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-    {
-      name: "August",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "September",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "October",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "November",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "December",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-  ];
+  const appointmentData =
+    useSelector((state) => state.admin.appointmentCount) || {}; // Default to empty object
+  const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
+  const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
+
+  console.log("Months data:", data);
+
+  // const data = [
+  //   {
+  //     name: "January",
+  //     uv: 4000,
+  //     pv: 2400,
+  //     amt: 2400,
+  //   },
+  //   {
+  //     name: "February",
+  //     uv: 3000,
+  //     pv: 1398,
+  //     amt: 2210,
+  //   },
+  //   {
+  //     name: "March",
+  //     uv: 2000,
+  //     pv: 9800,
+  //     amt: 2290,
+  //   },
+  //   {
+  //     name: "April",
+  //     uv: 2780,
+  //     pv: 3908,
+  //     amt: 2000,
+  //   },
+  //   {
+  //     name: "May",
+  //     uv: 1890,
+  //     pv: 4800,
+  //     amt: 2181,
+  //   },
+  //   {
+  //     name: "June",
+  //     uv: 2390,
+  //     pv: 3800,
+  //     amt: 2500,
+  //   },
+  //   {
+  //     name: "July",
+  //     uv: 3490,
+  //     pv: 4300,
+  //     amt: 2100,
+  //   },
+  //   {
+  //     name: "August",
+  //     uv: 4000,
+  //     pv: 2400,
+  //     amt: 2400,
+  //   },
+  //   {
+  //     name: "September",
+  //     uv: 3000,
+  //     pv: 1398,
+  //     amt: 2210,
+  //   },
+  //   {
+  //     name: "October",
+  //     uv: 2000,
+  //     pv: 9800,
+  //     amt: 2290,
+  //   },
+  //   {
+  //     name: "November",
+  //     uv: 2780,
+  //     pv: 3908,
+  //     amt: 2000,
+  //   },
+  //   {
+  //     name: "December",
+  //     uv: 1890,
+  //     pv: 4800,
+  //     amt: 2181,
+  //   },
+  // ];
 
   const areaData = [
     {
@@ -154,23 +165,23 @@ function Admin(props) {
 
   const navigate = useNavigate();
 
-    const handleBarToggle = (bar) => {
-        // Set only the clicked bar to true, and the others to false
-        setVisibleBars({
-            appointments: bar === 'appointments',
-            completed: bar === 'completed',
-            canceled: bar === 'canceled',
-        });
-    };
+  const handleBarToggle = (bar) => {
+    // Set only the clicked bar to true, and the others to false
+    setVisibleBars({
+      appointments: bar === "appointments",
+      completed: bar === "completed",
+      canceled: bar === "canceled",
+    });
+  };
 
-    // Reset all bars to visible when "Appointment Statistics" is clicked
-    const handleResetBars = () => {
-        setVisibleBars({
-            appointments: true,
-            completed: true,
-            canceled: true,
-        });
-    };
+  // Reset all bars to visible when "Appointment Statistics" is clicked
+  const handleResetBars = () => {
+    setVisibleBars({
+      appointments: true,
+      completed: true,
+      canceled: true,
+    });
+  };
 
   return (
     <>
@@ -209,81 +220,114 @@ function Admin(props) {
         </Button>
       </div>
 
-            {/* Main Grid container */}
-            <Grid container spacing={2}>
-                {/* Top grid (one large block) */}
-                <Grid item xs={12}>
+      {/* Main Grid container */}
+      <Grid container spacing={2}>
+        {/* Top grid (one large block) */}
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              width: "97%",
+              backgroundColor: "#25307F",
+              px: 3,
+              py: 2,
+              borderRadius: "0.4rem",
+            }}
+          >
+            <Box display="flex" style={{ justifyContent: "space-between" }}>
+              <div
+                style={{
+                  paddingTop: "1rem",
+                  marginLeft: "1.8rem",
+                  marginBottom: "1.5rem",
+                  cursor: "pointer",
+                }}
+                onClick={handleResetBars} // Clicking on Appointment Statistics resets the bars
+              >
+                <h3>Appointment Statistics</h3>
+              </div>
 
-                    <Box sx={{width: '97%',backgroundColor:"#25307F",px:3,py:2,borderRadius:"0.4rem"}}>
+              <Box sx={{ display: "flex", gap: 3 }}>
+                {" "}
+                {/* Adjust gap for spacing */}
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => handleBarToggle("appointments")}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      backgroundColor: "#8884d8",
+                    }}
+                  />
+                  Appointments
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => handleBarToggle("completed")}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      backgroundColor: "#82ca9d",
+                    }}
+                  />
+                  Completed
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => handleBarToggle("canceled")}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      backgroundColor: "#EAA000",
+                    }}
+                  />
+                  Canceled
+                </Box>
+              </Box>
 
-                        <Box display="flex" style={{justifyContent:'space-between'}}>
-                            <div style={{paddingTop: "1rem", marginLeft: "1.8rem", marginBottom: "1.5rem",cursor:"pointer"}}
-                                 onClick={handleResetBars} // Clicking on Appointment Statistics resets the bars
-                            >
-                                <h3>Appointment Statistics</h3>
-                            </div>
-
-                            <Box sx={{display: "flex", gap: 3}}> {/* Adjust gap for spacing */}
-                                <Box display="flex" alignItems="center" gap={1} sx={{ cursor:'pointer'}} onClick={() => handleBarToggle('appointments')}>
-                                    <Box
-                                        sx={{
-                                            width: 10,
-                                            height: 10,
-                                            borderRadius: "50%",
-                                            backgroundColor: "#8884d8",
-                                        }}
-                                    />
-                                    Appointments
-                                </Box>
-                                <Box display="flex" alignItems="center" gap={1} sx={{cursor:'pointer'}} onClick={() => handleBarToggle('completed')}>
-                                    <Box
-                                        sx={{
-                                            width: 10,
-                                            height: 10,
-                                            borderRadius: "50%",
-                                            backgroundColor: "#82ca9d",
-                                        }}
-                                    />
-                                    Completed
-                                </Box>
-                                <Box display="flex" alignItems="center" gap={1} sx={{cursor:'pointer'}} onClick={() => handleBarToggle('canceled')}>
-                                    <Box
-                                        sx={{
-                                            width: 10,
-                                            height: 10,
-                                            borderRadius: "50%",
-                                            backgroundColor: "#EAA000",
-                                        }}
-                                    />
-                                    Canceled
-                                </Box>
-                            </Box>
-
-                            <div>
-                                {branches.length && (
-                                    <Grid
-                                        container
-                                        justifyContent="flex-end"
-                                        alignItems="center"
-                                        flexDirection={{md: "row"}}
-                                        size={12}
-                                        sx={{margin: "10px 0 1px 0"}}
-
-                                    >
-                                        <Grid size={3} sx={{backgroundColor: "white",borderRadius:"0.2rem"}}>
-                                            <Select
-                                                inputId="input-department"
-                                                selectId="select-department"
-                                                label="Department"
-                                                list={branches}
-                                                size="small"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                )}
-                            </div>
-
-                        </Box>
+              <div>
+                {branches.length && (
+                  <Grid
+                    container
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    flexDirection={{ md: "row" }}
+                    size={12}
+                    sx={{ margin: "10px 0 1px 0" }}
+                  >
+                    <Grid
+                      size={3}
+                      sx={{ backgroundColor: "white", borderRadius: "0.2rem" }}
+                    >
+                      <Select
+                        inputId="input-department"
+                        selectId="select-department"
+                        label="Department"
+                        list={branches}
+                        size="small"
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+              </div>
+            </Box>
 
             {/* Content for the top grid */}
             <ResponsiveContainer width="100%" height={300}>
@@ -312,16 +356,31 @@ function Admin(props) {
                   }}
                 />
                 {/* Remove the Legend for clarity */}
-                  {/* Conditionally render bars based on state */}
-                  {visibleBars.appointments && (
-                      <Bar dataKey="pv" fill="#8884d8" radius={[10, 10, 0, 0]} barSize={15} />
-                  )}
-                  {visibleBars.completed && (
-                      <Bar dataKey="uv" fill="#82ca9d" radius={[10, 10, 0, 0]} barSize={15} />
-                  )}
-                  {visibleBars.canceled && (
-                      <Bar dataKey="amt" fill="#EAA000" radius={[10, 10, 0, 0]} barSize={15} />
-                  )}
+                {/* Conditionally render bars based on state */}
+                {visibleBars.appointments && (
+                  <Bar
+                    dataKey="total"
+                    fill="#8884d8"
+                    radius={[10, 10, 0, 0]}
+                    barSize={15}
+                  />
+                )}
+                {visibleBars.completed && (
+                  <Bar
+                    dataKey="completed"
+                    fill="#82ca9d"
+                    radius={[10, 10, 0, 0]}
+                    barSize={15}
+                  />
+                )}
+                {visibleBars.canceled && (
+                  <Bar
+                    dataKey="cancelled"
+                    fill="#EAA000"
+                    radius={[10, 10, 0, 0]}
+                    barSize={15}
+                  />
+                )}
               </BarChart>
             </ResponsiveContainer>
           </Box>

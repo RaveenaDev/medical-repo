@@ -1,13 +1,15 @@
 import {
   ADD_DOCTORS,
   ADD_EXPENSE,
-  ADD_ROOM, ADD_SERVICE,
+  ADD_ROOM,
+  ADD_SERVICE,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM, DELETE_SERVICE,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
+  GET_APPOINTMENT_COUNTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_DETAILS,
@@ -17,7 +19,8 @@ import {
   GET_EXPENSES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
-  GET_ROOMS, GET_SERVICES,
+  GET_ROOMS,
+  GET_SERVICES,
   GET_STAFFS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
@@ -31,6 +34,7 @@ const inititalState = {
   totalStaffs: null,
   totalRooms: null,
   patient: null,
+  appointmentCount: null,
   patients: [],
   doctors: [],
   staffs: [],
@@ -43,7 +47,7 @@ const inititalState = {
   rejectedAppointments: [],
   billingRecord: null,
   billingRecords: [],
-  services:[],
+  services: [],
   noOfAppointments: null,
   isLoading: true,
   error: null,
@@ -52,6 +56,11 @@ const inititalState = {
 
 export const adminReducer = (state = inititalState, action) => {
   switch (action.type) {
+    case GET_APPOINTMENT_COUNTS:
+      return {
+        ...state,
+        appointmentCount: action.payload,
+      };
     case GET_DOCTORS:
       return {
         ...state,
@@ -61,7 +70,7 @@ export const adminReducer = (state = inititalState, action) => {
     case ADD_DOCTORS:
       return {
         ...state,
-        doctors: [...state.doctors, action.payload.doctor],
+        doctors: [...state.doctors, action.payload.newUser],
       };
     case DELETE_DOCTORS:
       return {
@@ -121,15 +130,15 @@ export const adminReducer = (state = inititalState, action) => {
           (staff) => staff._id !== action.payload.resource._id
         ),
       };
-    case UPDATE_STAFFS:
-      return {
-        ...state,
-        staffs: state.staffs.map((staff) =>
-          staff._id === action.payload.resource._id
-            ? action.payload.resource
-            : staff
-        ),
-      };
+    // case UPDATE_STAFFS:
+    //   return {
+    //     ...state,
+    //     staffs: state.staffs.map((staff) =>
+    //       staff._id === action.payload.resource._id
+    //         ? action.payload.resource
+    //         : staff
+    //     ),
+    //   };
 
     case GET_ROOMS:
       return {
@@ -148,15 +157,15 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         rooms: [...state.rooms, action.payload.room],
       };
-    case UPDATE_ROOM:
-      return {
-        ...state,
-        rooms: state.rooms.map((room) =>
-          room._id === action.payload.resource._id
-            ? action.payload.resource._id
-            : room
-        ),
-      };
+    // case UPDATE_ROOM:
+    //   return {
+    //     ...state,
+    //     rooms: state.rooms.map((room) =>
+    //       room._id === action.payload.resource._id
+    //         ? action.payload.resource._id
+    //         : room
+    //     ),
+    //   };
 
     case DELETE_ROOM:
       return {
@@ -212,10 +221,10 @@ export const adminReducer = (state = inititalState, action) => {
       };
 
     case GET_SERVICES:
-      return{
+      return {
         ...state,
-        services: action.payload.services
-      }
+        services: action.payload.services,
+      };
 
     case ADD_SERVICE:
       return {

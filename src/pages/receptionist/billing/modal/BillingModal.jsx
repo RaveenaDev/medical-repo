@@ -3,19 +3,19 @@ import { Modal, Box, Typography, Button } from "@mui/material";
 import "./BillingModal.scss"; // Ensure this file exists
 
 import arrowBack from "../../../../assets/arrow_back.svg";
-import {useDispatch, useSelector} from "react-redux";
-import {getBillById} from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
+import { useDispatch, useSelector } from "react-redux";
+import { getBillById } from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 
 const BillingModal = ({ open, bill, onClose }) => {
   const billId = bill?._id;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBillById(billId))
-  }, [dispatch,billId]);
+    dispatch(getBillById(billId));
+  }, [dispatch, billId]);
 
-  const billByID = useSelector(store => store.receptionist.bill)
+  const billByID = useSelector((store) => store.receptionist.bill);
 
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
@@ -61,53 +61,38 @@ const BillingModal = ({ open, bill, onClose }) => {
               </div>
               <div>
                 <span className="bold">Invoice Date</span>
-                <span>{billByID?.invoiceDate}</span>
+                <span>
+                  {new Date(billByID?.invoiceDate).toLocaleDateString()}
+                </span>
               </div>
             </div>
             <div className="billing-divider"></div>
             <div className="billing-invoice-amount">
-              {
-                billByID?.services.map((service) => (
-                    <>
-                      <h3>{service.name}</h3>
-                      <div >
-                        {
-                          service.categories.map((cat,index) => (
-                              <div key={index} className="billing-desc">
-                                <div>
-                                  <span className="bold">Description</span>
-                                  <span>{cat.category}</span>
-                                </div>
-                                <div>
-                                  <span className="bold">Quantity</span>
-                                  <span className="center">{cat.quantity}</span>
-                                </div>
-                                <div>
-                                  <span className="bold">Price</span>
-                                  <span> {cat.rate}</span>
-                                </div>
-                              </div>
-                          ))
-                        }
-                      </div>
+              {billByID?.services.map((service, index) => (
+                <div key={index} className="billing-desc">
+                  <div>
+                    <span className="bold">Description</span>
+                    <span>{service.name}</span>
+                  </div>
 
-                      <div className="billing-divider"></div>
-                      <div className="billing-total">
-                        <div className="bold">Total</div>
-                        <div className="bold">
-                          {
-                            service.categories.reduce((acc, cat) => acc + (cat.rate * cat.quantity), 0).toFixed(2)
-                            // Calculate the total sum of all item totals and format it
-                          }
-                        </div>
-                      </div>
-
-                    </>
-                ))
-              }
-
+                  {service.categories.map((cat, index) => (
+                    <div key={index} className="billing-category">
+                      <div>{cat.subCategoryName}</div>
+                      <div>Qty: {cat.quantity}</div>
+                      <div>Price: {cat.rate}</div>
+                      <div>Total: {cat.total}</div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+              <div className="billing-divider"></div>
+              <div className="billing-total">
+                <div className="bold">Total</div>
+                <div className="bold">{billByID?.totalAmount}</div>
+              </div>
             </div>
           </div>
+
           <div className="billing-amount">
             <div className="billing-amount-details">
               <div>
@@ -136,7 +121,9 @@ const BillingModal = ({ open, bill, onClose }) => {
                 </p>
                 <p>Mode: Cash</p>
                 <p>
-                  Date: <span>{billByID?.invoiceDate}</span>
+                  <span>
+                    {new Date(billByID?.invoiceDate).toLocaleDateString()}
+                  </span>
                 </p>
               </div>
             </div>

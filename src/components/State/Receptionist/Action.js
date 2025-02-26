@@ -28,7 +28,7 @@ export const updateRoom = (roomId, updatedData) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_ROOM, payload: data });
+    // dispatch({ type: UPDATE_ROOM, payload: data });
     console.log("Room EDIT route working :", data);
     dispatch(getRooms());
   } catch (error) {
@@ -47,7 +47,7 @@ export const deleteRoom = (roomId) => async (dispatch) => {
       },
     });
 
-    dispatch({ type: DELETE_ROOM, payload: roomId });
+    // dispatch({ type: DELETE_ROOM, payload: roomId });
     console.log("Room DELETION route working :", data);
     dispatch(getRooms());
   } catch (error) {
@@ -110,7 +110,7 @@ export const getRooms = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getRooms`, {
+    const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -189,7 +189,9 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
       },
     });
 
-    dispatch({ type: BOOK_APPOINTMENT, payload: data });
+    dispatch(getAppointments("Scheduled"));
+
+    // dispatch({ type: BOOK_APPOINTMENT, payload: data });
     console.log("Appointment Booked Successfully :", data);
 
     // Show success toast
