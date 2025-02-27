@@ -12,7 +12,6 @@ export const login = (data) => async (dispatch) => {
       localStorage.setItem("hospitalName", response.data.hospitalName);
     }
     dispatch({ type: LOGIN, payload: response.data });
-    console.log("Successfully Logged in ", response.data);
 
     // Show success toast
     toast.success("Login Successful!", {
@@ -32,7 +31,6 @@ export const Logout = () => async (dispatch) => {
   try {
     localStorage.clear(); // Remove jwt token from localStorage when we logOut...
     dispatch({ type: LOGOUT });
-    console.log("Logout Success");
     // Show success toast
     toast.success("Logout Successful!", {
       position: "bottom-right", // Use string for position
