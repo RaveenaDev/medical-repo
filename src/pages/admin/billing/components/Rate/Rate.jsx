@@ -15,7 +15,11 @@ import "./Rate.scss";
 
 import RateModal from "./components/RateModal";
 import { useDispatch, useSelector } from "react-redux";
-import {deleteService, deleteServiceCategory, getServices} from "../../../../../components/State/Admin/Action.js";
+import {
+  deleteService,
+  deleteServiceCategory,
+  getServices,
+} from "../../../../../components/State/Admin/Action.js";
 import EditRateModal from "./components/EditRateModal.jsx";
 
 const Rate = () => {
@@ -26,8 +30,6 @@ const Rate = () => {
   }, [dispatch]);
 
   const reduxServices = useSelector((store) => store.admin.services);
-
-  // console.log("Coming from redux: ", reduxServices);
 
   const services = reduxServices.map((service) => ({
     serviceId: service._id,
@@ -65,28 +67,30 @@ const Rate = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleOpenMenu = (event,service,category) => {
+  const handleOpenMenu = (event, service, category) => {
     event.stopPropagation(); // Prevent interference with other clicks
     setAnchorE2(event.currentTarget);
-    setSelectedService({service,category})
+    setSelectedService({ service, category });
   };
 
   const handleCloseMenu = () => {
     setAnchorE2(null);
-    setSelectedService(null)
+    setSelectedService(null);
   };
 
   const handleDelete = () => {
-    console.log("Deleteeeee",selectedService)
-    console.log("Category Id:",selectedService.category.categoryId)
-    console.log("Service Id:",selectedService.service.serviceId)
     // dispatch(deleteService(selectedService.category.categoryId));
-    dispatch(deleteServiceCategory(selectedService.service.serviceId,selectedService.category.categoryId))
-  }
+    dispatch(
+      deleteServiceCategory(
+        selectedService.service.serviceId,
+        selectedService.category.categoryId
+      )
+    );
+  };
 
   const handleDeleteService = () => {
-    dispatch(deleteService(selectedService.service.serviceId))
-  }
+    dispatch(deleteService(selectedService.service.serviceId));
+  };
 
   const handleSelect = (option) => {
     setSelectedFilter(option);
@@ -269,15 +273,23 @@ const Rate = () => {
                   <span>{category.effectiveDate}</span>
                   <span>{category.lastUpdated}</span>
                   <span className="blue">{category.amenities}</span>
-                  <IconButton onClick={(event) => handleOpenMenu(event,service,category)}>
+                  <IconButton
+                    onClick={(event) =>
+                      handleOpenMenu(event, service, category)
+                    }
+                  >
                     <MoreVertIcon />
                   </IconButton>
                   {/* Dropdown Menu */}
                   <Menu
-                      key={`${service.serviceId}-${category.categoryId}`}
-                      anchorEl={anchorE2}
-                      open={Boolean(anchorE2 && selectedService?.category?.categoryId === category.categoryId)}
-                      onClose={handleCloseMenu}
+                    key={`${service.serviceId}-${category.categoryId}`}
+                    anchorEl={anchorE2}
+                    open={Boolean(
+                      anchorE2 &&
+                        selectedService?.category?.categoryId ===
+                          category.categoryId
+                    )}
+                    onClose={handleCloseMenu}
                   >
                     <MenuItem
                       value="edit"
@@ -345,43 +357,40 @@ const Rate = () => {
                       Delete
                     </MenuItem>
 
-
-                    {
-                        index === 0 && (
-                            <MenuItem
-                                value="delete"
-                                sx={{ display: "flex", gap: "4px" }}
-                                onClick={() => handleDeleteService()}
-                            >
-                              <svg
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 20 20"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <mask
-                                    id="mask0_1313_1069"
-                                    mask-type="alpha"
-                                    maskUnits="userSpaceOnUse"
-                                    x="0"
-                                    y="0"
-                                    width="20"
-                                    height="20"
-                                >
-                                  <rect width="20" height="20" fill="#D9D9D9" />
-                                </mask>
-                                <g mask="url(#mask0_1313_1069)">
-                                  <path
-                                      d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
-                                      fill="#FF4800"
-                                  />
-                                </g>
-                              </svg>
-                              Delete Service
-                            </MenuItem>
-                        )
-                    }
+                    {index === 0 && (
+                      <MenuItem
+                        value="delete"
+                        sx={{ display: "flex", gap: "4px" }}
+                        onClick={() => handleDeleteService()}
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <mask
+                            id="mask0_1313_1069"
+                            mask-type="alpha"
+                            maskUnits="userSpaceOnUse"
+                            x="0"
+                            y="0"
+                            width="20"
+                            height="20"
+                          >
+                            <rect width="20" height="20" fill="#D9D9D9" />
+                          </mask>
+                          <g mask="url(#mask0_1313_1069)">
+                            <path
+                              d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
+                              fill="#FF4800"
+                            />
+                          </g>
+                        </svg>
+                        Delete Service
+                      </MenuItem>
+                    )}
                   </Menu>
                 </div>
               ))}
@@ -390,11 +399,13 @@ const Rate = () => {
       </div>
       {/* Use the separate BillingModal Component */}
       <RateModal open={modalOpen} handleClose={() => setModalOpen(false)} />
-      {
-        selectedService && (
-              <EditRateModal open={editModalOpen} handleClose={() => setEditModalOpen(false)} service={selectedService}/>
-          )
-      }
+      {selectedService && (
+        <EditRateModal
+          open={editModalOpen}
+          handleClose={() => setEditModalOpen(false)}
+          service={selectedService}
+        />
+      )}
     </div>
   );
 };
