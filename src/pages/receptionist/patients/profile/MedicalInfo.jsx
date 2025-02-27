@@ -34,7 +34,7 @@ const MedicalInfo = ({
 
   const handleMoreClick = () => {
     navigate("/receptionist/patients/profile/more-info", {
-      state: { patient },
+      state: {medicalHistory,currentMedications,symptoms,history,patient },
     }); // Redirects to the MoreInfo page
   };
 
@@ -90,15 +90,6 @@ const MedicalInfo = ({
       )}
     </>
   );
-};
-
-MedicalInfo.propTypes = {
-  medicalHistory: PropTypes.arrayOf(PropTypes.string),
-  currentMedications: PropTypes.arrayOf(PropTypes.string),
-  symptoms: PropTypes.arrayOf(PropTypes.string),
-  history: PropTypes.arrayOf(PropTypes.string),
-  showSymptoms: PropTypes.bool,
-  showHistory: PropTypes.bool,
 };
 
 export default MedicalInfo;

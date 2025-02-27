@@ -109,7 +109,7 @@ const Profile = (props) => {
                     }}
                   >
                     <Avatar
-                      src="https://via.placeholder.com/150"
+                      src=""
                       alt="Profile Image"
                       sx={{
                         width: 80,
@@ -216,7 +216,7 @@ const Profile = (props) => {
                 </div>
               </div>
 
-              <Grid item xs={12}>
+              <Grid xs={12}>
                 <Box
                   sx={{
                     backgroundColor: "#FFFFFF", // Set the background color to white

@@ -102,24 +102,6 @@ const Staffs = (props) => {
           </div>
           <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
           <h2 className={ayu.departmentTitleDetails}>200+</h2>
-
-          {/*<div style={{marginLeft: 'auto'}}>*/}
-          {/*    <Button*/}
-          {/*        variant="contained"*/}
-          {/*        sx={{*/}
-          {/*            fontSize: "20px",*/}
-          {/*            color: "#ffffff",*/}
-          {/*            textTransform: "capitalize",*/}
-          {/*            padding: "2px 18px",*/}
-          {/*            backgroundColor: "#25307F",*/}
-          {/*        }}*/}
-          {/*        onClick={() => setAddDialogOpen(true)} // Open the modal*/}
-          {/*    >*/}
-          {/*        <img src={addIcon} className={styles.appointmentBlock__plusIcon} />*/}
-          {/*        Add*/}
-          {/*    </Button>*/}
-
-          {/*</div>*/}
         </div>
       </Box>
 
@@ -144,9 +126,9 @@ const Staffs = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {staffs.map((patient) => (
+            {staffs.map((patient,index) => (
               <TableRow
-                key={patient.id}
+                key={index}
                 sx={{
                   background: "#fff",
                   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",

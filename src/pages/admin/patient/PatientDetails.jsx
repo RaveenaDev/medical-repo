@@ -88,7 +88,7 @@ const PatientDetails = (props) => {
                   }}
                 >
                   <Avatar
-                    src="https://via.placeholder.com/150"
+                    src=""
                     alt="Profile Image"
                     sx={{
                       width: 80,
@@ -190,6 +190,7 @@ const PatientDetails = (props) => {
                   currentMedications={currentMedications}
                   showSymptoms={false} // Hide Symptoms section
                   showHistory={false} // Hide Social History section
+                    patient={patient}
                 />
               </div>
             </div>

@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDepartmentById } from "../../../../components/State/Admin/Action.js";
 
@@ -367,8 +367,9 @@ const DepartDetails1 = (props) => {
                       <div className={avi.box3} style={{ padding: "14px" }}>
                         <div style={{ marginBottom: "14px" }}>
                           <h4>Available services</h4>
-                          {department?.availableServices.map((serv) => (
+                          {department?.availableServices.map((serv,index) => (
                             <ul
+                                key={index}
                               style={{
                                 listStyleType: "none",
                                 paddingLeft: "10px",

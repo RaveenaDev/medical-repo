@@ -13,8 +13,6 @@ const DepartCard = ({ department }) => {
     navigate(`/admin/departments/departDetails`, { state: { departmentId } });
   };
 
-  console.log(department)
-
   const handleClickMessage = (e) => {
     e.stopPropagation(); // Prevent navigation from firing
     // You can add further functionality here

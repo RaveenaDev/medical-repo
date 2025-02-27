@@ -28,11 +28,12 @@ const MedicalInfo = ({
     showSymptoms = true,
     showHistory = true,
     showButton = true, // New prop to control button visibility
+    patient
 }) => {
     const navigate = useNavigate();
 
     const handleMoreClick = () => {
-        navigate("/admin/reception/patients/History"); // Redirects to the MoreInfo page
+        navigate("/admin/reception/patients/History", { state: { medicalHistory,currentMedications,symptoms,history,patient } }); // Redirects to the MoreInfo page
     };
 
     return (
@@ -90,13 +91,13 @@ const MedicalInfo = ({
 };
 
 
-MedicalInfo.propTypes = {
-    medicalHistory: PropTypes.arrayOf(PropTypes.string),
-    currentMedications: PropTypes.arrayOf(PropTypes.string),
-    symptoms: PropTypes.arrayOf(PropTypes.string),
-    history: PropTypes.arrayOf(PropTypes.string),
-    showSymptoms: PropTypes.bool,
-    showHistory: PropTypes.bool,
-};
+// MedicalInfo.propTypes = {
+//     medicalHistory: PropTypes.arrayOf(PropTypes.string),
+//     currentMedications: PropTypes.arrayOf(PropTypes.string),
+//     symptoms: PropTypes.arrayOf(PropTypes.string),
+//     history: PropTypes.arrayOf(PropTypes.string),
+//     showSymptoms: PropTypes.bool,
+//     showHistory: PropTypes.bool,
+// };
 
 export default MedicalInfo;

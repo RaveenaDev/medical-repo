@@ -249,7 +249,7 @@ const Rooms = (props) => {
               {" "}
               {/* Fix width issue */}
               <Grid container spacing={2}>
-                <Grid item xs={3}>
+                <Grid xs={3}>
                   <TextField
                     autoFocus
                     margin="dense"
@@ -262,7 +262,7 @@ const Rooms = (props) => {
                     variant="outlined"
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid xs={3}>
                   <TextField
                     margin="dense"
                     label="Room Name"
@@ -274,7 +274,7 @@ const Rooms = (props) => {
                     variant="outlined"
                   />
                 </Grid>
-                <Grid item xs={3} sx={{ padding: 0, width: "22%" }}>
+                <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
                   <FormControl fullWidth margin="dense">
                     <InputLabel id="status-select-label">Status</InputLabel>
                     <Select

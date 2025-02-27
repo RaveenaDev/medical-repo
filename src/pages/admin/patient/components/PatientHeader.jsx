@@ -56,7 +56,7 @@ const PatientHeader = ({ showEditPatients = true,patient }) => {
           </g>
         </svg>
 
-        <p>{patient.name}</p>
+        <p>{patient?.name}</p>
         <svg
           width="24"
           height="24"

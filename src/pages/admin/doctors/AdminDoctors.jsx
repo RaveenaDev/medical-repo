@@ -393,11 +393,11 @@ const AdminDoctors = (props) => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {truncateText(doctor?._id, 13)}
+                    {truncateText(doctor?._id, 8)}
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1">{doctor?.name}</Typography>
+                  <Typography variant="body1">{truncateText(doctor?.name, 13)}</Typography>
                 </TableCell>
                 <TableCell>{doctor?.phone}</TableCell>
                 <TableCell>{doctor?.specialization}</TableCell>

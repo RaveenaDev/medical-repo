@@ -5,57 +5,22 @@ import MedicalInfo from "./MedicalInfo";
 import rav from "./styles.module.scss";
 import FileDocuments from "./FileDocuments";
 import PatientHeader from "./components/PatientHeader.jsx";
+import {useLocation} from "react-router-dom";
 
 const History = (props) => {
-  const [medicalHistory, setMedicalHistory] = useState([]);
-  const [currentMedications, setCurrentMedications] = useState([]);
-  const [symptoms, setSymptoms] = useState([]); // State for symptoms
-  const [socialHistory, setSocialHistory] = useState([]); // State for social history
 
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  useEffect(() => {
-    // Simulate fetching data from the backend
-    const fetchData = async () => {
-      // backend response structure
-      const response = {
-        medicalHistory: [
-          "Type 2 diabetes diagnosed 5 years ago",
-          "Hypertension diagnosed 3 years ago",
-          "Family history of heart disease (father)",
-        ],
-        currentMedications: [
-          "Metformin (for diabetes)",
-          "Lisinopril (for hypertension)",
-          "Aspirin (for heart health)",
-        ],
-        symptoms: ["Fatigue", "Frequent urination", "Headaches"],
-        socialHistory: [
-          "Non-smoker",
-          "Occasional alcohol use",
-          "Regular exercise",
-        ],
-      };
-
-      // Simulating an API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setMedicalHistory(response.medicalHistory);
-      setCurrentMedications(response.currentMedications);
-      setSymptoms(response.symptoms); // Set symptoms
-      setSocialHistory(response.socialHistory); // Set social history
-    };
-
-    fetchData();
-  }, []);
+    const location = useLocation();
+    const { medicalHistory,currentMedications,symptoms,history,patient } = location.state || {};
 
   return (
       <>
         <div className={rav.receptionist}>
               <>
-                <PatientHeader showEditPatients={false} />
+                <PatientHeader showEditPatients={false} patient={patient} />
                 <Grid
                     container
                     spacing={2}
@@ -78,7 +43,7 @@ const History = (props) => {
                           medicalHistory={medicalHistory}
                           currentMedications={currentMedications}
                           symptoms={symptoms}
-                          history={socialHistory}
+                          history={history}
                           showButton={false} // Hide the button
                       />
                     </Paper>

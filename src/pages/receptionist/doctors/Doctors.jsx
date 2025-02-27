@@ -47,6 +47,10 @@ const Doctors = (props) => {
 
   const navigate = useNavigate();
 
+  const truncateText = (text, maxLength) => {
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
   return (
     <>
       <CommonPanel />
@@ -64,7 +68,7 @@ const Doctors = (props) => {
 
           <div style={{ marginLeft: "25px" }}>
             {branches.length && (
-              <Grid item xs={3} spacing={2}>
+              <Grid xs={3}>
                 <Box sx={{ width: "200px" }}>
                   {" "}
                   {/* Adjust width here */}
@@ -103,9 +107,9 @@ const Doctors = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {doctors.map((patient) => (
+            {doctors.map((patient,index) => (
               <TableRow
-                key={patient.id}
+                key={index}
                 sx={{
                   background: "#fff",
                   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
@@ -127,11 +131,11 @@ const Doctors = (props) => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {patient._id}
+                    {truncateText(patient?._id, 8)}
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1">{patient.name}</Typography>
+                  <Typography variant="body1">{truncateText(patient?.name, 13)}</Typography>
                 </TableCell>
                 <TableCell>{patient.phone}</TableCell>
                 <TableCell>{patient.specialization}</TableCell>

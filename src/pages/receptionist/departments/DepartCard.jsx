@@ -10,7 +10,7 @@ const DepartCard = ({ department }) => {
   const navigate = useNavigate();
   const handleClick = (departmentId) => {
     // Redirect to the specific page
-    navigate(`/receptionist/departments/${departmentId}`);
+    navigate(`/receptionist/departments/departDetails`,{ state: { departmentId } });
   };
 
   const handleClickMessage = (e) => {
@@ -92,7 +92,9 @@ const DepartCard = ({ department }) => {
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Active Services:</p>
-          <p className={styles.value}>{department.activeServices}</p>
+          {
+            department.activeServices.length > 0 ? <p className={styles.value}>{department.activeServices[0]}...</p> : <p className={styles.value}>No Services</p>
+          }
         </div>
       </div>
     </Box>

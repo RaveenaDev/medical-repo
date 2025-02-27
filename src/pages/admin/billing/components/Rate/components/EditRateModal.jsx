@@ -8,7 +8,6 @@ import {
   IconButton,
   MenuItem,
 } from "@mui/material";
-import { Add, Remove } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addService,
@@ -17,9 +16,7 @@ import {
 } from "../../../../../../components/State/Admin/Action.js";
 
 const EditRateModal = ({ open, handleClose,service}) => {
-    console.log("Selected Services :",service)
     const serviceId = service.service.serviceId;
-    console.log("IDDDDDDDDDDDDD:",serviceId)
     const [serviceDetails, setServiceDetails] = useState({
         serviceId: serviceId,
         name: service.service.serviceName,
@@ -93,22 +90,6 @@ const EditRateModal = ({ open, handleClose,service}) => {
           value={serviceDetails.name}
           onChange={handleChange}
         />
-
-        <TextField
-          select
-          label="Deparment Name"
-          fullWidth
-          margin="dense"
-          name="departmentName"
-          value={serviceDetails.departmentName}
-          onChange={handleChange}
-        >
-          {departments.map((department, index) => (
-            <MenuItem key={index} value={department.departmentName}>
-              {department.departmentName}
-            </MenuItem>
-          ))}
-        </TextField>
 
         <div
           style={{

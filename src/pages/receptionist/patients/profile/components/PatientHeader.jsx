@@ -111,7 +111,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
             <rect width="42" height="42" rx="5" fill="white" />
             <mask
               id="mask0_patient_header"
-              maskType="alpha"
+              mask-type="alpha"
               maskUnits="userSpaceOnUse"
               x="9"
               y="10"
@@ -151,7 +151,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
           >
             <mask
               id="mask1_patient_header"
-              maskType="alpha"
+              mask-type="alpha"
               maskUnits="userSpaceOnUse"
               x="0"
               y="0"
@@ -182,7 +182,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
             >
               <mask
                 id="mask2_patient_header"
-                maskType="alpha"
+                mask-type="alpha"
                 maskUnits="userSpaceOnUse"
                 x="0"
                 y="0"

@@ -8,7 +8,7 @@ const PersonalInfo = ({patient}) => {
     },
     {
       labels: ["Address", "Case ID", "Assessed by"],
-      values: ["Data A", "Data B", "Dr. Arunita"],
+      values: [patient.address, patient.appointments[patient.appointments.length - 1].caseId, patient.appointments[patient.appointments.length - 1].doctorName],
     },
     {
       labels: ["Member status", "Registered Date"],

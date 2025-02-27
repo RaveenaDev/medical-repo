@@ -223,9 +223,9 @@ const PatientList = ({ allPatients }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {totalPatients.map((patient) => (
+            {totalPatients.map((patient,index) => (
               <TableRow
-                key={patient.id}
+                key={index}
                 sx={{
                   background: "#fff",
                   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
