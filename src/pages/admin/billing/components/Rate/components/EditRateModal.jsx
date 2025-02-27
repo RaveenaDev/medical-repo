@@ -47,14 +47,16 @@ const EditRateModal = ({ open, handleClose,service}) => {
             serviceId: serviceDetails.serviceId,
             name: serviceDetails.name,
             departmentName: serviceDetails.departmentName,
-            categories: {
-                _id : service.category.categoryId,
-                subCategoryName:serviceDetails.subCategoryName,
-                rateType:serviceDetails.rateType,
-                rate:serviceDetails.rate,
-                effectiveDate:serviceDetails.effectiveDate,
-                amenities:serviceDetails.amenities,
-            }
+            categories: [
+                {
+                    _id : service.category.categoryId,
+                    subCategoryName:serviceDetails.subCategoryName,
+                    rateType:serviceDetails.rateType,
+                    rate:serviceDetails.rate,
+                    effectiveDate:serviceDetails.effectiveDate,
+                    amenities:serviceDetails.amenities,
+                }
+            ]
         }
         console.log("Edited Testing Service Details: ",pass)
         dispatch(updateService(pass))

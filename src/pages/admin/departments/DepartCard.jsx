@@ -10,8 +10,10 @@ const DepartCard = ({ department }) => {
   const navigate = useNavigate();
   const handleClick = (departmentId) => {
     // Redirect to the specific page
-    navigate(`/admin/departments/${departmentId}`);
+    navigate(`/admin/departments/departDetails`, { state: { departmentId } });
   };
+
+  console.log(department)
 
   const handleClickMessage = (e) => {
     e.stopPropagation(); // Prevent navigation from firing
@@ -91,7 +93,9 @@ const DepartCard = ({ department }) => {
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Active Services:</p>
-          <p className={styles.value}>{department.activeServices}</p>
+          {
+            department.activeServices.length > 0 ? <p className={styles.value}>{department.activeServices[0]}...</p> : <p className={styles.value}>No Services</p>
+          }
         </div>
       </div>
     </Box>

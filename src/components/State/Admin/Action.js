@@ -487,6 +487,8 @@ export const updateService = (updatedData) => async (dispatch) => {
       }
     );
     dispatch({ type: UPDATE_SERVICE, payload: data });
+    console.log("Edit Service Working:",data)
+    dispatch(getServices())
   } catch (error) {
     console.error("Error updating service:", error);
   }

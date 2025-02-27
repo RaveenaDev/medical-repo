@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import { useNavigate, useParams } from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDepartmentById } from "../../../../components/State/Admin/Action.js";
 
@@ -37,7 +37,10 @@ const DepartDetails1 = (props) => {
     navigate("/admin/departments");
   };
 
-  const { departmentId } = useParams();
+  // const { departmentId } = useParams();
+
+  const location = useLocation();
+  const { departmentId } = location.state || {};
 
   const dispatch = useDispatch();
 

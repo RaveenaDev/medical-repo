@@ -270,7 +270,7 @@ const Rate = () => {
                   </span>
                   <span>{category.rateType}</span>
                   <span className="blue">₹{category.currentRate}</span>
-                  <span>{category.effectiveDate}</span>
+                  <span>{new Date(category.effectiveDate).toLocaleString()}</span>
                   <span>{category.lastUpdated}</span>
                   <span className="blue">{category.amenities}</span>
                   <IconButton

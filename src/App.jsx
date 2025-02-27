@@ -349,7 +349,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/departments/:departmentId"
+              path="/admin/departments/departDetails"
               element={
                 <DepartDetails1
                   setIsSignUpOrLogin={setIsSignUpOrLogin}
