@@ -77,7 +77,6 @@ const AdminRooms = (props) => {
         originalRoomID: selectedRoom._id,
       });
       setEditDialogOpen(true);
-      console.log("Edit room", editedRoom);
     }
     handleMenuClose();
   };
@@ -86,7 +85,6 @@ const AdminRooms = (props) => {
   const handleSaveEditedRoom = () => {
     dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
     setEditDialogOpen(false);
-    console.log("Room Edited Successfully");
   };
 
   // Handle Menu Open
@@ -105,7 +103,6 @@ const AdminRooms = (props) => {
   // Handle Delete Action
   const handleDelete = () => {
     dispatch(deleteRoom(selectedRoom._id));
-    console.log("Patient Deleted"); // Dispatch delete action    console.log("Patient Deleted");
     handleMenuClose();
   };
 
@@ -117,7 +114,6 @@ const AdminRooms = (props) => {
   const handleAddDialogOpen = () => setAddDialogOpen(true);
   const handleAddDialogClose = () => {
     dispatch(addRoom(formData));
-    console.log("Form Data: ", formData);
     setAddDialogOpen(false);
   };
 
@@ -138,7 +134,6 @@ const AdminRooms = (props) => {
 
   const rooms = useSelector((state) => state.admin.rooms);
   const doctors = useSelector((state) => state.admin.doctors);
-  console.log("ROOMS", rooms);
 
   return (
     <>
