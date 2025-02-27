@@ -16,8 +16,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useNavigate, useParams } from "react-router-dom";
-import {getDepartmentById} from "../../../../components/State/Receptionist/Action.js";
-import {useDispatch, useSelector} from "react-redux";
+import { getDepartmentById } from "../../../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const DepartDetails = (props) => {
   const navigate = useNavigate();
@@ -29,13 +29,13 @@ const DepartDetails = (props) => {
 
   const [age, setAge] = React.useState("");
 
-    const {departmentId} = useParams();
+  const { departmentId } = useParams();
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getDepartmentById(departmentId))
-    }, [dispatch,departmentId]);
+  useEffect(() => {
+    dispatch(getDepartmentById(departmentId));
+  }, [dispatch, departmentId]);
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -45,9 +45,7 @@ const DepartDetails = (props) => {
     navigate("/receptionist/departments");
   };
 
-    const department = useSelector((store) => store.receptionist.department)
-
-    console.log("DEP:",department)
+  const department = useSelector((store) => store.receptionist.department);
 
   return (
     <>

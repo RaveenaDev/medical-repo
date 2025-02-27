@@ -101,16 +101,13 @@ function Receptionist(props) {
   }, []);
 
   const handleAppointmentRequests = () => {
-    console.log("handleAppointmentRequests");
     // Any other logic before opening the modal
     setIsModalOpen(true);
   };
   const handleBilling = () => {
-    console.log("handleBilling");
     navigate("/receptionist/billing");
   };
   const handleBookAppointment = () => {
-    console.log("handleBookAppointment");
     setIsBookAppointment(true); // Set the state to show BookAppointment component
   };
 
@@ -131,7 +128,6 @@ function Receptionist(props) {
   ];
 
   const activeLabel = boxData.find((box) => box.id === activeBox)?.label;
-  // console.log("Active Label",activeLabel);
 
   const handleBoxClick = (id) => {
     setActiveBox(id);
@@ -440,7 +436,7 @@ function Receptionist(props) {
                         <TableCell>Type Visit</TableCell>
                         <TableCell>Branch</TableCell>
                         <TableCell>Token No.</TableCell>
-                        <TableCell align='center'>Status</TableCell>
+                        <TableCell align="center">Status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -475,7 +471,9 @@ function Receptionist(props) {
                           <TableCell>{appointment.doctor?.name}</TableCell>
                           <TableCell>{appointment.typeVisit}</TableCell>
                           <TableCell>{appointment.department.name}</TableCell>
-                          <TableCell align='center'>{appointment?.tokenNumber}</TableCell>
+                          <TableCell align="center">
+                            {appointment?.tokenNumber}
+                          </TableCell>
                           <TableCell>
                             <Chip
                               label={appointment.status}

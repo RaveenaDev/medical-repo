@@ -14,55 +14,57 @@ import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
 
 const Profile = (props) => {
-    // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
-    const location = useLocation();
-    const patient = location.state?.patient;
+  // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
+  const location = useLocation();
+  const patient = location.state?.patient;
 
-    if (!patient) {
-        return <p>No patient data found!</p>;
-    }
+  if (!patient) {
+    return <p>No patient data found!</p>;
+  }
 
-    console.log("Patient Details",patient)
-
-    const [medicalHistory, setMedicalHistory] = useState([]);
-    const [currentMedications, setCurrentMedications] = useState([]);
+  const [medicalHistory, setMedicalHistory] = useState([]);
+  const [currentMedications, setCurrentMedications] = useState([]);
 
   const [tableIndex, setTableIndex] = useState(null);
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-    useEffect(() => {
-        // Simulate fetching data from the backend
-        const fetchData = async () => {
-            // backend response structure
-            const response = {
-                // medicalHistory: [
-                //     "Type 2 diabetes diagnosed 5 years ago",
-                //     "Hypertension diagnosed 3 years ago",
-                //     "Family history of heart disease (father)",
-                // ],
-                medicalHistory: patient.medicalHistory,
-                currentMedications: patient.currentMedication
-                // currentMedications: [
-                //     "Metformin (for diabetes)",
-                //     "Lisinopril (for hypertension)",
-                //     "Aspirin (for heart health)",
-                // ],
-            };
+  useEffect(() => {
+    // Simulate fetching data from the backend
+    const fetchData = async () => {
+      // backend response structure
+      const response = {
+        // medicalHistory: [
+        //     "Type 2 diabetes diagnosed 5 years ago",
+        //     "Hypertension diagnosed 3 years ago",
+        //     "Family history of heart disease (father)",
+        // ],
+        medicalHistory: patient.medicalHistory,
+        currentMedications: patient.currentMedication,
+        // currentMedications: [
+        //     "Metformin (for diabetes)",
+        //     "Lisinopril (for hypertension)",
+        //     "Aspirin (for heart health)",
+        // ],
+      };
 
-            // Simulating an API call delay
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Simulating an API call delay
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setMedicalHistory(response.medicalHistory);
       setCurrentMedications(response.currentMedications);
     };
 
-        fetchData();
-    }, []);
+    fetchData();
+  }, []);
 
-    const upcoming = patient.appointments?.filter((app) => app.status === "Scheduled").length;
-    const completed = patient.appointments?.filter((app) => app.status === "Completed").length;
+  const upcoming = patient.appointments?.filter(
+    (app) => app.status === "Scheduled"
+  ).length;
+  const completed = patient.appointments?.filter(
+    (app) => app.status === "Completed"
+  ).length;
 
   return (
     <>
@@ -190,7 +192,7 @@ const Profile = (props) => {
                     boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   }}
                 >
-                  <PersonalInfo patient={patient}/>
+                  <PersonalInfo patient={patient} />
                 </div>
 
                 {/* Box 3 - Medical Info */}
@@ -205,7 +207,7 @@ const Profile = (props) => {
                   }}
                 >
                   <MedicalInfo
-                                        patient = {patient}
+                    patient={patient}
                     medicalHistory={medicalHistory}
                     currentMedications={currentMedications}
                     showSymptoms={false} // Hide Symptoms section
