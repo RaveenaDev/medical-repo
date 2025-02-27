@@ -26,20 +26,6 @@ const EditRateModal = ({ open, handleClose,service}) => {
         amenities:service.category.amenities,
     });
 
-    const pass = {
-        serviceId: serviceId,
-        name: service.service.serviceName,
-        departmentName: service.service.department,
-        categories: {
-            _id : service.category.categoryId,
-            subCategoryName:service.category.name,
-            rateType:service.category.rateType,
-            rate:service.category.currentRate,
-            effectiveDate:service.category.effectiveDate,
-            amenities:service.category.amenities,
-        }
-    }
-
     const [lastUpdated, setLastUpdated] = useState(
         new Date().toISOString().split("T")[0]
     );
@@ -52,7 +38,20 @@ const EditRateModal = ({ open, handleClose,service}) => {
     }
 
     const handleSubmit = () => {
-        console.log("Edited Service Details: ",serviceDetails)
+        const pass = {
+            serviceId: serviceDetails.serviceId,
+            name: serviceDetails.name,
+            departmentName: serviceDetails.departmentName,
+            categories: {
+                _id : service.category.categoryId,
+                subCategoryName:serviceDetails.subCategoryName,
+                rateType:serviceDetails.rateType,
+                rate:serviceDetails.rate,
+                effectiveDate:serviceDetails.effectiveDate,
+                amenities:serviceDetails.amenities,
+            }
+        }
+        console.log("Edited Testing Service Details: ",pass)
         dispatch(updateService(pass))
         // Reset the form fields
         setServiceDetails({

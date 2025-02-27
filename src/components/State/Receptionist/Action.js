@@ -8,7 +8,7 @@ import {
   GET_BILL_BY_ID,
   GET_BILLS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS,
+  GET_DOCTORS, GET_DOCTORS_BY_DEPARTMENT,
   GET_PATIENTS,
   GET_ROOMS,
   GET_STAFFS,
@@ -278,3 +278,21 @@ export const getBillById = (billId) => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const getDoctorsByDepartment = (departId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getDoctorsByDepartment/${departId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_DOCTORS_BY_DEPARTMENT, payload: data });
+    console.log("Doctors By Department route working :", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+

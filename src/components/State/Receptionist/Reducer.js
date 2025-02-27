@@ -8,7 +8,7 @@ import {
   GET_BILL_BY_ID,
   GET_BILLS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS,
+  GET_DOCTORS, GET_DOCTORS_BY_DEPARTMENT,
   GET_PATIENTS,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
@@ -26,6 +26,7 @@ const inititalState = {
   patient: null,
   patients: [],
   doctors: [],
+  doctorsByDepartment: [],
   staffs: [],
   rooms: [],
   departments: [],
@@ -65,6 +66,12 @@ export const receptionistReducer = (state = inititalState, action) => {
         totalDoctors: action.payload.count,
         doctors: action.payload.doctors,
       };
+
+    case GET_DOCTORS_BY_DEPARTMENT:
+      return{
+        ...state,
+        doctorsByDepartment: action.payload.doctors,
+      }
 
     case GET_STAFFS:
       return {

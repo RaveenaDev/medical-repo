@@ -8,13 +8,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {
   bookAppointment,
   getAllDepartments,
-  getDoctors,
+  getDoctors, getDoctorsByDepartment,
   getPatients
 } from "../../../../components/State/Receptionist/Action.js";
 import {useNavigate} from "react-router-dom";
 
 const BookAppointment = ({ isOpen, onClose }) => {
-  const navigate = useNavigate()
   if (!isOpen) return null;
 
   // const [date, setDate] = useState(new Date());
@@ -44,6 +43,11 @@ const BookAppointment = ({ isOpen, onClose }) => {
     </span>
   );
 
+  const handleDepartmentDoctors = (departmentId) => {
+    console.log("Depart: ",departmentId)
+    dispatch(getDoctorsByDepartment(departmentId))
+  }
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -54,6 +58,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
 
   const doctors = useSelector(store => store.receptionist.doctors)
   const departments = useSelector(store => store.receptionist.departments)
+  const doctorsByDepartment = useSelector(store => store.receptionist.doctorsByDepartment)
 
   const handleClick = () => {
     console.log(formData)
@@ -119,7 +124,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
           >
             {
               departments.map((department, index) => (
-                  <MenuItem key={index} value={department.departmentName}>{department.departmentName}</MenuItem>
+                  <MenuItem key={index} value={department.departmentName} onClick={() => handleDepartmentDoctors(department.departmentId)}>{department.departmentName}</MenuItem>
               ))
             }
             {/*<MenuItem value="ENT">ENT</MenuItem>*/}
@@ -134,7 +139,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
               fullWidth
           >
             {
-              doctors.map((doctor, index) => (
+              doctorsByDepartment.map((doctor, index) => (
                   <MenuItem key={index} value={doctor.email}>{doctor.name}</MenuItem>
               ))
             }
