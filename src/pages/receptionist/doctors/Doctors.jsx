@@ -41,44 +41,9 @@ const Doctors = (props) => {
     "Dermatology",
   ]);
 
-  const [patients, setPatients] = useState([
-    {
-      profile: "1",
-      doctorId: "#2YY2LCGY",
-      name: "Jasmin Kaur",
-      phone: "+91 79327728",
-      specialization: "Cardiologist",
-      status: "Emergency Room",
-    },
-    {
-      profile: "2",
-      doctorId: "#2YY2LCGY",
-      name: "Amit Tripathi",
-      phone: "+91 79327728",
-      specialization: "Dentist",
-      status: "On Leave",
-    },
-  ]);
-
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [newDoctor, setNewDoctor] = useState({
-    profile: "",
-    doctorId: "",
-    name: "",
-    phone: "",
-    specialization: "",
-    status: "",
-  });
-
-  const handleSubmit = () => {
-    console.log("New Doctor Data:", newDoctor);
-  };
-
   const location = useLocation();
-  console.log(location);
-  const doctors = location.state?.doctors;
 
-  console.log("COMING ", doctors);
+  const doctors = location.state?.doctors;
 
   const navigate = useNavigate();
 
@@ -114,123 +79,8 @@ const Doctors = (props) => {
               </Grid>
             )}
           </div>
-
-          {/*<div style={{marginLeft: 'auto'}}>*/}
-          {/*    <Button*/}
-          {/*        variant="contained"*/}
-          {/*        sx={{*/}
-          {/*            fontSize: "20px",*/}
-          {/*            color: "#ffffff",*/}
-          {/*            textTransform: "capitalize",*/}
-          {/*            padding: "2px 18px",*/}
-          {/*            backgroundColor: "#25307F",*/}
-          {/*        }}*/}
-          {/*        onClick={() => setAddDialogOpen(true)} // Open the modal*/}
-          {/*    >*/}
-          {/*        <img src={addIcon} className={styles.appointmentBlock__plusIcon} />*/}
-          {/*        Add*/}
-          {/*    </Button>*/}
-          {/*</div>*/}
         </div>
       </Box>
-
-      <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)}>
-        <DialogTitle>Add New Doctor</DialogTitle>
-        <DialogContent>
-          {/* Profile Icon Input */}
-          <Avatar
-            src={newDoctor.profile}
-            alt="Profile"
-            sx={{ width: 60, height: 60, cursor: "pointer", marginBottom: 2 }}
-            onClick={() => {
-              // Handle file input or image picker
-              alert("Open file picker to select profile picture");
-            }}
-          />
-
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Doctor ID"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={newDoctor.doctorId}
-            onChange={(e) =>
-              setNewDoctor({ ...newDoctor, doctorId: e.target.value })
-            }
-          />
-
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={newDoctor.name}
-            onChange={(e) =>
-              setNewDoctor({ ...newDoctor, name: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Phone"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={newDoctor.phone}
-            onChange={(e) =>
-              setNewDoctor({ ...newDoctor, phone: e.target.value })
-            }
-          />
-
-          <TextField
-            select
-            label="Specialization"
-            name="specialization"
-            value={newDoctor.specialization}
-            onChange={(e) =>
-              setNewDoctor({ ...newDoctor, specialization: e.target.value })
-            }
-            fullWidth
-            margin="dense"
-          >
-            <MenuItem value="General Checkup">General Checkup</MenuItem>
-            <MenuItem value="Follow Up">Follow Up</MenuItem>
-            <MenuItem value="Consultation">Consultation</MenuItem>
-          </TextField>
-
-          <TextField
-            select
-            label="Status"
-            name="status"
-            value={newDoctor.status}
-            onChange={(e) =>
-              setNewDoctor({ ...newDoctor, status: e.target.value })
-            }
-            fullWidth
-            margin="dense"
-          >
-            <MenuItem value="Available">Available</MenuItem>
-            <MenuItem value="On Leave">On Leave</MenuItem>
-          </TextField>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: "center" }}>
-          {/*<Button onClick={handleAddDialogClose}>Cancel</Button>*/}
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
-            sx={{
-              width: "200px",
-              backgroundColor: "#25307F",
-              "&:hover": { backgroundColor: "green" },
-            }}
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {/* Table Section */}
       <TableContainer component={Paper}>

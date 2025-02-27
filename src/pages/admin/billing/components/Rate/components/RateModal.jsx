@@ -1,25 +1,29 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   TextField,
   Button,
-  IconButton, MenuItem,
+  IconButton,
+  MenuItem,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import {useDispatch, useSelector} from "react-redux";
-import {addService, getAllDepartments} from "../../../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addService,
+  getAllDepartments,
+} from "../../../../../../components/State/Admin/Action.js";
 
-const RateModal = ({ open, handleClose}) => {
+const RateModal = ({ open, handleClose }) => {
   const [serviceDetails, setServiceDetails] = useState({
     name: "",
     departmentName: "",
-    subCategoryName:"",
-    rateType:"",
-    rate:"",
-    effectiveDate:"",
-    amenities:"",
+    subCategoryName: "",
+    rateType: "",
+    rate: "",
+    effectiveDate: "",
+    amenities: "",
   });
 
   const [lastUpdated, setLastUpdated] = useState(
@@ -29,13 +33,12 @@ const RateModal = ({ open, handleClose}) => {
   const handleChange = (e) => {
     setServiceDetails({
       ...serviceDetails,
-      [e.target.name] : e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = () => {
-    console.log("Service Details: ",serviceDetails)
-    dispatch(addService(serviceDetails))
+    dispatch(addService(serviceDetails));
     // Reset the form fields
     setServiceDetails({
       name: "",
@@ -49,15 +52,13 @@ const RateModal = ({ open, handleClose}) => {
     handleClose();
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllDepartments());
   }, [dispatch]);
 
-  const departments = useSelector(store => store.admin.departments)
-
-  console.log("DEPARTMENTS: ",departments)
+  const departments = useSelector((store) => store.admin.departments);
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -73,74 +74,73 @@ const RateModal = ({ open, handleClose}) => {
         />
 
         <TextField
-            select
-            label="Deparment Name"
-            fullWidth
-            margin="dense"
-            name="departmentName"
-            value={serviceDetails.departmentName}
-            onChange={handleChange}
+          select
+          label="Deparment Name"
+          fullWidth
+          margin="dense"
+          name="departmentName"
+          value={serviceDetails.departmentName}
+          onChange={handleChange}
         >
-          {
-            departments.map((department,index) => (
-                <MenuItem key={index} value={department.departmentName}>{department.departmentName}</MenuItem>
-            ))
-          }
+          {departments.map((department, index) => (
+            <MenuItem key={index} value={department.departmentName}>
+              {department.departmentName}
+            </MenuItem>
+          ))}
         </TextField>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              marginBottom: "16px",
-            }}
-          >
-            <TextField
-              label="Category Name"
-              fullWidth
-              margin="dense"
-              name="subCategoryName"
-              value={serviceDetails.subCategoryName}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Rate Type"
-              fullWidth
-              margin="dense"
-              name="rateType"
-              value={serviceDetails.rateType}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Current Rate"
-              fullWidth
-              margin="dense"
-              type="number"
-              name="rate"
-              value={serviceDetails.rate}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Amenities"
-              fullWidth
-              margin="dense"
-              name="amenities"
-              value={serviceDetails.amenities}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Effective Date"
-              fullWidth
-              margin="dense"
-              InputLabelProps={{ shrink: true }}
-              type="date"
-              name="effectiveDate"
-              value={serviceDetails.effectiveDate}
-              onChange={handleChange}
-            />
-
-          </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            marginBottom: "16px",
+          }}
+        >
+          <TextField
+            label="Category Name"
+            fullWidth
+            margin="dense"
+            name="subCategoryName"
+            value={serviceDetails.subCategoryName}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Rate Type"
+            fullWidth
+            margin="dense"
+            name="rateType"
+            value={serviceDetails.rateType}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Current Rate"
+            fullWidth
+            margin="dense"
+            type="number"
+            name="rate"
+            value={serviceDetails.rate}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Amenities"
+            fullWidth
+            margin="dense"
+            name="amenities"
+            value={serviceDetails.amenities}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Effective Date"
+            fullWidth
+            margin="dense"
+            InputLabelProps={{ shrink: true }}
+            type="date"
+            name="effectiveDate"
+            value={serviceDetails.effectiveDate}
+            onChange={handleChange}
+          />
+        </div>
 
         <TextField
           label="Last Updated"

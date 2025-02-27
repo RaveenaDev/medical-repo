@@ -78,7 +78,6 @@ const Rooms = (props) => {
         originalRoomID: selectedRoom._id,
       });
       setEditDialogOpen(true);
-      console.log("Edit room", editedRoom);
     }
     handleMenuClose();
   };
@@ -87,7 +86,6 @@ const Rooms = (props) => {
   const handleSaveEditedRoom = () => {
     dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
     setEditDialogOpen(false);
-    console.log("Patient Edited Successfully");
   };
 
   // Handle Menu Open
@@ -106,7 +104,7 @@ const Rooms = (props) => {
   // Handle Delete Action
   const handleDelete = () => {
     dispatch(deleteRoom(selectedRoom._id)); // Dispatch delete action
-    console.log("Patient Deleted");
+
     handleMenuClose();
   };
 
@@ -120,7 +118,7 @@ const Rooms = (props) => {
   const handleAddDialogOpen = () => setAddDialogOpen(true);
   const handleAddDialogClose = () => {
     dispatch(addRoom(formData));
-    console.log("Form Data: ", formData);
+
     setAddDialogOpen(false);
   };
 

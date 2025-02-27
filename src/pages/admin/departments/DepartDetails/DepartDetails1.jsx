@@ -16,8 +16,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useNavigate, useParams } from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {getDepartmentById} from "../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getDepartmentById } from "../../../../components/State/Admin/Action.js";
 
 const DepartDetails1 = (props) => {
   const navigate = useNavigate();
@@ -37,16 +37,15 @@ const DepartDetails1 = (props) => {
     navigate("/admin/departments");
   };
 
-    const {departmentId} = useParams();
+  const { departmentId } = useParams();
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getDepartmentById(departmentId))
-    }, [dispatch,departmentId]);
+  useEffect(() => {
+    dispatch(getDepartmentById(departmentId));
+  }, [dispatch, departmentId]);
 
-    const department = useSelector((store) => store.admin.department)
-  console.log("DEP:",department)
+  const department = useSelector((store) => store.admin.department);
 
   return (
     <>
@@ -75,7 +74,9 @@ const DepartDetails1 = (props) => {
               <span className={ayu.forwardButton}>
                 <ArrowForwardIosIcon />
               </span>
-              <h2 className={ayu.departmentTitleDetails}>{department?.departmentName}</h2>
+              <h2 className={ayu.departmentTitleDetails}>
+                {department?.departmentName}
+              </h2>
             </div>
 
             {/*/!* Horizontal line *!/*/}
@@ -213,26 +214,36 @@ const DepartDetails1 = (props) => {
                             </FormControl>
                             <div className={avi.details}>
                               <h3>Specialist Doctors:</h3>
-                              {
-                                department?.specialistDoctors.length > 0 ? department.specialistDoctors.map((doc,index) => (
+                              {department?.specialistDoctors.length > 0 ? (
+                                department.specialistDoctors.map(
+                                  (doc, index) => (
                                     <ul
-                                        key={index}
-                                        style={{
-                                          listStyleType: "disc",
-                                          paddingLeft: "10px",
-                                          color: "black",
-                                        }}
+                                      key={index}
+                                      style={{
+                                        listStyleType: "disc",
+                                        paddingLeft: "10px",
+                                        color: "black",
+                                      }}
                                     >
                                       <li
-                                          style={{color: "black", listStyle: "none"}}
+                                        style={{
+                                          color: "black",
+                                          listStyle: "none",
+                                        }}
                                       >
-                                        <span style={{color: "black"}}>• </span>
+                                        <span style={{ color: "black" }}>
+                                          •{" "}
+                                        </span>
                                         {doc}
                                       </li>
                                     </ul>
-                                )) :
-                                    <p style={{color:"black"}}>No specialist found.</p>
-                              }
+                                  )
+                                )
+                              ) : (
+                                <p style={{ color: "black" }}>
+                                  No specialist found.
+                                </p>
+                              )}
                             </div>
                           </Stack>
                         </Box>
@@ -241,16 +252,16 @@ const DepartDetails1 = (props) => {
 
                     {/* Section 2 */}
                     <Grid
-                        xs={12}
-                        sm={6}
-                        sx={{display: "flex", justifyContent: "center"}}
-                        className={avi.section2}
+                      xs={12}
+                      sm={6}
+                      sx={{ display: "flex", justifyContent: "center" }}
+                      className={avi.section2}
                     >
                       <div
-                          style={{
-                            width: "100%",
-                            boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                            padding: "20px",
+                        style={{
+                          width: "100%",
+                          boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                          padding: "20px",
                           borderRadius: "8px",
                           border: "1px solid rgba(116, 116, 116, 0.3)",
                         }}
@@ -353,89 +364,79 @@ const DepartDetails1 = (props) => {
                       <div className={avi.box3} style={{ padding: "14px" }}>
                         <div style={{ marginBottom: "14px" }}>
                           <h4>Available services</h4>
-                          {
-                            department?.availableServices.map((serv) => (
-                                <ul
-                                    style={{
-                                      listStyleType: "none",
-                                      paddingLeft: "10px",
-                                      color: "#727272",
-                                    }}
-                                >
-                                  <li>
-                                    <span style={{color: "#727272"}}>• </span>
-                                    {serv}
-                                  </li>
-                                </ul>
-                            ))
-                          }
+                          {department?.availableServices.map((serv) => (
+                            <ul
+                              style={{
+                                listStyleType: "none",
+                                paddingLeft: "10px",
+                                color: "#727272",
+                              }}
+                            >
+                              <li>
+                                <span style={{ color: "#727272" }}>• </span>
+                                {serv}
+                              </li>
+                            </ul>
+                          ))}
                         </div>
 
                         <div>
                           <h4>Specialized Procedures</h4>
-                          {
-                            department?.specializedProcedures.map((spec) => (
-                                <ul
-                                    style={{
-                                      listStyleType: "none",
-                                      paddingLeft: "10px",
-                                      color: "#727272",
-                                    }}
-                                >
-                                  <li>
-                                    <span style={{color: "#727272"}}>• </span>
-                                    {spec}
-                                  </li>
-                                </ul>
-                            ))
-                          }
+                          {department?.specializedProcedures.map((spec) => (
+                            <ul
+                              style={{
+                                listStyleType: "none",
+                                paddingLeft: "10px",
+                                color: "#727272",
+                              }}
+                            >
+                              <li>
+                                <span style={{ color: "#727272" }}>• </span>
+                                {spec}
+                              </li>
+                            </ul>
+                          ))}
                         </div>
                       </div>
                     </Grid>
 
                     {/* Second Grid Item */}
                     <Grid xs={12} sm={6}>
-                      <div className={avi.box4} style={{padding: "14px"}}>
-                        <div style={{marginBottom: "14px"}}>
+                      <div className={avi.box4} style={{ padding: "14px" }}>
+                        <div style={{ marginBottom: "14px" }}>
                           <h4>Critical Equipment</h4>
-                          {
-                            department?.criticalEquipment.map((cric) => (
-                                <ul
-                                    style={{
-                                      listStyleType: "none",
-                                      paddingLeft: "10px",
-                                      color: "#727272",
-                                    }}
-                                >
-                                  <li>
-                                    <span style={{color: "#727272"}}>• </span>
-                                    {cric}
-                                  </li>
-                                </ul>
-                            ))
-                          }
+                          {department?.criticalEquipment.map((cric) => (
+                            <ul
+                              style={{
+                                listStyleType: "none",
+                                paddingLeft: "10px",
+                                color: "#727272",
+                              }}
+                            >
+                              <li>
+                                <span style={{ color: "#727272" }}>• </span>
+                                {cric}
+                              </li>
+                            </ul>
+                          ))}
                         </div>
 
                         <div>
                           <h4>Equipment Maintenance</h4>
-                          {
-                            department?.equipmentMaintenance.map((eq) => (
-                                <ul
-                                    style={{
-                                      listStyleType: "none",
-                                      paddingLeft: "10px",
-                                      color: "#727272",
-                                    }}
-                                >
-                                  <li style={{display: "flex"}}>
-                                    <span style={{color: "#727272"}}>• </span>
-                                    <div style={{marginLeft: "4px"}}>
-                                      {eq}
-                                    </div>
-                                  </li>
-                                </ul>
-                            ))
-                          }
+                          {department?.equipmentMaintenance.map((eq) => (
+                            <ul
+                              style={{
+                                listStyleType: "none",
+                                paddingLeft: "10px",
+                                color: "#727272",
+                              }}
+                            >
+                              <li style={{ display: "flex" }}>
+                                <span style={{ color: "#727272" }}>• </span>
+                                <div style={{ marginLeft: "4px" }}>{eq}</div>
+                              </li>
+                            </ul>
+                          ))}
                         </div>
                       </div>
                     </Grid>
@@ -445,7 +446,7 @@ const DepartDetails1 = (props) => {
             </Box>
           </>
         ) : (
-            <EntityBasedTable entity={props?.entity} tableIndex={tableIndex}/>
+          <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
         )}
       </div>
     </>

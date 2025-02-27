@@ -79,7 +79,6 @@ const AdminStaffs = (props) => {
       });
 
       setEditDialogOpen(true);
-      console.log("Edit Staff", editedStaff);
     }
     handleMenuClose();
   };
@@ -88,7 +87,6 @@ const AdminStaffs = (props) => {
   const handleSaveEditedStaff = () => {
     dispatch(updateStaff(editedStaff.staffId, editedStaff));
     setEditDialogOpen(false);
-    console.log("Expense Edited Successfully");
   };
 
   // Handle Menu Open
@@ -107,7 +105,6 @@ const AdminStaffs = (props) => {
   // Handle Delete Action
   const handleDelete = () => {
     dispatch(deleteStaff(selectedStaff._id));
-    console.log("Staff Deleted");
     handleMenuClose();
   };
 
@@ -129,7 +126,6 @@ const AdminStaffs = (props) => {
 
   const handleSubmit = () => {
     dispatch(addStaff(newStaff));
-    console.log("New Staff Data:", newStaff);
   };
 
   const navigate = useNavigate();

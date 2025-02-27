@@ -78,7 +78,6 @@ function Appointments(props) {
   };
 
   const activeLabel = boxData.find((box) => box.id === activeBox)?.label;
-  // console.log("Active Label",activeLabel);
 
   const [appointments, setAppointments] = useState([
     {
@@ -163,7 +162,6 @@ function Appointments(props) {
   const totalAppointments = useSelector(
     (store) => store.admin.totalAppointments
   );
-  console.log("Total Appointments", totalAppointments);
 
   return (
     <>

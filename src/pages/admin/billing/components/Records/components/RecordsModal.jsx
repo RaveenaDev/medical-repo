@@ -17,8 +17,6 @@ const RecordModal = ({ open, bill, onClose }) => {
 
   if (!bill) return null;
 
-  console.log("bill", bill);
-
   return (
     <div
       className={`billing-modal-overlay ${open ? "open" : ""}`}

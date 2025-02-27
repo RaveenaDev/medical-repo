@@ -80,7 +80,6 @@ const AdminDoctors = (props) => {
 
   const handleSubmit = () => {
     dispatch(addDoctor(newDoctor));
-    console.log("New Doctor Data:", newDoctor);
     setAddDialogOpen(false);
   };
 
@@ -126,7 +125,6 @@ const AdminDoctors = (props) => {
         _id: selectedDoctor._id,
       });
       setEditDialogOpen(true);
-      console.log("Edit room", editedDoctor);
     }
     handleMenuClose();
   };
@@ -135,7 +133,6 @@ const AdminDoctors = (props) => {
   const handleSaveEditedDoctor = () => {
     dispatch(updateDoctor(editedDoctor._id, editedDoctor));
     setEditDialogOpen(false);
-    console.log("Doctor Edited Successfully");
   };
 
   // Handle Edit Dialog Close
@@ -156,11 +153,8 @@ const AdminDoctors = (props) => {
   // Handle Delete Action
   const handleDelete = () => {
     dispatch(deleteDoctor(selectedDoctor._id));
-    console.log("Doctor Deleted"); // Dispatch delete action    console.log("Patient Deleted");
     handleMenuClose();
   };
-
-  console.log("Doctors", doctors);
 
   return (
     <>

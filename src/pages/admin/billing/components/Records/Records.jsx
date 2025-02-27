@@ -22,50 +22,8 @@ import {
 const Records = () => {
   const [selectedBill, setSelectedBill] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [patients, setPatients] = useState([
-    {
-      id: "C001231",
-      name: "John Doe",
-      phone: "9876543210",
-      date: "11-12-2024",
-      amount: "$250",
-      status: "Paid",
-    },
-    {
-      id: "C002123",
-      name: "Jane Smith",
-      phone: "8765432109",
-      date: "11-10-2024",
-      amount: "$400",
-      status: "Unpaid",
-    },
-    {
-      id: "C003302",
-      name: "Aiditi",
-      phone: "7654321098",
-      date: "11-08-2024",
-      amount: "$150",
-      status: "Paid",
-    },
-    {
-      id: "C004456",
-      name: "Amit verma",
-      phone: "6543210987",
-      date: "21-01-2025",
-      amount: "$1300",
-      status: "Unpaid",
-    },
-    {
-      id: "C005567",
-      name: "Aditya Soni",
-      phone: "5432109876",
-      date: "11-01-2025",
-      amount: "$1200",
-      status: "Paid",
-    },
-  ]);
+
   const billingRecords = useSelector((store) => store.admin.billingRecords);
-  console.log("RECORDS", billingRecords);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -74,7 +32,6 @@ const Records = () => {
     }
   }, [dispatch, billingRecords]);
   const billDetails = useSelector((store) => store.admin.billingRecord);
-  console.log("BILL DETAILS", billDetails);
   useEffect(() => {
     setSelectedBill(billDetails);
   }, [billDetails]);
@@ -139,7 +96,7 @@ const Records = () => {
                 color: "black",
               }}
             >
-              {patients.length}{" "}
+              {billingRecords.length}
               <Typography
                 component="span"
                 variant="body1"

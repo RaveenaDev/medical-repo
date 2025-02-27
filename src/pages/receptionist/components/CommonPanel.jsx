@@ -39,8 +39,6 @@ const CommonPanel = () => {
   const noOfRooms = receptionist.totalRooms;
   const rooms = receptionist.rooms;
 
-  // console.log("Rooms",noOfRooms);
-
   return (
     <div className={ayu.patients}>
       <div className={ayu.patientHeader}>

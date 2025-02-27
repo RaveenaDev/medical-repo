@@ -114,7 +114,6 @@ const PatientList = ({ allPatients }) => {
 
   // Handle Search Results
   const handleSearchResults = () => {
-    console.log("Filters Applied:", filters);
     setFilterDrawerOpen(false);
   };
 
@@ -137,8 +136,6 @@ const PatientList = ({ allPatients }) => {
   const handleClick = (patient) => {
     navigate(`/receptionist/patients/profile`, { state: { patient } });
   };
-
-  // console.log("Patt :",allPatients.patients)
 
   const totalPatients = allPatients.patients;
 

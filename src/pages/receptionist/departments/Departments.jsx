@@ -11,9 +11,10 @@ import CommonPanel from "../components/CommonPanel.jsx";
 import accountCircle from "../../../assets/account_circle.svg";
 import billingDetails from "../../../assets/payments.svg";
 import addAppointments from "../../../assets/plus.svg";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  getAllDepartments, getRequestedAppointments,
+  getAllDepartments,
+  getRequestedAppointments,
 } from "../../../components/State/Receptionist/Action.js";
 import { useNavigate } from "react-router-dom";
 import AppointmentRequestModal from "../Appointment/Requests/AppointmentRequest.jsx";
@@ -37,15 +38,12 @@ const Departments = (props) => {
   }, []);
 
   const handleAppointmentRequests = () => {
-    console.log("handleAppointmentRequests");
     setIsModalOpen(true);
   };
   const handleBilling = () => {
-    console.log("handleBilling");
     navigate("/receptionist/billing");
   };
   const handleBookAppointment = () => {
-    console.log("handleBookAppointment");
     setIsBookAppointment(true);
   };
 
@@ -76,19 +74,19 @@ const Departments = (props) => {
     },
   ];
 
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllDepartments());
+    dispatch(getRequestedAppointments());
+  }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(getAllDepartments());
-      dispatch(getRequestedAppointments());
-    }, [dispatch]);
+  const receptionist = useSelector((store) => store.receptionist);
+  const appointmentRequests = useSelector(
+    (store) => store.receptionist.appointmentRequests
+  );
 
-    const receptionist = useSelector(store => store.receptionist)
-  const appointmentRequests = useSelector(store => store.receptionist.appointmentRequests)
-
-
-    const allDepartments = receptionist.departments;
+  const allDepartments = receptionist.departments;
 
   return (
     <>
@@ -111,26 +109,26 @@ const Departments = (props) => {
                   <Grid size={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <Box
-                          sx={{
-                            backgroundColor: "white",
-                            boxShadow: 3,
-                            borderRadius: 1,
-                            width: 180, // Adjust width here
-                            textAlign: "center",
-                            // padding: "4px", // Reduce padding to make the container smaller
-                          }}
+                        sx={{
+                          backgroundColor: "white",
+                          boxShadow: 3,
+                          borderRadius: 1,
+                          width: 180, // Adjust width here
+                          textAlign: "center",
+                          // padding: "4px", // Reduce padding to make the container smaller
+                        }}
                       >
                         <DatePicker
-                            value={selectedDate}
-                            onChange={(newValue) => setSelectedDate(newValue)}
-                            sx={{
-                              width: "100%", // Ensure the date picker takes up 100% of the container's width
-                              fontSize: "24px", // Adjust font size inside the date picker
-                              input: {
-                                fontSize: "14px", // Adjust input field font size if needed
-                                padding: "10px", // Adjust input field padding to make it smaller
-                              }
-                            }}
+                          value={selectedDate}
+                          onChange={(newValue) => setSelectedDate(newValue)}
+                          sx={{
+                            width: "100%", // Ensure the date picker takes up 100% of the container's width
+                            fontSize: "24px", // Adjust font size inside the date picker
+                            input: {
+                              fontSize: "14px", // Adjust input field font size if needed
+                              padding: "10px", // Adjust input field padding to make it smaller
+                            },
+                          }}
                         />
                       </Box>
                     </LocalizationProvider>
@@ -246,13 +244,11 @@ const Departments = (props) => {
                   {/* Cards */}
 
                   <div className={ayu.superCardContainer}>
-                            {
-                                allDepartments.map((department,index) => (
-                            <DepartCard key={index} department={department} />
-                        ))
-                            }
+                    {allDepartments.map((department, index) => (
+                      <DepartCard key={index} department={department} />
+                    ))}
 
-                            {/*<DepartCard />*/}
+                    {/*<DepartCard />*/}
                     {/*<DepartCard />*/}
                     {/*<DepartCard />*/}
                     {/*<DepartCard />*/}

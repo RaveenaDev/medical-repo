@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import PersonalInfo from "./PersonalInfo.jsx";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import FileDocuments from "./FileDocuments";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
 
 const MoreInfo = (props) => {
@@ -24,44 +24,42 @@ const MoreInfo = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-    const location = useLocation();
-    const patient = location.state?.patient
+  const location = useLocation();
+  const patient = location.state?.patient;
 
-    console.log("BANKAI",patient)
+  useEffect(() => {
+    // Simulate fetching data from the backend
+    const fetchData = async () => {
+      // backend response structure
+      const response = {
+        // medicalHistory: [
+        //     "Type 2 diabetes diagnosed 5 years ago",
+        //     "Hypertension diagnosed 3 years ago",
+        //     "Family history of heart disease (father)",
+        // ],
+        medicalHistory: patient.medicalHistory,
+        // currentMedications: [
+        //     "Metformin (for diabetes)",
+        //     "Lisinopril (for hypertension)",
+        //     "Aspirin (for heart health)",
+        // ],
+        currentMedications: patient.currentMedication,
+        // symptoms: [
+        //     "Fatigue",
+        //     "Frequent urination",
+        //     "Headaches",
+        // ],
+        symptoms: patient.symptoms,
+        // socialHistory: [
+        //     "Non-smoker",
+        //     "Occasional alcohol use",
+        //     "Regular exercise",
+        // ],
+        socialHistory: patient.socialHistory,
+      };
 
-    useEffect(() => {
-        // Simulate fetching data from the backend
-        const fetchData = async () => {
-            // backend response structure
-            const response = {
-                // medicalHistory: [
-                //     "Type 2 diabetes diagnosed 5 years ago",
-                //     "Hypertension diagnosed 3 years ago",
-                //     "Family history of heart disease (father)",
-                // ],
-                medicalHistory: patient.medicalHistory,
-                // currentMedications: [
-                //     "Metformin (for diabetes)",
-                //     "Lisinopril (for hypertension)",
-                //     "Aspirin (for heart health)",
-                // ],
-                currentMedications: patient.currentMedication,
-                // symptoms: [
-                //     "Fatigue",
-                //     "Frequent urination",
-                //     "Headaches",
-                // ],
-                symptoms: patient.symptoms,
-                // socialHistory: [
-                //     "Non-smoker",
-                //     "Occasional alcohol use",
-                //     "Regular exercise",
-                // ],
-                socialHistory: patient.socialHistory
-            };
-
-            // // Simulating an API call delay
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
+      // // Simulating an API call delay
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setMedicalHistory(response.medicalHistory);
       setCurrentMedications(response.currentMedications);
