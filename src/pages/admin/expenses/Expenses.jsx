@@ -1,15 +1,23 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import CommonPanel from "../Components/CommonPanel.jsx";
 import {
-    Box,
-    Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ListItemIcon, ListItemText, Menu,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,8 +29,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import addAppointments from "../../../assets/plus.svg";
-import {useDispatch, useSelector} from "react-redux";
-import {addExpense, deleteExpense, getExpenses, updateExpense} from "../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addExpense,
+  deleteExpense,
+  getExpenses,
+  updateExpense,
+} from "../../../components/State/Admin/Action.js";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -34,109 +47,99 @@ const Expenses = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-    const [date, setDate] = useState(dayjs());
+  const [date, setDate] = useState(dayjs());
 
-    const [expenseData, setExpenseData] = useState({
-        expenseType: "",
-        amount: "",
-        paidTo: "",
-        details: "",
-        date: dayjs().format("YYYY-MM-DD")
-    })
+  const [expenseData, setExpenseData] = useState({
+    expenseType: "",
+    amount: "",
+    paidTo: "",
+    details: "",
+    date: dayjs().format("YYYY-MM-DD"),
+  });
 
   const truncateText = (text, maxLength) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedExpense, setSelectedExpense] = useState(null);
-    const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const [editedExpense, setEditedExpense] = useState({
-        expenseId: "",
-        expenseType: "",
-        amount: "",
-        paidTo: "",
-        details: "",
-        date: "",
-    });
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editedExpense, setEditedExpense] = useState({
+    expenseId: "",
+    expenseType: "",
+    amount: "",
+    paidTo: "",
+    details: "",
+    date: "",
+  });
 
-    const handleMenuOpen = (event, expense) => {
-        event.stopPropagation(); // Prevent interference with other clicks
-        setAnchorEl(event.currentTarget);
-        setSelectedExpense(expense);
-        console.log("Selected Expense:",expense)
-        console.log("GAMMA:",selectedExpense) // Ye toh previous value hi show krega because of async nature of react
-    };
+  const handleMenuOpen = (event, expense) => {
+    event.stopPropagation(); // Prevent interference with other clicks
+    setAnchorEl(event.currentTarget);
+    setSelectedExpense(expense);
+  };
 
-    // Handle Menu Close
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        setSelectedExpense(null);
-    };
+  // Handle Menu Close
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedExpense(null);
+  };
 
-    const handleEdit = () => {
-        if (selectedExpense) {
-            setEditedExpense({
-                expenseId: selectedExpense._id,
-                expenseType: selectedExpense.expenseType,
-                amount: selectedExpense.amount,
-                paidTo: selectedExpense.paidTo,
-                details: selectedExpense.details,
-                date: selectedExpense.date
-            });
+  const handleEdit = () => {
+    if (selectedExpense) {
+      setEditedExpense({
+        expenseId: selectedExpense._id,
+        expenseType: selectedExpense.expenseType,
+        amount: selectedExpense.amount,
+        paidTo: selectedExpense.paidTo,
+        details: selectedExpense.details,
+        date: selectedExpense.date,
+      });
 
-            setEditDialogOpen(true);
-            console.log("Edit Expense", editedExpense);
-        }
-        handleMenuClose();
-    };
+      setEditDialogOpen(true);
+    }
+    handleMenuClose();
+  };
 
-    // Handle Delete Action
-    const handleDelete = () => {
-        dispatch(deleteExpense(selectedExpense._id));
-        console.log("Staff Deleted");
-        handleMenuClose();
-    };
+  // Handle Delete Action
+  const handleDelete = () => {
+    dispatch(deleteExpense(selectedExpense._id));
+    handleMenuClose();
+  };
 
-    // Handle Edit Dialog Close
-    const handleEditDialogClose = () => {
-        setEditDialogOpen(false);
-    };
+  // Handle Edit Dialog Close
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+  };
 
-    // Handle Save Edited Room
-    const handleSaveEditedExpense = () => {
-        dispatch(updateExpense(editedExpense.expenseId,editedExpense));
-        setEditDialogOpen(false);
-        // console.log("Expense Edited Successfully",editedExpense);
-    };
+  // Handle Save Edited Room
+  const handleSaveEditedExpense = () => {
+    dispatch(updateExpense(editedExpense.expenseId, editedExpense));
+    setEditDialogOpen(false);
+  };
 
   const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getExpenses())
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(getExpenses());
+  }, [dispatch]);
 
-    const expenses = useSelector((store) => store.admin.expenses)
+  const expenses = useSelector((store) => store.admin.expenses);
 
-    // console.log("EXP ",expenses)
+  const handleClick = () => {
+    dispatch(addExpense(expenseData));
+  };
 
-    const handleClick = () => {
-        console.log("Expense data: ",expenseData)
-        dispatch(addExpense(expenseData))
-    }
+  const handleChange = (e) => {
+    setExpenseData({ ...expenseData, [e.target.name]: e.target.value });
+  };
 
-    const handleChange = (e) => {
-        setExpenseData({ ...expenseData,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleDateChange = (newDate) => {
-        setExpenseData({
-            ...expenseData,
-            date: dayjs(newDate).format("YYYY-MM-DD")
-        })
-    }
+  const handleDateChange = (newDate) => {
+    setExpenseData({
+      ...expenseData,
+      date: dayjs(newDate).format("YYYY-MM-DD"),
+    });
+  };
 
   return (
     <>
@@ -205,9 +208,14 @@ const Expenses = (props) => {
           <div style={{ paddingLeft: "0.2rem" }}>
             <p style={{ color: "#25307F" }}>Paid To</p>
           </div>
-          <TextField id="outlined-basic" label="Paid To" variant="outlined"
-                     name="paidTo"
-                     value={expenseData.paidTo} onChange={handleChange}/>
+          <TextField
+            id="outlined-basic"
+            label="Paid To"
+            variant="outlined"
+            name="paidTo"
+            value={expenseData.paidTo}
+            onChange={handleChange}
+          />
         </div>
         <div
           style={{
@@ -220,9 +228,14 @@ const Expenses = (props) => {
           <div style={{ paddingLeft: "0.2rem" }}>
             <p style={{ color: "#25307F" }}>Details</p>
           </div>
-          <TextField id="outlined-basic" label="Details" variant="outlined"
-                     name="details"
-                     value={expenseData.details} onChange={handleChange}/>
+          <TextField
+            id="outlined-basic"
+            label="Details"
+            variant="outlined"
+            name="details"
+            value={expenseData.details}
+            onChange={handleChange}
+          />
         </div>
         <div
           style={{
@@ -236,7 +249,11 @@ const Expenses = (props) => {
           </div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
-              <DatePicker name="date" value={date} onChange={handleDateChange}/>
+              <DatePicker
+                name="date"
+                value={date}
+                onChange={handleDateChange}
+              />
             </DemoContainer>
           </LocalizationProvider>
         </div>
@@ -342,7 +359,7 @@ const Expenses = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {expenses.map((row,index) => (
+              {expenses.map((row, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -355,7 +372,7 @@ const Expenses = (props) => {
                     scope="row"
                     sx={{ color: "#25307f", border: "none" }}
                   >
-                      {row.expenseType}
+                    {row.expenseType}
                   </TableCell>
                   <TableCell
                     component="th"
@@ -371,117 +388,123 @@ const Expenses = (props) => {
                     {row.details}
                   </TableCell>
                   <TableCell align="center" sx={{ border: "none" }}>
-                      {truncateText(row.date, 14)}
+                    {truncateText(row.date, 14)}
                   </TableCell>
-                    <TableCell>
-                        <IconButton onClick={(event) => handleMenuOpen(event, row)}>
-                            <MoreVertIcon />
-                        </IconButton>
-                    </TableCell>
+                  <TableCell>
+                    <IconButton onClick={(event) => handleMenuOpen(event, row)}>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
 
-          {/* Actions Menu */}
-          <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              PaperProps={{
-                  elevation: 2,
-                  sx: { padding: 1 },
-              }}
-          >
-              <MenuItem onClick={handleEdit}>
-                  <ListItemIcon>
-                      <EditIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Edit</ListItemText>
-              </MenuItem>
-              <MenuItem onClick={handleDelete}>
-                  <ListItemIcon>
-                      <DeleteIcon fontSize="small" color="error" />
-                  </ListItemIcon>
-                  <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
-              </MenuItem>
-          </Menu>
+        {/* Actions Menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          PaperProps={{
+            elevation: 2,
+            sx: { padding: 1 },
+          }}
+        >
+          <MenuItem onClick={handleEdit}>
+            <ListItemIcon>
+              <EditIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon fontSize="small" color="error" />
+            </ListItemIcon>
+            <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+          </MenuItem>
+        </Menu>
 
-          {/* Edit Patient Dialog */}
-          <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-              <DialogTitle>Edit Expense</DialogTitle>
-              <DialogContent>
-                  <TextField
-                      select
-                      label="Expense Type"
-                      name="expenseType"
-                      value={editedExpense.expenseType}
-                      onChange={(e) =>
-                          setEditedExpense({ ...editedExpense, expenseType: e.target.value })
-                      }
-                      fullWidth
-                      margin="dense"
-                  >
-                      <MenuItem value="salary">Salary</MenuItem>
-                      <MenuItem value="rent">Rent</MenuItem>
-                      <MenuItem value="utilities">Utilities</MenuItem>
-                  </TextField>
+        {/* Edit Patient Dialog */}
+        <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+          <DialogTitle>Edit Expense</DialogTitle>
+          <DialogContent>
+            <TextField
+              select
+              label="Expense Type"
+              name="expenseType"
+              value={editedExpense.expenseType}
+              onChange={(e) =>
+                setEditedExpense({
+                  ...editedExpense,
+                  expenseType: e.target.value,
+                })
+              }
+              fullWidth
+              margin="dense"
+            >
+              <MenuItem value="salary">Salary</MenuItem>
+              <MenuItem value="rent">Rent</MenuItem>
+              <MenuItem value="utilities">Utilities</MenuItem>
+            </TextField>
 
-                  <TextField
-                      autoFocus
-                      margin="dense"
-                      label="Amount"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={editedExpense.amount}
-                      onChange={(e) =>
-                          setEditedExpense({ ...editedExpense, amount: e.target.value })
-                      }
-                  />
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Amount"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editedExpense.amount}
+              onChange={(e) =>
+                setEditedExpense({ ...editedExpense, amount: e.target.value })
+              }
+            />
 
-                  <TextField
-                      autoFocus
-                      margin="dense"
-                      label="Paid To"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={editedExpense.paidTo}
-                      onChange={(e) =>
-                          setEditedExpense({ ...editedExpense, paidTo: e.target.value })
-                      }
-                  />
-                  <TextField
-                      margin="dense"
-                      label="Details"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={editedExpense.details}
-                      onChange={(e) =>
-                          setEditedExpense({ ...editedExpense, details: e.target.value })
-                      }
-                  />
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Paid To"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editedExpense.paidTo}
+              onChange={(e) =>
+                setEditedExpense({ ...editedExpense, paidTo: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Details"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editedExpense.details}
+              onChange={(e) =>
+                setEditedExpense({ ...editedExpense, details: e.target.value })
+              }
+            />
 
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
-                          <DatePicker name="date" value={dayjs(editedExpense.date)}
-                                      onChange={(newDate) =>
-                                          setEditedExpense({ ...editedExpense, date: dayjs(newDate).format("YYYY-MM-DD") })
-                                      }
-                          />
-                      </DemoContainer>
-                  </LocalizationProvider>
-
-
-              </DialogContent>
-              <DialogActions>
-                  <Button onClick={handleEditDialogClose}>Cancel</Button>
-                  <Button onClick={handleSaveEditedExpense}>Save</Button>
-              </DialogActions>
-          </Dialog>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
+                <DatePicker
+                  name="date"
+                  value={dayjs(editedExpense.date)}
+                  onChange={(newDate) =>
+                    setEditedExpense({
+                      ...editedExpense,
+                      date: dayjs(newDate).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleEditDialogClose}>Cancel</Button>
+            <Button onClick={handleSaveEditedExpense}>Save</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </>
   );
