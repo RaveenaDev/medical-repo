@@ -15,18 +15,18 @@ import {
   updateService,
 } from "../../../../../../components/State/Admin/Action.js";
 
-const EditRateModal = ({ open, handleClose,service}) => {
-    const serviceId = service.service.serviceId;
-    const [serviceDetails, setServiceDetails] = useState({
-        serviceId: serviceId,
-        name: service.service.serviceName,
-        departmentName: service.service.department,
-        subCategoryName:service.category.name,
-        rateType:service.category.rateType,
-        rate:service.category.currentRate,
-        effectiveDate:service.category.effectiveDate,
-        amenities:service.category.amenities,
-    });
+const EditRateModal = ({ open, handleClose, service }) => {
+  const serviceId = service.service.serviceId;
+  const [serviceDetails, setServiceDetails] = useState({
+    serviceId: serviceId,
+    name: service.service.serviceName,
+    departmentName: service.service.department,
+    subCategoryName: service.category.name,
+    rateType: service.category.rateType,
+    rate: service.category.currentRate,
+    effectiveDate: service.category.effectiveDate,
+    amenities: service.category.amenities,
+  });
 
   const [lastUpdated, setLastUpdated] = useState(
     new Date().toISOString().split("T")[0]
@@ -39,36 +39,35 @@ const EditRateModal = ({ open, handleClose,service}) => {
     });
   };
 
-    const handleSubmit = () => {
-        const pass = {
-            serviceId: serviceDetails.serviceId,
-            name: serviceDetails.name,
-            departmentName: serviceDetails.departmentName,
-            categories: [
-                {
-                    _id : service.category.categoryId,
-                    subCategoryName:serviceDetails.subCategoryName,
-                    rateType:serviceDetails.rateType,
-                    rate:serviceDetails.rate,
-                    effectiveDate:serviceDetails.effectiveDate,
-                    amenities:serviceDetails.amenities,
-                }
-            ]
-        }
-        console.log("Edited Testing Service Details: ",pass)
-        dispatch(updateService(pass))
-        // Reset the form fields
-        setServiceDetails({
-            name: "",
-            departmentName: "",
-            subCategoryName: "",
-            rateType: "",
-            rate: "",
-            effectiveDate: "",
-            amenities: "",
-        });
-        handleClose();
+  const handleSubmit = () => {
+    const pass = {
+      serviceId: serviceDetails.serviceId,
+      name: serviceDetails.name,
+      departmentName: serviceDetails.departmentName,
+      categories: [
+        {
+          _id: service.category.categoryId,
+          subCategoryName: serviceDetails.subCategoryName,
+          rateType: serviceDetails.rateType,
+          rate: serviceDetails.rate,
+          effectiveDate: serviceDetails.effectiveDate,
+          amenities: serviceDetails.amenities,
+        },
+      ],
     };
+    dispatch(updateService(pass));
+    // Reset the form fields
+    setServiceDetails({
+      name: "",
+      departmentName: "",
+      subCategoryName: "",
+      rateType: "",
+      rate: "",
+      effectiveDate: "",
+      amenities: "",
+    });
+    handleClose();
+  };
 
   const dispatch = useDispatch();
 

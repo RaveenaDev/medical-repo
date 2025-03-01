@@ -6,23 +6,27 @@ import {
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_BY_ID,
-  GET_BILLS,
+  GET_BILLS, GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS, GET_DOCTORS_BY_DEPARTMENT,
+  GET_DOCTORS, GET_DOCTORS_BY_DEPARTMENT, GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
-  GET_ROOMS,
-  GET_STAFFS,
+  GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
+  GET_STAFFS, GET_WAITING_APPOINTMENTS,
   UPDATE_ROOM,
 } from "./ActionType.js";
 
-const inititalState = {
+const initialState = {
   totalPatients: null,
   totalDoctors: null,
   totalStaffs: null,
   totalRooms: null,
-  totalAppointments: null,
+  totalAppointments: [],
+  scheduledAppointments: [],
+  ongoingAppointments: [],
+  waitingAppointments: [],
+  completedAppointments: [],
   patient: null,
   patients: [],
   doctors: [],
@@ -40,7 +44,7 @@ const inititalState = {
   success: null,
 };
 
-export const receptionistReducer = (state = inititalState, action) => {
+export const receptionistReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_RECEPTIONIST_OVERVIEW_SUCCESS:
     case GET_RECEPTIONIST_PATIENTS_SUCCESS:
@@ -123,6 +127,30 @@ export const receptionistReducer = (state = inititalState, action) => {
         ...state,
         totalAppointments: action.payload.count,
         appointments: action.payload.appointments,
+      };
+
+    case GET_SCHEDULED_APPOINTMENTS:
+      return {
+        ...state,
+        scheduledAppointments: action.payload.appointments,
+      };
+
+    case GET_ONGOING_APPOINTMENTS:
+      return {
+        ...state,
+        ongoingAppointments: action.payload.appointments,
+      };
+
+    case GET_WAITING_APPOINTMENTS:
+      return {
+        ...state,
+        waitingAppointments: action.payload.appointments,
+      };
+
+    case GET_COMPLETED_APPOINTMENTS:
+      return {
+        ...state,
+        completedAppointments: action.payload.appointments,
       };
 
     case BOOK_APPOINTMENT:

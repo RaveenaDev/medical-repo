@@ -107,7 +107,7 @@ const Doctors = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {doctors.map((patient,index) => (
+            {doctors.map((patient, index) => (
               <TableRow
                 key={index}
                 sx={{
@@ -135,10 +135,14 @@ const Doctors = (props) => {
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1">{truncateText(patient?.name, 13)}</Typography>
+                  <Typography variant="body1">
+                    {truncateText(patient?.name, 13)}
+                  </Typography>
                 </TableCell>
                 <TableCell>{patient.phone}</TableCell>
-                <TableCell>{patient.specialization}</TableCell>
+                <TableCell>
+                  {patient?.specialization || "Not Assigned"}
+                </TableCell>
                 <TableCell align="center">
                   <Chip
                     label={patient.status}

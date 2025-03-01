@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CommonPanel from "../../Components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
 import Select from "../../../../components/Select/index.jsx";
@@ -66,11 +66,33 @@ function Appointments(props) {
 
   const [activeBox, setActiveBox] = useState(1);
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAppointments("Scheduled"))
+    dispatch(getAppointments("Ongoing"))
+    dispatch(getAppointments("Waiting"))
+    dispatch(getAppointments("Completed"))
+  }, [dispatch]);
+
+  const scheduledAppointments = useSelector(
+      (store) => store.admin.scheduledAppointments
+  );
+  const ongoingAppointments = useSelector(
+      (store) => store.admin.ongoingAppointments
+  );
+  const waitingAppointments = useSelector(
+      (store) => store.admin.waitingAppointments
+  );
+  const completedAppointments = useSelector(
+      (store) => store.admin.completedAppointments
+  );
+
   const boxData = [
-    { id: 1, label: "Scheduled", count: 25 },
-    { id: 2, label: "Ongoing", count: 12 },
-    { id: 3, label: "Waiting", count: 40 },
-    { id: 4, label: "Completed", count: 5 },
+    { id: 1, label: "Scheduled", count: scheduledAppointments.length },
+    { id: 2, label: "Ongoing", count: ongoingAppointments.length },
+    { id: 3, label: "Waiting", count: waitingAppointments.length },
+    { id: 4, label: "Completed", count: completedAppointments.length },
   ];
 
   const handleBoxClick = (id) => {
@@ -78,36 +100,6 @@ function Appointments(props) {
   };
 
   const activeLabel = boxData.find((box) => box.id === activeBox)?.label;
-
-  const [appointments, setAppointments] = useState([
-    {
-      id: "1",
-      name: "Jasmin Kaur",
-      appointmentWith: "jasmin@gmail.com",
-      typeVisit: "Walk In",
-      branch: "Cardiology",
-      tokenNo: "2024-10-08",
-      status: "Ongoing",
-    },
-    {
-      id: "2",
-      name: "Amit Tripathi",
-      appointmentWith: "amittripathi@gmail.com",
-      typeVisit: "Referral",
-      branch: "Cardiology",
-      tokenNo: "2024-10-08",
-      status: "Waiting",
-    },
-    {
-      id: "3",
-      name: "Amit Tripathi",
-      appointmentWith: "amittripathi@gmail.com",
-      typeVisit: "Referral",
-      branch: "Cardiology",
-      tokenNo: "2024-10-08",
-      status: "Completed",
-    },
-  ]);
 
   // Handle Menu Open
   const handleMenuOpen = (event, patient) => {
@@ -139,29 +131,28 @@ function Appointments(props) {
     setEditDialogOpen(false);
   };
 
-  // Handle Save Edited Patient
-  const handleSaveEditedPatient = () => {
-    setAppointments((prev) =>
-      prev.map((patient) =>
-        patient.id === editedPatient.id ? editedPatient : patient
-      )
-    );
-    handleEditDialogClose();
-  };
-
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
-  const dispatch = useDispatch();
+  let totalAppointments = [];
 
-  useEffect(() => {
-    dispatch(getAppointments(activeLabel));
-  }, [dispatch, activeLabel]);
-
-  const totalAppointments = useSelector(
-    (store) => store.admin.totalAppointments
-  );
+  switch (activeLabel) {
+    case "Scheduled":
+      totalAppointments = scheduledAppointments;
+      break;
+    case "Ongoing":
+      totalAppointments = ongoingAppointments;
+      break;
+    case "Waiting":
+      totalAppointments = waitingAppointments;
+      break;
+    case "Completed":
+      totalAppointments = completedAppointments;
+      break;
+    default:
+      totalAppointments = [];
+  }
 
   return (
     <>
@@ -298,7 +289,7 @@ function Appointments(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {totalAppointments.map((patient, index) => (
+              {totalAppointments.length > 0 ? totalAppointments.map((patient, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -330,26 +321,33 @@ function Appointments(props) {
                   </TableCell>
                   <TableCell>{patient.typeVisit}</TableCell>
                   <TableCell>{patient.department.name}</TableCell>
-                  <TableCell>{patient.tokenDate}</TableCell>
+                  <TableCell>{patient?.tokenNumber || "N/A"}</TableCell>
                   <TableCell>
                     <Chip
-                      label={patient.status}
-                      color={
-                        patient.status === "Active" ? "success" : "default"
-                      }
-                      size="small"
-                      sx={{
-                        bgcolor:
-                          patient.status === "Ongoing" ? "#3DB461" : "white",
-                        color:
-                          patient.status === "Ongoing"
-                            ? "white"
-                            : patient.status === "Completed"
-                            ? "orange"
-                            : "#757575",
-                        fontWeight: "bold",
-                        px: 0.7,
-                      }}
+                        label={patient.status}
+                        size="small"
+                        sx={{
+                          bgcolor:
+                              patient.status === "Ongoing"
+                                  ? "#3DB461"
+                                  : patient.status === "Scheduled"
+                                      ? "#007bff"
+                                      : patient.status === "Waiting"
+                                          ? "#ffc107"
+                                          : "white",
+                          color:
+                              patient.status === "Ongoing"
+                                  ? "white"
+                                  : patient.status === "Completed"
+                                      ? "orange"
+                                      : patient.status === "Scheduled"
+                                          ? "white"
+                                          : patient.status === "Waiting"
+                                              ? "black"
+                                              : "#757575",
+                          fontWeight: "bold",
+                          px: 0.7,
+                        }}
                     />
                   </TableCell>
                   <TableCell>
@@ -360,7 +358,11 @@ function Appointments(props) {
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              ))}
+              )) :
+                <TableRow sx={{display: 'flex',alignItems: 'center',justifyContent: 'center'}}>
+                  No data found!
+                </TableRow>
+              }
             </TableBody>
           </Table>
         </TableContainer>
@@ -511,7 +513,7 @@ function Appointments(props) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleEditDialogClose}>Cancel</Button>
-            <Button onClick={handleSaveEditedPatient}>Save</Button>
+            <Button>Save</Button>
           </DialogActions>
         </Dialog>
       </Box>

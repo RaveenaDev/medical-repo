@@ -176,9 +176,11 @@ const DepartDetails1 = (props) => {
                                   },
                                 }}
                               >
-                                <MenuItem value={10}>Doctor1</MenuItem>
-                                <MenuItem value={20}>Doctor2</MenuItem>
-                                <MenuItem value={30}>Doctor3</MenuItem>
+                                {
+                                  department?.totalDoctors.map((doctor,index) => (
+                                      <MenuItem key={index} value={doctor}>{doctor}</MenuItem>
+                                  ))
+                                }
                               </Select>
                             </FormControl>
                             <FormControl fullWidth>
@@ -210,9 +212,7 @@ const DepartDetails1 = (props) => {
                                   },
                                 }}
                               >
-                                <MenuItem value={10}>Doctor1</MenuItem>
-                                <MenuItem value={20}>Doctor2</MenuItem>
-                                <MenuItem value={30}>Doctor3</MenuItem>
+                                <MenuItem value="NURSE1">NURSE 1</MenuItem>
                               </Select>
                             </FormControl>
                             <div className={avi.details}>

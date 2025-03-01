@@ -74,7 +74,9 @@ const Billings = (props) => {
             <span className="blue">{item.caseId}</span>
             <span className="blue">{item.patient.name}</span>
             <span className="grey">{item.patient.phone}</span>
-            <span className="grey">{item.updatedAt}</span>
+            <span className="grey">
+              {new Date(item.updatedAt).toLocaleDateString()}
+            </span>
             <span className="grey"> {item.totalAmount}</span>
             <span className={`status ${item.status.toLowerCase()}`}>
               {item.status}

@@ -255,7 +255,13 @@ const PatientPanel = (props) => {
                     },
                   }}
                 >
-                  <TableCell>{truncateText(patient._id, 13)}</TableCell>
+                  <TableCell>
+                    {truncateText(
+                      patient.appointments[patient.appointments.length - 1]
+                        ?.caseId || "Not Assigned",
+                      13
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -270,19 +276,15 @@ const PatientPanel = (props) => {
                   </TableCell>
                   <TableCell>{patient.phone}</TableCell>
                   <TableCell>
-                    {
-                      patient.appointments[patient.appointments.length - 1]
-                        .typeVisit
-                    }
+                    {patient.appointments[patient.appointments.length - 1]
+                      ?.typeVisit || "Not Assigned"}
                   </TableCell>
                   <TableCell>
-                    {
-                      patient.appointments[patient.appointments.length - 1]
-                        .branch
-                    }
+                    {patient.appointments[patient.appointments.length - 1]
+                      ?.branch || "Not Assigned"}
                   </TableCell>
                   <TableCell>
-                    {truncateText(patient.registrationDate, 13)}
+                    {new Date(patient.registrationDate).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
                     <Chip
