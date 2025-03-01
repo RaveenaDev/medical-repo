@@ -472,7 +472,7 @@ function Receptionist(props) {
                           <TableCell>{appointment.typeVisit}</TableCell>
                           <TableCell>{appointment.department.name}</TableCell>
                           <TableCell align="center">
-                            {appointment?.tokenNumber}
+                            {appointment?.tokenNumber || "N/A"}
                           </TableCell>
                           <TableCell>
                             <Chip

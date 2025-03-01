@@ -223,7 +223,7 @@ const PatientList = ({ allPatients }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {totalPatients.map((patient,index) => (
+            {totalPatients.map((patient, index) => (
               <TableRow
                 key={index}
                 sx={{
@@ -238,7 +238,10 @@ const PatientList = ({ allPatients }) => {
                   },
                 }}
               >
-                <TableCell>{patient._id}</TableCell>
+                <TableCell>
+                  {patient.appointments[patient.appointments.length - 1]
+                    ?.caseId || "Not Assigned"}
+                </TableCell>
                 <TableCell>
                   <Typography
                     variant="body1"
@@ -252,9 +255,15 @@ const PatientList = ({ allPatients }) => {
                   </Typography>
                 </TableCell>
                 <TableCell>{patient.phone}</TableCell>
-                <TableCell>{patient.appointments[0].typeVisit}</TableCell>
-                <TableCell>{patient.appointments[0].branch}</TableCell>
-                <TableCell>{patient.registrationDate}</TableCell>
+                <TableCell>
+                  {patient.appointments[0]?.typeVisit || "Not Assigned"}
+                </TableCell>
+                <TableCell>
+                  {patient.appointments[0]?.branch || "Not Assigned"}
+                </TableCell>
+                <TableCell>
+                  {new Date(patient.registrationDate).toLocaleDateString()}
+                </TableCell>
                 <TableCell>
                   <Chip
                     label={patient.status}
