@@ -215,7 +215,7 @@ const ReceptionPage = () => {
                             align="center"
                             sx={{ border: "none", px: 0.6 }}
                           >
-                            {truncateText(row.tokenNumber, 13)}
+                            {truncateText(row?.tokenNumber || "N/A", 13)}
                           </TableCell>
                           <TableCell
                             align="center"
