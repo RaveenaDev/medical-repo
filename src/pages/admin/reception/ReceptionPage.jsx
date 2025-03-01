@@ -215,7 +215,7 @@ const ReceptionPage = () => {
                             align="center"
                             sx={{ border: "none", px: 0.6 }}
                           >
-                            {truncateText(row.tokenDate, 13)}
+                            {truncateText(row.tokenNumber, 13)}
                           </TableCell>
                           <TableCell
                             align="center"
@@ -416,7 +416,8 @@ const ReceptionPage = () => {
               <div>
                 <h4>{req.patient.name}</h4>
                 <p>
-                  Appointment for {req.department.name},{req.tokenDate}
+                  Appointment for {req.department.name},{" "}
+                  {new Date(req.tokenDate).toLocaleDateString()}
                 </p>
                 {/*<p>Appointment for ENT, 28 September</p>*/}
               </div>
@@ -435,7 +436,8 @@ const ReceptionPage = () => {
               <div>
                 <h4>{req.patient.name}</h4>
                 <p>
-                  Appointment for {req.doctor.specialization},{req.dateRejected}
+                  Appointment for {req.doctor.specialization},{" "}
+                  {new Date(req.dateActioned).toLocaleDateString()}
                 </p>
                 {/*<p>Appointment for ENT, 28 September</p>*/}
               </div>

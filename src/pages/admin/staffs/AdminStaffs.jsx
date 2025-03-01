@@ -134,8 +134,6 @@ const AdminStaffs = (props) => {
   const staffs = useSelector((state) => state.admin.staffs);
   const noOfStaffs = staffs.length;
 
-  console.log(staffs);
-
   const departments = useSelector((state) => state.admin.departments);
 
   const handleImageChange = (e) => {

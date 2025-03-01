@@ -255,7 +255,13 @@ const PatientPanel = (props) => {
                     },
                   }}
                 >
-                  <TableCell>{truncateText(patient._id, 13)}</TableCell>
+                  <TableCell>
+                    {truncateText(
+                      patient.appointments[patient.appointments.length - 1]
+                        ?.caseId || "Not Assigned",
+                      13
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Typography
                       variant="body1"
