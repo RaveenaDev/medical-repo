@@ -6,19 +6,14 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
-  FormControlLabel,
-  FormLabel,
   IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   Paper,
-  Radio,
-  RadioGroup,
   Table,
   TableBody,
   TableCell,
@@ -38,12 +33,11 @@ import Select from "@mui/material/Select";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addRoom,
   deleteRoom,
-  getRooms,
   updateRoom,
 } from "../../../components/State/Admin/Action.js";
 
@@ -113,6 +107,10 @@ const AdminRooms = (props) => {
 
   const handleAddDialogOpen = () => setAddDialogOpen(true);
   const handleAddDialogClose = () => {
+    setAddDialogOpen(false);
+  };
+
+  const handleSubmit = () => {
     dispatch(addRoom(formData));
     setAddDialogOpen(false);
   };
@@ -248,7 +246,7 @@ const AdminRooms = (props) => {
                 {" "}
                 {/* Fix width issue */}
                 <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                  <Grid xs={3}>
                     <TextField
                       autoFocus
                       margin="dense"
@@ -261,7 +259,7 @@ const AdminRooms = (props) => {
                       variant="outlined"
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid xs={3}>
                     <TextField
                       margin="dense"
                       label="Room Name"
@@ -273,7 +271,7 @@ const AdminRooms = (props) => {
                       variant="outlined"
                     />
                   </Grid>
-                  <Grid item xs={3} sx={{ padding: 0, width: "22%" }}>
+                  <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
                     <FormControl fullWidth margin="dense">
                       <InputLabel id="status-select-label">Status</InputLabel>
                       <Select
@@ -323,7 +321,7 @@ const AdminRooms = (props) => {
 
             <DialogActions sx={{ justifyContent: "center" }}>
               <Button
-                onClick={handleAddDialogClose}
+                onClick={handleSubmit}
                 variant="contained"
                 sx={{
                   width: "200px",

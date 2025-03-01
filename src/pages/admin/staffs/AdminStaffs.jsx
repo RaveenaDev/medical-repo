@@ -71,7 +71,7 @@ const AdminStaffs = (props) => {
         profile: selectedStaff.profile,
         name: selectedStaff.name,
         phone: selectedStaff.phone,
-        department: selectedStaff.department,
+        department: selectedStaff.department._id,
         designation: selectedStaff.designation,
         staff_id: selectedStaff.staff_id,
         staffId: selectedStaff._id,
@@ -133,6 +133,8 @@ const AdminStaffs = (props) => {
 
   const staffs = useSelector((state) => state.admin.staffs);
   const noOfStaffs = staffs.length;
+
+  console.log(staffs);
 
   const departments = useSelector((state) => state.admin.departments);
 
@@ -480,7 +482,7 @@ const AdminStaffs = (props) => {
             select
             label="Department"
             name="department"
-            value={editedStaff.department._id}
+            value={editedStaff.department}
             onChange={(e) =>
               setEditedStaff({ ...editedStaff, department: e.target.value })
             }
@@ -498,7 +500,6 @@ const AdminStaffs = (props) => {
           </TextField>
 
           <TextField
-            select
             label="Designation"
             name="designation"
             value={editedStaff.designation}
@@ -507,11 +508,7 @@ const AdminStaffs = (props) => {
             }
             fullWidth
             margin="dense"
-          >
-            <MenuItem value="General Checkup">General Checkup</MenuItem>
-            <MenuItem value="Follow Up">Follow Up</MenuItem>
-            <MenuItem value="Consultation">Consultation</MenuItem>
-          </TextField>
+          ></TextField>
 
           <TextField
             select
