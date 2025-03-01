@@ -267,13 +267,21 @@ const PatientList = ({ allPatients }) => {
                 <TableCell>
                   <Chip
                     label={patient.status}
-                    color={patient.status === "Active" ? "success" : "default"}
+                    color={
+                      patient.status.toLowerCase() === "active"
+                        ? "success"
+                        : "default"
+                    }
                     size="small"
                     sx={{
                       bgcolor:
-                        patient.status === "Active" ? "#d4edda" : "#f0f0f0",
+                        patient.status.toLowerCase() === "active"
+                          ? "#d4edda"
+                          : "#f0f0f0",
                       color:
-                        patient.status === "Active" ? "#155724" : "#757575",
+                        patient.status.toLowerCase() === "active"
+                          ? "#155724"
+                          : "#757575",
                       fontWeight: "bold",
                     }}
                   />
