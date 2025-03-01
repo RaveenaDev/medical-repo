@@ -388,7 +388,7 @@ const Expenses = (props) => {
                     {row.details}
                   </TableCell>
                   <TableCell align="center" sx={{ border: "none" }}>
-                    {truncateText(row.date, 14)}
+                    {new Date(row.date).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
                     <IconButton onClick={(event) => handleMenuOpen(event, row)}>
