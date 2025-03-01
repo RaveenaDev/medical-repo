@@ -18,7 +18,10 @@ const PersonalInfo = ({ patient }) => {
     },
     {
       labels: ["Member status", "Registered Date"],
-      values: [patient.status, patient.registrationDate],
+      values: [
+        patient.status,
+        new Date(patient.registrationDate).toLocaleDateString(),
+      ],
     },
   ];
 
