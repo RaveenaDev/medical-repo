@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Dashboard from "./dashboard";
 import styles from "./styles.module.scss";
-import ayu from "./patients/patients.module.scss";
 import Grid from "@mui/material/Grid2";
 import EntityBasedTable from "./EntityBasedTable";
 import {
@@ -120,11 +119,25 @@ function Receptionist(props) {
 
   const [activeBox, setActiveBox] = useState(1);
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAppointments("Scheduled"))
+    dispatch(getAppointments("Ongoing"))
+    dispatch(getAppointments("Waiting"))
+    dispatch(getAppointments("Completed"))
+  }, [dispatch]);
+
+  const scheduledAppointments = useSelector((store) => store.receptionist.scheduledAppointments);
+  const ongoingAppointments = useSelector((store) => store.receptionist.ongoingAppointments);
+  const waitingAppointments = useSelector((store) => store.receptionist.waitingAppointments);
+  const completedAppointments = useSelector((store) => store.receptionist.completedAppointments);
+
   const boxData = [
-    { id: 1, label: "Scheduled", count: 25 },
-    { id: 2, label: "Ongoing", count: 12 },
-    { id: 3, label: "Waiting", count: 40 },
-    { id: 4, label: "Completed", count: 5 },
+    { id: 1, label: "Scheduled", count: scheduledAppointments.length },
+    { id: 2, label: "Ongoing", count: ongoingAppointments.length },
+    { id: 3, label: "Waiting", count: waitingAppointments.length },
+    { id: 4, label: "Completed", count: completedAppointments.length },
   ];
 
   const activeLabel = boxData.find((box) => box.id === activeBox)?.label;
@@ -163,33 +176,36 @@ function Receptionist(props) {
     setEditDialogOpen(false);
   };
 
-  // Handle Save Edited Patient
-  const handleSaveEditedPatient = () => {
-    // setAppointments((prev) =>
-    //   prev.map((patient) =>
-    //     patient.id === editedPatient.id ? editedPatient : patient
-    //   )
-    // );
-    handleEditDialogClose();
-  };
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getAppointments(activeLabel));
-  }, [dispatch, activeLabel]);
-
   useEffect(() => {
     dispatch(getRequestedAppointments());
   }, [dispatch]);
 
-  const appointments = useSelector((store) => store.receptionist.appointments);
   const appointmentRequests = useSelector(
     (store) => store.receptionist.appointmentRequests
   );
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
+
+  let appointments = [];
+
+  switch (activeLabel) {
+    case "Scheduled":
+      appointments = scheduledAppointments;
+      break;
+    case "Ongoing":
+      appointments = ongoingAppointments;
+      break;
+    case "Waiting":
+      appointments = waitingAppointments;
+      break;
+    case "Completed":
+      appointments = completedAppointments;
+      break;
+    default:
+      appointments = [];
+  }
+
   return (
     <>
       <div>
@@ -442,7 +458,7 @@ function Receptionist(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {appointments.map((appointment) => (
+                      {appointments.length > 0 ? appointments.map((appointment) => (
                         <TableRow
                           key={appointment._id}
                           sx={{
@@ -480,27 +496,30 @@ function Receptionist(props) {
                           </TableCell>
                           <TableCell>
                             <Chip
-                              label={appointment.status}
-                              // color={
-                              //   appointment.status === "Active"
-                              //     ? "success"
-                              //     : "default"
-                              // }
-                              size="small"
-                              sx={{
-                                bgcolor:
-                                  appointment.status === "Ongoing"
-                                    ? "#3DB461"
-                                    : "white",
-                                color:
-                                  appointment.status === "Ongoing"
-                                    ? "white"
-                                    : appointment.status === "Completed"
-                                    ? "orange"
-                                    : "#757575",
-                                fontWeight: "bold",
-                                px: 0.7,
-                              }}
+                                label={appointment.status}
+                                size="small"
+                                sx={{
+                                  bgcolor:
+                                      appointment.status === "Ongoing"
+                                          ? "#3DB461"
+                                          : appointment.status === "Scheduled"
+                                              ? "#007bff"
+                                              : appointment.status === "Waiting"
+                                                  ? "#ffc107"
+                                                  : "white",
+                                  color:
+                                      appointment.status === "Ongoing"
+                                          ? "white"
+                                          : appointment.status === "Completed"
+                                              ? "orange"
+                                              : appointment.status === "Scheduled"
+                                                  ? "white"
+                                                  : appointment.status === "Waiting"
+                                                      ? "black"
+                                                      : "#757575",
+                                  fontWeight: "bold",
+                                  px: 0.7,
+                                }}
                             />
                           </TableCell>
                           <TableCell>
@@ -513,7 +532,11 @@ function Receptionist(props) {
                             </IconButton>
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )) :
+                          <TableRow sx={{display: 'flex',alignItems: 'center',justifyContent: 'center'}}>
+                            No data found!
+                          </TableRow>
+                      }
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -666,7 +689,7 @@ function Receptionist(props) {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleEditDialogClose}>Cancel</Button>
-                    <Button onClick={handleSaveEditedPatient}>Save</Button>
+                    <Button>Save</Button>
                   </DialogActions>
                 </Dialog>
               </Box>

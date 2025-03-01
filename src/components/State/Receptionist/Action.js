@@ -6,13 +6,13 @@ import {
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_BY_ID,
-  GET_BILLS,
+  GET_BILLS, GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
-  GET_DOCTORS_BY_DEPARTMENT,
+  GET_DOCTORS_BY_DEPARTMENT, GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
-  GET_ROOMS,
-  GET_STAFFS,
+  GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
+  GET_STAFFS, GET_WAITING_APPOINTMENTS,
   UPDATE_ROOM,
 } from "./ActionType.js";
 import axios from "axios";
@@ -210,6 +210,22 @@ export const getAppointments = (activeLabel) => async (dispatch) => {
     });
 
     dispatch({ type: GET_APPOINTMENTS, payload: data });
+
+    if(data.message === 'Scheduled appointments retrieved successfully'){
+      dispatch({type: GET_SCHEDULED_APPOINTMENTS,payload: data})
+    }
+
+    else if(data.message === 'Ongoing appointments retrieved successfully'){
+      dispatch({type: GET_ONGOING_APPOINTMENTS,payload: data})
+    }
+
+    else if(data.message === 'Waiting appointments retrieved successfully'){
+      dispatch({type: GET_WAITING_APPOINTMENTS,payload: data})
+    }
+
+    else{
+      dispatch({type: GET_COMPLETED_APPOINTMENTS,payload: data})
+    }
   } catch (error) {
     console.log(error);
   }

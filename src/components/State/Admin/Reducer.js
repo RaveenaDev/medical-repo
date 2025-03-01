@@ -13,15 +13,15 @@ import {
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_DETAILS,
-  GET_BILLING_RECORDS,
+  GET_BILLING_RECORDS, GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
-  GET_EXPENSES,
+  GET_EXPENSES, GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
-  GET_ROOMS,
+  GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
-  GET_STAFFS,
+  GET_STAFFS, GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
   UPDATE_ROOM,
@@ -43,6 +43,10 @@ const inititalState = {
   department: null,
   expenses: [],
   totalAppointments: [],
+  scheduledAppointments: [],
+  ongoingAppointments: [],
+  waitingAppointments: [],
+  completedAppointments: [],
   appointmentRequests: [],
   rejectedAppointments: [],
   billingRecord: null,
@@ -104,6 +108,30 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         totalAppointments: action.payload.appointments,
+      };
+
+    case GET_SCHEDULED_APPOINTMENTS:
+      return {
+        ...state,
+        scheduledAppointments: action.payload.appointments,
+      };
+
+    case GET_ONGOING_APPOINTMENTS:
+      return {
+        ...state,
+        ongoingAppointments: action.payload.appointments,
+      };
+
+    case GET_WAITING_APPOINTMENTS:
+      return {
+        ...state,
+        waitingAppointments: action.payload.appointments,
+      };
+
+    case GET_COMPLETED_APPOINTMENTS:
+      return {
+        ...state,
+        completedAppointments: action.payload.appointments,
       };
 
     case GET_PATIENTS:
