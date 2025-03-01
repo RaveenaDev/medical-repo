@@ -24,9 +24,6 @@ import {
 function createData(name, appointmentWith, typeVisit, branch, tokenNumber) {
   return { name, appointmentWith, typeVisit, branch, tokenNumber };
 }
-
-const appointmentRequests = [1, 1, 1, 1, 1, 1, 1, 1];
-
 // Utility function to truncate text
 const truncateText = (text, maxLength) => {
   return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -194,7 +191,7 @@ const ReceptionPage = () => {
                             scope="row"
                             sx={{ color: "#25307f", border: "none", px: 0.6 }}
                           >
-                            {truncateText(row.patient.name, 13)}
+                            {truncateText(row.patient?.name, 13)}
                           </TableCell>
                           <TableCell
                             align="center"
@@ -351,7 +348,10 @@ const ReceptionPage = () => {
                             scope="row"
                             sx={{ border: "none", padding: "14px 14px" }}
                           >
-                            {truncateText(row.doctors[0].name, 13)}
+                            {truncateText(
+                              row.doctors[0]?.name || "Not Assigned",
+                              12
+                            )}
                           </TableCell>
                           <TableCell
                             align="left"
@@ -363,10 +363,10 @@ const ReceptionPage = () => {
                             align="left"
                             sx={{ border: "none", padding: "14px 14px" }}
                           >
-                            {
-                              row.appointments[row.appointments.length - 1]
-                                .branch
-                            }
+                            {row.appointments.length > 0
+                              ? row.appointments[row.appointments.length - 1]
+                                  ?.branch || "Not Assigned"
+                              : "Not Assigned"}
                           </TableCell>
                           <TableCell
                             align="center"

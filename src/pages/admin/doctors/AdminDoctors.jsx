@@ -397,10 +397,14 @@ const AdminDoctors = (props) => {
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1">{truncateText(doctor?.name, 13)}</Typography>
+                  <Typography variant="body1">
+                    {truncateText(doctor?.name, 13)}
+                  </Typography>
                 </TableCell>
                 <TableCell>{doctor?.phone}</TableCell>
-                <TableCell>{doctor?.specialization}</TableCell>
+                <TableCell>
+                  {doctor?.specialization || "Not Assigned"}
+                </TableCell>
                 <TableCell align="center">
                   <Chip
                     label={doctor?.status}
