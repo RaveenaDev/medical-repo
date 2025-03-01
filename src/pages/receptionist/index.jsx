@@ -187,7 +187,9 @@ function Receptionist(props) {
   const appointmentRequests = useSelector(
     (store) => store.receptionist.appointmentRequests
   );
-
+  const truncateText = (text, maxLength) => {
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
   return (
     <>
       <div>
@@ -459,7 +461,9 @@ function Receptionist(props) {
                             },
                           }}
                         >
-                          <TableCell>{appointment.caseId}</TableCell>
+                          <TableCell>
+                            {truncateText(appointment.caseId, 12)}
+                          </TableCell>
                           <TableCell>
                             <Typography
                               variant="body1"
@@ -472,7 +476,7 @@ function Receptionist(props) {
                           <TableCell>{appointment.typeVisit}</TableCell>
                           <TableCell>{appointment.department.name}</TableCell>
                           <TableCell align="center">
-                            {appointment?.tokenNumber}
+                            {appointment?.tokenNumber || "N/A"}
                           </TableCell>
                           <TableCell>
                             <Chip

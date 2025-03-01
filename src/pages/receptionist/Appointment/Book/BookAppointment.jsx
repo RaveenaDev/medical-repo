@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   bookAppointment,
   getAllDepartments,
-  getDoctors, getDoctorsByDepartment,
+  getDoctors,
+  getDoctorsByDepartment,
   getPatients,
 } from "../../../../components/State/Receptionist/Action.js";
 import { useNavigate } from "react-router-dom";
@@ -44,9 +45,8 @@ const BookAppointment = ({ isOpen, onClose }) => {
   );
 
   const handleDepartmentDoctors = (departmentId) => {
-    console.log("Depart: ",departmentId)
-    dispatch(getDoctorsByDepartment(departmentId))
-  }
+    dispatch(getDoctorsByDepartment(departmentId));
+  };
 
   const dispatch = useDispatch();
 
@@ -58,7 +58,9 @@ const BookAppointment = ({ isOpen, onClose }) => {
 
   const doctors = useSelector((store) => store.receptionist.doctors);
   const departments = useSelector((store) => store.receptionist.departments);
-  const doctorsByDepartment = useSelector(store => store.receptionist.doctorsByDepartment)
+  const doctorsByDepartment = useSelector(
+    (store) => store.receptionist.doctorsByDepartment
+  );
 
   const handleClick = () => {
     dispatch(bookAppointment(formData, onClose));
@@ -125,11 +127,15 @@ const BookAppointment = ({ isOpen, onClose }) => {
             onChange={handleChange}
             fullWidth
           >
-            {
-              departments.map((department, index) => (
-                  <MenuItem key={index} value={department.departmentName} onClick={() => handleDepartmentDoctors(department.departmentId)}>{department.departmentName}</MenuItem>
-              ))
-            }
+            {departments.map((department, index) => (
+              <MenuItem
+                key={index}
+                value={department.departmentName}
+                onClick={() => handleDepartmentDoctors(department.departmentId)}
+              >
+                {department.departmentName}
+              </MenuItem>
+            ))}
             {/*<MenuItem value="ENT">ENT</MenuItem>*/}
           </TextField>
           <p>{renderRequiredLabel("Select Doctor")}</p>
@@ -141,11 +147,11 @@ const BookAppointment = ({ isOpen, onClose }) => {
             onChange={handleChange}
             fullWidth
           >
-            {
-              doctorsByDepartment.map((doctor, index) => (
-                  <MenuItem key={index} value={doctor.email}>{doctor.name}</MenuItem>
-              ))
-            }
+            {doctorsByDepartment.map((doctor, index) => (
+              <MenuItem key={index} value={doctor.email}>
+                {doctor.name}
+              </MenuItem>
+            ))}
             {/*<MenuItem value="Dr. Johnson">Dr. Johnson</MenuItem>*/}
           </TextField>
 

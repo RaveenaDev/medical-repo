@@ -223,7 +223,7 @@ const PatientList = ({ allPatients }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {totalPatients.map((patient,index) => (
+            {totalPatients.map((patient, index) => (
               <TableRow
                 key={index}
                 sx={{
@@ -238,7 +238,10 @@ const PatientList = ({ allPatients }) => {
                   },
                 }}
               >
-                <TableCell>{patient._id}</TableCell>
+                <TableCell>
+                  {patient.appointments[patient.appointments.length - 1]
+                    ?.caseId || "Not Assigned"}
+                </TableCell>
                 <TableCell>
                   <Typography
                     variant="body1"
@@ -252,19 +255,33 @@ const PatientList = ({ allPatients }) => {
                   </Typography>
                 </TableCell>
                 <TableCell>{patient.phone}</TableCell>
-                <TableCell>{patient.appointments[0].typeVisit}</TableCell>
-                <TableCell>{patient.appointments[0].branch}</TableCell>
-                <TableCell>{patient.registrationDate}</TableCell>
+                <TableCell>
+                  {patient.appointments[0]?.typeVisit || "Not Assigned"}
+                </TableCell>
+                <TableCell>
+                  {patient.appointments[0]?.branch || "Not Assigned"}
+                </TableCell>
+                <TableCell>
+                  {new Date(patient.registrationDate).toLocaleDateString()}
+                </TableCell>
                 <TableCell>
                   <Chip
                     label={patient.status}
-                    color={patient.status === "Active" ? "success" : "default"}
+                    color={
+                      patient.status.toLowerCase() === "active"
+                        ? "success"
+                        : "default"
+                    }
                     size="small"
                     sx={{
                       bgcolor:
-                        patient.status === "Active" ? "#d4edda" : "#f0f0f0",
+                        patient.status.toLowerCase() === "active"
+                          ? "#d4edda"
+                          : "#f0f0f0",
                       color:
-                        patient.status === "Active" ? "#155724" : "#757575",
+                        patient.status.toLowerCase() === "active"
+                          ? "#155724"
+                          : "#757575",
                       fontWeight: "bold",
                     }}
                   />

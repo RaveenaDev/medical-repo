@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBillById } from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 
 const BillingModal = ({ open, bill, onClose }) => {
+  if (!bill) return null; // Avoid rendering if no bill is selected
   const billId = bill?._id;
 
   const dispatch = useDispatch();
@@ -30,7 +31,6 @@ const BillingModal = ({ open, bill, onClose }) => {
       document.body.style.overflow = "auto";
     };
   }, [open]);
-  if (!bill) return null; // Avoid rendering if no bill is selected
 
   return (
     <div
