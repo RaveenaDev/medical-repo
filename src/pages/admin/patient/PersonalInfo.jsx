@@ -1,6 +1,6 @@
 import React from "react";
 
-const PersonalInfo = ({patient}) => {
+const PersonalInfo = ({ patient }) => {
   const tables = [
     {
       labels: ["Gender", "Birthday", "Phone Number"],
@@ -8,11 +8,20 @@ const PersonalInfo = ({patient}) => {
     },
     {
       labels: ["Address", "Case ID", "Assessed by"],
-      values: [patient.address, patient.appointments[patient.appointments.length - 1].caseId, patient.appointments[patient.appointments.length - 1].doctorName],
+      values: [
+        patient.address,
+        patient.appointments[patient.appointments.length - 1]?.caseId ||
+          "Not Assigned",
+        patient.appointments[patient.appointments.length - 1]?.doctorName ||
+          "Not Assigned",
+      ],
     },
     {
       labels: ["Member status", "Registered Date"],
-      values: [patient.status, patient.registrationDate],
+      values: [
+        patient.status,
+        new Date(patient.registrationDate).toLocaleDateString(),
+      ],
     },
   ];
 
@@ -54,7 +63,7 @@ const PersonalInfo = ({patient}) => {
                     fontSize: "15px",
                     fontWeight: "700",
                     color: "#1A1A1A",
-                    width: "7.8rem"
+                    width: "7.8rem",
                   }}
                 >
                   {section.values[i]}
