@@ -40,11 +40,14 @@ import {
   deleteRoom,
   updateRoom,
 } from "../../../components/State/Admin/Action.js";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminRooms = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
+  const [errors, setErrors] = useState({}); // Added error state
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -75,9 +78,25 @@ const AdminRooms = (props) => {
     handleMenuClose();
   };
 
-  // Handle Save Edited Room
   const handleSaveEditedRoom = () => {
+    let newErrors = {};
+
+    Object.keys(editedRoom).forEach((key) => {
+      if (!editedRoom[key]) {
+        newErrors[key] = "This field is required";
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields!", {
+        position: "bottom-right",
+      });
+      return;
+    }
+
     dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
+    setErrors({});
     setEditDialogOpen(false);
   };
 
@@ -111,7 +130,23 @@ const AdminRooms = (props) => {
   };
 
   const handleSubmit = () => {
+    let newErrors = {};
+
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key]) {
+        newErrors[key] = "This field is required";
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields!", {
+        position: "bottom-right",
+      });
+      return;
+    }
     dispatch(addRoom(formData));
+    setErrors({});
     setAddDialogOpen(false);
   };
 
@@ -257,6 +292,9 @@ const AdminRooms = (props) => {
                       type="text"
                       fullWidth
                       variant="outlined"
+                      error={!!errors.roomID}
+                      helperText={errors.roomID}
+                      required
                     />
                   </Grid>
                   <Grid xs={3}>
@@ -269,10 +307,17 @@ const AdminRooms = (props) => {
                       type="text"
                       fullWidth
                       variant="outlined"
+                      error={!!errors.name}
+                      helperText={errors.name}
+                      required
                     />
                   </Grid>
                   <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                    <FormControl fullWidth margin="dense">
+                    <FormControl
+                      fullWidth
+                      margin="dense"
+                      error={!!errors.status}
+                    >
                       <InputLabel id="status-select-label">Status</InputLabel>
                       <Select
                         labelId="status-select-label"
@@ -283,6 +328,7 @@ const AdminRooms = (props) => {
                         label="Status"
                         variant="outlined"
                         sx={{ width: "100%" }}
+                        required
                       >
                         <MenuItem value="Available">Available</MenuItem>
                         <MenuItem value="Occupied">Occupied</MenuItem>
@@ -290,11 +336,20 @@ const AdminRooms = (props) => {
                           Under Maintenance
                         </MenuItem>
                       </Select>
+                      {errors.status && (
+                        <Typography variant="caption" color="error">
+                          {errors.status}
+                        </Typography>
+                      )}
                     </FormControl>
                   </Grid>
 
                   <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                    <FormControl fullWidth margin="dense">
+                    <FormControl
+                      fullWidth
+                      margin="dense"
+                      error={!!errors.doctorId}
+                    >
                       <InputLabel id="doctor-select-label">
                         Doctor Assigned
                       </InputLabel>
@@ -306,6 +361,7 @@ const AdminRooms = (props) => {
                         onChange={handleChange}
                         label="Doctor Assigned"
                         variant="outlined"
+                        required
                       >
                         {doctors?.map((doctor) => (
                           <MenuItem key={doctor._id} value={doctor._id}>
@@ -313,6 +369,11 @@ const AdminRooms = (props) => {
                           </MenuItem>
                         ))}
                       </Select>
+                      {errors.doctorId && (
+                        <Typography variant="caption" color="error">
+                          {errors.doctorId}
+                        </Typography>
+                      )}
                     </FormControl>
                   </Grid>
                 </Grid>
@@ -471,6 +532,9 @@ const AdminRooms = (props) => {
                   type="text"
                   fullWidth
                   variant="outlined"
+                  error={!!errors.roomID}
+                  helperText={errors.roomID}
+                  required
                 />
               </Grid>
               <Grid xs={3}>
@@ -485,10 +549,13 @@ const AdminRooms = (props) => {
                   type="text"
                   fullWidth
                   variant="outlined"
+                  error={!!errors.name}
+                  helperText={errors.name}
+                  required
                 />
               </Grid>
               <Grid xs={3}>
-                <FormControl fullWidth margin="dense">
+                <FormControl fullWidth margin="dense" error={!!errors.status}>
                   <InputLabel id="status-select-label">Status</InputLabel>
                   <Select
                     labelId="status-select-label"
@@ -507,11 +574,16 @@ const AdminRooms = (props) => {
                       Under Maintenance
                     </MenuItem>
                   </Select>
+                  {errors.status && (
+                    <Typography variant="caption" color="error">
+                      {errors.status}
+                    </Typography>
+                  )}
                 </FormControl>
               </Grid>
 
               <Grid xs={3}>
-                <FormControl fullWidth margin="dense">
+                <FormControl fullWidth margin="dense" error={!!errors.doctorId}>
                   <InputLabel id="doctor-select-label">
                     Doctor Assigned
                   </InputLabel>
@@ -528,6 +600,7 @@ const AdminRooms = (props) => {
                     }
                     label="Doctor Assigned"
                     variant="outlined"
+                    required
                   >
                     {doctors?.map((doctor) => (
                       <MenuItem key={doctor._id} value={doctor._id}>
@@ -535,6 +608,11 @@ const AdminRooms = (props) => {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.doctorId && (
+                    <Typography variant="caption" color="error">
+                      {errors.doctorId}
+                    </Typography>
+                  )}
                 </FormControl>
               </Grid>
             </Grid>
