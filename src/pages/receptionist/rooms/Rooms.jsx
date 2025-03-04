@@ -3,23 +3,17 @@ import CommonPanel from "../components/CommonPanel.jsx";
 import {
   Box,
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
-  FormControlLabel,
-  FormLabel,
   IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   Paper,
-  Radio,
-  RadioGroup,
   Table,
   TableBody,
   TableCell,
@@ -33,7 +27,6 @@ import ayu from "../doctors/doctors.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import addIcon from "../../../assets/plus.svg";
 import styles from "../styles.module.scss";
-import Avatar from "@mui/material/Avatar";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -41,7 +34,6 @@ import Grid from "@mui/material/Grid2";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addRoom,
@@ -53,6 +45,7 @@ const Rooms = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
+  const [errors, setErrors] = useState({}); // Added error state
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -84,7 +77,25 @@ const Rooms = (props) => {
 
   // Handle Save Edited Room
   const handleSaveEditedRoom = () => {
+    let newErrors = {};
+
+    Object.keys(editedRoom).forEach((key) => {
+      if (!editedRoom[key]) {
+        newErrors[key] = "This field is required";
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields!", {
+        position: "bottom-right",
+      });
+      return;
+    }
+
     dispatch(updateRoom(editedRoom.originalRoomID, editedRoom));
+    setErrors({});
+
     setEditDialogOpen(false);
   };
 
@@ -121,9 +132,25 @@ const Rooms = (props) => {
   };
 
   const handleSubmit = () => {
+    let newErrors = {};
+
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key]) {
+        newErrors[key] = "This field is required";
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields!", {
+        position: "bottom-right",
+      });
+      return;
+    }
     dispatch(addRoom(formData));
+    setErrors({});
     setAddDialogOpen(false);
-  }
+  };
 
   const [formData, setFormData] = useState({
     roomID: "",
@@ -156,7 +183,7 @@ const Rooms = (props) => {
               <ArrowBackIosIcon />
             </div>
             <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-            <h2 className={ayu.departmentTitleDetails}>80</h2>
+            <h2 className={ayu.departmentTitleDetails}>{rooms.length}</h2>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
@@ -263,6 +290,9 @@ const Rooms = (props) => {
                     type="text"
                     fullWidth
                     variant="outlined"
+                    error={!!errors.roomID}
+                    helperText={errors.roomID}
+                    required
                   />
                 </Grid>
                 <Grid xs={3}>
@@ -275,6 +305,9 @@ const Rooms = (props) => {
                     type="text"
                     fullWidth
                     variant="outlined"
+                    error={!!errors.name}
+                    helperText={errors.name}
+                    required
                   />
                 </Grid>
                 <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
@@ -289,18 +322,28 @@ const Rooms = (props) => {
                       label="Status"
                       variant="outlined"
                       sx={{ width: "100%" }}
+                      required
                     >
                       <MenuItem value="Available">Available</MenuItem>
                       <MenuItem value="Occupied">Occupied</MenuItem>
                       <MenuItem value="Under Maintenance">
                         Under Maintenance
                       </MenuItem>
-                    </Select>
+                    </Select>{" "}
+                    {errors.status && (
+                      <Typography variant="caption" color="error">
+                        {errors.status}
+                      </Typography>
+                    )}
                   </FormControl>
                 </Grid>
 
                 <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                  <FormControl fullWidth margin="dense">
+                  <FormControl
+                    fullWidth
+                    margin="dense"
+                    error={!!errors.doctorId}
+                  >
                     <InputLabel id="doctor-select-label">
                       Doctor Assigned
                     </InputLabel>
@@ -312,6 +355,7 @@ const Rooms = (props) => {
                       onChange={handleChange}
                       label="Doctor Assigned"
                       variant="outlined"
+                      required
                     >
                       {doctors?.map((doctor) => (
                         <MenuItem key={doctor._id} value={doctor._id}>
@@ -319,6 +363,11 @@ const Rooms = (props) => {
                         </MenuItem>
                       ))}
                     </Select>
+                    {errors.doctorId && (
+                      <Typography variant="caption" color="error">
+                        {errors.doctorId}
+                      </Typography>
+                    )}
                   </FormControl>
                 </Grid>
               </Grid>
@@ -417,7 +466,9 @@ const Rooms = (props) => {
                     {room.status}
                   </Box>
                 </TableCell>
-                <TableCell align="center">{room.assignedDoctor.name}</TableCell>
+                <TableCell align="center">
+                  {room.assignedDoctor?.name || "Not Assigned"}
+                </TableCell>
 
                 <TableCell align="right">
                   <IconButton onClick={(event) => handleMenuOpen(event, room)}>
@@ -471,6 +522,9 @@ const Rooms = (props) => {
                   type="text"
                   fullWidth
                   variant="outlined"
+                  error={!!errors.roomID}
+                  helperText={errors.roomID}
+                  required
                 />
               </Grid>
               <Grid xs={3}>
@@ -485,10 +539,13 @@ const Rooms = (props) => {
                   type="text"
                   fullWidth
                   variant="outlined"
+                  error={!!errors.name}
+                  helperText={errors.name}
+                  required
                 />
               </Grid>
               <Grid xs={3}>
-                <FormControl fullWidth margin="dense">
+                <FormControl fullWidth margin="dense" error={!!errors.status}>
                   <InputLabel id="status-select-label">Status</InputLabel>
                   <Select
                     labelId="status-select-label"
@@ -507,11 +564,16 @@ const Rooms = (props) => {
                       Under Maintenance
                     </MenuItem>
                   </Select>
+                  {errors.status && (
+                    <Typography variant="caption" color="error">
+                      {errors.status}
+                    </Typography>
+                  )}
                 </FormControl>
               </Grid>
 
               <Grid xs={3}>
-                <FormControl fullWidth margin="dense">
+                <FormControl fullWidth margin="dense" error={!!errors.doctorId}>
                   <InputLabel id="doctor-select-label">
                     Doctor Assigned
                   </InputLabel>
@@ -535,6 +597,11 @@ const Rooms = (props) => {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.doctorId && (
+                    <Typography variant="caption" color="error">
+                      {errors.doctorId}
+                    </Typography>
+                  )}
                 </FormControl>
               </Grid>
             </Grid>

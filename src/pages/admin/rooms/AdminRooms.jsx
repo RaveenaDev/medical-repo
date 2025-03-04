@@ -475,7 +475,7 @@ const AdminRooms = (props) => {
                   </Box>
                 </TableCell>
                 <TableCell align="center">
-                  {room.assignedDoctor?.name}
+                  {room.assignedDoctor?.name || "Not Assigned"}
                 </TableCell>
 
                 <TableCell align="right">
