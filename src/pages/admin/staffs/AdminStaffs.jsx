@@ -126,6 +126,7 @@ const AdminStaffs = (props) => {
 
   const handleSubmit = () => {
     dispatch(addStaff(newStaff));
+    setAddDialogOpen(false);
   };
 
   const navigate = useNavigate();

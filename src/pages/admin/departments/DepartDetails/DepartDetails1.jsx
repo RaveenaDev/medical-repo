@@ -195,7 +195,7 @@ const DepartDetails1 = (props) => {
                                     top: "1px",
                                   }}
                                 >
-                                  {department?.totalNurses}
+                                  {department?.totalStaffs.length}
                                 </span>
                               </InputLabel>
                               <Select
@@ -212,7 +212,11 @@ const DepartDetails1 = (props) => {
                                   },
                                 }}
                               >
-                                <MenuItem value="NURSE1">NURSE 1</MenuItem>
+                                {
+                                  department?.totalStaffs.map((staff,index) => (
+                                      <MenuItem key={index} value={staff}>{staff}</MenuItem>
+                                  ))
+                                }
                               </Select>
                             </FormControl>
                             <div className={avi.details}>
@@ -386,8 +390,9 @@ const DepartDetails1 = (props) => {
 
                         <div>
                           <h4>Specialized Procedures</h4>
-                          {department?.specializedProcedures.map((spec) => (
+                          {department?.specializedProcedures.map((spec,index) => (
                             <ul
+                                key={index}
                               style={{
                                 listStyleType: "none",
                                 paddingLeft: "10px",

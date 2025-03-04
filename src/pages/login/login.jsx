@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/pages/login.module.scss";
-import TextFieldHiddenLabel from "../../components/TextInput";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -58,6 +57,10 @@ const Login = (props) => {
     navigate("/receptionist");
   } else if (auth?.role === "HospitalAdmin") {
     navigate("/admin");
+  }
+
+  else if(auth?.role === "doctor"){
+    navigate("/doctor")
   }
 
   return (

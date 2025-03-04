@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 export const login = (data) => async (dispatch) => {
   try {
     const response = await axios.post(`${API_URL}/login`, data);
+    console.log("Res: ",response.data)
 
     if (response.data.token) {
       localStorage.setItem("jwt", response.data.token);
@@ -19,8 +20,9 @@ export const login = (data) => async (dispatch) => {
       autoClose: 3000,
     });
   } catch (error) {
-    console.log(error);
-    toast.error("Please try again!", {
+    // console.log("Error ayu: ",error);
+    const err = error.response.data.message
+    toast.error(err, {
       position: "bottom-right", // Use string for position
       autoClose: 3000,
     });
@@ -38,5 +40,9 @@ export const Logout = () => async (dispatch) => {
     });
   } catch (error) {
     console.log("error", error);
+    toast.error("Logout Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 3000,
+    });
   }
 };

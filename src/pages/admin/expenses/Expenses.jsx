@@ -273,6 +273,16 @@ const Expenses = (props) => {
             height: "3.4rem",
             width: "12rem",
             marginTop: "1.9rem",
+              outline: "none",
+              boxShadow: "none",
+              "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+              },
+              "&:active": {
+                  outline: "none",
+                  boxShadow: "none",
+              },
           }}
         >
           <img src={addAppointments} alt="Img" />
