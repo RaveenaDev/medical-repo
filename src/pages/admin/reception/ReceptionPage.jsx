@@ -197,7 +197,7 @@ const ReceptionPage = () => {
                             align="center"
                             sx={{ border: "none", px: 0.6 }}
                           >
-                            {truncateText(row.doctor.name, 14)}
+                            {truncateText(row.doctor?.name, 14)}
                           </TableCell>
                           <TableCell
                             align="center"

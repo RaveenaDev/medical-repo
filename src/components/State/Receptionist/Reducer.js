@@ -95,6 +95,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         rooms: [...state.rooms, action.payload.room],
+        totalRooms: state.totalRooms + 1
       };
     case UPDATE_ROOM:
       return {
@@ -107,7 +108,8 @@ export const receptionistReducer = (state = initialState, action) => {
     case DELETE_ROOM:
       return {
         ...state,
-        rooms: state.rooms.filter((room) => room._id !== action.payload),
+        rooms: state.rooms.filter((room) => room._id !== action.payload.resource._id),
+        totalRooms: state.totalRooms - 1
       };
 
     case GET_ALL_DEPARTMENTS:

@@ -75,6 +75,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         doctors: [...state.doctors, action.payload.newUser],
+        totalDoctors: state.totalDoctors - 1
       };
     case DELETE_DOCTORS:
       return {
@@ -82,6 +83,7 @@ export const adminReducer = (state = inititalState, action) => {
         doctors: state.doctors.filter(
           (doctor) => doctor._id !== action.payload.resource._id
         ),
+        totalDoctors: state.totalDoctors - 1
       };
     case UPDATE_DOCTORS:
       return {
@@ -150,6 +152,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         staffs: [...state.staffs, action.payload.staff],
+        totalStaffs: state.totalStaffs + 1
       };
     case DELETE_STAFFS:
       return {
@@ -157,6 +160,7 @@ export const adminReducer = (state = inititalState, action) => {
         staffs: state.staffs.filter(
           (staff) => staff._id !== action.payload.resource._id
         ),
+        totalStaffs: state.totalStaffs - 1
       };
     // case UPDATE_STAFFS:
     //   return {
@@ -184,6 +188,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         rooms: [...state.rooms, action.payload.room],
+        totalRooms: state.totalRooms + 1
       };
     // case UPDATE_ROOM:
     //   return {
@@ -201,6 +206,7 @@ export const adminReducer = (state = inititalState, action) => {
         rooms: state.rooms.filter(
           (room) => room._id !== action.payload.resource._id
         ),
+        totalRooms: state.totalRooms - 1
       };
     case GET_REJECTED_APPOINTMENTS:
       return {

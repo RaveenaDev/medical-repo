@@ -117,10 +117,13 @@ const Rooms = (props) => {
 
   const handleAddDialogOpen = () => setAddDialogOpen(true);
   const handleAddDialogClose = () => {
-    dispatch(addRoom(formData));
-
     setAddDialogOpen(false);
   };
+
+  const handleSubmit = () => {
+    dispatch(addRoom(formData));
+    setAddDialogOpen(false);
+  }
 
   const [formData, setFormData] = useState({
     roomID: "",
@@ -324,7 +327,7 @@ const Rooms = (props) => {
 
           <DialogActions sx={{ justifyContent: "center" }}>
             <Button
-              onClick={handleAddDialogClose}
+              onClick={handleSubmit}
               variant="contained"
               sx={{
                 width: "200px",

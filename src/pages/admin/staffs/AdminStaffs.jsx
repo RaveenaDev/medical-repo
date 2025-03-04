@@ -166,6 +166,7 @@ const AdminStaffs = (props) => {
       return;
     }
     dispatch(addStaff(newStaff));
+    setAddDialogOpen(false);
     setErrors({});
   };
 

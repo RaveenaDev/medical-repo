@@ -29,10 +29,10 @@ import {
   GET_STAFFS, GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
-  UPDATE_ROOM,
-  UPDATE_SERVICE,
-  UPDATE_STAFFS,
+  UPDATE_SERVICE
 } from "./ActionType.js";
+
+import { toast } from "react-toastify";
 
 export const getEarnings = () => async (dispatch) => {
   try {
@@ -80,11 +80,21 @@ export const addDoctor = (doctorData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_DOCTORS, payload: response.data });
+
+    toast.success("Doctor Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error(
       "Error adding doctor:",
       error.response?.data || error.message
     );
+
+    toast.error("Error adding Doctor!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 // Action to update a Doctor
@@ -98,8 +108,17 @@ export const updateDoctor = (doctorId, updatedData) => async (dispatch) => {
       },
     });
     dispatch({ type: UPDATE_DOCTORS, payload: data });
+
+    toast.success("Doctor Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error updating doctor:", error);
+    toast.error("Error updating Doctor!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -112,8 +131,16 @@ export const deleteDoctor = (doctorId) => async (dispatch) => {
       },
     });
     dispatch({ type: DELETE_DOCTORS, payload: data });
+    toast.success("Doctor Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error deleting Doctor:", error);
+    toast.error("Error updating Doctor!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -279,8 +306,16 @@ export const addRoom = (roomData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_ROOM, payload: data });
+    toast.success("Room Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.log(error);
+    toast.error("Adding Room Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 // Action to update a room
@@ -294,9 +329,17 @@ export const updateRoom = (roomId, updatedData) => async (dispatch) => {
       },
     });
     dispatch(getRooms());
+    toast.success("Room Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
     // dispatch({ type: UPDATE_ROOM, payload: data });
   } catch (error) {
     console.error("Error updating room:", error);
+    toast.error("Updating Room Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -311,8 +354,16 @@ export const deleteRoom = (roomId) => async (dispatch) => {
     });
 
     dispatch({ type: DELETE_ROOM, payload: data });
+    toast.success("Room Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error deleting room:", error);
+    toast.error("Room Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -329,8 +380,16 @@ export const addStaff = (staffData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_STAFFS, payload: data });
+    toast.success("Staff Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.log(error);
+    toast.error("Adding Staff Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 // Action to delete a STaFF
@@ -344,8 +403,16 @@ export const deleteStaff = (StaffId) => async (dispatch) => {
     });
 
     dispatch({ type: DELETE_STAFFS, payload: data });
+    toast.success("Staff Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error deleting room:", error);
+    toast.error("Staff Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -360,8 +427,16 @@ export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
     });
     // dispatch({ type: UPDATE_STAFFS, payload: data });
     dispatch(getStaffs());
+    toast.success("Staff Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error updating room:", error);
+    toast.error("Staff Updation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -392,8 +467,17 @@ export const addExpense = (exp) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_EXPENSE, payload: data });
+
+    toast.success("Expense Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.log(error);
+    toast.error("Adding Expense Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -406,8 +490,16 @@ export const updateExpense = (expenseId, updatedData) => async (dispatch) => {
       },
     });
     dispatch({ type: UPDATE_EXPENSE, payload: data });
+    toast.success("Expense Updates Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error updating expense:", error);
+    toast.error("Updating Expense Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -420,8 +512,16 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
       },
     });
     dispatch({ type: DELETE_EXPENSE, payload: data });
+    toast.success("Expense Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error deleting expense:", error);
+    toast.error("Expense Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -486,8 +586,16 @@ export const addService = (serviceData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_SERVICE, payload: data });
+    toast.success("Service Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.log(error);
+    toast.error("Service Addition Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -504,10 +612,17 @@ export const updateService = (updatedData) => async (dispatch) => {
       }
     );
     dispatch({ type: UPDATE_SERVICE, payload: data });
-
     dispatch(getServices());
+    toast.success("Service Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error updating service:", error);
+    toast.error("Service Updation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -527,8 +642,16 @@ export const deleteServiceCategory =
         type: DELETE_SERVICE_CATEGORY,
         payload: { serviceId, categoryId },
       });
+      toast.success("Service Category Deleted Successfully!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
     } catch (error) {
       console.error("Error deleting category service:", error);
+      toast.error("Service Category Deletion Error!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
     }
   };
 
@@ -544,8 +667,16 @@ export const deleteService = (serviceId) => async (dispatch) => {
       }
     );
     dispatch({ type: DELETE_SERVICE, payload: serviceId });
+    toast.success("Service Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error deleting service:", error);
+    toast.error("Service Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
