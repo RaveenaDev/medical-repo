@@ -1,17 +1,22 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
-import {FORGOT_PASSWORD, LOGIN, LOGOUT, RESET_PASSWORD} from "./ActionType.js";
+import {
+  FORGOT_PASSWORD,
+  LOGIN,
+  LOGOUT,
+  RESET_PASSWORD,
+} from "./ActionType.js";
 import { toast } from "react-toastify";
 
 export const login = (data) => async (dispatch) => {
   try {
     const response = await axios.post(`${API_URL}/login`, data);
-    console.log("Res: ",response.data)
+    // console.log("Res: ",response.data)
 
     if (response.data.token) {
       localStorage.setItem("jwt", response.data.token);
       localStorage.setItem("hospitalName", response.data.hospitalName);
-      localStorage.setItem("role",response.data.role);
+      localStorage.setItem("role", response.data.role);
     }
     dispatch({ type: LOGIN, payload: response.data });
 
@@ -22,7 +27,7 @@ export const login = (data) => async (dispatch) => {
     });
   } catch (error) {
     // console.log("Error ayu: ",error);
-    const err = error.response.data.message
+    const err = error.response.data.message;
     toast.error(err, {
       position: "bottom-right", // Use string for position
       autoClose: 3000,
@@ -62,8 +67,8 @@ export const forgotPassword = (data) => async (dispatch) => {
       autoClose: 2000,
     });
   } catch (error) {
-    console.log("Error ayu: ",error);
-    const err = error.response.data.message
+    console.log("Error ayu: ", error);
+    const err = error.response.data.message;
     toast.error(err, {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
@@ -71,15 +76,15 @@ export const forgotPassword = (data) => async (dispatch) => {
   }
 };
 
-export const resetPassword = (newData,token,navigate) => async (dispatch) => {
-  console.log("Role: ",newData.role)
-  console.log("Token: ",token)
+export const resetPassword = (newData, token, navigate) => async (dispatch) => {
+  console.log("Role: ", newData.role);
+  console.log("Token: ", token);
   try {
-    const response = await axios.post(`${API_URL}/resetPassword`,newData,{
+    const response = await axios.post(`${API_URL}/resetPassword`, newData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-      }
+      },
     });
     // console.log("Res: ",response.data)
     dispatch({ type: RESET_PASSWORD, payload: response.data });
@@ -90,10 +95,10 @@ export const resetPassword = (newData,token,navigate) => async (dispatch) => {
       autoClose: 2000,
     });
 
-    navigate(`/`)
+    navigate(`/`);
   } catch (error) {
-    console.log("Error ayu: ",error);
-    const err = error.response.data.message
+    console.log("Error ayu: ", error);
+    const err = error.response.data.message;
     toast.error(err, {
       position: "bottom-right", // Use string for position
       autoClose: 2000,

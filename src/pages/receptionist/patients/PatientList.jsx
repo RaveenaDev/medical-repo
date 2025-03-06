@@ -45,29 +45,6 @@ const PatientList = ({ allPatients }) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editedPatient, setEditedPatient] = useState({});
 
-  const [patients, setPatients] = useState([
-    {
-      id: "1",
-      name: "Jasmin Kaur",
-      email: "jasmin@gmail.com",
-      phone: "+91 79327728",
-      type: "Walk In",
-      branch: "Cardiology",
-      date: "2024-10-08",
-      status: "Active",
-    },
-    {
-      id: "2",
-      name: "Amit Tripathi",
-      email: "amittripathi@gmail.com",
-      phone: "+91 79327728",
-      type: "Referral",
-      branch: "Cardiology",
-      date: "2024-10-08",
-      status: "In-active",
-    },
-  ]);
-
   const [filters, setFilters] = useState({
     status: "All",
     type: "All",

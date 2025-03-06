@@ -37,7 +37,6 @@ const PatientDetails = (props) => {
       };
 
       // Simulating an API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setMedicalHistory(response.medicalHistory);
       setCurrentMedications(response.currentMedications);
@@ -45,6 +44,13 @@ const PatientDetails = (props) => {
 
     fetchData();
   }, []);
+
+  const upcoming = patient.appointments?.filter(
+    (app) => app.status === "Scheduled"
+  ).length;
+  const completed = patient.appointments?.filter(
+    (app) => app.status === "Completed"
+  ).length;
 
   return (
     <>
@@ -119,13 +125,13 @@ const PatientDetails = (props) => {
                     }}
                   >
                     <div>
-                      <h5 style={{ margin: "5px 0" }}>8</h5>
+                      <h5 style={{ margin: "5px 0" }}>{completed}</h5>
                       <p style={{ fontSize: "14px", color: "#777" }}>
                         Past Visits
                       </p>
                     </div>
                     <div>
-                      <h5 style={{ margin: "5px 0" }}>2</h5>
+                      <h5 style={{ margin: "5px 0" }}>{upcoming}</h5>
                       <p style={{ fontSize: "14px", color: "#777" }}>
                         Upcoming
                       </p>
@@ -190,7 +196,7 @@ const PatientDetails = (props) => {
                   currentMedications={currentMedications}
                   showSymptoms={false} // Hide Symptoms section
                   showHistory={false} // Hide Social History section
-                    patient={patient}
+                  patient={patient}
                 />
               </div>
             </div>
@@ -219,7 +225,7 @@ const PatientDetails = (props) => {
                   }}
                 />
 
-                <ProgressTracker />
+                <ProgressTracker patient={patient} />
               </Box>
             </Grid>
           </Grid>

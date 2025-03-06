@@ -154,7 +154,7 @@ const AdminStaffs = (props) => {
         newErrors[key] = "This field is required";
       }
     });
-    if (!/^\d{10}$/.test(editedStaff.phone)) {
+    if (!/^\d{10}$/.test(newStaff.phone)) {
       newErrors.phone = "Enter a valid 10-digit phone number";
     }
 
@@ -294,7 +294,6 @@ const AdminStaffs = (props) => {
           />
 
           <TextField
-            select
             label="Department"
             name="department"
             value={newStaff.department}
@@ -306,6 +305,7 @@ const AdminStaffs = (props) => {
             error={!!errors.department}
             helperText={errors.department}
             required
+            select
           >
             {departments?.map((departments) => (
               <MenuItem
@@ -318,7 +318,6 @@ const AdminStaffs = (props) => {
           </TextField>
 
           <TextField
-            select
             label="Designation"
             name="designation"
             value={newStaff.designation}

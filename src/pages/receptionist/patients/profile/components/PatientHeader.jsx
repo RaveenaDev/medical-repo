@@ -4,7 +4,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import RecordModal from "./components/RecordsModal.jsx";
 
-const PatientHeader = ({ showEditPatients = true }) => {
+const PatientHeader = ({ showEditPatients = true, patient }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const handleCloseModal = () => {
@@ -16,6 +16,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
     setOpenModal(true);
   };
   const navigate = useNavigate();
+
   return (
     <div className="patient-header">
       <div className="patient-info">
@@ -63,7 +64,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
           </g>
         </svg>
 
-        <p>Jasmine Kaur</p>
+        <p>{patient?.name}</p>
         <svg
           width="24"
           height="24"
@@ -99,7 +100,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
 
         <p>XXXXXX</p>
       </div>
-      <div className="patient-actions" style={{cursor:'pointer'}}>
+      <div className="patient-actions" style={{ cursor: "pointer" }}>
         <div>
           <svg
             width="42"
@@ -130,7 +131,7 @@ const PatientHeader = ({ showEditPatients = true }) => {
         </div>
         <div
           className="box"
-          style={{cursor:'pointer'}}
+          style={{ cursor: "pointer" }}
           onClick={() =>
             handleViewClick({
               id: "C001231",

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 import PatientHeader from "./components/PatientHeader";
+import { useLocation } from "react-router-dom";
 
-const ProgressReport = () => {
+const ProgressReport = (props) => {
   const sections = [
     {
       title: "Healing Progress",
@@ -50,10 +51,15 @@ const ProgressReport = () => {
       ],
     },
   ];
+  useEffect(() => {
+    props?.setIsSignUpOrLogin(false);
+  }, []);
+  useLocation();
+  const patient = useLocation().state?.patient;
 
   return (
     <>
-      <PatientHeader showEditPatients={false} />
+      <PatientHeader showEditPatients={false} patient={patient} />
       <Box
         sx={{
           padding: "24px",

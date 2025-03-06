@@ -365,7 +365,6 @@ const AdminDoctors = (props) => {
               label="Department"
               variant="outlined"
               error={!!errors.department}
-              helperText={errors.department}
               required
             >
               {departments?.map((department) => (
