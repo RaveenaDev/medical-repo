@@ -39,8 +39,10 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Avatar from "@mui/material/Avatar";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const Expenses = (props) => {
   useEffect(() => {
@@ -60,6 +62,7 @@ const Expenses = (props) => {
   const truncateText = (text, maxLength) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
+  const [errors, setErrors] = useState({}); // Added error state
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedExpense, setSelectedExpense] = useState(null);
@@ -112,12 +115,6 @@ const Expenses = (props) => {
     setEditDialogOpen(false);
   };
 
-  // Handle Save Edited Room
-  const handleSaveEditedExpense = () => {
-    dispatch(updateExpense(editedExpense.expenseId, editedExpense));
-    setEditDialogOpen(false);
-  };
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -125,9 +122,53 @@ const Expenses = (props) => {
   }, [dispatch]);
 
   const expenses = useSelector((store) => store.admin.expenses);
+  const validateExpenseData = (data) => {
+    let newErrors = {};
 
+    if (!data.expenseType) newErrors.expenseType = "Expense Type is required";
+    if (!data.amount) {
+      newErrors.amount = "Amount is required";
+    } else if (isNaN(data.amount) || Number(data.amount) <= 0) {
+      newErrors.amount = "Enter a valid amount";
+    }
+    if (!data.paidTo) newErrors.paidTo = "Paid To is required";
+    if (!data.details) newErrors.details = "Details are required";
+    if (!data.date) newErrors.date = "Date is required";
+
+    return newErrors;
+  };
+
+  // Handle Add Expense
   const handleClick = () => {
+    let newErrors = validateExpenseData(expenseData);
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields correctly!", {
+        position: "bottom-right",
+      });
+      return;
+    }
+
     dispatch(addExpense(expenseData));
+    setErrors({});
+  };
+
+  // Handle Edit Expense
+  const handleSaveEditedExpense = () => {
+    let newErrors = validateExpenseData(editedExpense);
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields correctly!", {
+        position: "bottom-right",
+      });
+      return;
+    }
+
+    dispatch(updateExpense(editedExpense.expenseId, editedExpense));
+    setErrors({});
+    setEditDialogOpen(false);
   };
 
   const handleChange = (e) => {
@@ -167,10 +208,11 @@ const Expenses = (props) => {
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
+              label="Expense Type"
               name="expenseType"
               value={expenseData.expenseType}
-              label="Expense Type"
               onChange={handleChange}
+              error={!!errors.expenseType}
             >
               <MenuItem value="salary">Salary</MenuItem>
               <MenuItem value="rent">Rent</MenuItem>
@@ -195,6 +237,9 @@ const Expenses = (props) => {
             name="amount"
             value={expenseData.amount}
             onChange={handleChange}
+            error={!!errors.amount}
+            helperText={errors.amount}
+            required
           />
         </div>
         <div
@@ -215,6 +260,9 @@ const Expenses = (props) => {
             name="paidTo"
             value={expenseData.paidTo}
             onChange={handleChange}
+            error={!!errors.paidTo}
+            helperText={errors.paidTo}
+            required
           />
         </div>
         <div
@@ -235,6 +283,9 @@ const Expenses = (props) => {
             name="details"
             value={expenseData.details}
             onChange={handleChange}
+            error={!!errors.details}
+            helperText={errors.details}
+            required
           />
         </div>
         <div
@@ -253,6 +304,12 @@ const Expenses = (props) => {
                 name="date"
                 value={date}
                 onChange={handleDateChange}
+                slotProps={{
+                  textField: {
+                    error: !!errors.date,
+                    helperText: errors.date,
+                  },
+                }}
               />
             </DemoContainer>
           </LocalizationProvider>
@@ -273,6 +330,16 @@ const Expenses = (props) => {
             height: "3.4rem",
             width: "12rem",
             marginTop: "1.9rem",
+            outline: "none",
+            boxShadow: "none",
+            "&:focus": {
+              outline: "none",
+              boxShadow: "none",
+            },
+            "&:active": {
+              outline: "none",
+              boxShadow: "none",
+            },
           }}
         >
           <img src={addAppointments} alt="Img" />
@@ -442,6 +509,8 @@ const Expenses = (props) => {
               }
               fullWidth
               margin="dense"
+              error={!!errors.expenseType}
+              helperText={errors.expenseType}
             >
               <MenuItem value="salary">Salary</MenuItem>
               <MenuItem value="rent">Rent</MenuItem>
@@ -459,6 +528,8 @@ const Expenses = (props) => {
               onChange={(e) =>
                 setEditedExpense({ ...editedExpense, amount: e.target.value })
               }
+              error={!!errors.amount}
+              helperText={errors.amount}
             />
 
             <TextField
@@ -472,6 +543,8 @@ const Expenses = (props) => {
               onChange={(e) =>
                 setEditedExpense({ ...editedExpense, paidTo: e.target.value })
               }
+              error={!!errors.paidTo}
+              helperText={errors.paidTo}
             />
             <TextField
               margin="dense"
@@ -483,6 +556,8 @@ const Expenses = (props) => {
               onChange={(e) =>
                 setEditedExpense({ ...editedExpense, details: e.target.value })
               }
+              error={!!errors.details}
+              helperText={errors.details}
             />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -496,6 +571,12 @@ const Expenses = (props) => {
                       date: dayjs(newDate).format("YYYY-MM-DD"),
                     })
                   }
+                  slotProps={{
+                    textField: {
+                      error: !!errors.date,
+                      helperText: errors.date,
+                    },
+                  }}
                 />
               </DemoContainer>
             </LocalizationProvider>

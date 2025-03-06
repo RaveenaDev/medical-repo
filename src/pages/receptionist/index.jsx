@@ -122,16 +122,24 @@ function Receptionist(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAppointments("Scheduled"))
-    dispatch(getAppointments("Ongoing"))
-    dispatch(getAppointments("Waiting"))
-    dispatch(getAppointments("Completed"))
+    dispatch(getAppointments("Scheduled"));
+    dispatch(getAppointments("Ongoing"));
+    dispatch(getAppointments("Waiting"));
+    dispatch(getAppointments("Completed"));
   }, [dispatch]);
 
-  const scheduledAppointments = useSelector((store) => store.receptionist.scheduledAppointments);
-  const ongoingAppointments = useSelector((store) => store.receptionist.ongoingAppointments);
-  const waitingAppointments = useSelector((store) => store.receptionist.waitingAppointments);
-  const completedAppointments = useSelector((store) => store.receptionist.completedAppointments);
+  const scheduledAppointments = useSelector(
+    (store) => store.receptionist.scheduledAppointments
+  );
+  const ongoingAppointments = useSelector(
+    (store) => store.receptionist.ongoingAppointments
+  );
+  const waitingAppointments = useSelector(
+    (store) => store.receptionist.waitingAppointments
+  );
+  const completedAppointments = useSelector(
+    (store) => store.receptionist.completedAppointments
+  );
 
   const boxData = [
     { id: 1, label: "Scheduled", count: scheduledAppointments.length },
@@ -458,85 +466,93 @@ function Receptionist(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {appointments.length > 0 ? appointments.map((appointment) => (
-                        <TableRow
-                          key={appointment._id}
-                          sx={{
-                            background: "#fff",
-                            bgcolor:
-                              appointment.status === "Ongoing"
-                                ? "#EEF8F1"
-                                : "white",
-                            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                            borderRadius: "8px",
-                            "&:hover": {
-                              backgroundColor: "#f9f9f9",
-                            },
-                            "& > *": {
-                              borderBottom: "unset",
-                            },
-                          }}
-                        >
-                          <TableCell>
-                            {truncateText(appointment.caseId, 12)}
-                          </TableCell>
-                          <TableCell>
-                            <Typography
-                              variant="body1"
-                              sx={{ fontWeight: "bold", cursor: "pointer" }}
-                            >
-                              {appointment.patient.name}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>{appointment.doctor?.name}</TableCell>
-                          <TableCell>{appointment.typeVisit}</TableCell>
-                          <TableCell>{appointment.department.name}</TableCell>
-                          <TableCell align="center">
-                            {appointment?.tokenNumber || "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            <Chip
+                      {appointments.length > 0 ? (
+                        appointments.map((appointment) => (
+                          <TableRow
+                            key={appointment._id}
+                            sx={{
+                              background: "#fff",
+                              bgcolor:
+                                appointment.status === "Ongoing"
+                                  ? "#EEF8F1"
+                                  : "white",
+                              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                              borderRadius: "8px",
+                              "&:hover": {
+                                backgroundColor: "#f9f9f9",
+                              },
+                              "& > *": {
+                                borderBottom: "unset",
+                              },
+                            }}
+                          >
+                            <TableCell>
+                              {truncateText(appointment.caseId, 12)}
+                            </TableCell>
+                            <TableCell>
+                              <Typography
+                                variant="body1"
+                                sx={{ fontWeight: "bold", cursor: "pointer" }}
+                              >
+                                {appointment.patient.name}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>{appointment.doctor?.name}</TableCell>
+                            <TableCell>{appointment.typeVisit}</TableCell>
+                            <TableCell>{appointment.department.name}</TableCell>
+                            <TableCell align="center">
+                              {appointment?.tokenNumber || "N/A"}
+                            </TableCell>
+                            <TableCell>
+                              <Chip
                                 label={appointment.status}
                                 size="small"
                                 sx={{
                                   bgcolor:
-                                      appointment.status === "Ongoing"
-                                          ? "#3DB461"
-                                          : appointment.status === "Scheduled"
-                                              ? "#007bff"
-                                              : appointment.status === "Waiting"
-                                                  ? "#ffc107"
-                                                  : "white",
+                                    appointment.status === "Ongoing"
+                                      ? "#3DB461"
+                                      : appointment.status === "Scheduled"
+                                      ? "#007bff"
+                                      : appointment.status === "Waiting"
+                                      ? "#ffc107"
+                                      : "white",
                                   color:
-                                      appointment.status === "Ongoing"
-                                          ? "white"
-                                          : appointment.status === "Completed"
-                                              ? "orange"
-                                              : appointment.status === "Scheduled"
-                                                  ? "white"
-                                                  : appointment.status === "Waiting"
-                                                      ? "black"
-                                                      : "#757575",
+                                    appointment.status === "Ongoing"
+                                      ? "white"
+                                      : appointment.status === "Completed"
+                                      ? "orange"
+                                      : appointment.status === "Scheduled"
+                                      ? "white"
+                                      : appointment.status === "Waiting"
+                                      ? "black"
+                                      : "#757575",
                                   fontWeight: "bold",
                                   px: 0.7,
                                 }}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <IconButton
-                              onClick={(event) =>
-                                handleMenuOpen(event, appointment)
-                              }
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      )) :
-                          <TableRow sx={{display: 'flex',alignItems: 'center',justifyContent: 'center'}}>
-                            No data found!
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <IconButton
+                                onClick={(event) =>
+                                  handleMenuOpen(event, appointment)
+                                }
+                              >
+                                <MoreVertIcon />
+                              </IconButton>
+                            </TableCell>
                           </TableRow>
-                      }
+                        ))
+                      ) : (
+                        <TableRow
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TableCell>No data found!</TableCell>
+                        </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>

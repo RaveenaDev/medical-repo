@@ -69,23 +69,23 @@ function Appointments(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAppointments("Scheduled"))
-    dispatch(getAppointments("Ongoing"))
-    dispatch(getAppointments("Waiting"))
-    dispatch(getAppointments("Completed"))
+    dispatch(getAppointments("Scheduled"));
+    dispatch(getAppointments("Ongoing"));
+    dispatch(getAppointments("Waiting"));
+    dispatch(getAppointments("Completed"));
   }, [dispatch]);
 
   const scheduledAppointments = useSelector(
-      (store) => store.admin.scheduledAppointments
+    (store) => store.admin.scheduledAppointments
   );
   const ongoingAppointments = useSelector(
-      (store) => store.admin.ongoingAppointments
+    (store) => store.admin.ongoingAppointments
   );
   const waitingAppointments = useSelector(
-      (store) => store.admin.waitingAppointments
+    (store) => store.admin.waitingAppointments
   );
   const completedAppointments = useSelector(
-      (store) => store.admin.completedAppointments
+    (store) => store.admin.completedAppointments
   );
 
   const boxData = [
@@ -289,80 +289,89 @@ function Appointments(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {totalAppointments.length > 0 ? totalAppointments.map((patient, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    background: "#fff",
-                    bgcolor: patient.status === "Ongoing" ? "#EEF8F1" : "white",
-                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "8px",
-                    "&:hover": {
-                      backgroundColor: "#f9f9f9",
-                    },
-                    "& > *": {
-                      borderBottom: "unset",
-                    },
-                  }}
-                >
-                  <TableCell>{truncateText(patient.caseId, 13)}</TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      sx={{ fontWeight: "bold", cursor: "pointer" }}
-                    >
-                      {patient.patient.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" color="text.secondary">
-                      {patient.doctor?.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{patient.typeVisit}</TableCell>
-                  <TableCell>{patient.department.name}</TableCell>
-                  <TableCell>{patient?.tokenNumber || "N/A"}</TableCell>
-                  <TableCell>
-                    <Chip
+              {totalAppointments.length > 0 ? (
+                totalAppointments.map((patient, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      background: "#fff",
+                      bgcolor:
+                        patient.status === "Ongoing" ? "#EEF8F1" : "white",
+                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    <TableCell>{truncateText(patient.caseId, 13)}</TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body1"
+                        sx={{ fontWeight: "bold", cursor: "pointer" }}
+                      >
+                        {patient.patient.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" color="text.secondary">
+                        {patient.doctor?.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>{patient.typeVisit}</TableCell>
+                    <TableCell>{patient.department.name}</TableCell>
+                    <TableCell>{patient?.tokenNumber || "N/A"}</TableCell>
+                    <TableCell>
+                      <Chip
                         label={patient.status}
                         size="small"
                         sx={{
                           bgcolor:
-                              patient.status === "Ongoing"
-                                  ? "#3DB461"
-                                  : patient.status === "Scheduled"
-                                      ? "#007bff"
-                                      : patient.status === "Waiting"
-                                          ? "#ffc107"
-                                          : "white",
+                            patient.status === "Ongoing"
+                              ? "#3DB461"
+                              : patient.status === "Scheduled"
+                              ? "#007bff"
+                              : patient.status === "Waiting"
+                              ? "#ffc107"
+                              : "white",
                           color:
-                              patient.status === "Ongoing"
-                                  ? "white"
-                                  : patient.status === "Completed"
-                                      ? "orange"
-                                      : patient.status === "Scheduled"
-                                          ? "white"
-                                          : patient.status === "Waiting"
-                                              ? "black"
-                                              : "#757575",
+                            patient.status === "Ongoing"
+                              ? "white"
+                              : patient.status === "Completed"
+                              ? "orange"
+                              : patient.status === "Scheduled"
+                              ? "white"
+                              : patient.status === "Waiting"
+                              ? "black"
+                              : "#757575",
                           fontWeight: "bold",
                           px: 0.7,
                         }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      onClick={(event) => handleMenuOpen(event, patient)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </TableCell>
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={(event) => handleMenuOpen(event, patient)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TableCell>No data found!</TableCell>
                 </TableRow>
-              )) :
-                <TableRow sx={{display: 'flex',alignItems: 'center',justifyContent: 'center'}}>
-                  No data found!
-                </TableRow>
-              }
+              )}
             </TableBody>
           </Table>
         </TableContainer>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/pages/login.module.scss";
-import TextFieldHiddenLabel from "../../components/TextInput";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -18,7 +17,7 @@ const Login = (props) => {
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
-    role: "HospitalAdmin",
+    // role: "HospitalAdmin",
   });
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -56,8 +55,12 @@ const Login = (props) => {
 
   if (auth?.role === "receptionist") {
     navigate("/receptionist");
-  } else if (auth?.role === "HospitalAdmin") {
+  } else if (auth?.role === "hospitalAdmin") {
     navigate("/admin");
+  }
+
+  else if(auth?.role === "doctor"){
+    navigate("/doctor")
   }
 
   return (

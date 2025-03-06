@@ -6,22 +6,28 @@ import {
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
-  DELETE_ROOM, DELETE_SERVICE, DELETE_SERVICE_CATEGORY,
+  DELETE_ROOM,
+  DELETE_SERVICE,
+  DELETE_SERVICE_CATEGORY,
   DELETE_STAFFS,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_DETAILS,
-  GET_BILLING_RECORDS, GET_COMPLETED_APPOINTMENTS,
+  GET_BILLING_RECORDS,
+  GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
-  GET_EXPENSES, GET_ONGOING_APPOINTMENTS,
+  GET_EXPENSES,
+  GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
-  GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
+  GET_ROOMS,
+  GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
-  GET_STAFFS, GET_WAITING_APPOINTMENTS,
+  GET_STAFFS,
+  GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
   UPDATE_ROOM,
@@ -75,6 +81,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         doctors: [...state.doctors, action.payload.newUser],
+        totalDoctors: state.totalDoctors + 1,
       };
     case DELETE_DOCTORS:
       return {
@@ -82,6 +89,7 @@ export const adminReducer = (state = inititalState, action) => {
         doctors: state.doctors.filter(
           (doctor) => doctor._id !== action.payload.resource._id
         ),
+        totalDoctors: state.totalDoctors - 1,
       };
     case UPDATE_DOCTORS:
       return {
@@ -150,6 +158,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         staffs: [...state.staffs, action.payload.staff],
+        totalStaffs: state.totalStaffs + 1,
       };
     case DELETE_STAFFS:
       return {
@@ -157,6 +166,7 @@ export const adminReducer = (state = inititalState, action) => {
         staffs: state.staffs.filter(
           (staff) => staff._id !== action.payload.resource._id
         ),
+        totalStaffs: state.totalStaffs - 1,
       };
     // case UPDATE_STAFFS:
     //   return {
@@ -184,6 +194,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         rooms: [...state.rooms, action.payload.room],
+        totalRooms: state.totalRooms + 1,
       };
     // case UPDATE_ROOM:
     //   return {
@@ -201,6 +212,7 @@ export const adminReducer = (state = inititalState, action) => {
         rooms: state.rooms.filter(
           (room) => room._id !== action.payload.resource._id
         ),
+        totalRooms: state.totalRooms - 1,
       };
     case GET_REJECTED_APPOINTMENTS:
       return {
@@ -258,40 +270,39 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         services: state.services.some(
-            (service) =>
-                service.name === action.payload.service.name &&
-                service.department.name === action.payload.service.department.name
+          (service) =>
+            service.name === action.payload.service.name &&
+            service.department.name === action.payload.service.department.name
         )
-            ? state.services.map((service) =>
-                service.name === action.payload.service.name &&
-                service.department.name === action.payload.service.department.name
-                    ? action.payload.service
-                    : service
+          ? state.services.map((service) =>
+              service.name === action.payload.service.name &&
+              service.department.name === action.payload.service.department.name
+                ? action.payload.service
+                : service
             )
-            : [...state.services, action.payload.service]
+          : [...state.services, action.payload.service],
       };
 
-
     case DELETE_SERVICE:
-      return{
+      return {
         ...state,
-        services: state.services.filter((service) =>
-          service._id !== action.payload
-        )
-      }
+        services: state.services.filter(
+          (service) => service._id !== action.payload
+        ),
+      };
 
     case DELETE_SERVICE_CATEGORY:
       return {
         ...state,
         services: state.services.map((service) =>
-            service._id === action.payload.serviceId
-                ? {
-                  ...service,
-                  categories: service.categories.filter(
-                      (category) => category._id !== action.payload.categoryId
-                  ),
-                }
-                : service
+          service._id === action.payload.serviceId
+            ? {
+                ...service,
+                categories: service.categories.filter(
+                  (category) => category._id !== action.payload.categoryId
+                ),
+              }
+            : service
         ),
       };
 

@@ -71,7 +71,7 @@ const Profile = (props) => {
       <div className={rav.receptionist}>
         {!props.entity ? (
           <>
-            <PatientHeader />
+            <PatientHeader patient={patient} />
             <Grid container spacing={2}>
               <div
                 style={{
@@ -128,7 +128,7 @@ const Profile = (props) => {
                       {patient.name}
                     </h4>
                     <p style={{ fontSize: "14px", color: "#555" }}>
-                      Jaisminekaur@gmail.com
+                      {patient.email}
                     </p>
 
                     <div
@@ -240,7 +240,7 @@ const Profile = (props) => {
                     }}
                   />
 
-                  <ProgressTracker />
+                  <ProgressTracker patient={patient} />
                 </Box>
               </Grid>
             </Grid>

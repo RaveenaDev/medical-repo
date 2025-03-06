@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 const BookAppointment = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  // const [date, setDate] = useState(new Date());
   const [formData, setFormData] = useState({
     patientName: "",
     mobileNumber: "",
@@ -29,6 +28,8 @@ const BookAppointment = ({ isOpen, onClose }) => {
     note: "",
     date: new Date(),
   });
+
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,8 +63,46 @@ const BookAppointment = ({ isOpen, onClose }) => {
     (store) => store.receptionist.doctorsByDepartment
   );
 
+  const validateForm = () => {
+    let newErrors = {};
+
+    // Required fields validation
+    const requiredFields = [
+      "patientName",
+      "mobileNumber",
+      "appointmentType",
+      "departmentName",
+      "doctorEmail",
+      "email",
+    ];
+    requiredFields.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === "") {
+        newErrors[field] = "This field is required";
+      }
+    });
+
+    // Mobile number validation (10-digit numeric)
+    if (
+      formData.mobileNumber &&
+      !/^\d{10}$/.test(formData.mobileNumber.trim())
+    ) {
+      newErrors.mobileNumber = "Enter a valid 10-digit phone number";
+    }
+
+    // Email validation (optional but should be valid if provided)
+    if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email.trim())) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleClick = () => {
-    dispatch(bookAppointment(formData, onClose));
+    if (validateForm()) {
+      dispatch(bookAppointment(formData, onClose));
+    }
   };
 
   return (
@@ -103,6 +142,8 @@ const BookAppointment = ({ isOpen, onClose }) => {
             value={formData.patientName}
             onChange={handleChange}
             fullWidth
+            error={!!errors.patientName}
+            helperText={errors.patientName}
           />
           <p>{renderRequiredLabel("Select Appointment Type")}</p>
           <TextField
@@ -112,6 +153,8 @@ const BookAppointment = ({ isOpen, onClose }) => {
             value={formData.appointmentType}
             onChange={handleChange}
             fullWidth
+            error={!!errors.appointmentType}
+            helperText={errors.appointmentType}
           >
             <MenuItem value="Follow up">Follow up</MenuItem>
             <MenuItem value="Consultation">Consultation</MenuItem>
@@ -126,6 +169,8 @@ const BookAppointment = ({ isOpen, onClose }) => {
             value={formData.departmentName}
             onChange={handleChange}
             fullWidth
+            error={!!errors.departmentName}
+            helperText={errors.departmentName}
           >
             {departments.map((department, index) => (
               <MenuItem
@@ -136,7 +181,6 @@ const BookAppointment = ({ isOpen, onClose }) => {
                 {department.departmentName}
               </MenuItem>
             ))}
-            {/*<MenuItem value="ENT">ENT</MenuItem>*/}
           </TextField>
           <p>{renderRequiredLabel("Select Doctor")}</p>
           <TextField
@@ -146,13 +190,14 @@ const BookAppointment = ({ isOpen, onClose }) => {
             value={formData.doctorEmail}
             onChange={handleChange}
             fullWidth
+            error={!!errors.doctorEmail}
+            helperText={errors.doctorEmail}
           >
             {doctorsByDepartment.map((doctor, index) => (
               <MenuItem key={index} value={doctor.email}>
                 {doctor.name}
               </MenuItem>
             ))}
-            {/*<MenuItem value="Dr. Johnson">Dr. Johnson</MenuItem>*/}
           </TextField>
 
           <p>{renderRequiredLabel("Type Visit")}</p>
@@ -174,14 +219,18 @@ const BookAppointment = ({ isOpen, onClose }) => {
             value={formData.mobileNumber}
             onChange={handleChange}
             fullWidth
+            error={!!errors.mobileNumber}
+            helperText={errors.mobileNumber}
           />
-          <p>Email</p>
+          <p>{renderRequiredLabel("Email")}</p>
           <TextField
             label="Email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             fullWidth
+            error={!!errors.email}
+            helperText={errors.email}
           />
 
           <Button

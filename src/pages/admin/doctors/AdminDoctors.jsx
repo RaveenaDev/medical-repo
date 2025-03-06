@@ -44,6 +44,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InputLabel from "@mui/material/InputLabel";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminDoctors = (props) => {
   useEffect(() => {
@@ -78,8 +80,45 @@ const AdminDoctors = (props) => {
     hospitalName: hospitalName,
   });
 
+  const [errors, setErrors] = useState({}); // Added error state
+  const validateDoctor = (doctor, isEdit = false) => {
+    let newErrors = {};
+
+    // Check required fields
+    Object.keys(doctor).forEach((key) => {
+      if (
+        (!doctor[key] || doctor[key].trim() === "") && // Check empty values
+        key !== "profile" &&
+        key !== "role" &&
+        key !== "hospitalName" &&
+        (isEdit ? key !== "department" : true) // Skip department if in edit mode
+      ) {
+        newErrors[key] = "This field is required";
+      }
+    });
+
+    // Validate email format
+    if (doctor.email && !/^\S+@\S+\.\S+$/.test(doctor.email)) {
+      newErrors.email = "Enter a valid email";
+    }
+
+    // Validate phone number
+    if (doctor.phone && !/^\d{10}$/.test(String(doctor.phone))) {
+      newErrors.phone = "Enter a valid 10-digit phone number";
+    }
+
+    return newErrors;
+  };
+
   const handleSubmit = () => {
+    const newErrors = validateDoctor(newDoctor);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please correct the errors!", { position: "bottom-right" });
+      return;
+    }
     dispatch(addDoctor(newDoctor));
+    setErrors({});
     setAddDialogOpen(false);
   };
 
@@ -131,7 +170,15 @@ const AdminDoctors = (props) => {
 
   // Handle Save Edited Doctor
   const handleSaveEditedDoctor = () => {
+    const newErrors = validateDoctor(editedDoctor, true);
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please correct the errors!", { position: "bottom-right" });
+      return;
+    }
     dispatch(updateDoctor(editedDoctor._id, editedDoctor));
+    setErrors({});
     setEditDialogOpen(false);
   };
 
@@ -230,6 +277,9 @@ const AdminDoctors = (props) => {
           />
 
           <TextField
+            error={!!errors.email}
+            helperText={errors.email}
+            required
             autoFocus
             margin="dense"
             label="Email"
@@ -242,6 +292,9 @@ const AdminDoctors = (props) => {
             }
           />
           <TextField
+            error={!!errors.password}
+            helperText={errors.password}
+            required
             autoFocus
             margin="dense"
             label="Password"
@@ -262,6 +315,9 @@ const AdminDoctors = (props) => {
             fullWidth
             variant="outlined"
             value={newDoctor.name}
+            error={!!errors.name}
+            helperText={errors.name}
+            required
             onChange={(e) =>
               setNewDoctor({ ...newDoctor, name: e.target.value })
             }
@@ -269,6 +325,9 @@ const AdminDoctors = (props) => {
           <TextField
             margin="dense"
             label="Phone"
+            error={!!errors.phone}
+            helperText={errors.phone}
+            required
             type="text"
             fullWidth
             variant="outlined"
@@ -289,6 +348,9 @@ const AdminDoctors = (props) => {
             fullWidth
             type="text"
             variant="outlined"
+            error={!!errors.specialization}
+            helperText={errors.specialization}
+            required
           />
           <FormControl fullWidth margin="dense">
             <InputLabel id="doctor-select-label">Department</InputLabel>
@@ -302,6 +364,8 @@ const AdminDoctors = (props) => {
               }
               label="Department"
               variant="outlined"
+              error={!!errors.department}
+              required
             >
               {departments?.map((department) => (
                 <MenuItem
@@ -324,6 +388,9 @@ const AdminDoctors = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.status}
+            helperText={errors.status}
+            required
           >
             <MenuItem value="Idle">Idle</MenuItem>
             <MenuItem value="On Leave">On Leave</MenuItem>
@@ -528,6 +595,9 @@ const AdminDoctors = (props) => {
             onChange={(e) =>
               setEditedDoctor({ ...editedDoctor, email: e.target.value })
             }
+            error={!!errors.email}
+            helperText={errors.email}
+            required
           />
 
           <TextField
@@ -541,6 +611,9 @@ const AdminDoctors = (props) => {
             onChange={(e) =>
               setEditedDoctor({ ...editedDoctor, password: e.target.value })
             }
+            error={!!errors.password}
+            helperText={errors.password}
+            required
           />
           <TextField
             autoFocus
@@ -553,6 +626,9 @@ const AdminDoctors = (props) => {
             onChange={(e) =>
               setEditedDoctor({ ...editedDoctor, name: e.target.value })
             }
+            error={!!errors.name}
+            helperText={errors.name}
+            required
           />
           <TextField
             margin="dense"
@@ -564,6 +640,9 @@ const AdminDoctors = (props) => {
             onChange={(e) =>
               setEditedDoctor({ ...editedDoctor, phone: e.target.value })
             }
+            error={!!errors.phone}
+            helperText={errors.phone}
+            required
           />
 
           <TextField
@@ -580,6 +659,9 @@ const AdminDoctors = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.specialization}
+            helperText={errors.specialization}
+            required
           ></TextField>
           {/* <FormControl fullWidth margin="dense">
             <InputLabel id="doctor-select-label">Department</InputLabel>
@@ -615,6 +697,9 @@ const AdminDoctors = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.status}
+            helperText={errors.status}
+            required
           >
             <MenuItem value="Idle">Idle</MenuItem>
             <MenuItem value="On Leave">On Leave</MenuItem>

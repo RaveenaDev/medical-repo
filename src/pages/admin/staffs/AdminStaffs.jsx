@@ -45,11 +45,14 @@ import {
   getDoctors,
   updateStaff,
 } from "../../../components/State/Admin/Action.js";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminStaffs = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
+  const [errors, setErrors] = useState({}); // Added error state
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
@@ -85,7 +88,26 @@ const AdminStaffs = (props) => {
 
   // Handle Save Edited Room
   const handleSaveEditedStaff = () => {
+    let newErrors = {};
+
+    Object.keys(editedStaff).forEach((key) => {
+      if (key !== "profile" && !editedStaff[key]) {
+        newErrors[key] = "This field is required";
+      }
+    });
+    if (!/^\d{10}$/.test(editedStaff.phone)) {
+      newErrors.phone = "Enter a valid 10-digit phone number";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields!", {
+        position: "bottom-right",
+      });
+      return;
+    }
     dispatch(updateStaff(editedStaff.staffId, editedStaff));
+    setErrors({});
     setEditDialogOpen(false);
   };
 
@@ -125,7 +147,27 @@ const AdminStaffs = (props) => {
   });
 
   const handleSubmit = () => {
+    let newErrors = {};
+
+    Object.keys(newStaff).forEach((key) => {
+      if (key !== "profile" && !newStaff[key]) {
+        newErrors[key] = "This field is required";
+      }
+    });
+    if (!/^\d{10}$/.test(newStaff.phone)) {
+      newErrors.phone = "Enter a valid 10-digit phone number";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill all required fields!", {
+        position: "bottom-right",
+      });
+      return;
+    }
     dispatch(addStaff(newStaff));
+    setAddDialogOpen(false);
+    setErrors({});
   };
 
   const navigate = useNavigate();
@@ -218,6 +260,9 @@ const AdminStaffs = (props) => {
             onChange={(e) =>
               setNewStaff({ ...newStaff, staff_id: e.target.value })
             }
+            error={!!errors.staff_id}
+            helperText={errors.staff_id}
+            required
           />
 
           <TextField
@@ -228,6 +273,9 @@ const AdminStaffs = (props) => {
             fullWidth
             variant="outlined"
             value={newStaff.name}
+            error={!!errors.name}
+            helperText={errors.name}
+            required
             onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
           />
           <TextField
@@ -240,10 +288,12 @@ const AdminStaffs = (props) => {
             onChange={(e) =>
               setNewStaff({ ...newStaff, phone: e.target.value })
             }
+            error={!!errors.phone}
+            helperText={errors.phone}
+            required
           />
 
           <TextField
-            select
             label="Department"
             name="department"
             value={newStaff.department}
@@ -252,6 +302,10 @@ const AdminStaffs = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.department}
+            helperText={errors.department}
+            required
+            select
           >
             {departments?.map((departments) => (
               <MenuItem
@@ -264,7 +318,6 @@ const AdminStaffs = (props) => {
           </TextField>
 
           <TextField
-            select
             label="Designation"
             name="designation"
             value={newStaff.designation}
@@ -273,11 +326,10 @@ const AdminStaffs = (props) => {
             }
             fullWidth
             margin="dense"
-          >
-            <MenuItem value="General Checkup">General Checkup</MenuItem>
-            <MenuItem value="Follow Up">Follow Up</MenuItem>
-            <MenuItem value="Consultation">Consultation</MenuItem>
-          </TextField>
+            error={!!errors.designation}
+            helperText={errors.designation}
+            required
+          ></TextField>
 
           <TextField
             select
@@ -289,6 +341,9 @@ const AdminStaffs = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.status}
+            helperText={errors.status}
+            required
           >
             <MenuItem value="Available">Available</MenuItem>
             <MenuItem value="On Leave">On Leave</MenuItem>
@@ -450,6 +505,9 @@ const AdminStaffs = (props) => {
             onChange={(e) =>
               setEditedStaff({ ...editedStaff, staff_id: e.target.value })
             }
+            error={!!errors.staff_id}
+            helperText={errors.staff_id}
+            required
           />
 
           <TextField
@@ -463,6 +521,9 @@ const AdminStaffs = (props) => {
             onChange={(e) =>
               setEditedStaff({ ...editedStaff, name: e.target.value })
             }
+            error={!!errors.name}
+            helperText={errors.name}
+            required
           />
           <TextField
             margin="dense"
@@ -474,6 +535,9 @@ const AdminStaffs = (props) => {
             onChange={(e) =>
               setEditedStaff({ ...editedStaff, phone: e.target.value })
             }
+            error={!!errors.phone}
+            helperText={errors.phone}
+            required
           />
 
           <TextField
@@ -486,6 +550,9 @@ const AdminStaffs = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.department}
+            helperText={errors.department}
+            required
           >
             {departments?.map((departments) => (
               <MenuItem
@@ -506,6 +573,9 @@ const AdminStaffs = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.designation}
+            helperText={errors.designation}
+            required
           ></TextField>
 
           <TextField
@@ -518,6 +588,9 @@ const AdminStaffs = (props) => {
             }
             fullWidth
             margin="dense"
+            error={!!errors.status}
+            helperText={errors.status}
+            required
           >
             <MenuItem value="Available">Available</MenuItem>
             <MenuItem value="On Leave">On Leave</MenuItem>

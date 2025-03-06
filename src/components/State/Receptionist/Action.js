@@ -1,7 +1,5 @@
 import {
-  ADD_ROOM,
-  BOOK_APPOINTMENT,
-  DELETE_ROOM,
+  ADD_ROOM, DELETE_ROOM,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -12,8 +10,7 @@ import {
   GET_DOCTORS_BY_DEPARTMENT, GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
-  GET_STAFFS, GET_WAITING_APPOINTMENTS,
-  UPDATE_ROOM,
+  GET_STAFFS, GET_WAITING_APPOINTMENTS
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -30,8 +27,16 @@ export const updateRoom = (roomId, updatedData) => async (dispatch) => {
     });
     // dispatch({ type: UPDATE_ROOM, payload: data });
     dispatch(getRooms());
+    toast.success("Room Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error updating room:", error);
+    toast.error("Room Updation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -45,10 +50,18 @@ export const deleteRoom = (roomId) => async (dispatch) => {
       },
     });
 
-    // dispatch({ type: DELETE_ROOM, payload: roomId });
-    dispatch(getRooms());
+    dispatch({ type: DELETE_ROOM, payload: data });
+    // dispatch(getRooms());
+    toast.success("Room Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.error("Error deleting room:", error);
+    toast.error("Room Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -127,9 +140,17 @@ export const addRoom = (roomData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_ROOM, payload: data });
-    dispatch(getRooms());
+    // dispatch(getRooms());
+    toast.success("Room Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.log(error);
+    toast.error("Adding Room Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
