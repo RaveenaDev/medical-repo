@@ -17,7 +17,7 @@ const Login = (props) => {
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
-    role: "HospitalAdmin",
+    // role: "HospitalAdmin",
   });
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -55,7 +55,7 @@ const Login = (props) => {
 
   if (auth?.role === "receptionist") {
     navigate("/receptionist");
-  } else if (auth?.role === "HospitalAdmin") {
+  } else if (auth?.role === "hospitalAdmin") {
     navigate("/admin");
   }
 
