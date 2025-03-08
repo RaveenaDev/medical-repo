@@ -25,7 +25,7 @@ const Register = ({ setIsSignUpOrLogin, setShouldShowSidebar }) => {
     e.preventDefault();
     console.log("Form Data:", formData);
     // Navigate to the next step or perform form submission logic
-    navigate("/next-step"); // Change this to the actual next route
+    navigate("/information"); // Change this to the actual next route
   };
 
   return (

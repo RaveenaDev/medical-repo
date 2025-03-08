@@ -42,6 +42,7 @@ import BillingAdmin from "./pages/admin/billing/Billing.jsx";
 import Tracking from "./pages/admin/patient/Tracking.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Register from "./pages/register/Register.jsx";
+import Information from "./pages/register/info/Information.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -110,6 +111,17 @@ function App() {
               path="/register"
               element={
                 <Register
+                  setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  setShouldShowSidebar={setShouldShowSidebar}
+                  setEntity={setEntity}
+                  entity={entity}
+                />
+              }
+            />
+            <Route
+              path="/information"
+              element={
+                <Information
                   setIsSignUpOrLogin={setIsSignUpOrLogin}
                   setShouldShowSidebar={setShouldShowSidebar}
                   setEntity={setEntity}
