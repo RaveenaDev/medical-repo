@@ -50,6 +50,7 @@ const Login = (props) => {
 
   useEffect(() => {
     props?.setIsSignUpOrLogin(true);
+    props?.setShouldShowSidebar(true);
   }, []);
 
   const auth = useSelector((store) => store.authentication);
@@ -58,10 +59,8 @@ const Login = (props) => {
     navigate("/receptionist");
   } else if (auth?.role === "hospitalAdmin") {
     navigate("/admin");
-  }
-
-  else if(auth?.role === "doctor"){
-    navigate("/doctor")
+  } else if (auth?.role === "doctor") {
+    navigate("/doctor");
   }
 
   return (
