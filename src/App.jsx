@@ -80,7 +80,7 @@ function App() {
       <ToastContainer />
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
         {shouldShowSidebar && (
-          <div style={{ width: "20%", backgroundColor: "white" }}>
+          <div style={{width: "20%", backgroundColor: "white",height: "100vh"}}>
             <div className={styles.logo}>
               <Logo />
             </div>

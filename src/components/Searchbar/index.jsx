@@ -7,7 +7,7 @@ function Searchbar() {
   return (
     <TextField
       variant="outlined"
-      placeholder="Search..."
+      placeholder="Search"
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -16,13 +16,23 @@ function Searchbar() {
         ),
         style: {
           height: '40px', // Custom height
+            backgroundColor:'white'
         },
       }}
       sx={{
         width: '190px', // Custom width
         '& .MuiOutlinedInput-root': {
-          borderRadius: '20px', // Rounded corners
+          borderRadius: '15px', // Rounded corners
         },
+          '& .MuiOutlinedInput-notchedOutline': {
+              borderWidth: '2px', // Bold border
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderWidth: '2px', // Keep bold on hover
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderWidth: '2px', // Keep bold on focus
+          }
       }}
     />
   );
