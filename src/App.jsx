@@ -85,7 +85,7 @@ function App() {
               width: "20%",
               backgroundColor: "white",
               height: "100vh",
-              position: "fixed", // Changed from "Sticky" to "Fixed"
+              position: "fixed",
               top: 0, // Ensure it sticks to the top
               left: 0, // Position it on the left side
               overflowY: "auto", // Allows scrolling inside the sidebar if needed

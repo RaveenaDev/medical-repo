@@ -28,7 +28,7 @@ import {
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
 
-import billing from "../../../assets/Billing.png"
+import billing from "../../../assets/Billing.png";
 
 const CommonPanel = () => {
   const navigate = useNavigate();
