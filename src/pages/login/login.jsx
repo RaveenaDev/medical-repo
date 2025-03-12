@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../components/State/Authentication/Action.js";
+import {Box} from "@mui/material";
 
 const Login = (props) => {
   const [userDetails, setUserDetails] = useState({
@@ -72,6 +73,27 @@ const Login = (props) => {
           name="email"
           value={userDetails.email}
           onChange={handleChange}
+          InputProps={{
+              sx: {
+                  height: '58px', // Adjust height of the input box
+                  fontSize: '1rem', // Adjust font size if needed
+                  padding: '0 14px', // Adjust padding inside input
+              }
+          }}
+          sx={{
+              '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                      borderWidth: '2px', // Bold border
+                      borderRadius: '10px' // Ensure the input's border radius matches
+                  },
+                  '&:hover fieldset': {
+                      borderWidth: '2px', // Keep bold on hover
+                  },
+                  '&.Mui-focused fieldset': {
+                      borderWidth: '2px', // Keep bold on focus
+                  }
+              }
+          }}
         />
         {/* <TextFieldHiddenLabel name="Password" id="password" type="password" placeholder="Enter Password" /> */}
         <OutlinedInput
@@ -96,24 +118,70 @@ const Login = (props) => {
               </IconButton>
             </InputAdornment>
           }
+          sx={{
+              height: '60px', // Adjust outer height
+              fontSize: '1rem', // Adjust font size
+              borderRadius: '10px',
+              padding: '0 14px', // Adjust padding inside input
+              '& .MuiOutlinedInput-notchedOutline': {
+                  borderWidth: '2px', // Bold border
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderWidth: '2px', // Keep bold on hover
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderWidth: '2px', // Keep bold on focus
+              }
+          }}
         />
-        <p className={styles.login__errormsg}>
-          The password you have entered is incorrect{" "}
-        </p>
-        {/* <Grid container spacing={2} justifyContent="space-between" alignItems="center" flexDirection={{ xs: 'column', md: 'row' }} size={12}>
+         <Grid container spacing={5} justifyContent="space-between" alignItems="center" flexDirection={{ xs: 'column', md: 'row' }} size={12}>
+             <Grid size={6}>
+                 <Box sx={{
+                     backgroundColor: '#25307F',
+                     color: 'white',
+                     padding: '7px',
+                     borderRadius: '8px',
+                     textAlign: 'center',
+                     fontSize: '1.8rem', // Bigger font size
+                     letterSpacing: '1rem', // Gap between digits
+                     fontWeight: 600
+                 }}>
+                     45673
+                 </Box>
+             </Grid>
                     <Grid size={6}>
-                        <TextFieldHiddenLabel name="Captcha" id="captcha_read" placeholder="45673"/>
+                        <TextField name="Captcha" id="captcha_write" placeholder="Enter Captcha"
+                                   InputProps={{
+                                       sx: {
+                                           height: '58px', // Adjust height of the input box
+                                           fontSize: '1rem', // Adjust font size if needed
+                                           padding: '0 14px', // Adjust padding inside input
+                                       }
+                                   }}
+                                   sx={{
+                                       '& .MuiOutlinedInput-root': {
+                                           '& fieldset': {
+                                               borderWidth: '2px', // Bold border
+                                               borderRadius: '10px' // Ensure the input's border radius matches
+                                           },
+                                           '&:hover fieldset': {
+                                               borderWidth: '2px', // Keep bold on hover
+                                           },
+                                           '&.Mui-focused fieldset': {
+                                               borderWidth: '2px', // Keep bold on focus
+                                           }
+                                       }
+                                   }}
+                        />
                     </Grid>
-                    <Grid size={6}>
-                        <TextFieldHiddenLabel name="Captcha" id="captcha_write" placeholder="Enter Captcha"/>
-                    </Grid>
-                </Grid> */}
+                </Grid>
         <Button
           variant="contained"
           sx={{
             fontSize: "24px",
             textTransform: "capitalize",
             backgroundColor: "#25307F",
+              borderRadius: '8px',
           }}
           onClick={handleLoginClick}
         >
@@ -134,10 +202,11 @@ const Login = (props) => {
             <Button
               variant="text"
               sx={{
-                fontSize: "22px",
+                fontSize: "17px",
                 color: "#0150EA",
                 textTransform: "capitalize",
                 padding: "0px",
+                  fontWeight: 300
               }}
               onClick={handleForgetPassword}
             >

@@ -41,50 +41,92 @@ function Admin(props) {
   const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
   const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
 
-  const areaData = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+    const areaData = [
+        {
+            name: 'Jan',
+            uv: 4000,
+            pv: 2400,
+            amt: 2400,
+            ayu: 2200
+        },
+        {
+            name: 'Feb',
+            uv: 3000,
+            pv: 1398,
+            amt: 2210,
+            ayu: 2100
+        },
+        {
+            name: 'Mar',
+            uv: 5000,
+            pv: 7800,
+            amt: 2290,
+            ayu: 2400
+        },
+        {
+            name: 'Apr',
+            uv: 2780,
+            pv: 3908,
+            amt: 2000,
+            ayu: 1200
+        },
+        {
+            name: 'May',
+            uv: 4890,
+            pv: 4800,
+            amt: 2181,
+            ayu: 3200
+        },
+        {
+            name: 'June',
+            uv: 2390,
+            pv: 3800,
+            amt: 2500,
+            ayu: 2600
+        },
+        {
+            name: 'July',
+            uv: 5490,
+            pv: 4300,
+            amt: 2100,
+            ayu: 2500
+        },
+        {
+            name: 'Aug',
+            uv: 3490,
+            pv: 4300,
+            amt: 2100,
+            ayu: 2300
+        },
+        {
+            name: 'Sep',
+            uv: 5490,
+            pv: 4300,
+            amt: 2100,
+            ayu: 2100
+        },
+        {
+            name: 'Oct',
+            uv: 2490,
+            pv: 4300,
+            amt: 2100,
+            ayu: 1800
+        },
+        {
+            name: 'Nov',
+            uv: 3490,
+            pv: 4300,
+            amt: 2100,
+            ayu: 1200
+        },
+        {
+            name: 'Dec',
+            uv: 6490,
+            pv: 4300,
+            amt: 2100,
+            ayu: 3200
+        },
+    ];
 
   const navigate = useNavigate();
 
@@ -123,7 +165,7 @@ function Admin(props) {
             marginLeft: "16px",
             position: "absolute",
             left: "11.2rem", // % mai isliye nhi di because ye alag file mai hai toh iski position fixed honi jaruri hai during responsiveness
-            top: "10.68rem",
+            top: "8.55rem",
           }}
         >
           <span
@@ -159,17 +201,17 @@ function Admin(props) {
             <Box display="flex" style={{ justifyContent: "space-between" }}>
               <div
                 style={{
-                  paddingTop: "1rem",
+                  paddingTop: "0.4rem",
                   marginLeft: "1.8rem",
                   marginBottom: "1.5rem",
                   cursor: "pointer",
                 }}
                 onClick={handleResetBars} // Clicking on Appointment Statistics resets the bars
               >
-                <h3>Appointment Statistics</h3>
+                <h4 style={{fontWeight:400}}>Appointment Statistics</h4>
               </div>
 
-              <Box sx={{ display: "flex", gap: 3 }}>
+              <Box sx={{ display: "flex", gap: 3 ,marginTop:'-20px'}}>
                 {" "}
                 {/* Adjust gap for spacing */}
                 <Box
@@ -233,7 +275,7 @@ function Admin(props) {
                     alignItems="center"
                     flexDirection={{ md: "row" }}
                     size={12}
-                    sx={{ margin: "10px 0 1px 0" }}
+                    sx={{ margin: "0 0 1px 0" }}
                   >
                     <Grid
                       size={3}
@@ -253,7 +295,7 @@ function Admin(props) {
             </Box>
 
             {/* Content for the top grid */}
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={290}>
               <BarChart
                 barGap={5} // Adjust space between bars
                 width={500}
@@ -331,7 +373,7 @@ function Admin(props) {
                   marginBottom: "1.5rem",
                 }}
               >
-                <h3>
+                <h3 style={{fontSize:'18px',fontWeight:500}}>
                   Revenue
                   <span
                     style={{
@@ -346,10 +388,10 @@ function Admin(props) {
 
               {/* Add spacing before the graph */}
               <Box sx={{ marginLeft: "1.8rem" }}>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={280}>
                   <AreaChart
                     width={500}
-                    height={400}
+                    height={100}
                     data={areaData}
                     margin={{
                       top: 10,
@@ -359,27 +401,34 @@ function Admin(props) {
                     }}
                   >
                     {/*<CartesianGrid strokeDasharray="3 3" />*/}
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                      <CartesianGrid horizontal={true} vertical={false} /> {/* Horizontal lines only */}
+                    <XAxis dataKey="name" hide/>
+                    <YAxis axisLine={false} tickLine={false}/>
                     <Tooltip />
                     <Area
                       type="monotone"
                       dataKey="uv"
                       stroke="#8884d8"
-                      fill="#8884d8"
+                      fill="#444FA2"
                     />
                     <Area
                       type="monotone"
                       dataKey="pv"
                       stroke="#8884d8"
-                      fill="#8884d8"
+                      fill="#2765CA"
                     />
                     <Area
                       type="monotone"
                       dataKey="amt"
                       stroke="#8884d8"
-                      fill="#8884d8"
+                      fill="#7A8AFF"
                     />
+                      <Area
+                          type="monotone"
+                          dataKey="ayu"
+                          stroke="#8884d8"
+                          fill="#D7DCFF"
+                      />
                   </AreaChart>
                 </ResponsiveContainer>
               </Box>
@@ -406,7 +455,7 @@ function Admin(props) {
                   marginBottom: "1rem",
                 }}
               >
-                <h3>
+                <h3 style={{fontSize:'18px',fontWeight:500}}>
                   Department
                   <span
                     style={{

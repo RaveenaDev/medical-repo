@@ -28,6 +28,8 @@ import {
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
 
+import billing from "../../../assets/Billing.png"
+
 const CommonPanel = () => {
   const navigate = useNavigate();
   const [branches, setBranches] = useState([
@@ -122,7 +124,7 @@ const CommonPanel = () => {
           alignItems="center"
           flexDirection={{ md: "row" }}
           size={12}
-          sx={{ margin: "0 0 20px 0" }}
+          sx={{ margin: "0 0 10px 0" }}
         >
           <Grid size={3}>
             <Card
