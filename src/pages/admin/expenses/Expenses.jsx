@@ -369,11 +369,12 @@ const Expenses = (props) => {
                   Expense Type
                 </TableCell>
                 <TableCell
-                  align="left"
+                  align="center"
                   sx={{
                     fontSize: "15px",
                     color: "#959595",
-                    padding: "0.5rem 1.5rem",
+                    padding: "0.5rem 0.8rem",
+                    paddingRight:"28px",
                     border: "none",
                   }}
                 >
@@ -437,14 +438,13 @@ const Expenses = (props) => {
                   <TableCell
                     component="th"
                     scope="row"
-                    sx={{ color: "#25307f", border: "none" }}
+                    sx={{ color: "#25307f", border: "none"}}
                   >
                     {row.expenseType}
                   </TableCell>
                   <TableCell
-                    component="th"
-                    scope="row"
-                    sx={{ color: "#25307f", border: "none" }}
+                      align="center"
+                    sx={{ color: "#25307f", border: "none",paddingRight:"38px"}}
                   >
                     {truncateText(row.amount, 13)}
                   </TableCell>
@@ -457,7 +457,7 @@ const Expenses = (props) => {
                   <TableCell align="center" sx={{ border: "none" }}>
                     {new Date(row.date).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <IconButton onClick={(event) => handleMenuOpen(event, row)}>
                       <MoreVertIcon />
                     </IconButton>

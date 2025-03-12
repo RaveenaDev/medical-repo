@@ -235,7 +235,7 @@ const PatientPanel = (props) => {
                 <TableCell>Type Visit</TableCell>
                 <TableCell>Branch</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell align='center' sx={{paddingRight:'22px'}}>Status</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -255,14 +255,14 @@ const PatientPanel = (props) => {
                     },
                   }}
                 >
-                  <TableCell>
+                  <TableCell sx={{color:"#25307F"}}>
                     {truncateText(
                       patient.appointments[patient.appointments.length - 1]
                         ?.caseId || "Not Assigned",
                       13
                     )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{color:"#25307F"}}>
                     <Typography
                       variant="body1"
                       sx={{ fontWeight: "bold", cursor: "pointer" }}
@@ -270,7 +270,7 @@ const PatientPanel = (props) => {
                     >
                       {patient.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" sx={{ textDecoration: "underline" }}>
                       {patient.email}
                     </Typography>
                   </TableCell>
@@ -286,18 +286,21 @@ const PatientPanel = (props) => {
                   <TableCell>
                     {new Date(patient.registrationDate).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
+                  <TableCell align='center'>
                     <Chip
-                      label={patient.status}
+                      label={patient.status.charAt(0).toUpperCase() + patient.status.slice(1)}
                       color={
-                        patient.status === "Active" ? "success" : "default"
+                        patient.status === "active" ? "success" : "default"
                       }
                       size="small"
                       sx={{
+                        padding: '4px',
                         bgcolor:
-                          patient.status === "Active" ? "#d4edda" : "#f0f0f0",
+                          patient.status === "active" ? "#d4edda" : "#ffffff",
                         color:
-                          patient.status === "Active" ? "#155724" : "#757575",
+                          patient.status === "active" ? "#155724" : "#757575",
+                        border:
+                        patient.status === "active" ? "1px solid #155724 " : "",
                         fontWeight: "bold",
                       }}
                     />
