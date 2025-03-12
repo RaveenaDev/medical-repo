@@ -252,25 +252,11 @@ $blue: #25307f;
 }
 
 .superCardContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: space-evenly;
-  align-items: center;
-  //@media (max-width: 1446px) {
-  //  width: 28%; // Keep 3 cards per row even on widths below 1446px
-  //}
-  //
-  //@media (max-width: 1300px) {
-  //  width: 27%; // Keep 3 cards per row even on widths below 1446px
-  //  height: 200px;
-  //}
-  //
-  //@media (max-width: 1024px) {
-  //  width: 48%; // 2 cards per row on tablets
-  //}
-  //
-  //@media (max-width: 768px) {
-  //  width: 100%; // 1 card per row on mobile
-  //}
+  // display: flex;
+  // flex-wrap: wrap;
+  gap: 2rem;
+  // justify-content: space-evenly;
+  // align-items: center;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
 }

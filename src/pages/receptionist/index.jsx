@@ -216,7 +216,7 @@ function Receptionist(props) {
 
   return (
     <>
-      <div>
+      <div style={{ padding: "0 20px 0 0" }}>
         <CommonPanel />
         {!props.entity ? (
           <>
@@ -264,19 +264,22 @@ function Receptionist(props) {
                   <Button
                     variant="contained"
                     sx={{
-                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
+                      fontSize: "16px",
                       color: "#878787",
                       textTransform: "capitalize",
                       padding: {
                         xs: "0px 8px",
                         sm: "0px 10px",
-                        md: "0px 10px",
+                        md: "6px 12px",
                       }, // Adjust padding
                       backgroundColor: "#fff",
                       marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
                       display: "flex",
                       alignItems: "center",
                       gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
+                      fontWeight: "500",
+                      lineHeight: "100%",
+                      letterSpacing: "0%",
                     }}
                     onClick={handleAppointmentRequests}
                   >
@@ -298,19 +301,21 @@ function Receptionist(props) {
                   <Button
                     variant="contained"
                     sx={{
-                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
+                      fontSize: "16px",
                       color: "#878787",
                       textTransform: "capitalize",
                       padding: {
-                        xs: "0px 8px",
-                        sm: "0px 10px",
                         md: "0px 10px",
                       }, // Adjust padding
                       backgroundColor: "#fff",
-                      marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
+                      marginRight: { md: "20px" }, // Reduce margin for small screens
                       display: "flex",
                       alignItems: "center",
-                      gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
+                      gap: { md: "8px" }, // Adjust spacing between icon and text
+                      fontWeight: "500",
+
+                      lineHeight: "100%",
+                      letterSpacing: "0%",
                     }}
                     onClick={handleBilling}
                   >
@@ -323,7 +328,7 @@ function Receptionist(props) {
                   <Button
                     variant="contained"
                     sx={{
-                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
+                      fontSize: "16px",
                       color: "#ffffff",
                       textTransform: "capitalize",
                       padding: {
@@ -354,7 +359,7 @@ function Receptionist(props) {
                 onClose={() => setIsBookAppointment(false)}
               />
             ) : (
-              <Box sx={{ backgroundColor: "white", pt: 0.7 }}>
+              <Box sx={{ backgroundColor: "white", pt: 0.7, px: 2 }}>
                 <div>
                   {branches.length && (
                     <Grid
@@ -395,7 +400,7 @@ function Receptionist(props) {
                         sx={{
                           backgroundColor:
                             activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                          px: { sm: 3, md: 3, lg: 6 },
+                          px: { sm: 3, md: 5, lg: 8 },
                           height: 55,
                           display: "flex",
                           alignItems: "center",
@@ -404,7 +409,7 @@ function Receptionist(props) {
                           boxShadow: 1,
                           cursor: "pointer",
                           borderBottom:
-                            activeBox === box.id ? "4px solid #6A0DAD" : "none",
+                            activeBox === box.id ? "4px solid #25307F" : "none",
                           transition: "all 0.3s ease-in-out",
                         }}
                         onClick={() => handleBoxClick(box.id)}
@@ -413,7 +418,8 @@ function Receptionist(props) {
                           style={{
                             fontSize: "2.1rem",
                             fontWeight: 600,
-                            color: "#25307F",
+                            color:
+                              activeBox === box.id ? "#25307F" : " #4A4A4A",
                             // marginRight: "4px",
                             // marginLeft: "42px",
                           }}
@@ -434,8 +440,8 @@ function Receptionist(props) {
                           style={{
                             fontSize: "1.1rem",
                             fontWeight: 500,
-                            color: "black",
                             marginTop: "4px",
+                            color: activeBox === box.id ? "black" : "#747474",
                           }}
                         >
                           {box.label}
@@ -451,30 +457,107 @@ function Receptionist(props) {
                     sx={{
                       borderCollapse: "separate",
                       borderSpacing: "0 10px",
-                      background: "#F1F1F1",
                     }}
                   >
-                    <TableHead>
+                    <TableHead sx={{}}>
                       <TableRow>
-                        <TableCell>Case Id</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Appointment With</TableCell>
-                        <TableCell>Type Visit</TableCell>
-                        <TableCell>Branch</TableCell>
-                        <TableCell>Token No.</TableCell>
-                        <TableCell align="center">Status</TableCell>
+                        <TableCell
+                          sx={{
+                            color: " #000000",
+                            fontFamily: "Karla",
+                            fontWeight: "600",
+                            fontSize: "16px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                          }}
+                        >
+                          Case Id
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: " #000000",
+                            fontFamily: "Karla",
+                            fontWeight: "600",
+                            fontSize: "16px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                          }}
+                        >
+                          Name
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: " #000000",
+                            fontFamily: "Karla",
+                            fontWeight: "600",
+                            fontSize: "16px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                          }}
+                        >
+                          Appointment With
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: " #000000",
+                            fontFamily: "Karla",
+                            fontWeight: "600",
+                            fontSize: "16px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                          }}
+                        >
+                          Type Visit
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: " #000000",
+                            fontFamily: "Karla",
+                            fontWeight: "600",
+                            fontSize: "16px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                          }}
+                        >
+                          Branch
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{
+                            color: " #000000",
+                            fontFamily: "Karla",
+                            fontWeight: "600",
+                            fontSize: "16px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                          }}
+                        >
+                          Token Number
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{
+                            color: " #000000",
+                            fontFamily: "Karla",
+                            fontWeight: "600",
+                            fontSize: "16px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                          }}
+                        >
+                          Status
+                        </TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody sx={{ pl: 2 }}>
                       {appointments.length > 0 ? (
                         appointments.map((appointment) => (
                           <TableRow
                             key={appointment._id}
                             sx={{
-                              background: "#fff",
                               bgcolor:
                                 appointment.status === "Ongoing"
-                                  ? "#EEF8F1"
+                                  ? "#3DB46117"
                                   : "white",
                               boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
                               borderRadius: "8px",
@@ -487,23 +570,50 @@ function Receptionist(props) {
                             }}
                           >
                             <TableCell>
-                              {truncateText(appointment.caseId, 12)}
+                              <Typography
+                                sx={{
+                                  fontWeight: "bold",
+                                  cursor: "pointer",
+                                  color: "#25307F",
+                                }}
+                              >
+                                {truncateText(appointment.caseId, 12)}
+                              </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography
                                 variant="body1"
-                                sx={{ fontWeight: "bold", cursor: "pointer" }}
+                                sx={{
+                                  fontWeight: "bold",
+                                  cursor: "pointer",
+                                  color: "#25307F",
+                                }}
                               >
                                 {appointment.patient.name}
                               </Typography>
                             </TableCell>
-                            <TableCell>{appointment.doctor?.name}</TableCell>
-                            <TableCell>{appointment.typeVisit}</TableCell>
-                            <TableCell>{appointment.department.name}</TableCell>
-                            <TableCell align="center">
+                            <TableCell
+                              sx={{ color: "#747474", fontWeight: "600" }}
+                            >
+                              {appointment.doctor?.name}
+                            </TableCell>
+                            <TableCell
+                              sx={{ color: "#747474", fontWeight: "600" }}
+                            >
+                              {appointment.typeVisit}
+                            </TableCell>
+                            <TableCell
+                              sx={{ color: "#747474", fontWeight: "600" }}
+                            >
+                              {appointment.department.name}
+                            </TableCell>
+                            <TableCell
+                              sx={{ color: "#747474", fontWeight: "600" }}
+                              align="center"
+                            >
                               {appointment?.tokenNumber || "N/A"}
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Chip
                                 label={appointment.status}
                                 size="small"
@@ -511,10 +621,6 @@ function Receptionist(props) {
                                   bgcolor:
                                     appointment.status === "Ongoing"
                                       ? "#3DB461"
-                                      : appointment.status === "Scheduled"
-                                      ? "#007bff"
-                                      : appointment.status === "Waiting"
-                                      ? "#ffc107"
                                       : "white",
                                   color:
                                     appointment.status === "Ongoing"
@@ -522,23 +628,12 @@ function Receptionist(props) {
                                       : appointment.status === "Completed"
                                       ? "orange"
                                       : appointment.status === "Scheduled"
-                                      ? "white"
-                                      : appointment.status === "Waiting"
-                                      ? "black"
+                                      ? "#25307F"
                                       : "#757575",
-                                  fontWeight: "bold",
+                                  fontWeight: "600",
                                   px: 0.7,
                                 }}
                               />
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={(event) =>
-                                  handleMenuOpen(event, appointment)
-                                }
-                              >
-                                <MoreVertIcon />
-                              </IconButton>
                             </TableCell>
                           </TableRow>
                         ))
@@ -550,7 +645,7 @@ function Receptionist(props) {
                             justifyContent: "center",
                           }}
                         >
-                          <TableCell>No data found!</TableCell>
+                          <TableCell align="center">No data found!</TableCell>
                         </TableRow>
                       )}
                     </TableBody>
