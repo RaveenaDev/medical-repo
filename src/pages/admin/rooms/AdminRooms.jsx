@@ -170,462 +170,480 @@ const AdminRooms = (props) => {
 
   return (
     <>
-      <CommonPanel />
-
-      <Box>
-        <div
-          className={ayu.headerContainer}
-          style={{ justifyContent: "space-between" }}
-        >
-          <div style={{ display: "flex" }}>
-            <span
-              onClick={() => navigate(-1)}
-              style={{
-                transform: "translateY(8px)",
-                color: "black",
-                cursor: "pointer",
-              }}
-            >
-              <ArrowBackIosIcon />
-            </span>
-            <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-            <h2 className={ayu.departmentTitleDetails}>{rooms.length}</h2>
-          </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <Box sx={{ display: "flex", gap: 3 }}>
-              {/* Adjust gap for spacing */}
-              <Box
-                display="flex"
-                alignItems="center"
-                gap={1}
-                sx={{ color: "black" }}
-              >
-                <Box
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    backgroundColor: "green",
-                  }}
-                />
-                Available
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap={1}
-                sx={{ color: "black" }}
-              >
-                <Box
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    backgroundColor: "orange",
-                  }}
-                />
-                Occupied
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap={1}
-                sx={{ color: "black" }}
-              >
-                <Box
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    backgroundColor: "skyblue",
-                  }}
-                />
-                Under Maintenance
-              </Box>
-            </Box>
-
-            <div style={{ marginLeft: "auto" }}>
-              <Button
-                variant="contained"
-                sx={{
-                  fontSize: "20px",
-                  color: "#ffffff",
-                  textTransform: "capitalize",
-                  padding: "2px 18px",
-                  backgroundColor: "#25307F",
-                }}
-                onClick={handleAddDialogOpen} // Open modal on click
-              >
-                <img
-                  src={addIcon}
-                  className={styles.appointmentBlock__plusIcon}
-                />
-                Add
-              </Button>
-            </div>
-          </div>
-          <Dialog
-            open={addDialogOpen}
-            onClose={handleAddDialogClose}
-            maxWidth="md"
-            fullWidth
-            sx={{
-              "& .MuiDialog-paper": {
-                maxWidth: "65%", // This will reduce the max width between md and lg.
-              },
-            }}
-          >
-            <DialogTitle>Add Room</DialogTitle>
-            <DialogContent>
-              <Box sx={{ width: "100%" }}>
-                {" "}
-                {/* Fix width issue */}
-                <Grid container spacing={2}>
-                  <Grid xs={3}>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      label="Room ID"
-                      name="roomID"
-                      value={formData.roomID}
-                      onChange={handleChange}
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      error={!!errors.roomID}
-                      helperText={errors.roomID}
-                      required
-                    />
-                  </Grid>
-                  <Grid xs={3}>
-                    <TextField
-                      margin="dense"
-                      label="Room Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      error={!!errors.name}
-                      helperText={errors.name}
-                      required
-                    />
-                  </Grid>
-                  <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                    <FormControl
-                      fullWidth
-                      margin="dense"
-                      error={!!errors.status}
-                    >
-                      <InputLabel id="status-select-label">Status</InputLabel>
-                      <Select
-                        labelId="status-select-label"
-                        id="status-select"
-                        name="status"
-                        value={formData.status}
-                        onChange={handleChange}
-                        label="Status"
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                        required
-                      >
-                        <MenuItem value="Available">Available</MenuItem>
-                        <MenuItem value="Occupied">Occupied</MenuItem>
-                        <MenuItem value="Under Maintenance">
-                          Under Maintenance
-                        </MenuItem>
-                      </Select>
-                      {errors.status && (
-                        <Typography variant="caption" color="error">
-                          {errors.status}
-                        </Typography>
-                      )}
-                    </FormControl>
-                  </Grid>
-
-                  <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                    <FormControl
-                      fullWidth
-                      margin="dense"
-                      error={!!errors.doctorId}
-                    >
-                      <InputLabel id="doctor-select-label">
-                        Doctor Assigned
-                      </InputLabel>
-                      <Select
-                        labelId="doctor-select-label"
-                        id="doctor-select"
-                        name="doctorId"
-                        value={formData.doctorId}
-                        onChange={handleChange}
-                        label="Doctor Assigned"
-                        variant="outlined"
-                        required
-                      >
-                        {doctors?.map((doctor) => (
-                          <MenuItem key={doctor._id} value={doctor._id}>
-                            {doctor.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {errors.doctorId && (
-                        <Typography variant="caption" color="error">
-                          {errors.doctorId}
-                        </Typography>
-                      )}
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </Box>
-            </DialogContent>
-
-            <DialogActions sx={{ justifyContent: "center" }}>
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                sx={{
-                  width: "200px",
-                  backgroundColor: "#25307F",
-                  "&:hover": { backgroundColor: "green" },
-                }}
-              >
-                Save
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      </Box>
-
-      {/* Table Section */}
-      <TableContainer component={Paper}>
-        <Table
-          sx={{
-            borderCollapse: "separate",
-            borderSpacing: "0 10px",
-            background: "#F1F1F1",
-          }}
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell>Room ID</TableCell>
-              <TableCell align="center" sx={{ pl: 8 }}>
-                Name
-              </TableCell>
-              <TableCell align="center" sx={{ pr: 14 }}>
-                Status
-              </TableCell>
-              <TableCell align="center">Doctor Assigned</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rooms.map((room, index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  background: "#fff",
-                  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "8px",
-                  "&:hover": {
-                    backgroundColor: "#f9f9f9",
-                  },
-                  "& > *": {
-                    borderBottom: "unset",
-                  },
-                }}
-              >
-                <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                  {room.roomID}
-                </TableCell>
-                <TableCell align="center" sx={{ pl: 8 }}>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontWeight: "bold",
-                      color: "#25307F",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {room.name}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  {" "}
-                  {/* Increase 'pl' value for more spacing */}
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    gap={1}
-                    sx={{ ml: 16 }}
-                  >
-                    <Box
-                      sx={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: "50%",
-                        backgroundColor:
-                          room.status === "Available"
-                            ? "green"
-                            : room.status === "Occupied"
-                            ? "orange"
-                            : "skyblue",
-                      }}
-                    />
-                    {room.status}
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  {room.assignedDoctor?.name || "Not Assigned"}
-                </TableCell>
-
-                <TableCell align="right">
-                  <IconButton onClick={(event) => handleMenuOpen(event, room)}>
-                    <MoreVertIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      {/* Actions Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-        PaperProps={{
-          elevation: 2,
-          sx: { padding: 1 },
+      <div
+        style={{
+          position: "fixed",
+          top: "0px",
+          padding: "10px",
+          width: "77%",
+          background: " #F1F1F1",
+          zIndex: 10000,
         }}
       >
-        <MenuItem onClick={handleEdit}>
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleDelete}>
-          <ListItemIcon>
-            <DeleteIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
-        </MenuItem>
-      </Menu>
+        <CommonPanel />
+      </div>
+      <div style={{ marginTop: "150px" }}>
+        <Box>
+          <div
+            className={ayu.headerContainer}
+            style={{ justifyContent: "space-between" }}
+          >
+            <div style={{ display: "flex" }}>
+              <span
+                onClick={() => navigate(-1)}
+                style={{
+                  transform: "translateY(8px)",
+                  color: "black",
+                  cursor: "pointer",
+                }}
+              >
+                <ArrowBackIosIcon />
+              </span>
+              <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
+              <h2 className={ayu.departmentTitleDetails}>{rooms.length}</h2>
+            </div>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <Box sx={{ display: "flex", gap: 3 }}>
+                {/* Adjust gap for spacing */}
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ color: "black" }}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      backgroundColor: "green",
+                    }}
+                  />
+                  Available
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ color: "black" }}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      backgroundColor: "orange",
+                    }}
+                  />
+                  Occupied
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ color: "black" }}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      backgroundColor: "skyblue",
+                    }}
+                  />
+                  Under Maintenance
+                </Box>
+              </Box>
 
-      {/* Edit Room Dialog */}
-      <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-        <DialogTitle>Edit Room</DialogTitle>
-        <DialogContent>
-          <Box sx={{ width: "100%" }}>
-            <Grid container spacing={2}>
-              <Grid xs={3}>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  label="Room ID"
-                  name="roomID"
-                  value={editedRoom.roomID}
-                  onChange={(e) =>
-                    setEditedRoom({ ...editedRoom, roomID: e.target.value })
-                  }
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                  error={!!errors.roomID}
-                  helperText={errors.roomID}
-                  required
-                />
-              </Grid>
-              <Grid xs={3}>
-                <TextField
-                  margin="dense"
-                  label="Room Name"
-                  name="name"
-                  value={editedRoom.name}
-                  onChange={(e) =>
-                    setEditedRoom({ ...editedRoom, name: e.target.value })
-                  }
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                  error={!!errors.name}
-                  helperText={errors.name}
-                  required
-                />
-              </Grid>
-              <Grid xs={3}>
-                <FormControl fullWidth margin="dense" error={!!errors.status}>
-                  <InputLabel id="status-select-label">Status</InputLabel>
-                  <Select
-                    labelId="status-select-label"
-                    id="status-select"
-                    name="status"
-                    value={editedRoom.status}
-                    onChange={(e) =>
-                      setEditedRoom({ ...editedRoom, status: e.target.value })
-                    }
-                    label="Status"
-                    variant="outlined"
-                  >
-                    <MenuItem value="Available">Available</MenuItem>
-                    <MenuItem value="Occupied">Occupied</MenuItem>
-                    <MenuItem value="Under Maintenance">
-                      Under Maintenance
-                    </MenuItem>
-                  </Select>
-                  {errors.status && (
-                    <Typography variant="caption" color="error">
-                      {errors.status}
+              <div style={{ marginLeft: "auto" }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    fontSize: "20px",
+                    color: "#ffffff",
+                    textTransform: "capitalize",
+                    padding: "2px 18px",
+                    backgroundColor: "#25307F",
+                  }}
+                  onClick={handleAddDialogOpen} // Open modal on click
+                >
+                  <img
+                    src={addIcon}
+                    className={styles.appointmentBlock__plusIcon}
+                  />
+                  Add
+                </Button>
+              </div>
+            </div>
+            <Dialog
+              open={addDialogOpen}
+              onClose={handleAddDialogClose}
+              maxWidth="md"
+              fullWidth
+              sx={{
+                "& .MuiDialog-paper": {
+                  maxWidth: "65%", // This will reduce the max width between md and lg.
+                },
+              }}
+            >
+              <DialogTitle>Add Room</DialogTitle>
+              <DialogContent>
+                <Box sx={{ width: "100%" }}>
+                  {" "}
+                  {/* Fix width issue */}
+                  <Grid container spacing={2}>
+                    <Grid xs={3}>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Room ID"
+                        name="roomID"
+                        value={formData.roomID}
+                        onChange={handleChange}
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        error={!!errors.roomID}
+                        helperText={errors.roomID}
+                        required
+                      />
+                    </Grid>
+                    <Grid xs={3}>
+                      <TextField
+                        margin="dense"
+                        label="Room Name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        error={!!errors.name}
+                        helperText={errors.name}
+                        required
+                      />
+                    </Grid>
+                    <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
+                      <FormControl
+                        fullWidth
+                        margin="dense"
+                        error={!!errors.status}
+                      >
+                        <InputLabel id="status-select-label">Status</InputLabel>
+                        <Select
+                          labelId="status-select-label"
+                          id="status-select"
+                          name="status"
+                          value={formData.status}
+                          onChange={handleChange}
+                          label="Status"
+                          variant="outlined"
+                          sx={{ width: "100%" }}
+                          required
+                        >
+                          <MenuItem value="Available">Available</MenuItem>
+                          <MenuItem value="Occupied">Occupied</MenuItem>
+                          <MenuItem value="Under Maintenance">
+                            Under Maintenance
+                          </MenuItem>
+                        </Select>
+                        {errors.status && (
+                          <Typography variant="caption" color="error">
+                            {errors.status}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Grid>
+
+                    <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
+                      <FormControl
+                        fullWidth
+                        margin="dense"
+                        error={!!errors.doctorId}
+                      >
+                        <InputLabel id="doctor-select-label">
+                          Doctor Assigned
+                        </InputLabel>
+                        <Select
+                          labelId="doctor-select-label"
+                          id="doctor-select"
+                          name="doctorId"
+                          value={formData.doctorId}
+                          onChange={handleChange}
+                          label="Doctor Assigned"
+                          variant="outlined"
+                          required
+                        >
+                          {doctors?.map((doctor) => (
+                            <MenuItem key={doctor._id} value={doctor._id}>
+                              {doctor.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {errors.doctorId && (
+                          <Typography variant="caption" color="error">
+                            {errors.doctorId}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </DialogContent>
+
+              <DialogActions sx={{ justifyContent: "center" }}>
+                <Button
+                  onClick={handleSubmit}
+                  variant="contained"
+                  sx={{
+                    width: "200px",
+                    backgroundColor: "#25307F",
+                    "&:hover": { backgroundColor: "green" },
+                  }}
+                >
+                  Save
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+        </Box>
+
+        {/* Table Section */}
+        <TableContainer component={Paper}>
+          <Table
+            sx={{
+              borderCollapse: "separate",
+              borderSpacing: "0 10px",
+              background: "#F1F1F1",
+            }}
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>Room ID</TableCell>
+                <TableCell align="center" sx={{ pl: 8 }}>
+                  Name
+                </TableCell>
+                <TableCell align="center" sx={{ pr: 14 }}>
+                  Status
+                </TableCell>
+                <TableCell align="center">Doctor Assigned</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rooms.map((room, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    background: "#fff",
+                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "#f9f9f9",
+                    },
+                    "& > *": {
+                      borderBottom: "unset",
+                    },
+                  }}
+                >
+                  <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                    {room.roomID}
+                  </TableCell>
+                  <TableCell align="center" sx={{ pl: 8 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: "bold",
+                        color: "#25307F",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {room.name}
                     </Typography>
-                  )}
-                </FormControl>
-              </Grid>
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {/* Increase 'pl' value for more spacing */}
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      sx={{ ml: 16 }}
+                    >
+                      <Box
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: "50%",
+                          backgroundColor:
+                            room.status === "Available"
+                              ? "green"
+                              : room.status === "Occupied"
+                              ? "orange"
+                              : "skyblue",
+                        }}
+                      />
+                      {room.status}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    {room.assignedDoctor?.name || "Not Assigned"}
+                  </TableCell>
 
-              <Grid xs={3}>
-                <FormControl fullWidth margin="dense" error={!!errors.doctorId}>
-                  <InputLabel id="doctor-select-label">
-                    Doctor Assigned
-                  </InputLabel>
-                  <Select
-                    labelId="doctor-select-label"
-                    id="doctor-select"
-                    name="doctorId"
-                    value={editedRoom.assignedDoctor}
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={(event) => handleMenuOpen(event, room)}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {/* Actions Menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          PaperProps={{
+            elevation: 2,
+            sx: { padding: 1 },
+          }}
+        >
+          <MenuItem onClick={handleEdit}>
+            <ListItemIcon>
+              <EditIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon fontSize="small" color="error" />
+            </ListItemIcon>
+            <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+          </MenuItem>
+        </Menu>
+
+        {/* Edit Room Dialog */}
+        <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+          <DialogTitle>Edit Room</DialogTitle>
+          <DialogContent>
+            <Box sx={{ width: "100%" }}>
+              <Grid container spacing={2}>
+                <Grid xs={3}>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Room ID"
+                    name="roomID"
+                    value={editedRoom.roomID}
                     onChange={(e) =>
-                      setEditedRoom({
-                        ...editedRoom,
-                        assignedDoctor: e.target.value,
-                      })
+                      setEditedRoom({ ...editedRoom, roomID: e.target.value })
                     }
-                    label="Doctor Assigned"
+                    type="text"
+                    fullWidth
                     variant="outlined"
+                    error={!!errors.roomID}
+                    helperText={errors.roomID}
                     required
-                  >
-                    {doctors?.map((doctor) => (
-                      <MenuItem key={doctor._id} value={doctor._id}>
-                        {doctor.name}
+                  />
+                </Grid>
+                <Grid xs={3}>
+                  <TextField
+                    margin="dense"
+                    label="Room Name"
+                    name="name"
+                    value={editedRoom.name}
+                    onChange={(e) =>
+                      setEditedRoom({ ...editedRoom, name: e.target.value })
+                    }
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    error={!!errors.name}
+                    helperText={errors.name}
+                    required
+                  />
+                </Grid>
+                <Grid xs={3}>
+                  <FormControl fullWidth margin="dense" error={!!errors.status}>
+                    <InputLabel id="status-select-label">Status</InputLabel>
+                    <Select
+                      labelId="status-select-label"
+                      id="status-select"
+                      name="status"
+                      value={editedRoom.status}
+                      onChange={(e) =>
+                        setEditedRoom({ ...editedRoom, status: e.target.value })
+                      }
+                      label="Status"
+                      variant="outlined"
+                    >
+                      <MenuItem value="Available">Available</MenuItem>
+                      <MenuItem value="Occupied">Occupied</MenuItem>
+                      <MenuItem value="Under Maintenance">
+                        Under Maintenance
                       </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.doctorId && (
-                    <Typography variant="caption" color="error">
-                      {errors.doctorId}
-                    </Typography>
-                  )}
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Box>
-        </DialogContent>
+                    </Select>
+                    {errors.status && (
+                      <Typography variant="caption" color="error">
+                        {errors.status}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
 
-        <DialogActions>
-          <Button onClick={handleEditDialogClose}>Cancel</Button>
-          <Button onClick={handleSaveEditedRoom} variant="contained">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+                <Grid xs={3}>
+                  <FormControl
+                    fullWidth
+                    margin="dense"
+                    error={!!errors.doctorId}
+                  >
+                    <InputLabel id="doctor-select-label">
+                      Doctor Assigned
+                    </InputLabel>
+                    <Select
+                      labelId="doctor-select-label"
+                      id="doctor-select"
+                      name="doctorId"
+                      value={editedRoom.assignedDoctor}
+                      onChange={(e) =>
+                        setEditedRoom({
+                          ...editedRoom,
+                          assignedDoctor: e.target.value,
+                        })
+                      }
+                      label="Doctor Assigned"
+                      variant="outlined"
+                      required
+                    >
+                      {doctors?.map((doctor) => (
+                        <MenuItem key={doctor._id} value={doctor._id}>
+                          {doctor.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.doctorId && (
+                      <Typography variant="caption" color="error">
+                        {errors.doctorId}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Box>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={handleEditDialogClose}>Cancel</Button>
+            <Button onClick={handleSaveEditedRoom} variant="contained">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 };
