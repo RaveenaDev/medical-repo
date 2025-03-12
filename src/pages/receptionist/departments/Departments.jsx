@@ -102,7 +102,7 @@ const Departments = (props) => {
               zIndex: 10000,
             }}
           >
-            <CommonPanel />
+            <CommonPanel setIsBookAppointment={setIsBookAppointment} />
           </div>
           <div style={{ marginTop: "210px" }}>
             {!props.entity ? (
