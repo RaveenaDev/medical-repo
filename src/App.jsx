@@ -80,7 +80,17 @@ function App() {
       <ToastContainer />
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
         {shouldShowSidebar && (
-          <div style={{width: "20%", backgroundColor: "white"}}>
+          <div
+            style={{
+              width: "20%",
+              backgroundColor: "white",
+              height: "100vh",
+              position: "fixed",
+              top: 0, // Ensure it sticks to the top
+              left: 0, // Position it on the left side
+              overflowY: "auto", // Allows scrolling inside the sidebar if needed
+            }}
+          >
             <div className={styles.logo}>
               <Logo />
             </div>
@@ -96,6 +106,7 @@ function App() {
           className={`${styles.register} ${
             isSignUpOrLogin ? styles.loginPageActive : styles.otherPages
           }`}
+          style={{ marginLeft: shouldShowSidebar ? "20%" : "0" }} // Prevent content from going under the sidebar
         >
           <Routes>
             <Route

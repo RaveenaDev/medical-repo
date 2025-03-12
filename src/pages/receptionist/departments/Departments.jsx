@@ -248,7 +248,7 @@ const Departments = (props) => {
                       <DepartCard key={index} department={department} />
                     ))}
 
-                    {/*<DepartCard />*/}
+                    {/* <DepartCard /> */}
                     {/*<DepartCard />*/}
                     {/*<DepartCard />*/}
                     {/*<DepartCard />*/}

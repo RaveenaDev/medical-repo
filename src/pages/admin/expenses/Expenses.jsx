@@ -184,168 +184,185 @@ const Expenses = (props) => {
 
   return (
     <>
-      <CommonPanel />
-
-      <h2 style={{ color: "black", fontWeight: 500 }}>Expenses</h2>
-
-      <Box
-        sx={{ display: "flex", gap: 1, mt: 2, justifyContent: "space-between" }}
+      <div
+        style={{
+          position: "fixed",
+          top: "0px",
+          padding: "10px",
+          width: "76%",
+          background: " #F1F1F1",
+          zIndex: 10000,
+        }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "12rem",
-          }}
-        >
-          <div style={{ paddingLeft: "0.2rem" }}>
-            <p style={{ color: "#25307F" }}>Expense Type</p>
-          </div>
-          <FormControl sx={{ my: 1 }}>
-            <InputLabel id="demo-simple-select-helper-label">
-              Expense Type
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
-              label="Expense Type"
-              name="expenseType"
-              value={expenseData.expenseType}
-              onChange={handleChange}
-              error={!!errors.expenseType}
-            >
-              <MenuItem value="salary">Salary</MenuItem>
-              <MenuItem value="rent">Rent</MenuItem>
-              <MenuItem value="utilities">Utilities</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "7px",
-          }}
-        >
-          <div style={{ paddingLeft: "0.2rem" }}>
-            <p style={{ color: "#25307F" }}>Amount</p>
-          </div>
-          <TextField
-            id="outlined-basic"
-            label="Enter Amount"
-            variant="outlined"
-            name="amount"
-            value={expenseData.amount}
-            onChange={handleChange}
-            error={!!errors.amount}
-            helperText={errors.amount}
-            required
-          />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
+        <CommonPanel />
+      </div>
 
-            gap: "7px",
-          }}
-        >
-          <div style={{ paddingLeft: "0.2rem" }}>
-            <p style={{ color: "#25307F" }}>Paid To</p>
-          </div>
-          <TextField
-            id="outlined-basic"
-            label="Paid To"
-            variant="outlined"
-            name="paidTo"
-            value={expenseData.paidTo}
-            onChange={handleChange}
-            error={!!errors.paidTo}
-            helperText={errors.paidTo}
-            required
-          />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
+      <div style={{ marginTop: "200px" }}>
+        <h2 style={{ color: "black", fontWeight: 500 }}>Expenses</h2>
 
-            gap: "7px",
-          }}
-        >
-          <div style={{ paddingLeft: "0.2rem" }}>
-            <p style={{ color: "#25307F" }}>Details</p>
-          </div>
-          <TextField
-            id="outlined-basic"
-            label="Details"
-            variant="outlined"
-            name="details"
-            value={expenseData.details}
-            onChange={handleChange}
-            error={!!errors.details}
-            helperText={errors.details}
-            required
-          />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "7px",
-          }}
-        >
-          <div style={{ paddingLeft: "0.2rem" }}>
-            <p style={{ color: "#25307F" }}>Date</p>
-          </div>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
-              <DatePicker
-                name="date"
-                value={date}
-                onChange={handleDateChange}
-                slotProps={{
-                  textField: {
-                    error: !!errors.date,
-                    helperText: errors.date,
-                  },
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </div>
-        <Button
-          variant="contained"
-          onClick={handleClick}
+        <Box
           sx={{
-            fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
-            color: "#ffffff",
-            textTransform: "capitalize",
-            padding: {
-              xs: "0px 8px",
-              sm: "0px 10px",
-              md: "0px 10px",
-            }, // Adjust padding
-            backgroundColor: "#25307F",
-            height: "3.4rem",
-            width: "12rem",
-            marginTop: "1.9rem",
-            outline: "none",
-            boxShadow: "none",
-            "&:focus": {
-              outline: "none",
-              boxShadow: "none",
-            },
-            "&:active": {
-              outline: "none",
-              boxShadow: "none",
-            },
+            display: "flex",
+            gap: 1,
+            mt: 2,
+            justifyContent: "space-between",
           }}
         >
-          <img src={addAppointments} alt="Img" />
-          <h5 style={{ marginLeft: "1rem" }}>Add Expense</h5>
-        </Button>
-      </Box>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "12rem",
+            }}
+          >
+            <div style={{ paddingLeft: "0.2rem" }}>
+              <p style={{ color: "#25307F" }}>Expense Type</p>
+            </div>
+            <FormControl sx={{ my: 1 }}>
+              <InputLabel id="demo-simple-select-helper-label">
+                Expense Type
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                label="Expense Type"
+                name="expenseType"
+                value={expenseData.expenseType}
+                onChange={handleChange}
+                error={!!errors.expenseType}
+              >
+                <MenuItem value="salary">Salary</MenuItem>
+                <MenuItem value="rent">Rent</MenuItem>
+                <MenuItem value="utilities">Utilities</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "7px",
+            }}
+          >
+            <div style={{ paddingLeft: "0.2rem" }}>
+              <p style={{ color: "#25307F" }}>Amount</p>
+            </div>
+            <TextField
+              id="outlined-basic"
+              label="Enter Amount"
+              variant="outlined"
+              name="amount"
+              value={expenseData.amount}
+              onChange={handleChange}
+              error={!!errors.amount}
+              helperText={errors.amount}
+              required
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+
+              gap: "7px",
+            }}
+          >
+            <div style={{ paddingLeft: "0.2rem" }}>
+              <p style={{ color: "#25307F" }}>Paid To</p>
+            </div>
+            <TextField
+              id="outlined-basic"
+              label="Paid To"
+              variant="outlined"
+              name="paidTo"
+              value={expenseData.paidTo}
+              onChange={handleChange}
+              error={!!errors.paidTo}
+              helperText={errors.paidTo}
+              required
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+
+              gap: "7px",
+            }}
+          >
+            <div style={{ paddingLeft: "0.2rem" }}>
+              <p style={{ color: "#25307F" }}>Details</p>
+            </div>
+            <TextField
+              id="outlined-basic"
+              label="Details"
+              variant="outlined"
+              name="details"
+              value={expenseData.details}
+              onChange={handleChange}
+              error={!!errors.details}
+              helperText={errors.details}
+              required
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "7px",
+            }}
+          >
+            <div style={{ paddingLeft: "0.2rem" }}>
+              <p style={{ color: "#25307F" }}>Date</p>
+            </div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
+                <DatePicker
+                  name="date"
+                  value={date}
+                  onChange={handleDateChange}
+                  slotProps={{
+                    textField: {
+                      error: !!errors.date,
+                      helperText: errors.date,
+                    },
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </div>
+          <Button
+            variant="contained"
+            onClick={handleClick}
+            sx={{
+              fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
+              color: "#ffffff",
+              textTransform: "capitalize",
+              padding: {
+                xs: "0px 8px",
+                sm: "0px 10px",
+                md: "0px 10px",
+              }, // Adjust padding
+              backgroundColor: "#25307F",
+              height: "3.4rem",
+              width: "12rem",
+              marginTop: "1.9rem",
+              outline: "none",
+              boxShadow: "none",
+              "&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
+              "&:active": {
+                outline: "none",
+                boxShadow: "none",
+              },
+            }}
+          >
+            <img src={addAppointments} alt="Img" />
+            <h5 style={{ marginLeft: "1rem" }}>Add Expense</h5>
+          </Button>
+        </Box>
 
       <div style={{ marginTop: "1.5rem" }}>
         <TableContainer component={Paper}>
@@ -468,124 +485,128 @@ const Expenses = (props) => {
           </Table>
         </TableContainer>
 
-        {/* Actions Menu */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          PaperProps={{
-            elevation: 2,
-            sx: { padding: 1 },
-          }}
-        >
-          <MenuItem onClick={handleEdit}>
-            <ListItemIcon>
-              <EditIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Edit</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon fontSize="small" color="error" />
-            </ListItemIcon>
-            <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
-          </MenuItem>
-        </Menu>
+          {/* Actions Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            PaperProps={{
+              elevation: 2,
+              sx: { padding: 1 },
+            }}
+          >
+            <MenuItem onClick={handleEdit}>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Edit</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" color="error" />
+              </ListItemIcon>
+              <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+            </MenuItem>
+          </Menu>
 
-        {/* Edit Patient Dialog */}
-        <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-          <DialogTitle>Edit Expense</DialogTitle>
-          <DialogContent>
-            <TextField
-              select
-              label="Expense Type"
-              name="expenseType"
-              value={editedExpense.expenseType}
-              onChange={(e) =>
-                setEditedExpense({
-                  ...editedExpense,
-                  expenseType: e.target.value,
-                })
-              }
-              fullWidth
-              margin="dense"
-              error={!!errors.expenseType}
-              helperText={errors.expenseType}
-            >
-              <MenuItem value="salary">Salary</MenuItem>
-              <MenuItem value="rent">Rent</MenuItem>
-              <MenuItem value="utilities">Utilities</MenuItem>
-            </TextField>
+          {/* Edit Patient Dialog */}
+          <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+            <DialogTitle>Edit Expense</DialogTitle>
+            <DialogContent>
+              <TextField
+                select
+                label="Expense Type"
+                name="expenseType"
+                value={editedExpense.expenseType}
+                onChange={(e) =>
+                  setEditedExpense({
+                    ...editedExpense,
+                    expenseType: e.target.value,
+                  })
+                }
+                fullWidth
+                margin="dense"
+                error={!!errors.expenseType}
+                helperText={errors.expenseType}
+              >
+                <MenuItem value="salary">Salary</MenuItem>
+                <MenuItem value="rent">Rent</MenuItem>
+                <MenuItem value="utilities">Utilities</MenuItem>
+              </TextField>
 
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Amount"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={editedExpense.amount}
-              onChange={(e) =>
-                setEditedExpense({ ...editedExpense, amount: e.target.value })
-              }
-              error={!!errors.amount}
-              helperText={errors.amount}
-            />
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Amount"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={editedExpense.amount}
+                onChange={(e) =>
+                  setEditedExpense({ ...editedExpense, amount: e.target.value })
+                }
+                error={!!errors.amount}
+                helperText={errors.amount}
+              />
 
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Paid To"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={editedExpense.paidTo}
-              onChange={(e) =>
-                setEditedExpense({ ...editedExpense, paidTo: e.target.value })
-              }
-              error={!!errors.paidTo}
-              helperText={errors.paidTo}
-            />
-            <TextField
-              margin="dense"
-              label="Details"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={editedExpense.details}
-              onChange={(e) =>
-                setEditedExpense({ ...editedExpense, details: e.target.value })
-              }
-              error={!!errors.details}
-              helperText={errors.details}
-            />
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Paid To"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={editedExpense.paidTo}
+                onChange={(e) =>
+                  setEditedExpense({ ...editedExpense, paidTo: e.target.value })
+                }
+                error={!!errors.paidTo}
+                helperText={errors.paidTo}
+              />
+              <TextField
+                margin="dense"
+                label="Details"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={editedExpense.details}
+                onChange={(e) =>
+                  setEditedExpense({
+                    ...editedExpense,
+                    details: e.target.value,
+                  })
+                }
+                error={!!errors.details}
+                helperText={errors.details}
+              />
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
-                <DatePicker
-                  name="date"
-                  value={dayjs(editedExpense.date)}
-                  onChange={(newDate) =>
-                    setEditedExpense({
-                      ...editedExpense,
-                      date: dayjs(newDate).format("YYYY-MM-DD"),
-                    })
-                  }
-                  slotProps={{
-                    textField: {
-                      error: !!errors.date,
-                      helperText: errors.date,
-                    },
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleEditDialogClose}>Cancel</Button>
-            <Button onClick={handleSaveEditedExpense}>Save</Button>
-          </DialogActions>
-        </Dialog>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
+                  <DatePicker
+                    name="date"
+                    value={dayjs(editedExpense.date)}
+                    onChange={(newDate) =>
+                      setEditedExpense({
+                        ...editedExpense,
+                        date: dayjs(newDate).format("YYYY-MM-DD"),
+                      })
+                    }
+                    slotProps={{
+                      textField: {
+                        error: !!errors.date,
+                        helperText: errors.date,
+                      },
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleEditDialogClose}>Cancel</Button>
+              <Button onClick={handleSaveEditedExpense}>Save</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </div>
     </>
   );
