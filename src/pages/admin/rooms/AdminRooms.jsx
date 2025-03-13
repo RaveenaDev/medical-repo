@@ -169,7 +169,7 @@ const AdminRooms = (props) => {
   const doctors = useSelector((state) => state.admin.doctors);
 
   return (
-    <>
+    <div style={{ height: "100vh" }}>
       <div
         style={{
           position: "fixed",
@@ -216,7 +216,7 @@ const AdminRooms = (props) => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "green",
+                      backgroundColor: "#3DB461",
                     }}
                   />
                   Available
@@ -232,7 +232,7 @@ const AdminRooms = (props) => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "orange",
+                      backgroundColor: "#FFA412",
                     }}
                   />
                   Occupied
@@ -248,7 +248,7 @@ const AdminRooms = (props) => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "skyblue",
+                      backgroundColor: "#AEC3FF",
                     }}
                   />
                   Under Maintenance
@@ -264,6 +264,7 @@ const AdminRooms = (props) => {
                     textTransform: "capitalize",
                     padding: "2px 18px",
                     backgroundColor: "#25307F",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
                   }}
                   onClick={handleAddDialogOpen} // Open modal on click
                 >
@@ -460,7 +461,7 @@ const AdminRooms = (props) => {
                       {room.name}
                     </Typography>
                   </TableCell>
-                  <TableCell align='right'>
+                  <TableCell align="right">
                     {" "}
                     {/* Increase 'pl' value for more spacing */}
                     <Box
@@ -476,16 +477,16 @@ const AdminRooms = (props) => {
                           borderRadius: "50%",
                           backgroundColor:
                             room.status === "Available"
-                              ? "green"
+                              ? "#3DB461"
                               : room.status === "Occupied"
-                              ? "orange"
-                              : "skyblue",
+                              ? "#FFA412"
+                              : "#AEC3FF",
                         }}
                       />
                       {room.status}
                     </Box>
                   </TableCell>
-                  <TableCell align="left" sx={{color:'#747474'}}>
+                  <TableCell align="left" sx={{ color: "#747474" }}>
                     {room.assignedDoctor?.name || "Not Assigned"}
                   </TableCell>
 
@@ -644,7 +645,7 @@ const AdminRooms = (props) => {
           </DialogActions>
         </Dialog>
       </div>
-    </>
+    </div>
   );
 };
 export default AdminRooms;

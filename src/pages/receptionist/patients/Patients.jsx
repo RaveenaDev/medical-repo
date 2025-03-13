@@ -36,6 +36,16 @@ const Patients = (props) => {
       <div
         style={{
           position: "fixed",
+          bottom: "0",
+          height: "30px",
+          background: " #F1F1F1",
+          width: "100%",
+          zIndex: 10000,
+        }}
+      ></div>
+      <div
+        style={{
+          position: "fixed",
           top: "0px",
           padding: "10px",
           width: "77%",

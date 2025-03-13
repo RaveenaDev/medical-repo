@@ -204,7 +204,7 @@ const AdminDoctors = (props) => {
   };
 
   return (
-    <>
+    <div style={{ height: "100vh" }}>
       <div
         style={{
           position: "fixed",
@@ -260,6 +260,7 @@ const AdminDoctors = (props) => {
                   textTransform: "capitalize",
                   padding: "2px 18px",
                   backgroundColor: "#25307F",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
                 onClick={() => setAddDialogOpen(true)} // Open the modal
               >
@@ -470,17 +471,22 @@ const AdminDoctors = (props) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1" sx={{  color: "#25307F",fontWeight: "bold"}}>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#25307F", fontWeight: "bold" }}
+                    >
                       {truncateText(doctor?._id, 8)}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1" sx={{ color: "#25307F",}}>
+                    <Typography variant="body1" sx={{ color: "#25307F" }}>
                       {truncateText(doctor?.name, 13)}
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{color: "#747474",}}>{doctor?.phone}</TableCell>
-                  <TableCell sx={{color: "#747474",}}>
+                  <TableCell sx={{ color: "#747474" }}>
+                    {doctor?.phone}
+                  </TableCell>
+                  <TableCell sx={{ color: "#747474" }}>
                     {doctor?.specialization || "Not Assigned"}
                   </TableCell>
                   <TableCell align="center">
@@ -733,7 +739,7 @@ const AdminDoctors = (props) => {
           </DialogActions>
         </Dialog>
       </div>
-    </>
+    </div>
   );
 };
 export default AdminDoctors;

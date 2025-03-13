@@ -190,7 +190,7 @@ const AdminStaffs = (props) => {
   };
 
   return (
-    <>
+    <div style={{ height: "100vh" }}>
       <div
         style={{
           position: "fixed",
@@ -228,6 +228,7 @@ const AdminStaffs = (props) => {
                   textTransform: "capitalize",
                   padding: "2px 18px",
                   backgroundColor: "#25307F",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
                 onClick={() => setAddDialogOpen(true)} // Open the modal
               >
@@ -441,16 +442,23 @@ const AdminStaffs = (props) => {
                       {staff?.name}
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{ color: "#747474"}}>{staff?.phone}</TableCell>
-                  <TableCell sx={{ color: "#747474"}}>{staff?.department.name}</TableCell>
-                  <TableCell sx={{ color: "#747474"}}>{staff?.designation}</TableCell>
+                  <TableCell sx={{ color: "#747474" }}>
+                    {staff?.phone}
+                  </TableCell>
+                  <TableCell sx={{ color: "#747474" }}>
+                    {staff?.department.name}
+                  </TableCell>
+                  <TableCell sx={{ color: "#747474" }}>
+                    {staff?.designation}
+                  </TableCell>
                   <TableCell>
                     <Chip
                       label={staff?.status}
                       size="small"
                       sx={{
                         backgroundColor: "transparent", // Removes background
-                        color: staff?.status === "Available" ? "#3DB461" : "#E1473D", // Black for Available, Red otherwise
+                        color:
+                          staff?.status === "Available" ? "#3DB461" : "#E1473D", // Black for Available, Red otherwise
                         fontWeight: "bold",
                         border: "none", // Ensures no border appears
                       }}
@@ -627,7 +635,7 @@ const AdminStaffs = (props) => {
           </DialogActions>
         </Dialog>
       </div>
-    </>
+    </div>
   );
 };
 export default AdminStaffs;

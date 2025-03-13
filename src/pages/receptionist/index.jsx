@@ -203,6 +203,16 @@ function Receptionist(props) {
 
   return (
     <>
+      <div
+        style={{
+          position: "fixed",
+          bottom: "0",
+          height: "30px",
+          background: " #F1F1F1",
+          width: "100%",
+          zIndex: 10000,
+        }}
+      ></div>
       <div style={{ padding: "0 20px 0 0" }}>
         <div
           style={{

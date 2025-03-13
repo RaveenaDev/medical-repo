@@ -149,7 +149,7 @@ function Admin(props) {
   };
 
   return (
-    <>
+    <div style={{ background: "#F1F1F1" }}>
       <div
         style={{
           position: "fixed",
@@ -195,7 +195,9 @@ function Admin(props) {
           </Button>
         </div>
       </div>
-      <div style={{ marginTop: "200px" }}>
+      <div
+        style={{ marginTop: "200px", height: "100dvh", background: "#F1F1F1" }}
+      >
         {/* Main Grid container */}
         <Grid container spacing={2}>
           {/* Top grid (one large block) */}
@@ -395,7 +397,7 @@ function Admin(props) {
                         transform: "translateY(0.49rem)",
                       }}
                     >
-                      <KeyboardArrowRightIcon sx={{fontSize: "28px"}}/>
+                      <KeyboardArrowRightIcon sx={{ fontSize: "28px" }} />
                     </span>
                   </h3>
                 </div>
@@ -418,7 +420,11 @@ function Admin(props) {
                       <CartesianGrid horizontal={true} vertical={false} />{" "}
                       {/* Horizontal lines only */}
                       <XAxis dataKey="name" hide />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 14 }}/>
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 14 }}
+                      />
                       <Tooltip />
                       <Area
                         type="monotone"
@@ -478,7 +484,7 @@ function Admin(props) {
                         transform: "translateY(0.49rem)",
                       }}
                     >
-                      <KeyboardArrowRightIcon sx={{fontSize: "28px"}}/>
+                      <KeyboardArrowRightIcon sx={{ fontSize: "28px" }} />
                     </span>
                   </h3>
                 </div>
@@ -491,7 +497,7 @@ function Admin(props) {
           </Grid>
         </Grid>
       </div>
-    </>
+    </div>
   );
 }
 

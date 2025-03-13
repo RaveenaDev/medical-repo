@@ -28,8 +28,7 @@ import {
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
 
-import { Dropdown } from 'primereact/dropdown';
-
+import { Dropdown } from "primereact/dropdown";
 
 import billing from "../../../assets/Billing.png";
 
@@ -185,10 +184,11 @@ const CommonPanel = () => {
                 <Box
                   sx={{
                     backgroundColor: "white",
-                    boxShadow: 3,
+
                     borderRadius: 1,
                     width: 180, // Adjust width here
                     textAlign: "center",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
                     // padding: "4px", // Reduce padding to make the container smaller
                   }}
                 >
@@ -218,6 +218,7 @@ const CommonPanel = () => {
                   padding: "0px 8px",
                   backgroundColor: "#fff",
                   marginRight: "22px",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
               >
                 <svg
@@ -252,6 +253,7 @@ const CommonPanel = () => {
                   padding: "0px 8px",
                   backgroundColor: "#fff",
                   marginRight: "22px",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
               >
                 <div
@@ -282,6 +284,7 @@ const CommonPanel = () => {
                   backgroundColor: "#25307F",
                   color: "white !important",
                   borderRadius: "5px",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
               >
                 {branches.length && (
@@ -293,38 +296,44 @@ const CommonPanel = () => {
                   //   size="small"
                   //   color="white"
                   // />
-                    <Dropdown
-                        options={branches}
-                        optionLabel="All Branches"
-                        placeholder="All Branches"
+                  <Dropdown
+                    options={branches}
+                    optionLabel="All Branches"
+                    placeholder="All Branches"
+                    style={{
+                      width: "9rem",
+                      height: "2.4rem",
+                      padding: "6px 14px",
+                      display: "flex",
+                      flexDirection: "row-reverse",
+                      gap: "8px",
+                    }}
+                    panelStyle={{
+                      zIndex: 105000, // Dropdown options panel
+                      backgroundColor: "white", // Background color of the open dropdown
+                      color: "black",
+                    }}
+                    itemTemplate={(option) => (
+                      <div
                         style={{
-                          width: '9rem',
-                          height: '2.4rem',
-                          padding: '6px 14px',
-                          display: 'flex',
-                          flexDirection: 'row-reverse',
-                          gap:'8px'
+                          padding: "8px 8px",
+                          borderBottom: "1px solid #ccc", // Border between items
+                          cursor: "pointer",
+                          zIndex: 1000000,
                         }}
-                        panelStyle={{
-                          zIndex: 105000, // Dropdown options panel
-                          backgroundColor: 'white', // Background color of the open dropdown
-                          color:'black'
+                        onMouseEnter={(e) => {
+                          (e.currentTarget.style.backgroundColor = "#25307F"),
+                            (e.currentTarget.style.color = "white");
                         }}
-                        itemTemplate={(option) => (
-                            <div
-                                style={{
-                                  padding: '8px 8px',
-                                  borderBottom: '1px solid #ccc', // Border between items
-                                  cursor: 'pointer',
-                                  zIndex: 1000000
-                                }}
-                                onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#25307F',e.currentTarget.style.color = 'white'}}
-                                onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'white',e.currentTarget.style.color = 'black'}}
-                            >
-                              {option}
-                            </div>
-                        )}
-                    />
+                        onMouseLeave={(e) => {
+                          (e.currentTarget.style.backgroundColor = "white"),
+                            (e.currentTarget.style.color = "black");
+                        }}
+                      >
+                        {option}
+                      </div>
+                    )}
+                  />
                 )}
               </div>
             </Grid>

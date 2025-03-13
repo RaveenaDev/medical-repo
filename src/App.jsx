@@ -106,7 +106,10 @@ function App() {
           className={`${styles.register} ${
             isSignUpOrLogin ? styles.loginPageActive : styles.otherPages
           }`}
-          style={{ marginLeft: shouldShowSidebar ? "20%" : "0" }} // Prevent content from going under the sidebar
+          style={{
+            marginLeft: shouldShowSidebar ? "20%" : "0",
+            height: "100%",
+          }} // Prevent content from going under the sidebar
         >
           <Routes>
             <Route

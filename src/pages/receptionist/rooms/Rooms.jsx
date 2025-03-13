@@ -172,6 +172,16 @@ const Rooms = (props) => {
       <div
         style={{
           position: "fixed",
+          bottom: "0",
+          height: "30px",
+          background: " #F1F1F1",
+          width: "100%",
+          zIndex: 10000,
+        }}
+      ></div>
+      <div
+        style={{
+          position: "fixed",
           top: "0px",
           padding: "10px",
           width: "77%",
@@ -214,7 +224,7 @@ const Rooms = (props) => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "green",
+                      backgroundColor: "#3DB461",
                     }}
                   />
                   Available
@@ -230,7 +240,7 @@ const Rooms = (props) => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "orange",
+                      backgroundColor: "#FFA412",
                     }}
                   />
                   Occupied
@@ -246,7 +256,7 @@ const Rooms = (props) => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "skyblue",
+                      backgroundColor: "#AEC3FF",
                     }}
                   />
                   Under Maintenance
@@ -472,10 +482,10 @@ const Rooms = (props) => {
                           borderRadius: "50%",
                           backgroundColor:
                             room.status === "Available"
-                              ? "green"
+                              ? "#3DB461"
                               : room.status === "Occupied"
-                              ? "orange"
-                              : "skyblue",
+                              ? "#FFA412"
+                              : "#AEC3FF",
                         }}
                       />
                       {room.status}

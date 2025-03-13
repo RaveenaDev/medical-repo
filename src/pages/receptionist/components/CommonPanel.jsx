@@ -267,6 +267,7 @@ const CommonPanel = ({ setIsBookAppointment }) => {
 
                   lineHeight: "100%",
                   letterSpacing: "0%",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
                 onClick={handleBilling}
               >
@@ -288,6 +289,13 @@ const CommonPanel = ({ setIsBookAppointment }) => {
                     md: "0px 10px",
                   }, // Adjust padding
                   backgroundColor: "#25307F",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:hover": {
+                    background: "#AEC3FF",
+                  },
+                  "&:active": {
+                    backgroundColor: "#181F52",
+                  },
                 }}
                 onClick={handleBookAppointment}
               >
