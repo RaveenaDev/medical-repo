@@ -229,7 +229,7 @@ function Receptionist(props) {
                 />
               ) : (
                 <Box sx={{ backgroundColor: "white", pt: 0.7, px: 2 }}>
-                  <div>
+                  <div style={{ position: "fixed" }}>
                     {branches.length && (
                       <Grid
                         container
@@ -261,6 +261,7 @@ function Receptionist(props) {
                       justifyContent: "space-between",
                       display: "flex",
                       gap: "1rem",
+                      position: "fixed",
                     }}
                   >
                     {boxData.map((box) => (
@@ -323,11 +324,12 @@ function Receptionist(props) {
                   </div>
 
                   {/* Table Section */}
-                  <TableContainer component={Paper}>
+                  <TableContainer>
                     <Table
                       sx={{
                         borderCollapse: "separate",
                         borderSpacing: "0 10px",
+                        margin: "4rem 0",
                       }}
                     >
                       <TableHead sx={{}}>
@@ -335,8 +337,6 @@ function Receptionist(props) {
                           <TableCell
                             sx={{
                               color: " #000000",
-                              fontFamily: "Karla",
-                              fontWeight: "600",
                               fontSize: "16px",
                               lineHeight: "100%",
                               letterSpacing: "0%",
@@ -347,8 +347,6 @@ function Receptionist(props) {
                           <TableCell
                             sx={{
                               color: " #000000",
-                              fontFamily: "Karla",
-                              fontWeight: "600",
                               fontSize: "16px",
                               lineHeight: "100%",
                               letterSpacing: "0%",
@@ -359,8 +357,7 @@ function Receptionist(props) {
                           <TableCell
                             sx={{
                               color: " #000000",
-                              fontFamily: "Karla",
-                              fontWeight: "600",
+
                               fontSize: "16px",
                               lineHeight: "100%",
                               letterSpacing: "0%",
@@ -371,8 +368,7 @@ function Receptionist(props) {
                           <TableCell
                             sx={{
                               color: " #000000",
-                              fontFamily: "Karla",
-                              fontWeight: "600",
+
                               fontSize: "16px",
                               lineHeight: "100%",
                               letterSpacing: "0%",
@@ -383,8 +379,7 @@ function Receptionist(props) {
                           <TableCell
                             sx={{
                               color: " #000000",
-                              fontFamily: "Karla",
-                              fontWeight: "600",
+
                               fontSize: "16px",
                               lineHeight: "100%",
                               letterSpacing: "0%",
@@ -396,8 +391,7 @@ function Receptionist(props) {
                             align="center"
                             sx={{
                               color: " #000000",
-                              fontFamily: "Karla",
-                              fontWeight: "600",
+
                               fontSize: "16px",
                               lineHeight: "100%",
                               letterSpacing: "0%",
@@ -409,8 +403,7 @@ function Receptionist(props) {
                             align="center"
                             sx={{
                               color: " #000000",
-                              fontFamily: "Karla",
-                              fontWeight: "600",
+
                               fontSize: "16px",
                               lineHeight: "100%",
                               letterSpacing: "0%",
@@ -497,7 +490,7 @@ function Receptionist(props) {
                                       appointment.status === "Ongoing"
                                         ? "white"
                                         : appointment.status === "Completed"
-                                        ? "orange"
+                                        ? "#EAA000"
                                         : appointment.status === "Scheduled"
                                         ? "#25307F"
                                         : "#757575",
