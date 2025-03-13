@@ -92,187 +92,76 @@ const Departments = (props) => {
     <>
       <div>
         <div className={styles.receptionist}>
-          <CommonPanel />
+          <div
+            style={{
+              position: "fixed",
+              top: "0px",
+              padding: "10px",
+              width: "77%",
+              background: " #F1F1F1",
+              zIndex: 10000,
+            }}
+          >
+            <CommonPanel setIsBookAppointment={setIsBookAppointment} />
+          </div>
+          <div style={{ marginTop: "210px" }}>
+            {!props.entity ? (
+              <>
+                {/* Main Table */}
 
-          {!props.entity ? (
-            <>
-              <div className={styles.appointmentBlock}>
-                <Grid
-                  container
-                  spacing={2}
-                  justifyContent="space-between"
-                  alignItems="center"
-                  flexDirection={{ md: "row" }}
-                  size={12}
-                  sx={{ margin: "0 0 20px 0" }}
-                >
-                  <Grid size={3}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <Box
-                        sx={{
-                          backgroundColor: "white",
-                          boxShadow: 3,
-                          borderRadius: 1,
-                          width: 180, // Adjust width here
-                          textAlign: "center",
-                          // padding: "4px", // Reduce padding to make the container smaller
-                        }}
-                      >
-                        <DatePicker
-                          value={selectedDate}
-                          onChange={(newValue) => setSelectedDate(newValue)}
-                          sx={{
-                            width: "100%", // Ensure the date picker takes up 100% of the container's width
-                            fontSize: "24px", // Adjust font size inside the date picker
-                            input: {
-                              fontSize: "14px", // Adjust input field font size if needed
-                              padding: "10px", // Adjust input field padding to make it smaller
-                            },
-                          }}
-                        />
-                      </Box>
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid
-                    size={9}
-                    sx={{ display: "flex", justifyContent: "flex-end" }}
-                  >
-                    <Button
-                      variant="contained"
-                      sx={{
-                        fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
-                        color: "#878787",
-                        textTransform: "capitalize",
-                        padding: {
-                          xs: "0px 8px",
-                          sm: "0px 10px",
-                          md: "0px 10px",
-                        }, // Adjust padding
-                        backgroundColor: "#fff",
-                        marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
-                        display: "flex",
-                        alignItems: "center",
-                        gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
-                      }}
-                      onClick={handleAppointmentRequests}
-                    >
-                      <img
-                        src={accountCircle}
-                        className={styles.appointmentBlock__accountIcon}
-                      />
-                      Appointment Requests
-                    </Button>
-                    <AppointmentRequestModal
-                      isOpen={isModalOpen}
-                      onClose={() => setIsModalOpen(false)}
-                      requests={dummyRequests}
-                      appointmentRequests={appointmentRequests}
-                    >
-                      <p>This is where appointment requests will appear.</p>
-                    </AppointmentRequestModal>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
-                        color: "#878787",
-                        textTransform: "capitalize",
-                        padding: {
-                          xs: "0px 8px",
-                          sm: "0px 10px",
-                          md: "0px 10px",
-                        }, // Adjust padding
-                        backgroundColor: "#fff",
-                        marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
-                        display: "flex",
-                        alignItems: "center",
-                        gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
-                      }}
-                      onClick={handleBilling}
-                    >
-                      <img
-                        src={billingDetails}
-                        className={styles.appointmentBlock__paymentIcon}
-                      />
-                      Billing
-                    </Button>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
-                        color: "#ffffff",
-                        textTransform: "capitalize",
-                        padding: {
-                          xs: "0px 8px",
-                          sm: "0px 10px",
-                          md: "0px 10px",
-                        }, // Adjust padding
-                        backgroundColor: "#25307F",
-                      }}
-                      onClick={handleBookAppointment}
-                    >
-                      <img
-                        src={addAppointments}
-                        className={styles.appointmentBlock__plusIcon}
-                      />
-                      Book Appointment
-                    </Button>
-                  </Grid>
-                </Grid>
-              </div>
-              {/* Main Table */}
-
-              {/* Conditionally render BookAppointment or Dashboard based on state */}
-              {isBookAppointment ? (
-                <BookAppointment
-                  isOpen={isBookAppointment}
-                  onClose={() => setIsBookAppointment(false)}
-                />
-              ) : (
-                <div className="departments">
-                  <div className={ayu.headerContainer}>
-                    <button className={ayu.backButton}>
-                      <ArrowBackIosIcon />
-                    </button>
-                    <h2 className={ayu.departmentTitle}>Department</h2>
-                  </div>
-
-                  {/* Horizontal line */}
-                  <hr
-                    style={{ border: "1px solid #d3d3d3", margin: "20px 0" }}
+                {/* Conditionally render BookAppointment or Dashboard based on state */}
+                {isBookAppointment ? (
+                  <BookAppointment
+                    isOpen={isBookAppointment}
+                    onClose={() => setIsBookAppointment(false)}
                   />
+                ) : (
+                  <div className="departments">
+                    <div className={ayu.headerContainer}>
+                      <button className={ayu.backButton}>
+                        <ArrowBackIosIcon />
+                      </button>
+                      <h2 className={ayu.departmentTitle}>Department</h2>
+                    </div>
 
-                  {/* Cards */}
+                    {/* Horizontal line */}
+                    <hr
+                      style={{ border: "1px solid #d3d3d3", margin: "20px 0" }}
+                    />
 
-                  <div className={ayu.superCardContainer}>
-                    {allDepartments.map((department, index) => (
-                      <DepartCard key={index} department={department} />
-                    ))}
+                    {/* Cards */}
 
-                    {/*<DepartCard />*/}
-                    {/*<DepartCard />*/}
-                    {/*<DepartCard />*/}
-                    {/*<DepartCard />*/}
-                    {/*<DepartCard />*/}
+                    <div className={ayu.superCardContainer}>
+                      {allDepartments.map((department, index) => (
+                        <DepartCard key={index} department={department} />
+                      ))}
+
+                      {/* <DepartCard /> */}
+                      {/*<DepartCard />*/}
+                      {/*<DepartCard />*/}
+                      {/*<DepartCard />*/}
+                      {/*<DepartCard />*/}
+                    </div>
                   </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
-              {isBookAppointment ? (
-                <BookAppointment
-                  isBookAppointment={isBookAppointment}
-                  onClose={() => setIsBookAppointment(false)}
-                />
-              ) : (
-                <EntityBasedTable
-                  entity={props?.entity}
-                  tableIndex={tableIndex}
-                />
-              )}
-            </>
-          )}
+                )}
+              </>
+            ) : (
+              <>
+                {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
+                {isBookAppointment ? (
+                  <BookAppointment
+                    isBookAppointment={isBookAppointment}
+                    onClose={() => setIsBookAppointment(false)}
+                  />
+                ) : (
+                  <EntityBasedTable
+                    entity={props?.entity}
+                    tableIndex={tableIndex}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </>

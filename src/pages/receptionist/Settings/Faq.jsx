@@ -9,8 +9,8 @@ import { Typography, Container } from "@mui/material";
 const Faq =( ) => {
   return (
     <div>
-<Container maxWidth="md"  sx={{  color: "#838383" , padding: 0 , marginTop:"2rem"}}>
-  <Typography variant="h6" sx={{ color: '#000', fontWeight: 500 }} gutterBottom>
+<Container maxWidth="md"  sx={{  color: "#838383" , padding: 0 , marginTop:"3rem"}}>
+  <Typography variant="h6" sx={{ color: '#000', fontWeight: 600,fontSize: '17px',marginBottom:'1rem' }} gutterBottom>
   Frequently Asked Questions
           </Typography>
 
@@ -19,11 +19,20 @@ const Faq =( ) => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1-content"
           id="panel1-header"
-          sx={{ color: '#25307F', fontWeight: 600 }}
+          sx={{
+              color: '#25307F',
+              fontWeight: 600,
+              '&:focus': {
+                  outline: 'none' // Removes focus outline
+              },
+              '&.Mui-focusVisible': {
+                  backgroundColor: 'transparent' // Optional: prevents highlight when focused via keyboard
+              }
+          }}
         >
           How do I schedule a new appointment?
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{color:'#747474'}}>
         To schedule a new appointment, click on the ‘New Appointment’ button, select the patient, type of consultation, doctor, and confirm the time.
         </AccordionDetails>
       </Accordion>
@@ -32,11 +41,16 @@ const Faq =( ) => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2-content"
           id="panel2-header"
-          sx={{ color: '#25307F', fontWeight: 600 }}
+          sx={{ color: '#25307F', fontWeight: 600,'&:focus': {
+                  outline: 'none' // Removes focus outline
+              },
+              '&.Mui-focusVisible': {
+                  backgroundColor: 'transparent' // Optional: prevents highlight when focused via keyboard
+              } }}
         >
           How can I access the system's help or support resources?
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{color:'#747474'}}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
           malesuada lacus ex, sit amet blandit leo lobortis eget.
         </AccordionDetails>
@@ -46,11 +60,16 @@ const Faq =( ) => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3-content"
           id="panel3-header"
-          sx={{ color: '#25307F', fontWeight: 600 }}
+          sx={{ color: '#25307F', fontWeight: 600,'&:focus': {
+                  outline: 'none' // Removes focus outline
+              },
+              '&.Mui-focusVisible': {
+                  backgroundColor: 'transparent' // Optional: prevents highlight when focused via keyboard
+              } }}
         >
           Can I send appointment reminders to patients?
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{color:'#747474'}}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
           malesuada lacus ex, sit amet blandit leo lobortis eget.
         </AccordionDetails>
@@ -61,11 +80,16 @@ const Faq =( ) => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3-content"
           id="panel3-header"
-          sx={{ color: '#25307F', fontWeight: 600 }}
+          sx={{ color: '#25307F', fontWeight: 600,'&:focus': {
+                  outline: 'none' // Removes focus outline
+              },
+              '&.Mui-focusVisible': {
+                  backgroundColor: 'transparent' // Optional: prevents highlight when focused via keyboard
+              } }}
         >
           How can I check a doctor's availability for a specific date and time?
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{color:'#747474'}}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
           malesuada lacus ex, sit amet blandit leo lobortis eget.
         </AccordionDetails>
@@ -76,11 +100,16 @@ const Faq =( ) => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3-content"
           id="panel3-header"
-          sx={{ color: '#25307F', fontWeight: 600 }}
+          sx={{ color: '#25307F', fontWeight: 600,'&:focus': {
+                  outline: 'none' // Removes focus outline
+              },
+              '&.Mui-focusVisible': {
+                  backgroundColor: 'transparent' // Optional: prevents highlight when focused via keyboard
+              } }}
         >
           What should I do if there is a discrepancy in a patient's payment?
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{color:'#747474'}}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
           malesuada lacus ex, sit amet blandit leo lobortis eget.
         </AccordionDetails>

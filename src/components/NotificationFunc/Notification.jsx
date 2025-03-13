@@ -13,13 +13,13 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import Badge from "@mui/material/Badge";
 
 const CircularButton = styled(Button)(({ theme }) => ({
-  width: "56px",
-  height: "56px",
+  width: "45px",
+  height: "45px",
   borderRadius: "50%",
   minWidth: "unset",
   padding: "10px",
-  backgroundColor: theme.palette.grey[200],
-  boxShadow: theme.shadows[3],
+  backgroundColor: 'white',
+  // boxShadow: theme.shadows[3],
   "&:hover": {
     backgroundColor: theme.palette.grey[300],
   },

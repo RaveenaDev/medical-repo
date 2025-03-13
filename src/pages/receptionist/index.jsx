@@ -33,7 +33,6 @@ import {
   Typography,
 } from "@mui/material";
 import CommonPanel from "./components/CommonPanel.jsx";
-import AppointmentRequestModal from "./Appointment/Requests/AppointmentRequest.jsx";
 import BookAppointment from "./Appointment/Book/BookAppointment.jsx";
 import { useNavigate } from "react-router-dom";
 import Select from "../../components/Select/index.jsx";
@@ -64,7 +63,6 @@ function Receptionist(props) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editedPatient, setEditedPatient] = useState({});
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBookAppointment, setIsBookAppointment] = useState(false); // State to toggle between components
   const navigate = useNavigate();
 
@@ -98,17 +96,6 @@ function Receptionist(props) {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
-
-  const handleAppointmentRequests = () => {
-    // Any other logic before opening the modal
-    setIsModalOpen(true);
-  };
-  const handleBilling = () => {
-    navigate("/receptionist/billing");
-  };
-  const handleBookAppointment = () => {
-    setIsBookAppointment(true); // Set the state to show BookAppointment component
-  };
 
   const [branches, setBranches] = useState([
     "All Branches",
@@ -216,517 +203,304 @@ function Receptionist(props) {
 
   return (
     <>
-      <div>
-        <CommonPanel />
-        {!props.entity ? (
-          <>
-            <div className={styles.appointmentBlock}>
-              <Grid
-                container
-                spacing={2}
-                justifyContent="space-between"
-                alignItems="center"
-                flexDirection={{ md: "row" }}
-                size={12}
-                sx={{ margin: "0 0 20px 0" }}
-              >
-                <Grid size={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Box
-                      sx={{
-                        backgroundColor: "white",
-                        boxShadow: 3,
-                        borderRadius: 1,
-                        width: 180, // Adjust width here
-                        textAlign: "center",
-                        // padding: "4px", // Reduce padding to make the container smaller
-                      }}
-                    >
-                      <DatePicker
-                        value={selectedDate}
-                        onChange={(newValue) => setSelectedDate(newValue)}
-                        sx={{
-                          width: "100%", // Ensure the date picker takes up 100% of the container's width
-                          fontSize: "24px", // Adjust font size inside the date picker
-                          input: {
-                            fontSize: "14px", // Adjust input field font size if needed
-                            padding: "10px", // Adjust input field padding to make it smaller
-                          },
-                        }}
-                      />
-                    </Box>
-                  </LocalizationProvider>
-                </Grid>
-                <Grid
-                  size={9}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Button
-                    variant="contained"
-                    sx={{
-                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
-                      color: "#878787",
-                      textTransform: "capitalize",
-                      padding: {
-                        xs: "0px 8px",
-                        sm: "0px 10px",
-                        md: "0px 10px",
-                      }, // Adjust padding
-                      backgroundColor: "#fff",
-                      marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
-                      display: "flex",
-                      alignItems: "center",
-                      gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
-                    }}
-                    onClick={handleAppointmentRequests}
-                  >
-                    <img
-                      src={accountCircle}
-                      className={styles.appointmentBlock__accountIcon}
-                    />
-                    Appointment Requests
-                  </Button>
-                  {/* Modal Component */}
-                  <AppointmentRequestModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    requests={dummyRequests}
-                    appointmentRequests={appointmentRequests}
-                  >
-                    <p>This is where appointment requests will appear.</p>
-                  </AppointmentRequestModal>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
-                      color: "#878787",
-                      textTransform: "capitalize",
-                      padding: {
-                        xs: "0px 8px",
-                        sm: "0px 10px",
-                        md: "0px 10px",
-                      }, // Adjust padding
-                      backgroundColor: "#fff",
-                      marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
-                      display: "flex",
-                      alignItems: "center",
-                      gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
-                    }}
-                    onClick={handleBilling}
-                  >
-                    <img
-                      src={billingDetails}
-                      className={styles.appointmentBlock__paymentIcon}
-                    />
-                    Billing
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
-                      color: "#ffffff",
-                      textTransform: "capitalize",
-                      padding: {
-                        xs: "0px 8px",
-                        sm: "0px 10px",
-                        md: "0px 10px",
-                      }, // Adjust padding
-                      backgroundColor: "#25307F",
-                    }}
-                    onClick={handleBookAppointment}
-                  >
-                    <img
-                      src={addAppointments}
-                      className={styles.appointmentBlock__plusIcon}
-                    />
-                    Book Appointment
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
+      <div
+        style={{
+          position: "fixed",
+          bottom: "0",
+          height: "30px",
+          background: " #F1F1F1",
+          width: "100%",
+          zIndex: 10000,
+        }}
+      ></div>
+      <div style={{ padding: "0 20px 0 0" }}>
+        <div
+          style={{
+            position: "fixed",
+            top: "0px",
+            padding: "10px",
+            width: "77%",
+            background: " #F1F1F1",
+            zIndex: 10000,
+          }}
+        >
+          <CommonPanel setIsBookAppointment={setIsBookAppointment} />
+        </div>
+        <div style={{ marginTop: "210px" }}>
+          {!props.entity ? (
+            <>
+              {/* Main Table */}
 
-            {/* Main Table */}
-
-            {/* Conditionally render BookAppointment or Dashboard based on state */}
-            {isBookAppointment ? (
-              <BookAppointment
-                isOpen={isBookAppointment}
-                onClose={() => setIsBookAppointment(false)}
-              />
-            ) : (
-              <Box sx={{ backgroundColor: "white", pt: 0.7 }}>
-                <div>
-                  {branches.length && (
-                    <Grid
-                      container
-                      spacing={2}
-                      justifyContent="flex-end"
-                      alignItems="center"
-                      flexDirection={{ md: "row" }}
-                      size={12}
-                      sx={{ margin: "10px 20px 10px 0" }}
-                    >
-                      <Grid size={3}>
-                        <Select
-                          inputId="input-department"
-                          selectId="select-department"
-                          label="Department"
-                          list={branches}
-                          size="small"
-                        />
-                      </Grid>
-                    </Grid>
-                  )}
-                </div>
-
+              {/* Conditionally render BookAppointment or Dashboard based on state */}
+              {isBookAppointment ? (
+                <BookAppointment
+                  isOpen={isBookAppointment}
+                  onClose={() => setIsBookAppointment(false)}
+                />
+              ) : (
                 <div
-                  // sx={{ mb: 1,px: 2}}
                   style={{
-                    marginBottom: "1rem",
-                    padding: "0 2rem",
-                    justifyContent: "space-between",
-                    display: "flex",
-                    gap: "1rem",
+                    backgroundColor: "white",
+                    position: "relative",
                   }}
                 >
-                  {boxData.map((box) => (
-                    <div key={box.id}>
-                      <Box
-                        sx={{
-                          backgroundColor:
-                            activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                          px: { sm: 3, md: 3, lg: 6 },
-                          height: 55,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderRadius: 1,
-                          boxShadow: 1,
-                          cursor: "pointer",
-                          borderBottom:
-                            activeBox === box.id ? "4px solid #6A0DAD" : "none",
-                          transition: "all 0.3s ease-in-out",
-                        }}
-                        onClick={() => handleBoxClick(box.id)}
-                      >
-                        <h2
-                          style={{
-                            fontSize: "2.1rem",
-                            fontWeight: 600,
-                            color: "#25307F",
-                            // marginRight: "4px",
-                            // marginLeft: "42px",
-                          }}
-                        >
-                          {box.count}
-                        </h2>
-                        <span
-                          style={{
-                            fontSize: "1.6rem",
-                            fontWeight: 500,
-                            color: "black",
-                            marginRight: "4px",
-                          }}
-                        >
-                          -
-                        </span>
-                        <p
-                          style={{
-                            fontSize: "1.1rem",
-                            fontWeight: 500,
-                            color: "black",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {box.label}
-                        </p>
-                      </Box>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Table Section */}
-                <TableContainer component={Paper}>
-                  <Table
-                    sx={{
-                      borderCollapse: "separate",
-                      borderSpacing: "0 10px",
-                      background: "#F1F1F1",
+                  {/* Fixed / Sticky Header */}
+                  <div
+                    style={{
+                      position: "sticky",
+                      top: "220px",
+                      background: "#fff",
+                      zIndex: 10, // Ensures it's above other content
+                      width: "100%",
+                      paddingTop: "10px",
                     }}
                   >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Case Id</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Appointment With</TableCell>
-                        <TableCell>Type Visit</TableCell>
-                        <TableCell>Branch</TableCell>
-                        <TableCell>Token No.</TableCell>
-                        <TableCell align="center">Status</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {appointments.length > 0 ? (
-                        appointments.map((appointment) => (
-                          <TableRow
-                            key={appointment._id}
-                            sx={{
-                              background: "#fff",
-                              bgcolor:
-                                appointment.status === "Ongoing"
-                                  ? "#EEF8F1"
-                                  : "white",
-                              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                              borderRadius: "8px",
-                              "&:hover": {
-                                backgroundColor: "#f9f9f9",
-                              },
-                              "& > *": {
-                                borderBottom: "unset",
-                              },
-                            }}
-                          >
-                            <TableCell>
-                              {truncateText(appointment.caseId, 12)}
-                            </TableCell>
-                            <TableCell>
-                              <Typography
-                                variant="body1"
-                                sx={{ fontWeight: "bold", cursor: "pointer" }}
-                              >
-                                {appointment.patient.name}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>{appointment.doctor?.name}</TableCell>
-                            <TableCell>{appointment.typeVisit}</TableCell>
-                            <TableCell>{appointment.department.name}</TableCell>
-                            <TableCell align="center">
-                              {appointment?.tokenNumber || "N/A"}
-                            </TableCell>
-                            <TableCell>
-                              <Chip
-                                label={appointment.status}
-                                size="small"
-                                sx={{
-                                  bgcolor:
-                                    appointment.status === "Ongoing"
-                                      ? "#3DB461"
-                                      : appointment.status === "Scheduled"
-                                      ? "#007bff"
-                                      : appointment.status === "Waiting"
-                                      ? "#ffc107"
-                                      : "white",
-                                  color:
-                                    appointment.status === "Ongoing"
-                                      ? "white"
-                                      : appointment.status === "Completed"
-                                      ? "orange"
-                                      : appointment.status === "Scheduled"
-                                      ? "white"
-                                      : appointment.status === "Waiting"
-                                      ? "black"
-                                      : "#757575",
-                                  fontWeight: "bold",
-                                  px: 0.7,
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={(event) =>
-                                  handleMenuOpen(event, appointment)
-                                }
-                              >
-                                <MoreVertIcon />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow
+                    {branches.length > 0 && (
+                      <Grid
+                        container
+                        spacing={2}
+                        justifyContent="flex-end"
+                        alignItems="center"
+                        sx={{ margin: "10px 30px 10px 0" }}
+                      >
+                        <Grid item xs={4}>
+                          <Select
+                            inputId="input-department"
+                            selectId="select-department"
+                            label="Department"
+                            list={branches}
+                            size="small"
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
+
+                    {/* Box Data Section */}
+                    <div
+                      style={{
+                        marginBottom: "1rem",
+                        padding: "0 2rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: "1rem",
+                      }}
+                    >
+                      {boxData.map((box) => (
+                        <Box
+                          key={box.id}
                           sx={{
+                            backgroundColor:
+                              activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
+                            px: { sm: 3, md: 5, lg: 7 },
+                            height: 55,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
+                            borderRadius: 1,
+                            boxShadow: 1,
+                            cursor: "pointer",
+                            borderBottom:
+                              activeBox === box.id
+                                ? "4px solid #25307F"
+                                : "none",
+                            transition: "all 0.3s ease-in-out",
                           }}
+                          onClick={() => handleBoxClick(box.id)}
                         >
-                          <TableCell>No data found!</TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                          <h2
+                            style={{
+                              fontSize: "2.1rem",
+                              fontWeight: 600,
+                              color:
+                                activeBox === box.id ? "#25307F" : " #4A4A4A",
+                            }}
+                          >
+                            {box.count}
+                          </h2>
+                          <span
+                            style={{
+                              fontSize: "1.6rem",
+                              fontWeight: 500,
+                              color: "black",
+                              marginRight: "4px",
+                            }}
+                          >
+                            -
+                          </span>
+                          <p
+                            style={{
+                              fontSize: "1.1rem",
+                              fontWeight: 500,
+                              marginTop: "4px",
+                              color: activeBox === box.id ? "black" : "#747474",
+                            }}
+                          >
+                            {box.label}
+                          </p>
+                        </Box>
+                      ))}
+                    </div>
+                  </div>
 
-                {/* Actions Menu */}
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                  PaperProps={{
-                    elevation: 2,
-                    sx: { padding: 1 },
-                  }}
-                >
-                  <MenuItem onClick={handleEdit}>
-                    <ListItemIcon>
-                      <EditIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Edit</ListItemText>
-                  </MenuItem>
-                  <MenuItem onClick={handleDelete}>
-                    <ListItemIcon>
-                      <DeleteIcon fontSize="small" color="error" />
-                    </ListItemIcon>
-                    <ListItemText sx={{ color: "error.main" }}>
-                      Delete
-                    </ListItemText>
-                  </MenuItem>
-                </Menu>
-
-                {/* Edit Patient Dialog */}
-                <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-                  <DialogTitle>Edit Patient</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      Modify the details of the patient.
-                    </DialogContentText>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      label="Name"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={editedPatient.name}
-                      onChange={(e) =>
-                        setEditedPatient({
-                          ...editedPatient,
-                          name: e.target.value,
-                        })
-                      }
-                    />
-                    <TextField
-                      margin="dense"
-                      label="Email"
-                      type="email"
-                      fullWidth
-                      variant="outlined"
-                      value={editedPatient.email}
-                      onChange={(e) =>
-                        setEditedPatient({
-                          ...editedPatient,
-                          email: e.target.value,
-                        })
-                      }
-                    />
-                    <TextField
-                      margin="dense"
-                      label="Phone"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={editedPatient.phone}
-                      onChange={(e) =>
-                        setEditedPatient({
-                          ...editedPatient,
-                          phone: e.target.value,
-                        })
-                      }
-                    />
-                    <TextField
-                      margin="dense"
-                      label="Type of Visit"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={editedPatient.type}
-                      onChange={(e) =>
-                        setEditedPatient({
-                          ...editedPatient,
-                          type: e.target.value,
-                        })
-                      }
-                    />
-                    <TextField
-                      margin="dense"
-                      label="Branch"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={editedPatient.branch}
-                      onChange={(e) =>
-                        setEditedPatient({
-                          ...editedPatient,
-                          branch: e.target.value,
-                        })
-                      }
-                    />
-                    <TextField
-                      margin="dense"
-                      label="Date"
-                      type="date"
-                      fullWidth
-                      variant="outlined"
-                      value={editedPatient.date}
-                      onChange={(e) =>
-                        setEditedPatient({
-                          ...editedPatient,
-                          date: e.target.value,
-                        })
-                      }
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                    <FormControl fullWidth margin="dense">
-                      <FormLabel>Status</FormLabel>
-                      <RadioGroup
-                        name="status"
-                        value={editedPatient.status}
-                        onChange={(e) =>
-                          setEditedPatient({
-                            ...editedPatient,
-                            status: e.target.value,
-                          })
-                        }
+                  {/* Table Section */}
+                  <div>
+                    <TableContainer>
+                      <Table
+                        sx={{
+                          borderCollapse: "separate",
+                          borderSpacing: "0 10px",
+                        }}
                       >
-                        <FormControlLabel
-                          value="Active"
-                          control={<Radio />}
-                          label="Active"
-                        />
-                        <FormControlLabel
-                          value="In-active"
-                          control={<Radio />}
-                          label="In-active"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleEditDialogClose}>Cancel</Button>
-                    <Button>Save</Button>
-                  </DialogActions>
-                </Dialog>
-              </Box>
-            )}
-          </>
-        ) : (
-          <>
-            {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
-            {isBookAppointment ? (
-              <BookAppointment
-                isBookAppointment={isBookAppointment}
-                onClose={() => setIsBookAppointment(false)}
-              />
-            ) : (
-              <EntityBasedTable
-                entity={props?.entity}
-                tableIndex={tableIndex}
-              />
-            )}
-          </>
-        )}
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Case Id
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Name
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Appointment With
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Type Visit
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Branch
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ color: "#000", fontSize: "16px" }}
+                            >
+                              Token Number
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ color: "#000", fontSize: "16px" }}
+                            >
+                              Status
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {appointments.length > 0 ? (
+                            appointments.map((appointment) => (
+                              <TableRow
+                                key={appointment._id}
+                                sx={{
+                                  bgcolor:
+                                    appointment.status === "Ongoing"
+                                      ? "#3DB46117"
+                                      : "white",
+                                  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                                  borderRadius: "8px",
+                                  "&:hover": {
+                                    backgroundColor: "#f9f9f9",
+                                  },
+                                  "& > *": {
+                                    borderBottom: "unset",
+                                  },
+                                }}
+                              >
+                                <TableCell>
+                                  <Typography
+                                    sx={{
+                                      fontWeight: "bold",
+                                      cursor: "pointer",
+                                      color: "#25307F",
+                                    }}
+                                  >
+                                    {truncateText(appointment.caseId, 12)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    variant="body1"
+                                    sx={{
+                                      fontWeight: "bold",
+                                      cursor: "pointer",
+                                      color: "#25307F",
+                                    }}
+                                  >
+                                    {appointment.patient.name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
+                                >
+                                  {appointment.doctor?.name}
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
+                                >
+                                  {appointment.typeVisit}
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
+                                >
+                                  {appointment.department.name}
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
+                                  align="center"
+                                >
+                                  {appointment?.tokenNumber || "N/A"}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Chip
+                                    label={appointment.status}
+                                    size="small"
+                                    sx={{
+                                      bgcolor:
+                                        appointment.status === "Ongoing"
+                                          ? "#3DB461"
+                                          : "white",
+                                      color:
+                                        appointment.status === "Ongoing"
+                                          ? "white"
+                                          : appointment.status === "Completed"
+                                          ? "#EAA000"
+                                          : appointment.status === "Scheduled"
+                                          ? "#25307F"
+                                          : "#757575",
+                                      fontWeight: "600",
+                                      px: 0.7,
+                                    }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell align="center" colSpan={7}>
+                                No data found!
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
+              {isBookAppointment ? (
+                <BookAppointment
+                  isBookAppointment={isBookAppointment}
+                  onClose={() => setIsBookAppointment(false)}
+                />
+              ) : (
+                <EntityBasedTable
+                  entity={props?.entity}
+                  tableIndex={tableIndex}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
     </>
   );

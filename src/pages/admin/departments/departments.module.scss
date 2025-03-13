@@ -4,10 +4,11 @@ $blue: #25307f;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 5px;
+  margin-bottom: 7px;
+  margin-top: -12px;
 
   .backButton {
-    margin-right: 0.5rem; // Space between button and h2
+    margin-right: 0.2rem; // Space between button and h2
     margin-top: 10px;
     color: #25307f;
     background-color: #f1f1f1;
@@ -20,6 +21,7 @@ $blue: #25307f;
     margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
+    font-size: 22px;
   }
 
   .departmentTitle1 {
@@ -49,10 +51,10 @@ $blue: #25307f;
 
 .cardContainer {
   background-color: white;
-  min-width: 316px;
-  height: 225px;
+  min-width: 290px;
+  height: 220px;
   padding: 1.5rem 1rem; // px-4 py-6
-  border-radius: 12px;
+  border-radius: 6px;
   cursor: pointer;
   border: 2px solid transparent; // Start with no visible border
   transition: border-color 0.3s ease; // Smooth transition for border color
@@ -74,32 +76,32 @@ $blue: #25307f;
 
     .circle {
       background-color: #c8dfe4;
-      width: 1.25rem; // w-5
-      height: 1.25rem; // h-5
+      width: 1.75rem; // w-5
+      height: 1.75rem; // h-5
       border-radius: 50%; // rounded-full
-      margin-top: 0.5rem; // mt-[3px]
+      margin-top: 0.2rem; // mt-[3px]
       margin-right: 0.3rem; // Add this margin to increase the space between circle and title
     }
 
     .title {
       color: #25307f;
       font-weight: 600; // font-semibold
-      //font-size: 1.4rem; // Set default font size
+      font-size: 1.2rem; // Set default font size
       padding: 0;
       margin: 0;
     }
 
     .arrow {
       color: #25307f;
-      margin-top: 0.6rem;
+      margin-top: 0.42rem;
+      margin-left: 0.3rem;
     }
 
     .icons {
-      margin-top: 0.3rem;
-
-      //margin-left: 2rem;
+      //padding-right: 4px;
       .message {
         color: #25307f;
+        font-size: 12px;
       }
 
       .phone {
@@ -110,11 +112,11 @@ $blue: #25307f;
   }
 
   .detailsContainer {
-    margin-left: 2rem;
+    margin-left: 2.5rem;
     margin-top: 15px;
     .details {
       display: flex;
-      height: 26px;
+      height: 28px;
       font-weight: 500;
       .name {
         color: black;
@@ -130,9 +132,12 @@ $blue: #25307f;
 }
 
 .superCardContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: space-evenly;
-  align-items: center;
+  // display: flex;
+  // flex-wrap: wrap;
+  // gap: 15px;
+  // justify-content: space-evenly;
+  // align-items: center;
+  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }

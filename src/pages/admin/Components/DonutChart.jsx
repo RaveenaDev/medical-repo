@@ -40,7 +40,7 @@ const DonutChart = () => {
     });
 
     return (
-        <div style={{height:'19.2rem'}}>
+        <div style={{height:'18.1rem'}}>
             <div id="chart">
                 <ReactApexChart
                     options={state.options}

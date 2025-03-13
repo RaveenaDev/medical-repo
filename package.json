@@ -18,9 +18,11 @@
     "@mui/material": "^6.4.2",
     "@mui/x-data-grid": "^7.22.2",
     "@mui/x-date-pickers": "^7.24.1",
-    "axios": "^1.7.9",
     "apexcharts": "^4.4.0",
+    "axios": "^1.7.9",
     "dayjs": "^1.11.13",
+    "formik": "^2.4.6",
+    "primereact": "^10.9.3",
     "react": "^18.3.1",
     "react-apexcharts": "^1.7.0",
     "react-calendar": "^5.1.0",
@@ -29,9 +31,10 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.27.0",
     "react-toastify": "^11.0.3",
+    "recharts": "^2.15.1",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "recharts": "^2.15.1"
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

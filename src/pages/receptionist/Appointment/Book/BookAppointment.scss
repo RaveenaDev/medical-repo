@@ -1,6 +1,6 @@
 .book-appointment {
   margin: auto;
-  padding: 20px;
+  padding: 15px;
   background: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -11,7 +11,7 @@
     align-items: center;
 
     h2 {
-      font-size: 1.6rem;
+      font-size: 1.25rem;
       margin-left: 4px;
     }
 
@@ -30,16 +30,16 @@
 
   .content {
     display: flex;
-    gap: 20px;
-    margin-top: 20px;
+    gap: 15px;
+    margin-top: 15px;
 
     .left-panel {
       width: 50%;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 10px;
       h3 {
-        font: 16px;
+        font: 13px;
         font-weight: 400;
       }
 
@@ -58,5 +58,35 @@
         background: #25307f;
       }
     }
+  }
+  .react-calendar {
+    background: #eaecff !important;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: "Arial", sans-serif;
+    width: 100%;
+  }
+
+  .react-calendar__tile {
+    color: #181f52 !important; // Change text color
+    font-weight: 500;
+  }
+  .react-calendar__navigation {
+    background: #ffffff;
+  }
+
+  .react-calendar__tile--active {
+    background: #181f52 !important;
+    color: white !important;
+    border-radius: 5px;
+  }
+
+  .react-calendar__tile:hover {
+    background: #aeb4ff !important;
+    border-radius: 5px;
+  }
+  .MuiTextField-root {
+    font-size: 14px !important;
   }
 }

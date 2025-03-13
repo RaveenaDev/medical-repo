@@ -33,21 +33,43 @@ const Patients = (props) => {
 
   return (
     <div className={styles.patients}>
-      <CommonPanel />
+      <div
+        style={{
+          position: "fixed",
+          bottom: "0",
+          height: "30px",
+          background: " #F1F1F1",
+          width: "100%",
+          zIndex: 10000,
+        }}
+      ></div>
+      <div
+        style={{
+          position: "fixed",
+          top: "0px",
+          padding: "10px",
+          width: "77%",
+          background: " #F1F1F1",
+          zIndex: 10000,
+        }}
+      >
+        <CommonPanel />
+      </div>
+      <div style={{ marginTop: "150px" }}>
+        {!props.entity ? (
+          <div className={styles.section}>
+            <p className={styles.title}>Patient List</p>
 
-      {!props.entity ? (
-        <div className={styles.section}>
-          <p className={styles.title}>Patient List</p>
+            <PatientList allPatients={{ noOfPatients, patients }} />
 
-          <PatientList allPatients={{ noOfPatients, patients }} />
-
-          {/* <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>
+            {/* <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>
             Click here to view the profile
           </button> */}
-        </div>
-      ) : (
-        <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
-      )}
+          </div>
+        ) : (
+          <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
+        )}
+      </div>
     </div>
   );
 };
