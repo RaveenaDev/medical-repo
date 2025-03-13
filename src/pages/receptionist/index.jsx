@@ -228,19 +228,32 @@ function Receptionist(props) {
                   onClose={() => setIsBookAppointment(false)}
                 />
               ) : (
-                <Box sx={{ backgroundColor: "white", pt: 0.7, px: 2 }}>
-                  <div style={{ position: "fixed" }}>
-                    {branches.length && (
+                <div
+                  style={{
+                    backgroundColor: "white",
+                    position: "relative",
+                  }}
+                >
+                  {/* Fixed / Sticky Header */}
+                  <div
+                    style={{
+                      position: "sticky",
+                      top: "220px",
+                      background: "#fff",
+                      zIndex: 10, // Ensures it's above other content
+                      width: "100%",
+                      paddingTop: "10px",
+                    }}
+                  >
+                    {branches.length > 0 && (
                       <Grid
                         container
                         spacing={2}
                         justifyContent="flex-end"
                         alignItems="center"
-                        flexDirection={{ md: "row" }}
-                        size={12}
-                        sx={{ margin: "10px 20px 10px 0" }}
+                        sx={{ margin: "10px 30px 10px 0" }}
                       >
-                        <Grid size={3}>
+                        <Grid item xs={4}>
                           <Select
                             inputId="input-department"
                             selectId="select-department"
@@ -251,26 +264,24 @@ function Receptionist(props) {
                         </Grid>
                       </Grid>
                     )}
-                  </div>
 
-                  <div
-                    // sx={{ mb: 1,px: 2}}
-                    style={{
-                      marginBottom: "1rem",
-                      padding: "0 2rem",
-                      justifyContent: "space-between",
-                      display: "flex",
-                      gap: "1rem",
-                      position: "fixed",
-                    }}
-                  >
-                    {boxData.map((box) => (
-                      <div key={box.id}>
+                    {/* Box Data Section */}
+                    <div
+                      style={{
+                        marginBottom: "1rem",
+                        padding: "0 2rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: "1rem",
+                      }}
+                    >
+                      {boxData.map((box) => (
                         <Box
+                          key={box.id}
                           sx={{
                             backgroundColor:
                               activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                            px: { sm: 3, md: 5, lg: 8 },
+                            px: { sm: 3, md: 5, lg: 7 },
                             height: 55,
                             display: "flex",
                             alignItems: "center",
@@ -292,8 +303,6 @@ function Receptionist(props) {
                               fontWeight: 600,
                               color:
                                 activeBox === box.id ? "#25307F" : " #4A4A4A",
-                              // marginRight: "4px",
-                              // marginLeft: "42px",
                             }}
                           >
                             {box.count}
@@ -319,355 +328,150 @@ function Receptionist(props) {
                             {box.label}
                           </p>
                         </Box>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
 
                   {/* Table Section */}
-                  <TableContainer>
-                    <Table
-                      sx={{
-                        borderCollapse: "separate",
-                        borderSpacing: "0 10px",
-                        margin: "4rem 0",
-                      }}
-                    >
-                      <TableHead sx={{}}>
-                        <TableRow>
-                          <TableCell
-                            sx={{
-                              color: " #000000",
-                              fontSize: "16px",
-                              lineHeight: "100%",
-                              letterSpacing: "0%",
-                            }}
-                          >
-                            Case Id
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: " #000000",
-                              fontSize: "16px",
-                              lineHeight: "100%",
-                              letterSpacing: "0%",
-                            }}
-                          >
-                            Name
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: " #000000",
-
-                              fontSize: "16px",
-                              lineHeight: "100%",
-                              letterSpacing: "0%",
-                            }}
-                          >
-                            Appointment With
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: " #000000",
-
-                              fontSize: "16px",
-                              lineHeight: "100%",
-                              letterSpacing: "0%",
-                            }}
-                          >
-                            Type Visit
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: " #000000",
-
-                              fontSize: "16px",
-                              lineHeight: "100%",
-                              letterSpacing: "0%",
-                            }}
-                          >
-                            Branch
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              color: " #000000",
-
-                              fontSize: "16px",
-                              lineHeight: "100%",
-                              letterSpacing: "0%",
-                            }}
-                          >
-                            Token Number
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              color: " #000000",
-
-                              fontSize: "16px",
-                              lineHeight: "100%",
-                              letterSpacing: "0%",
-                            }}
-                          >
-                            Status
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody sx={{ pl: 2 }}>
-                        {appointments.length > 0 ? (
-                          appointments.map((appointment) => (
-                            <TableRow
-                              key={appointment._id}
-                              sx={{
-                                bgcolor:
-                                  appointment.status === "Ongoing"
-                                    ? "#3DB46117"
-                                    : "white",
-                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                                borderRadius: "8px",
-                                "&:hover": {
-                                  backgroundColor: "#f9f9f9",
-                                },
-                                "& > *": {
-                                  borderBottom: "unset",
-                                },
-                              }}
+                  <div>
+                    <TableContainer>
+                      <Table
+                        sx={{
+                          borderCollapse: "separate",
+                          borderSpacing: "0 10px",
+                        }}
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Case Id
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Name
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Appointment With
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Type Visit
+                            </TableCell>
+                            <TableCell sx={{ color: "#000", fontSize: "16px" }}>
+                              Branch
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ color: "#000", fontSize: "16px" }}
                             >
-                              <TableCell>
-                                <Typography
-                                  sx={{
-                                    fontWeight: "bold",
-                                    cursor: "pointer",
-                                    color: "#25307F",
-                                  }}
+                              Token Number
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ color: "#000", fontSize: "16px" }}
+                            >
+                              Status
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {appointments.length > 0 ? (
+                            appointments.map((appointment) => (
+                              <TableRow
+                                key={appointment._id}
+                                sx={{
+                                  bgcolor:
+                                    appointment.status === "Ongoing"
+                                      ? "#3DB46117"
+                                      : "white",
+                                  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                                  borderRadius: "8px",
+                                  "&:hover": {
+                                    backgroundColor: "#f9f9f9",
+                                  },
+                                  "& > *": {
+                                    borderBottom: "unset",
+                                  },
+                                }}
+                              >
+                                <TableCell>
+                                  <Typography
+                                    sx={{
+                                      fontWeight: "bold",
+                                      cursor: "pointer",
+                                      color: "#25307F",
+                                    }}
+                                  >
+                                    {truncateText(appointment.caseId, 12)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    variant="body1"
+                                    sx={{
+                                      fontWeight: "bold",
+                                      cursor: "pointer",
+                                      color: "#25307F",
+                                    }}
+                                  >
+                                    {appointment.patient.name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
                                 >
-                                  {truncateText(appointment.caseId, 12)}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography
-                                  variant="body1"
-                                  sx={{
-                                    fontWeight: "bold",
-                                    cursor: "pointer",
-                                    color: "#25307F",
-                                  }}
+                                  {appointment.doctor?.name}
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
                                 >
-                                  {appointment.patient.name}
-                                </Typography>
-                              </TableCell>
-                              <TableCell
-                                sx={{ color: "#747474", fontWeight: "600" }}
-                              >
-                                {appointment.doctor?.name}
-                              </TableCell>
-                              <TableCell
-                                sx={{ color: "#747474", fontWeight: "600" }}
-                              >
-                                {appointment.typeVisit}
-                              </TableCell>
-                              <TableCell
-                                sx={{ color: "#747474", fontWeight: "600" }}
-                              >
-                                {appointment.department.name}
-                              </TableCell>
-                              <TableCell
-                                sx={{ color: "#747474", fontWeight: "600" }}
-                                align="center"
-                              >
-                                {appointment?.tokenNumber || "N/A"}
-                              </TableCell>
-                              <TableCell align="center">
-                                <Chip
-                                  label={appointment.status}
-                                  size="small"
-                                  sx={{
-                                    bgcolor:
-                                      appointment.status === "Ongoing"
-                                        ? "#3DB461"
-                                        : "white",
-                                    color:
-                                      appointment.status === "Ongoing"
-                                        ? "white"
-                                        : appointment.status === "Completed"
-                                        ? "#EAA000"
-                                        : appointment.status === "Scheduled"
-                                        ? "#25307F"
-                                        : "#757575",
-                                    fontWeight: "600",
-                                    px: 0.7,
-                                  }}
-                                />
+                                  {appointment.typeVisit}
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
+                                >
+                                  {appointment.department.name}
+                                </TableCell>
+                                <TableCell
+                                  sx={{ color: "#747474", fontWeight: "600" }}
+                                  align="center"
+                                >
+                                  {appointment?.tokenNumber || "N/A"}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Chip
+                                    label={appointment.status}
+                                    size="small"
+                                    sx={{
+                                      bgcolor:
+                                        appointment.status === "Ongoing"
+                                          ? "#3DB461"
+                                          : "white",
+                                      color:
+                                        appointment.status === "Ongoing"
+                                          ? "white"
+                                          : appointment.status === "Completed"
+                                          ? "#EAA000"
+                                          : appointment.status === "Scheduled"
+                                          ? "#25307F"
+                                          : "#757575",
+                                      fontWeight: "600",
+                                      px: 0.7,
+                                    }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell align="center" colSpan={7}>
+                                No data found!
                               </TableCell>
                             </TableRow>
-                          ))
-                        ) : (
-                          <TableRow
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <TableCell align="center">No data found!</TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-
-                  {/* Actions Menu */}
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleMenuClose}
-                    PaperProps={{
-                      elevation: 2,
-                      sx: { padding: 1 },
-                    }}
-                  >
-                    <MenuItem onClick={handleEdit}>
-                      <ListItemIcon>
-                        <EditIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Edit</ListItemText>
-                    </MenuItem>
-                    <MenuItem onClick={handleDelete}>
-                      <ListItemIcon>
-                        <DeleteIcon fontSize="small" color="error" />
-                      </ListItemIcon>
-                      <ListItemText sx={{ color: "error.main" }}>
-                        Delete
-                      </ListItemText>
-                    </MenuItem>
-                  </Menu>
-
-                  {/* Edit Patient Dialog */}
-                  <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-                    <DialogTitle>Edit Patient</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText>
-                        Modify the details of the patient.
-                      </DialogContentText>
-                      <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Name"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={editedPatient.name}
-                        onChange={(e) =>
-                          setEditedPatient({
-                            ...editedPatient,
-                            name: e.target.value,
-                          })
-                        }
-                      />
-                      <TextField
-                        margin="dense"
-                        label="Email"
-                        type="email"
-                        fullWidth
-                        variant="outlined"
-                        value={editedPatient.email}
-                        onChange={(e) =>
-                          setEditedPatient({
-                            ...editedPatient,
-                            email: e.target.value,
-                          })
-                        }
-                      />
-                      <TextField
-                        margin="dense"
-                        label="Phone"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={editedPatient.phone}
-                        onChange={(e) =>
-                          setEditedPatient({
-                            ...editedPatient,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                      <TextField
-                        margin="dense"
-                        label="Type of Visit"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={editedPatient.type}
-                        onChange={(e) =>
-                          setEditedPatient({
-                            ...editedPatient,
-                            type: e.target.value,
-                          })
-                        }
-                      />
-                      <TextField
-                        margin="dense"
-                        label="Branch"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={editedPatient.branch}
-                        onChange={(e) =>
-                          setEditedPatient({
-                            ...editedPatient,
-                            branch: e.target.value,
-                          })
-                        }
-                      />
-                      <TextField
-                        margin="dense"
-                        label="Date"
-                        type="date"
-                        fullWidth
-                        variant="outlined"
-                        value={editedPatient.date}
-                        onChange={(e) =>
-                          setEditedPatient({
-                            ...editedPatient,
-                            date: e.target.value,
-                          })
-                        }
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                      <FormControl fullWidth margin="dense">
-                        <FormLabel>Status</FormLabel>
-                        <RadioGroup
-                          name="status"
-                          value={editedPatient.status}
-                          onChange={(e) =>
-                            setEditedPatient({
-                              ...editedPatient,
-                              status: e.target.value,
-                            })
-                          }
-                        >
-                          <FormControlLabel
-                            value="Active"
-                            control={<Radio />}
-                            label="Active"
-                          />
-                          <FormControlLabel
-                            value="In-active"
-                            control={<Radio />}
-                            label="In-active"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleEditDialogClose}>Cancel</Button>
-                      <Button>Save</Button>
-                    </DialogActions>
-                  </Dialog>
-                </Box>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </div>
               )}
             </>
           ) : (
