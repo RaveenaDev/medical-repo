@@ -89,238 +89,250 @@ const Staffs = (props) => {
 
   const navigate = useNavigate();
   return (
-    <>
-      <CommonPanel />
-
-      <Box>
-        <div className={ayu.headerContainer}>
-          <div
-            className={ayu.backButton}
-            onClick={() => navigate(`/receptionist`)}
-          >
-            <ArrowBackIosIcon />
-          </div>
-          <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
-          <h2 className={ayu.departmentTitleDetails}>200+</h2>
-        </div>
-      </Box>
-
-      {/* Table Section */}
-      <TableContainer component={Paper}>
-        <Table
-          sx={{
-            borderCollapse: "separate",
-            borderSpacing: "0 10px",
-            background: "#F1F1F1",
-          }}
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell>Profile</TableCell>
-              <TableCell>Staff ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Department</TableCell>
-              <TableCell>Designation</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {staffs.map((patient,index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  background: "#fff",
-                  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "8px",
-                  "&:hover": {
-                    backgroundColor: "#f9f9f9",
-                  },
-                  "& > *": {
-                    borderBottom: "unset",
-                  },
-                }}
-              >
-                <TableCell>
-                  <Avatar
-                    src={patient.profile}
-                    alt="Profile"
-                    sx={{ width: 40, height: 40 }} // Adjust size
-                  />
-                </TableCell>
-                <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                  {patient.staff_id}
-                </TableCell>
-                <TableCell>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontWeight: "bold",
-                      color: "#25307F",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {patient.name}
-                  </Typography>
-                </TableCell>
-                <TableCell>{patient.phone}</TableCell>
-                <TableCell>{patient.department.name}</TableCell>
-                <TableCell>{patient.designation}</TableCell>
-                <TableCell>
-                  <Chip
-                    label={patient.status}
-                    size="small"
-                    sx={{
-                      backgroundColor: "transparent", // Removes background
-                      color: patient.status === "Available" ? "green" : "red", // Black for Available, Red otherwise
-                      fontWeight: "bold",
-                      border: "none", // Ensures no border appears
-                    }}
-                  />
-                </TableCell>
-
-                {/*<TableCell>*/}
-                {/*    <IconButton*/}
-                {/*        onClick={(event) => handleMenuOpen(event, patient)}*/}
-                {/*    >*/}
-                {/*        <MoreVertIcon />*/}
-                {/*    </IconButton>*/}
-                {/*</TableCell>*/}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      {/* Actions Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-        PaperProps={{
-          elevation: 2,
-          sx: { padding: 1 },
+    <div>
+      <div
+        style={{
+          position: "fixed",
+          top: "0px",
+          padding: "10px",
+          width: "77%",
+          background: " #F1F1F1",
+          zIndex: 10000,
         }}
       >
-        <MenuItem onClick={handleEdit}>
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleDelete}>
-          <ListItemIcon>
-            <DeleteIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
-        </MenuItem>
-      </Menu>
-
-      {/* Edit Patient Dialog */}
-      <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-        <DialogTitle>Edit Patient</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Modify the details of the patient.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.name}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, name: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.email}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, email: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Phone"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.phone}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, phone: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Type of Visit"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.type}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, type: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Branch"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.branch}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, branch: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Date"
-            type="date"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.date}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, date: e.target.value })
-            }
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <FormControl fullWidth margin="dense">
-            <FormLabel>Status</FormLabel>
-            <RadioGroup
-              name="status"
-              value={editedPatient.status}
-              onChange={(e) =>
-                setEditedPatient({ ...editedPatient, status: e.target.value })
-              }
+        <CommonPanel />
+      </div>
+      <div style={{ marginTop: "150px" }}>
+        <Box>
+          <div className={ayu.headerContainer}>
+            <div
+              className={ayu.backButton}
+              onClick={() => navigate(`/receptionist`)}
             >
-              <FormControlLabel
-                value="Active"
-                control={<Radio />}
-                label="Active"
-              />
-              <FormControlLabel
-                value="In-active"
-                control={<Radio />}
-                label="In-active"
-              />
-            </RadioGroup>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleEditDialogClose}>Cancel</Button>
-          <Button onClick={handleSaveEditedPatient}>Save</Button>
-        </DialogActions>
-      </Dialog>
-    </>
+              <ArrowBackIosIcon />
+            </div>
+            <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
+            <h2 className={ayu.departmentTitleDetails}>200+</h2>
+          </div>
+        </Box>
+
+        {/* Table Section */}
+        <TableContainer component={Paper}>
+          <Table
+            sx={{
+              borderCollapse: "separate",
+              borderSpacing: "0 10px",
+              background: "#F1F1F1",
+            }}
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>Profile</TableCell>
+                <TableCell>Staff ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Phone Number</TableCell>
+                <TableCell>Department</TableCell>
+                <TableCell>Designation</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {staffs.map((patient, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    background: "#fff",
+                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "#f9f9f9",
+                    },
+                    "& > *": {
+                      borderBottom: "unset",
+                    },
+                  }}
+                >
+                  <TableCell>
+                    <Avatar
+                      src={patient.profile}
+                      alt="Profile"
+                      sx={{ width: 40, height: 40 }} // Adjust size
+                    />
+                  </TableCell>
+                  <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                    {patient.staff_id}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: "bold",
+                        color: "#25307F",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {patient.name}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{patient.phone}</TableCell>
+                  <TableCell>{patient.department.name}</TableCell>
+                  <TableCell>{patient.designation}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={patient.status}
+                      size="small"
+                      sx={{
+                        backgroundColor: "transparent", // Removes background
+                        color: patient.status === "Available" ? "green" : "red", // Black for Available, Red otherwise
+                        fontWeight: "bold",
+                        border: "none", // Ensures no border appears
+                      }}
+                    />
+                  </TableCell>
+
+                  {/*<TableCell>*/}
+                  {/*    <IconButton*/}
+                  {/*        onClick={(event) => handleMenuOpen(event, patient)}*/}
+                  {/*    >*/}
+                  {/*        <MoreVertIcon />*/}
+                  {/*    </IconButton>*/}
+                  {/*</TableCell>*/}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {/* Actions Menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          PaperProps={{
+            elevation: 2,
+            sx: { padding: 1 },
+          }}
+        >
+          <MenuItem onClick={handleEdit}>
+            <ListItemIcon>
+              <EditIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon fontSize="small" color="error" />
+            </ListItemIcon>
+            <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+          </MenuItem>
+        </Menu>
+
+        {/* Edit Patient Dialog */}
+        <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+          <DialogTitle>Edit Patient</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Modify the details of the patient.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editedPatient.name}
+              onChange={(e) =>
+                setEditedPatient({ ...editedPatient, name: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Email"
+              type="email"
+              fullWidth
+              variant="outlined"
+              value={editedPatient.email}
+              onChange={(e) =>
+                setEditedPatient({ ...editedPatient, email: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Phone"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editedPatient.phone}
+              onChange={(e) =>
+                setEditedPatient({ ...editedPatient, phone: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Type of Visit"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editedPatient.type}
+              onChange={(e) =>
+                setEditedPatient({ ...editedPatient, type: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Branch"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editedPatient.branch}
+              onChange={(e) =>
+                setEditedPatient({ ...editedPatient, branch: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="Date"
+              type="date"
+              fullWidth
+              variant="outlined"
+              value={editedPatient.date}
+              onChange={(e) =>
+                setEditedPatient({ ...editedPatient, date: e.target.value })
+              }
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <FormControl fullWidth margin="dense">
+              <FormLabel>Status</FormLabel>
+              <RadioGroup
+                name="status"
+                value={editedPatient.status}
+                onChange={(e) =>
+                  setEditedPatient({ ...editedPatient, status: e.target.value })
+                }
+              >
+                <FormControlLabel
+                  value="Active"
+                  control={<Radio />}
+                  label="Active"
+                />
+                <FormControlLabel
+                  value="In-active"
+                  control={<Radio />}
+                  label="In-active"
+                />
+              </RadioGroup>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleEditDialogClose}>Cancel</Button>
+            <Button onClick={handleSaveEditedPatient}>Save</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    </div>
   );
 };
 export default Staffs;
