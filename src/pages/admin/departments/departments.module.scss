@@ -4,10 +4,11 @@ $blue: #25307f;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 5px;
+  margin-bottom: 7px;
+  margin-top: -12px;
 
   .backButton {
-    margin-right: 0.5rem; // Space between button and h2
+    margin-right: 0.2rem; // Space between button and h2
     margin-top: 10px;
     color: #25307f;
     background-color: #f1f1f1;
@@ -20,6 +21,7 @@ $blue: #25307f;
     margin: 0; // Remove default margin of h2
     color: $blue;
     font-weight: 500;
+    font-size: 22px;
   }
 
   .departmentTitle1 {

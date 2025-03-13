@@ -34,7 +34,7 @@ const Departments1 = (props) => {
         style={{
           position: "fixed",
           top: "0px",
-          padding: "10px",
+          padding: "10px 0",
           width: "77%",
           background: " #F1F1F1",
           zIndex: 10000,

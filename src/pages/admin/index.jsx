@@ -382,20 +382,20 @@ function Admin(props) {
                 <div
                   style={{
                     color: "#25307F",
-                    paddingTop: "0.4rem",
+                    paddingTop: "0.1rem",
                     marginLeft: "1.8rem",
                     marginBottom: "1.5rem",
                   }}
                 >
-                  <h3 style={{ fontSize: "18px", fontWeight: 500 }}>
+                  <h3 style={{ fontSize: "20px", fontWeight: 500 }}>
                     Revenue
                     <span
                       style={{
                         display: "inline-block",
-                        transform: "translateY(0.37rem)",
+                        transform: "translateY(0.49rem)",
                       }}
                     >
-                      <KeyboardArrowRightIcon />
+                      <KeyboardArrowRightIcon sx={{fontSize: "28px"}}/>
                     </span>
                   </h3>
                 </div>
@@ -418,7 +418,7 @@ function Admin(props) {
                       <CartesianGrid horizontal={true} vertical={false} />{" "}
                       {/* Horizontal lines only */}
                       <XAxis dataKey="name" hide />
-                      <YAxis axisLine={false} tickLine={false} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 14 }}/>
                       <Tooltip />
                       <Area
                         type="monotone"
@@ -465,20 +465,20 @@ function Admin(props) {
                   style={{
                     cursor: "pointer",
                     color: "#25307F",
-                    paddingTop: "0.4rem",
+                    paddingTop: "0.1rem",
                     marginLeft: "1.8rem",
                     marginBottom: "1rem",
                   }}
                 >
-                  <h3 style={{ fontSize: "18px", fontWeight: 500 }}>
+                  <h3 style={{ fontSize: "20px", fontWeight: 500 }}>
                     Department
                     <span
                       style={{
                         display: "inline-block",
-                        transform: "translateY(0.37rem)",
+                        transform: "translateY(0.49rem)",
                       }}
                     >
-                      <KeyboardArrowRightIcon />
+                      <KeyboardArrowRightIcon sx={{fontSize: "28px"}}/>
                     </span>
                   </h3>
                 </div>
