@@ -195,31 +195,31 @@ const ReceptionPage = () => {
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6 }}
+                            sx={{ border: "none", px: 0.6,color:"#747474"}}
                           >
                             {truncateText(row.doctor?.name, 14)}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6 }}
+                            sx={{ border: "none", px: 0.6,color:"#747474"}}
                           >
                             {row.typeVisit}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6 }}
+                            sx={{ border: "none", px: 0.6,color:"#747474"}}
                           >
                             {row.department.name}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6 }}
+                            sx={{ border: "none", px: 0.6,color:"#747474"}}
                           >
                             {truncateText(row?.tokenNumber || "N/A", 13)}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6, pr: 2 }}
+                            sx={{ border: "none", px: 0.6, pr: 2,color:"#747474"}}
                           >
                             <span
                               style={{
@@ -346,7 +346,7 @@ const ReceptionPage = () => {
                           <TableCell
                             component="th"
                             scope="row"
-                            sx={{ border: "none", padding: "14px 14px" }}
+                            sx={{ border: "none", padding: "14px 14px",color:"#747474",fontWeight:500}}
                           >
                             {truncateText(
                               row.doctors[0]?.name || "Not Assigned",
@@ -355,13 +355,13 @@ const ReceptionPage = () => {
                           </TableCell>
                           <TableCell
                             align="left"
-                            sx={{ border: "none", padding: "14px 14px" }}
+                            sx={{ border: "none", padding: "14px 14px",color:"#747474"}}
                           >
                             {truncateText(row.role, 14)}
                           </TableCell>
                           <TableCell
                             align="left"
-                            sx={{ border: "none", padding: "14px 14px" }}
+                            sx={{ border: "none", padding: "14px 14px",color:"#747474"}}
                           >
                             {row.appointments.length > 0
                               ? row.appointments[row.appointments.length - 1]
@@ -403,7 +403,7 @@ const ReceptionPage = () => {
       <Grid
         size={3.5}
         className={styles.container1}
-        sx={{ maxHeight: "calc(110vh - 150px)", overflowY: "auto" }}
+        sx={{ maxHeight: "calc(140vh - 190px)", overflowY: "auto" }}
       >
         <div>
           <div className={styles.heading1}>

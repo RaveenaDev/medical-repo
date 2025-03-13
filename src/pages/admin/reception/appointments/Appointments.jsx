@@ -240,7 +240,7 @@ function Appointments(props) {
                     boxShadow: 1,
                     cursor: "pointer",
                     borderBottom:
-                      activeBox === box.id ? "4px solid #6A0DAD" : "none",
+                      activeBox === box.id ? "4px solid #25307F" : "none",
                     transition: "all 0.3s ease-in-out",
                   }}
                   onClick={() => handleBoxClick(box.id)}
@@ -298,7 +298,7 @@ function Appointments(props) {
                   <TableCell>Type Visit</TableCell>
                   <TableCell>Branch</TableCell>
                   <TableCell>Token Number</TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell sx={{paddingLeft:"28px"}}>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -320,8 +320,8 @@ function Appointments(props) {
                         },
                       }}
                     >
-                      <TableCell>{truncateText(patient.caseId, 13)}</TableCell>
-                      <TableCell>
+                      <TableCell sx={{color:'#25307F'}}>{truncateText(patient.caseId, 13)}</TableCell>
+                      <TableCell sx={{color:'#25307F'}}>
                         <Typography
                           variant="body1"
                           sx={{ fontWeight: "bold", cursor: "pointer" }}
@@ -329,14 +329,14 @@ function Appointments(props) {
                           {patient.patient.name}
                         </Typography>
                       </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" color="text.secondary">
+                      <TableCell sx={{color:'#878787'}}>
+                        <Typography variant="body2">
                           {patient.doctor?.name}
                         </Typography>
                       </TableCell>
-                      <TableCell>{patient.typeVisit}</TableCell>
-                      <TableCell>{patient.department.name}</TableCell>
-                      <TableCell>{patient?.tokenNumber || "N/A"}</TableCell>
+                      <TableCell sx={{color:'#878787'}}>{patient.typeVisit}</TableCell>
+                      <TableCell sx={{color:'#878787'}}>{patient.department.name}</TableCell>
+                      <TableCell align="center" sx={{color:'#878787',paddingRight:'40px'}}>{patient?.tokenNumber || "N/A"}</TableCell>
                       <TableCell>
                         <Chip
                           label={patient.status}
@@ -346,19 +346,19 @@ function Appointments(props) {
                               patient.status === "Ongoing"
                                 ? "#3DB461"
                                 : patient.status === "Scheduled"
-                                ? "#007bff"
+                                ? "#25307F"
                                 : patient.status === "Waiting"
-                                ? "#ffc107"
+                                ? "#ffffff"
                                 : "white",
                             color:
                               patient.status === "Ongoing"
-                                ? "white"
+                                ? "#FFFFFF"
                                 : patient.status === "Completed"
                                 ? "orange"
                                 : patient.status === "Scheduled"
                                 ? "white"
                                 : patient.status === "Waiting"
-                                ? "black"
+                                ? "#878787"
                                 : "#757575",
                             fontWeight: "bold",
                             px: 0.7,

@@ -30,6 +30,7 @@
   height: 120vh;
   padding: 20px;
   background-color: #f4f4f4;
+  z-index: -1;
   // overflow-y: auto;
 
   &::-webkit-scrollbar {

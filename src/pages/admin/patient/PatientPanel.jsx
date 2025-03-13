@@ -230,102 +230,105 @@ const PatientPanel = (props) => {
             </Box>
           </Box>
 
-          {/* Table Section */}
-          <TableContainer component={Paper}>
-            <Table
-              sx={{
-                borderCollapse: "separate",
-                borderSpacing: "0 10px",
-                background: "#F1F1F1",
-              }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Case Id</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Phone Number</TableCell>
-                  <TableCell>Type Visit</TableCell>
-                  <TableCell>Branch</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Actions</TableCell>
+        {/* Table Section */}
+        <TableContainer component={Paper}>
+          <Table
+            sx={{
+              borderCollapse: "separate",
+              borderSpacing: "0 10px",
+              background: "#F1F1F1",
+            }}
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>Case Id</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Phone Number</TableCell>
+                <TableCell>Type Visit</TableCell>
+                <TableCell>Branch</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell align='center' sx={{paddingRight:'22px'}}>Status</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {totalPatients.map((patient, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    background: "#fff",
+                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "#f9f9f9",
+                    },
+                    "& > *": {
+                      borderBottom: "unset",
+                    },
+                  }}
+                >
+                  <TableCell sx={{color:"#25307F"}}>
+                    {truncateText(
+                      patient.appointments[patient.appointments.length - 1]
+                        ?.caseId || "Not Assigned",
+                      13
+                    )}
+                  </TableCell>
+                  <TableCell sx={{color:"#25307F"}}>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: "bold", cursor: "pointer" }}
+                      onClick={() => handleClick(patient)}
+                    >
+                      {patient.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ textDecoration: "underline" }}>
+                      {patient.email}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{patient.phone}</TableCell>
+                  <TableCell>
+                    {patient.appointments[patient.appointments.length - 1]
+                      ?.typeVisit || "Not Assigned"}
+                  </TableCell>
+                  <TableCell>
+                    {patient.appointments[patient.appointments.length - 1]
+                      ?.branch || "Not Assigned"}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(patient.registrationDate).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell align='center'>
+                    <Chip
+                      label={patient.status.charAt(0).toUpperCase() + patient.status.slice(1)}
+                      color={
+                        patient.status === "active" ? "success" : "default"
+                      }
+                      size="small"
+                      sx={{
+                        padding: '4px',
+                        bgcolor:
+                          patient.status === "active" ? "#d4edda" : "#ffffff",
+                        color:
+                          patient.status === "active" ? "#155724" : "#757575",
+                        border:
+                        patient.status === "active" ? "1px solid #155724 " : "",
+                        fontWeight: "bold",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={(event) => handleMenuOpen(event, patient)}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {totalPatients.map((patient, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      background: "#fff",
-                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                      borderRadius: "8px",
-                      "&:hover": {
-                        backgroundColor: "#f9f9f9",
-                      },
-                      "& > *": {
-                        borderBottom: "unset",
-                      },
-                    }}
-                  >
-                    <TableCell>
-                      {truncateText(
-                        patient.appointments[patient.appointments.length - 1]
-                          ?.caseId || "Not Assigned",
-                        13
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        sx={{ fontWeight: "bold", cursor: "pointer" }}
-                        onClick={() => handleClick(patient)}
-                      >
-                        {patient.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {patient.email}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{patient.phone}</TableCell>
-                    <TableCell>
-                      {patient.appointments[patient.appointments.length - 1]
-                        ?.typeVisit || "Not Assigned"}
-                    </TableCell>
-                    <TableCell>
-                      {patient.appointments[patient.appointments.length - 1]
-                        ?.branch || "Not Assigned"}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(patient.registrationDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={patient.status}
-                        color={
-                          patient.status === "Active" ? "success" : "default"
-                        }
-                        size="small"
-                        sx={{
-                          bgcolor:
-                            patient.status === "Active" ? "#d4edda" : "#f0f0f0",
-                          color:
-                            patient.status === "Active" ? "#155724" : "#757575",
-                          fontWeight: "bold",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        onClick={(event) => handleMenuOpen(event, patient)}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
           {/* Actions Menu */}
           <Menu

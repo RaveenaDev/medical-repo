@@ -364,128 +364,126 @@ const Expenses = (props) => {
           </Button>
         </Box>
 
-        <div style={{ marginTop: "1.5rem" }}>
-          <TableContainer component={Paper}>
-            <Table
-              sx={{
-                borderCollapse: "separate", // Ensure border-spacing works
-                borderSpacing: "0 8px", // Adds vertical spacing between rows
-              }}
-              aria-label="simple table"
-            >
-              <TableHead>
-                <TableRow>
+      <div style={{ marginTop: "1.5rem" }}>
+        <TableContainer component={Paper}>
+          <Table
+            sx={{
+              borderCollapse: "separate", // Ensure border-spacing works
+              borderSpacing: "0 8px", // Adds vertical spacing between rows
+            }}
+            aria-label="simple table"
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    fontSize: "15px",
+                    color: "#959595",
+                    padding: "0.5rem 0.8rem",
+                    border: "none",
+                  }}
+                >
+                  Expense Type
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "15px",
+                    color: "#959595",
+                    padding: "0.5rem 0.8rem",
+                    paddingRight:"28px",
+                    border: "none",
+                  }}
+                >
+                  Amount
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "15px",
+                    color: "#959595",
+                    padding: "0.5rem 0.8rem",
+                    border: "none",
+                  }}
+                >
+                  Paid To
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "15px",
+                    color: "#959595",
+                    padding: "0.5rem 0.8rem",
+                    border: "none",
+                  }}
+                >
+                  Details
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "15px",
+                    color: "#959595",
+                    padding: "0.5rem 0.8rem",
+                    border: "none",
+                  }}
+                >
+                  Date
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "15px",
+                    color: "#959595",
+                    padding: "0.5rem 0.8rem",
+                    border: "none",
+                  }}
+                >
+                  Action
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {expenses.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    backgroundColor: "#F1F5FF",
+                  }}
+                >
                   <TableCell
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
+                    component="th"
+                    scope="row"
+                    sx={{ color: "#25307f", border: "none"}}
                   >
-                    Expense Type
+                    {row.expenseType}
                   </TableCell>
                   <TableCell
-                    align="left"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 1.5rem",
-                      border: "none",
-                    }}
+                      align="center"
+                    sx={{ color: "#25307f", border: "none",paddingRight:"38px"}}
                   >
-                    Amount
+                    {truncateText(row.amount, 13)}
                   </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Paid To
+                  <TableCell align="center" sx={{ border: "none" }}>
+                    {truncateText(row.paidTo, 14)}
                   </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Details
+                  <TableCell align="center" sx={{ border: "none" }}>
+                    {row.details}
                   </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Date
+                  <TableCell align="center" sx={{ border: "none" }}>
+                    {new Date(row.date).toLocaleDateString()}
                   </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Action
+                  <TableCell align="center">
+                    <IconButton onClick={(event) => handleMenuOpen(event, row)}>
+                      <MoreVertIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {expenses.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      backgroundColor: "#F1F5FF",
-                    }}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ color: "#25307f", border: "none" }}
-                    >
-                      {row.expenseType}
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ color: "#25307f", border: "none" }}
-                    >
-                      {truncateText(row.amount, 13)}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {truncateText(row.paidTo, 14)}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {row.details}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {new Date(row.date).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        onClick={(event) => handleMenuOpen(event, row)}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
           {/* Actions Menu */}
           <Menu
