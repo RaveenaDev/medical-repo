@@ -470,17 +470,17 @@ const AdminDoctors = (props) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                    <Typography variant="body1" sx={{  color: "#25307F",fontWeight: "bold"}}>
                       {truncateText(doctor?._id, 8)}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1">
+                    <Typography variant="body1" sx={{ color: "#25307F",}}>
                       {truncateText(doctor?.name, 13)}
                     </Typography>
                   </TableCell>
-                  <TableCell>{doctor?.phone}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{color: "#747474",}}>{doctor?.phone}</TableCell>
+                  <TableCell sx={{color: "#747474",}}>
                     {doctor?.specialization || "Not Assigned"}
                   </TableCell>
                   <TableCell align="center">
@@ -492,30 +492,30 @@ const AdminDoctors = (props) => {
                       size="small"
                       sx={{
                         bgcolor:
-                          doctor?.status === "Emergency Room"
+                          doctor?.status === "Available"
                             ? "#d4edda"
                             : doctor?.status === "On Leave"
                             ? "#f8d7da"
                             : doctor?.status === "Idle"
-                            ? "#ffffff"
+                            ? "000000"
                             : undefined,
                         color:
-                          doctor?.status === "Emergency Room"
-                            ? "#155724"
+                          doctor?.status === "Available"
+                            ? "#2E823B"
                             : doctor?.status === "On Leave"
-                            ? "#721c24"
+                            ? "#E1473D"
                             : doctor?.status === "Idle"
-                            ? "#000000"
+                            ? "#878787"
                             : undefined,
 
                         width: "8rem",
                         border:
-                          doctor?.status === "Emergency Room"
-                            ? "1px solid green"
+                          doctor?.status === "Available"
+                            ? "1px solid #2E823B"
                             : doctor?.status === "On Leave"
-                            ? "1px solid red"
+                            ? "1px solid #E1473D"
                             : doctor?.status === "Idle"
-                            ? "1px solid black"
+                            ? "1px solid #878787"
                             : undefined,
 
                         // fontSize: "12px"
@@ -527,13 +527,14 @@ const AdminDoctors = (props) => {
                     <Button
                       variant="outlined"
                       sx={{
-                        border: "2px solid purple", // Purple border
+                        border: "2px solid #25307F", // Purple border
                         borderRadius: "18px", // Rounded corners
-                        color: "purple", // Blue text color
+                        px: 4,
+                        color: "#25307F", // Blue text color
                         textTransform: "none", // Prevents uppercase text
                         fontSize: "12px", // Adjust text size if needed
                         "&:hover": {
-                          borderColor: "purple", // Darker border on hover
+                          borderColor: "#25307F", // Darker border on hover
                           backgroundColor: "rgba(128, 0, 128, 0.1)", // Light purple hover effect
                         },
                       }}
@@ -541,13 +542,13 @@ const AdminDoctors = (props) => {
                       View Profile
                     </Button>
                   </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      onClick={(event) => handleMenuOpen(event, doctor)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </TableCell>
+                  {/*<TableCell align="right">*/}
+                  {/*  <IconButton*/}
+                  {/*    onClick={(event) => handleMenuOpen(event, doctor)}*/}
+                  {/*  >*/}
+                  {/*    <MoreVertIcon />*/}
+                  {/*  </IconButton>*/}
+                  {/*</TableCell>*/}
                 </TableRow>
               ))}
             </TableBody>

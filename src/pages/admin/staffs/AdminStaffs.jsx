@@ -441,16 +441,16 @@ const AdminStaffs = (props) => {
                       {staff?.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>{staff?.phone}</TableCell>
-                  <TableCell>{staff?.department.name}</TableCell>
-                  <TableCell>{staff?.designation}</TableCell>
+                  <TableCell sx={{ color: "#747474"}}>{staff?.phone}</TableCell>
+                  <TableCell sx={{ color: "#747474"}}>{staff?.department.name}</TableCell>
+                  <TableCell sx={{ color: "#747474"}}>{staff?.designation}</TableCell>
                   <TableCell>
                     <Chip
                       label={staff?.status}
                       size="small"
                       sx={{
                         backgroundColor: "transparent", // Removes background
-                        color: staff?.status === "Available" ? "green" : "red", // Black for Available, Red otherwise
+                        color: staff?.status === "Available" ? "#3DB461" : "#E1473D", // Black for Available, Red otherwise
                         fontWeight: "bold",
                         border: "none", // Ensures no border appears
                       }}

@@ -426,7 +426,7 @@ const AdminRooms = (props) => {
                 <TableCell align="center" sx={{ pr: 14 }}>
                   Status
                 </TableCell>
-                <TableCell align="center">Doctor Assigned</TableCell>
+                <TableCell align="left">Doctor Assigned</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -460,7 +460,7 @@ const AdminRooms = (props) => {
                       {room.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align='right'>
                     {" "}
                     {/* Increase 'pl' value for more spacing */}
                     <Box
@@ -485,7 +485,7 @@ const AdminRooms = (props) => {
                       {room.status}
                     </Box>
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="left" sx={{color:'#747474'}}>
                     {room.assignedDoctor?.name || "Not Assigned"}
                   </TableCell>
 
