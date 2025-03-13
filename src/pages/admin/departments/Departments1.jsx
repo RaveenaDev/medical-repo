@@ -57,7 +57,7 @@ const Departments1 = (props) => {
 
         <div className={ayu.superCardContainer}>
           {allDepartments.map((department, index) => (
-            <DepartCard key={index} department={department} />
+            <DepartCard key={index} department={department} index={index} />
           ))}
         </div>
       </div>

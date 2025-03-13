@@ -22,6 +22,7 @@
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "formik": "^2.4.6",
+    "primereact": "^10.9.3",
     "react": "^18.3.1",
     "react-apexcharts": "^1.7.0",
     "react-calendar": "^5.1.0",
