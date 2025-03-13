@@ -143,7 +143,7 @@ const Earnings = (props) => {
           padding: "10px",
           width: "77%",
           background: " #F1F1F1",
-          zIndex: 10000,
+          zIndex: 100,
         }}
       >
         <CommonPanel />

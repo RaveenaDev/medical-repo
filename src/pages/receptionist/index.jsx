@@ -210,7 +210,7 @@ function Receptionist(props) {
           height: "30px",
           background: " #F1F1F1",
           width: "100%",
-          zIndex: 10000,
+          zIndex: 100,
         }}
       ></div>
       <div style={{ padding: "0 20px 0 0" }}>
@@ -221,7 +221,7 @@ function Receptionist(props) {
             padding: "10px",
             width: "77%",
             background: " #F1F1F1",
-            zIndex: 10000,
+            zIndex: 100,
           }}
         >
           <CommonPanel setIsBookAppointment={setIsBookAppointment} />

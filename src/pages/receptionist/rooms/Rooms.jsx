@@ -176,7 +176,7 @@ const Rooms = (props) => {
           height: "30px",
           background: " #F1F1F1",
           width: "100%",
-          zIndex: 10000,
+          zIndex: 100,
         }}
       ></div>
       <div
@@ -186,7 +186,7 @@ const Rooms = (props) => {
           padding: "10px",
           width: "77%",
           background: " #F1F1F1",
-          zIndex: 10000,
+          zIndex: 100,
         }}
       >
         <CommonPanel />

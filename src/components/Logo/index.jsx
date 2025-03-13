@@ -4,8 +4,10 @@ import styles from "../../styles/components/logo.module.scss";
 const Logo = () => {
   return (
     <div>
-      <p className={styles.logo__image}>Logo</p>
-      <p className={styles.logo__tagline}>Tagline</p>
+      <img
+        style={{ width: "100px", height: "100px" }}
+        src="/stepcarelogo.png"
+      />
     </div>
   );
 };
