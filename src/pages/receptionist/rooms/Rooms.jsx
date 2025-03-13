@@ -168,7 +168,7 @@ const Rooms = (props) => {
   const doctors = useSelector((state) => state.receptionist.doctors);
 
   return (
-    <>
+    <div style={{ background: "#f1f1f1", height: "100lvh" }}>
       <div
         style={{
           position: "fixed",
@@ -403,24 +403,31 @@ const Rooms = (props) => {
           </Dialog>
         </Box>
         {/* Table Section */}
-        <TableContainer component={Paper}>
+        <TableContainer>
           <Table
             sx={{
               borderCollapse: "separate",
               borderSpacing: "0 10px",
-              background: "#F1F1F1",
+              width: "100%",
             }}
           >
             <TableHead>
               <TableRow>
-                <TableCell>Room ID</TableCell>
-                <TableCell align="center" sx={{ pl: 8 }}>
+                <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                  Room ID
+                </TableCell>
+                <TableCell sx={{ fontWeight: "600", width: "25%" }}>
                   Name
                 </TableCell>
-                <TableCell align="center" sx={{ pr: 14 }}>
+                <TableCell sx={{ fontWeight: "600", width: "25%" }}>
                   Status
                 </TableCell>
-                <TableCell align="center">Doctor Assigned</TableCell>
+                <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                  Doctor Assigned
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: "600", width: "auto", textAlign: "right" }}
+                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -434,35 +441,30 @@ const Rooms = (props) => {
                     "&:hover": {
                       backgroundColor: "#f9f9f9",
                     },
-                    "& > *": {
-                      borderBottom: "unset",
-                    },
                   }}
                 >
-                  <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                  <TableCell
+                    sx={{ color: "#25307F", fontWeight: "bold", width: "25%" }}
+                  >
                     {room.roomID}
                   </TableCell>
-                  <TableCell align="center" sx={{ pl: 8 }}>
+                  <TableCell sx={{ width: "25%" }}>
                     <Typography
                       variant="body1"
                       sx={{
                         fontWeight: "bold",
                         color: "#25307F",
                         cursor: "pointer",
+                        whiteSpace: "nowrap", // Prevents text from wrapping
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
                       }}
                     >
                       {room.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    {" "}
-                    {/* Increase 'pl' value for more spacing */}
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ ml: 16 }}
-                    >
+                  <TableCell sx={{ width: "25%" }}>
+                    <Box display="flex" alignItems="center" gap={1}>
                       <Box
                         sx={{
                           width: 10,
@@ -479,11 +481,10 @@ const Rooms = (props) => {
                       {room.status}
                     </Box>
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell sx={{ width: "25%" }}>
                     {room.assignedDoctor?.name || "Not Assigned"}
                   </TableCell>
-
-                  <TableCell align="right">
+                  <TableCell sx={{ width: "auto", textAlign: "right" }}>
                     <IconButton
                       onClick={(event) => handleMenuOpen(event, room)}
                     >
@@ -495,6 +496,7 @@ const Rooms = (props) => {
             </TableBody>
           </Table>
         </TableContainer>
+
         {/* Actions Menu */}
         <Menu
           anchorEl={anchorEl}
@@ -635,7 +637,7 @@ const Rooms = (props) => {
           </DialogActions>
         </Dialog>
       </div>
-    </>
+    </div>
   );
 };
 export default Rooms;

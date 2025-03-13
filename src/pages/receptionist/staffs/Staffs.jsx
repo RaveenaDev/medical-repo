@@ -89,7 +89,7 @@ const Staffs = (props) => {
 
   const navigate = useNavigate();
   return (
-    <div>
+    <div style={{ background: "#f1f1f1", height: "100lvh" }}>
       <div
         style={{
           position: "fixed",
@@ -104,7 +104,13 @@ const Staffs = (props) => {
       </div>
       <div style={{ marginTop: "150px" }}>
         <Box>
-          <div className={ayu.headerContainer}>
+          <div
+            className={ayu.headerContainer}
+            style={{
+              paddingBottom: "8px",
+              borderBottom: "0.5px solid #4A4A4A8C",
+            }}
+          >
             <div
               className={ayu.backButton}
               onClick={() => navigate(`/receptionist`)}
@@ -112,28 +118,95 @@ const Staffs = (props) => {
               <ArrowBackIosIcon />
             </div>
             <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
-            <h2 className={ayu.departmentTitleDetails}>200+</h2>
+            <h2
+              className={ayu.departmentTitleDetails}
+              style={{ color: "#878787" }}
+            >
+              200+
+            </h2>
           </div>
         </Box>
 
         {/* Table Section */}
-        <TableContainer component={Paper}>
+        <TableContainer>
           <Table
             sx={{
               borderCollapse: "separate",
               borderSpacing: "0 10px",
-              background: "#F1F1F1",
             }}
           >
             <TableHead>
               <TableRow>
-                <TableCell>Profile</TableCell>
-                <TableCell>Staff ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone Number</TableCell>
-                <TableCell>Department</TableCell>
-                <TableCell>Designation</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Profile
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Staff ID
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Phone Number
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Department
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Designation
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Status
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -174,16 +247,25 @@ const Staffs = (props) => {
                       {patient.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>{patient.phone}</TableCell>
-                  <TableCell>{patient.department.name}</TableCell>
-                  <TableCell>{patient.designation}</TableCell>
+                  <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
+                    {patient.phone}
+                  </TableCell>
+                  <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
+                    {patient.department.name}
+                  </TableCell>
+                  <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
+                    {patient.designation}
+                  </TableCell>
                   <TableCell>
                     <Chip
                       label={patient.status}
                       size="small"
                       sx={{
                         backgroundColor: "transparent", // Removes background
-                        color: patient.status === "Available" ? "green" : "red", // Black for Available, Red otherwise
+                        color:
+                          patient.status === "Available"
+                            ? "#3DB461"
+                            : "#E1473D",
                         fontWeight: "bold",
                         border: "none", // Ensures no border appears
                       }}

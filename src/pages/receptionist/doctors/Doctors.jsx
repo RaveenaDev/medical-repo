@@ -43,7 +43,7 @@ const Doctors = (props) => {
   };
 
   return (
-    <>
+    <div style={{ background: "#f1f1f1", height: "100lvh" }}>
       <div
         style={{
           position: "fixed",
@@ -66,12 +66,17 @@ const Doctors = (props) => {
               <ArrowBackIosIcon />
             </div>
             <h2 className={ayu.departmentTitle}>Total Doctors:</h2>
-            <h2 className={ayu.departmentTitleDetails}>8</h2>
+            <h2
+              className={ayu.departmentTitleDetails}
+              style={{ color: "#878787" }}
+            >
+              8
+            </h2>
 
             <div style={{ marginLeft: "25px" }}>
               {branches.length && (
                 <Grid xs={3}>
-                  <Box sx={{ width: "200px" }}>
+                  <Box sx={{ width: "250px", background: "#FFFFFF" }}>
                     {" "}
                     {/* Adjust width here */}
                     <Select
@@ -89,23 +94,26 @@ const Doctors = (props) => {
         </Box>
 
         {/* Table Section */}
-        <TableContainer component={Paper}>
+        <TableContainer>
           <Table
             sx={{
               borderCollapse: "separate",
               borderSpacing: "0 10px",
-              background: "#F1F1F1",
             }}
           >
             <TableHead>
               <TableRow>
-                <TableCell>Profile</TableCell>
-                <TableCell>Doctor ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone Number</TableCell>
-                <TableCell>Specialization</TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Booking</TableCell>
+                <TableCell sx={{ color: "#000000" }}>Profile</TableCell>
+                <TableCell sx={{ color: "#000000" }}>Doctor ID</TableCell>
+                <TableCell sx={{ color: "#000000" }}>Name</TableCell>
+                <TableCell sx={{ color: "#000000" }}>Phone Number</TableCell>
+                <TableCell sx={{ color: "#000000" }}>Specialization</TableCell>
+                <TableCell sx={{ color: "#000000" }} align="center">
+                  Status
+                </TableCell>
+                <TableCell sx={{ color: "#000000" }} align="center">
+                  Booking
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -132,17 +140,25 @@ const Doctors = (props) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: "bold", color: "#25307F" }}
+                    >
                       {truncateText(patient?._id, 8)}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1">
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#25307F", fontWeight: "bold" }}
+                    >
                       {truncateText(patient?.name, 13)}
                     </Typography>
                   </TableCell>
-                  <TableCell>{patient.phone}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
+                    {patient.phone}
+                  </TableCell>
+                  <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
                     {patient?.specialization || "Not Assigned"}
                   </TableCell>
                   <TableCell align="center">
@@ -155,29 +171,40 @@ const Doctors = (props) => {
                       sx={{
                         bgcolor:
                           patient.status === "Emergency Room"
-                            ? "#d4edda"
+                            ? "#D3E4D5"
+                            : patient.status === "With Patient"
+                            ? "#D3E4D5"
+                            : patient.status === "In Meeting"
+                            ? "#D3E4D5"
                             : patient.status === "On Leave"
-                            ? "#f8d7da"
+                            ? "#E4D6D3"
                             : patient.status === "Idle"
-                            ? "#ffffff"
+                            ? " #EBEBEB"
                             : undefined,
                         color:
                           patient.status === "Emergency Room"
-                            ? "#155724"
+                            ? "#2E823B"
                             : patient.status === "On Leave"
-                            ? "#721c24"
+                            ? "#E1473D"
+                            : patient.status === "In Meeting"
+                            ? "#2E823B"
                             : patient.status === "Idle"
-                            ? "#000000"
+                            ? "#878787"
+                            : patient.status === "With Patient"
+                            ? "#2E823B"
                             : undefined,
-
                         width: "9rem",
                         border:
                           patient.status === "Emergency Room"
-                            ? "1px solid green"
+                            ? "1px solid #2E823B"
                             : patient.status === "On Leave"
-                            ? "1px solid red"
+                            ? " 1px solid #E1473D"
                             : patient.status === "Idle"
-                            ? "1px solid black"
+                            ? " 1px solid #878787"
+                            : patient.status === "With Patient"
+                            ? " 1px solid #2E823B"
+                            : patient.status === "In Meeting"
+                            ? " 1px solid #2E823B"
                             : undefined,
 
                         // fontSize: "12px"
@@ -189,15 +216,11 @@ const Doctors = (props) => {
                     <Button
                       variant="outlined"
                       sx={{
-                        border: "2px solid purple", // Purple border
+                        border: "1px solid #25307F",
                         borderRadius: "18px", // Rounded corners
-                        color: "purple", // Blue text color
+                        color: " #25307F",
                         textTransform: "none", // Prevents uppercase text
                         fontSize: "12px", // Adjust text size if needed
-                        "&:hover": {
-                          borderColor: "purple", // Darker border on hover
-                          backgroundColor: "rgba(128, 0, 128, 0.1)", // Light purple hover effect
-                        },
                       }}
                     >
                       Book Appointment
@@ -209,7 +232,7 @@ const Doctors = (props) => {
           </Table>
         </TableContainer>
       </div>
-    </>
+    </div>
   );
 };
 export default Doctors;
