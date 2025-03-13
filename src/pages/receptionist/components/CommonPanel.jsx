@@ -230,6 +230,7 @@ const CommonPanel = ({ setIsBookAppointment }) => {
                   fontWeight: "500",
                   lineHeight: "100%",
                   letterSpacing: "0%",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
                 onClick={handleAppointmentRequests}
               >
