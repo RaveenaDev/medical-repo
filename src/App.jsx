@@ -43,6 +43,7 @@ import Tracking from "./pages/admin/patient/Tracking.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Register from "./pages/register/Register.jsx";
 import Information from "./pages/register/info/Information.jsx";
+import { Navigate } from "react-router-dom";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -52,6 +53,11 @@ function App() {
 
   // Hook to get the current location
   const location = useLocation();
+
+  const RedirectToLanding = () => {
+    window.location.href = "https://landingpage.stepcare.tech";
+    return null; // Prevents rendering anything
+  };
 
   // Determine role based on the route
   useEffect(() => {
@@ -68,7 +74,7 @@ function App() {
 
   // Determine if the current path is a login or signup page
   const isLoginPage = [
-    "/",
+    "/login",
     "/password-reset",
     "/recovery-link",
     "/update-password",
@@ -112,8 +118,9 @@ function App() {
           }} // Prevent content from going under the sidebar
         >
           <Routes>
+            <Route path="/" element={<RedirectToLanding />} />
             <Route
-              path="/"
+              path="/login"
               element={
                 <Login
                   setShouldShowSidebar={setShouldShowSidebar}
