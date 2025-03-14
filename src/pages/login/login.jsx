@@ -13,6 +13,17 @@ import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../components/State/Authentication/Action.js";
 import {Box} from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+
+
+const generateCaptcha = () => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let captcha = "";
+    for (let i = 0; i < 6; i++) {
+        captcha += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return captcha;
+};
 
 const Login = (props) => {
   const [userDetails, setUserDetails] = useState({
@@ -20,6 +31,12 @@ const Login = (props) => {
     password: "",
     // role: "HospitalAdmin",
   });
+
+    const [captcha, setCaptcha] = useState(generateCaptcha());
+    const [captchaInput, setCaptchaInput] = useState("");
+    const [captchaError, setCaptchaError] = useState("");
+    const [loading, setLoading] = useState(false);
+
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
@@ -39,10 +56,27 @@ const Login = (props) => {
     });
   };
 
+    const handleCaptchaChange = (e) => {
+        setCaptchaInput(e.target.value);
+    };
+
   const handleLoginClick = () => {
     //validation for user login & write an api call for user login
-
-    dispatch(login(userDetails));
+      if (captchaInput !== captcha) {
+          setCaptchaError("Invalid CAPTCHA. Please try again.");
+          setCaptcha(generateCaptcha());
+          setCaptchaInput("");
+          return;
+      }
+      setCaptchaError(""); // Clear error if CAPTCHA is correct
+      setLoading(true); // Show loader
+    dispatch(login(userDetails))
+        .then(() => {
+            setLoading(false); // Hide loader on success
+        })
+        .catch(() => {
+            setLoading(false); // Hide loader on failure
+        });
   };
   const handleForgetPassword = () => {
     navigate("/password-reset");
@@ -139,18 +173,21 @@ const Login = (props) => {
                  <Box sx={{
                      backgroundColor: '#25307F',
                      color: 'white',
-                     padding: '7px',
+                     padding: '7px 2px',
+                     paddingLeft: '12px',
                      borderRadius: '8px',
                      textAlign: 'center',
                      fontSize: '1.8rem', // Bigger font size
-                     letterSpacing: '1rem', // Gap between digits
+                     letterSpacing: '0.8rem', // Gap between digits
                      fontWeight: 600
                  }}>
-                     45673
+                     {captcha}
                  </Box>
              </Grid>
                     <Grid size={6}>
-                        <TextField name="Captcha" id="captcha_write" placeholder="Enter Captcha"
+                        <TextField name="captcha" id="captcha_write" placeholder="Enter Captcha"
+                                   value={captchaInput}
+                                   onChange={handleCaptchaChange}
                                    InputProps={{
                                        sx: {
                                            height: '58px', // Adjust height of the input box
@@ -175,17 +212,30 @@ const Login = (props) => {
                         />
                     </Grid>
          </Grid>
+          {captchaError && (
+              <p style={{display:'flex',justifyContent:'flex-end', color: "red", fontSize: "0.9rem", marginTop: "8px" }}>{captchaError}</p>
+          )}
         <Button
           variant="contained"
           sx={{
             fontSize: "24px",
+              height: '55px',
             textTransform: "capitalize",
             backgroundColor: "#25307F",
               borderRadius: '8px',
+              border: "none", // Remove any border
+              boxShadow: "none", // Remove any box shadow that might look like a border
+              "&:hover": {
+                  backgroundColor: "#1F276B", // Optional: adjust hover color without border
+                  boxShadow: "none", // Remove hover shadow
+              },
           }}
           onClick={handleLoginClick}
         >
-          Login
+            {loading ? <CircularProgress size={30} thickness={5}
+                                         sx={{
+                                             color: "white",
+                                         }}/> : "Login"}
         </Button>
         <Grid
           container
