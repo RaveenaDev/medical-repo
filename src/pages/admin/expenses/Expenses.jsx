@@ -349,6 +349,9 @@ const Expenses = (props) => {
               marginTop: "1.9rem",
               outline: "none",
               boxShadow: "none",
+              "&:hover": {
+                background: "#AEC3FF",
+              },
               "&:focus": {
                 outline: "none",
                 boxShadow: "none",
