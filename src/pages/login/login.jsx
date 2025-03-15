@@ -12,8 +12,9 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../components/State/Authentication/Action.js";
-import {Box} from "@mui/material";
+import {Box,Tooltip} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import RefreshIcon from "@mui/icons-material/Refresh"; // Import refresh icon
 
 
 const generateCaptcha = () => {
@@ -32,6 +33,9 @@ const Login = (props) => {
     // role: "HospitalAdmin",
   });
 
+
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const [captcha, setCaptcha] = useState(generateCaptcha());
     const [captchaInput, setCaptchaInput] = useState("");
     const [captchaError, setCaptchaError] = useState("");
@@ -54,6 +58,12 @@ const Login = (props) => {
       ...userDetails,
       [name]: value,
     });
+
+      if (name === "email") {
+          setEmailError(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? "" : "Invalid email format");
+      } else if (name === "password") {
+          setPasswordError(value.length >= 6 ? "" : "Password must be at least 6 characters long");
+      }
   };
 
     const handleCaptchaChange = (e) => {
@@ -61,6 +71,16 @@ const Login = (props) => {
     };
 
   const handleLoginClick = () => {
+      if (!userDetails.email || !userDetails.password) {
+          setEmailError(!userDetails.email ? "Email is required" : "");
+          setPasswordError(!userDetails.password ? "Password is required" : "");
+          return;
+      }
+
+      if(emailError || passwordError){
+          return;
+      }
+
     //validation for user login & write an api call for user login
       if (captchaInput !== captcha) {
           setCaptchaError("Invalid CAPTCHA. Please try again.");
@@ -78,6 +98,13 @@ const Login = (props) => {
             setLoading(false); // Hide loader on failure
         });
   };
+
+    const refreshCaptcha = () => {
+        setCaptcha(generateCaptcha());
+        setCaptchaInput("");
+        setCaptchaError("");
+    };
+
   const handleForgetPassword = () => {
     navigate("/password-reset");
   };
@@ -107,6 +134,8 @@ const Login = (props) => {
           name="email"
           value={userDetails.email}
           onChange={handleChange}
+          error={!!emailError}
+          helperText={emailError}
           InputProps={{
               sx: {
                   height: '58px', // Adjust height of the input box
@@ -137,6 +166,7 @@ const Login = (props) => {
           name="password"
           value={userDetails.password}
           onChange={handleChange}
+          error={!!passwordError}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -168,8 +198,9 @@ const Login = (props) => {
               }
           }}
         />
-         <Grid container spacing={5} justifyContent="space-between" alignItems="center" flexDirection={{ xs: 'column', md: 'row' }} size={12}>
-             <Grid size={6}>
+          {passwordError && <p style={{ color: "#D32F2F", fontSize: "0.77rem", marginTop: "2px",marginLeft:"16px"}}>{passwordError}</p>}
+         <Grid container spacing={6} justifyContent="space-between" alignItems="center" flexDirection={{ xs: 'column', md: 'row' }} size={12}>
+             <Grid size={6} sx={{display:'flex'}}>
                  <Box sx={{
                      backgroundColor: '#25307F',
                      color: 'white',
@@ -183,6 +214,21 @@ const Login = (props) => {
                  }}>
                      {captcha}
                  </Box>
+                 <Grid sx={{transform: 'translateY(10px)'}}>
+                     <Tooltip title="Refresh CAPTCHA">
+                         <IconButton onClick={refreshCaptcha} sx={{
+                             outline: "none", // Remove the focus outline
+                             "&:focus": {
+                                 outline: "none",
+                             },
+                             "&:focus-visible": {
+                                 outline: "none",
+                             },
+                         }}>
+                             <RefreshIcon />
+                         </IconButton>
+                     </Tooltip>
+                 </Grid>
              </Grid>
                     <Grid size={6}>
                         <TextField name="captcha" id="captcha_write" placeholder="Enter Captcha"
