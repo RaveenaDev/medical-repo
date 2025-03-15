@@ -195,31 +195,36 @@ const ReceptionPage = () => {
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {truncateText(row.doctor?.name, 14)}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {row.typeVisit}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {row.department.name}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {truncateText(row?.tokenNumber || "N/A", 13)}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6, pr: 2,color:"#747474"}}
+                            sx={{
+                              border: "none",
+                              px: 0.6,
+                              pr: 2,
+                              color: "#747474",
+                            }}
                           >
                             <span
                               style={{
@@ -346,7 +351,12 @@ const ReceptionPage = () => {
                           <TableCell
                             component="th"
                             scope="row"
-                            sx={{ border: "none", padding: "14px 14px",color:"#747474",fontWeight:500}}
+                            sx={{
+                              border: "none",
+                              padding: "14px 14px",
+                              color: "#747474",
+                              fontWeight: 500,
+                            }}
                           >
                             {truncateText(
                               row.doctors[0]?.name || "Not Assigned",
@@ -355,13 +365,21 @@ const ReceptionPage = () => {
                           </TableCell>
                           <TableCell
                             align="left"
-                            sx={{ border: "none", padding: "14px 14px",color:"#747474"}}
+                            sx={{
+                              border: "none",
+                              padding: "14px 14px",
+                              color: "#747474",
+                            }}
                           >
                             {truncateText(row.role, 14)}
                           </TableCell>
                           <TableCell
                             align="left"
-                            sx={{ border: "none", padding: "14px 14px",color:"#747474"}}
+                            sx={{
+                              border: "none",
+                              padding: "14px 14px",
+                              color: "#747474",
+                            }}
                           >
                             {row.appointments.length > 0
                               ? row.appointments[row.appointments.length - 1]
@@ -417,7 +435,11 @@ const ReceptionPage = () => {
                 <h4>{req.patient.name}</h4>
                 <p>
                   Appointment for {req.department.name},{" "}
-                  {new Date(req.tokenDate).toLocaleDateString()}
+                  {new Date(req.tokenDate).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
                 </p>
                 {/*<p>Appointment for ENT, 28 September</p>*/}
               </div>
@@ -437,7 +459,11 @@ const ReceptionPage = () => {
                 <h4>{req.patient.name}</h4>
                 <p>
                   Appointment for {req.doctor.specialization},{" "}
-                  {new Date(req.dateActioned).toLocaleDateString()}
+                  {new Date(req.dateActioned).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
                 </p>
                 {/*<p>Appointment for ENT, 28 September</p>*/}
               </div>

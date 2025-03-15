@@ -239,7 +239,14 @@ const PatientList = ({ allPatients }) => {
                   {patient.appointments[0]?.branch || "Not Assigned"}
                 </TableCell>
                 <TableCell>
-                  {new Date(patient.registrationDate).toLocaleDateString()}
+                  {new Date(patient.registrationDate).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    }
+                  )}
                 </TableCell>
                 <TableCell>
                   <Chip

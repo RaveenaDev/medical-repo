@@ -46,7 +46,13 @@ const RecordModal = ({ open, bill, onClose }) => {
               </div>
               <div>
                 <span className="bold">Invoice Date</span>
-                <span>{new Date(bill.invoiceDate).toLocaleDateString()}</span>
+                <span>
+                  {new Date(bill.invoiceDate).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </span>
               </div>
             </div>
             <div className="billing-divider"></div>
@@ -104,7 +110,13 @@ const RecordModal = ({ open, bill, onClose }) => {
                 </p>
                 <p>Mode: {bill.mode}</p>
                 <p>
-                  <span>{new Date(bill.invoiceDate).toLocaleDateString()}</span>
+                  <span>
+                    {new Date(bill.invoiceDate).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </span>
                 </p>
               </div>
             </div>

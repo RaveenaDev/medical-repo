@@ -62,7 +62,11 @@ const BillingModal = ({ open, bill, onClose }) => {
               <div>
                 <span className="bold">Invoice Date</span>
                 <span>
-                  {new Date(billByID?.invoiceDate).toLocaleDateString()}
+                  {new Date(billByID?.invoiceDate).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
                 </span>
               </div>
             </div>
@@ -122,7 +126,14 @@ const BillingModal = ({ open, bill, onClose }) => {
                 <p>Mode: Cash</p>
                 <p>
                   <span>
-                    {new Date(billByID?.invoiceDate).toLocaleDateString()}
+                    {new Date(billByID?.invoiceDate).toLocaleDateString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      }
+                    )}
                   </span>
                 </p>
               </div>
