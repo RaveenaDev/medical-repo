@@ -35,22 +35,9 @@ const Profile = (props) => {
     const fetchData = async () => {
       // backend response structure
       const response = {
-        // medicalHistory: [
-        //     "Type 2 diabetes diagnosed 5 years ago",
-        //     "Hypertension diagnosed 3 years ago",
-        //     "Family history of heart disease (father)",
-        // ],
         medicalHistory: patient.medicalHistory,
         currentMedications: patient.currentMedication,
-        // currentMedications: [
-        //     "Metformin (for diabetes)",
-        //     "Lisinopril (for hypertension)",
-        //     "Aspirin (for heart health)",
-        // ],
       };
-
-      // Simulating an API call delay
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setMedicalHistory(response.medicalHistory);
       setCurrentMedications(response.currentMedications);
@@ -78,21 +65,20 @@ const Profile = (props) => {
                   display: "flex",
                   justifyContent: "space-between",
                   gap: "20px",
-                  padding: "20px",
+                  padding: "5px 0",
                   width: "100%",
                 }}
               >
                 {/* Box 1 - Profile Card */}
                 <div
                   style={{
-                    width: "25%",
-
+                    width: "28%",
+                    padding: '20px 0',
                     backgroundColor: "#FFFFFF",
                     height: "auto",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    padding: "16px 20px",
                     borderRadius: "10px",
                     boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
                     textAlign: "center",
@@ -115,19 +101,20 @@ const Profile = (props) => {
                         width: 80,
                         height: 80,
                         borderRadius: "50%",
-                        marginBottom: "8px",
+                        marginBottom: "2px"
                       }}
                     />
                     <h4
                       style={{
-                        margin: "8px 0",
-                        fontSize: "18px",
-                        fontWeight: "bold",
+                        margin: "2px 0",
+                        fontSize: "20px",
+                        fontWeight: 500,
+                        color: '#25307F'
                       }}
                     >
                       {patient.name}
                     </h4>
-                    <p style={{ fontSize: "14px", color: "#555" }}>
+                    <p style={{ fontSize: "14px", color: "#878787",marginBottom:'24px'}}>
                       {patient.email}
                     </p>
 
@@ -140,14 +127,14 @@ const Profile = (props) => {
                       }}
                     >
                       <div>
-                        <h5 style={{ margin: "5px 0" }}>{completed}</h5>
-                        <p style={{ fontSize: "14px", color: "#777" }}>
+                        <h5 style={{color: '#25307F',fontSize:"24px"}}>{completed}</h5>
+                        <p style={{ fontSize: "14px", color: "#878787" }}>
                           Past Visits
                         </p>
                       </div>
                       <div>
-                        <h5 style={{ margin: "5px 0" }}>{upcoming}</h5>
-                        <p style={{ fontSize: "14px", color: "#777" }}>
+                        <h5 style={{fontSize:"24px",color: '#25307F'}}>{upcoming}</h5>
+                        <p style={{ fontSize: "14px", color: "#878787" }}>
                           Upcoming
                         </p>
                       </div>
@@ -156,7 +143,7 @@ const Profile = (props) => {
                     <button
                       style={{
                         marginTop: "16px",
-                        padding: "12px 24px",
+                        padding: "12px 10px",
                         width: "100%",
                         border: "2px solid #25307F",
                         backgroundColor: "transparent",
