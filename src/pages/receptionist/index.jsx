@@ -204,7 +204,7 @@ function Receptionist(props) {
   return (
     <div
       style={{
-        height: "100vh", // Make the entire div take up the full viewport height
+        height: "95dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >
@@ -402,7 +402,7 @@ function Receptionist(props) {
                             </TableCell>
                           </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody sx={{ marginBottom: "50px" }}>
                           {appointments.length > 0 ? (
                             appointments.map((appointment) => (
                               <TableRow
