@@ -231,6 +231,10 @@ const CommonPanel = ({ setIsBookAppointment }) => {
                   lineHeight: "100%",
                   letterSpacing: "0%",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
                 }}
                 onClick={handleAppointmentRequests}
               >
@@ -268,6 +272,10 @@ const CommonPanel = ({ setIsBookAppointment }) => {
                   lineHeight: "100%",
                   letterSpacing: "0%",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
                 }}
                 onClick={handleBilling}
               >
@@ -295,6 +303,12 @@ const CommonPanel = ({ setIsBookAppointment }) => {
                   },
                   "&:active": {
                     backgroundColor: "#181F52",
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
                   },
                 }}
                 onClick={handleBookAppointment}

@@ -272,6 +272,10 @@ const Rooms = (props) => {
                     textTransform: "capitalize",
                     padding: "2px 18px",
                     backgroundColor: "#25307F",
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
                   }}
                   onClick={handleAddDialogOpen} // Open modal on click
                 >
@@ -405,6 +409,10 @@ const Rooms = (props) => {
                   width: "200px",
                   backgroundColor: "#25307F",
                   "&:hover": { backgroundColor: "green" },
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
                 }}
               >
                 Save

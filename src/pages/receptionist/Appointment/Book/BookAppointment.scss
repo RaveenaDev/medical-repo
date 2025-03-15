@@ -32,9 +32,16 @@
     .close-btn {
       height: 30px;
       width: 30px;
-      min-width: none;
       background: none;
       padding: 4px 8px;
+      border: none; // Ensure no border is applied
+
+      &:hover,
+      &:focus,
+      &:active {
+        outline: none;
+        box-shadow: none;
+      }
     }
   }
 

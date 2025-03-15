@@ -32,7 +32,12 @@ const AppointmentRequestModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
-          <Button className="close-btn" onClick={onClose}>
+          <Button className="close-btn" onClick={onClose} sx={{
+            "&:focus": {
+              outline: "none",
+              boxShadow: "none",
+            },
+          }}>
             <img src={arrowBack} alt="Back" />
           </Button>
           <h2>Appointment Requests </h2>

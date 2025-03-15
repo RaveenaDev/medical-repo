@@ -82,9 +82,6 @@ const Departments = (props) => {
   }, [dispatch]);
 
   const receptionist = useSelector((store) => store.receptionist);
-  const appointmentRequests = useSelector(
-    (store) => store.receptionist.appointmentRequests
-  );
 
   const allDepartments = receptionist.departments;
 
@@ -118,9 +115,9 @@ const Departments = (props) => {
                 ) : (
                   <div className="departments">
                     <div className={ayu.headerContainer}>
-                      <button className={ayu.backButton}>
+                      <div className={ayu.backButton}>
                         <ArrowBackIosIcon />
-                      </button>
+                      </div>
                       <h2 className={ayu.departmentTitle}>Department</h2>
                     </div>
 
