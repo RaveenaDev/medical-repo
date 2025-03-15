@@ -140,75 +140,43 @@ const DepartDetails = (props) => {
                           {" "}
                           {/* Adds a gap of 2 (default = 16px) between children */}
                           <FormControl fullWidth>
-                            <InputLabel
-                              id="demo-simple-select-label"
-                              // sx={{ fontWeight: 'bold' }} // Makes the label text bold
-                            >
-                              Total Doctors:{" "}
-                              <span
-                                style={{
-                                  fontWeight: "bold",
-                                  fontSize: "1.1em",
-                                  marginLeft: "1px",
-                                  position: "relative",
-                                  top: "1px", // Adjust this value to shift it further down
-                                }}
-                              >
-                                {department?.totalDoctors.length}
-                              </span>
-                            </InputLabel>
                             <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              value={age}
-                              label="Total Doctors: 03"
-                              onChange={handleChange}
-                              IconComponent={KeyboardArrowDownIcon} // Use ArrowDownwardIcon as the dropdown icon
-                              sx={{
-                                "& .MuiSelect-icon": {
-                                  color: "#25307f", // Change icon color to blue
-                                },
-                              }}
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={age}
+                                onChange={handleChange}
+                                IconComponent={KeyboardArrowDownIcon}
+                                displayEmpty // Ensures label remains visible
+                                renderValue={() => `Total Doctors: ${department?.totalDoctors.length}`} // Placeholder text inside Select
+                                sx={{
+                                  "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
+                                }}
                             >
-                              {
-                                department?.totalDoctors.map((doctor,index) => (
-                                    <MenuItem key={index} value={doctor}>{doctor}</MenuItem>
-                                ))
-                              }
+                              {department?.totalDoctors.map((doctor, index) => (
+                                  <MenuItem key={index} value={doctor} sx={{ color: "#000", opacity: 1, pointerEvents: "none" }} >
+                                    {doctor}
+                                  </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
+
                           <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">
-                              Total Nurses/Support Staff:{" "}
-                              <span
-                                style={{
-                                  fontWeight: "bold",
-                                  fontSize: "1.1em",
-                                  marginLeft: "1px",
-                                  position: "relative",
-                                  top: "1px",
-                                }}
-                              >
-                                {department?.totalNurses}
-                              </span>
-                            </InputLabel>
                             <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              value={age}
-                              label="Total Nurses/Support Staff: 04"
-                              onChange={handleChange}
-                              // IconComponent={CustomIcon} // Custom icon component
-                              IconComponent={KeyboardArrowDownIcon} // Use ArrowDownwardIcon as the dropdown icon
-                              sx={{
-                                "& .MuiSelect-icon": {
-                                  color: "#25307f", // Change icon color to blue
-                                },
-                              }}
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={age}
+                                onChange={handleChange}
+                                IconComponent={KeyboardArrowDownIcon}
+                                displayEmpty // Ensures label remains visible
+                                renderValue={() => `Total Nurses/Support Staff: ${department?.totalNurses}`} // Placeholder text inside Select
+                                sx={{
+                                  "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
+                                }}
                             >
-                              <MenuItem value="NURSE1">NURSE 1</MenuItem>
+                              <MenuItem value="NURSE1" sx={{ color: "#000", opacity: 1, pointerEvents: "none" }}>NURSE 1</MenuItem>
                             </Select>
                           </FormControl>
+
                           <div className={avi.details}>
                             <h3>Specialist Doctors:</h3>
                             {department?.specialistDoctors.length > 0 ? (
