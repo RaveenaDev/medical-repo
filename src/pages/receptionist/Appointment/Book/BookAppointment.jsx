@@ -14,7 +14,7 @@ import {
 } from "../../../../components/State/Receptionist/Action.js";
 import { useNavigate } from "react-router-dom";
 
-const BookAppointment = ({ isOpen, onClose }) => {
+const BookAppointment = ({ isOpen, onClose, isFromDoctor, doctorName }) => {
   if (!isOpen) return null;
 
   const [formData, setFormData] = useState({
@@ -23,12 +23,14 @@ const BookAppointment = ({ isOpen, onClose }) => {
     email: "",
     appointmentType: "",
     departmentName: "",
-    doctorEmail: "",
+    doctorEmail: doctorName || "", // Set the initial value,
     typeVisit: "Walk in",
     note: "",
     date: new Date(),
   });
-
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, doctorName }));
+  }, [doctorName]);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -106,7 +108,9 @@ const BookAppointment = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="book-appointment">
+    <div
+      className={`book-appointment ${isFromDoctor ? "from-doctor" : "default"}`}
+    >
       <div className="book-header">
         <button className="close-btn" onClick={onClose}>
           <img src={arrowBack} alt="Back" />

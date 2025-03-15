@@ -6,12 +6,17 @@
   color: black;
   display: flex;
   flex-direction: column;
-  max-height: 65vh; // Prevent overflowing the screen
   // background: white;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden; // Prevent content from overflowing the modal
+  &.from-doctor {
+    max-height: 75vh;
+  }
 
+  &.default {
+    max-height: 65vh; // Prevent overflowing the screen
+  }
   .book-header {
     position: sticky;
     top: 0;
