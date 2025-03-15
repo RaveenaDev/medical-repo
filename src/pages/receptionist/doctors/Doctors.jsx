@@ -80,7 +80,7 @@ const Doctors = (props) => {
               className={ayu.departmentTitleDetails}
               style={{ color: "#878787" }}
             >
-              8
+              {doctors?.length}
             </h2>
 
             <div style={{ marginLeft: "25px" }}>
@@ -226,7 +226,7 @@ const Doctors = (props) => {
                     <Button
                       variant="outlined"
                       sx={{
-                        border: "1px solid #25307F",
+                        border: "1px solidrgb(28, 30, 49)",
                         borderRadius: "18px", // Rounded corners
                         color: " #25307F",
                         textTransform: "none", // Prevents uppercase text

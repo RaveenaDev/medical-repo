@@ -132,7 +132,7 @@ const Staffs = (props) => {
               className={ayu.departmentTitleDetails}
               style={{ color: "#878787" }}
             >
-              200+
+              {staffs?.length}
             </h2>
           </div>
         </Box>
