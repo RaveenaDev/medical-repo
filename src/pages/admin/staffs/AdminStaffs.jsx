@@ -229,6 +229,9 @@ const AdminStaffs = (props) => {
                   padding: "2px 18px",
                   backgroundColor: "#25307F",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:hover": {
+                    background: "#AEC3FF",
+                  },
                 }}
                 onClick={() => setAddDialogOpen(true)} // Open the modal
               >
@@ -376,7 +379,9 @@ const AdminStaffs = (props) => {
               sx={{
                 width: "200px",
                 backgroundColor: "#25307F",
-                "&:hover": { backgroundColor: "green" },
+                "&:hover": {
+                  background: "#AEC3FF",
+                },
               }}
             >
               Save
@@ -631,7 +636,18 @@ const AdminStaffs = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleEditDialogClose}>Cancel</Button>
-            <Button onClick={handleSaveEditedStaff}>Save</Button>
+            <Button
+              onClick={handleSaveEditedStaff}
+              sx={{
+                backgroundColor: "#25307F",
+                "&:hover": {
+                  background: "#AEC3FF",
+                },
+              }}
+              variant="contained"
+            >
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
       </div>

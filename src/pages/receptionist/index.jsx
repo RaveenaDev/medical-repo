@@ -202,7 +202,12 @@ function Receptionist(props) {
   }
 
   return (
-    <>
+    <div
+      style={{
+        height: "95dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -341,17 +346,32 @@ function Receptionist(props) {
                       ))}
                     </div>
                   </div>
-
                   {/* Table Section */}
-                  <div>
-                    <TableContainer>
+                  <div
+                    style={{
+                      position: "relative",
+                    }}
+                  >
+                    <TableContainer
+                      sx={{
+                        maxHeight: "calc(100vh - 260px)", // Adjust this to fit your layout needs
+                        overflowY: "auto",
+                      }}
+                    >
                       <Table
                         sx={{
                           borderCollapse: "separate",
                           borderSpacing: "0 10px",
                         }}
                       >
-                        <TableHead>
+                        <TableHead
+                          sx={{
+                            position: "sticky",
+                            top: 0,
+                            backgroundColor: "white", // Ensure it's visible
+                            zIndex: 10, // Keep it above other elements
+                          }}
+                        >
                           <TableRow>
                             <TableCell sx={{ color: "#000", fontSize: "16px" }}>
                               Case Id
@@ -382,7 +402,7 @@ function Receptionist(props) {
                             </TableCell>
                           </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody sx={{ marginBottom: "50px" }}>
                           {appointments.length > 0 ? (
                             appointments.map((appointment) => (
                               <TableRow
@@ -502,7 +522,7 @@ function Receptionist(props) {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

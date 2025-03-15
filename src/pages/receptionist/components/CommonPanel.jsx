@@ -188,7 +188,7 @@ const CommonPanel = ({ setIsBookAppointment }) => {
                 <Box
                   sx={{
                     backgroundColor: "white",
-                    boxShadow: 3,
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
                     borderRadius: 1,
                     width: 180, // Adjust width here
                     textAlign: "center",

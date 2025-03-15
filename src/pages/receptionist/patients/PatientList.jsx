@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -36,14 +36,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getPatients,
+  updatePatient,
+} from "../../../components/State/Receptionist/Action";
 
-const PatientList = ({ allPatients }) => {
+const PatientList = () => {
   const [sortOrder, setSortOrder] = useState("Newest to Oldest");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editedPatient, setEditedPatient] = useState({});
+  const [editedPatient, setEditedPatient] = useState({ status: "" });
+  const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({
     status: "All",
@@ -70,16 +76,14 @@ const PatientList = ({ allPatients }) => {
 
   // Handle Edit Action
   const handleEdit = () => {
-    setEditedPatient(selectedPatient); // Load selected patient into editedPatient
-    setEditDialogOpen(true);
-    handleMenuClose();
-  };
+    if (selectedPatient) {
+      setEditedPatient({
+        id: selectedPatient._id,
+        status: selectedPatient.status,
+      });
+    }
 
-  // Handle Delete Action
-  const handleDelete = () => {
-    setPatients((prev) =>
-      prev.filter((patient) => patient.id !== selectedPatient.id)
-    );
+    setEditDialogOpen(true);
     handleMenuClose();
   };
 
@@ -101,20 +105,21 @@ const PatientList = ({ allPatients }) => {
 
   // Handle Save Edited Patient
   const handleSaveEditedPatient = () => {
-    setPatients((prev) =>
-      prev.map((patient) =>
-        patient.id === editedPatient.id ? editedPatient : patient
-      )
-    );
+    dispatch(updatePatient(editedPatient.id, editedPatient));
     handleEditDialogClose();
   };
-
   const navigate = useNavigate();
   const handleClick = (patient) => {
     navigate(`/receptionist/patients/profile`, { state: { patient } });
   };
 
-  const totalPatients = allPatients.patients;
+  useEffect(() => {
+    dispatch(getPatients());
+  }, [dispatch]);
+
+  const receptionist = useSelector((store) => store.receptionist);
+  const noOfPatients = receptionist.totalPatients;
+  const totalPatients = receptionist.patients;
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -141,7 +146,7 @@ const PatientList = ({ allPatients }) => {
               color: "black",
             }}
           >
-            {allPatients?.noOfPatients}{" "}
+            {noOfPatients}{" "}
             <Typography
               variant="body1"
               sx={{ display: "inline", color: "black" }}
@@ -177,7 +182,6 @@ const PatientList = ({ allPatients }) => {
           </Button>
         </Box>
       </Box>
-
       {/* Table Section */}
       <TableContainer component={Paper}>
         <Table
@@ -239,7 +243,14 @@ const PatientList = ({ allPatients }) => {
                   {patient.appointments[0]?.branch || "Not Assigned"}
                 </TableCell>
                 <TableCell>
-                  {new Date(patient.registrationDate).toLocaleDateString()}
+                  {new Date(patient.registrationDate).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    }
+                  )}
                 </TableCell>
                 <TableCell>
                   <Chip
@@ -275,16 +286,11 @@ const PatientList = ({ allPatients }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
       {/* Actions Menu */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
-        PaperProps={{
-          elevation: 2,
-          sx: { padding: 1 },
-        }}
       >
         <MenuItem onClick={handleEdit}>
           <ListItemIcon>
@@ -292,120 +298,50 @@ const PatientList = ({ allPatients }) => {
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleDelete}>
-          <ListItemIcon>
-            <DeleteIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
-        </MenuItem>
       </Menu>
-
-      {/* Edit Patient Dialog */}
+      {/* // Edit Patient Dialog */}
       <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
         <DialogTitle>Edit Patient</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Modify the details of the patient.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.name}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, name: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.email}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, email: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Phone"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.phone}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, phone: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Type of Visit"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.type}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, type: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Branch"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.branch}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, branch: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Date"
-            type="date"
-            fullWidth
-            variant="outlined"
-            value={editedPatient.date}
-            onChange={(e) =>
-              setEditedPatient({ ...editedPatient, date: e.target.value })
-            }
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+        <DialogContent sx={{ width: "250px" }}>
           <FormControl fullWidth margin="dense">
             <FormLabel>Status</FormLabel>
             <RadioGroup
               name="status"
-              value={editedPatient.status}
+              value={editedPatient.status || ""}
               onChange={(e) =>
                 setEditedPatient({ ...editedPatient, status: e.target.value })
               }
             >
               <FormControlLabel
-                value="Active"
+                value="active"
                 control={<Radio />}
                 label="Active"
               />
               <FormControlLabel
-                value="In-active"
+                value="inactive"
                 control={<Radio />}
-                label="In-active"
+                label="Inactive"
               />
             </RadioGroup>
           </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose}>Cancel</Button>
-          <Button onClick={handleSaveEditedPatient}>Save</Button>
+          <Button
+            onClick={handleSaveEditedPatient}
+            sx={{
+              backgroundColor: "#25307F",
+              "&:hover": {
+                background: "#AEC3FF",
+              },
+            }}
+            variant="contained"
+          >
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Filter Drawer */}
+      ;{/* Filter Drawer */}
       <Drawer
         anchor="right"
         open={filterDrawerOpen}

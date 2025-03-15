@@ -189,7 +189,11 @@ const Records = () => {
             <span className="blue">{item.patient.name}</span>
             <span className="grey">{item.patient.phone}</span>
             <span className="grey">
-              {new Date(item.createdAt).toLocaleDateString()}
+              {new Date(item.createdAt).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })}
             </span>
             <span className="grey"> {item.totalAmount}</span>
             <span className={`status ${item.status.toLowerCase()}`}>

@@ -349,6 +349,9 @@ const Expenses = (props) => {
               marginTop: "1.9rem",
               outline: "none",
               boxShadow: "none",
+              "&:hover": {
+                background: "#AEC3FF",
+              },
               "&:focus": {
                 outline: "none",
                 boxShadow: "none",
@@ -476,7 +479,11 @@ const Expenses = (props) => {
                       {row.details}
                     </TableCell>
                     <TableCell align="center" sx={{ border: "none" }}>
-                      {new Date(row.date).toLocaleDateString()}
+                      {new Date(row.date).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
                     </TableCell>
                     <TableCell align="center">
                       <IconButton
