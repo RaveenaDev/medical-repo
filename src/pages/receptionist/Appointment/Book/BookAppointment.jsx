@@ -122,6 +122,7 @@ const BookAppointment = ({ isOpen, onClose }) => {
             onChange={handleDateChange}
             name="date"
             value={formData.date}
+            tileDisabled={({ date }) => date < new Date().setHours(0, 0, 0, 0)} // Disable past dates
           />
           <h3>Note</h3>
           <TextField
