@@ -83,7 +83,6 @@ const CommonPanel = ({ setIsBookAppointment }) => {
 
   const noOfDoctors = receptionist.totalDoctors;
   const doctors = receptionist.doctors;
-  console.log(doctors);
 
   const noOfStaffs = receptionist.totalStaffs;
   const staffs = receptionist.staffs;

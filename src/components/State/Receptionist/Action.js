@@ -1,16 +1,21 @@
 import {
-  ADD_ROOM, DELETE_ROOM,
+  ADD_ROOM,
+  DELETE_ROOM,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_BY_ID,
-  GET_BILLS, GET_COMPLETED_APPOINTMENTS,
+  GET_BILLS,
+  GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
-  GET_DOCTORS_BY_DEPARTMENT, GET_ONGOING_APPOINTMENTS,
+  GET_DOCTORS_BY_DEPARTMENT,
+  GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
-  GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
-  GET_STAFFS, GET_WAITING_APPOINTMENTS
+  GET_ROOMS,
+  GET_SCHEDULED_APPOINTMENTS,
+  GET_STAFFS,
+  GET_WAITING_APPOINTMENTS,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -232,20 +237,14 @@ export const getAppointments = (activeLabel) => async (dispatch) => {
 
     dispatch({ type: GET_APPOINTMENTS, payload: data });
 
-    if(data.message === 'Scheduled appointments retrieved successfully'){
-      dispatch({type: GET_SCHEDULED_APPOINTMENTS,payload: data})
-    }
-
-    else if(data.message === 'Ongoing appointments retrieved successfully'){
-      dispatch({type: GET_ONGOING_APPOINTMENTS,payload: data})
-    }
-
-    else if(data.message === 'Waiting appointments retrieved successfully'){
-      dispatch({type: GET_WAITING_APPOINTMENTS,payload: data})
-    }
-
-    else{
-      dispatch({type: GET_COMPLETED_APPOINTMENTS,payload: data})
+    if (data.message === "Scheduled appointments retrieved successfully") {
+      dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+    } else if (data.message === "Ongoing appointments retrieved successfully") {
+      dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+    } else if (data.message === "Waiting appointments retrieved successfully") {
+      dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+    } else {
+      dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
     }
   } catch (error) {
     console.log(error);
@@ -316,5 +315,27 @@ export const getDoctorsByDepartment = (departId) => async (dispatch) => {
     dispatch({ type: GET_DOCTORS_BY_DEPARTMENT, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+export const updatePatient = (patientId, updatedData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.put(`${API_URL}/${patientId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch(getPatients());
+    toast.success("Patient Status Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error updating Patient:", error);
+    toast.error(" Patient Updation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };

@@ -379,7 +379,9 @@ const AdminStaffs = (props) => {
               sx={{
                 width: "200px",
                 backgroundColor: "#25307F",
-                "&:hover": { backgroundColor: "green" },
+                "&:hover": {
+                  background: "#AEC3FF",
+                },
               }}
             >
               Save
@@ -634,7 +636,18 @@ const AdminStaffs = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleEditDialogClose}>Cancel</Button>
-            <Button onClick={handleSaveEditedStaff}>Save</Button>
+            <Button
+              onClick={handleSaveEditedStaff}
+              sx={{
+                backgroundColor: "#25307F",
+                "&:hover": {
+                  background: "#AEC3FF",
+                },
+              }}
+              variant="contained"
+            >
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
