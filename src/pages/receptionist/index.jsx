@@ -369,7 +369,7 @@ function Receptionist(props) {
                             position: "sticky",
                             top: 0,
                             backgroundColor: "white", // Ensure it's visible
-                            zIndex: 100, // Keep it above other elements
+                            zIndex: 10, // Keep it above other elements
                           }}
                         >
                           <TableRow>
