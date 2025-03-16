@@ -1,5 +1,5 @@
 import {
-  ADD_ROOM,
+  ADD_ROOM, BOOK_APPOINTMENT,
   DELETE_ROOM,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
@@ -206,15 +206,15 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
 
     dispatch(getAppointments("Scheduled"));
 
-    // dispatch({ type: BOOK_APPOINTMENT, payload: data });
+    dispatch({ type: BOOK_APPOINTMENT, payload: data });
 
     // Show success toast
-    toast.success("Appointment Booked successfully!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 3000,
-    });
+    // toast.success("Appointment Booked successfully!", {
+    //   position: "bottom-right", // Use string for position
+    //   autoClose: 3000,
+    // });
 
-    onClose();
+    // onClose();
   } catch (error) {
     console.log(error);
     toast.error("Failed to book appointment. Please try again!", {

@@ -201,6 +201,8 @@ function Receptionist(props) {
       appointments = [];
   }
 
+  // console.log("APP: ",appointments)
+
   return (
     <div
       style={{

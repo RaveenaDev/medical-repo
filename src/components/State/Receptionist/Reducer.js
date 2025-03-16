@@ -42,6 +42,7 @@ const initialState = {
   isLoading: true,
   error: null,
   success: null,
+  bookAppointment: null
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -158,8 +159,9 @@ export const receptionistReducer = (state = initialState, action) => {
     case BOOK_APPOINTMENT:
       return {
         ...state,
-        totalAppointments: action.payload.updatedPatientAppointments.length,
-        appointments: [...state.appointments, action.payload.appointment],
+        // totalAppointments: action.payload.updatedPatientAppointments.length,
+        // appointments: [...state.appointments, action.payload.appointment],
+        bookAppointment: "Appointment Booked Successfully"
       };
 
     case GET_APPOINTMENT_REQUESTS:
