@@ -55,25 +55,25 @@ const Profile = (props) => {
 
   return (
     <>
-      <div className={rav.receptionist}>
+      <div>
         {!props.entity ? (
           <>
             <PatientHeader patient={patient} />
-            <Grid container spacing={2}>
+            <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   gap: "20px",
                   padding: "5px 0",
-                  width: "100%",
+                  width: "75vw", // Optional
                 }}
               >
                 {/* Box 1 - Profile Card */}
                 <div
                   style={{
-                    width: "28%",
-                    padding: '20px 0',
+                    width: "25%",
+                    padding: "20px 0",
                     backgroundColor: "#FFFFFF",
                     height: "auto",
                     display: "flex",
@@ -101,7 +101,7 @@ const Profile = (props) => {
                         width: 80,
                         height: 80,
                         borderRadius: "50%",
-                        marginBottom: "2px"
+                        marginBottom: "2px",
                       }}
                     />
                     <h4
@@ -109,12 +109,18 @@ const Profile = (props) => {
                         margin: "2px 0",
                         fontSize: "20px",
                         fontWeight: 500,
-                        color: '#25307F'
+                        color: "#25307F",
                       }}
                     >
                       {patient.name}
                     </h4>
-                    <p style={{ fontSize: "14px", color: "#878787",marginBottom:'24px'}}>
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: "#878787",
+                        marginBottom: "24px",
+                      }}
+                    >
                       {patient.email}
                     </p>
 
@@ -127,13 +133,17 @@ const Profile = (props) => {
                       }}
                     >
                       <div>
-                        <h5 style={{color: '#25307F',fontSize:"24px"}}>{completed}</h5>
+                        <h5 style={{ color: "#25307F", fontSize: "24px" }}>
+                          {completed}
+                        </h5>
                         <p style={{ fontSize: "14px", color: "#878787" }}>
                           Past Visits
                         </p>
                       </div>
                       <div>
-                        <h5 style={{fontSize:"24px",color: '#25307F'}}>{upcoming}</h5>
+                        <h5 style={{ fontSize: "24px", color: "#25307F" }}>
+                          {upcoming}
+                        </h5>
                         <p style={{ fontSize: "14px", color: "#878787" }}>
                           Upcoming
                         </p>
@@ -209,7 +219,7 @@ const Profile = (props) => {
                     backgroundColor: "#FFFFFF", // Set the background color to white
                     padding: "16px", // Optional padding for content spacing
                     borderRadius: "8px", // Optional rounded corners
-                    width: "75vw", // Optional
+                    width: "73vw", // Optional
                   }}
                 >
                   <Typography
