@@ -50,8 +50,10 @@ const Sidebar = ({ role }) => {
     setActiveIndex(index);
     navigate(`${option.path}`);
   };
+  const [activeSub, setActiveSub] = useState("");
 
   const handleSubClick = (path) => {
+    setActiveSub(path);
     if (role === "admin") {
       navigate(`/admin/settings/${path}`);
     } else if (role === "receptionist") {
@@ -88,32 +90,36 @@ const Sidebar = ({ role }) => {
               variant="body1"
               onClick={() => handleSubClick("")}
               gutterBottom
-              sx={{ cursor: "pointer" }}
+              className={`${activeSub === "" ? adi.selected : "option"}`}
             >
-              FAQ's
+              <span>FAQ's</span>
             </Typography>
             <Typography
               variant="body1"
               onClick={() => handleSubClick("privacyPolicy")}
               gutterBottom
-              sx={{ cursor: "pointer" }}
+              className={`${
+                activeSub === "privacyPolicy" ? adi.selected : "option"
+              }`}
             >
-              Privacy Policy
+              <span>Privacy Policy</span>
             </Typography>
             <Typography
               variant="body1"
               onClick={() => handleSubClick("helpAndSupport")}
               gutterBottom
-              sx={{ cursor: "pointer" }}
+              className={`${
+                activeSub === "helpAndSupport" ? adi.selected : "option"
+              }`}
             >
-              Help & Support
+              <span> Help & Support</span>
             </Typography>
             <Typography
               variant="body1"
               onClick={handlelogout}
-              sx={{ cursor: "pointer" }}
+              className="option"
             >
-              Logout
+              <span>Logout</span>
             </Typography>
           </Box>
         </div>
