@@ -65,41 +65,48 @@ const ProgressTracker = ({ patient }) => {
       flexDirection="row"
       justifyContent="center"
       alignItems="start"
-      gap="2px"
     >
-      <Timeline position="left" style={{ marginTop: "30px" }}>
+      <Timeline
+          position="left"
+          style={{ marginTop: "42px", paddingRight: "0", marginLeft: "12px" }}
+      >
         {steps.map((step, index) => (
-          <TimelineItem key={index}>
-            <TimelineSeparator>
-              <TimelineDot
-                color={step.status === "Ongoing" ? "primary" : "success"}
-                variant={step.status === "Ongoing" ? "filled" : "outlined"}
-              />
-              {index < steps.length - 1 && <TimelineConnector />}
-            </TimelineSeparator>
-            <TimelineContent></TimelineContent>
-          </TimelineItem>
+            <TimelineItem key={index} style={{ padding: 0, margin: 0 }}>
+              <TimelineSeparator style={{ padding: 0, margin: 0 }}>
+                <TimelineDot
+                    sx={{
+                      backgroundColor: step.status === "Ongoing" ? "#2E823B" : "#EAA000",
+                      borderColor: step.status === "Ongoing" ? "#2E823B" : "#EAAA000",
+                    }}
+                />
+                {index < steps.length - 1 && (
+                    <TimelineConnector sx={{ height: "100%" }} />
+                )}
+              </TimelineSeparator>
+              <TimelineContent style={{ padding: 0 }}></TimelineContent>
+            </TimelineItem>
         ))}
       </Timeline>
 
-      <TableContainer component={Paper} style={{ maxWidth: 980 }}>
+
+      <TableContainer style={{marginTop:"-22px",paddingRight:"22px"}}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Typography variant="h6">Phase</Typography>
+              <TableCell sx={{color:'#878787',paddingLeft:"44px"}}>
+                Phase
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Date</Typography>
+              <TableCell sx={{color:'#878787',paddingLeft:"40px"}}>
+                Date
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Responsible</Typography>
+              <TableCell sx={{color:'#878787'}}>
+                Responsible
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Progress</Typography>
+              <TableCell sx={{color:'#878787'}}>
+                Progress
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Status</Typography>
+              <TableCell sx={{color:'#878787',paddingLeft:"20px"}}>
+                Status
               </TableCell>
             </TableRow>
           </TableHead>
@@ -111,33 +118,27 @@ const ProgressTracker = ({ patient }) => {
                   backgroundColor:
                     step.status === "Ongoing" ? "#e8f5e9" : "inherit",
                 }}
-                onClick={() => handleClick()}
+                onClick={step.status === "Ongoing" ? () => handleClick() : ""}
                 sx={{
-                  cursor: "pointer",
+                  cursor: step.status === "Ongoing" ? "pointer" : "",
                   transition: "background-color 0.3s",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#f0f0f0")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    step.status === "Ongoing" ? "#e8f5e9" : "inherit")
-                }
               >
-                <TableCell>{step.phase}</TableCell>
+                <TableCell sx={{padding:"24px 12px"}}>{step.phase}</TableCell>
                 <TableCell>{step.date}</TableCell>
                 <TableCell>{step.responsible}</TableCell>
                 <TableCell>{step.progress}</TableCell>
-                <TableCell>
+                <TableCell >
                   <Typography
                     style={{
                       color:
                         step.status === "Completed"
                           ? "#EAA000"
                           : step.status === "Ongoing"
-                          ? "blue"
+                          ? "#2E823B"
                           : "black",
-                      fontWeight: "bold",
+                      fontWeight:500,
+                      fontSize: "14px"
                     }}
                   >
                     {step.status}

@@ -221,25 +221,27 @@ const Profile = (props) => {
                 <Box
                   sx={{
                     backgroundColor: "#FFFFFF", // Set the background color to white
-                    padding: "16px", // Optional padding for content spacing
+                    padding: "16px 0", // Optional padding for content spacing
                     borderRadius: "8px", // Optional rounded corners
                     width: "73vw", // Optional
                   }}
                 >
-                  <Typography
-                    variant="h3"
-                    sx={{ color: "#4A4A4A", fontSize: "20px" }}
-                  >
-                    Progress Tracker
-                  </Typography>
+                  <div style={{paddingLeft:"38px"}}>
+                    <Typography
+                        variant="h3"
+                        sx={{ color: "#4A4A4A", fontSize: "20px" }}
+                    >
+                      Progress Tracker
+                    </Typography>
 
-                  <Box
-                    sx={{
-                      height: "1px",
-                      backgroundColor: "#8787877A",
-                      my: 2, // Adds top and bottom margin (equivalent to padding)
-                    }}
-                  />
+                    <Box
+                        sx={{
+                          height: "1px",
+                          backgroundColor: "#8787877A",
+                          my: 2, // Adds top and bottom margin (equivalent to padding)
+                        }}
+                    />
+                  </div>
 
                   <ProgressTracker patient={patient} />
                 </Box>
