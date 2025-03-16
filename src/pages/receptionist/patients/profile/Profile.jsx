@@ -59,7 +59,11 @@ const Profile = (props) => {
         {!props.entity ? (
           <>
             <PatientHeader patient={patient} />
-            <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
+            <Grid
+              container
+              spacing={2}
+              sx={{ marginBottom: "1rem", marginTop: "60px" }}
+            >
               <div
                 style={{
                   display: "flex",

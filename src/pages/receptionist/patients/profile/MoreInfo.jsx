@@ -14,18 +14,18 @@ import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
 
 const MoreInfo = (props) => {
-
   const [tableIndex, setTableIndex] = useState(null);
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
   const location = useLocation();
-  const { medicalHistory,currentMedications,symptoms,history,patient } = location.state || {};
+  const { medicalHistory, currentMedications, symptoms, history, patient } =
+    location.state || {};
 
   return (
     <>
-      <div className={rav.receptionist}>
+      <div style={{ height: "88vh" }}>
         {!props.entity ? (
           <>
             <PatientHeader showEditPatients={false} patient={patient} />
@@ -33,8 +33,10 @@ const MoreInfo = (props) => {
               container
               spacing={2}
               style={{
-                height: "100vh", // Full viewport height
+                height: "80vh", // Full viewport height
                 padding: "1rem",
+                marginBottom: "1rem",
+                marginTop: "60px",
               }}
             >
               <Grid xs={6}>
