@@ -206,20 +206,11 @@ function Receptionist(props) {
   return (
     <div
       style={{
-        height: "95dvh", // Make the entire div take up the full viewport height
+        height: "96dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
+        background: " #F1F1F1",
       }}
     >
-      <div
-        style={{
-          position: "fixed",
-          bottom: "0",
-          height: "30px",
-          background: " #F1F1F1",
-          width: "100%",
-          zIndex: 100,
-        }}
-      ></div>
       <div style={{ padding: "0 20px 0 0" }}>
         <div
           style={{
@@ -356,7 +347,7 @@ function Receptionist(props) {
                   >
                     <TableContainer
                       sx={{
-                        maxHeight: "calc(100vh - 260px)", // Adjust this to fit your layout needs
+                        maxHeight: "50vh", // Adjust this to fit your layout needs
                         overflowY: "auto",
                       }}
                     >
@@ -364,6 +355,7 @@ function Receptionist(props) {
                         sx={{
                           borderCollapse: "separate",
                           borderSpacing: "0 10px",
+                          marginBottom: "30px",
                         }}
                       >
                         <TableHead
@@ -397,8 +389,12 @@ function Receptionist(props) {
                               Token Number
                             </TableCell>
                             <TableCell
-                              align="center"
-                              sx={{ color: "#000", fontSize: "16px" }}
+                              align="left"
+                              sx={{
+                                color: "#000",
+                                fontSize: "16px",
+                                pl: 3,
+                              }}
                             >
                               Status
                             </TableCell>
@@ -468,27 +464,44 @@ function Receptionist(props) {
                                 >
                                   {appointment?.tokenNumber || "N/A"}
                                 </TableCell>
-                                <TableCell align="center">
-                                  <Chip
-                                    label={appointment.status}
-                                    size="small"
+                                <TableCell align="right">
+                                  <Box
                                     sx={{
-                                      bgcolor:
-                                        appointment.status === "Ongoing"
-                                          ? "#3DB461"
-                                          : "white",
-                                      color:
-                                        appointment.status === "Ongoing"
-                                          ? "white"
-                                          : appointment.status === "Completed"
-                                          ? "#EAA000"
-                                          : appointment.status === "Scheduled"
-                                          ? "#25307F"
-                                          : "#757575",
-                                      fontWeight: "600",
-                                      px: 0.7,
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "space-between",
+
+                                      width: "100%",
                                     }}
-                                  />
+                                  >
+                                    <Chip
+                                      label={appointment.status}
+                                      size="small"
+                                      sx={{
+                                        bgcolor:
+                                          appointment.status === "Ongoing"
+                                            ? "#3DB461"
+                                            : "white",
+                                        color:
+                                          appointment.status === "Ongoing"
+                                            ? "white"
+                                            : appointment.status === "Completed"
+                                            ? "#EAA000"
+                                            : appointment.status === "Scheduled"
+                                            ? "#25307F"
+                                            : "#757575",
+                                        fontWeight: "600",
+                                        px: 0.7,
+                                      }}
+                                    />
+                                    {appointment.status === "Waiting" && (
+                                      <Box sx={{ ml: "auto" }}>
+                                        <IconButton size="small" sx={{ p: 0 }}>
+                                          <MoreVertIcon fontSize="small" />
+                                        </IconButton>
+                                      </Box>
+                                    )}
+                                  </Box>
                                 </TableCell>
                               </TableRow>
                             ))
