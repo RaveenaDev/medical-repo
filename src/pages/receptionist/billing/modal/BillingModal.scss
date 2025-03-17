@@ -52,6 +52,11 @@
         background: none;
         border: none;
         max-width: 30px;
+        &:focus,
+        &:active {
+          outline: none;
+          box-shadow: none;
+        }
       }
 
       .print-btn {

@@ -63,22 +63,37 @@ const AppointmentRequestModal = ({
                   variant="contained"
                   sx={{
                     backgroundColor: "#25307F",
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
+
                   }}
                 >
                   Accept
                 </Button>
                 <Button
-                  sx={{
-                    backgroundColor: "white",
-                    color: "red",
-                    border: "2px solid red" /* Red border */,
-                    ".MuiSvgIcon-root": {
-                      color: "red" /* Ensures the cross icon is red */,
-                    },
-                  }}
+                    sx={{
+                      backgroundColor: "white",
+                      color: "red",
+                      border: "2px solid red", // Red border
+                      ".MuiSvgIcon-root": {
+                        color: "red", // Ensures the cross icon is red
+                      },
+                      "&:hover": {
+                        backgroundColor: "white", // Prevents background color change
+                        border: "2px solid red", // Keeps border red on hover
+                      },
+                      "&:focus, &:active": {
+                        outline: "none",
+                        boxShadow: "none",
+                        border: "2px solid red", // Ensures no blue border on focus/click
+                      },
+                    }}
                 >
                   <CloseIcon />
                 </Button>
+
               </div>
             </div>
           ))}

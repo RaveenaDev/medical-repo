@@ -175,7 +175,11 @@ const PatientList = () => {
           <Button
             variant="outlined"
             startIcon={<FilterAltOutlinedIcon />}
-            sx={{ textTransform: "none" }}
+            sx={{ textTransform: "none","&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
+            }}
             onClick={() => setFilterDrawerOpen(true)}
           >
             Filter
@@ -357,7 +361,11 @@ const PatientList = () => {
             }}
           >
             <Typography variant="h6">Filter By</Typography>
-            <IconButton onClick={() => setFilterDrawerOpen(false)}>
+            <IconButton sx={{"&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
+            }} onClick={() => setFilterDrawerOpen(false)}>
               <CloseIcon />
             </IconButton>
           </Box>

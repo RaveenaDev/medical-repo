@@ -223,7 +223,7 @@ const Profile = (props) => {
                     backgroundColor: "#FFFFFF", // Set the background color to white
                     padding: "16px 0", // Optional padding for content spacing
                     borderRadius: "8px", // Optional rounded corners
-                    width: "73vw", // Optional
+                    width: "75vw", // Optional
                   }}
                 >
                   <div style={{paddingLeft:"38px"}}>

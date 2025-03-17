@@ -186,26 +186,46 @@ const CommonPanel = ({ setIsBookAppointment }) => {
             <Grid size={3}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box
-                  sx={{
-                    backgroundColor: "white",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    borderRadius: 1,
-                    width: 180, // Adjust width here
-                    textAlign: "center",
-                    // padding: "4px", // Reduce padding to make the container smaller
-                  }}
+                    sx={{
+                      backgroundColor: "white",
+                      boxShadow: "0px 4px 4px 0px #C2C2C240",
+                      borderRadius: 1,
+                      width: 180,
+                      textAlign: "center",
+                    }}
                 >
                   <DatePicker
-                    value={selectedDate}
-                    onChange={(newValue) => setSelectedDate(newValue)}
-                    sx={{
-                      width: "100%", // Ensure the date picker takes up 100% of the container's width
-                      fontSize: "24px", // Adjust font size inside the date picker
-                      input: {
-                        fontSize: "14px", // Adjust input field font size if needed
-                        padding: "10px", // Adjust input field padding to make it smaller
-                      },
-                    }}
+                      value={selectedDate}
+                      onChange={(newValue) => setSelectedDate(newValue)}
+                      slotProps={{
+                        textField: {
+                          sx: {
+                            "& .MuiOutlinedInput-root": {
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "transparent !important", // Force remove the border
+                              },
+                              "&:hover .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "transparent !important", // Prevents border on hover
+                              },
+                              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "transparent !important", // Prevents border on focus
+                                boxShadow: "none !important",
+                              },
+                            },
+                            "& .MuiInputBase-input": {
+                              fontSize: "14px",
+                              padding: "10px",
+                              "&:focus": {
+                                outline: "none !important", // Removes input focus outline
+                              },
+                            },
+                            "&:focus": {
+                              outline: "none !important",
+                              boxShadow: "none !important",
+                            },
+                          },
+                        },
+                      }}
                   />
                 </Box>
               </LocalizationProvider>
