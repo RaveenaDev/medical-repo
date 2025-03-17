@@ -82,7 +82,7 @@ const DepartDetails = (props) => {
             {/*<hr style={{border: '1px solid #d3d3d3', margin: '20px 0'}} />*/}
 
             <Box className={avi.boxContainer}>
-              <h3 className={avi.heading}>Specific Branch Name</h3>
+              <h4 className={avi.heading}>Specific Branch Name</h4>
               <div className={avi.pro}>
                 <img
                   className={avi.img}
@@ -131,6 +131,7 @@ const DepartDetails = (props) => {
                       display: "flex",
                       justifyContent: "center",
                       width: "40%",
+                      padding:"0 30px"
                     }}
                   >
                     <div style={{ width: "100%", padding: "0 20px" }}>
@@ -147,7 +148,12 @@ const DepartDetails = (props) => {
                                 onChange={handleChange}
                                 IconComponent={KeyboardArrowDownIcon}
                                 displayEmpty // Ensures label remains visible
-                                renderValue={() => `Total Doctors: ${department?.totalDoctors.length}`} // Placeholder text inside Select
+                                renderValue={() => (
+                                    <span>
+                                      <span style={{ color: "#3C3C3C" }}>Total Doctors: </span>
+                                      <span style={{ color: "#3C3C3C", fontWeight: "bold" }}>{department?.totalDoctors.length}</span>
+                                    </span>
+                                )}
                                 sx={{
                                   "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
                                 }}
@@ -168,7 +174,12 @@ const DepartDetails = (props) => {
                                 onChange={handleChange}
                                 IconComponent={KeyboardArrowDownIcon}
                                 displayEmpty // Ensures label remains visible
-                                renderValue={() => `Total Nurses/Support Staff: ${department?.totalNurses}`} // Placeholder text inside Select
+                                renderValue={() => (
+                                    <span>
+                                      <span style={{ color: "#3C3C3C" }}>Total Nurses/Support Staff: </span>
+                                      <span style={{ color: "#3C3C3C", fontWeight: "bold" }}>{department?.totalNurses}</span>
+                                    </span>
+                                )}
                                 sx={{
                                   "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
                                 }}
@@ -178,7 +189,7 @@ const DepartDetails = (props) => {
                           </FormControl>
 
                           <div className={avi.details}>
-                            <h3>Specialist Doctors:</h3>
+                            <h3 style={{color:"#3C3C3C"}}>Specialist Doctors:</h3>
                             {department?.specialistDoctors.length > 0 ? (
                                 department.specialistDoctors.map(
                                     (doc, index) => (
@@ -219,19 +230,19 @@ const DepartDetails = (props) => {
                   <Grid
                     xs={12}
                     sm={6}
-                    sx={{ display: "flex", justifyContent: "center" }}
+                    sx={{ display: "flex", justifyContent: "center"}}
                     className={avi.section2}
                   >
                     <div
                       style={{
                         width: "100%",
-                        boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                        padding: "20px",
-                        borderRadius: "8px",
+                        boxShadow: "0 2px 4px rgba(116, 116, 116, 0.2)",
+                        padding: "8px 10px 0 20px",
+                        borderRadius: "4px",
                         border: "1px solid rgba(116, 116, 116, 0.3)",
                       }}
                     >
-                      <h4 className={avi.heading}>Facilites</h4>
+                      <h4 className={avi.heading} style={{fontSize:"15px",color:"#3C3C3C"}}>Facilities:</h4>
                       <ul
                         style={{
                           listStyleType: "none", // Remove default list style
@@ -309,16 +320,18 @@ const DepartDetails = (props) => {
                 </Grid>
               </div>
 
+              <div style={{padding: "0 0 0 32px"}}>
               <div className={avi.section3}>
                 <Grid
                   container
-                  sx={{ width: "100%", justifyContent: "space-between" }}
+                  sx={{ width: "100%", justifyContent: "flex-start",paddingBottom:2}}
+                  spacing={2}
                 >
                   {/* First Grid Item */}
-                  <Grid xs={12} sm={6}>
+                  <Grid xs={12} sm={6} md={5} sx={{width:"40%"}}>
                     <div className={avi.box3} style={{ padding: "14px" }}>
                       <div style={{ marginBottom: "14px" }}>
-                        <h4>Available services</h4>
+                        <h4 style={{color:"#3C3C3C"}}>Available services:</h4>
                         {department?.availableServices.map((serv,index) => (
                             <ul
                                 key={index}
@@ -328,8 +341,8 @@ const DepartDetails = (props) => {
                                   color: "#727272",
                                 }}
                             >
-                              <li>
-                                <span style={{ color: "#727272" }}>• </span>
+                              <li style={{color:"#747474"}}>
+                                <span style={{ color: "#747474",marginRight:"2px" }}>• </span>
                                 {serv}
                               </li>
                             </ul>
@@ -337,7 +350,7 @@ const DepartDetails = (props) => {
                       </div>
 
                       <div>
-                        <h4>Specialized Procedures</h4>
+                        <h4 style={{color:"#3C3C3C"}}>Specialized Procedures:</h4>
                         {department?.specializedProcedures.map((spec,index) => (
                             <ul key={index}
                                 style={{
@@ -346,8 +359,8 @@ const DepartDetails = (props) => {
                                   color: "#727272",
                                 }}
                             >
-                              <li>
-                                <span style={{ color: "#727272" }}>• </span>
+                              <li style={{color:"#747474"}}>
+                                <span style={{ color: "#727272",marginRight:"2px"}}>• </span>
                                 {spec}
                               </li>
                             </ul>
@@ -357,10 +370,10 @@ const DepartDetails = (props) => {
                   </Grid>
 
                   {/* Second Grid Item */}
-                  <Grid xs={12} sm={6}>
+                  <Grid xs={12} sm={6} md={7}>
                     <div className={avi.box4} style={{ padding: "14px" }}>
                       <div style={{ marginBottom: "14px" }}>
-                        <h4>Critical Equipment</h4>
+                        <h4 style={{color:"#3C3C3C"}}>Critical Equipment:</h4>
                         {department?.criticalEquipment.map((cric,index) => (
                             <ul key={index}
                                 style={{
@@ -369,8 +382,8 @@ const DepartDetails = (props) => {
                                   color: "#727272",
                                 }}
                             >
-                              <li>
-                                <span style={{ color: "#727272" }}>• </span>
+                              <li style={{color:"#747474"}}>
+                                <span style={{ color: "#727272",marginRight:"2px"}}>• </span>
                                 {cric}
                               </li>
                             </ul>
@@ -378,7 +391,7 @@ const DepartDetails = (props) => {
                       </div>
 
                       <div>
-                        <h4>Equipment Maintenance</h4>
+                        <h4 style={{color:"#3C3C3C"}}>Equipment Maintenance:</h4>
                         {department?.equipmentMaintenance.map((eq,index) => (
                             <ul key={index}
                                 style={{
@@ -387,9 +400,9 @@ const DepartDetails = (props) => {
                                   color: "#727272",
                                 }}
                             >
-                              <li style={{ display: "flex" }}>
-                                <span style={{ color: "#727272" }}>• </span>
-                                <div style={{ marginLeft: "4px" }}>{eq}</div>
+                              <li style={{color:"#747474"}}>
+                                <span style={{ color: "#727272",marginRight:"2px"}}>• </span>
+                                {eq}
                               </li>
                             </ul>
                         ))}
@@ -397,6 +410,7 @@ const DepartDetails = (props) => {
                     </div>
                   </Grid>
                 </Grid>
+              </div>
               </div>
             </Box>
           </>

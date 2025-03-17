@@ -57,10 +57,10 @@ $blue: #25307f;
 .cardContainer {
   background-color: white;
 
-  height: 225px;
-  min-width: 316px;
+  height: 220px;
+  min-width: 290px;
   padding: 1.5rem 1rem; // px-4 py-6
-  border-radius: 12px;
+  border-radius: 6px;
   cursor: pointer;
   border: 2px solid transparent; // Start with no visible border
   transition: border-color 0.3s ease; // Smooth transition for border color
@@ -81,32 +81,32 @@ $blue: #25307f;
 
     .circle {
       background-color: #c8dfe4;
-      width: 1.25rem; // w-5
-      height: 1.25rem; // h-5
+      width: 1.75rem; // w-5
+      height: 1.75rem; // h-5
       border-radius: 50%; // rounded-full
-      margin-top: 0.5rem; // mt-[3px]
-      // margin-right: 0.6rem; // Add this margin to increase the space between circle and title
+      margin-top: 0.2rem; // mt-[3px]
+       margin-right: 0.3rem; // Add this margin to increase the space between circle and title
     }
 
     .title {
       color: #25307f;
       font-weight: 600; // font-semibold
-      //font-size: 1.4rem; // Set default font size
+      font-size: 1.2rem; // Set default font size
       padding: 0;
       margin: 0;
     }
 
     .arrow {
       color: #25307f;
-      margin-top: 0.6rem;
+      margin-top: 0.42rem;
+      margin-left: 0.3rem;
     }
 
     .icons {
-      margin-top: 0.3rem;
-      //margin-left: 2rem;
 
       .message {
         color: #25307f;
+        font-size: 12px;
       }
 
       .phone {
@@ -117,11 +117,11 @@ $blue: #25307f;
   }
 
   .detailsContainer {
-    margin-left: 40px;
+    margin-left: 2.5rem;
     margin-top: 15px;
     .details {
       display: flex;
-      height: 26px;
+      height: 28px;
       font-weight: 500;
       .name {
         color: black;

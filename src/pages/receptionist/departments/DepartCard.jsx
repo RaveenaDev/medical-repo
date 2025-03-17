@@ -6,7 +6,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useNavigate } from "react-router-dom";
 
-const DepartCard = ({ department }) => {
+const DepartCard = ({ department,index }) => {
   const navigate = useNavigate();
   const handleClick = (departmentId) => {
     // Redirect to the specific page
@@ -23,6 +23,19 @@ const DepartCard = ({ department }) => {
     // You can add further functionality here
   };
 
+  const colors = [
+    "#EAAA00",
+    "#66A7B4",
+    "#2E823B",
+    "#F14400",
+    "#5461BE"
+  ];
+
+  // Get color based on the department index
+  const getSequentialColor = (index) => {
+    return colors[index % colors.length];
+  };
+
   return (
     <Box
       className={styles.cardContainer}
@@ -30,7 +43,9 @@ const DepartCard = ({ department }) => {
     >
       <div className={styles.cardHeader}>
         <div className={styles.titleContainer}>
-          <div className={styles.circle}></div>
+          <div className={styles.circle}
+               style={{ backgroundColor: getSequentialColor(index) }}
+          ></div>
           <h2 className={styles.title}>{department.departmentName}</h2>
           <span className={styles.arrow}>
             <ArrowForwardIosIcon fontSize="small" />
