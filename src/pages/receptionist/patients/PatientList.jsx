@@ -41,6 +41,7 @@ import {
   getPatients,
   updatePatient,
 } from "../../../components/State/Receptionist/Action";
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 const PatientList = () => {
   const [sortOrder, setSortOrder] = useState("Newest to Oldest");
@@ -131,7 +132,7 @@ const PatientList = () => {
           alignItems: "center",
           borderTop: "0.5px solid #4A4A4A8C",
           borderBottom: "0.5px solid #4A4A4A8C",
-          paddingY: 2,
+          paddingY: 1.5,
           marginBottom: 3,
         }}
       >
@@ -173,11 +174,17 @@ const PatientList = () => {
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Button
-            variant="outlined"
-            startIcon={<FilterAltOutlinedIcon />}
-            sx={{ textTransform: "none","&:focus": {
+            startIcon={<FilterAltIcon />}
+            sx={{ textTransform: "none",
+              padding:"6px 20px",
+              backgroundColor:"white",
+              borderRadius:"5px",
+              fontSize:"15px",
+              color:"#25307F",
+              "&:focus": {
                 outline: "none",
                 boxShadow: "none",
+                backgroundColor:"white"
               },
             }}
             onClick={() => setFilterDrawerOpen(true)}
@@ -350,8 +357,15 @@ const PatientList = () => {
         anchor="right"
         open={filterDrawerOpen}
         onClose={() => setFilterDrawerOpen(false)}
+        sx={{
+          "& .MuiDrawer-paper": {
+            height: "70vh", // Adjust height as needed
+            top: "10vh", // Center it vertically
+            borderRadius: "10px 0 0 10px", // Optional rounded corners
+          }
+        }}
       >
-        <Box sx={{ width: 300, padding: 2 }}>
+        <Box sx={{ width: 200, padding: 2,paddingLeft:4 }}>
           <Box
             sx={{
               display: "flex",
@@ -360,11 +374,12 @@ const PatientList = () => {
               marginBottom: 2,
             }}
           >
-            <Typography variant="h6">Filter By</Typography>
+            <Typography variant="h6" sx={{color:"#0B0B0B"}}>Filter By</Typography>
             <IconButton sx={{"&:focus": {
                 outline: "none",
                 boxShadow: "none",
               },
+              color:"black",
             }} onClick={() => setFilterDrawerOpen(false)}>
               <CloseIcon />
             </IconButton>
@@ -372,10 +387,12 @@ const PatientList = () => {
 
           {/* Filter Options */}
           <FormControl
-            sx={{ marginBottom: 4, width: "100%" }}
+            sx={{ marginBottom: 4,marginTop:2, width: "100%" }}
             component="fieldset"
           >
-            <FormLabel component="legend" sx={{ marginBottom: 1 }}>
+            <FormLabel component="legend" sx={{ marginBottom: 1,color:"#000000",
+              "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+            }}>
               Status
             </FormLabel>
             <RadioGroup
@@ -385,15 +402,32 @@ const PatientList = () => {
             >
               <FormControlLabel
                 value="Active"
-                control={<Radio />}
+                control={<Radio sx={{
+                  color: "#878787", // Default color
+                  "&.Mui-checked": {
+                    color: "#25307F", // Selected dot color
+                  },
+                }}/>}
                 label="Active"
+                sx={{height:"34px",color:"#878787"}}
               />
               <FormControlLabel
                 value="In-active"
-                control={<Radio />}
+                control={<Radio sx={{
+                  color: "#878787", // Default color
+                  "&.Mui-checked": {
+                    color: "#25307F", // Selected dot color
+                  },
+                }}/>}
                 label="In-active"
+                sx={{height:"34px",color:"#878787"}}
               />
-              <FormControlLabel value="All" control={<Radio />} label="All" />
+              <FormControlLabel value="All" control={<Radio sx={{
+                color: "#878787", // Default color
+                "&.Mui-checked": {
+                  color: "#25307F", // Selected dot color
+                },
+              }}/>} label="All" sx={{height:"34px",color:"#878787"}}/>
             </RadioGroup>
           </FormControl>
 
@@ -401,7 +435,9 @@ const PatientList = () => {
             sx={{ marginBottom: 4, width: "100%" }}
             component="fieldset"
           >
-            <FormLabel component="legend" sx={{ marginBottom: 1 }}>
+            <FormLabel component="legend" sx={{ marginBottom: 1 ,color:"#000000",
+              "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+            }}>
               Type of Visit
             </FormLabel>
             <RadioGroup
@@ -411,27 +447,54 @@ const PatientList = () => {
             >
               <FormControlLabel
                 value="Walk In"
-                control={<Radio />}
+                control={<Radio sx={{
+                  color: "#878787", // Default color
+                  "&.Mui-checked": {
+                    color: "#25307F", // Selected dot color
+                  },
+                }}/>}
                 label="Walk in"
+                sx={{height:"34px",color:"#878787"}}
               />
               <FormControlLabel
                 value="Referral"
-                control={<Radio />}
+                control={<Radio sx={{
+                  color: "#878787", // Default color
+                  "&.Mui-checked": {
+                    color: "#25307F", // Selected dot color
+                  },
+                }}/>}
                 label="Referral"
+                sx={{height:"34px",color:"#878787"}}
               />
               <FormControlLabel
                 value="Online"
-                control={<Radio />}
+                control={<Radio sx={{
+                  color: "#878787", // Default color
+                  "&.Mui-checked": {
+                    color: "#25307F", // Selected dot color
+                  },
+                }}/>}
                 label="Online"
+                sx={{height:"34px",color:"#878787"}}
               />
-              <FormControlLabel value="All" control={<Radio />} label="All" />
+              <FormControlLabel value="All" control={<Radio sx={{
+                color: "#878787", // Default color
+                "&.Mui-checked": {
+                  color: "#25307F", // Selected dot color
+                },
+              }}/>} label="All" sx={{height:"34px",color:"#878787"}}/>
             </RadioGroup>
           </FormControl>
 
           <Button
             variant="contained"
-            color="primary"
-            fullWidth
+            sx={{backgroundColor:"#25307F",
+                  textTransform: "none", // Prevents uppercase transformation
+              borderRadius:"16px",
+              padding:"6px 35px",
+              marginLeft:"4px"
+                   }}
             onClick={handleSearchResults}
           >
             Search Results
