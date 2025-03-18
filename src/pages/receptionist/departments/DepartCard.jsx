@@ -6,11 +6,13 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useNavigate } from "react-router-dom";
 
-const DepartCard = ({ department,index }) => {
+const DepartCard = ({ department, index }) => {
   const navigate = useNavigate();
   const handleClick = (departmentId) => {
     // Redirect to the specific page
-    navigate(`/receptionist/departments/departDetails`,{ state: { departmentId } });
+    navigate(`/receptionist/departments/departDetails`, {
+      state: { departmentId },
+    });
   };
 
   const handleClickMessage = (e) => {
@@ -23,13 +25,7 @@ const DepartCard = ({ department,index }) => {
     // You can add further functionality here
   };
 
-  const colors = [
-    "#EAAA00",
-    "#66A7B4",
-    "#2E823B",
-    "#F14400",
-    "#5461BE"
-  ];
+  const colors = ["#EAAA00", "#66A7B4", "#2E823B", "#F14400", "#5461BE"];
 
   // Get color based on the department index
   const getSequentialColor = (index) => {
@@ -43,8 +39,9 @@ const DepartCard = ({ department,index }) => {
     >
       <div className={styles.cardHeader}>
         <div className={styles.titleContainer}>
-          <div className={styles.circle}
-               style={{ backgroundColor: getSequentialColor(index) }}
+          <div
+            className={styles.circle}
+            style={{ backgroundColor: getSequentialColor(index) }}
           ></div>
           <h2 className={styles.title}>{department.departmentName}</h2>
           <span className={styles.arrow}>
@@ -87,19 +84,23 @@ const DepartCard = ({ department,index }) => {
       <div className={styles.detailsContainer}>
         <div className={styles.details}>
           <p className={styles.name}>Department Head:</p>
-          <p className={styles.value}>{department.departmentHead}</p>
+          <p className={styles.value}>
+            {department?.departmentHead.name || "Not Assigned"}
+          </p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Patients Present:</p>
-          <p className={styles.value}>{department.totalPatients}</p>
+          <p className={styles.value}>
+            {department?.totalPatients || "Not Assigned"}
+          </p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Total Doctors:</p>
-          <p className={styles.value}>{department.Docs}</p>
+          <p className={styles.value}>{department.doctors.length}</p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Specialist Doctors:</p>
-          <p className={styles.value}>{department.specialistDocs}</p>
+          <p className={styles.value}>{department.specialistDocs.length}</p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Total Nurses:</p>
@@ -107,9 +108,11 @@ const DepartCard = ({ department,index }) => {
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Active Services:</p>
-          {
-            department.activeServices.length > 0 ? <p className={styles.value}>{department.activeServices[0]}...</p> : <p className={styles.value}>No Services</p>
-          }
+          {department.activeServices.length > 0 ? (
+            <p className={styles.value}>{department.activeServices[0]}...</p>
+          ) : (
+            <p className={styles.value}>No Services</p>
+          )}
         </div>
       </div>
     </Box>

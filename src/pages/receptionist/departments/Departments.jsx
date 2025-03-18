@@ -37,43 +37,6 @@ const Departments = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const handleAppointmentRequests = () => {
-    setIsModalOpen(true);
-  };
-  const handleBilling = () => {
-    navigate("/receptionist/billing");
-  };
-  const handleBookAppointment = () => {
-    setIsBookAppointment(true);
-  };
-
-  const dummyRequests = [
-    {
-      id: 1,
-      name: "Rahul Sharma",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/men/1.jpg",
-    },
-    {
-      id: 2,
-      name: "Sneha Kapoor",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/women/2.jpg",
-    },
-    {
-      id: 3,
-      name: "Amit Verma",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/men/3.jpg",
-    },
-    {
-      id: 4,
-      name: "Priya Singh",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/women/4.jpg",
-    },
-  ];
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -84,6 +47,7 @@ const Departments = (props) => {
   const receptionist = useSelector((store) => store.receptionist);
 
   const allDepartments = receptionist.departments;
+  console.log(allDepartments);
 
   return (
     <>
@@ -130,7 +94,11 @@ const Departments = (props) => {
 
                     <div className={ayu.superCardContainer}>
                       {allDepartments.map((department, index) => (
-                        <DepartCard key={index} department={department} index={index}/>
+                        <DepartCard
+                          key={index}
+                          department={department}
+                          index={index}
+                        />
                       ))}
                     </div>
                   </div>
