@@ -1,28 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles.module.scss";
 import ayu from "./departments.module.scss";
-import Grid from "@mui/material/Grid2";
-import Card from "../../../components/Card/index.jsx";
-import { Button } from "@mui/material";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import DepartCard from "./DepartCard.jsx";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CommonPanel from "../components/CommonPanel.jsx";
-import accountCircle from "../../../assets/account_circle.svg";
-import billingDetails from "../../../assets/payments.svg";
-import addAppointments from "../../../assets/plus.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllDepartments,
   getRequestedAppointments,
 } from "../../../components/State/Receptionist/Action.js";
 import { useNavigate } from "react-router-dom";
-import AppointmentRequestModal from "../Appointment/Requests/AppointmentRequest.jsx";
 import BookAppointment from "../Appointment/Book/BookAppointment.jsx";
-import { Box, Popper } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
 const Departments = (props) => {
@@ -56,7 +45,7 @@ const Departments = (props) => {
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >
-      <div className={styles.receptionist} style={{ padding: "0 20px 0 0" }}>
+      <div className={styles.receptionist}>
         <div
           style={{
             position: "fixed",

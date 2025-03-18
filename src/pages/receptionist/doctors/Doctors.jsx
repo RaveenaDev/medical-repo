@@ -58,7 +58,7 @@ const Doctors = (props) => {
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >
-      <div style={{ padding: "0 20px 0 0" }}>
+      <div>
         <div
           style={{
             position: "fixed",

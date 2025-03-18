@@ -211,7 +211,7 @@ function Receptionist(props) {
         background: " #F1F1F1",
       }}
     >
-      <div style={{ padding: "0 20px 0 0" }}>
+      <div>
         <div
           style={{
             position: "fixed",

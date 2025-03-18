@@ -15,11 +15,11 @@
   gap: 30px; // Adjust spacing
   color: #747474;
   padding: 1.5rem 0;
+  cursor: pointer;
 
   .selected {
     color: darkgreen !important;
-    background-color: #c8e6c9; // A slightly darker green background
-    padding: 6px 0;
+
     border-radius: 5px;
     width: 100%;
   }
