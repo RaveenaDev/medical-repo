@@ -293,7 +293,7 @@ const PatientList = () => {
                     }
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <Chip
                     label={
                       patient.status.charAt(0).toUpperCase() +
@@ -306,6 +306,9 @@ const PatientList = () => {
                     }
                     size="small"
                     sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                       bgcolor:
                         patient.status.toLowerCase() === "active"
                           ? "#d4edda"
