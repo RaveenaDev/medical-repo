@@ -50,6 +50,7 @@ const Doctors = (props) => {
     setSelectedDoctor(doctor);
     setIsBookAppointment(true);
   };
+
   return (
     <div
       style={{
@@ -77,7 +78,8 @@ const Doctors = (props) => {
               isOpen={isBookAppointment}
               onClose={() => setIsBookAppointment(false)}
               isFromDoctor={isFromDoctor}
-              doctorName={selectedDoctor?.name}
+              doctorEmail={selectedDoctor?.email}
+              department={selectedDoctor.departments?.[0]?.name}
             />
           ) : (
             <div>
@@ -269,7 +271,7 @@ const Doctors = (props) => {
                               textTransform: "none", // Prevents uppercase text
                               fontSize: "12px", // Adjust text size if needed
                             }}
-                            onClick={() => handleBookAppointment()}
+                            onClick={() => handleBookAppointment(patient)}
                           >
                             Book Appointment
                           </Button>
