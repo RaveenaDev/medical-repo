@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Tooltip } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import styles from "./departments.module.scss";
 import EmailIcon from "@mui/icons-material/Email";
@@ -56,14 +56,23 @@ const DepartCard = ({ department, index }) => {
               outline: "none",
               boxShadow: "none",
               "&:focus": { outline: "none" },
-
-              minWidth: "auto", // Remove default minWidth
-              width: "40px", // Custom width
-              height: "30px", // Custom height
+              minWidth: "auto",
+              width: "40px",
+              height: "30px",
             }}
           >
-            <EmailIcon />
+            <Tooltip
+              title={department?.departmentHead?.email || "No email available"}
+              arrow
+            >
+              <span>
+                {" "}
+                {/* This is needed to wrap non-button elements inside Tooltip */}
+                <EmailIcon />
+              </span>
+            </Tooltip>
           </Button>
+
           <Button
             className={styles.phone}
             onClick={handleClickContact}
@@ -71,12 +80,19 @@ const DepartCard = ({ department, index }) => {
               outline: "none",
               boxShadow: "none",
               "&:focus": { outline: "none" },
-              minWidth: "auto", // Remove default minWidth
-              width: "40px", // Custom width
-              height: "30px", // Custom height
+              minWidth: "auto",
+              width: "40px",
+              height: "30px",
             }}
           >
-            <PhoneIcon />
+            <Tooltip
+              title={department?.departmentHead?.phone || "No phone available"}
+              arrow
+            >
+              <span>
+                <PhoneIcon />
+              </span>
+            </Tooltip>
           </Button>
         </div>
       </div>
