@@ -1,4 +1,5 @@
 import {
+  ACCEPT_APPOINTMENT_REQUESTS,
   ADD_ROOM, BOOK_APPOINTMENT,
   DELETE_ROOM,
   GET_ALL_DEPARTMENTS,
@@ -15,7 +16,7 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STAFFS,
-  GET_WAITING_APPOINTMENTS,
+  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -262,6 +263,40 @@ export const getRequestedAppointments = () => async (dispatch) => {
     });
 
     dispatch({ type: GET_APPOINTMENT_REQUESTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const acceptAppointmentRequests = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/approveAppointment/${id}`,id, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: ACCEPT_APPOINTMENT_REQUESTS, payload: id });
+    // console.log("Request Accepted Successfully :",data)
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const rejectAppointmentRequests = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/rejectAppointment/${id}`,id, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: REJECT_APPOINTMENT_REQUESTS, payload: id });
+    // console.log("Request Rejected Successfully :",data)
   } catch (error) {
     console.log(error);
   }

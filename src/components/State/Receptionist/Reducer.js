@@ -1,4 +1,5 @@
 import {
+  ACCEPT_APPOINTMENT_REQUESTS,
   ADD_ROOM,
   BOOK_APPOINTMENT,
   DELETE_ROOM,
@@ -13,7 +14,7 @@ import {
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
-  GET_STAFFS, GET_WAITING_APPOINTMENTS,
+  GET_STAFFS, GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS,
   UPDATE_ROOM,
 } from "./ActionType.js";
 
@@ -169,6 +170,18 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         appointmentRequests: action.payload.appointments,
       };
+
+    case ACCEPT_APPOINTMENT_REQUESTS:
+      return{
+        ...state,
+        appointmentRequests: state.appointmentRequests.filter((request) => request._id !== action.payload)
+      }
+
+    case REJECT_APPOINTMENT_REQUESTS:
+      return{
+        ...state,
+        appointmentRequests: state.appointmentRequests.filter((request) => request._id !== action.payload)
+      }
 
     case GET_BILLS:
       return {

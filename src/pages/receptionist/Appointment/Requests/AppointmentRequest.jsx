@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import "./appointmentRequest.scss";
 import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import arrowBack from "../../../../assets/arrow_back.svg"; // Import the SVG as a React component
+import arrowBack from "../../../../assets/arrow_back.svg";
+import {useDispatch} from "react-redux";
+import {
+  acceptAppointmentRequests,
+  rejectAppointmentRequests
+} from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 
 const AppointmentRequestModal = ({
   isOpen,
@@ -10,6 +15,11 @@ const AppointmentRequestModal = ({
   requests,
   appointmentRequests,
 }) => {
+
+  // console.log("REQ: ",appointmentRequests)
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
     if (isOpen) {
@@ -24,6 +34,16 @@ const AppointmentRequestModal = ({
     };
   }, [isOpen]);
   if (!isOpen) return null;
+
+  const handleAcceptClick = (id) => {
+    // console.log("Accept")
+    dispatch(acceptAppointmentRequests(id))
+  }
+
+  const handleRejectClick = (id) => {
+    // console.log("Reject")
+    dispatch(rejectAppointmentRequests(id))
+  }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -69,6 +89,7 @@ const AppointmentRequestModal = ({
                     },
 
                   }}
+                  onClick={() => handleAcceptClick(request._id)}
                 >
                   Accept
                 </Button>
@@ -90,6 +111,7 @@ const AppointmentRequestModal = ({
                         border: "2px solid red", // Ensures no blue border on focus/click
                       },
                     }}
+                    onClick={() => handleRejectClick(request._id)}
                 >
                   <CloseIcon />
                 </Button>

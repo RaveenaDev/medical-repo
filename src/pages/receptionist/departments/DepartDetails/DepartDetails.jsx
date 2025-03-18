@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.scss";
-import { Box, Button } from "@mui/material";
+import {Box, Button, Tooltip} from "@mui/material";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ayu from "../departments.module.scss";
 import avi from "./departDetails.module.scss";
@@ -103,7 +103,10 @@ const DepartDetails = (props) => {
                     padding: "8px 2px",
                   }}
                 >
-                  <EmailIcon />
+                  <Tooltip title={department?.departmentHead?.email || "No email available"}
+                           arrow>
+                    <EmailIcon />
+                  </Tooltip>
                 </Button>
                 <Button
                   className={avi.phone}
@@ -115,7 +118,10 @@ const DepartDetails = (props) => {
                     padding: "8px 2px",
                   }}
                 >
-                  <PhoneIcon />
+                  <Tooltip title={department?.departmentHead?.phone || "No phone available"}
+                           arrow >
+                    <PhoneIcon />
+                  </Tooltip>
                 </Button>
               </div>
 
