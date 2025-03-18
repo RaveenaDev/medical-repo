@@ -12,6 +12,11 @@ import ProgressTracker from "./ProgressTracker";
 import { Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { WhatsApp, Email, Close } from "@mui/icons-material";
 
 const Profile = (props) => {
   // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
@@ -24,6 +29,24 @@ const Profile = (props) => {
 
   const [medicalHistory, setMedicalHistory] = useState([]);
   const [currentMedications, setCurrentMedications] = useState([]);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleSendEmail = () => {
+    window.open(
+      `mailto:${patient?.email}?subject=Appointment Details&body=Hello, here are your appointment details.`,
+      "_blank"
+    );
+    setShowModal(false);
+  };
+
+  const handleSendWhatsApp = () => {
+    window.open(
+      `https://wa.me/${patient?.phone}?text=Hello, here are your appointment details.`,
+      "_blank"
+    );
+    setShowModal(false);
+  };
 
   const [tableIndex, setTableIndex] = useState(null);
   useEffect(() => {
@@ -52,7 +75,13 @@ const Profile = (props) => {
   const completed = patient.appointments?.filter(
     (app) => app.status === "Completed"
   ).length;
-
+  console.log(patient);
+  // Close modal when clicking outside of it
+  const handleOverlayClick = (e) => {
+    if (e.target.id === "modal-overlay") {
+      setShowModal(false);
+    }
+  };
   return (
     <>
       <div>
@@ -176,9 +205,90 @@ const Profile = (props) => {
                         e.target.style.backgroundColor = "transparent";
                         e.target.style.color = "#25307F";
                       }}
+                      onClick={() => setShowModal(true)}
                     >
                       Send Message
                     </button>
+                    {/* Modal UI */}
+
+                    <Dialog
+                      open={showModal}
+                      onClose={() => setShowModal(false)}
+                      sx={{
+                        "& .MuiPaper-root": {
+                          borderRadius: "10px",
+                          padding: "10px",
+                          width: "400px", // Increased width
+                          maxWidth: "90%", // Ensures responsiveness
+                        },
+                      }}
+                    >
+                      <DialogTitle
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        Send Message Via
+                      </DialogTitle>
+
+                      <DialogContent
+                        sx={{ textAlign: "center", padding: "20px" }}
+                      >
+                        <Button
+                          fullWidth
+                          startIcon={<WhatsApp />}
+                          sx={{
+                            backgroundColor: "#fff",
+                            color: "#25D366",
+                            border: "1px solid #25D366",
+                            marginBottom: "10px",
+                            "&:hover": {
+                              backgroundColor: "#25D366",
+                              color: "#fff",
+                            },
+                          }}
+                          onClick={handleSendWhatsApp}
+                        >
+                          WhatsApp
+                        </Button>
+
+                        <Button
+                          fullWidth
+                          startIcon={<Email />}
+                          sx={{
+                            backgroundColor: "#fff",
+                            color: "#007bff",
+                            border: "1px solid #007bff",
+                            "&:hover": {
+                              backgroundColor: "#007bff",
+                              color: "#fff",
+                            },
+                          }}
+                          onClick={handleSendEmail}
+                        >
+                          Email
+                        </Button>
+                      </DialogContent>
+
+                      <DialogActions sx={{ justifyContent: "center" }}>
+                        <Button
+                          onClick={() => setShowModal(false)}
+                          sx={{
+                            color: "#25307F",
+                            border: "1px solid #25307F",
+                            boxShadow: "0px 4px 4px 0px #C2C2C240",
+                            "&:hover": {
+                              backgroundColor: "#25307F",
+                              color: "#fff",
+                            },
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </div>
                 </div>
 
@@ -226,20 +336,20 @@ const Profile = (props) => {
                     width: "75vw", // Optional
                   }}
                 >
-                  <div style={{paddingLeft:"38px"}}>
+                  <div style={{ paddingLeft: "38px" }}>
                     <Typography
-                        variant="h3"
-                        sx={{ color: "#4A4A4A", fontSize: "20px" }}
+                      variant="h3"
+                      sx={{ color: "#4A4A4A", fontSize: "20px" }}
                     >
                       Progress Tracker
                     </Typography>
 
                     <Box
-                        sx={{
-                          height: "1px",
-                          backgroundColor: "#8787877A",
-                          my: 2, // Adds top and bottom margin (equivalent to padding)
-                        }}
+                      sx={{
+                        height: "1px",
+                        backgroundColor: "#8787877A",
+                        my: 2, // Adds top and bottom margin (equivalent to padding)
+                      }}
                     />
                   </div>
 
