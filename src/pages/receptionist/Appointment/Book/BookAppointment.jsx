@@ -202,7 +202,11 @@ const BookAppointment = ({
               />
             </svg>
             <Button
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                setShowSuccessModal(false);
+              }
+              }
               sx={{
                 backgroundColor: "#25307F",
                 color: "white",
