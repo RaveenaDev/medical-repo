@@ -41,7 +41,7 @@ import {
   getPatients,
   updatePatient,
 } from "../../../components/State/Receptionist/Action";
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const PatientList = () => {
   const [sortOrder, setSortOrder] = useState("Newest to Oldest");
@@ -141,30 +141,42 @@ const PatientList = () => {
             variant="h4"
             sx={{
               fontWeight: "bold",
+              display: "flex",
+              alignItems: "center",
+              color: "#25307F",
+              gap: 1,
               borderRight: "0.5px solid #4A4A4A8C",
               paddingRight: 2,
-              marginRight: 2,
-              color: "black",
+              marginRight: 1,
             }}
           >
-            {noOfPatients}{" "}
+            {noOfPatients}
             <Typography
               variant="body1"
-              sx={{ display: "inline", color: "black" }}
+              component="span"
+              sx={{ color: "#878787", fontSize: "1rem", fontWeight: "normal" }}
             >
               Patients
             </Typography>
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography variant="body1" sx={{ marginRight: 1, color: "black" }}>
+            <Typography
+              variant="body1"
+              sx={{ marginRight: 1, color: "#25307F" }}
+            >
               Sort by:
             </Typography>
             <Select
               value={sortOrder}
               onChange={handleSortChange}
               size="small"
-              sx={{ minWidth: 160 }}
+              sx={{
+                minWidth: 160,
+                background: "#fff",
+                color: "#4A4A4A",
+                boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+              }}
             >
               <MenuItem value="Newest to Oldest">Newest to Oldest</MenuItem>
               <MenuItem value="Oldest to Newest">Oldest to Newest</MenuItem>
@@ -175,16 +187,17 @@ const PatientList = () => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Button
             startIcon={<FilterAltIcon />}
-            sx={{ textTransform: "none",
-              padding:"6px 20px",
-              backgroundColor:"white",
-              borderRadius:"5px",
-              fontSize:"15px",
-              color:"#25307F",
+            sx={{
+              textTransform: "none",
+              padding: "6px 20px",
+              backgroundColor: "white",
+              borderRadius: "5px",
+              fontSize: "15px",
+              color: "#25307F",
               "&:focus": {
                 outline: "none",
                 boxShadow: "none",
-                backgroundColor:"white"
+                backgroundColor: "white",
               },
             }}
             onClick={() => setFilterDrawerOpen(true)}
@@ -194,15 +207,28 @@ const PatientList = () => {
         </Box>
       </Box>
       {/* Table Section */}
-      <TableContainer component={Paper}>
+      <TableContainer
+        sx={{
+          maxHeight: "60vh", // Adjust this to fit your layout needs
+          overflowY: "auto",
+        }}
+      >
         <Table
           sx={{
             borderCollapse: "separate",
             borderSpacing: "0 10px",
             background: "#F1F1F1",
+            marginBottom: "30px",
           }}
         >
-          <TableHead>
+          <TableHead
+            sx={{
+              position: "sticky",
+              backgroundColor: "#f1f1f1",
+              top: 0,
+              zIndex: 10, // Keep it above other elements
+            }}
+          >
             <TableRow>
               <TableCell>Case Id</TableCell>
               <TableCell>Name</TableCell>
@@ -230,20 +256,24 @@ const PatientList = () => {
                   },
                 }}
               >
-                <TableCell>
+                <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
                   {patient.appointments[patient.appointments.length - 1]
                     ?.caseId || "Not Assigned"}
                 </TableCell>
                 <TableCell>
                   <Typography
                     variant="body1"
-                    sx={{ fontWeight: "bold", cursor: "pointer" }}
+                    sx={{
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                      color: "#25307F",
+                    }}
                     onClick={() => handleClick(patient)}
                   >
                     {patient.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {patient.socialHistory}
+                    {patient.email}
                   </Typography>
                 </TableCell>
                 <TableCell>{patient.phone}</TableCell>
@@ -265,7 +295,10 @@ const PatientList = () => {
                 </TableCell>
                 <TableCell>
                   <Chip
-                    label={patient.status}
+                    label={
+                      patient.status.charAt(0).toUpperCase() +
+                      patient.status.slice(1)
+                    }
                     color={
                       patient.status.toLowerCase() === "active"
                         ? "success"
@@ -362,10 +395,10 @@ const PatientList = () => {
             height: "70vh", // Adjust height as needed
             top: "10vh", // Center it vertically
             borderRadius: "10px 0 0 10px", // Optional rounded corners
-          }
+          },
         }}
       >
-        <Box sx={{ width: 200, padding: 2,paddingLeft:4 }}>
+        <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
           <Box
             sx={{
               display: "flex",
@@ -374,25 +407,36 @@ const PatientList = () => {
               marginBottom: 2,
             }}
           >
-            <Typography variant="h6" sx={{color:"#0B0B0B"}}>Filter By</Typography>
-            <IconButton sx={{"&:focus": {
-                outline: "none",
-                boxShadow: "none",
-              },
-              color:"black",
-            }} onClick={() => setFilterDrawerOpen(false)}>
+            <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
+              Filter By
+            </Typography>
+            <IconButton
+              sx={{
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
+                color: "black",
+              }}
+              onClick={() => setFilterDrawerOpen(false)}
+            >
               <CloseIcon />
             </IconButton>
           </Box>
 
           {/* Filter Options */}
           <FormControl
-            sx={{ marginBottom: 4,marginTop:2, width: "100%" }}
+            sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
             component="fieldset"
           >
-            <FormLabel component="legend" sx={{ marginBottom: 1,color:"#000000",
-              "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
-            }}>
+            <FormLabel
+              component="legend"
+              sx={{
+                marginBottom: 1,
+                color: "#000000",
+                "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+              }}
+            >
               Status
             </FormLabel>
             <RadioGroup
@@ -402,32 +446,49 @@ const PatientList = () => {
             >
               <FormControlLabel
                 value="Active"
-                control={<Radio sx={{
-                  color: "#878787", // Default color
-                  "&.Mui-checked": {
-                    color: "#25307F", // Selected dot color
-                  },
-                }}/>}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
                 label="Active"
-                sx={{height:"34px",color:"#878787"}}
+                sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
                 value="In-active"
-                control={<Radio sx={{
-                  color: "#878787", // Default color
-                  "&.Mui-checked": {
-                    color: "#25307F", // Selected dot color
-                  },
-                }}/>}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
                 label="In-active"
-                sx={{height:"34px",color:"#878787"}}
+                sx={{ height: "34px", color: "#878787" }}
               />
-              <FormControlLabel value="All" control={<Radio sx={{
-                color: "#878787", // Default color
-                "&.Mui-checked": {
-                  color: "#25307F", // Selected dot color
-                },
-              }}/>} label="All" sx={{height:"34px",color:"#878787"}}/>
+              <FormControlLabel
+                value="All"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="All"
+                sx={{ height: "34px", color: "#878787" }}
+              />
             </RadioGroup>
           </FormControl>
 
@@ -435,9 +496,14 @@ const PatientList = () => {
             sx={{ marginBottom: 4, width: "100%" }}
             component="fieldset"
           >
-            <FormLabel component="legend" sx={{ marginBottom: 1 ,color:"#000000",
-              "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
-            }}>
+            <FormLabel
+              component="legend"
+              sx={{
+                marginBottom: 1,
+                color: "#000000",
+                "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+              }}
+            >
               Type of Visit
             </FormLabel>
             <RadioGroup
@@ -447,54 +513,76 @@ const PatientList = () => {
             >
               <FormControlLabel
                 value="Walk In"
-                control={<Radio sx={{
-                  color: "#878787", // Default color
-                  "&.Mui-checked": {
-                    color: "#25307F", // Selected dot color
-                  },
-                }}/>}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
                 label="Walk in"
-                sx={{height:"34px",color:"#878787"}}
+                sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
                 value="Referral"
-                control={<Radio sx={{
-                  color: "#878787", // Default color
-                  "&.Mui-checked": {
-                    color: "#25307F", // Selected dot color
-                  },
-                }}/>}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
                 label="Referral"
-                sx={{height:"34px",color:"#878787"}}
+                sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
                 value="Online"
-                control={<Radio sx={{
-                  color: "#878787", // Default color
-                  "&.Mui-checked": {
-                    color: "#25307F", // Selected dot color
-                  },
-                }}/>}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
                 label="Online"
-                sx={{height:"34px",color:"#878787"}}
+                sx={{ height: "34px", color: "#878787" }}
               />
-              <FormControlLabel value="All" control={<Radio sx={{
-                color: "#878787", // Default color
-                "&.Mui-checked": {
-                  color: "#25307F", // Selected dot color
-                },
-              }}/>} label="All" sx={{height:"34px",color:"#878787"}}/>
+              <FormControlLabel
+                value="All"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="All"
+                sx={{ height: "34px", color: "#878787" }}
+              />
             </RadioGroup>
           </FormControl>
 
           <Button
             variant="contained"
-            sx={{backgroundColor:"#25307F",
-                  textTransform: "none", // Prevents uppercase transformation
-              borderRadius:"16px",
-              padding:"6px 35px",
-              marginLeft:"4px"
-                   }}
+            sx={{
+              backgroundColor: "#25307F",
+              textTransform: "none", // Prevents uppercase transformation
+              borderRadius: "16px",
+              padding: "6px 35px",
+              marginLeft: "4px",
+            }}
             onClick={handleSearchResults}
           >
             Search Results

@@ -47,7 +47,6 @@ const Departments = (props) => {
   const receptionist = useSelector((store) => store.receptionist);
 
   const allDepartments = receptionist.departments;
-  console.log(allDepartments);
 
   return (
     <>
