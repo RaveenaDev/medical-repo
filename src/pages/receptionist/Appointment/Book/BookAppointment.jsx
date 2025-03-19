@@ -41,14 +41,7 @@ const BookAppointment = ({
     doctorEmail: doctorEmail || "", // Set the initial value,
     typeVisit: "Walk in",
     note: "",
-    date: (() => {
-      const now = new Date();
-      const utcDate =
-        new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-          .toISOString()
-          .slice(0, -5) + "Z";
-      return utcDate;
-    })(),
+    date: new Date(),
   });
   useEffect(() => {
     if (doctorEmail) {
@@ -153,22 +146,9 @@ const BookAppointment = ({
     p: 4,
   };
   const handleDateChange = (date) => {
-    const now = new Date();
-    const localDate = new Date(date);
-
-    // Set selected date to match current time
-    localDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
-
-    // Convert to UTC by adjusting for the local timezone offset
-    const utcDate =
-      new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, -5) + "Z";
-
-    // Update state
     setFormData((prev) => ({
       ...prev,
-      date: utcDate,
+      date: date,
     }));
   };
   return (
@@ -205,8 +185,7 @@ const BookAppointment = ({
               onClick={() => {
                 onClose();
                 setShowSuccessModal(false);
-              }
-              }
+              }}
               sx={{
                 backgroundColor: "#25307F",
                 color: "white",
