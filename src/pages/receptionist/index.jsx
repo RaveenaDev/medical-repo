@@ -154,30 +154,10 @@ function Receptionist(props) {
     setSelectedPatient(null);
   };
 
-  // Handle Edit Action
-  const handleEdit = () => {
-    setEditedPatient(selectedPatient); // Load selected patient into editedPatient
-    setEditDialogOpen(true);
-    handleMenuClose();
-  };
-
-  // Handle Delete Action
-  const handleDelete = () => {
-    handleMenuClose();
-  };
-
-  // Handle Edit Dialog Close
-  const handleEditDialogClose = () => {
-    setEditDialogOpen(false);
-  };
-
   useEffect(() => {
     dispatch(getRequestedAppointments());
   }, [dispatch]);
 
-  const appointmentRequests = useSelector(
-    (store) => store.receptionist.appointmentRequests
-  );
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
