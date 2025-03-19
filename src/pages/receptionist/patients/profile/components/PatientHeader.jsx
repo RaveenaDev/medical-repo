@@ -134,7 +134,7 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
           style={{ cursor: "pointer" }}
           onClick={() =>
             handleViewClick({
-              id: patient?.bills[patient.bills.length - 1].caseId,
+              id: patient?._id,
               name: patient?.name,
               phone: patient?.phone,
               invoiceDate: patient?.bills[patient.bills.length - 1].invoiceDate,
@@ -212,6 +212,7 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
+        patient={patient}
       />
     </div>
   );

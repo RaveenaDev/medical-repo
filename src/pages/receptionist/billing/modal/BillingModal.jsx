@@ -20,6 +20,8 @@ const BillingModal = ({ open, bill, onClose }) => {
 
   const billByID = useSelector((store) => store.receptionist.bill);
 
+  console.log(billByID)
+
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
     if (open) {
@@ -146,7 +148,7 @@ const BillingModal = ({ open, bill, onClose }) => {
                   <p>
                     Amount Paid: <span> {billByID?.paidAmount}</span>
                   </p>
-                  <p>Mode: Cash</p>
+                  <p>Mode: {billByID?.mode}</p>
                   <p>
                     Date:
                     <span>

@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { Modal, Box, Typography, Button } from "@mui/material";
 import "./RecordModal.scss";
-import arrowBack from "/arrow_back.svg"; // Import the SVG as a React component
+import arrowBack from "/arrow_back.svg";
+import {useDispatch, useSelector} from "react-redux";
+import {getBillById} from "../../../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 
-const RecordModal = ({ open, bill, onClose }) => {
+const RecordModal = ({ open, bill, onClose,patient }) => {
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
     if (open) {
@@ -17,6 +19,17 @@ const RecordModal = ({ open, bill, onClose }) => {
       document.body.style.overflow = "auto";
     };
   }, [open]);
+
+  const billId = patient?.bills[patient.bills.length - 1]._id;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBillById(billId));
+  }, [dispatch, billId]);
+
+  const billByID = useSelector((store) => store.receptionist.bill);
+
   if (!bill) return null; // Avoid rendering if no bill is selected
 
   return (
@@ -34,7 +47,7 @@ const RecordModal = ({ open, bill, onClose }) => {
               <img src={arrowBack} alt="Back" />
             </button>
             <h2>
-              Billing Details: <span>{bill.name}</span>
+              Billing Details: <span>{billByID?.patient.name}</span>
             </h2>
           </div>
           <Button className="print-btn">Print</Button>
@@ -44,33 +57,43 @@ const RecordModal = ({ open, bill, onClose }) => {
             <div className="billing-no">
               <div>
                 <span className="bold">Invoice Number</span>
-                <span>{bill.invoiceNo}</span>
+                <span>{billByID?.invoiceNumber}</span>
               </div>
               <div>
                 <span className="bold">Invoice Date</span>
-                <span>{bill.invoiceDate}</span>
+                <span>{new Date(billByID?.invoiceDate).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    }
+                )}</span>
               </div>
             </div>
             <div className="billing-divider"></div>
             <div className="billing-invoice-amount">
-              <div className="billing-desc">
-                <div>
-                  <span className="bold">Description</span>
-                  <span>Therapy Session</span>
-                </div>
-                <div>
-                  <span className="bold">Quantity</span>
-                  <span>1</span>
-                </div>
-                <div>
-                  <span className="bold">Price</span>
-                  <span> 1000</span>
-                </div>
-              </div>
+              {billByID?.services.map((service, index) => (
+                  <div key={index} className="billing-desc">
+                    <div>
+                      <span className="bold">Description</span>
+                      <span>{service.name}</span>
+                    </div>
+
+                    {service.categories.map((cat, index) => (
+                        <div key={index} className="billing-category">
+                          <div>{cat.subCategoryName}</div>
+                          <div>Qty: {cat.quantity}</div>
+                          <div>Price: {cat.rate}</div>
+                          <div>Total: {cat.total}</div>
+                        </div>
+                    ))}
+                  </div>
+              ))}
               <div className="billing-divider"></div>
               <div className="billing-total">
                 <div className="bold">Total</div>
-                <div className="bold">{bill.totalAmount}</div>
+                <div className="bold">{billByID?.totalAmount}</div>
               </div>
             </div>
           </div>
@@ -78,21 +101,19 @@ const RecordModal = ({ open, bill, onClose }) => {
             <div className="billing-amount-details">
               <div>
                 <div className="bold">Total Amount</div>
-                <div>{bill.totalAmount}</div>
+                <div>{billByID?.totalAmount}</div>
               </div>
               <div>
                 <div className="bold">Paid</div>
-                <div>{bill.paidAmount}</div>
+                <div>{billByID?.paidAmount}</div>
               </div>
               <div>
                 <div className="bold ">Outstanding</div>
-                <div className="center">{bill.outstanding}</div>
+                <div className="center">{billByID?.outstanding}</div>
               </div>
               <div>
                 <div className="bold">Status</div>
-                <div className={`center status ${bill.status.toLowerCase()}`}>
-                  {bill.status}
-                </div>
+                <div className="center">{billByID?.status}</div>
               </div>
             </div>
             <div className="billing-divider"></div>
@@ -100,11 +121,18 @@ const RecordModal = ({ open, bill, onClose }) => {
               <div className="bold">Payment History</div>
               <div className="billing-summary">
                 <p>
-                  Amount Paid: <span> {bill.paidAmount}</span>
+                  Amount Paid: <span> {billByID?.paidAmount}</span>
                 </p>
-                <p>Mode: {bill.mode}</p>
+                <p>Mode: {bill?.mode}</p>
                 <p>
-                  Date: <span>{bill.invoiceDate}</span>
+                  Date: <span>{new Date(billByID?.invoiceDate).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    }
+                )}</span>
                 </p>
               </div>
             </div>
