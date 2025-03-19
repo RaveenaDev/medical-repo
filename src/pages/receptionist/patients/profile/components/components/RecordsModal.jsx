@@ -20,7 +20,7 @@ const RecordModal = ({ open, bill, onClose,patient }) => {
     };
   }, [open]);
 
-  const billId = patient?.bills[patient.bills.length - 1]._id;
+  const billId = patient?.bills[patient.bills.length - 1]?._id;
 
   const dispatch = useDispatch();
 

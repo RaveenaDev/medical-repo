@@ -14,7 +14,7 @@ import {
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
-  GET_STAFFS, GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS,
+  GET_STAFFS, GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS, REMOVE_BOOK_APPOINTMENT_DATA,
   UPDATE_ROOM,
 } from "./ActionType.js";
 
@@ -164,6 +164,12 @@ export const receptionistReducer = (state = initialState, action) => {
         // appointments: [...state.appointments, action.payload.appointment],
         bookAppointment: "Appointment Booked Successfully"
       };
+
+    case REMOVE_BOOK_APPOINTMENT_DATA:
+      return{
+        ...state,
+        bookAppointment: null
+      }
 
     case GET_APPOINTMENT_REQUESTS:
       return {

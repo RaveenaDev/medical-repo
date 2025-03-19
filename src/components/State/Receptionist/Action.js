@@ -16,7 +16,7 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STAFFS,
-  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS,
+  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS, REMOVE_BOOK_APPOINTMENT_DATA,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -224,6 +224,10 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
     });
   }
 };
+
+export const removeBookAppointmentData = () => async (dispatch) => {
+  dispatch({type: REMOVE_BOOK_APPOINTMENT_DATA})
+}
 
 export const getAppointments = (activeLabel) => async (dispatch) => {
   try {

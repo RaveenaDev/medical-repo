@@ -18,7 +18,7 @@ import {
   getAllDepartments,
   getDoctors,
   getDoctorsByDepartment,
-  getPatients,
+  getPatients, removeBookAppointmentData,
 } from "../../../../components/State/Receptionist/Action.js";
 
 const BookAppointment = ({
@@ -32,12 +32,19 @@ const BookAppointment = ({
 
   const dispatch = useDispatch();
 
+  const dep = "";
+
+  if(department){
+    dep = department[0]?.name;
+  }
+
+
   const [formData, setFormData] = useState({
     patientName: "",
     mobileNumber: "",
     email: "",
     appointmentType: "",
-    departmentName: department[0].name || "",
+    departmentName: dep || "",
     doctorEmail: doctorEmail || "", // Set the initial value,
     typeVisit: "Walk in",
     note: "",
@@ -157,7 +164,10 @@ const BookAppointment = ({
     <>
       <Modal
         open={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        onClose={() => {
+          setShowSuccessModal(false);
+          dispatch(removeBookAppointmentData());
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -187,6 +197,7 @@ const BookAppointment = ({
               onClick={() => {
                 onClose();
                 setShowSuccessModal(false);
+                dispatch(removeBookAppointmentData());
               }}
               sx={{
                 backgroundColor: "#25307F",
