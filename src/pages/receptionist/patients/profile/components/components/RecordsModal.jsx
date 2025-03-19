@@ -44,11 +44,11 @@ const RecordModal = ({ open, bill, onClose }) => {
             <div className="billing-no">
               <div>
                 <span className="bold">Invoice Number</span>
-                <span>INV20240919-VC-73</span>
+                <span>{bill.invoiceNo}</span>
               </div>
               <div>
                 <span className="bold">Invoice Date</span>
-                <span>{bill.date}</span>
+                <span>{bill.invoiceDate}</span>
               </div>
             </div>
             <div className="billing-divider"></div>
@@ -64,13 +64,13 @@ const RecordModal = ({ open, bill, onClose }) => {
                 </div>
                 <div>
                   <span className="bold">Price</span>
-                  <span> {bill.amount}</span>
+                  <span> 1000</span>
                 </div>
               </div>
               <div className="billing-divider"></div>
               <div className="billing-total">
                 <div className="bold">Total</div>
-                <div className="bold">{bill.amount}</div>
+                <div className="bold">{bill.totalAmount}</div>
               </div>
             </div>
           </div>
@@ -78,15 +78,15 @@ const RecordModal = ({ open, bill, onClose }) => {
             <div className="billing-amount-details">
               <div>
                 <div className="bold">Total Amount</div>
-                <div>{bill.amount}</div>
+                <div>{bill.totalAmount}</div>
               </div>
               <div>
                 <div className="bold">Paid</div>
-                <div>{bill.amount}</div>
+                <div>{bill.paidAmount}</div>
               </div>
               <div>
                 <div className="bold ">Outstanding</div>
-                <div className="center">$0</div>
+                <div className="center">{bill.outstanding}</div>
               </div>
               <div>
                 <div className="bold">Status</div>
@@ -100,11 +100,11 @@ const RecordModal = ({ open, bill, onClose }) => {
               <div className="bold">Payment History</div>
               <div className="billing-summary">
                 <p>
-                  Amount Paid: <span> {bill.amount}</span>
+                  Amount Paid: <span> {bill.paidAmount}</span>
                 </p>
-                <p>Mode: Cash</p>
+                <p>Mode: {bill.mode}</p>
                 <p>
-                  Date: <span>{bill.date}</span>
+                  Date: <span>{bill.invoiceDate}</span>
                 </p>
               </div>
             </div>

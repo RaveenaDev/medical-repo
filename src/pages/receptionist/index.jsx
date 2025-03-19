@@ -496,7 +496,11 @@ function Receptionist(props) {
                                     />
                                     {appointment.status === "Waiting" && (
                                       <Box sx={{ ml: "auto" }}>
-                                        <IconButton size="small" sx={{ p: 0 }}>
+                                        <IconButton size="small" sx={{ p: 0,"&:focus": {
+                                            outline: "none",
+                                            boxShadow: "none",
+                                          },
+                                        }}>
                                           <MoreVertIcon fontSize="small" />
                                         </IconButton>
                                       </Box>

@@ -50,7 +50,8 @@ const BillingModal = ({ open, bill, onClose }) => {
               Billing Details: <span>{billByID?.patient.name}</span>
             </h2>
           </div>
-          <Button className="print-btn">Print</Button>
+          <Button className="print-btn" onClick={() => window.print()}>
+            Print</Button>
         </div>
         <div className="billing-modal-body">
           <div className="billing-invoice-details">

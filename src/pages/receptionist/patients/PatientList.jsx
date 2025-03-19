@@ -122,6 +122,8 @@ const PatientList = () => {
   const noOfPatients = receptionist.totalPatients;
   const totalPatients = receptionist.patients;
 
+  // console.log("Total :",totalPatients)
+
   return (
     <Box sx={{ padding: 2 }}>
       {/* Header Section */}
@@ -323,6 +325,13 @@ const PatientList = () => {
                 </TableCell>
                 <TableCell>
                   <IconButton
+                      sx={{
+                          "&:focus": {
+                              outline: "none",
+                              boxShadow: "none",
+                          },
+
+                      }}
                     onClick={(event) => handleMenuOpen(event, patient)}
                   >
                     <MoreVertIcon />

@@ -89,7 +89,7 @@ const DepartDetails = (props) => {
                   src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
                   alt=""
                 />
-                <p className={avi.name}>{department?.departmentHead}</p>
+                <p className={avi.name}>{department?.departmentHead.name}</p>
               </div>
 
               <div className={avi.icons}>

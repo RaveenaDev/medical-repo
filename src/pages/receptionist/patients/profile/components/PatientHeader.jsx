@@ -134,12 +134,16 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
           style={{ cursor: "pointer" }}
           onClick={() =>
             handleViewClick({
-              id: "C001231",
-              name: "John Doe",
-              phone: "9876543210",
-              date: "11-12-2024",
-              amount: "$250",
-              status: "Paid",
+              id: patient?.bills[patient.bills.length - 1].caseId,
+              name: patient?.name,
+              phone: patient?.phone,
+              invoiceDate: patient?.bills[patient.bills.length - 1].invoiceDate,
+              status: patient?.bills[patient.bills.length - 1].status,
+              invoiceNo: patient?.bills[patient.bills.length - 1].invoiceNumber,
+              mode: patient?.bills[patient.bills.length - 1].mode,
+              outstanding: patient?.bills[patient.bills.length - 1].outstanding,
+              paidAmount: patient?.bills[patient.bills.length - 1].paidAmount,
+              totalAmount: patient?.bills[patient.bills.length - 1].totalAmount,
             })
           }
         >
