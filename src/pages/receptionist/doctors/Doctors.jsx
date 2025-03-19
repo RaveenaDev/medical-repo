@@ -79,7 +79,7 @@ const Doctors = (props) => {
               onClose={() => setIsBookAppointment(false)}
               isFromDoctor={isFromDoctor}
               doctorEmail={selectedDoctor?.email}
-              department={selectedDoctor.departments?.[0]?.name}
+              department={selectedDoctor.departments}
             />
           ) : (
             <div>

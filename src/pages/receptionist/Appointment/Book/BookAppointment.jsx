@@ -20,8 +20,6 @@ import {
   getDoctorsByDepartment,
   getPatients,
 } from "../../../../components/State/Receptionist/Action.js";
-import { useNavigate } from "react-router-dom";
-import SuccessModal from "../../components/SuccessModal.jsx";
 
 const BookAppointment = ({
   isOpen,
@@ -32,12 +30,14 @@ const BookAppointment = ({
 }) => {
   if (!isOpen) return null;
 
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     patientName: "",
     mobileNumber: "",
     email: "",
     appointmentType: "",
-    departmentName: department || "",
+    departmentName: department[0].name || "",
     doctorEmail: doctorEmail || "", // Set the initial value,
     typeVisit: "Walk in",
     note: "",
@@ -67,7 +67,9 @@ const BookAppointment = ({
     dispatch(getDoctorsByDepartment(departmentId));
   };
 
-  const dispatch = useDispatch();
+  if (department) {
+    dispatch(getDoctorsByDepartment(department[0]._id));
+  }
 
   useEffect(() => {
     dispatch(getDoctors());
