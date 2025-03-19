@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./sidebar.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import {Box, IconButton, Typography} from "@mui/material";
 import adi from "../../pages/receptionist/Settings/Settings.module.scss";
 import Logout from "../../pages/receptionist/Settings/Logout.jsx";
+import Avatar from "@mui/material/Avatar";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const roleOptions = {
   receptionist: [
@@ -66,7 +68,7 @@ const Sidebar = ({ role }) => {
     setIsLogout((prev) => !prev);
   };
   return (
-    <div className={styles.sidebar} style={{ width: "100%" }}>
+    <div className={styles.sidebar} style={{ width: "100%", display: "flex", flexDirection: "column", height: "82vh" }}>
       <>
         {sideOptions.map((option, index) => (
           <div
@@ -124,6 +126,23 @@ const Sidebar = ({ role }) => {
           </Box>
         </div>
       )}
+
+      <hr style={{marginTop:"230px", backgroundColor: "#E2E2E2", height: "1px", border: "none" }}/>
+      <div style={{display:'flex',justifyContent:'space-between', marginTop: "auto", paddingBottom: "10px"}}>
+        <div style={{display:'flex',gap:16,marginLeft: '25px',}}>
+          <Avatar sx={{ width: 50, height: 50 }} />
+          <div style={{paddingTop:'2px'}}>
+            <p style={{color:'black',fontWeight:500}}>Hospital</p>
+            <p style={{color:'#878787',fontSize:'12px'}}>TextField</p>
+          </div>
+        </div>
+
+        <div style={{paddingRight:"14px"}}>
+          <IconButton>
+            <KeyboardArrowDownIcon sx={{ width: 32, height: 32}}/>
+          </IconButton>
+        </div>
+      </div>
 
       {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout} />}
     </div>

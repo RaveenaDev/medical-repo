@@ -1,10 +1,13 @@
 .register {
   // height: 100vh;
   &.loginPageActive {
-    width: 100vw;
+    //width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 10rem;
+    margin-right: 15%;
+    //height: 400px;
   }
   &.otherPages {
     flex-basis: 80%;
