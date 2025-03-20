@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./sidebar.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
-import {Box, IconButton, Typography} from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import adi from "../../pages/receptionist/Settings/Settings.module.scss";
 import Logout from "../../pages/receptionist/Settings/Logout.jsx";
 import Avatar from "@mui/material/Avatar";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const roleOptions = {
   receptionist: [
@@ -68,8 +68,17 @@ const Sidebar = ({ role }) => {
     setIsLogout((prev) => !prev);
   };
   return (
-    <div className={styles.sidebar} style={{ width: "100%", display: "flex", flexDirection: "column", height: "82vh" }}>
-      <>
+    <div
+      className={styles.sidebar}
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "82vh",
+      }}
+    >
+      <div>
         {sideOptions.map((option, index) => (
           <div
             key={index}
@@ -81,7 +90,7 @@ const Sidebar = ({ role }) => {
             {option.title}
           </div>
         ))}
-      </>
+      </div>
 
       {/* Conditionally render settings options when "Settings" is active */}
       {activeIndex ===
@@ -127,19 +136,27 @@ const Sidebar = ({ role }) => {
         </div>
       )}
 
-      <hr style={{marginTop:"230px", backgroundColor: "#E2E2E2", height: "1px", border: "none" }}/>
-      <div style={{display:'flex',justifyContent:'space-between', marginTop: "auto", paddingBottom: "10px"}}>
-        <div style={{display:'flex',gap:16,marginLeft: '25px',}}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "auto",
+          paddingBottom: "10px",
+          paddingTop: "20px",
+          borderTop: "1px solid #E2E2E2 ",
+        }}
+      >
+        <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
           <Avatar sx={{ width: 50, height: 50 }} />
-          <div style={{paddingTop:'2px'}}>
-            <p style={{color:'black',fontWeight:500}}>Hospital</p>
-            <p style={{color:'#878787',fontSize:'12px'}}>TextField</p>
+          <div style={{ paddingTop: "2px" }}>
+            <p style={{ color: "black", fontWeight: 500 }}>Hospital</p>
+            <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
           </div>
         </div>
 
-        <div style={{paddingRight:"14px"}}>
+        <div style={{ paddingRight: "14px" }}>
           <IconButton>
-            <KeyboardArrowDownIcon sx={{ width: 32, height: 32}}/>
+            <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
           </IconButton>
         </div>
       </div>
