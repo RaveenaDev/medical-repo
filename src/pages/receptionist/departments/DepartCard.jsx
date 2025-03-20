@@ -64,10 +64,24 @@ const DepartCard = ({ department, index }) => {
             <Tooltip
               title={department?.departmentHead?.email || "No email available"}
               arrow
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    backgroundColor: "#25307F",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "8px",
+                    borderRadius: "8px",
+                  },
+                },
+                arrow: {
+                  sx: {
+                    color: "#25307F",
+                  },
+                },
+              }}
             >
               <span>
-                {" "}
-                {/* This is needed to wrap non-button elements inside Tooltip */}
                 <EmailIcon />
               </span>
             </Tooltip>
@@ -88,6 +102,22 @@ const DepartCard = ({ department, index }) => {
             <Tooltip
               title={department?.departmentHead?.phone || "No phone available"}
               arrow
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    backgroundColor: " #2E823B",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "8px",
+                    borderRadius: "8px",
+                  },
+                },
+                arrow: {
+                  sx: {
+                    color: " #2E823B",
+                  },
+                },
+              }}
             >
               <span>
                 <PhoneIcon />

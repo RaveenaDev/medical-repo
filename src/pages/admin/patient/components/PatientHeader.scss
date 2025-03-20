@@ -4,15 +4,20 @@
   color: black;
   border-bottom: 0.5px solid #4a4a4a8c;
   margin-bottom: 1.25rem;
+  position: fixed;
+  top: 0px;
+  padding: 10px 0;
+  width: 76%;
+  z-index: 10;
+  background-color: #f1f1f1;
 
   .patient-info {
     display: flex;
     align-items: center;
     gap: 4px;
     h2 {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 600;
-      line-height: 28.06px;
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -20,9 +25,8 @@
     }
 
     p {
-      font-size: 1.25rem;
+      font-size: 18px;
       font-weight: 500;
-
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -36,16 +40,15 @@
 
     .box {
       display: flex;
-      padding: 0 10px;
+      padding: 0 8px;
       background-color: white;
       gap: 10px;
       align-items: center;
-      height: 40px;
+      height: 35px;
       border-radius: 5px;
       p {
-        font-size: 1.25rem;
+        font-size: 16px;
         font-weight: 500;
-
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;

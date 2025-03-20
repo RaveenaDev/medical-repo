@@ -121,6 +121,14 @@
     background: #aeb4ff !important;
     border-radius: 5px;
   }
+  .react-calendar__tile:disabled {
+    background: #eaecff !important; /* Same background as regular tiles */
+    color: gray !important; /* Make text gray */
+    opacity: 1 !important; /* Prevent faded look */
+    cursor: not-allowed !important;
+    pointer-events: none; /* Ensure no interaction */
+  }
+
   .MuiTextField-root {
     font-size: 14px !important;
   }
