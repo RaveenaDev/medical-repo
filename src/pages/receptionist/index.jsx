@@ -34,86 +34,67 @@ import {
 } from "@mui/material";
 import CommonPanel from "./components/CommonPanel.jsx";
 import BookAppointment from "./Appointment/Book/BookAppointment.jsx";
-import { useNavigate } from "react-router-dom";
 import Select from "../../components/Select/index.jsx";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAppointments,
+  getAllDepartments,
+  getAppointments, getFilteredAppointments,
   getRequestedAppointments,
 } from "../../components/State/Receptionist/Action.js";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
-import accountCircle from "../../assets/account_circle.svg";
-import billingDetails from "../../assets/payments.svg";
-import addAppointments from "../../assets/plus.svg";
+import InputLabel from "@mui/material/InputLabel";
 
 function Receptionist(props) {
   const [tableIndex, setTableIndex] = useState(null);
 
-  const [selectedDate, setSelectedDate] = useState(dayjs());
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editedPatient, setEditedPatient] = useState({});
-
   const [isBookAppointment, setIsBookAppointment] = useState(false); // State to toggle between components
-  const navigate = useNavigate();
-
-  const dummyRequests = [
-    {
-      id: 1,
-      name: "Rahul Sharma",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/men/1.jpg",
-    },
-    {
-      id: 2,
-      name: "Sneha Kapoor",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/women/2.jpg",
-    },
-    {
-      id: 3,
-      name: "Amit Verma",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/men/3.jpg",
-    },
-    {
-      id: 4,
-      name: "Priya Singh",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/women/4.jpg",
-    },
-  ];
 
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const [branches, setBranches] = useState([
-    "All Branches",
-    "Cardiology",
-    "Therapy",
-    "Dermatology",
-  ]);
-
   const [activeBox, setActiveBox] = useState(1);
 
   const dispatch = useDispatch();
 
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const handleSelectChange = (value) => {
+    // console.log("Selected Value: ",value);
+    setSelectedBranch(value);
+  }
+
   useEffect(() => {
-    dispatch(getAppointments("Scheduled"));
-    dispatch(getAppointments("Ongoing"));
-    dispatch(getAppointments("Waiting"));
-    dispatch(getAppointments("Completed"));
-  }, [dispatch]);
+    dispatch(getAllDepartments());
+    if(selectedBranch === null || selectedBranch === "All Branches"){
+      dispatch(getAppointments("Scheduled"));
+      dispatch(getAppointments("Ongoing"));
+      dispatch(getAppointments("Waiting"));
+      dispatch(getAppointments("Completed"));
+    }
+
+    else{
+      console.log(selectedBranch)
+      dispatch(getFilteredAppointments("Scheduled",selectedBranch))
+      dispatch(getFilteredAppointments("Ongoing",selectedBranch))
+      dispatch(getFilteredAppointments("Waiting",selectedBranch))
+      dispatch(getFilteredAppointments("Completed",selectedBranch))
+    }
+  }, [dispatch,selectedBranch]);
+
+  const departments = useSelector(
+      (store) => store.receptionist.departments
+  );
+
+  // console.log("DEP: ",departments)
+
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    if(departments && Array.isArray(departments)){
+      // setBranches(["All Branches",...departments.map((dept) => dept.departmentName)]);
+      setBranches(departments)
+    }
+  }, [departments]);
 
   const scheduledAppointments = useSelector(
     (store) => store.receptionist.scheduledAppointments
@@ -139,19 +120,6 @@ function Receptionist(props) {
 
   const handleBoxClick = (id) => {
     setActiveBox(id);
-  };
-
-  // Handle Menu Open
-  const handleMenuOpen = (event, patient) => {
-    event.stopPropagation(); // Prevent interference with other clicks
-    setAnchorEl(event.currentTarget);
-    setSelectedPatient(patient);
-  };
-
-  // Handle Menu Close
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedPatient(null);
   };
 
   useEffect(() => {
@@ -233,7 +201,7 @@ function Receptionist(props) {
                       paddingTop: "10px",
                     }}
                   >
-                    {branches.length > 0 && (
+                    {departments.length > 0 && (
                       <Grid
                         container
                         spacing={2}
@@ -248,7 +216,25 @@ function Receptionist(props) {
                             label="Department"
                             list={branches}
                             size="small"
+                            onChange={handleSelectChange}
                           />
+                          {/*<FormControl sx={{ m: 1, minWidth: 120 }} size="small">*/}
+                          {/*  <InputLabel id="demo-select-small-label">Age</InputLabel>*/}
+                          {/*  <Select*/}
+                          {/*      labelId="demo-select-small-label"*/}
+                          {/*      id="demo-select-small"*/}
+                          {/*      value={age}*/}
+                          {/*      label="Age"*/}
+                          {/*      onChange={handleChange}*/}
+                          {/*  >*/}
+                          {/*    <MenuItem value="">*/}
+                          {/*      <em>None</em>*/}
+                          {/*    </MenuItem>*/}
+                          {/*    <MenuItem value={10}>Ten</MenuItem>*/}
+                          {/*    <MenuItem value={20}>Twenty</MenuItem>*/}
+                          {/*    <MenuItem value={30}>Thirty</MenuItem>*/}
+                          {/*  </Select>*/}
+                          {/*</FormControl>*/}
                         </Grid>
                       </Grid>
                     )}

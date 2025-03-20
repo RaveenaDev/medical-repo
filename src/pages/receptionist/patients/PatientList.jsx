@@ -32,14 +32,13 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getPatients,
-  updatePatient,
+    getFilteredPatients,
+    getPatients,
+    updatePatient,
 } from "../../../components/State/Receptionist/Action";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
@@ -53,9 +52,11 @@ const PatientList = () => {
   const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({
-    status: "All",
-    type: "All",
+    status: "",
+    type: "",
   });
+
+  // console.log("Filter: ",filters)
 
   // Handle Sort Change
   const handleSortChange = (event) => {
@@ -96,6 +97,7 @@ const PatientList = () => {
 
   // Handle Search Results
   const handleSearchResults = () => {
+      dispatch(getFilteredPatients(filters));
     setFilterDrawerOpen(false);
   };
 
@@ -115,14 +117,15 @@ const PatientList = () => {
   };
 
   useEffect(() => {
-    dispatch(getPatients());
+    // dispatch(getPatients());
+      dispatch(getFilteredPatients(filters));
   }, [dispatch]);
 
   const receptionist = useSelector((store) => store.receptionist);
-  const noOfPatients = receptionist.totalPatients;
-  const totalPatients = receptionist.patients;
+  const noOfPatients = receptionist.totalFilteredPatients;
+  const totalPatients = receptionist.filteredPatients;
 
-  // console.log("Total :",totalPatients)
+  console.log("Total :",totalPatients)
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -280,10 +283,10 @@ const PatientList = () => {
                 </TableCell>
                 <TableCell>{patient.phone}</TableCell>
                 <TableCell>
-                  {patient.appointments[0]?.typeVisit || "Not Assigned"}
+                  {patient?.typeVisit || "Not Assigned"}
                 </TableCell>
                 <TableCell>
-                  {patient.appointments[0]?.branch || "Not Assigned"}
+                  {patient.appointments[patient.appointments.length - 1]?.branch || "Not Assigned"}
                 </TableCell>
                 <TableCell>
                   {new Date(patient.registrationDate).toLocaleDateString(
@@ -404,7 +407,7 @@ const PatientList = () => {
         onClose={() => setFilterDrawerOpen(false)}
         sx={{
           "& .MuiDrawer-paper": {
-            height: "70vh", // Adjust height as needed
+            height: "72vh", // Adjust height as needed
             top: "10vh", // Center it vertically
             borderRadius: "10px 0 0 10px", // Optional rounded corners
           },
@@ -457,7 +460,7 @@ const PatientList = () => {
               onChange={handleFilterChange}
             >
               <FormControlLabel
-                value="Active"
+                value="active"
                 control={
                   <Radio
                     sx={{
@@ -472,7 +475,7 @@ const PatientList = () => {
                 sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
-                value="In-active"
+                value="inactive"
                 control={
                   <Radio
                     sx={{
@@ -487,7 +490,7 @@ const PatientList = () => {
                 sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
-                value="All"
+                value=""
                 control={
                   <Radio
                     sx={{
@@ -524,7 +527,7 @@ const PatientList = () => {
               onChange={handleFilterChange}
             >
               <FormControlLabel
-                value="Walk In"
+                value="Walk in"
                 control={
                   <Radio
                     sx={{
@@ -569,7 +572,7 @@ const PatientList = () => {
                 sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
-                value="All"
+                value=""
                 control={
                   <Radio
                     sx={{

@@ -48,6 +48,8 @@ const DepartDetails = (props) => {
 
   const department = useSelector((store) => store.receptionist.department);
 
+  console.log("Dep: ",department)
+
   return (
     <>
       <div className={styles.receptionist}>
@@ -166,7 +168,7 @@ const DepartDetails = (props) => {
                             >
                               {department?.totalDoctors.map((doctor, index) => (
                                   <MenuItem key={index} value={doctor} sx={{ color: "#000", opacity: 1, pointerEvents: "none" }} >
-                                    {doctor}
+                                    {doctor?.name}
                                   </MenuItem>
                               ))}
                             </Select>
@@ -183,14 +185,20 @@ const DepartDetails = (props) => {
                                 renderValue={() => (
                                     <span>
                                       <span style={{ color: "#3C3C3C" }}>Total Nurses/Support Staff: </span>
-                                      <span style={{ color: "#3C3C3C", fontWeight: "bold" }}>{department?.totalNurses}</span>
+                                      <span style={{ color: "#3C3C3C", fontWeight: "bold" }}>{department?.totalStaffs.length}</span>
                                     </span>
                                 )}
                                 sx={{
                                   "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
                                 }}
                             >
-                              <MenuItem value="NURSE1" sx={{ color: "#000", opacity: 1, pointerEvents: "none" }}>NURSE 1</MenuItem>
+                              {
+                                department?.totalStaffs.map((staff,index) => (
+                                    <MenuItem key={index} value="NURSE1" sx={{ color: "#000", opacity: 1, pointerEvents: "none" }}>
+                                      {staff?.name}
+                                    </MenuItem>
+                                ))
+                              }
                             </Select>
                           </FormControl>
 
