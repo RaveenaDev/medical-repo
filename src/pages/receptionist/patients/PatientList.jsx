@@ -125,7 +125,7 @@ const PatientList = () => {
   const noOfPatients = receptionist.totalFilteredPatients;
   const totalPatients = receptionist.filteredPatients;
 
-  console.log("Total :",totalPatients)
+  // console.log("Total :",totalPatients)
 
   return (
     <Box sx={{ padding: 2 }}>

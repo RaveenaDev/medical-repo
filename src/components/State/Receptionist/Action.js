@@ -81,7 +81,7 @@ export const getPatients = () => async (dispatch) => {
       },
     });
 
-    console.log("Dispatching",data)
+    // console.log("Dispatching",data)
 
     dispatch({ type: GET_PATIENTS, payload: data });
   } catch (error) {
@@ -90,7 +90,7 @@ export const getPatients = () => async (dispatch) => {
 };
 
 export const getFilteredPatients = (filteredData) => async (dispatch) => {
-  console.log("Fil:",filteredData)
+  // console.log("Fil:",filteredData)
   try {
     const token = localStorage.getItem("jwt");
 

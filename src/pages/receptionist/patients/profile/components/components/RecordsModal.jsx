@@ -21,11 +21,14 @@ const RecordModal = ({ open, bill, onClose,patient }) => {
   }, [open]);
 
   const billId = patient?.bills[patient.bills.length - 1]?._id;
+  console.log("Bill :",billId)
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBillById(billId));
+    if(billId){
+      dispatch(getBillById(billId));
+    }
   }, [dispatch, billId]);
 
   const billByID = useSelector((store) => store.receptionist.bill);
