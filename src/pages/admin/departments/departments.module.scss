@@ -1,143 +1,291 @@
+// $blue: #25307f;
+
+// .headerContainer {
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-start;
+//   margin-bottom: 7px;
+//   margin-top: -12px;
+
+//   .backButton {
+//     margin-right: 0.2rem; // Space between button and h2
+//     margin-top: 10px;
+//     color: #25307f;
+//     background-color: #f1f1f1;
+//     font-weight: bold;
+//     font-size: 20px;
+//     padding: 0;
+//   }
+
+//   .departmentTitle {
+//     margin: 0; // Remove default margin of h2
+//     color: $blue;
+//     font-weight: 500;
+//     font-size: 22px;
+//   }
+
+//   .departmentTitle1 {
+//     margin: 0; // Remove default margin of h2
+//     color: $blue;
+//     font-weight: 500;
+//     opacity: 0.5; // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
+//   }
+
+//   .forwardButton {
+//     margin-left: 0.8rem; // Space between button and h2
+//     margin-top: 10px;
+//     color: #25307f;
+//     background-color: #f1f1f1;
+//     font-weight: bold;
+//     font-size: 20px;
+//     padding: 0;
+//   }
+
+//   .departmentTitleDetails {
+//     margin: 0; // Remove default margin of h2
+//     color: $blue;
+//     font-weight: 500;
+//     margin-left: 0.7rem;
+//   }
+// }
+
+// .cardContainer {
+//   background-color: white;
+//   min-width: 290px;
+//   height: 220px;
+//   padding: 1.5rem 1rem; // px-4 py-6
+//   border-radius: 6px;
+//   cursor: pointer;
+//   border: 2px solid transparent; // Start with no visible border
+//   transition: border-color 0.3s ease; // Smooth transition for border color
+
+//   &:hover {
+//     border-color: black; // Change border color to black on hover
+//     transform: scale(1.02); // Slight zoom effect
+//   }
+
+//   .cardHeader {
+//     display: flex;
+//     justify-content: space-between;
+
+//     .cardHeading {
+//       display: flex;
+
+//       gap: 8px; // gap-2
+//     }
+
+//     .circle {
+//       background-color: #c8dfe4;
+//       width: 1.75rem; // w-5
+//       height: 1.75rem; // h-5
+//       border-radius: 50%; // rounded-full
+//       margin-top: 0.2rem; // mt-[3px]
+//       margin-right: 0.3rem; // Add this margin to increase the space between circle and title
+//     }
+
+//     .title {
+//       color: #25307f;
+//       font-weight: 600; // font-semibold
+//       font-size: 1.2rem; // Set default font size
+//       padding: 0;
+//       margin: 0;
+//     }
+
+//     .arrow {
+//       color: #25307f;
+//       margin-top: 0.42rem;
+//       margin-left: 0.3rem;
+//     }
+
+//     .icons {
+//       //padding-right: 4px;
+//       .message {
+//         color: #25307f;
+//         font-size: 12px;
+//       }
+
+//       .phone {
+//         //margin-left: 20px;
+//         color: green;
+//       }
+//     }
+//   }
+
+//   .detailsContainer {
+//     margin-left: 2.5rem;
+//     margin-top: 15px;
+//     .details {
+//       display: flex;
+//       height: 28px;
+//       font-weight: 500;
+//       .name {
+//         color: black;
+//         padding: 0;
+//       }
+
+//       .value {
+//         color: gray;
+//         margin-left: 4px;
+//       }
+//     }
+//   }
+// }
+
+// .superCardContainer {
+//   // display: flex;
+//   // flex-wrap: wrap;
+//   // gap: 15px;
+//   // justify-content: space-evenly;
+//   // align-items: center;
+//   gap: 2rem;
+//   display: grid;
+//   grid-template-columns: repeat(3, 1fr);
+// }
 $blue: #25307f;
 
 .headerContainer {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 7px;
-  margin-top: -12px;
+  margin-bottom: 5px;
+  flex-wrap: wrap; // Allow items to wrap in smaller screens
 
-  .backButton {
-    margin-right: 0.2rem; // Space between button and h2
-    margin-top: 10px;
-    color: #25307f;
-    background-color: #f1f1f1;
-    font-weight: bold;
-    font-size: 20px;
-    padding: 0;
-  }
-
-  .departmentTitle {
-    margin: 0; // Remove default margin of h2
-    color: $blue;
-    font-weight: 500;
-    font-size: 22px;
-  }
-
-  .departmentTitle1 {
-    margin: 0; // Remove default margin of h2
-    color: $blue;
-    font-weight: 500;
-    opacity: 0.5; // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
-  }
-
+  .backButton,
   .forwardButton {
-    margin-left: 0.8rem; // Space between button and h2
-    margin-top: 10px;
-    color: #25307f;
+    margin: 10px 8px 0 0;
+    color: $blue;
     background-color: #f1f1f1;
     font-weight: bold;
-    font-size: 20px;
-    padding: 0;
+    font-size: 18px; // Adjusted for responsiveness
+    padding: 4px 8px;
+    border: none;
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
   }
 
+  .departmentTitle,
+  .departmentTitle1,
   .departmentTitleDetails {
-    margin: 0; // Remove default margin of h2
+    margin: 0;
     color: $blue;
     font-weight: 500;
-    margin-left: 0.7rem;
+    font-size: 1.2rem; // Adjusted for responsiveness
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .backButton,
+    .forwardButton {
+      font-size: 16px;
+    }
+
+    .departmentTitle,
+    .departmentTitle1,
+    .departmentTitleDetails {
+      font-size: 1rem;
+    }
   }
 }
 
 .cardContainer {
   background-color: white;
-  min-width: 290px;
-  height: 220px;
-  padding: 1.5rem 1rem; // px-4 py-6
+  height: 220px; // Adjust height dynamically
+  min-width: 260px;
+  padding: 1.2rem 0.8rem;
   border-radius: 6px;
   cursor: pointer;
-  border: 2px solid transparent; // Start with no visible border
-  transition: border-color 0.3s ease; // Smooth transition for border color
+  border: 2px solid transparent;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 
   &:hover {
-    border-color: black; // Change border color to black on hover
-    transform: scale(1.02); // Slight zoom effect
+    transform: scale(1.02);
   }
 
   .cardHeader {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
-    .cardHeading {
+    .titleContainer {
       display: flex;
-
-      gap: 8px; // gap-2
+      gap: 8px;
     }
 
     .circle {
       background-color: #c8dfe4;
-      width: 1.75rem; // w-5
-      height: 1.75rem; // h-5
-      border-radius: 50%; // rounded-full
-      margin-top: 0.2rem; // mt-[3px]
-      margin-right: 0.3rem; // Add this margin to increase the space between circle and title
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      margin-top: 0.2rem;
+      margin-right: 0.3rem;
     }
 
     .title {
-      color: #25307f;
-      font-weight: 600; // font-semibold
-      font-size: 1.2rem; // Set default font size
-      padding: 0;
+      color: $blue;
+      font-weight: 600;
+      font-size: 1.1rem;
       margin: 0;
     }
 
     .arrow {
-      color: #25307f;
-      margin-top: 0.42rem;
+      color: $blue;
+      margin-top: 0.3rem;
       margin-left: 0.3rem;
     }
 
     .icons {
-      //padding-right: 4px;
       .message {
-        color: #25307f;
+        color: $blue;
         font-size: 12px;
       }
-
       .phone {
-        //margin-left: 20px;
         color: green;
       }
     }
   }
 
   .detailsContainer {
-    margin-left: 2.5rem;
-    margin-top: 15px;
+    margin-left: 2rem;
+    margin-top: 12px;
     .details {
       display: flex;
       height: 28px;
       font-weight: 500;
+      font-size: 14px;
+      flex-wrap: wrap; // Allows wrapping in small screens
       .name {
         color: black;
-        padding: 0;
       }
-
       .value {
         color: gray;
         margin-left: 4px;
       }
     }
   }
+
+  @media (max-width: 768px) {
+    min-width: 100%; // Full width for smaller screens
+    height: auto;
+    padding: 1rem;
+  }
 }
 
 .superCardContainer {
-  // display: flex;
-  // flex-wrap: wrap;
-  // gap: 15px;
-  // justify-content: space-evenly;
-  // align-items: center;
-  gap: 2rem;
   display: grid;
+  gap: 1.5rem;
   grid-template-columns: repeat(3, 1fr);
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

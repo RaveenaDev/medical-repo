@@ -36,7 +36,7 @@ const MoreInfo = (props) => {
                 height: "80vh", // Full viewport height
                 padding: "1rem",
                 marginBottom: "1rem",
-                marginTop: "60px",
+                marginTop: "50px",
               }}
             >
               <Grid xs={6}>

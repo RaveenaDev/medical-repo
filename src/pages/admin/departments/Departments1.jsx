@@ -29,12 +29,18 @@ const Departments1 = (props) => {
   const allDepartments = admin.departments;
 
   return (
-    <>
+    <div
+      style={{
+        background: "#f1f1f1",
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+      }}
+    >
       <div
         style={{
           position: "fixed",
           top: "0px",
-          padding: "10px 0",
+          padding: "10px ",
           width: "77%",
           background: " #F1F1F1",
           zIndex: 100,
@@ -61,7 +67,7 @@ const Departments1 = (props) => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default Departments1;
