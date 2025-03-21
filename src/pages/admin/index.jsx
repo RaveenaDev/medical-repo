@@ -170,12 +170,16 @@ function Admin(props) {
               color: "#25307F",
               fontWeight: 500,
               textTransform: "capitalize",
-              padding: "4px 8px",
+              padding: "3px 8px",
               backgroundColor: "#fff",
               marginLeft: "16px",
               position: "absolute",
               left: "11.2rem", // % mai isliye nhi di because ye alag file mai hai toh iski position fixed honi jaruri hai during responsiveness
-              top: "8.55rem",
+              top: "8.45rem",
+                "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                },
             }}
           >
             <span

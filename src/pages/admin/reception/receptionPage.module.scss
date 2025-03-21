@@ -7,13 +7,12 @@ $blue : #25307f;
 
 .container1{
   //border: 1px solid black;
-  padding: 5px 12px;
   background-color: white;
 
   .heading1{
     display: flex;
     margin-top: 5px;
-    margin-bottom: 2px;
+    padding: 4px 15px;
     cursor: pointer;
     h3{
       color: $blue;

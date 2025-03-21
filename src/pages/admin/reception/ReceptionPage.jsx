@@ -57,11 +57,11 @@ const ReceptionPage = () => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{marginTop:'-10px'}}>
       <Grid size={8.5}>
         <Grid container direction="column" spacing={2}>
           {/* First vertically stacked item */}
-          <Grid className={styles.container1}>
+          <Grid className={styles.container1} style={{paddingBottom:'6px',borderRadius:'4px'}}>
             <div className={styles.heading1} onClick={handleAppointments}>
               <h3>Appointments</h3>
               <span className={ayu.forwardButton}>
@@ -74,18 +74,21 @@ const ReceptionPage = () => {
                 <Table
                   sx={{
                     borderCollapse: "separate", // Ensure border-spacing works
-                    borderSpacing: "0 4px", // Adds vertical spacing between rows
+                    borderSpacing: "0 8px", // Adds vertical spacing between rows
                   }}
                 >
                   <TableHead>
-                    <TableRow>
+                    <TableRow
+                        sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                            "& td, & th": { py: 0 }, // Removes padding from all cells
+                        }}>
                       <TableCell
                         sx={{
                           fontSize: "13px",
                           color: "#959595",
-                          padding: "0.5 1",
                           border: "none",
-                          px: 0.6,
+                          px: 2.6,
                         }}
                       >
                         Case ID
@@ -172,6 +175,7 @@ const ReceptionPage = () => {
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                             backgroundColor: "#EEF8F1",
+                              "& td, & th": { py: 1.5 }, // Removes padding from all cells
                           }}
                         >
                           <TableCell
@@ -252,7 +256,7 @@ const ReceptionPage = () => {
             </div>
           </Grid>
           {/* Second vertically stacked item */}
-          <Grid className={styles.container1}>
+          <Grid className={styles.container1} style={{paddingBottom:'6px',borderRadius:'4px'}}>
             <div className={styles.heading1} onClick={handlePatients}>
               <h3>Patients</h3>
               <span className={ayu.forwardButton}>
@@ -261,21 +265,24 @@ const ReceptionPage = () => {
             </div>
 
             <div>
-              <TableContainer component={Paper}>
+              <TableContainer>
                 <Table
                   sx={{
                     borderCollapse: "separate", // Ensure border-spacing works
-                    borderSpacing: "0 4px", // Adds vertical spacing between rows
+                    borderSpacing: "0 8px", // Adds vertical spacing between rows
                   }}
                   aria-label="simple table"
                 >
                   <TableHead>
-                    <TableRow>
+                    <TableRow sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        "& td, & th": { py: 0 }, // Removes padding from all cells
+                    }}>
                       <TableCell
                         sx={{
                           fontSize: "13px",
                           color: "#959595",
-                          padding: "0.5 1",
+                          pl: 4,
                           border: "none",
                         }}
                       >
@@ -334,6 +341,7 @@ const ReceptionPage = () => {
                           key={index}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
+                              "& td, & th": { py: 1.2 }, // Removes padding from all cells
                             backgroundColor: "#EEF8F1",
                           }}
                         >
@@ -343,7 +351,7 @@ const ReceptionPage = () => {
                             sx={{
                               color: "#25307f",
                               border: "none",
-                              padding: "14px 14px",
+                              padding: "14px 24px",
                             }}
                           >
                             {row.name}
@@ -421,10 +429,10 @@ const ReceptionPage = () => {
       <Grid
         size={3.5}
         className={styles.container1}
-        sx={{ maxHeight: "calc(140vh - 190px)", overflowY: "auto" }}
+        sx={{ maxHeight: "calc(140vh - 190px)", overflowY: "auto",paddingX:"15px" }}
       >
         <div>
-          <div className={styles.heading1}>
+          <div className={styles.heading1} style={{padding:'0'}}>
             <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>
           </div>
 
