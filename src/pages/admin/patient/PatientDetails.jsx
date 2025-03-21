@@ -54,10 +54,10 @@ const PatientDetails = (props) => {
 
   return (
     <>
-      <div className={rav.receptionist}>
+      <div>
         <>
           <PatientHeader patient={patient} />
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ marginTop: "40px" }}>
             <div
               style={{
                 display: "flex",

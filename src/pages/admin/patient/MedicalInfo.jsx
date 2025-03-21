@@ -6,90 +6,102 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
 const ListSection = ({ title, items, emptyMessage }) => (
-    <div>
-        <h4 className={styles.title}>{title}</h4>
-        {items.length > 0 ? (
-            <ul>
-                {items.map((item, index) => (
-                    <li key={index}>{item}</li>
-                ))}
-            </ul>
-        ) : (
-            <p>{emptyMessage}</p>
-        )}
-    </div>
+  <div>
+    <h4 className={styles.title}>{title}</h4>
+    {items.length > 0 ? (
+      <ul>
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>{emptyMessage}</p>
+    )}
+  </div>
 );
 
 const MedicalInfo = ({
-    medicalHistory = [],
-    currentMedications = [],
-    symptoms = [],
-    history = [],
-    showSymptoms = true,
-    showHistory = true,
-    showButton = true, // New prop to control button visibility
-    patient
+  medicalHistory = [],
+  currentMedications = [],
+  symptoms = [],
+  history = [],
+  showSymptoms = true,
+  showHistory = true,
+  showButton = true, // New prop to control button visibility
+  patient,
 }) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleMoreClick = () => {
-        navigate("/admin/reception/patients/History", { state: { medicalHistory,currentMedications,symptoms,history,patient } }); // Redirects to the MoreInfo page
-    };
+  const handleMoreClick = () => {
+    navigate("/admin/reception/patients/History", {
+      state: { medicalHistory, currentMedications, symptoms, history, patient },
+    }); // Redirects to the MoreInfo page
+  };
 
-    return (
-        <>
-            <ListSection 
-                title="Medical History" 
-                items={medicalHistory} 
-                emptyMessage="No medical history available." 
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
+        }}
+      >
+        <div>
+          <ListSection
+            title="Medical History"
+            items={medicalHistory}
+            emptyMessage="No medical history available."
+          />
+          <ListSection
+            title="Current Medications"
+            items={currentMedications}
+            emptyMessage="No current medications available."
+          />
+          {showSymptoms && (
+            <ListSection
+              title="Symptoms"
+              items={symptoms}
+              emptyMessage="No symptoms available."
             />
-            <ListSection 
-                title="Current Medications" 
-                items={currentMedications} 
-                emptyMessage="No current medications available." 
+          )}
+          {showHistory && (
+            <ListSection
+              title="Social History"
+              items={history}
+              emptyMessage="No social history available."
             />
-            {showSymptoms && (
-                <ListSection 
-                    title="Symptoms" 
-                    items={symptoms} 
-                    emptyMessage="No symptoms available." 
-                />
-            )}
-            {showHistory && (
-                <ListSection 
-                    title="Social History" 
-                    items={history} 
-                    emptyMessage="No social history available." 
-                />
-            )}
+          )}
 
-            {showButton && ( // Conditionally render the button
-                <Button
-                    variant="outlined"
-                    endIcon={<ArrowForwardIosIcon />}
-                    onClick={handleMoreClick}
-                    sx={{
-                        margin: "16px",
-                        padding: "5px 30px",
-                        borderColor: "#25307F",
-                        borderRadius: "20px",
-                        textTransform: "none",
-                        fontWeight: "bold",
-                        backgroundColor: "#25307F",
-                        fontSize: "14px",
-                        color: "#ffffff",
-                        "&:hover": {
-                            backgroundColor: "#1a1a1a",
-                        },
-                    }}
-                >
-                    More
-                </Button>
-            )}
-        </>
-    );
+          {showButton && ( // Conditionally render the button
+            <Button
+              variant="outlined"
+              endIcon={<ArrowForwardIosIcon />}
+              onClick={handleMoreClick}
+              sx={{
+                margin: "16px",
+                padding: "5px 30px",
+                borderColor: "#25307F",
+                borderRadius: "20px",
+                textTransform: "none",
+                fontWeight: "bold",
+                backgroundColor: "#25307F",
+                fontSize: "14px",
+                color: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#1a1a1a",
+                },
+              }}
+            >
+              More
+            </Button>
+          )}
+        </div>
+      </div>
+    </>
+  );
 };
-
 
 // MedicalInfo.propTypes = {
 //     medicalHistory: PropTypes.arrayOf(PropTypes.string),
