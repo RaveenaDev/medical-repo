@@ -73,7 +73,7 @@ function Receptionist(props) {
     }
 
     else{
-      console.log(selectedBranch)
+      // console.log(selectedBranch)
       dispatch(getFilteredAppointments("Scheduled",selectedBranch))
       dispatch(getFilteredAppointments("Ongoing",selectedBranch))
       dispatch(getFilteredAppointments("Waiting",selectedBranch))
