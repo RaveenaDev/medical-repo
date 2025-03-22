@@ -86,26 +86,33 @@ const Records = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography
-              variant="h4"
+            <Box
               sx={{
-                fontWeight: "bold",
                 borderRight: "0.5px solid #4A4A4A8C",
+                display: "flex",
+                alignItems: "center",
                 paddingRight: 2,
-                marginRight: 2,
-                color: "black",
               }}
             >
-              {billingRecords.length}
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+
+                  marginRight: 1,
+                  color: "black",
+                }}
+              >
+                {billingRecords.length}
+              </Typography>
               <Typography
                 component="span"
                 variant="body1"
                 sx={{ fontWeight: "normal", color: "#878787" }}
               >
-                Patients
+                Records
               </Typography>
-            </Typography>
-
+            </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography
                 variant="body1"
@@ -117,7 +124,12 @@ const Records = () => {
                 value={sortOrder}
                 onChange={handleSortChange}
                 size="small"
-                sx={{ minWidth: 160 }}
+                sx={{
+                  minWidth: 160,
+                  background: "#fff",
+                  boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                  border: "1px solid transparent",
+                }}
               >
                 <MenuItem
                   value="Weekly"
@@ -182,35 +194,36 @@ const Records = () => {
           <span>Status</span>
           <span>Actions</span>
         </div>
+        <div style={{ paddingBottom: "2rem" }}>
+          {billingRecords.map((item) => (
+            <div className="table-row" key={item._id}>
+              <span className="blue">{item.caseId}</span>
+              <span className="blue">{item.patient.name}</span>
+              <span className="grey">{item.patient.phone}</span>
+              <span className="grey">
+                {new Date(item.createdAt).toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </span>
+              <span className="grey"> {item.totalAmount}</span>
+              <span className={`status ${item.status.toLowerCase()}`}>
+                {item.status}
+              </span>
+              <Button
+                onClick={() => handleViewClick(item._id)}
+                className="view-btn"
+              >
+                View
+              </Button>
 
-        {billingRecords.map((item) => (
-          <div className="table-row" key={item._id}>
-            <span className="blue">{item.caseId}</span>
-            <span className="blue">{item.patient.name}</span>
-            <span className="grey">{item.patient.phone}</span>
-            <span className="grey">
-              {new Date(item.createdAt).toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
-            </span>
-            <span className="grey"> {item.totalAmount}</span>
-            <span className={`status ${item.status.toLowerCase()}`}>
-              {item.status}
-            </span>
-            <Button
-              onClick={() => handleViewClick(item._id)}
-              className="view-btn"
-            >
-              View
-            </Button>
-
-            <IconButton className="menu-btn">
-              <MoreVertIcon />
-            </IconButton>
-          </div>
-        ))}
+              <IconButton className="menu-btn">
+                <MoreVertIcon />
+              </IconButton>
+            </div>
+          ))}
+        </div>
       </div>
       {/* Use the separate BillingModal Component */}
       <RecordModal
