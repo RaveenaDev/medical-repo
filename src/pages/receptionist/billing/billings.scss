@@ -1,6 +1,7 @@
 .billings-container {
   background: #f1f1f1;
-  min-height: 100vh;
+  height: 91dvh; // Make the entire div take up the full viewport height
+  overflow: "hidden"; // Prevent scrolling on the rest of the page
   padding: 20px;
   color: black;
 
@@ -48,8 +49,10 @@
   }
 
   .billings-table {
+    margin-top: 90px;
+    max-height: 70vh; /* Ensure vertical scrolling */
+    overflow-y: auto; /* Enable scrolling */
     border-radius: 8px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
 
@@ -64,7 +67,11 @@
 
     .table-header {
       font-size: 16px;
-      margin-left: 1.5rem;
+
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #f1f1f1; /* Ensure it has a background */
     }
 
     .table-row {
