@@ -223,7 +223,6 @@ const PatientList = () => {
             borderCollapse: "separate",
             borderSpacing: "0 10px",
             background: "#F1F1F1",
-            marginBottom: "30px",
           }}
         >
           <TableHead
@@ -333,7 +332,6 @@ const PatientList = () => {
                               outline: "none",
                               boxShadow: "none",
                           },
-
                       }}
                     onClick={(event) => handleMenuOpen(event, patient)}
                   >
@@ -400,7 +398,8 @@ const PatientList = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      ;{/* Filter Drawer */}
+
+        {/* Filter Drawer */}
       <Drawer
         anchor="right"
         open={filterDrawerOpen}
