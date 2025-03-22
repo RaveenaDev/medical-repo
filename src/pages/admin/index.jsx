@@ -149,7 +149,13 @@ function Admin(props) {
   };
 
   return (
-    <div style={{ background: "#F1F1F1" }}>
+    <div
+      style={{
+        background: "#F1F1F1",
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -176,10 +182,10 @@ function Admin(props) {
               position: "absolute",
               left: "11.2rem", // % mai isliye nhi di because ye alag file mai hai toh iski position fixed honi jaruri hai during responsiveness
               top: "8.45rem",
-                "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                },
+              "&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
             }}
           >
             <span
@@ -200,7 +206,12 @@ function Admin(props) {
         </div>
       </div>
       <div
-        style={{ marginTop: "200px", height: "100dvh", background: "#F1F1F1" }}
+        style={{
+          marginTop: "200px",
+          background: "#F1F1F1",
+          maxHeight: "70vh", // Adjust this to fit your layout needs
+          overflowY: "auto",
+        }}
       >
         {/* Main Grid container */}
         <Grid container spacing={2}>
@@ -208,7 +219,7 @@ function Admin(props) {
           <Grid item xs={12}>
             <Box
               sx={{
-                width: "97%",
+                width: "95%",
                 backgroundColor: "#25307F",
                 px: 3,
                 py: 2,
@@ -372,7 +383,7 @@ function Admin(props) {
           </Grid>
 
           {/* Bottom grid (divided into 2 horizontal blocks) */}
-          <Grid container item xs={12} spacing={2}>
+          <Grid container item xs={12} spacing={1}>
             {/* Left half of the bottom grid */}
             <Grid item xs={8}>
               <Box
