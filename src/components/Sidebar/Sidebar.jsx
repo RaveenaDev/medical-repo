@@ -75,7 +75,7 @@ const Sidebar = ({ role }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        height: "82vh",
+        height: "83vh",
       }}
     >
       <div>
@@ -141,7 +141,7 @@ const Sidebar = ({ role }) => {
           display: "flex",
           justifyContent: "space-between",
           marginTop: "auto",
-          paddingBottom: "10px",
+          paddingBottom: "5px",
           paddingTop: "20px",
           borderTop: "1px solid #E2E2E2 ",
         }}

@@ -88,7 +88,7 @@ function App() {
               position: "fixed",
               top: 0, // Ensure it sticks to the top
               left: 0, // Position it on the left side
-              overflowY: "auto", // Allows scrolling inside the sidebar if needed
+              // overflowY: "auto", // Allows scrolling inside the sidebar if needed
             }}
           >
             <div className={styles.logo}>
