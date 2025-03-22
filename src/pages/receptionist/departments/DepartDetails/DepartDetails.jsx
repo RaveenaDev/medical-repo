@@ -6,7 +6,6 @@ import ayu from "../departments.module.scss";
 import avi from "./departDetails.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -86,104 +85,119 @@ const DepartDetails = (props) => {
             {/*<hr style={{border: '1px solid #d3d3d3', margin: '20px 0'}} />*/}
 
             <Box className={avi.boxContainer}>
-              <h4 className={avi.heading}>Specific Branch Name</h4>
-              <div className={avi.pro}>
-                <img
-                  className={avi.img}
-                  src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
-                  alt=""
-                />
-                <p className={avi.name}>{department?.departmentHead.name}</p>
-              </div>
+              <div style={{display:'flex',justifyContent:'space-between'}}>
+                <div>
+                  <h4 className={avi.heading}>Specific Branch Name</h4>
+                  <div className={avi.pro}>
+                    <img
+                        className={avi.img}
+                        src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
+                        alt=""
+                    />
+                    <p className={avi.name}>{department?.departmentHead.name}</p>
+                  </div>
+                </div>
 
-              <div className={avi.icons}>
-                <Button
-                  className={avi.message}
-                  sx={{
-                    outline: "none",
-                    boxShadow: "none",
-                    "&:focus": { outline: "none" },
-                    borderRadius: "12px",
-                    padding: "8px 2px",
-                  }}
-                >
-                  <Tooltip
-                    title={
-                      department?.departmentHead?.email || "No email available"
-                    }
-                    arrow
+                <div className={avi.icons}>
+                  <Button
+                      className={avi.message}
+                      sx={{
+                        outline: "none",
+                        boxShadow: "none",
+                        "&:focus": {outline: "none"},
+                        borderRadius: "12px",
+                        padding: "8px 2px",
+                      }}
                   >
-                    <EmailIcon />
-                  </Tooltip>
-                </Button>
-                <Button
-                  className={avi.phone}
-                  sx={{
-                    outline: "none",
-                    boxShadow: "none",
-                    "&:focus": { outline: "none" },
-                    borderRadius: "12px",
-                    padding: "8px 2px",
-                  }}
-                >
-                  <Tooltip
-                    title={
-                      department?.departmentHead?.phone || "No phone available"
-                    }
-                    arrow
+                    <Tooltip
+                        title={
+                            department?.departmentHead?.email || "No email available"
+                        }
+                        arrow
+                    >
+                      <EmailIcon/>
+                    </Tooltip>
+                  </Button>
+                  <Button
+                      className={avi.phone}
+                      sx={{
+                        outline: "none",
+                        boxShadow: "none",
+                        "&:focus": {outline: "none"},
+                        borderRadius: "12px",
+                        padding: "8px 2px",
+                      }}
                   >
-                    <PhoneIcon />
-                  </Tooltip>
-                </Button>
+                    <Tooltip
+                        title={
+                            department?.departmentHead?.phone || "No phone available"
+                        }
+                        arrow
+                    >
+                      <PhoneIcon/>
+                    </Tooltip>
+                  </Button>
+                </div>
               </div>
 
               <div className={avi.section1}>
                 <Grid
-                  container
-                  sx={{ width: "100%", justifyContent: "space-between" }}
+                    container
+                    sx={{width: "100%", justifyContent: "space-between"}}
                 >
                   {/* Section 1 */}
                   <Grid
-                    md={4}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      width: "40%",
-                      padding: "0 30px",
-                    }}
+                      md={4}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "40%",
+                        padding: "0 30px",
+                      }}
                   >
-                    <div style={{ width: "100%", padding: "0 20px" }}>
+                    <div style={{width: "100%", padding: "0 20px"}}>
                       <h4 className={avi.heading}>Staff Details</h4>
-                      <Box sx={{ minWidth: 430 }}>
+                      <Box>
                         <Stack spacing={1}>
                           {" "}
                           {/* Adds a gap of 2 (default = 16px) between children */}
-                          <FormControl fullWidth>
+                          <FormControl>
                             <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              value={age}
-                              onChange={handleChange}
-                              IconComponent={KeyboardArrowDownIcon}
-                              displayEmpty // Ensures label remains visible
-                              renderValue={() => (
-                                <span>
-                                  <span style={{ color: "#3C3C3C" }}>
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={age}
+                                onChange={handleChange}
+                                IconComponent={KeyboardArrowDownIcon}
+                                displayEmpty // Ensures label remains visible
+                                renderValue={() => (
+                                    <span>
+                                  <span style={{color: "#3C3C3C"}}>
                                     Total Doctors:{" "}
                                   </span>
                                   <span
-                                    style={{
-                                      color: "#3C3C3C",
-                                      fontWeight: "bold",
-                                    }}
+                                      style={{
+                                        color: "#3C3C3C",
+                                        fontWeight: "bold",
+                                      }}
                                   >
                                     {department?.totalDoctors.length}
                                   </span>
                                 </span>
                               )}
                               sx={{
+                                "& .MuiSelect-select": {
+                                  padding: 1.5, // Removes padding inside Select field
+                                },
                                 "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
                               }}
+                                MenuProps={{
+                                  PaperProps: {
+                                    sx: {
+                                      maxHeight: 200, // Set fixed height for the dropdown
+                                      overflowY: "auto", // Enable scrolling when content overflows
+                                    },
+                                  },
+                                }}
                             >
                               {department?.totalDoctors.map((doctor, index) => (
                                 <MenuItem
@@ -200,7 +214,7 @@ const DepartDetails = (props) => {
                               ))}
                             </Select>
                           </FormControl>
-                          <FormControl fullWidth>
+                          <FormControl>
                             <Select
                               labelId="demo-simple-select-label"
                               id="demo-simple-select"
@@ -224,7 +238,18 @@ const DepartDetails = (props) => {
                                 </span>
                               )}
                               sx={{
+                                "& .MuiSelect-select": {
+                                  padding: 1.5, // Removes padding inside Select field
+                                },
                                 "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
+                              }}
+                              MenuProps={{
+                                PaperProps: {
+                                  sx: {
+                                    maxHeight: 200, // Set fixed height for the dropdown
+                                    overflowY: "auto", // Enable scrolling when content overflows
+                                  },
+                                },
                               }}
                             >
                               {department?.totalStaffs.map((staff, index) => (
