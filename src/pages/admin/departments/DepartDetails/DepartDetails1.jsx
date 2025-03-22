@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.scss";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Tooltip } from "@mui/material";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ayu from "../departments.module.scss";
 import avi from "./departDetails.module.scss";
@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDepartmentById } from "../../../../components/State/Admin/Action.js";
 
@@ -94,7 +94,7 @@ const DepartDetails1 = (props) => {
                     src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
                     alt=""
                   />
-                  <p className={avi.name}>{department?.departmentHead}</p>
+                  <p className={avi.name}>{department?.departmentHead.name}</p>
                 </div>
 
                 <div className={avi.icons}>
@@ -108,7 +108,15 @@ const DepartDetails1 = (props) => {
                       padding: "8px 2px",
                     }}
                   >
-                    <EmailIcon />
+                    <Tooltip
+                      title={
+                        department?.departmentHead?.email ||
+                        "No email available"
+                      }
+                      arrow
+                    >
+                      <EmailIcon />
+                    </Tooltip>
                   </Button>
                   <Button
                     className={avi.phone}
@@ -120,7 +128,15 @@ const DepartDetails1 = (props) => {
                       padding: "8px 2px",
                     }}
                   >
-                    <PhoneIcon />
+                    <Tooltip
+                      title={
+                        department?.departmentHead?.phone ||
+                        "No phone available"
+                      }
+                      arrow
+                    >
+                      <PhoneIcon />
+                    </Tooltip>
                   </Button>
                 </div>
 
@@ -131,12 +147,12 @@ const DepartDetails1 = (props) => {
                   >
                     {/* Section 1 */}
                     <Grid
-                      xs={12}
-                      sm={6}
+                      md={4}
                       sx={{
                         display: "flex",
                         justifyContent: "center",
                         width: "40%",
+                        padding: "0 30px",
                       }}
                     >
                       <div style={{ width: "100%", padding: "0 20px" }}>
@@ -176,11 +192,13 @@ const DepartDetails1 = (props) => {
                                   },
                                 }}
                               >
-                                {
-                                  department?.totalDoctors.map((doctor,index) => (
-                                      <MenuItem key={index} value={doctor}>{doctor}</MenuItem>
-                                  ))
-                                }
+                                {department?.totalDoctors.map(
+                                  (doctor, index) => (
+                                    <MenuItem key={index} value={doctor}>
+                                      {doctor}
+                                    </MenuItem>
+                                  )
+                                )}
                               </Select>
                             </FormControl>
                             <FormControl fullWidth>
@@ -212,11 +230,11 @@ const DepartDetails1 = (props) => {
                                   },
                                 }}
                               >
-                                {
-                                  department?.totalStaffs.map((staff,index) => (
-                                      <MenuItem key={index} value={staff}>{staff}</MenuItem>
-                                  ))
-                                }
+                                {department?.totalStaffs.map((staff, index) => (
+                                  <MenuItem key={index} value={staff}>
+                                    {staff}
+                                  </MenuItem>
+                                ))}
                               </Select>
                             </FormControl>
                             <div className={avi.details}>
@@ -268,8 +286,8 @@ const DepartDetails1 = (props) => {
                         style={{
                           width: "100%",
                           boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                          padding: "20px",
-                          borderRadius: "8px",
+                          padding: "8px 10px 0 20px",
+                          borderRadius: "4px",
                           border: "1px solid rgba(116, 116, 116, 0.3)",
                         }}
                       >
@@ -371,9 +389,9 @@ const DepartDetails1 = (props) => {
                       <div className={avi.box3} style={{ padding: "14px" }}>
                         <div style={{ marginBottom: "14px" }}>
                           <h4>Available services</h4>
-                          {department?.availableServices.map((serv,index) => (
+                          {department?.availableServices.map((serv, index) => (
                             <ul
-                                key={index}
+                              key={index}
                               style={{
                                 listStyleType: "none",
                                 paddingLeft: "10px",
@@ -390,21 +408,23 @@ const DepartDetails1 = (props) => {
 
                         <div>
                           <h4>Specialized Procedures</h4>
-                          {department?.specializedProcedures.map((spec,index) => (
-                            <ul
+                          {department?.specializedProcedures.map(
+                            (spec, index) => (
+                              <ul
                                 key={index}
-                              style={{
-                                listStyleType: "none",
-                                paddingLeft: "10px",
-                                color: "#727272",
-                              }}
-                            >
-                              <li>
-                                <span style={{ color: "#727272" }}>• </span>
-                                {spec}
-                              </li>
-                            </ul>
-                          ))}
+                                style={{
+                                  listStyleType: "none",
+                                  paddingLeft: "10px",
+                                  color: "#727272",
+                                }}
+                              >
+                                <li>
+                                  <span style={{ color: "#727272" }}>• </span>
+                                  {spec}
+                                </li>
+                              </ul>
+                            )
+                          )}
                         </div>
                       </div>
                     </Grid>
