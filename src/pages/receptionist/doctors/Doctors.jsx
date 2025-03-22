@@ -83,7 +83,13 @@ const Doctors = (props) => {
             />
           ) : (
             <div>
-              <Box>
+              <Box
+                sx={{
+                  borderBottom: "1px solid #87878782",
+                  paddingBottom: 0.5,
+                  marginBottom: 1,
+                }}
+              >
                 <div className={ayu.headerContainer}>
                   <div
                     className={ayu.backButton}
