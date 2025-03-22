@@ -68,6 +68,7 @@ const PersonalInfo = ({ patient }) => {
                     fontSize: "15px",
                     fontWeight: "600",
                     color: "#1A1A1A",
+                    width: "8rem",
                   }}
                 >
                   {section.values[i]}

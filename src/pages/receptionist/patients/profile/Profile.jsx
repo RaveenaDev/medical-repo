@@ -5,8 +5,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import PersonalInfo from "./PersonalInfo";
 import MedicalInfo from "./MedicalInfo";
-import styles from "./profile.module.scss";
-import rav from "../../styles.module.scss";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ProgressTracker from "./ProgressTracker";
 import { Typography } from "@mui/material";

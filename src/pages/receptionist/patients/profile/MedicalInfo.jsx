@@ -75,8 +75,8 @@ const MedicalInfo = ({
                       endIcon={<ArrowForwardIosIcon sx={{backgroundColor:'white',borderRadius:'50%',padding:'1px',color:'#25307F'}}/>}
                       onClick={handleMoreClick}
                       sx={{
-                          // margin: "16px",
-                          padding: "5px 10px",
+                          margin: "16px",
+                          padding: "5px 30px",
                           gap:"28px",
                           borderColor: "#25307F",
                           borderRadius: "20px",

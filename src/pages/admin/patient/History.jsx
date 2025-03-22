@@ -28,7 +28,7 @@ const History = (props) => {
               height: "80vh", // Full viewport height
               padding: "1rem",
               marginBottom: "1rem",
-              marginTop: "40px",
+              marginTop: "50px",
             }}
           >
             <Grid xs={6}>
@@ -38,7 +38,7 @@ const History = (props) => {
                   height: "100%", // Full height of the grid item
                   padding: "20px",
                   textAlign: "left",
-                  width: "30vw",
+                  width: "35vw",
                 }}
               >
                 <MedicalInfo
@@ -57,7 +57,7 @@ const History = (props) => {
                   height: "100%", // Full height of the grid item
                   padding: "20px",
                   textAlign: "center",
-                  width: "30vw",
+                  width: "33.5vw",
                 }}
               >
                 <FileDocuments />
