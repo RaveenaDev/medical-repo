@@ -85,56 +85,92 @@ const DepartDetails = (props) => {
             {/*<hr style={{border: '1px solid #d3d3d3', margin: '20px 0'}} />*/}
 
             <Box className={avi.boxContainer}>
-              <div style={{display:'flex',justifyContent:'space-between'}}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                   <h4 className={avi.heading}>Specific Branch Name</h4>
                   <div className={avi.pro}>
                     <img
-                        className={avi.img}
-                        src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
-                        alt=""
+                      className={avi.img}
+                      src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
+                      alt=""
                     />
-                    <p className={avi.name}>{department?.departmentHead.name}</p>
+                    <p className={avi.name}>
+                      {department?.departmentHead.name}
+                    </p>
                   </div>
                 </div>
 
                 <div className={avi.icons}>
                   <Button
-                      className={avi.message}
-                      sx={{
-                        outline: "none",
-                        boxShadow: "none",
-                        "&:focus": {outline: "none"},
-                        borderRadius: "12px",
-                        padding: "8px 2px",
-                      }}
+                    className={avi.message}
+                    sx={{
+                      outline: "none",
+                      boxShadow: "none",
+                      "&:focus": { outline: "none" },
+                      borderRadius: "12px",
+                      padding: "8px 2px",
+                    }}
                   >
                     <Tooltip
-                        title={
-                            department?.departmentHead?.email || "No email available"
-                        }
-                        arrow
+                      title={
+                        department?.departmentHead?.email ||
+                        "No email available"
+                      }
+                      arrow
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            backgroundColor: "#25307F",
+                            color: "white",
+                            fontSize: "12px",
+                            padding: "8px",
+                            borderRadius: "8px",
+                          },
+                        },
+                        arrow: {
+                          sx: {
+                            color: "#25307F",
+                          },
+                        },
+                      }}
                     >
-                      <EmailIcon/>
+                      <EmailIcon />
                     </Tooltip>
                   </Button>
                   <Button
-                      className={avi.phone}
-                      sx={{
-                        outline: "none",
-                        boxShadow: "none",
-                        "&:focus": {outline: "none"},
-                        borderRadius: "12px",
-                        padding: "8px 2px",
-                      }}
+                    className={avi.phone}
+                    sx={{
+                      outline: "none",
+                      boxShadow: "none",
+                      "&:focus": { outline: "none" },
+                      borderRadius: "12px",
+                      padding: "8px 2px",
+                    }}
                   >
                     <Tooltip
-                        title={
-                            department?.departmentHead?.phone || "No phone available"
-                        }
-                        arrow
+                      title={
+                        department?.departmentHead?.phone ||
+                        "No phone available"
+                      }
+                      arrow
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            backgroundColor: " #2E823B",
+                            color: "white",
+                            fontSize: "12px",
+                            padding: "8px",
+                            borderRadius: "8px",
+                          },
+                        },
+                        arrow: {
+                          sx: {
+                            color: " #2E823B",
+                          },
+                        },
+                      }}
                     >
-                      <PhoneIcon/>
+                      <PhoneIcon />
                     </Tooltip>
                   </Button>
                 </div>
@@ -142,24 +178,24 @@ const DepartDetails = (props) => {
 
               <div className={avi.section1}>
                 <Grid
-                    container
-                    sx={{width: "100%", justifyContent: "space-between"}}
+                  container
+                  sx={{ width: "100%", justifyContent: "space-between" }}
                 >
                   {/* Section 1 */}
                   <Grid
-                      md={4}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        width: "45%",
-                        padding: "5px 25px 20px 15px",
+                    md={4}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      width: "45%",
+                      padding: "5px 25px 20px 15px",
 
-                        border: "1px solid rgba(116, 116, 116, 0.3)",
-                        borderRadius: '4px',
-                        boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                      }}
+                      border: "1px solid rgba(116, 116, 116, 0.3)",
+                      borderRadius: "4px",
+                      boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                    }}
                   >
-                    <div style={{width: "100%", padding: "0 20px"}}>
+                    <div style={{ width: "100%", padding: "0 20px" }}>
                       <h4 className={avi.heading}>Staff Details</h4>
                       <Box>
                         <Stack spacing={1}>
@@ -167,22 +203,22 @@ const DepartDetails = (props) => {
                           {/* Adds a gap of 2 (default = 16px) between children */}
                           <FormControl>
                             <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={age}
-                                onChange={handleChange}
-                                IconComponent={KeyboardArrowDownIcon}
-                                displayEmpty // Ensures label remains visible
-                                renderValue={() => (
-                                    <span>
-                                  <span style={{color: "#3C3C3C"}}>
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              value={age}
+                              onChange={handleChange}
+                              IconComponent={KeyboardArrowDownIcon}
+                              displayEmpty // Ensures label remains visible
+                              renderValue={() => (
+                                <span>
+                                  <span style={{ color: "#3C3C3C" }}>
                                     Total Doctors:{" "}
                                   </span>
                                   <span
-                                      style={{
-                                        color: "#3C3C3C",
-                                        fontWeight: "bold",
-                                      }}
+                                    style={{
+                                      color: "#3C3C3C",
+                                      fontWeight: "bold",
+                                    }}
                                   >
                                     {department?.totalDoctors.length}
                                   </span>
@@ -194,14 +230,14 @@ const DepartDetails = (props) => {
                                 },
                                 "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
                               }}
-                                MenuProps={{
-                                  PaperProps: {
-                                    sx: {
-                                      maxHeight: 200, // Set fixed height for the dropdown
-                                      overflowY: "auto", // Enable scrolling when content overflows
-                                    },
+                              MenuProps={{
+                                PaperProps: {
+                                  sx: {
+                                    maxHeight: 200, // Set fixed height for the dropdown
+                                    overflowY: "auto", // Enable scrolling when content overflows
                                   },
-                                }}
+                                },
+                              }}
                             >
                               {department?.totalDoctors.map((doctor, index) => (
                                 <MenuItem
