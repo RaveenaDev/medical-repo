@@ -1,6 +1,7 @@
 import {
   ACCEPT_APPOINTMENT_REQUESTS,
-  ADD_ROOM, BOOK_APPOINTMENT,
+  ADD_ROOM,
+  BOOK_APPOINTMENT,
   DELETE_ROOM,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
@@ -10,17 +11,22 @@ import {
   GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
-  GET_DOCTORS_BY_DEPARTMENT, GET_FILTERED_APPOINTMENTS, GET_FILTERED_PATIENTS,
+  GET_DOCTORS_BY_DEPARTMENT,
+  GET_FILTERED_APPOINTMENTS,
+  GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STAFFS,
-  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS, REMOVE_BOOK_APPOINTMENT_DATA,
+  GET_WAITING_APPOINTMENTS,
+  REJECT_APPOINTMENT_REQUESTS,
+  REMOVE_BOOK_APPOINTMENT_DATA,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import { toast } from "react-toastify";
+import { selectClasses } from "@mui/material";
 
 // Action to update a room
 export const updateRoom = (roomId, updatedData) => async (dispatch) => {
@@ -227,7 +233,7 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
       },
     });
 
-    dispatch(getAppointments("Scheduled"));
+    // dispatch(getAppointments("Scheduled"));
 
     dispatch({ type: BOOK_APPOINTMENT, payload: data });
 
@@ -248,66 +254,81 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
 };
 
 export const removeBookAppointmentData = () => async (dispatch) => {
-  dispatch({type: REMOVE_BOOK_APPOINTMENT_DATA})
-}
-
-export const getAppointments = (activeLabel) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-
-    const { data } = await axios.get(`${API_URL}/getAppointmentsByStatus`, {
-      params: { status: activeLabel }, // Sending status as a query parameter
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
-
-    console.log("Simple : ",data)
-
-    dispatch({ type: GET_APPOINTMENTS, payload: data });
-
-    if (data.message === "Scheduled appointments retrieved successfully") {
-      dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
-    } else if (data.message === "Ongoing appointments retrieved successfully") {
-      dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
-    } else if (data.message === "Waiting appointments retrieved successfully") {
-      dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
-    } else {
-      dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  dispatch({ type: REMOVE_BOOK_APPOINTMENT_DATA });
 };
 
-export const getFilteredAppointments = (activeLabel,departmentId) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getAppointments =
+  (activeLabel, startDate, endDate, selectedBranch) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      if (selectedBranch === "All Branches") selectedBranch = null;
+      const { data } = await axios.get(`${API_URL}/getAppointments`, {
+        params: {
+          status: activeLabel,
+          start: startDate,
+          end: endDate,
+          departmentId: selectedBranch,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    const { data } = await axios.get(`${API_URL}/getFilteredAppointments`, {
-      params: { status: activeLabel,departmentId: departmentId }, // Sending status as a query parameter
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      // console.log("Appointments: ", data);
 
-    console.log("Filtered appointments: ",data)
+      dispatch({ type: GET_APPOINTMENTS, payload: data });
 
-    dispatch({ type: GET_FILTERED_APPOINTMENTS, payload: data });
-
-    if (data.message === "Scheduled appointments retrieved successfully") {
-      dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
-    } else if (data.message === "Ongoing appointments retrieved successfully") {
-      dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
-    } else if (data.message === "Waiting appointments retrieved successfully") {
-      dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
-    } else {
-      dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      if (data.message === "Scheduled appointments retrieved successfully") {
+        dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Ongoing appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Waiting appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+      } else {
+        dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+  };
+
+export const getFilteredAppointments =
+  (activeLabel, departmentId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getFilteredAppointments`, {
+        params: { status: activeLabel, departmentId: departmentId }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      console.log("Filtered appointments: ", data);
+
+      dispatch({ type: GET_FILTERED_APPOINTMENTS, payload: data });
+
+      if (data.message === "Scheduled appointments retrieved successfully") {
+        dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Ongoing appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Waiting appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+      } else {
+        dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getRequestedAppointments = () => async (dispatch) => {
   try {
@@ -329,11 +350,15 @@ export const acceptAppointmentRequests = (id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/approveAppointment/${id}`,id, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/approveAppointment/${id}`,
+      id,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
     dispatch({ type: ACCEPT_APPOINTMENT_REQUESTS, payload: id });
     // console.log("Request Accepted Successfully :",data)
@@ -346,11 +371,15 @@ export const rejectAppointmentRequests = (id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/rejectAppointment/${id}`,id, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/rejectAppointment/${id}`,
+      id,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
     dispatch({ type: REJECT_APPOINTMENT_REQUESTS, payload: id });
     // console.log("Request Rejected Successfully :",data)
