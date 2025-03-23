@@ -36,9 +36,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    getFilteredPatients,
-    getPatients,
-    updatePatient,
+  getFilteredPatients,
+  getPatients,
+  updatePatient,
 } from "../../../components/State/Receptionist/Action";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
@@ -97,7 +97,7 @@ const PatientList = () => {
 
   // Handle Search Results
   const handleSearchResults = () => {
-      dispatch(getFilteredPatients(filters));
+    dispatch(getFilteredPatients(filters));
     setFilterDrawerOpen(false);
   };
 
@@ -118,7 +118,7 @@ const PatientList = () => {
 
   useEffect(() => {
     // dispatch(getPatients());
-      dispatch(getFilteredPatients(filters));
+    dispatch(getFilteredPatients(filters));
   }, [dispatch]);
 
   const receptionist = useSelector((store) => store.receptionist);
@@ -223,6 +223,7 @@ const PatientList = () => {
             borderCollapse: "separate",
             borderSpacing: "0 10px",
             background: "#F1F1F1",
+            marginBottom: "30px",
           }}
         >
           <TableHead
@@ -281,11 +282,10 @@ const PatientList = () => {
                   </Typography>
                 </TableCell>
                 <TableCell>{patient.phone}</TableCell>
+                <TableCell>{patient?.typeVisit || "Not Assigned"}</TableCell>
                 <TableCell>
-                  {patient?.typeVisit || "Not Assigned"}
-                </TableCell>
-                <TableCell>
-                  {patient.appointments[patient.appointments.length - 1]?.branch || "Not Assigned"}
+                  {patient.appointments[patient.appointments.length - 1]
+                    ?.branch || "Not Assigned"}
                 </TableCell>
                 <TableCell>
                   {new Date(patient.registrationDate).toLocaleDateString(
@@ -327,12 +327,12 @@ const PatientList = () => {
                 </TableCell>
                 <TableCell>
                   <IconButton
-                      sx={{
-                          "&:focus": {
-                              outline: "none",
-                              boxShadow: "none",
-                          },
-                      }}
+                    sx={{
+                      "&:focus": {
+                        outline: "none",
+                        boxShadow: "none",
+                      },
+                    }}
                     onClick={(event) => handleMenuOpen(event, patient)}
                   >
                     <MoreVertIcon />
@@ -399,7 +399,7 @@ const PatientList = () => {
         </DialogActions>
       </Dialog>
 
-        {/* Filter Drawer */}
+      {/* Filter Drawer */}
       <Drawer
         anchor="right"
         open={filterDrawerOpen}
