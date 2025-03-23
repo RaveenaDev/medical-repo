@@ -4,13 +4,6 @@ import styles from "./patients.module.scss";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import PatientList from "./PatientList.jsx";
 import CommonPanel from "../components/CommonPanel.jsx";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getDoctors,
-  getPatients,
-  getRooms,
-  getStaffs,
-} from "../../../components/State/Receptionist/Action.js";
 
 const Patients = (props) => {
   const [tableIndex, setTableIndex] = useState(null);
@@ -20,55 +13,43 @@ const Patients = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getPatients());
-  }, [dispatch]);
-
-  const receptionist = useSelector((store) => store.receptionist);
-
-  const noOfPatients = receptionist.totalPatients;
-  const patients = receptionist.patients;
-
   return (
-    <div className={styles.patients}>
-      <div
-        style={{
-          position: "fixed",
-          bottom: "0",
-          height: "30px",
-          background: " #F1F1F1",
-          width: "100%",
-          zIndex: 100,
-        }}
-      ></div>
-      <div
-        style={{
-          position: "fixed",
-          top: "0px",
-          padding: "10px",
-          width: "77%",
-          background: " #F1F1F1",
-          zIndex: 100,
-        }}
-      >
-        <CommonPanel />
-      </div>
-      <div style={{ marginTop: "150px" }}>
-        {!props.entity ? (
-          <div className={styles.section}>
-            <p className={styles.title}>Patient List</p>
+    <div
+      className={styles.patients}
+      style={{
+        background: "#f1f1f1",
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+      }}
+    >
+      <div>
+        <div
+          style={{
+            position: "fixed",
+            top: "0px",
+            padding: "10px",
+            width: "77%",
+            background: " #F1F1F1",
+            zIndex: 100,
+          }}
+        >
+          <CommonPanel />
+        </div>
+        <div style={{ marginTop: "150px" }}>
+          {!props.entity ? (
+            <div className={styles.section}>
+              <p className={styles.title}>Patient List</p>
 
-            <PatientList allPatients={{ noOfPatients, patients }} />
+              <PatientList />
 
-            {/* <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>
+              {/* <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>
             Click here to view the profile
           </button> */}
-          </div>
-        ) : (
-          <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
-        )}
+            </div>
+          ) : (
+            <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
+          )}
+        </div>
       </div>
     </div>
   );

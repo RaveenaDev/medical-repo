@@ -19,8 +19,11 @@
   }
 
   .billings-table {
+    max-height: 60vh; /* Ensure vertical scrolling */
+    overflow-y: auto; /* Enable scrolling */
+
     border-radius: 8px;
-    overflow: hidden;
+
     display: flex;
     flex-direction: column;
 
@@ -35,7 +38,11 @@
 
     .table-header {
       font-size: 16px;
-      margin-left: 1.5rem;
+      padding-left: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #f1f1f1; /* Ensure it has a background */
     }
 
     .table-row {

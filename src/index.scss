@@ -1,8 +1,8 @@
 :root {
-  --color-ongoing: #3DB46117;
-  --color-waiting: #FCFCFC;
-  --color-additional: #FFCE00;
-  
+  --color-ongoing: #3db46117;
+  --color-waiting: #fcfcfc;
+  --color-additional: #ffce00;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -74,4 +74,44 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+/* For Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+/* Thin and hidden scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Scrollbar thumb (hidden until hovering/scrolling) */
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+/* Show scrollbar thumb only when hovering over scrollable area */
+:hover::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background-color: transparent;
 }

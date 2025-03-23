@@ -7,13 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
 import styles from "../../receptionist/styles.module.scss";
 import { Box, Button } from "@mui/material";
-import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import Select1 from "../../../components/Select/index.jsx";
-import MenuItem from "@mui/material/MenuItem";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -29,8 +22,6 @@ import {
 } from "../../../components/State/Admin/Action.js";
 
 import { Dropdown } from "primereact/dropdown";
-
-import billing from "../../../assets/Billing.png";
 
 const CommonPanel = () => {
   const navigate = useNavigate();
@@ -169,7 +160,7 @@ const CommonPanel = () => {
       </div>
 
       {!shouldHideDiv && (
-        <div className={styles.appointmentBlock}>
+        <div>
           <Grid
             container
             spacing={2}
@@ -177,7 +168,7 @@ const CommonPanel = () => {
             alignItems="center"
             flexDirection={{ md: "row" }}
             size={12}
-            sx={{ margin: "0 0 20px 0" }}
+            // sx={{ margin: "0 0 20px 0" }}
           >
             <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -219,6 +210,10 @@ const CommonPanel = () => {
                   backgroundColor: "#fff",
                   marginRight: "22px",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
                 }}
               >
                 <svg
@@ -254,6 +249,10 @@ const CommonPanel = () => {
                   backgroundColor: "#fff",
                   marginRight: "22px",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
                 }}
               >
                 <div

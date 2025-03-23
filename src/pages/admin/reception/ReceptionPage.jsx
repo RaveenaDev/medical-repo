@@ -57,11 +57,11 @@ const ReceptionPage = () => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{marginTop:'-10px'}}>
       <Grid size={8.5}>
         <Grid container direction="column" spacing={2}>
           {/* First vertically stacked item */}
-          <Grid className={styles.container1}>
+          <Grid className={styles.container1} style={{paddingBottom:'6px',borderRadius:'4px'}}>
             <div className={styles.heading1} onClick={handleAppointments}>
               <h3>Appointments</h3>
               <span className={ayu.forwardButton}>
@@ -74,18 +74,21 @@ const ReceptionPage = () => {
                 <Table
                   sx={{
                     borderCollapse: "separate", // Ensure border-spacing works
-                    borderSpacing: "0 4px", // Adds vertical spacing between rows
+                    borderSpacing: "0 8px", // Adds vertical spacing between rows
                   }}
                 >
                   <TableHead>
-                    <TableRow>
+                    <TableRow
+                        sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                            "& td, & th": { py: 0 }, // Removes padding from all cells
+                        }}>
                       <TableCell
                         sx={{
                           fontSize: "13px",
                           color: "#959595",
-                          padding: "0.5 1",
                           border: "none",
-                          px: 0.6,
+                          px: 2.6,
                         }}
                       >
                         Case ID
@@ -172,6 +175,7 @@ const ReceptionPage = () => {
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                             backgroundColor: "#EEF8F1",
+                              "& td, & th": { py: 1.5 }, // Removes padding from all cells
                           }}
                         >
                           <TableCell
@@ -195,31 +199,36 @@ const ReceptionPage = () => {
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {truncateText(row.doctor?.name, 14)}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {row.typeVisit}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {row.department.name}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6,color:"#747474"}}
+                            sx={{ border: "none", px: 0.6, color: "#747474" }}
                           >
                             {truncateText(row?.tokenNumber || "N/A", 13)}
                           </TableCell>
                           <TableCell
                             align="center"
-                            sx={{ border: "none", px: 0.6, pr: 2,color:"#747474"}}
+                            sx={{
+                              border: "none",
+                              px: 0.6,
+                              pr: 2,
+                              color: "#747474",
+                            }}
                           >
                             <span
                               style={{
@@ -247,7 +256,7 @@ const ReceptionPage = () => {
             </div>
           </Grid>
           {/* Second vertically stacked item */}
-          <Grid className={styles.container1}>
+          <Grid className={styles.container1} style={{paddingBottom:'6px',borderRadius:'4px'}}>
             <div className={styles.heading1} onClick={handlePatients}>
               <h3>Patients</h3>
               <span className={ayu.forwardButton}>
@@ -256,21 +265,24 @@ const ReceptionPage = () => {
             </div>
 
             <div>
-              <TableContainer component={Paper}>
+              <TableContainer>
                 <Table
                   sx={{
                     borderCollapse: "separate", // Ensure border-spacing works
-                    borderSpacing: "0 4px", // Adds vertical spacing between rows
+                    borderSpacing: "0 8px", // Adds vertical spacing between rows
                   }}
                   aria-label="simple table"
                 >
                   <TableHead>
-                    <TableRow>
+                    <TableRow sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        "& td, & th": { py: 0 }, // Removes padding from all cells
+                    }}>
                       <TableCell
                         sx={{
                           fontSize: "13px",
                           color: "#959595",
-                          padding: "0.5 1",
+                          pl: 4,
                           border: "none",
                         }}
                       >
@@ -329,6 +341,7 @@ const ReceptionPage = () => {
                           key={index}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
+                              "& td, & th": { py: 1.2 }, // Removes padding from all cells
                             backgroundColor: "#EEF8F1",
                           }}
                         >
@@ -338,7 +351,7 @@ const ReceptionPage = () => {
                             sx={{
                               color: "#25307f",
                               border: "none",
-                              padding: "14px 14px",
+                              padding: "14px 24px",
                             }}
                           >
                             {row.name}
@@ -346,7 +359,12 @@ const ReceptionPage = () => {
                           <TableCell
                             component="th"
                             scope="row"
-                            sx={{ border: "none", padding: "14px 14px",color:"#747474",fontWeight:500}}
+                            sx={{
+                              border: "none",
+                              padding: "14px 14px",
+                              color: "#747474",
+                              fontWeight: 500,
+                            }}
                           >
                             {truncateText(
                               row.doctors[0]?.name || "Not Assigned",
@@ -355,13 +373,21 @@ const ReceptionPage = () => {
                           </TableCell>
                           <TableCell
                             align="left"
-                            sx={{ border: "none", padding: "14px 14px",color:"#747474"}}
+                            sx={{
+                              border: "none",
+                              padding: "14px 14px",
+                              color: "#747474",
+                            }}
                           >
                             {truncateText(row.role, 14)}
                           </TableCell>
                           <TableCell
                             align="left"
-                            sx={{ border: "none", padding: "14px 14px",color:"#747474"}}
+                            sx={{
+                              border: "none",
+                              padding: "14px 14px",
+                              color: "#747474",
+                            }}
                           >
                             {row.appointments.length > 0
                               ? row.appointments[row.appointments.length - 1]
@@ -403,10 +429,10 @@ const ReceptionPage = () => {
       <Grid
         size={3.5}
         className={styles.container1}
-        sx={{ maxHeight: "calc(140vh - 190px)", overflowY: "auto" }}
+        sx={{ maxHeight: "calc(140vh - 190px)", overflowY: "auto",paddingX:"15px" }}
       >
         <div>
-          <div className={styles.heading1}>
+          <div className={styles.heading1} style={{padding:'0'}}>
             <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>
           </div>
 
@@ -417,7 +443,11 @@ const ReceptionPage = () => {
                 <h4>{req.patient.name}</h4>
                 <p>
                   Appointment for {req.department.name},{" "}
-                  {new Date(req.tokenDate).toLocaleDateString()}
+                  {new Date(req.tokenDate).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
                 </p>
                 {/*<p>Appointment for ENT, 28 September</p>*/}
               </div>
@@ -437,7 +467,11 @@ const ReceptionPage = () => {
                 <h4>{req.patient.name}</h4>
                 <p>
                   Appointment for {req.doctor.specialization},{" "}
-                  {new Date(req.dateActioned).toLocaleDateString()}
+                  {new Date(req.dateActioned).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
                 </p>
                 {/*<p>Appointment for ENT, 28 September</p>*/}
               </div>

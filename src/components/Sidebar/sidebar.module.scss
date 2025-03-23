@@ -1,23 +1,23 @@
-*{
+* {
   padding: 0;
-  margin: 0
+  margin: 0;
 }
 
-.sidebar{
-  .sideElement{
+.sidebar {
+  .sideElement {
     color: black;
-    padding: 22px;
+    padding: 21px;
     padding-left: 30px;
     //border: 1px solid black;
     cursor: pointer;
   }
 
-  .sideElement:hover{
-    background-color: lightgray;
+  .sideElement:hover {
+    background-color: #aec3ff;
   }
 
-  .active{
-    background-color: #25307F;
+  .active {
+    background-color: #25307f;
     color: white;
   }
 }

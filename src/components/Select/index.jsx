@@ -8,7 +8,13 @@ export default function BasicSelect(props) {
   const [selectedValue, setSelectedValue] = React.useState('');
 
   const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+      const newValue = event.target.value;
+    setSelectedValue(newValue);
+
+      // Call the parent's callback function to pass the selected value
+      if (props.onChange) {
+          props.onChange(newValue);
+      }
   };
 
 	const formatString = (input) => {
@@ -24,7 +30,7 @@ export default function BasicSelect(props) {
         <Select
           labelId={props?.inputId}
           id={props?.selectId}
-          value={selectedValue || formatString(props?.list?.[0])}
+          value={selectedValue || "All Branches"}
           onChange={handleChange}
           sx={{
               color: `${props?.color || 'black'}`, // Text color
@@ -32,10 +38,13 @@ export default function BasicSelect(props) {
               '& .MuiSelect-icon': { color: `${props?.color || 'black'}` } // Icon color
           }}
         >
+            <MenuItem value="All Branches">All Branches</MenuItem>
 					{
 						props?.list?.map((item,index) => {
-							const valueId = formatString(item);
-							return <MenuItem value={valueId} key={index}>{item}</MenuItem>
+							// const valueId = formatString(item);
+							return (
+                                <MenuItem value={item.departmentId} key={index}>{item.departmentName}</MenuItem>
+                            )
 						})
 					}
         </Select>

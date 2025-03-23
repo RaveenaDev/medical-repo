@@ -1,4 +1,5 @@
 import {
+  ACCEPT_APPOINTMENT_REQUESTS,
   ADD_ROOM,
   BOOK_APPOINTMENT,
   DELETE_ROOM,
@@ -8,17 +9,18 @@ import {
   GET_BILL_BY_ID,
   GET_BILLS, GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS, GET_DOCTORS_BY_DEPARTMENT, GET_ONGOING_APPOINTMENTS,
+  GET_DOCTORS, GET_DOCTORS_BY_DEPARTMENT, GET_FILTERED_PATIENTS, GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
-  GET_STAFFS, GET_WAITING_APPOINTMENTS,
+  GET_STAFFS, GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT_REQUESTS, REMOVE_BOOK_APPOINTMENT_DATA,
   UPDATE_ROOM,
 } from "./ActionType.js";
 
 const initialState = {
   totalPatients: null,
+  totalFilteredPatients: null,
   totalDoctors: null,
   totalStaffs: null,
   totalRooms: null,
@@ -29,6 +31,7 @@ const initialState = {
   completedAppointments: [],
   patient: null,
   patients: [],
+  filteredPatients: [],
   doctors: [],
   doctorsByDepartment: [],
   staffs: [],
@@ -42,6 +45,7 @@ const initialState = {
   isLoading: true,
   error: null,
   success: null,
+  bookAppointment: null
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -60,8 +64,16 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        totalPatients: action.payload.count,
+        totalPatients: action.payload.totalPatients,
         patients: action.payload.patients,
+      };
+
+    case GET_FILTERED_PATIENTS:
+      return {
+        ...state,
+        isLoading: false,
+        totalFilteredPatients: action.payload.totalPatients,
+        filteredPatients: action.payload.patients,
       };
 
     case GET_DOCTORS:
@@ -158,15 +170,34 @@ export const receptionistReducer = (state = initialState, action) => {
     case BOOK_APPOINTMENT:
       return {
         ...state,
-        totalAppointments: action.payload.updatedPatientAppointments.length,
-        appointments: [...state.appointments, action.payload.appointment],
+        // totalAppointments: action.payload.updatedPatientAppointments.length,
+        // appointments: [...state.appointments, action.payload.appointment],
+        bookAppointment: "Appointment Booked Successfully"
       };
+
+    case REMOVE_BOOK_APPOINTMENT_DATA:
+      return{
+        ...state,
+        bookAppointment: null
+      }
 
     case GET_APPOINTMENT_REQUESTS:
       return {
         ...state,
         appointmentRequests: action.payload.appointments,
       };
+
+    case ACCEPT_APPOINTMENT_REQUESTS:
+      return{
+        ...state,
+        appointmentRequests: state.appointmentRequests.filter((request) => request._id !== action.payload)
+      }
+
+    case REJECT_APPOINTMENT_REQUESTS:
+      return{
+        ...state,
+        appointmentRequests: state.appointmentRequests.filter((request) => request._id !== action.payload)
+      }
 
     case GET_BILLS:
       return {

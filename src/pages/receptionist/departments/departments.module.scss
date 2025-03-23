@@ -5,67 +5,69 @@ $blue: #25307f;
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 5px;
+  flex-wrap: wrap; // Allow items to wrap in smaller screens
 
-  .backButton {
-    margin-right: 8px; // Space between button and h2
-    margin-top: 10px;
-    color: #25307f;
-    background-color: #f1f1f1;
-    font-weight: bold;
-    font-size: 20px;
-    padding: 0;
-  }
-
-  .departmentTitle {
-    margin: 0; // Remove default margin of h2
-    color: $blue;
-    font-weight: 500;
-  }
-
-  .departmentTitle1 {
-    margin: 0; // Remove default margin of h2
-    color: $blue;
-    font-weight: 500;
-    opacity: 0.5; // Adjust the opacity value (0 is fully transparent, 1 is fully opaque)
-  }
-
+  .backButton,
   .forwardButton {
-    margin-left: 14px; // Space between button and h2
-    margin-top: 10px;
-    color: #25307f;
+    margin: 10px 8px 0 0;
+    color: $blue;
     background-color: #f1f1f1;
     font-weight: bold;
-    font-size: 20px;
-    padding: 0;
+    font-size: 18px; // Adjusted for responsiveness
+    padding: 4px 8px;
+    border: none;
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
   }
 
+  .departmentTitle,
+  .departmentTitle1,
   .departmentTitleDetails {
-    margin: 0; // Remove default margin of h2
+    margin: 0;
     color: $blue;
     font-weight: 500;
-    margin-left: 12px;
+    font-size: 1.2rem; // Adjusted for responsiveness
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .backButton,
+    .forwardButton {
+      font-size: 16px;
+    }
+
+    .departmentTitle,
+    .departmentTitle1,
+    .departmentTitleDetails {
+      font-size: 1rem;
+    }
   }
 }
 
 .cardContainer {
   background-color: white;
-
-  height: 225px;
-  min-width: 316px;
-  padding: 1.5rem 1rem; // px-4 py-6
-  border-radius: 12px;
+  height: 220px; // Adjust height dynamically
+  min-width: 260px;
+  padding: 1.2rem 0.8rem;
+  border-radius: 6px;
   cursor: pointer;
-  border: 2px solid transparent; // Start with no visible border
-  transition: border-color 0.3s ease; // Smooth transition for border color
+  border: 2px solid transparent;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 
   &:hover {
-    border-color: black; // Change border color to black on hover
-    transform: scale(1.02); // Slight zoom effect
+    transform: scale(1.02);
   }
 
   .cardHeader {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     .titleContainer {
       display: flex;
@@ -74,53 +76,49 @@ $blue: #25307f;
 
     .circle {
       background-color: #c8dfe4;
-      width: 1.25rem; // w-5
-      height: 1.25rem; // h-5
-      border-radius: 50%; // rounded-full
-      margin-top: 0.5rem; // mt-[3px]
-      // margin-right: 0.6rem; // Add this margin to increase the space between circle and title
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      margin-top: 0.2rem;
+      margin-right: 0.3rem;
     }
 
     .title {
-      color: #25307f;
-      font-weight: 600; // font-semibold
-      //font-size: 1.4rem; // Set default font size
-      padding: 0;
+      color: $blue;
+      font-weight: 600;
+      font-size: 1.1rem;
       margin: 0;
     }
 
     .arrow {
-      color: #25307f;
-      margin-top: 0.6rem;
+      color: $blue;
+      margin-top: 0.3rem;
+      margin-left: 0.3rem;
     }
 
     .icons {
-      margin-top: 0.3rem;
-      //margin-left: 2rem;
-
       .message {
-        color: #25307f;
+        color: $blue;
+        font-size: 12px;
       }
-
       .phone {
-        //margin-left: 20px;
         color: green;
       }
     }
   }
 
   .detailsContainer {
-    margin-left: 40px;
-    margin-top: 15px;
+    margin-left: 2rem;
+    margin-top: 12px;
     .details {
       display: flex;
-      height: 26px;
+      height: 28px;
       font-weight: 500;
+      font-size: 14px;
+      flex-wrap: wrap; // Allows wrapping in small screens
       .name {
         color: black;
-        padding: 0;
       }
-
       .value {
         color: gray;
         margin-left: 4px;
@@ -128,131 +126,23 @@ $blue: #25307f;
     }
   }
 
-  //// Responsive Adjustments for Card
-  //@media (max-width: 1446px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 1.2rem;
-  //      height: 1.2rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 1.2rem;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.9rem;
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 30px;
-  //    .details {
-  //      font-size: 0.9rem;
-  //    }
-  //  }
-  //}
-  //
-  //@media (max-width: 1300px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 1.1rem;
-  //      height: 1.1rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 1.1rem;
-  //      margin-top: 2.5px;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.8rem;
-  //      position: relative;
-  //      bottom: 2px;
-  //    }
-  //
-  //    .icons{
-  //      margin-top: 0.3rem;
-  //      //margin-left: 2rem;
-  //      position: relative;
-  //      left: 20px;
-  //      bottom: 2px;
-  //
-  //      .message{
-  //        color: #25307f;
-  //        //font-size: 1rem;
-  //      }
-  //
-  //      .phone{
-  //        //margin-left: 20px;
-  //        color: green;
-  //      }
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 20px;
-  //    .details {
-  //      font-size: 0.8rem;
-  //    }
-  //  }
-  //}
-  //
-  //@media (max-width: 1024px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 1rem;
-  //      height: 1rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 1rem;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.8rem;
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 20px;
-  //    .details {
-  //      font-size: 0.8rem;
-  //    }
-  //  }
-  //}
-  //
-  //@media (max-width: 768px) {
-  //
-  //  .cardHeader {
-  //    .circle {
-  //      width: 0.8rem;
-  //      height: 0.8rem;
-  //    }
-  //
-  //    .title {
-  //      font-size: 0.9rem;
-  //    }
-  //
-  //    .arrow {
-  //      font-size: 0.7rem;
-  //    }
-  //  }
-  //
-  //  .detailsContainer {
-  //    margin-left: 10px;
-  //    .details {
-  //      font-size: 0.7rem;
-  //    }
-  //  }
-  //}
+  @media (max-width: 768px) {
+    min-width: 100%; // Full width for smaller screens
+    height: auto;
+    padding: 1rem;
+  }
 }
 
 .superCardContainer {
-  gap: 2rem;
   display: grid;
+  gap: 1.5rem;
   grid-template-columns: repeat(3, 1fr);
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

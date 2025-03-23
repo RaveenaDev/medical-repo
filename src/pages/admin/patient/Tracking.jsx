@@ -58,7 +58,7 @@ const Tracking = (props) => {
   const { patient } = location.state || {};
 
   return (
-    <>
+    <div style={{ height: "88vh" }}>
       <PatientHeader showEditPatients={false} patient={patient} />
       <Box
         sx={{
@@ -67,6 +67,7 @@ const Tracking = (props) => {
           backgroundColor: "#fff",
           borderRadius: "8px",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          marginTop: "60px",
         }}
       >
         {sections.map((section, index) => (
@@ -101,7 +102,7 @@ const Tracking = (props) => {
           </Box>
         ))}
       </Box>
-    </>
+    </div>
   );
 };
 

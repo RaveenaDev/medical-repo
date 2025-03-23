@@ -1,16 +1,18 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Tooltip } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import styles from "./departments.module.scss";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useNavigate } from "react-router-dom";
 
-const DepartCard = ({ department }) => {
+const DepartCard = ({ department, index }) => {
   const navigate = useNavigate();
   const handleClick = (departmentId) => {
     // Redirect to the specific page
-    navigate(`/receptionist/departments/departDetails`,{ state: { departmentId } });
+    navigate(`/receptionist/departments/departDetails`, {
+      state: { departmentId },
+    });
   };
 
   const handleClickMessage = (e) => {
@@ -23,6 +25,13 @@ const DepartCard = ({ department }) => {
     // You can add further functionality here
   };
 
+  const colors = ["#EAAA00", "#66A7B4", "#2E823B", "#F14400", "#5461BE"];
+
+  // Get color based on the department index
+  const getSequentialColor = (index) => {
+    return colors[index % colors.length];
+  };
+
   return (
     <Box
       className={styles.cardContainer}
@@ -30,7 +39,10 @@ const DepartCard = ({ department }) => {
     >
       <div className={styles.cardHeader}>
         <div className={styles.titleContainer}>
-          <div className={styles.circle}></div>
+          <div
+            className={styles.circle}
+            style={{ backgroundColor: getSequentialColor(index) }}
+          ></div>
           <h2 className={styles.title}>{department.departmentName}</h2>
           <span className={styles.arrow}>
             <ArrowForwardIosIcon fontSize="small" />
@@ -44,14 +56,37 @@ const DepartCard = ({ department }) => {
               outline: "none",
               boxShadow: "none",
               "&:focus": { outline: "none" },
-
-              minWidth: "auto", // Remove default minWidth
-              width: "40px", // Custom width
-              height: "30px", // Custom height
+              minWidth: "auto",
+              width: "40px",
+              height: "30px",
             }}
           >
-            <EmailIcon />
+            <Tooltip
+              title={department?.departmentHead?.email || "No email available"}
+              arrow
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    backgroundColor: "#25307F",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "8px",
+                    borderRadius: "8px",
+                  },
+                },
+                arrow: {
+                  sx: {
+                    color: "#25307F",
+                  },
+                },
+              }}
+            >
+              <span>
+                <EmailIcon />
+              </span>
+            </Tooltip>
           </Button>
+
           <Button
             className={styles.phone}
             onClick={handleClickContact}
@@ -59,12 +94,35 @@ const DepartCard = ({ department }) => {
               outline: "none",
               boxShadow: "none",
               "&:focus": { outline: "none" },
-              minWidth: "auto", // Remove default minWidth
-              width: "40px", // Custom width
-              height: "30px", // Custom height
+              minWidth: "auto",
+              width: "40px",
+              height: "30px",
             }}
           >
-            <PhoneIcon />
+            <Tooltip
+              title={department?.departmentHead?.phone || "No phone available"}
+              arrow
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    backgroundColor: " #2E823B",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "8px",
+                    borderRadius: "8px",
+                  },
+                },
+                arrow: {
+                  sx: {
+                    color: " #2E823B",
+                  },
+                },
+              }}
+            >
+              <span>
+                <PhoneIcon />
+              </span>
+            </Tooltip>
           </Button>
         </div>
       </div>
@@ -72,19 +130,23 @@ const DepartCard = ({ department }) => {
       <div className={styles.detailsContainer}>
         <div className={styles.details}>
           <p className={styles.name}>Department Head:</p>
-          <p className={styles.value}>{department.departmentHead}</p>
+          <p className={styles.value}>
+            {department?.departmentHead.name || "Not Assigned"}
+          </p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Patients Present:</p>
-          <p className={styles.value}>{department.totalPatients}</p>
+          <p className={styles.value}>
+            {department?.totalPatients || "Not Assigned"}
+          </p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Total Doctors:</p>
-          <p className={styles.value}>{department.Docs}</p>
+          <p className={styles.value}>{department.doctors.length}</p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Specialist Doctors:</p>
-          <p className={styles.value}>{department.specialistDocs}</p>
+          <p className={styles.value}>{department.specialistDocs.length}</p>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Total Nurses:</p>
@@ -92,9 +154,11 @@ const DepartCard = ({ department }) => {
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Active Services:</p>
-          {
-            department.activeServices.length > 0 ? <p className={styles.value}>{department.activeServices[0]}...</p> : <p className={styles.value}>No Services</p>
-          }
+          {department.activeServices.length > 0 ? (
+            <p className={styles.value}>{department.activeServices[0]}...</p>
+          ) : (
+            <p className={styles.value}>No Services</p>
+          )}
         </div>
       </div>
     </Box>

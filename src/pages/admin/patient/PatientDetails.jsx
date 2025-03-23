@@ -5,12 +5,17 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import PersonalInfo from "./PersonalInfo";
 import MedicalInfo from "./MedicalInfo";
-import styles from "./profile.module.scss";
-import rav from "./styles.module.scss";
 import ProgressTracker from "./ProgressTracker";
-import { Typography } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
+import { Email, WhatsApp } from "@mui/icons-material";
 
 const PatientDetails = (props) => {
   const [medicalHistory, setMedicalHistory] = useState([]);
@@ -18,6 +23,8 @@ const PatientDetails = (props) => {
 
   const location = useLocation();
   const patient = location.state?.patient;
+
+  const [showModal, setShowModal] = useState(false);
 
   if (!patient) {
     return <p>No patient data found!</p>;
@@ -51,38 +58,52 @@ const PatientDetails = (props) => {
   const completed = patient.appointments?.filter(
     (app) => app.status === "Completed"
   ).length;
+  const handleSendEmail = () => {
+    window.open(
+      `mailto:${patient?.email}?subject=Appointment Details&body=Hello, here are your appointment details.`,
+      "_blank"
+    );
+    setShowModal(false);
+  };
+
+  const handleSendWhatsApp = () => {
+    window.open(
+      `https://wa.me/${patient?.phone}?text=Hello, here are your appointment details.`,
+      "_blank"
+    );
+    setShowModal(false);
+  };
 
   return (
     <>
-      <div className={rav.receptionist}>
+      <div>
         <>
           <PatientHeader patient={patient} />
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ marginBottom: "1rem", marginTop: "60px" }}>
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 gap: "20px",
-                padding: "20px",
-                width: "100%",
+                padding: "5px 0",
+                width: "75vw",
               }}
             >
               {/* Box 1 - Profile Card */}
               <div
-                style={{
-                  width: "25%",
-
-                  backgroundColor: "#FFFFFF",
-                  height: "auto",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "16px 20px",
-                  borderRadius: "10px",
-                  boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
-                  textAlign: "center",
-                  color: "black",
-                }}
+                  style={{
+                      width: "25%",
+                      padding: "20px 0",
+                      backgroundColor: "#FFFFFF",
+                      height: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "10px",
+                      boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
+                      textAlign: "center",
+                      color: "black",
+                  }}
               >
                 <div
                   style={{
@@ -100,19 +121,24 @@ const PatientDetails = (props) => {
                       width: 80,
                       height: 80,
                       borderRadius: "50%",
-                      marginBottom: "8px",
+                      marginBottom: "2px",
                     }}
                   />
                   <h4
                     style={{
-                      margin: "8px 0",
-                      fontSize: "18px",
-                      fontWeight: "bold",
+                      margin: "2px 0",
+                      fontSize: "20px",
+                      fontWeight: 500,
+                        color: "#25307F"
                     }}
                   >
                     {patient.name}
                   </h4>
-                  <p style={{ fontSize: "14px", color: "#555" }}>
+                  <p style={{
+                      fontSize: "14px",
+                      color: "#878787",
+                      marginBottom: "24px",
+                  }}>
                     {patient.email}
                   </p>
 
@@ -125,14 +151,14 @@ const PatientDetails = (props) => {
                     }}
                   >
                     <div>
-                      <h5 style={{ margin: "5px 0" }}>{completed}</h5>
-                      <p style={{ fontSize: "14px", color: "#777" }}>
+                      <h5 style={{ color: "#25307F", fontSize: "24px" }}>{completed}</h5>
+                      <p style={{ fontSize: "14px", color: "#878787" }}>
                         Past Visits
                       </p>
                     </div>
                     <div>
-                      <h5 style={{ margin: "5px 0" }}>{upcoming}</h5>
-                      <p style={{ fontSize: "14px", color: "#777" }}>
+                      <h5 style={{ fontSize: "24px", color: "#25307F" }}>{upcoming}</h5>
+                      <p style={{ fontSize: "14px", color: "#878787" }}>
                         Upcoming
                       </p>
                     </div>
@@ -141,7 +167,7 @@ const PatientDetails = (props) => {
                   <button
                     style={{
                       marginTop: "16px",
-                      padding: "12px 24px",
+                      padding: "12px 10px",
                       width: "100%",
                       border: "2px solid #25307F",
                       backgroundColor: "transparent",
@@ -151,6 +177,10 @@ const PatientDetails = (props) => {
                       borderRadius: "6px",
                       cursor: "pointer",
                       transition: "all 0.3s ease",
+                        "&:focus,&:active": {
+                          outline: "none",
+                            boxShadow: "none"
+                        }
                     }}
                     onMouseOver={(e) => {
                       e.target.style.backgroundColor = "#25307F";
@@ -160,9 +190,90 @@ const PatientDetails = (props) => {
                       e.target.style.backgroundColor = "transparent";
                       e.target.style.color = "#25307F";
                     }}
+                    onClick={() => setShowModal(true)}
                   >
                     Send Message
                   </button>
+                  {/* Modal UI */}
+
+                  <Dialog
+                    open={showModal}
+                    onClose={() => setShowModal(false)}
+                    sx={{
+                      "& .MuiPaper-root": {
+                        borderRadius: "10px",
+                        padding: "10px",
+                        width: "400px", // Increased width
+                        maxWidth: "90%", // Ensures responsiveness
+                      },
+                    }}
+                  >
+                    <DialogTitle
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      Send Message Via
+                    </DialogTitle>
+
+                    <DialogContent
+                      sx={{ textAlign: "center", padding: "20px" }}
+                    >
+                      <Button
+                        fullWidth
+                        startIcon={<WhatsApp />}
+                        sx={{
+                          backgroundColor: "#fff",
+                          color: "#25D366",
+                          border: "1px solid #25D366",
+                          marginBottom: "10px",
+                          "&:hover": {
+                            backgroundColor: "#25D366",
+                            color: "#fff",
+                          },
+                        }}
+                        onClick={handleSendWhatsApp}
+                      >
+                        WhatsApp
+                      </Button>
+
+                      <Button
+                        fullWidth
+                        startIcon={<Email />}
+                        sx={{
+                          backgroundColor: "#fff",
+                          color: "#007bff",
+                          border: "1px solid #007bff",
+                          "&:hover": {
+                            backgroundColor: "#007bff",
+                            color: "#fff",
+                          },
+                        }}
+                        onClick={handleSendEmail}
+                      >
+                        Email
+                      </Button>
+                    </DialogContent>
+
+                    <DialogActions sx={{ justifyContent: "center" }}>
+                      <Button
+                        onClick={() => setShowModal(false)}
+                        sx={{
+                          color: "#25307F",
+                          border: "1px solid #25307F",
+                          boxShadow: "0px 4px 4px 0px #C2C2C240",
+                          "&:hover": {
+                            backgroundColor: "#25307F",
+                            color: "#fff",
+                          },
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </div>
               </div>
 
@@ -205,25 +316,27 @@ const PatientDetails = (props) => {
               <Box
                 sx={{
                   backgroundColor: "#FFFFFF", // Set the background color to white
-                  padding: "16px", // Optional padding for content spacing
+                  padding: "16px 0", // Optional padding for content spacing
                   borderRadius: "8px", // Optional rounded corners
                   width: "75vw", // Optional
                 }}
               >
-                <Typography
-                  variant="h3"
-                  sx={{ color: "#4A4A4A", fontSize: "20px" }}
-                >
-                  Progress Tracker
-                </Typography>
+                <div style={{ paddingLeft: "38px" }}>
+                    <Typography
+                        variant="h3"
+                        sx={{ color: "#4A4A4A", fontSize: "20px" }}
+                    >
+                        Progress Tracker
+                    </Typography>
 
-                <Box
-                  sx={{
-                    height: "1px",
-                    backgroundColor: "#8787877A",
-                    my: 2, // Adds top and bottom margin (equivalent to padding)
-                  }}
-                />
+                    <Box
+                        sx={{
+                            height: "1px",
+                            backgroundColor: "#8787877A",
+                            my: 2, // Adds top and bottom margin (equivalent to padding)
+                        }}
+                    />
+                </div>
 
                 <ProgressTracker patient={patient} />
               </Box>

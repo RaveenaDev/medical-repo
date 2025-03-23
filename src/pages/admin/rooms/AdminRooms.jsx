@@ -169,7 +169,13 @@ const AdminRooms = (props) => {
   const doctors = useSelector((state) => state.admin.doctors);
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div
+      style={{
+        background: "#f1f1f1",
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -183,7 +189,13 @@ const AdminRooms = (props) => {
         <CommonPanel />
       </div>
       <div style={{ marginTop: "150px" }}>
-        <Box>
+        <Box
+          sx={{
+            borderBottom: "1px solid #87878782",
+            paddingBottom: 0.5,
+            marginBottom: 1,
+          }}
+        >
           <div
             className={ayu.headerContainer}
             style={{ justifyContent: "space-between" }}
@@ -265,6 +277,9 @@ const AdminRooms = (props) => {
                     padding: "2px 18px",
                     backgroundColor: "#25307F",
                     boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    "&:hover": {
+                      background: "#AEC3FF",
+                    },
                   }}
                   onClick={handleAddDialogOpen} // Open modal on click
                 >
@@ -410,15 +425,28 @@ const AdminRooms = (props) => {
         </Box>
 
         {/* Table Section */}
-        <TableContainer component={Paper}>
+        <TableContainer
+          sx={{
+            maxHeight: "70vh", // Adjust this to fit your layout needs
+            overflowY: "auto",
+          }}
+        >
           <Table
             sx={{
               borderCollapse: "separate",
               borderSpacing: "0 10px",
-              background: "#F1F1F1",
+              width: "100%",
+              marginBottom: "30px",
             }}
           >
-            <TableHead>
+            <TableHead
+              sx={{
+                position: "sticky",
+                backgroundColor: "#f1f1f1",
+                top: 0,
+                zIndex: 10, // Keep it above other elements
+              }}
+            >
               <TableRow>
                 <TableCell>Room ID</TableCell>
                 <TableCell align="center" sx={{ pl: 8 }}>

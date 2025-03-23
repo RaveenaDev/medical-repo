@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./sidebar.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import adi from "../../pages/receptionist/Settings/Settings.module.scss";
 import Logout from "../../pages/receptionist/Settings/Logout.jsx";
+import Avatar from "@mui/material/Avatar";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const roleOptions = {
   receptionist: [
@@ -50,8 +52,10 @@ const Sidebar = ({ role }) => {
     setActiveIndex(index);
     navigate(`${option.path}`);
   };
+  const [activeSub, setActiveSub] = useState("");
 
   const handleSubClick = (path) => {
+    setActiveSub(path);
     if (role === "admin") {
       navigate(`/admin/settings/${path}`);
     } else if (role === "receptionist") {
@@ -64,8 +68,17 @@ const Sidebar = ({ role }) => {
     setIsLogout((prev) => !prev);
   };
   return (
-    <div className={styles.sidebar} style={{ width: "100%" }}>
-      <>
+    <div
+      className={styles.sidebar}
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "83vh",
+      }}
+    >
+      <div>
         {sideOptions.map((option, index) => (
           <div
             key={index}
@@ -77,7 +90,7 @@ const Sidebar = ({ role }) => {
             {option.title}
           </div>
         ))}
-      </>
+      </div>
 
       {/* Conditionally render settings options when "Settings" is active */}
       {activeIndex ===
@@ -88,36 +101,69 @@ const Sidebar = ({ role }) => {
               variant="body1"
               onClick={() => handleSubClick("")}
               gutterBottom
-              sx={{ cursor: "pointer" }}
+              className={`${activeSub === "" ? adi.selected : "option"}`}
             >
-              FAQ's
+              <span>FAQ's</span>
             </Typography>
             <Typography
               variant="body1"
               onClick={() => handleSubClick("privacyPolicy")}
               gutterBottom
-              sx={{ cursor: "pointer" }}
+              className={`${
+                activeSub === "privacyPolicy" ? adi.selected : "option"
+              }`}
             >
-              Privacy Policy
+              <span>Privacy Policy</span>
             </Typography>
             <Typography
               variant="body1"
               onClick={() => handleSubClick("helpAndSupport")}
               gutterBottom
-              sx={{ cursor: "pointer" }}
+              className={`${
+                activeSub === "helpAndSupport" ? adi.selected : "option"
+              }`}
             >
-              Help & Support
+              <span> Help & Support</span>
             </Typography>
             <Typography
               variant="body1"
               onClick={handlelogout}
-              sx={{ cursor: "pointer" }}
+              className="option"
             >
-              Logout
+              <span>Logout</span>
             </Typography>
           </Box>
         </div>
       )}
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "auto",
+          paddingBottom: "5px",
+          paddingTop: "20px",
+          borderTop: "1px solid #E2E2E2 ",
+        }}
+      >
+        <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
+          <Avatar sx={{ width: 50, height: 50 }} />
+          <div style={{ paddingTop: "2px" }}>
+            <p style={{ color: "black", fontWeight: 500 }}>Hospital</p>
+            <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
+          </div>
+        </div>
+
+        <div style={{ paddingRight: "14px" }}>
+          <IconButton sx={{"&:focus": {
+              outline: "none",
+              boxShadow: "none",
+            },
+          }}>
+            <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
+          </IconButton>
+        </div>
+      </div>
 
       {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout} />}
     </div>

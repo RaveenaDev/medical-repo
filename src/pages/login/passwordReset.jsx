@@ -13,11 +13,26 @@ const PasswordReset = (props) => {
     const [email, setEmail] = useState({
         email: ''
     });
+    const [error, setError] = useState('');
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     const dispatch = useDispatch();
 
     const handleSendEmail = () => {
-        // console.log("Email: ",email)
+        if (!email.email) {
+            setError('Email is required');
+            return;
+        }
+        if (!validateEmail(email.email)) {
+            setError('Enter a valid email address');
+            return;
+        }
+
+        setError('');
         dispatch(forgotPassword(email))
         navigate('/recovery-link',{state: email}); //send a recovery email on users mail id to reset the password
     };
@@ -36,7 +51,11 @@ const PasswordReset = (props) => {
                 autoComplete="off"
             >
                 <p className={styles.login__passwordReset}>You will receive instructions for resetting your password.</p>
-                <TextField name="email" id="email" placeholder="Enter Email ID" value={email.email} onChange={(e) => {setEmail({...email,email: e.target.value})}}/>
+                <TextField name="email" id="email" placeholder="Enter Email ID" value={email.email}
+                           onChange={(e) => {setEmail({...email,email: e.target.value})}}
+                           error={!!error}
+                           helperText={error}
+                />
                 <Button variant="contained" sx={{fontSize: "24px", textTransform: "capitalize", backgroundColor:"#25307F"}} onClick={handleSendEmail}>Send</Button>
             </Stack>
         </div>

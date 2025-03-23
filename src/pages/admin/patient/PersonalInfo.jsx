@@ -20,13 +20,17 @@ const PersonalInfo = ({ patient }) => {
       labels: ["Member status", "Registered Date"],
       values: [
         patient.status,
-        new Date(patient.registrationDate).toLocaleDateString(),
+        new Date(patient.registrationDate).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }),
       ],
     },
   ];
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "600px", margin: "auto" }}>
+    <div style={{maxWidth: "600px", margin: "auto" }}>
       {tables.map((section, index) => (
         <React.Fragment key={index}>
           <div
@@ -34,9 +38,10 @@ const PersonalInfo = ({ patient }) => {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "space-between",
-              gap: "10px",
               padding: "10px",
+              paddingBottom: '18px',
               borderRadius: "8px",
+              marginTop: '8px'
             }}
           >
             {section.labels.map((label, i) => (
@@ -61,9 +66,9 @@ const PersonalInfo = ({ patient }) => {
                 <p
                   style={{
                     fontSize: "15px",
-                    fontWeight: "700",
+                    fontWeight: "600",
                     color: "#1A1A1A",
-                    width: "7.8rem",
+                    width: "8rem",
                   }}
                 >
                   {section.values[i]}

@@ -190,7 +190,13 @@ const AdminStaffs = (props) => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div
+      style={{
+        background: "#f1f1f1",
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -204,7 +210,13 @@ const AdminStaffs = (props) => {
         <CommonPanel />
       </div>
       <div style={{ marginTop: "150px" }}>
-        <Box>
+        <Box
+          sx={{
+            borderBottom: "0.5px solid #4A4A4A8C",
+            paddingBottom: 0.5,
+            marginBottom: 1,
+          }}
+        >
           <div className={ayu.headerContainer}>
             <span
               onClick={() => navigate(-1)}
@@ -229,6 +241,9 @@ const AdminStaffs = (props) => {
                   padding: "2px 18px",
                   backgroundColor: "#25307F",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:hover": {
+                    background: "#AEC3FF",
+                  },
                 }}
                 onClick={() => setAddDialogOpen(true)} // Open the modal
               >
@@ -376,7 +391,9 @@ const AdminStaffs = (props) => {
               sx={{
                 width: "200px",
                 backgroundColor: "#25307F",
-                "&:hover": { backgroundColor: "green" },
+                "&:hover": {
+                  background: "#AEC3FF",
+                },
               }}
             >
               Save
@@ -385,23 +402,109 @@ const AdminStaffs = (props) => {
         </Dialog>
 
         {/* Table Section */}
-        <TableContainer component={Paper}>
+        <TableContainer
+          sx={{
+            maxHeight: "70vh", // Adjust this to fit your layout needs
+            overflowY: "auto",
+          }}
+        >
           <Table
             sx={{
               borderCollapse: "separate",
               borderSpacing: "0 10px",
-              background: "#F1F1F1",
+
+              marginBottom: "30px",
             }}
           >
-            <TableHead>
+            <TableHead
+              sx={{
+                position: "sticky",
+                backgroundColor: "#f1f1f1",
+                top: 0,
+                zIndex: 10, // Keep it above other elements
+              }}
+            >
               <TableRow>
-                <TableCell>Profile</TableCell>
-                <TableCell>Staff ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone Number</TableCell>
-                <TableCell>Department</TableCell>
-                <TableCell>Designation</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Profile
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Staff ID
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Phone Number
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Department
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Designation
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Status
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    lineHeight: "100%",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -631,7 +734,18 @@ const AdminStaffs = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleEditDialogClose}>Cancel</Button>
-            <Button onClick={handleSaveEditedStaff}>Save</Button>
+            <Button
+              onClick={handleSaveEditedStaff}
+              sx={{
+                backgroundColor: "#25307F",
+                "&:hover": {
+                  background: "#AEC3FF",
+                },
+              }}
+              variant="contained"
+            >
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
       </div>

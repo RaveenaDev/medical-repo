@@ -16,6 +16,7 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
     setOpenModal(true);
   };
   const navigate = useNavigate();
+  // console.log("Pat : ",patient)
 
   return (
     <div className="patient-header">
@@ -101,45 +102,21 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
         <p>XXXXXX</p>
       </div>
       <div className="patient-actions" style={{ cursor: "pointer" }}>
-        <div>
-          <svg
-            width="42"
-            height="42"
-            viewBox="0 0 42 42"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect width="42" height="42" rx="5" fill="white" />
-            <mask
-              id="mask0_patient_header"
-              mask-type="alpha"
-              maskUnits="userSpaceOnUse"
-              x="9"
-              y="10"
-              width="24"
-              height="24"
-            >
-              <rect x="9" y="10" width="24" height="24" fill="#D9D9D9" />
-            </mask>
-            <g mask="url(#mask0_patient_header)">
-              <path
-                d="M27 17H15V13H27V17ZM27 22.5C27.2833 22.5 27.5208 22.4042 27.7125 22.2125C27.9042 22.0208 28 21.7833 28 21.5C28 21.2167 27.9042 20.9792 27.7125 20.7875C27.5208 20.5958 27.2833 20.5 27 20.5C26.7167 20.5 26.4792 20.5958 26.2875 20.7875C26.0958 20.9792 26 21.2167 26 21.5C26 21.7833 26.0958 22.0208 26.2875 22.2125C26.4792 22.4042 26.7167 22.5 27 22.5ZM25 29V25H17V29H25ZM27 31H15V27H11V21C11 20.15 11.2917 19.4375 11.875 18.8625C12.4583 18.2875 13.1667 18 14 18H28C28.85 18 29.5625 18.2875 30.1375 18.8625C30.7125 19.4375 31 20.15 31 21V27H27V31Z"
-                fill="#25307F"
-              />
-            </g>
-          </svg>
-        </div>
         <div
           className="box"
           style={{ cursor: "pointer" }}
           onClick={() =>
             handleViewClick({
-              id: "C001231",
-              name: "John Doe",
-              phone: "9876543210",
-              date: "11-12-2024",
-              amount: "$250",
-              status: "Paid",
+              id: patient?._id,
+              name: patient?.name,
+              phone: patient?.phone,
+              invoiceDate: patient?.bills[patient.bills.length - 1].invoiceDate,
+              status: patient?.bills[patient.bills.length - 1].status,
+              invoiceNo: patient?.bills[patient.bills.length - 1].invoiceNumber,
+              mode: patient?.bills[patient.bills.length - 1].mode,
+              outstanding: patient?.bills[patient.bills.length - 1].outstanding,
+              paidAmount: patient?.bills[patient.bills.length - 1].paidAmount,
+              totalAmount: patient?.bills[patient.bills.length - 1].totalAmount,
             })
           }
         >
@@ -171,43 +148,13 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
 
           <p>Billing Details</p>
         </div>
-        {/* Conditionally render Edit Patients */}
-        {showEditPatients && (
-          <div className="box">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <mask
-                id="mask2_patient_header"
-                mask-type="alpha"
-                maskUnits="userSpaceOnUse"
-                x="0"
-                y="0"
-                width="24"
-                height="24"
-              >
-                <rect width="24" height="24" fill="#D9D9D9" />
-              </mask>
-              <g mask="url(#mask2_patient_header)">
-                <path
-                  d="M2 24V20H22V24H2ZM4 18V13.75L15.2 2.575C15.3833 2.39167 15.5958 2.25 15.8375 2.15C16.0792 2.05 16.3333 2 16.6 2C16.8667 2 17.125 2.05 17.375 2.15C17.625 2.25 17.85 2.4 18.05 2.6L19.425 4C19.625 4.18333 19.7708 4.4 19.8625 4.65C19.9542 4.9 20 5.15833 20 5.425C20 5.675 19.9542 5.92083 19.8625 6.1625C19.7708 6.40417 19.625 6.625 19.425 6.825L8.25 18H4ZM16.6 6.8L18 5.4L16.6 4L15.2 5.4L16.6 6.8Z"
-                  fill="#25307F"
-                />
-              </g>
-            </svg>
-            <p>Edit Patients</p>
-          </div>
-        )}
       </div>
       {/* Use the separate BillingModal Component */}
       <RecordModal
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
+        patient={patient}
       />
     </div>
   );

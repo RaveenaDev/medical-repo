@@ -44,20 +44,30 @@ const Billings = (props) => {
 
   return (
     <div className="billings-container">
-      <div className="header">
-        <Searchbar />
-        <Notifications />
+      <div
+        style={{
+          position: "fixed",
+          top: "0px",
+          padding: "20px 10px 0 0",
+          width: "75%",
+          background: " #F1F1F1",
+          zIndex: 100,
+        }}
+      >
+        <div className="header">
+          <Searchbar />
+          <Notifications />
+        </div>
+
+        <div className="billings-header">
+          <button onClick={() => handleClose()} className="back-btn">
+            <img src={arrowBack} alt="Back" />
+          </button>
+          <h2>Billings</h2>
+        </div>
+
+        <div className="divider"></div>
       </div>
-
-      <div className="billings-header">
-        <button onClick={() => handleClose()} className="back-btn">
-          <img src={arrowBack} alt="Back" />
-        </button>
-        <h2>Billings</h2>
-      </div>
-
-      <div className="divider"></div>
-
       <div className="billings-table">
         <div className="table-header">
           <span>Case ID</span>
@@ -75,7 +85,11 @@ const Billings = (props) => {
             <span className="blue">{item.patient.name}</span>
             <span className="grey">{item.patient.phone}</span>
             <span className="grey">
-              {new Date(item.updatedAt).toLocaleDateString()}
+              {new Date(item.updatedAt).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })}
             </span>
             <span className="grey"> {item.totalAmount}</span>
             <span className={`status ${item.status.toLowerCase()}`}>
@@ -85,7 +99,18 @@ const Billings = (props) => {
               View
             </Button>
 
-            <IconButton className="menu-btn">
+            <IconButton
+              disableRipple
+              className="menu-btn"
+              sx={{
+                height: "42px",
+                width: "42px",
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
+              }}
+            >
               <MoreVertIcon />
             </IconButton>
           </div>

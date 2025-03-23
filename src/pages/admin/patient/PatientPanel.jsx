@@ -37,6 +37,9 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
 import CommonPanel from "../Components/CommonPanel.jsx";
+import {getFilteredPatients, updatePatient} from "../../../components/State/Receptionist/Action.js";
+import {useDispatch, useSelector} from "react-redux";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const PatientPanel = (props) => {
   useEffect(() => {
@@ -48,33 +51,11 @@ const PatientPanel = (props) => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editedPatient, setEditedPatient] = useState({});
-
-  const [patients, setPatients] = useState([
-    {
-      id: "1",
-      name: "Jasmin Kaur",
-      email: "jasmin@gmail.com",
-      phone: "+91 79327728",
-      type: "Walk In",
-      branch: "Cardiology",
-      date: "2024-10-08",
-      status: "Active",
-    },
-    {
-      id: "2",
-      name: "Amit Tripathi",
-      email: "amittripathi@gmail.com",
-      phone: "+91 79327728",
-      type: "Referral",
-      branch: "Cardiology",
-      date: "2024-10-08",
-      status: "In-active",
-    },
-  ]);
+  const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({
-    status: "All",
-    type: "All",
+    status: "",
+    type: "",
   });
 
   // Handle Sort Change
@@ -97,7 +78,13 @@ const PatientPanel = (props) => {
 
   // Handle Edit Action
   const handleEdit = () => {
-    setEditedPatient(selectedPatient); // Load selected patient into editedPatient
+    if (selectedPatient) {
+      setEditedPatient({
+        id: selectedPatient._id,
+        status: selectedPatient.status,
+      });
+    }
+
     setEditDialogOpen(true);
     handleMenuClose();
   };
@@ -118,6 +105,7 @@ const PatientPanel = (props) => {
 
   // Handle Search Results
   const handleSearchResults = () => {
+    dispatch(getFilteredPatients(filters));
     setFilterDrawerOpen(false);
   };
 
@@ -128,16 +116,12 @@ const PatientPanel = (props) => {
 
   // Handle Save Edited Patient
   const handleSaveEditedPatient = () => {
-    setPatients((prev) =>
-      prev.map((patient) =>
-        patient.id === editedPatient.id ? editedPatient : patient
-      )
-    );
+    dispatch(updatePatient(editedPatient.id, editedPatient));
     handleEditDialogClose();
   };
 
-  const location = useLocation();
-  const totalPatients = location.state?.totalPatients;
+  // const location = useLocation();
+  // const totalPatients = location.state?.totalPatients;
 
   const navigate = useNavigate();
   const handleClick = (patient) => {
@@ -145,6 +129,15 @@ const PatientPanel = (props) => {
       state: { patient },
     });
   };
+
+  useEffect(() => {
+    // dispatch(getPatients());
+    dispatch(getFilteredPatients(filters));
+  }, [dispatch]);
+
+  const receptionist = useSelector((store) => store.receptionist);
+  const noOfPatients = receptionist.totalFilteredPatients;
+  const totalPatients = receptionist.filteredPatients;
 
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -174,7 +167,7 @@ const PatientPanel = (props) => {
               alignItems: "center",
               borderTop: "0.5px solid #4A4A4A8C",
               borderBottom: "0.5px solid #4A4A4A8C",
-              paddingY: 2,
+              paddingY: 1.5,
               marginBottom: 3,
             }}
           >
@@ -183,17 +176,20 @@ const PatientPanel = (props) => {
                 variant="h4"
                 sx={{
                   fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#25307F",
+                  gap: 1,
                   borderRight: "0.5px solid #4A4A4A8C",
                   paddingRight: 2,
-                  marginRight: 2,
-                  color: "black",
+                  marginRight: 1,
                 }}
               >
-                {patients.length}{" "}
+                {noOfPatients}
                 <Typography
                   component="span"
                   variant="body1"
-                  sx={{ fontWeight: "normal", color: "black" }}
+                  sx={{  color: "#878787", fontSize: "1rem", fontWeight: "normal" }}
                 >
                   Patients
                 </Typography>
@@ -202,7 +198,7 @@ const PatientPanel = (props) => {
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
                   variant="body1"
-                  sx={{ marginRight: 1, color: "black" }}
+                  sx={{ marginRight: 1, color: "#25307F" }}
                 >
                   Sort by:
                 </Typography>
@@ -210,7 +206,12 @@ const PatientPanel = (props) => {
                   value={sortOrder}
                   onChange={handleSortChange}
                   size="small"
-                  sx={{ minWidth: 160 }}
+                  sx={{
+                    minWidth: 160,
+                    background: "#fff",
+                    color: "#4A4A4A",
+                    boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                  }}
                 >
                   <MenuItem value="Newest to Oldest">Newest to Oldest</MenuItem>
                   <MenuItem value="Oldest to Newest">Oldest to Newest</MenuItem>
@@ -220,9 +221,20 @@ const PatientPanel = (props) => {
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Button
-                variant="outlined"
-                startIcon={<FilterAltOutlinedIcon />}
-                sx={{ textTransform: "none" }}
+                startIcon={<FilterAltIcon/>}
+                sx={{
+                  textTransform: "none",
+                  padding: "6px 20px",
+                  backgroundColor: "white",
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  color: "#25307F",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                    backgroundColor: "white",
+                  },
+                }}
                 onClick={() => setFilterDrawerOpen(true)}
               >
                 Filter
@@ -231,7 +243,11 @@ const PatientPanel = (props) => {
           </Box>
 
           {/* Table Section */}
-          <TableContainer component={Paper}>
+          <TableContainer
+              sx={{
+                maxHeight: "60vh", // Adjust this to fit your layout needs
+                overflowY: "auto",
+              }}>
             <Table
               sx={{
                 borderCollapse: "separate",
@@ -239,7 +255,13 @@ const PatientPanel = (props) => {
                 background: "#F1F1F1",
               }}
             >
-              <TableHead>
+              <TableHead
+                  sx={{
+                    position: "sticky",
+                    backgroundColor: "#f1f1f1",
+                    top: 0,
+                    zIndex: 10, // Keep it above other elements
+                  }}>
                 <TableRow>
                   <TableCell>Case Id</TableCell>
                   <TableCell>Name</TableCell>
@@ -269,7 +291,7 @@ const PatientPanel = (props) => {
                       },
                     }}
                   >
-                    <TableCell sx={{ color: "#25307F" }}>
+                    <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
                       {truncateText(
                         patient.appointments[patient.appointments.length - 1]
                           ?.caseId || "Not Assigned",
@@ -279,7 +301,7 @@ const PatientPanel = (props) => {
                     <TableCell sx={{ color: "#25307F" }}>
                       <Typography
                         variant="body1"
-                        sx={{ fontWeight: "bold", cursor: "pointer" }}
+                        sx={{ fontWeight: "bold", cursor: "pointer",color: "#25307F" }}
                         onClick={() => handleClick(patient)}
                       >
                         {patient.name}
@@ -302,7 +324,14 @@ const PatientPanel = (props) => {
                         ?.branch || "Not Assigned"}
                     </TableCell>
                     <TableCell>
-                      {new Date(patient.registrationDate).toLocaleDateString()}
+                      {new Date(patient.registrationDate).toLocaleDateString(
+                        "en-IN",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }
+                      )}
                     </TableCell>
                     <TableCell align="center">
                       <Chip
@@ -311,25 +340,33 @@ const PatientPanel = (props) => {
                           patient.status.slice(1)
                         }
                         color={
-                          patient.status === "active" ? "success" : "default"
+                          patient.status.toLowerCase()  === "active" ? "success" : "default"
                         }
                         size="small"
                         sx={{
-                          padding: "4px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
                           bgcolor:
-                            patient.status === "active" ? "#d4edda" : "#ffffff",
+                              patient.status.toLowerCase() === "active"
+                                  ? "#d4edda"
+                                  : "#f0f0f0",
                           color:
-                            patient.status === "active" ? "#155724" : "#757575",
-                          border:
-                            patient.status === "active"
-                              ? "1px solid #155724 "
-                              : "",
+                              patient.status.toLowerCase() === "active"
+                                  ? "#155724"
+                                  : "#757575",
                           fontWeight: "bold",
                         }}
                       />
                     </TableCell>
                     <TableCell>
                       <IconButton
+                          sx={{
+                            "&:focus": {
+                              outline: "none",
+                              boxShadow: "none",
+                            },
+                          }}
                         onClick={(event) => handleMenuOpen(event, patient)}
                       >
                         <MoreVertIcon />
@@ -346,10 +383,6 @@ const PatientPanel = (props) => {
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
-            PaperProps={{
-              elevation: 2,
-              sx: { padding: 1 },
-            }}
           >
             <MenuItem onClick={handleEdit}>
               <ListItemIcon>
@@ -368,108 +401,43 @@ const PatientPanel = (props) => {
           {/* Edit Patient Dialog */}
           <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
             <DialogTitle>Edit Patient</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Modify the details of the patient.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Name"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={editedPatient.name}
-                onChange={(e) =>
-                  setEditedPatient({ ...editedPatient, name: e.target.value })
-                }
-              />
-              <TextField
-                margin="dense"
-                label="Email"
-                type="email"
-                fullWidth
-                variant="outlined"
-                value={editedPatient.email}
-                onChange={(e) =>
-                  setEditedPatient({ ...editedPatient, email: e.target.value })
-                }
-              />
-              <TextField
-                margin="dense"
-                label="Phone"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={editedPatient.phone}
-                onChange={(e) =>
-                  setEditedPatient({ ...editedPatient, phone: e.target.value })
-                }
-              />
-              <TextField
-                margin="dense"
-                label="Type of Visit"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={editedPatient.type}
-                onChange={(e) =>
-                  setEditedPatient({ ...editedPatient, type: e.target.value })
-                }
-              />
-              <TextField
-                margin="dense"
-                label="Branch"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={editedPatient.branch}
-                onChange={(e) =>
-                  setEditedPatient({ ...editedPatient, branch: e.target.value })
-                }
-              />
-              <TextField
-                margin="dense"
-                label="Date"
-                type="date"
-                fullWidth
-                variant="outlined"
-                value={editedPatient.date}
-                onChange={(e) =>
-                  setEditedPatient({ ...editedPatient, date: e.target.value })
-                }
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
+            <DialogContent sx={{ width: "250px" }}>
               <FormControl fullWidth margin="dense">
                 <FormLabel>Status</FormLabel>
                 <RadioGroup
-                  name="status"
-                  value={editedPatient.status}
-                  onChange={(e) =>
-                    setEditedPatient({
-                      ...editedPatient,
-                      status: e.target.value,
-                    })
-                  }
+                    name="status"
+                    value={editedPatient.status || ""}
+                    onChange={(e) =>
+                        setEditedPatient({ ...editedPatient, status: e.target.value })
+                    }
                 >
                   <FormControlLabel
-                    value="Active"
-                    control={<Radio />}
-                    label="Active"
+                      value="active"
+                      control={<Radio />}
+                      label="Active"
                   />
                   <FormControlLabel
-                    value="In-active"
-                    control={<Radio />}
-                    label="In-active"
+                      value="inactive"
+                      control={<Radio />}
+                      label="Inactive"
                   />
                 </RadioGroup>
               </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleEditDialogClose}>Cancel</Button>
-              <Button onClick={handleSaveEditedPatient}>Save</Button>
+              <Button
+                  onClick={handleSaveEditedPatient}
+                  sx={{
+                    backgroundColor: "#25307F",
+                    "&:hover": {
+                      background: "#AEC3FF",
+                    },
+                  }}
+                  variant="contained"
+              >
+                Save
+              </Button>
             </DialogActions>
           </Dialog>
 
@@ -478,8 +446,15 @@ const PatientPanel = (props) => {
             anchor="right"
             open={filterDrawerOpen}
             onClose={() => setFilterDrawerOpen(false)}
+            sx={{
+              "& .MuiDrawer-paper": {
+                height: "72vh", // Adjust height as needed
+                top: "10vh", // Center it vertically
+                borderRadius: "10px 0 0 10px", // Optional rounded corners
+              },
+            }}
           >
-            <Box sx={{ width: 300, padding: 2 }}>
+            <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
               <Box
                 sx={{
                   display: "flex",
@@ -488,18 +463,29 @@ const PatientPanel = (props) => {
                   marginBottom: 2,
                 }}
               >
-                <Typography variant="h6">Filter By</Typography>
-                <IconButton onClick={() => setFilterDrawerOpen(false)}>
+                <Typography variant="h6" sx={{ color: "#0B0B0B" }}>Filter By</Typography>
+                <IconButton sx={{
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                  color: "black",
+                }}
+                    onClick={() => setFilterDrawerOpen(false)}>
                   <CloseIcon />
                 </IconButton>
               </Box>
 
               {/* Filter Options */}
               <FormControl
-                sx={{ marginBottom: 4, width: "100%" }}
+                  sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
                 component="fieldset"
               >
-                <FormLabel component="legend" sx={{ marginBottom: 1 }}>
+                <FormLabel component="legend" sx={{
+                  marginBottom: 1,
+                  color: "#000000",
+                  "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                }}>
                   Status
                 </FormLabel>
                 <RadioGroup
@@ -508,19 +494,37 @@ const PatientPanel = (props) => {
                   onChange={handleFilterChange}
                 >
                   <FormControlLabel
-                    value="Active"
-                    control={<Radio />}
+                    value="active"
+                    control={<Radio sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}/>}
                     label="Active"
+                    sx={{ height: "34px", color: "#878787" }}
                   />
                   <FormControlLabel
-                    value="In-active"
-                    control={<Radio />}
+                    value="inactive"
+                    control={<Radio sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}/>}
                     label="In-active"
+                    sx={{ height: "34px", color: "#878787" }}
                   />
                   <FormControlLabel
-                    value="All"
-                    control={<Radio />}
+                    value=""
+                    control={<Radio sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}/>}
                     label="All"
+                    sx={{ height: "34px", color: "#878787" }}
                   />
                 </RadioGroup>
               </FormControl>
@@ -529,7 +533,11 @@ const PatientPanel = (props) => {
                 sx={{ marginBottom: 4, width: "100%" }}
                 component="fieldset"
               >
-                <FormLabel component="legend" sx={{ marginBottom: 1 }}>
+                <FormLabel component="legend" sx={{
+                  marginBottom: 1,
+                  color: "#000000",
+                  "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                }}>
                   Type of Visit
                 </FormLabel>
                 <RadioGroup
@@ -538,32 +546,62 @@ const PatientPanel = (props) => {
                   onChange={handleFilterChange}
                 >
                   <FormControlLabel
-                    value="Walk In"
-                    control={<Radio />}
+                    value="Walk in"
+                    control={<Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}/>}
                     label="Walk in"
+                    sx={{ height: "34px", color: "#878787" }}
                   />
                   <FormControlLabel
                     value="Referral"
-                    control={<Radio />}
+                    control={<Radio sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}/>}
                     label="Referral"
+                    sx={{ height: "34px", color: "#878787" }}
                   />
                   <FormControlLabel
                     value="Online"
-                    control={<Radio />}
+                    control={<Radio sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}/>}
                     label="Online"
+                    sx={{ height: "34px", color: "#878787" }}
                   />
                   <FormControlLabel
-                    value="All"
-                    control={<Radio />}
+                    value=""
+                    control={<Radio sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}/>}
                     label="All"
+                    sx={{ height: "34px", color: "#878787" }}
                   />
                 </RadioGroup>
               </FormControl>
 
               <Button
                 variant="contained"
-                color="primary"
-                fullWidth
+                sx={{
+                  backgroundColor: "#25307F",
+                  textTransform: "none", // Prevents uppercase transformation
+                  borderRadius: "16px",
+                  padding: "6px 35px",
+                  marginLeft: "4px",
+                }}
                 onClick={handleSearchResults}
               >
                 Search Results

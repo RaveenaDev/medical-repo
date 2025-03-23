@@ -7,17 +7,17 @@ $blue: #25307f;
 .boxContainer {
   background-color: white;
   padding: 0.5rem 1.5rem;
+  padding-bottom: 2rem;
   .heading {
     color: $blue;
+    font-weight: 500;
+    font-size: 16px;
     margin: 12px 0;
   }
 
   .icons {
-    position: absolute;
     margin-top: 0.4rem;
     margin-left: 3.5rem;
-    right: 100px;
-    top: 95px;
 
     .message {
       color: #25307f;
@@ -44,17 +44,18 @@ $blue: #25307f;
       margin-top: 2px;
     }
     .name {
-      color: #1a1a1a;
+      color: #3C3C3C;
       margin-top: 8px;
     }
   }
 
   .section1 {
     margin-bottom: 25px;
+    margin-top: 30px;
     .heading {
       color: black;
       font-size: medium;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .details {
@@ -72,8 +73,7 @@ $blue: #25307f;
   }
 
   .section2 {
-    height: 320px;
-    width: 40%;
+    width: 53%;
     li {
       padding-bottom: 14px;
       .text1 {
@@ -93,6 +93,7 @@ $blue: #25307f;
   .section3 {
     border: 1px solid rgba(116, 116, 116, 0.3);
     width: 100%;
+    //margin-left: 14px;
 
     border-radius: 6px;
     h4 {
