@@ -151,8 +151,12 @@ const DepartDetails = (props) => {
                       sx={{
                         display: "flex",
                         justifyContent: "center",
-                        width: "40%",
-                        padding: "0 30px",
+                        width: "45%",
+                        padding: "5px 25px 20px 15px",
+
+                        border: "1px solid rgba(116, 116, 116, 0.3)",
+                        borderRadius: '4px',
+                        boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
                       }}
                   >
                     <div style={{width: "100%", padding: "0 20px"}}>

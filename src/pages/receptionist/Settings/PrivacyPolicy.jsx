@@ -15,6 +15,7 @@ const PrivacyPolicy = (props) => {
       {!props.entity ? (
         <Container
           maxWidth="md"
+          disableGutters
           sx={{ color: "#838383", marginTop: "2rem", paddingBottom: "3rem" }}
         >
           <Typography
