@@ -215,32 +215,37 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
   }
 };
 
-export const getAppointments = (activeLabel) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getAppointments =
+  (activeLabel, startDate, endDate) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getAppointmentsByStatus`, {
-      params: { status: activeLabel }, // Sending status as a query parameter
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getAppointments`, {
+        params: { status: activeLabel, start: startDate, end: endDate }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    dispatch({ type: GET_APPOINTMENTS, payload: data });
+      dispatch({ type: GET_APPOINTMENTS, payload: data });
 
-    if (data.message === "Scheduled appointments retrieved successfully") {
-      dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
-    } else if (data.message === "Ongoing appointments retrieved successfully") {
-      dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
-    } else if (data.message === "Waiting appointments retrieved successfully") {
-      dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
-    } else {
-      dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      if (data.message === "Scheduled appointments retrieved successfully") {
+        dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Ongoing appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Waiting appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+      } else {
+        dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+  };
 
 export const getAppointmentRequests = () => async (dispatch) => {
   try {
