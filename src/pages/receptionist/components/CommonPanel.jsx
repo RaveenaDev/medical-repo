@@ -24,7 +24,11 @@ import styles from "../styles.module.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, Button } from "@mui/material";
 import dayjs from "dayjs";
-const CommonPanel = ({ setIsBookAppointment }) => {
+const CommonPanel = ({
+  setIsBookAppointment,
+  setSelectedDate,
+  selectedDate,
+}) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -89,7 +93,7 @@ const CommonPanel = ({ setIsBookAppointment }) => {
 
   const noOfRooms = receptionist.totalRooms;
   const rooms = receptionist.rooms;
-  const [selectedDate, setSelectedDate] = useState(dayjs());
+  // const [selectedDate, setSelectedDate] = useState(dayjs());
   const handleAppointmentRequests = () => {
     // Any other logic before opening the modal
     setIsModalOpen(true);
@@ -186,46 +190,46 @@ const CommonPanel = ({ setIsBookAppointment }) => {
             <Grid size={3}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box
-                    sx={{
-                      backgroundColor: "white",
-                      boxShadow: "0px 4px 4px 0px #C2C2C240",
-                      borderRadius: 1,
-                      width: 180,
-                      textAlign: "center",
-                    }}
+                  sx={{
+                    backgroundColor: "white",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    borderRadius: 1,
+                    width: 180,
+                    textAlign: "center",
+                  }}
                 >
                   <DatePicker
-                      value={selectedDate}
-                      onChange={(newValue) => setSelectedDate(newValue)}
-                      slotProps={{
-                        textField: {
-                          sx: {
-                            "& .MuiOutlinedInput-root": {
-                              "& .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "transparent !important", // Force remove the border
-                              },
-                              "&:hover .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "transparent !important", // Prevents border on hover
-                              },
-                              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "transparent !important", // Prevents border on focus
-                                boxShadow: "none !important",
-                              },
+                    value={selectedDate}
+                    onChange={(newValue) => setSelectedDate(newValue)}
+                    slotProps={{
+                      textField: {
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important", // Force remove the border
                             },
-                            "& .MuiInputBase-input": {
-                              fontSize: "14px",
-                              padding: "10px",
-                              "&:focus": {
-                                outline: "none !important", // Removes input focus outline
-                              },
+                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important", // Prevents border on hover
                             },
-                            "&:focus": {
-                              outline: "none !important",
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important", // Prevents border on focus
                               boxShadow: "none !important",
                             },
                           },
+                          "& .MuiInputBase-input": {
+                            fontSize: "14px",
+                            padding: "10px",
+                            "&:focus": {
+                              outline: "none !important", // Removes input focus outline
+                            },
+                          },
+                          "&:focus": {
+                            outline: "none !important",
+                            boxShadow: "none !important",
+                          },
                         },
-                      }}
+                      },
+                    }}
                   />
                 </Box>
               </LocalizationProvider>
