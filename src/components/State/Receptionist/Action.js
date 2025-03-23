@@ -237,13 +237,7 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
 
     dispatch({ type: BOOK_APPOINTMENT, payload: data });
 
-    // Show success toast
-    // toast.success("Appointment Booked successfully!", {
-    //   position: "bottom-right", // Use string for position
-    //   autoClose: 3000,
-    // });
-
-    // onClose();
+    console.log("Booked: ",data)
   } catch (error) {
     console.log(error);
     toast.error("Failed to book appointment. Please try again!", {
@@ -277,6 +271,8 @@ export const getAppointments =
       // console.log("Appointments: ", data);
 
       dispatch({ type: GET_APPOINTMENTS, payload: data });
+
+      // console.log("DA: ",data)
 
       if (data.message === "Scheduled appointments retrieved successfully") {
         dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });

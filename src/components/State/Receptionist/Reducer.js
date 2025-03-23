@@ -172,7 +172,8 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         // totalAppointments: action.payload.updatedPatientAppointments.length,
         // appointments: [...state.appointments, action.payload.appointment],
-        bookAppointment: "Appointment Booked Successfully"
+        bookAppointment: "Appointment Booked Successfully",
+        scheduledAppointments: [...state.scheduledAppointments,action.payload.appointment]
       };
 
     case REMOVE_BOOK_APPOINTMENT_DATA:

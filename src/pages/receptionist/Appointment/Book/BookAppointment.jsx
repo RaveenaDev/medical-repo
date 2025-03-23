@@ -140,6 +140,7 @@ const BookAppointment = ({
 
   const handleClick = () => {
     if (validateForm()) {
+      console.log("Data",formData)
       dispatch(bookAppointment(formData, onClose));
     }
   };
