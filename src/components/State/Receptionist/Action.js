@@ -262,6 +262,8 @@ export const getAppointments = (activeLabel) => async (dispatch) => {
       },
     });
 
+    console.log("Simple : ",data)
+
     dispatch({ type: GET_APPOINTMENTS, payload: data });
 
     if (data.message === "Scheduled appointments retrieved successfully") {
