@@ -42,6 +42,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAppointments } from "../../../../components/State/Admin/Action.js";
 
 function Appointments(props) {
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -69,11 +71,13 @@ function Appointments(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAppointments("Scheduled"));
-    dispatch(getAppointments("Ongoing"));
-    dispatch(getAppointments("Waiting"));
-    dispatch(getAppointments("Completed"));
-  }, [dispatch]);
+    const startDate = selectedDate.startOf("day").toISOString();
+    const endDate = selectedDate.endOf("day").toISOString();
+
+    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+      dispatch(getAppointments(status, startDate, endDate));
+    });
+  }, [dispatch, selectedDate]);
 
   const scheduledAppointments = useSelector(
     (store) => store.admin.scheduledAppointments
@@ -166,7 +170,10 @@ function Appointments(props) {
           zIndex: 100,
         }}
       >
-        <CommonPanel />
+        <CommonPanel
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
       </div>
 
       <div style={{ marginTop: "200px" }}>
