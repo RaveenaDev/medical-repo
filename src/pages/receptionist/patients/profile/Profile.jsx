@@ -73,7 +73,7 @@ const Profile = (props) => {
   const completed = patient.appointments?.filter(
     (app) => app.status === "Completed"
   ).length;
-  console.log(patient);
+  // console.log(patient);
   // Close modal when clicking outside of it
   const handleOverlayClick = (e) => {
     if (e.target.id === "modal-overlay") {

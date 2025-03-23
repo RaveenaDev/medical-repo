@@ -32,7 +32,7 @@ const BookAppointment = ({
 
   const dispatch = useDispatch();
 
-  const dep = "";
+  let dep = "";
 
   if(department){
     dep = department[0]?.name;

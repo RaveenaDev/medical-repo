@@ -155,7 +155,11 @@ const Sidebar = ({ role }) => {
         </div>
 
         <div style={{ paddingRight: "14px" }}>
-          <IconButton>
+          <IconButton sx={{"&:focus": {
+              outline: "none",
+              boxShadow: "none",
+            },
+          }}>
             <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
           </IconButton>
         </div>

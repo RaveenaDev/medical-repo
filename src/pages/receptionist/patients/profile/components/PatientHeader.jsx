@@ -16,7 +16,7 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
     setOpenModal(true);
   };
   const navigate = useNavigate();
-  console.log("Pat : ",patient)
+  // console.log("Pat : ",patient)
 
   return (
     <div className="patient-header">

@@ -101,7 +101,7 @@ export const getFilteredPatients = (filteredData) => async (dispatch) => {
       },
     });
 
-    console.log("Filtered Data: ",data)
+    // console.log("Filtered Data: ",data)
 
     dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
   } catch (error) {
