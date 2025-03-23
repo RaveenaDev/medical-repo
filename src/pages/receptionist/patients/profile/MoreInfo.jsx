@@ -46,10 +46,11 @@ const MoreInfo = (props) => {
                     height: "100%", // Full height of the grid item
                     padding: "20px",
                     textAlign: "left",
-                    width: "30vw",
+                    width: "35vw",
                   }}
                 >
                   <MedicalInfo
+                      patient={patient}
                     medicalHistory={medicalHistory}
                     currentMedications={currentMedications}
                     symptoms={symptoms}
@@ -65,7 +66,7 @@ const MoreInfo = (props) => {
                     height: "100%", // Full height of the grid item
                     padding: "20px",
                     textAlign: "center",
-                    width: "30vw",
+                    width: "33.5vw",
                   }}
                 >
                   <FileDocuments />

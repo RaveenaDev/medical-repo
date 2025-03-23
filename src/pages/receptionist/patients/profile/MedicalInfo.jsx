@@ -55,14 +55,14 @@ const MedicalInfo = ({
               {showSymptoms && (
                   <ListSection
                       title="Symptoms"
-                      items={symptoms}
+                      items={patient.symptoms}
                       emptyMessage="No symptoms available."
                   />
               )}
               {showHistory && (
                   <ListSection
                       title="Social History"
-                      items={history}
+                      items={patient.socialHistory}
                       emptyMessage="No social history available."
                   />
               )}
