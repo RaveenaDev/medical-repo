@@ -63,14 +63,12 @@ const FileDocuments = () => {
           mb: 2,
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-          Files/ Documents
-        </Typography>
+        <Typography sx={{ color: "#25307F" }}>Files/ Documents</Typography>
         <Button
           variant="text"
           startIcon={<AddIcon />}
           component="label"
-          sx={{ textTransform: "none" }}
+          sx={{ textTransform: "none", color: "#25307F" }}
         >
           Add
           <input
