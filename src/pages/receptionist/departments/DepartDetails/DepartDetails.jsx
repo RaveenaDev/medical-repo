@@ -442,7 +442,7 @@ const DepartDetails = (props) => {
                 </Grid>
               </div>
 
-              <div style={{ padding: "0 0 0 32px" }}>
+              <div>
                 <div className={avi.section3}>
                   <Grid
                     container

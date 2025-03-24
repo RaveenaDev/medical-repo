@@ -39,12 +39,15 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllDepartments,
-  getAppointments, getFilteredAppointments,
+  getAppointments,
+  getFilteredAppointments,
   getRequestedAppointments,
 } from "../../components/State/Receptionist/Action.js";
 import InputLabel from "@mui/material/InputLabel";
+import dayjs from "dayjs";
 
 function Receptionist(props) {
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [tableIndex, setTableIndex] = useState(null);
 
   const [isBookAppointment, setIsBookAppointment] = useState(false); // State to toggle between components
@@ -57,42 +60,52 @@ function Receptionist(props) {
 
   const dispatch = useDispatch();
 
-  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [selectedBranch, setSelectedBranch] = useState();
   const handleSelectChange = (value) => {
     // console.log("Selected Value: ",value);
     setSelectedBranch(value);
-  }
+  };
 
   useEffect(() => {
+    const startDate = selectedDate.startOf("day").toISOString();
+    const endDate = selectedDate.endOf("day").toISOString();
+
     dispatch(getAllDepartments());
-    if(selectedBranch === null || selectedBranch === "All Branches"){
-      dispatch(getAppointments("Scheduled"));
-      dispatch(getAppointments("Ongoing"));
-      dispatch(getAppointments("Waiting"));
-      dispatch(getAppointments("Completed"));
-    }
 
-    else{
-      // console.log(selectedBranch)
-      dispatch(getFilteredAppointments("Scheduled",selectedBranch))
-      dispatch(getFilteredAppointments("Ongoing",selectedBranch))
-      dispatch(getFilteredAppointments("Waiting",selectedBranch))
-      dispatch(getFilteredAppointments("Completed",selectedBranch))
-    }
-  }, [dispatch,selectedBranch]);
+    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+      dispatch(getAppointments(status, startDate, endDate, selectedBranch));
+    });
+  }, [dispatch, selectedBranch, selectedDate]);
 
-  const departments = useSelector(
-      (store) => store.receptionist.departments
-  );
+  // const startDate = new Date(selectedDate).toISOString().setHours(0, 0, 0, 0);
+  // const endDate = new Date(selectedDate).toISOString();
+  // console.log("START DATE: ", startDate);
+  // console.log("END DATE: ", endDate);
 
-  // console.log("DEP: ",departments)
+  // useEffect(() => {
+  //   dispatch(getAllDepartments());
+  //   if (selectedBranch === null || selectedBranch === "All Branches") {
+  //     dispatch(getAppointments("Scheduled"));
+  //     dispatch(getAppointments("Ongoing"));
+  //     dispatch(getAppointments("Waiting"));
+  //     dispatch(getAppointments("Completed"));
+  //   } else {
+  //     // console.log(selectedBranch)
+  //     dispatch(getFilteredAppointments("Scheduled", selectedBranch));
+  //     dispatch(getFilteredAppointments("Ongoing", selectedBranch));
+  //     dispatch(getFilteredAppointments("Waiting", selectedBranch));
+  //     dispatch(getFilteredAppointments("Completed", selectedBranch));
+  //   }
+  // }, [dispatch, selectedBranch]);
+
+  const departments = useSelector((store) => store.receptionist.departments);
 
   const [branches, setBranches] = useState([]);
 
   useEffect(() => {
-    if(departments && Array.isArray(departments)){
+    if (departments && Array.isArray(departments)) {
       // setBranches(["All Branches",...departments.map((dept) => dept.departmentName)]);
-      setBranches(departments)
+      setBranches(departments);
     }
   }, [departments]);
 
@@ -149,8 +162,6 @@ function Receptionist(props) {
       appointments = [];
   }
 
-  // console.log("APP: ",appointments)
-
   return (
     <div
       style={{
@@ -170,7 +181,11 @@ function Receptionist(props) {
             zIndex: 100,
           }}
         >
-          <CommonPanel setIsBookAppointment={setIsBookAppointment} />
+          <CommonPanel
+            setIsBookAppointment={setIsBookAppointment}
+            setSelectedDate={setSelectedDate}
+            selectedDate={selectedDate}
+          />
         </div>
         <div style={{ marginTop: "210px" }}>
           {!props.entity ? (
@@ -218,23 +233,6 @@ function Receptionist(props) {
                             size="small"
                             onChange={handleSelectChange}
                           />
-                          {/*<FormControl sx={{ m: 1, minWidth: 120 }} size="small">*/}
-                          {/*  <InputLabel id="demo-select-small-label">Age</InputLabel>*/}
-                          {/*  <Select*/}
-                          {/*      labelId="demo-select-small-label"*/}
-                          {/*      id="demo-select-small"*/}
-                          {/*      value={age}*/}
-                          {/*      label="Age"*/}
-                          {/*      onChange={handleChange}*/}
-                          {/*  >*/}
-                          {/*    <MenuItem value="">*/}
-                          {/*      <em>None</em>*/}
-                          {/*    </MenuItem>*/}
-                          {/*    <MenuItem value={10}>Ten</MenuItem>*/}
-                          {/*    <MenuItem value={20}>Twenty</MenuItem>*/}
-                          {/*    <MenuItem value={30}>Thirty</MenuItem>*/}
-                          {/*  </Select>*/}
-                          {/*</FormControl>*/}
                         </Grid>
                       </Grid>
                     )}
@@ -462,11 +460,16 @@ function Receptionist(props) {
                                     />
                                     {appointment.status === "Waiting" && (
                                       <Box sx={{ ml: "auto" }}>
-                                        <IconButton size="small" sx={{ p: 0,"&:focus": {
-                                            outline: "none",
-                                            boxShadow: "none",
-                                          },
-                                        }}>
+                                        <IconButton
+                                          size="small"
+                                          sx={{
+                                            p: 0,
+                                            "&:focus": {
+                                              outline: "none",
+                                              boxShadow: "none",
+                                            },
+                                          }}
+                                        >
                                           <MoreVertIcon fontSize="small" />
                                         </IconButton>
                                       </Box>

@@ -23,7 +23,7 @@ import {
 
 import { Dropdown } from "primereact/dropdown";
 
-const CommonPanel = () => {
+const CommonPanel = ({ setSelectedDate, selectedDate }) => {
   const navigate = useNavigate();
   const [branches, setBranches] = useState([
     "All Branches",
@@ -76,7 +76,7 @@ const CommonPanel = () => {
   // Check if the current route is in the excluded routes list
   const shouldHideDiv = excludedRoutes.includes(location.pathname);
 
-  const [selectedDate, setSelectedDate] = useState(dayjs());
+  // const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
   const shapeCircleStyles = { borderRadius: "50%" };

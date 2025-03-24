@@ -29,50 +29,51 @@ const MoreInfo = (props) => {
         {!props.entity ? (
           <>
             <PatientHeader showEditPatients={false} patient={patient} />
-            <Grid
-              container
-              spacing={2}
+            <div
               style={{
                 height: "80vh", // Full viewport height
                 padding: "1rem",
                 marginBottom: "1rem",
                 marginTop: "50px",
+                display: "grid",
+                gridTemplateColumns: "1.2fr 1fr",
+                gap: "20px",
               }}
             >
-              <Grid xs={6}>
-                <Paper
-                  elevation={3}
-                  style={{
-                    height: "100%", // Full height of the grid item
-                    padding: "20px",
-                    textAlign: "left",
-                    width: "35vw",
-                  }}
-                >
-                  <MedicalInfo
-                      patient={patient}
-                    medicalHistory={medicalHistory}
-                    currentMedications={currentMedications}
-                    symptoms={symptoms}
-                    history={history}
-                    showButton={false} // Hide the button
-                  />
-                </Paper>
-              </Grid>
-              <Grid xs={6}>
-                <Paper
-                  elevation={3}
-                  style={{
-                    height: "100%", // Full height of the grid item
-                    padding: "20px",
-                    textAlign: "center",
-                    width: "33.5vw",
-                  }}
-                >
-                  <FileDocuments />
-                </Paper>
-              </Grid>
-            </Grid>
+              <div
+                style={{
+                  height: "100%", // Full height of the grid item
+                  padding: "20px",
+                  textAlign: "left",
+
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                }}
+              >
+                <MedicalInfo
+                  patient={patient}
+                  medicalHistory={medicalHistory}
+                  currentMedications={currentMedications}
+                  symptoms={symptoms}
+                  history={history}
+                  showButton={false} // Hide the button
+                />
+              </div>
+              <div
+                style={{
+                  height: "100%", // Full height of the grid item
+                  padding: "20px",
+                  textAlign: "center",
+
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                }}
+              >
+                <FileDocuments />
+              </div>
+            </div>
           </>
         ) : (
           <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
