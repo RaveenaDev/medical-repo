@@ -230,6 +230,12 @@ const Expenses = (props) => {
                 value={expenseData.expenseType}
                 onChange={handleChange}
                 error={!!errors.expenseType}
+                sx={{
+                    height: '50px', // Adjust height
+                    "& .MuiSelect-select": {
+                        padding: 1.5, // Removes padding inside Select field
+                    },
+                }}
               >
                 <MenuItem value="salary">Salary</MenuItem>
                 <MenuItem value="rent">Rent</MenuItem>
@@ -257,6 +263,12 @@ const Expenses = (props) => {
               error={!!errors.amount}
               helperText={errors.amount}
               required
+              sx={{
+                  '& .MuiOutlinedInput-root': {
+                      padding: '0px', // Remove extra padding from the input wrapper
+                      height: '50px', // Ensure height is consistent
+                  },
+              }}
             />
           </div>
           <div
@@ -280,6 +292,12 @@ const Expenses = (props) => {
               error={!!errors.paidTo}
               helperText={errors.paidTo}
               required
+              sx={{
+                  '& .MuiOutlinedInput-root': {
+                      padding: '0px', // Remove extra padding from the input wrapper
+                      height: '50px', // Ensure height is consistent
+                  },
+              }}
             />
           </div>
           <div
@@ -303,6 +321,12 @@ const Expenses = (props) => {
               error={!!errors.details}
               helperText={errors.details}
               required
+              sx={{
+                  '& .MuiOutlinedInput-root': {
+                      padding: '0px', // Remove extra padding from the input wrapper
+                      height: '50px', // Ensure height is consistent
+                  },
+              }}
             />
           </div>
           <div
@@ -312,7 +336,7 @@ const Expenses = (props) => {
               gap: "7px",
             }}
           >
-            <div style={{ paddingLeft: "0.2rem" }}>
+            <div style={{ paddingLeft: "0.2rem"}}>
               <p style={{ color: "#25307F" }}>Date</p>
             </div>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -325,6 +349,17 @@ const Expenses = (props) => {
                     textField: {
                       error: !!errors.date,
                       helperText: errors.date,
+                        sx: {
+
+                            '& .MuiOutlinedInput-root': {
+                                height: '50px', // Ensures proper height
+                                width: '12rem',
+                            },
+                            '& .MuiInputBase-input': {
+                                padding: '5px 10px', // Adjusts text padding
+                                height: '100%', // Makes input take full height
+                            },
+                        },
                     },
                   }}
                 />
@@ -335,17 +370,17 @@ const Expenses = (props) => {
             variant="contained"
             onClick={handleClick}
             sx={{
-              fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
+              fontSize: { xs: "1rem", sm: "1rem", md: "1.05rem" }, // Smaller font on small screens
               color: "#ffffff",
               textTransform: "capitalize",
               padding: {
-                xs: "0px 8px",
-                sm: "0px 10px",
-                md: "0px 10px",
+                xs: "0px 5px",
+                sm: "0px 5px",
+                md: "0px 5px",
               }, // Adjust padding
               backgroundColor: "#25307F",
-              height: "3.4rem",
-              width: "12rem",
+              height: "50px",
+              width: "11rem",
               marginTop: "1.9rem",
               outline: "none",
               boxShadow: "none",

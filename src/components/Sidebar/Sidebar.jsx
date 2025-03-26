@@ -154,7 +154,7 @@ const Sidebar = ({ role }) => {
           </div>
         </div>
 
-        <div style={{ paddingRight: "14px" }}>
+        <div style={{ paddingRight: "0.7rem" }}>
           <IconButton sx={{"&:focus": {
               outline: "none",
               boxShadow: "none",
