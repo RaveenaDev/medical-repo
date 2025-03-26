@@ -353,19 +353,22 @@ const Expenses = (props) => {
                   onChange={handleDateChange}
                   slotProps={{
                     textField: {
-                      error: !!errors.date,
-                      helperText: errors.date,
+                        size: "small", // Makes the input field smaller
                         sx: {
-
-                            '& .MuiOutlinedInput-root': {
-                                height: '50px', // Ensures proper height
-                                width: '12rem',
+                            "& .MuiInputBase-root": {
+                                minHeight: "50px", // Adjust height of input
+                                width: "10.5rem",
+                                minWidth: "6.5rem"
                             },
-                            '& .MuiInputBase-input': {
-                                padding: '5px 10px', // Adjusts text padding
-                                height: '100%', // Makes input take full height
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                width: "9.5rem",
+                            },
+                            "& .MuiStack-root": {
+                                width: "9.5rem",
                             },
                         },
+                      error: !!errors.date,
+                      helperText: errors.date,
                     },
                   }}
                 />
