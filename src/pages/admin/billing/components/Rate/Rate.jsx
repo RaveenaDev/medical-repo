@@ -260,127 +260,98 @@ const Rate = () => {
           <span>Amenities</span>
         </div>
         <div>
-          {services
-            .filter(
-              (service) =>
-                !selectedFilter || service.serviceName === selectedFilter
-            )
-            .map((service, ayu) => (
-              <div key={ayu} className="service-container">
-                {service.categories.map((category, index) => (
-                  <div className="rate-table-row" key={index}>
-                    <span className="blue">
-                      {index === 0 ? truncateText(service.serviceName, 18) : ""}
-                    </span>
-                    <span className="blue">
-                      {index === 0 ? truncateText(service.department, 16) : ""}
-                    </span>
-                    <span className="blue">
-                      {truncateText(category.name, 20)}
-                    </span>
-                    <span>{category.rateType}</span>
-                    <span className="blue">₹{category.currentRate}</span>
-                    <span>
-                      {new Date(category.effectiveDate).toLocaleDateString(
-                        "en-IN",
-                        {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
+          {services.length > 0 ? (
+            services
+              .filter(
+                (service) =>
+                  !selectedFilter || service.serviceName === selectedFilter
+              )
+              .map((service, ayu) => (
+                <div key={ayu} className="service-container">
+                  {service.categories.map((category, index) => (
+                    <div className="rate-table-row" key={index}>
+                      <span className="blue">
+                        {index === 0
+                          ? truncateText(service.serviceName, 18)
+                          : ""}
+                      </span>
+                      <span className="blue">
+                        {index === 0
+                          ? truncateText(service.department, 16)
+                          : ""}
+                      </span>
+                      <span className="blue">
+                        {truncateText(category.name, 20)}
+                      </span>
+                      <span>{category.rateType}</span>
+                      <span className="blue">₹{category.currentRate}</span>
+                      <span>
+                        {new Date(category.effectiveDate).toLocaleDateString(
+                          "en-IN",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
+                      <span>{category.lastUpdated}</span>
+                      <span className="blue">{category.amenities}</span>
+                      <IconButton
+                        onClick={(event) =>
+                          handleOpenMenu(event, service, category)
                         }
-                      )}
-                    </span>
-                    <span>{category.lastUpdated}</span>
-                    <span className="blue">{category.amenities}</span>
-                    <IconButton
-                      onClick={(event) =>
-                        handleOpenMenu(event, service, category)
-                      }
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                    {/* Dropdown Menu */}
-                    <Menu
-                      key={`${service.serviceId}-${category.categoryId}`}
-                      anchorEl={anchorE2}
-                      open={Boolean(
-                        anchorE2 &&
-                          selectedService?.category?.categoryId ===
-                            category.categoryId
-                      )}
-                      onClose={handleCloseMenu}
-                    >
-                      <MenuItem
-                        value="edit"
-                        sx={{ display: "flex", gap: "4px" }}
-                        onClick={() => setEditModalOpen(true)}
                       >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <MoreVertIcon />
+                      </IconButton>
+                      {/* Dropdown Menu */}
+                      <Menu
+                        key={`${service.serviceId}-${category.categoryId}`}
+                        anchorEl={anchorE2}
+                        open={Boolean(
+                          anchorE2 &&
+                            selectedService?.category?.categoryId ===
+                              category.categoryId
+                        )}
+                        onClose={handleCloseMenu}
+                      >
+                        <MenuItem
+                          value="edit"
+                          sx={{ display: "flex", gap: "4px" }}
+                          onClick={() => setEditModalOpen(true)}
                         >
-                          <mask
-                            id="mask0_1313_1066"
-                            mask-type="alpha"
-                            maskUnits="userSpaceOnUse"
-                            x="0"
-                            y="0"
+                          <svg
                             width="20"
                             height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
                           >
-                            <rect width="20" height="20" fill="#D9D9D9" />
-                          </mask>
-                          <g mask="url(#mask0_1313_1066)">
-                            <path
-                              d="M1.66699 20V16.6667H18.3337V20H1.66699ZM5.00033 13.3334H6.16699L12.667 6.85419L11.4795 5.66669L5.00033 12.1667V13.3334ZM3.33366 15V11.4584L12.667 2.14585C12.8198 1.99308 12.9969 1.87502 13.1982 1.79169C13.3996 1.70835 13.6114 1.66669 13.8337 1.66669C14.0559 1.66669 14.2712 1.70835 14.4795 1.79169C14.6878 1.87502 14.8753 2.00002 15.042 2.16669L16.1878 3.33335C16.3545 3.48613 16.476 3.66669 16.5524 3.87502C16.6288 4.08335 16.667 4.29863 16.667 4.52085C16.667 4.72919 16.6288 4.93405 16.5524 5.13544C16.476 5.33683 16.3545 5.52085 16.1878 5.68752L6.87533 15H3.33366Z"
-                              fill="#1C1B1F"
-                            />
-                          </g>
-                        </svg>
-                        Edit
-                      </MenuItem>
+                            <mask
+                              id="mask0_1313_1066"
+                              mask-type="alpha"
+                              maskUnits="userSpaceOnUse"
+                              x="0"
+                              y="0"
+                              width="20"
+                              height="20"
+                            >
+                              <rect width="20" height="20" fill="#D9D9D9" />
+                            </mask>
+                            <g mask="url(#mask0_1313_1066)">
+                              <path
+                                d="M1.66699 20V16.6667H18.3337V20H1.66699ZM5.00033 13.3334H6.16699L12.667 6.85419L11.4795 5.66669L5.00033 12.1667V13.3334ZM3.33366 15V11.4584L12.667 2.14585C12.8198 1.99308 12.9969 1.87502 13.1982 1.79169C13.3996 1.70835 13.6114 1.66669 13.8337 1.66669C14.0559 1.66669 14.2712 1.70835 14.4795 1.79169C14.6878 1.87502 14.8753 2.00002 15.042 2.16669L16.1878 3.33335C16.3545 3.48613 16.476 3.66669 16.5524 3.87502C16.6288 4.08335 16.667 4.29863 16.667 4.52085C16.667 4.72919 16.6288 4.93405 16.5524 5.13544C16.476 5.33683 16.3545 5.52085 16.1878 5.68752L6.87533 15H3.33366Z"
+                                fill="#1C1B1F"
+                              />
+                            </g>
+                          </svg>
+                          Edit
+                        </MenuItem>
 
-                      <MenuItem
-                        value="delete"
-                        sx={{ display: "flex", gap: "4px" }}
-                        onClick={() => handleDelete()}
-                      >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <mask
-                            id="mask0_1313_1069"
-                            mask-type="alpha"
-                            maskUnits="userSpaceOnUse"
-                            x="0"
-                            y="0"
-                            width="20"
-                            height="20"
-                          >
-                            <rect width="20" height="20" fill="#D9D9D9" />
-                          </mask>
-                          <g mask="url(#mask0_1313_1069)">
-                            <path
-                              d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
-                              fill="#FF4800"
-                            />
-                          </g>
-                        </svg>
-                        Delete
-                      </MenuItem>
-
-                      {index === 0 && (
                         <MenuItem
                           value="delete"
                           sx={{ display: "flex", gap: "4px" }}
-                          onClick={() => handleDeleteService()}
+                          onClick={() => handleDelete()}
                         >
                           <svg
                             width="20"
@@ -407,14 +378,63 @@ const Rate = () => {
                               />
                             </g>
                           </svg>
-                          Delete Service
+                          Delete
                         </MenuItem>
-                      )}
-                    </Menu>
-                  </div>
-                ))}
+
+                        {index === 0 && (
+                          <MenuItem
+                            value="delete"
+                            sx={{ display: "flex", gap: "4px" }}
+                            onClick={() => handleDeleteService()}
+                          >
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <mask
+                                id="mask0_1313_1069"
+                                mask-type="alpha"
+                                maskUnits="userSpaceOnUse"
+                                x="0"
+                                y="0"
+                                width="20"
+                                height="20"
+                              >
+                                <rect width="20" height="20" fill="#D9D9D9" />
+                              </mask>
+                              <g mask="url(#mask0_1313_1069)">
+                                <path
+                                  d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
+                                  fill="#FF4800"
+                                />
+                              </g>
+                            </svg>
+                            Delete Service
+                          </MenuItem>
+                        )}
+                      </Menu>
+                    </div>
+                  ))}
+                </div>
+              ))
+          ) : (
+            <div className="service-container">
+              <div
+                className="rate-table-row"
+                style={{
+                  gridTemplateColumns: "1fr",
+                  textAlign: "center",
+                  fontSize: "1rem",
+                  fontWeight: "500",
+                }}
+              >
+                No Services Found
               </div>
-            ))}
+            </div>
+          )}
         </div>
       </div>
       {/* Use the separate BillingModal Component */}

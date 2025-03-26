@@ -230,77 +230,99 @@ const Staffs = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {staffs.map((patient, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      background: "#fff",
-                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                      borderRadius: "8px",
-                      "&:hover": {
-                        backgroundColor: "#f9f9f9",
-                      },
-                      "& > *": {
-                        borderBottom: "unset",
-                      },
-                    }}
-                  >
-                    <TableCell>
-                      <Avatar
-                        src={patient.profile}
-                        alt="Profile"
-                        sx={{ width: 40, height: 40 }} // Adjust size
-                      />
-                    </TableCell>
-                    <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                      {patient.staff_id}
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          fontWeight: "bold",
-                          color: "#25307F",
-                          cursor: "pointer",
-                        }}
-                      >
-                        {patient.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
-                      {patient.phone}
-                    </TableCell>
-                    <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
-                      {patient.department.name}
-                    </TableCell>
-                    <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
-                      {patient.designation}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={patient.status}
-                        size="small"
-                        sx={{
-                          backgroundColor: "transparent", // Removes background
-                          color:
-                            patient.status === "Available"
-                              ? "#3DB461"
-                              : "#E1473D",
-                          fontWeight: "bold",
-                          border: "none", // Ensures no border appears
-                        }}
-                      />
-                    </TableCell>
+                {staffs.length > 0 ? (
+                  staffs.map((patient, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        background: "#fff",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      <TableCell>
+                        <Avatar
+                          src={patient.profile}
+                          alt="Profile"
+                          sx={{ width: 40, height: 40 }} // Adjust size
+                        />
+                      </TableCell>
+                      <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                        {patient.staff_id}
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: "bold",
+                            color: "#25307F",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {patient.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
+                        {patient.phone}
+                      </TableCell>
+                      <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
+                        {patient.department.name}
+                      </TableCell>
+                      <TableCell sx={{ color: "#747474", fontWeight: "bold" }}>
+                        {patient.designation}
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={patient.status}
+                          size="small"
+                          sx={{
+                            backgroundColor: "transparent", // Removes background
+                            color:
+                              patient.status === "Available"
+                                ? "#3DB461"
+                                : "#E1473D",
+                            fontWeight: "bold",
+                            border: "none", // Ensures no border appears
+                          }}
+                        />
+                      </TableCell>
 
-                    {/*<TableCell>*/}
-                    {/*    <IconButton*/}
-                    {/*        onClick={(event) => handleMenuOpen(event, patient)}*/}
-                    {/*    >*/}
-                    {/*        <MoreVertIcon />*/}
-                    {/*    </IconButton>*/}
-                    {/*</TableCell>*/}
+                      {/*<TableCell>*/}
+                      {/*    <IconButton*/}
+                      {/*        onClick={(event) => handleMenuOpen(event, patient)}*/}
+                      {/*    >*/}
+                      {/*        <MoreVertIcon />*/}
+                      {/*    </IconButton>*/}
+                      {/*</TableCell>*/}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      align="center"
+                      sx={{
+                        background: "#fff",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      No Staff found!
+                    </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>

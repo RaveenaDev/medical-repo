@@ -29,17 +29,26 @@ const truncateText = (text, maxLength) => {
   return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 };
 
-const ReceptionPage = () => {
+const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   dispatch(getAppointments("Scheduled"));
+  //   dispatch(getAppointmentRequests());
+  //   dispatch(getRejectedAppointments());
+  //   dispatch(getPatients());
+  // }, [dispatch]);
   useEffect(() => {
-    dispatch(getAppointments("Scheduled"));
+    const startDate = selectedDate.startOf("day").toISOString();
+    const endDate = selectedDate.endOf("day").toISOString();
+
+    dispatch(getAppointments("Scheduled", startDate, endDate));
     dispatch(getAppointmentRequests());
     dispatch(getRejectedAppointments());
     dispatch(getPatients());
-  }, [dispatch]);
+  }, [dispatch, selectedDate]);
 
   const admin = useSelector((store) => store.admin);
 
@@ -57,11 +66,14 @@ const ReceptionPage = () => {
   };
 
   return (
-    <Grid container spacing={2} sx={{marginTop:'-10px'}}>
+    <Grid container spacing={2} sx={{ marginTop: "-10px" }}>
       <Grid size={8.5}>
         <Grid container direction="column" spacing={2}>
           {/* First vertically stacked item */}
-          <Grid className={styles.container1} style={{paddingBottom:'6px',borderRadius:'4px'}}>
+          <Grid
+            className={styles.container1}
+            style={{ paddingBottom: "6px", borderRadius: "4px" }}
+          >
             <div className={styles.heading1} onClick={handleAppointments}>
               <h3>Appointments</h3>
               <span className={ayu.forwardButton}>
@@ -79,10 +91,11 @@ const ReceptionPage = () => {
                 >
                   <TableHead>
                     <TableRow
-                        sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                            "& td, & th": { py: 0 }, // Removes padding from all cells
-                        }}>
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        "& td, & th": { py: 0 }, // Removes padding from all cells
+                      }}
+                    >
                       <TableCell
                         sx={{
                           fontSize: "13px",
@@ -175,7 +188,7 @@ const ReceptionPage = () => {
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                             backgroundColor: "#EEF8F1",
-                              "& td, & th": { py: 1.5 }, // Removes padding from all cells
+                            "& td, & th": { py: 1.5 }, // Removes padding from all cells
                           }}
                         >
                           <TableCell
@@ -247,7 +260,13 @@ const ReceptionPage = () => {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell>No appointments found.</TableCell>
+                        <TableCell
+                          align="center"
+                          colSpan={7}
+                          sx={{ backgroundColor: "#EEF8F1" }}
+                        >
+                          No appointments found.
+                        </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
@@ -256,7 +275,10 @@ const ReceptionPage = () => {
             </div>
           </Grid>
           {/* Second vertically stacked item */}
-          <Grid className={styles.container1} style={{paddingBottom:'6px',borderRadius:'4px'}}>
+          <Grid
+            className={styles.container1}
+            style={{ paddingBottom: "6px", borderRadius: "4px" }}
+          >
             <div className={styles.heading1} onClick={handlePatients}>
               <h3>Patients</h3>
               <span className={ayu.forwardButton}>
@@ -274,10 +296,12 @@ const ReceptionPage = () => {
                   aria-label="simple table"
                 >
                   <TableHead>
-                    <TableRow sx={{
+                    <TableRow
+                      sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                         "& td, & th": { py: 0 }, // Removes padding from all cells
-                    }}>
+                      }}
+                    >
                       <TableCell
                         sx={{
                           fontSize: "13px",
@@ -341,7 +365,7 @@ const ReceptionPage = () => {
                           key={index}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
-                              "& td, & th": { py: 1.2 }, // Removes padding from all cells
+                            "& td, & th": { py: 1.2 }, // Removes padding from all cells
                             backgroundColor: "#EEF8F1",
                           }}
                         >
@@ -416,7 +440,13 @@ const ReceptionPage = () => {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell>No patients found.</TableCell>
+                        <TableCell
+                          align="center"
+                          colSpan={7}
+                          sx={{ backgroundColor: "#EEF8F1" }}
+                        >
+                          No patients found.
+                        </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
@@ -429,10 +459,14 @@ const ReceptionPage = () => {
       <Grid
         size={3.5}
         className={styles.container1}
-        sx={{ maxHeight: "calc(140vh - 190px)", overflowY: "auto",paddingX:"15px" }}
+        sx={{
+          maxHeight: "calc(140vh - 190px)",
+          overflowY: "auto",
+          paddingX: "15px",
+        }}
       >
         <div>
-          <div className={styles.heading1} style={{padding:'0'}}>
+          <div className={styles.heading1} style={{ padding: "0" }}>
             <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>
           </div>
 

@@ -159,7 +159,13 @@ function Appointments(props) {
   }
 
   return (
-    <>
+    <div
+      style={{
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+        background: " #F1F1F1",
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -297,16 +303,33 @@ function Appointments(props) {
             </div>
           </div>
 
-          <div>
+          <div
+            style={{
+              position: "relative",
+            }}
+          >
             {/* Table Section */}
-            <TableContainer>
+            <TableContainer
+              sx={{
+                maxHeight: "50vh", // Adjust this to fit your layout needs
+                overflowY: "auto",
+              }}
+            >
               <Table
                 sx={{
                   borderCollapse: "separate",
                   borderSpacing: "0 10px",
+                  marginBottom: "30px",
                 }}
               >
-                <TableHead>
+                <TableHead
+                  sx={{
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "white", // Ensure it's visible
+                    zIndex: 10, // Keep it above other elements
+                  }}
+                >
                   <TableRow>
                     <TableCell sx={{ color: "#000", fontSize: "16px" }}>
                       Case Id
@@ -418,24 +441,17 @@ function Appointments(props) {
                             }}
                           />
                         </TableCell>
-                        <TableCell>
-                          <IconButton
-                            onClick={(event) => handleMenuOpen(event, patient)}
-                          >
-                            <MoreVertIcon />
-                          </IconButton>
-                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
-                    <TableRow
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <TableCell>No data found!</TableCell>
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        colSpan={7}
+                        sx={{ backgroundColor: "#EEF8F1" }}
+                      >
+                        No data found!
+                      </TableCell>
                     </TableRow>
                   )}
                 </TableBody>
@@ -594,7 +610,7 @@ function Appointments(props) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

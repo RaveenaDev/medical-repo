@@ -3,10 +3,10 @@ import "./appointmentRequest.scss";
 import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import arrowBack from "../../../../assets/arrow_back.svg";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   acceptAppointmentRequests,
-  rejectAppointmentRequests
+  rejectAppointmentRequests,
 } from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 
 const AppointmentRequestModal = ({
@@ -15,7 +15,6 @@ const AppointmentRequestModal = ({
   requests,
   appointmentRequests,
 }) => {
-
   // console.log("REQ: ",appointmentRequests)
 
   const dispatch = useDispatch();
@@ -37,13 +36,13 @@ const AppointmentRequestModal = ({
 
   const handleAcceptClick = (id) => {
     // console.log("Accept")
-    dispatch(acceptAppointmentRequests(id))
-  }
+    dispatch(acceptAppointmentRequests(id));
+  };
 
   const handleRejectClick = (id) => {
     // console.log("Reject")
-    dispatch(rejectAppointmentRequests(id))
-  }
+    dispatch(rejectAppointmentRequests(id));
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -52,48 +51,52 @@ const AppointmentRequestModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
-          <Button className="close-btn" onClick={onClose} sx={{
-            "&:focus": {
-              outline: "none",
-              boxShadow: "none",
-            },
-          }}>
+          <Button
+            className="close-btn"
+            onClick={onClose}
+            sx={{
+              "&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
+            }}
+          >
             <img src={arrowBack} alt="Back" />
           </Button>
           <h2>Appointment Requests </h2>
           <span className="request-count">({appointmentRequests.length})</span>
         </div>
         <div className="modal-body">
-          {appointmentRequests.map((request, index) => (
-            <div key={index} className="request-item">
-              <div className="request-info">
-                <img
-                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23CCCCCC' width='50' height='50'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M2 20c0-4 3-7 7-7h6c4 0 7 3 7 7'/%3E%3C/svg%3E" // Default SVG
-                  alt="Profile-img"
-                  className="request-img"
-                />
-                <div className="request-text">
-                  <p className="request-name">{request.patient.name}</p>
-                  <p className="request-detail">{request.note}</p>
+          {appointmentRequests.length > 0 ? (
+            appointmentRequests.map((request, index) => (
+              <div key={index} className="request-item">
+                <div className="request-info">
+                  <img
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23CCCCCC' width='50' height='50'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M2 20c0-4 3-7 7-7h6c4 0 7 3 7 7'/%3E%3C/svg%3E" // Default SVG
+                    alt="Profile-img"
+                    className="request-img"
+                  />
+                  <div className="request-text">
+                    <p className="request-name">{request.patient.name}</p>
+                    <p className="request-detail">{request.note}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="request-actions">
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#25307F",
-                    "&:focus": {
-                      outline: "none",
-                      boxShadow: "none",
-                    },
-
-                  }}
-                  onClick={() => handleAcceptClick(request._id)}
-                >
-                  Accept
-                </Button>
-                <Button
+                <div className="request-actions">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#25307F",
+                      "&:focus": {
+                        outline: "none",
+                        boxShadow: "none",
+                      },
+                    }}
+                    onClick={() => handleAcceptClick(request._id)}
+                  >
+                    Accept
+                  </Button>
+                  <Button
                     sx={{
                       backgroundColor: "white",
                       color: "red",
@@ -112,13 +115,25 @@ const AppointmentRequestModal = ({
                       },
                     }}
                     onClick={() => handleRejectClick(request._id)}
-                >
-                  <CloseIcon />
-                </Button>
-
+                  >
+                    <CloseIcon />
+                  </Button>
+                </div>
               </div>
+            ))
+          ) : (
+            <div
+              className="request-item"
+              style={{
+                justifyContent: "center",
+                fontSize: "1rem",
+                fontWeight: "500",
+                color: "#25307F",
+              }}
+            >
+              No Requests Found!
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

@@ -183,7 +183,13 @@ const Expenses = (props) => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+        background: " #F1F1F1",
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -230,6 +236,12 @@ const Expenses = (props) => {
                 value={expenseData.expenseType}
                 onChange={handleChange}
                 error={!!errors.expenseType}
+                sx={{
+                  height: "50px", // Adjust height
+                  "& .MuiSelect-select": {
+                    padding: 1.5, // Removes padding inside Select field
+                  },
+                }}
               >
                 <MenuItem value="salary">Salary</MenuItem>
                 <MenuItem value="rent">Rent</MenuItem>
@@ -257,6 +269,12 @@ const Expenses = (props) => {
               error={!!errors.amount}
               helperText={errors.amount}
               required
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  padding: "0px", // Remove extra padding from the input wrapper
+                  height: "50px", // Ensure height is consistent
+                },
+              }}
             />
           </div>
           <div
@@ -280,6 +298,12 @@ const Expenses = (props) => {
               error={!!errors.paidTo}
               helperText={errors.paidTo}
               required
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  padding: "0px", // Remove extra padding from the input wrapper
+                  height: "50px", // Ensure height is consistent
+                },
+              }}
             />
           </div>
           <div
@@ -303,6 +327,12 @@ const Expenses = (props) => {
               error={!!errors.details}
               helperText={errors.details}
               required
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  padding: "0px", // Remove extra padding from the input wrapper
+                  height: "50px", // Ensure height is consistent
+                },
+              }}
             />
           </div>
           <div
@@ -316,36 +346,57 @@ const Expenses = (props) => {
               <p style={{ color: "#25307F" }}>Date</p>
             </div>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
+              <Box
+                sx={{
+                  borderRadius: 1,
+                  width: 180, // Adjust width here
+                  textAlign: "center",
+                  // boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  // padding: "4px", // Reduce padding to make the container smaller
+                }}
+              >
                 <DatePicker
                   name="date"
                   value={date}
                   onChange={handleDateChange}
+                  sx={{
+                    width: "100%", // Ensure full width
+                    // fontSize: "24px",
+                  }}
                   slotProps={{
                     textField: {
+                      sx: {
+                        "& .MuiInputBase-root": {
+                          minHeight: "50px", // Increase height
+                          fontSize: "16px", // Adjust text size
+                        },
+                        "& input": {
+                          padding: "12px", // Internal padding
+                        },
+                      },
                       error: !!errors.date,
                       helperText: errors.date,
                     },
                   }}
                 />
-              </DemoContainer>
+              </Box>
             </LocalizationProvider>
           </div>
           <Button
             variant="contained"
             onClick={handleClick}
             sx={{
-              fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" }, // Smaller font on small screens
+              fontSize: { xs: "1rem", sm: "1rem", md: "1.05rem" }, // Smaller font on small screens
               color: "#ffffff",
               textTransform: "capitalize",
               padding: {
-                xs: "0px 8px",
-                sm: "0px 10px",
-                md: "0px 10px",
+                xs: "0px 5px",
+                sm: "0px 5px",
+                md: "0px 5px",
               }, // Adjust padding
               backgroundColor: "#25307F",
-              height: "3.4rem",
-              width: "12rem",
+              height: "50px",
+              width: "11rem",
               marginTop: "1.9rem",
               outline: "none",
               boxShadow: "none",
@@ -368,15 +419,29 @@ const Expenses = (props) => {
         </Box>
 
         <div style={{ marginTop: "1.5rem" }}>
-          <TableContainer component={Paper}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              maxHeight: "50vh", // Adjust this to fit your layout needs
+              overflowY: "auto",
+            }}
+          >
             <Table
               sx={{
                 borderCollapse: "separate", // Ensure border-spacing works
                 borderSpacing: "0 8px", // Adds vertical spacing between rows
+                marginBottom: "30px",
               }}
               aria-label="simple table"
             >
-              <TableHead>
+              <TableHead
+                sx={{
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "white", // Ensure it's visible
+                  zIndex: 10, // Keep it above other elements
+                }}
+              >
                 <TableRow>
                   <TableCell
                     sx={{
@@ -447,53 +512,65 @@ const Expenses = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {expenses.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      backgroundColor: "#F1F5FF",
-                    }}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ color: "#25307f", border: "none" }}
-                    >
-                      {row.expenseType}
-                    </TableCell>
-                    <TableCell
-                      align="center"
+                {expenses.length > 0 ? (
+                  expenses.map((row, index) => (
+                    <TableRow
+                      key={index}
                       sx={{
-                        color: "#25307f",
-                        border: "none",
-                        paddingRight: "38px",
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        backgroundColor: "#F1F5FF",
                       }}
                     >
-                      {truncateText(row.amount, 13)}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {truncateText(row.paidTo, 14)}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {row.details}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {new Date(row.date).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        onClick={(event) => handleMenuOpen(event, row)}
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ color: "#25307f", border: "none" }}
                       >
-                        <MoreVertIcon />
-                      </IconButton>
+                        {row.expenseType}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          color: "#25307f",
+                          border: "none",
+                          paddingRight: "38px",
+                        }}
+                      >
+                        {truncateText(row.amount, 13)}
+                      </TableCell>
+                      <TableCell align="center" sx={{ border: "none" }}>
+                        {truncateText(row.paidTo, 14)}
+                      </TableCell>
+                      <TableCell align="center" sx={{ border: "none" }}>
+                        {row.details}
+                      </TableCell>
+                      <TableCell align="center" sx={{ border: "none" }}>
+                        {new Date(row.date).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          onClick={(event) => handleMenuOpen(event, row)}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      align="center"
+                      colSpan={6}
+                      sx={{ backgroundColor: "#F1F5FF" }}
+                    >
+                      No data found!
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -621,7 +698,7 @@ const Expenses = (props) => {
           </Dialog>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default Expenses;

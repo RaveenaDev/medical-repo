@@ -443,7 +443,7 @@ export const updatePatient = (patientId, updatedData) => async (dispatch) => {
       },
     });
 
-    dispatch(getPatients());
+    dispatch(getFilteredPatients());
     toast.success("Patient Status Updated Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
