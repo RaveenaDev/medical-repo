@@ -508,75 +508,99 @@ const AdminStaffs = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {staffs.map((staff) => (
-                <TableRow
-                  key={staff?._id}
-                  sx={{
-                    background: "#fff",
-                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "8px",
-                    "&:hover": {
-                      backgroundColor: "#f9f9f9",
-                    },
-                    "& > *": {
-                      borderBottom: "unset",
-                    },
-                  }}
-                >
-                  <TableCell>
-                    <Avatar
-                      src={staff?.profile}
-                      alt="Profile"
-                      sx={{ width: 40, height: 40 }} // Adjust size
-                    />
-                  </TableCell>
-                  <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                    {staff?.staff_id}
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontWeight: "bold",
-                        color: "#25307F",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {staff?.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell sx={{ color: "#747474" }}>
-                    {staff?.phone}
-                  </TableCell>
-                  <TableCell sx={{ color: "#747474" }}>
-                    {staff?.department.name}
-                  </TableCell>
-                  <TableCell sx={{ color: "#747474" }}>
-                    {staff?.designation}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={staff?.status}
-                      size="small"
-                      sx={{
-                        backgroundColor: "transparent", // Removes background
-                        color:
-                          staff?.status === "Available" ? "#3DB461" : "#E1473D", // Black for Available, Red otherwise
-                        fontWeight: "bold",
-                        border: "none", // Ensures no border appears
-                      }}
-                    />
-                  </TableCell>
+              {staffs.length > 0 ? (
+                staffs.map((staff) => (
+                  <TableRow
+                    key={staff?._id}
+                    sx={{
+                      background: "#fff",
+                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    <TableCell>
+                      <Avatar
+                        src={staff?.profile}
+                        alt="Profile"
+                        sx={{ width: 40, height: 40 }} // Adjust size
+                      />
+                    </TableCell>
+                    <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                      {staff?.staff_id}
+                    </TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: "bold",
+                          color: "#25307F",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {staff?.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ color: "#747474" }}>
+                      {staff?.phone}
+                    </TableCell>
+                    <TableCell sx={{ color: "#747474" }}>
+                      {staff?.department.name}
+                    </TableCell>
+                    <TableCell sx={{ color: "#747474" }}>
+                      {staff?.designation}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={staff?.status}
+                        size="small"
+                        sx={{
+                          backgroundColor: "transparent", // Removes background
+                          color:
+                            staff?.status === "Available"
+                              ? "#3DB461"
+                              : "#E1473D", // Black for Available, Red otherwise
+                          fontWeight: "bold",
+                          border: "none", // Ensures no border appears
+                        }}
+                      />
+                    </TableCell>
 
-                  <TableCell>
-                    <IconButton
-                      onClick={(event) => handleMenuOpen(event, staff)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
+                    <TableCell>
+                      <IconButton
+                        onClick={(event) => handleMenuOpen(event, staff)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    align="center"
+                    colSpan={8}
+                    sx={{
+                      background: "#fff",
+                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    No data found!
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>

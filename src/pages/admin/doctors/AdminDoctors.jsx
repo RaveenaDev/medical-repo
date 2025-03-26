@@ -469,115 +469,137 @@ const AdminDoctors = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {doctors?.map((doctor, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    background: "#fff",
-                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "8px",
-                    "&:hover": {
-                      backgroundColor: "#f9f9f9",
-                    },
-                    "& > *": {
-                      borderBottom: "unset",
-                    },
-                  }}
-                >
-                  <TableCell>
-                    <Avatar
-                      src={doctor?.profile}
-                      alt="Profile"
-                      sx={{ width: 40, height: 40 }} // Adjust size
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      sx={{ color: "#25307F", fontWeight: "bold" }}
-                    >
-                      {truncateText(doctor?._id, 8)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body1" sx={{ color: "#25307F" }}>
-                      {truncateText(doctor?.name, 13)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell sx={{ color: "#747474" }}>
-                    {doctor?.phone}
-                  </TableCell>
-                  <TableCell sx={{ color: "#747474" }}>
-                    {doctor?.specialization || "Not Assigned"}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Chip
-                      label={doctor?.status}
-                      color={
-                        doctor?.status === "Active" ? "success" : "default"
-                      }
-                      size="small"
-                      sx={{
-                        bgcolor:
-                          doctor?.status === "Available"
-                            ? "#d4edda"
-                            : doctor?.status === "On Leave"
-                            ? "#f8d7da"
-                            : doctor?.status === "Idle"
-                            ? "000000"
-                            : undefined,
-                        color:
-                          doctor?.status === "Available"
-                            ? "#2E823B"
-                            : doctor?.status === "On Leave"
-                            ? "#E1473D"
-                            : doctor?.status === "Idle"
-                            ? "#878787"
-                            : undefined,
+              {doctors.length > 0 ? (
+                doctors?.map((doctor, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      background: "#fff",
+                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    <TableCell>
+                      <Avatar
+                        src={doctor?.profile}
+                        alt="Profile"
+                        sx={{ width: 40, height: 40 }} // Adjust size
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#25307F", fontWeight: "bold" }}
+                      >
+                        {truncateText(doctor?._id, 8)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1" sx={{ color: "#25307F" }}>
+                        {truncateText(doctor?.name, 13)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ color: "#747474" }}>
+                      {doctor?.phone}
+                    </TableCell>
+                    <TableCell sx={{ color: "#747474" }}>
+                      {doctor?.specialization || "Not Assigned"}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        label={doctor?.status}
+                        color={
+                          doctor?.status === "Active" ? "success" : "default"
+                        }
+                        size="small"
+                        sx={{
+                          bgcolor:
+                            doctor?.status === "Available"
+                              ? "#d4edda"
+                              : doctor?.status === "On Leave"
+                              ? "#f8d7da"
+                              : doctor?.status === "Idle"
+                              ? "000000"
+                              : undefined,
+                          color:
+                            doctor?.status === "Available"
+                              ? "#2E823B"
+                              : doctor?.status === "On Leave"
+                              ? "#E1473D"
+                              : doctor?.status === "Idle"
+                              ? "#878787"
+                              : undefined,
 
-                        width: "8rem",
-                        border:
-                          doctor?.status === "Available"
-                            ? "1px solid #2E823B"
-                            : doctor?.status === "On Leave"
-                            ? "1px solid #E1473D"
-                            : doctor?.status === "Idle"
-                            ? "1px solid #878787"
-                            : undefined,
+                          width: "8rem",
+                          border:
+                            doctor?.status === "Available"
+                              ? "1px solid #2E823B"
+                              : doctor?.status === "On Leave"
+                              ? "1px solid #E1473D"
+                              : doctor?.status === "Idle"
+                              ? "1px solid #878787"
+                              : undefined,
 
-                        // fontSize: "12px"
-                        py: 1.7,
-                      }}
-                    />
+                          // fontSize: "12px"
+                          py: 1.7,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          border: "2px solid #25307F", // Purple border
+                          borderRadius: "18px", // Rounded corners
+                          px: 4,
+                          color: "#25307F", // Blue text color
+                          textTransform: "none", // Prevents uppercase text
+                          fontSize: "12px", // Adjust text size if needed
+                          "&:hover": {
+                            borderColor: "#25307F", // Darker border on hover
+                            backgroundColor: "rgba(128, 0, 128, 0.1)", // Light purple hover effect
+                          },
+                        }}
+                      >
+                        View Profile
+                      </Button>
+                    </TableCell>
+                    {/*<TableCell align="right">*/}
+                    {/*  <IconButton*/}
+                    {/*    onClick={(event) => handleMenuOpen(event, doctor)}*/}
+                    {/*  >*/}
+                    {/*    <MoreVertIcon />*/}
+                    {/*  </IconButton>*/}
+                    {/*</TableCell>*/}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    align="center"
+                    colSpan={7}
+                    sx={{
+                      background: "#fff",
+                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    No data found!
                   </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        border: "2px solid #25307F", // Purple border
-                        borderRadius: "18px", // Rounded corners
-                        px: 4,
-                        color: "#25307F", // Blue text color
-                        textTransform: "none", // Prevents uppercase text
-                        fontSize: "12px", // Adjust text size if needed
-                        "&:hover": {
-                          borderColor: "#25307F", // Darker border on hover
-                          backgroundColor: "rgba(128, 0, 128, 0.1)", // Light purple hover effect
-                        },
-                      }}
-                    >
-                      View Profile
-                    </Button>
-                  </TableCell>
-                  {/*<TableCell align="right">*/}
-                  {/*  <IconButton*/}
-                  {/*    onClick={(event) => handleMenuOpen(event, doctor)}*/}
-                  {/*  >*/}
-                  {/*    <MoreVertIcon />*/}
-                  {/*  </IconButton>*/}
-                  {/*</TableCell>*/}
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>
