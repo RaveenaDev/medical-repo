@@ -237,10 +237,10 @@ const Expenses = (props) => {
                 onChange={handleChange}
                 error={!!errors.expenseType}
                 sx={{
-                    height: '50px', // Adjust height
-                    "& .MuiSelect-select": {
-                        padding: 1.5, // Removes padding inside Select field
-                    },
+                  height: "50px", // Adjust height
+                  "& .MuiSelect-select": {
+                    padding: 1.5, // Removes padding inside Select field
+                  },
                 }}
               >
                 <MenuItem value="salary">Salary</MenuItem>
@@ -270,10 +270,10 @@ const Expenses = (props) => {
               helperText={errors.amount}
               required
               sx={{
-                  '& .MuiOutlinedInput-root': {
-                      padding: '0px', // Remove extra padding from the input wrapper
-                      height: '50px', // Ensure height is consistent
-                  },
+                "& .MuiOutlinedInput-root": {
+                  padding: "0px", // Remove extra padding from the input wrapper
+                  height: "50px", // Ensure height is consistent
+                },
               }}
             />
           </div>
@@ -299,10 +299,10 @@ const Expenses = (props) => {
               helperText={errors.paidTo}
               required
               sx={{
-                  '& .MuiOutlinedInput-root': {
-                      padding: '0px', // Remove extra padding from the input wrapper
-                      height: '50px', // Ensure height is consistent
-                  },
+                "& .MuiOutlinedInput-root": {
+                  padding: "0px", // Remove extra padding from the input wrapper
+                  height: "50px", // Ensure height is consistent
+                },
               }}
             />
           </div>
@@ -328,10 +328,10 @@ const Expenses = (props) => {
               helperText={errors.details}
               required
               sx={{
-                  '& .MuiOutlinedInput-root': {
-                      padding: '0px', // Remove extra padding from the input wrapper
-                      height: '50px', // Ensure height is consistent
-                  },
+                "& .MuiOutlinedInput-root": {
+                  padding: "0px", // Remove extra padding from the input wrapper
+                  height: "50px", // Ensure height is consistent
+                },
               }}
             />
           </div>
@@ -342,37 +342,44 @@ const Expenses = (props) => {
               gap: "7px",
             }}
           >
-            <div style={{ paddingLeft: "0.2rem"}}>
+            <div style={{ paddingLeft: "0.2rem" }}>
               <p style={{ color: "#25307F" }}>Date</p>
             </div>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
+              <Box
+                sx={{
+                  borderRadius: 1,
+                  width: 180, // Adjust width here
+                  textAlign: "center",
+                  // boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  // padding: "4px", // Reduce padding to make the container smaller
+                }}
+              >
                 <DatePicker
                   name="date"
                   value={date}
                   onChange={handleDateChange}
+                  sx={{
+                    width: "100%", // Ensure full width
+                    // fontSize: "24px",
+                  }}
                   slotProps={{
                     textField: {
-                        size: "small", // Makes the input field smaller
-                        sx: {
-                            "& .MuiInputBase-root": {
-                                minHeight: "50px", // Adjust height of input
-                                width: "10.5rem",
-                                minWidth: "6.5rem"
-                            },
-                            "& .MuiOutlinedInput-notchedOutline": {
-                                width: "9.5rem",
-                            },
-                            "& .MuiStack-root": {
-                                width: "9.5rem",
-                            },
+                      sx: {
+                        "& .MuiInputBase-root": {
+                          minHeight: "50px", // Increase height
+                          fontSize: "16px", // Adjust text size
                         },
+                        "& input": {
+                          padding: "12px", // Internal padding
+                        },
+                      },
                       error: !!errors.date,
                       helperText: errors.date,
                     },
                   }}
                 />
-              </DemoContainer>
+              </Box>
             </LocalizationProvider>
           </div>
           <Button
