@@ -183,7 +183,13 @@ const Expenses = (props) => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+        background: " #F1F1F1",
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -403,15 +409,29 @@ const Expenses = (props) => {
         </Box>
 
         <div style={{ marginTop: "1.5rem" }}>
-          <TableContainer component={Paper}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              maxHeight: "50vh", // Adjust this to fit your layout needs
+              overflowY: "auto",
+            }}
+          >
             <Table
               sx={{
                 borderCollapse: "separate", // Ensure border-spacing works
                 borderSpacing: "0 8px", // Adds vertical spacing between rows
+                marginBottom: "30px",
               }}
               aria-label="simple table"
             >
-              <TableHead>
+              <TableHead
+                sx={{
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "white", // Ensure it's visible
+                  zIndex: 10, // Keep it above other elements
+                }}
+              >
                 <TableRow>
                   <TableCell
                     sx={{
@@ -656,7 +676,7 @@ const Expenses = (props) => {
           </Dialog>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default Expenses;

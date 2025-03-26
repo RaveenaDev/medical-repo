@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ReceptionPage from "./ReceptionPage.jsx";
 import CommonPanel from "../Components/CommonPanel.jsx";
-
+import dayjs from "dayjs";
 function Reception(props) {
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
@@ -18,11 +19,17 @@ function Reception(props) {
           zIndex: 100,
         }}
       >
-        <CommonPanel />
+        <CommonPanel
+          setSelectedDate={setSelectedDate}
+          selectedDate={selectedDate}
+        />
       </div>
       <div style={{ marginTop: "200px" }}>
         {" "}
-        <ReceptionPage />
+        <ReceptionPage
+          setSelectedDate={setSelectedDate}
+          selectedDate={selectedDate}
+        />
       </div>
     </>
   );

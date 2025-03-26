@@ -204,7 +204,13 @@ const AdminDoctors = (props) => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div
+      style={{
+        height: "96dvh", // Make the entire div take up the full viewport height
+        overflow: "hidden", // Prevent scrolling on the rest of the page
+        background: " #F1F1F1",
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -431,15 +437,27 @@ const AdminDoctors = (props) => {
         </Dialog>
 
         {/* Table Section */}
-        <TableContainer component={Paper}>
+        <TableContainer
+          sx={{
+            maxHeight: "70vh", // Adjust this to fit your layout needs
+            overflowY: "auto",
+          }}
+        >
           <Table
             sx={{
               borderCollapse: "separate",
               borderSpacing: "0 10px",
-              background: "#F1F1F1",
+              marginBottom: "30px",
             }}
           >
-            <TableHead>
+            <TableHead
+              sx={{
+                position: "sticky",
+                backgroundColor: "#f1f1f1",
+                top: 0,
+                zIndex: 10, // Keep it above other elements
+              }}
+            >
               <TableRow>
                 <TableCell>Profile</TableCell>
                 <TableCell>Doctor ID</TableCell>
