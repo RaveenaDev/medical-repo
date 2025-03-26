@@ -33,13 +33,12 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CommonPanel from "../Components/CommonPanel.jsx";
-import {getFilteredPatients, updatePatient} from "../../../components/State/Receptionist/Action.js";
 import {useDispatch, useSelector} from "react-redux";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import {getFilteredPatients, updatePatient} from "../../../components/State/Admin/Action.js";
 
 const PatientPanel = (props) => {
   useEffect(() => {
@@ -116,7 +115,7 @@ const PatientPanel = (props) => {
 
   // Handle Save Edited Patient
   const handleSaveEditedPatient = () => {
-    dispatch(updatePatient(editedPatient.id, editedPatient));
+    dispatch(updatePatient(editedPatient.id, editedPatient,filters));
     handleEditDialogClose();
   };
 
@@ -135,9 +134,9 @@ const PatientPanel = (props) => {
     dispatch(getFilteredPatients(filters));
   }, [dispatch]);
 
-  const receptionist = useSelector((store) => store.receptionist);
-  const noOfPatients = receptionist.totalFilteredPatients;
-  const totalPatients = receptionist.filteredPatients;
+  const admin = useSelector((store) => store.admin);
+  const noOfPatients = admin.totalFilteredPatients;
+  const totalPatients = admin.filteredPatients;
 
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;

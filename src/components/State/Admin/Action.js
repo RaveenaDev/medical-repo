@@ -22,7 +22,7 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_EARNINGS,
-  GET_EXPENSES,
+  GET_EXPENSES, GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -290,6 +290,26 @@ export const getPatients = () => async (dispatch) => {
     });
 
     dispatch({ type: GET_PATIENTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFilteredPatients = (filteredData) => async (dispatch) => {
+  // console.log("Fil:",filteredData)
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
+      params: { status: filteredData.status, typeVisit: filteredData.type }, // Sending status as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Filtered Data: ",data)
+
+    dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
   }
@@ -697,5 +717,28 @@ export const getAppointmentCounts = () => async (dispatch) => {
     dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const updatePatient = (patientId, updatedData,filters) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.put(`${API_URL}/${patientId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch(getFilteredPatients(filters));
+    toast.success("Patient Status Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error updating Patient:", error);
+    toast.error(" Patient Updation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
