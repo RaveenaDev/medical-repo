@@ -444,14 +444,14 @@ function Appointments(props) {
                       </TableRow>
                     ))
                   ) : (
-                    <TableRow
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <TableCell>No data found!</TableCell>
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        colSpan={7}
+                        sx={{ backgroundColor: "#EEF8F1" }}
+                      >
+                        No data found!
+                      </TableCell>
                     </TableRow>
                   )}
                 </TableBody>

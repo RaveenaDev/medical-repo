@@ -467,53 +467,65 @@ const Expenses = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {expenses.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      backgroundColor: "#F1F5FF",
-                    }}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ color: "#25307f", border: "none" }}
-                    >
-                      {row.expenseType}
-                    </TableCell>
-                    <TableCell
-                      align="center"
+                {expenses.length > 0 ? (
+                  expenses.map((row, index) => (
+                    <TableRow
+                      key={index}
                       sx={{
-                        color: "#25307f",
-                        border: "none",
-                        paddingRight: "38px",
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        backgroundColor: "#F1F5FF",
                       }}
                     >
-                      {truncateText(row.amount, 13)}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {truncateText(row.paidTo, 14)}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {row.details}
-                    </TableCell>
-                    <TableCell align="center" sx={{ border: "none" }}>
-                      {new Date(row.date).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        onClick={(event) => handleMenuOpen(event, row)}
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ color: "#25307f", border: "none" }}
                       >
-                        <MoreVertIcon />
-                      </IconButton>
+                        {row.expenseType}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          color: "#25307f",
+                          border: "none",
+                          paddingRight: "38px",
+                        }}
+                      >
+                        {truncateText(row.amount, 13)}
+                      </TableCell>
+                      <TableCell align="center" sx={{ border: "none" }}>
+                        {truncateText(row.paidTo, 14)}
+                      </TableCell>
+                      <TableCell align="center" sx={{ border: "none" }}>
+                        {row.details}
+                      </TableCell>
+                      <TableCell align="center" sx={{ border: "none" }}>
+                        {new Date(row.date).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          onClick={(event) => handleMenuOpen(event, row)}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      align="center"
+                      colSpan={6}
+                      sx={{ backgroundColor: "#F1F5FF" }}
+                    >
+                      No data found!
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>

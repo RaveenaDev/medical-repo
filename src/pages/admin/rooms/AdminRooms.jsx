@@ -459,74 +459,96 @@ const AdminRooms = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rooms.map((room, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    background: "#fff",
-                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "8px",
-                    "&:hover": {
-                      backgroundColor: "#f9f9f9",
-                    },
-                    "& > *": {
-                      borderBottom: "unset",
-                    },
-                  }}
-                >
-                  <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                    {room.roomID}
-                  </TableCell>
-                  <TableCell align="center" sx={{ pl: 8 }}>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontWeight: "bold",
-                        color: "#25307F",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {room.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    {" "}
-                    {/* Increase 'pl' value for more spacing */}
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ ml: 16 }}
-                    >
-                      <Box
+              {rooms.length > 0 ? (
+                rooms.map((room, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      background: "#fff",
+                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                      {room.roomID}
+                    </TableCell>
+                    <TableCell align="center" sx={{ pl: 8 }}>
+                      <Typography
+                        variant="body1"
                         sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor:
-                            room.status === "Available"
-                              ? "#3DB461"
-                              : room.status === "Occupied"
-                              ? "#FFA412"
-                              : "#AEC3FF",
+                          fontWeight: "bold",
+                          color: "#25307F",
+                          cursor: "pointer",
                         }}
-                      />
-                      {room.status}
-                    </Box>
-                  </TableCell>
-                  <TableCell align="left" sx={{ color: "#747474" }}>
-                    {room.assignedDoctor?.name || "Not Assigned"}
-                  </TableCell>
+                      >
+                        {room.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      {" "}
+                      {/* Increase 'pl' value for more spacing */}
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        sx={{ ml: 16 }}
+                      >
+                        <Box
+                          sx={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: "50%",
+                            backgroundColor:
+                              room.status === "Available"
+                                ? "#3DB461"
+                                : room.status === "Occupied"
+                                ? "#FFA412"
+                                : "#AEC3FF",
+                          }}
+                        />
+                        {room.status}
+                      </Box>
+                    </TableCell>
+                    <TableCell align="left" sx={{ color: "#747474" }}>
+                      {room.assignedDoctor?.name || "Not Assigned"}
+                    </TableCell>
 
-                  <TableCell align="right">
-                    <IconButton
-                      onClick={(event) => handleMenuOpen(event, room)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
+                    <TableCell align="right">
+                      <IconButton
+                        onClick={(event) => handleMenuOpen(event, room)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    align="center"
+                    colSpan={7}
+                    sx={{
+                      background: "#fff",
+                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#f9f9f9",
+                      },
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    No data found!
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>

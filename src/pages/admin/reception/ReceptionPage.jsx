@@ -260,7 +260,13 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell>No appointments found.</TableCell>
+                        <TableCell
+                          align="center"
+                          colSpan={7}
+                          sx={{ backgroundColor: "#EEF8F1" }}
+                        >
+                          No appointments found.
+                        </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
@@ -434,7 +440,13 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell>No patients found.</TableCell>
+                        <TableCell
+                          align="center"
+                          colSpan={7}
+                          sx={{ backgroundColor: "#EEF8F1" }}
+                        >
+                          No patients found.
+                        </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
