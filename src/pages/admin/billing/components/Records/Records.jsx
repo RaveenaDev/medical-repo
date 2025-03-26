@@ -225,7 +225,15 @@ const Records = () => {
               </div>
             ))
           ) : (
-            <div className="table-row blue" style={{ textAlign: "center" }}>
+            <div
+              className="table-row blue"
+              style={{
+                gridTemplateColumns: "1fr",
+                textAlign: "center",
+                fontSize: "1rem",
+                fontWeight: "500",
+              }}
+            >
               No Records Found
             </div>
           )}

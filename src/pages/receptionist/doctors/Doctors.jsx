@@ -166,124 +166,146 @@ const Doctors = (props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {doctors.map((patient, index) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          background: "#fff",
-                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          "&:hover": {
-                            backgroundColor: "#f9f9f9",
-                          },
-                          "& > *": {
-                            borderBottom: "unset",
-                          },
-                        }}
-                      >
-                        <TableCell>
-                          <Avatar
-                            src={patient.profile}
-                            alt="Profile"
-                            sx={{ width: 40, height: 40 }} // Adjust size
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            sx={{ fontWeight: "bold", color: "#25307F" }}
-                          >
-                            {truncateText(patient?._id, 8)}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            sx={{ color: "#25307F", fontWeight: "bold" }}
-                          >
-                            {truncateText(patient?.name, 13)}
-                          </Typography>
-                        </TableCell>
-                        <TableCell
-                          sx={{ color: "#747474", fontWeight: "bold" }}
+                    {doctors.length > 0 ? (
+                      doctors.map((patient, index) => (
+                        <TableRow
+                          key={index}
+                          sx={{
+                            background: "#fff",
+                            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                            borderRadius: "8px",
+                            "&:hover": {
+                              backgroundColor: "#f9f9f9",
+                            },
+                            "& > *": {
+                              borderBottom: "unset",
+                            },
+                          }}
                         >
-                          {patient.phone}
-                        </TableCell>
-                        <TableCell
-                          sx={{ color: "#747474", fontWeight: "bold" }}
-                        >
-                          {patient?.specialization || "Not Assigned"}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Chip
-                            label={patient.status}
-                            color={
-                              patient.status === "Active"
-                                ? "success"
-                                : "default"
-                            }
-                            size="small"
-                            sx={{
-                              bgcolor:
-                                patient.status === "Emergency Room"
-                                  ? "#D3E4D5"
-                                  : patient.status === "With Patient"
-                                  ? "#D3E4D5"
-                                  : patient.status === "In Meeting"
-                                  ? "#D3E4D5"
-                                  : patient.status === "On Leave"
-                                  ? "#E4D6D3"
-                                  : patient.status === "Idle"
-                                  ? " #EBEBEB"
-                                  : undefined,
-                              color:
-                                patient.status === "Emergency Room"
-                                  ? "#2E823B"
-                                  : patient.status === "On Leave"
-                                  ? "#E1473D"
-                                  : patient.status === "In Meeting"
-                                  ? "#2E823B"
-                                  : patient.status === "Idle"
-                                  ? "#878787"
-                                  : patient.status === "With Patient"
-                                  ? "#2E823B"
-                                  : undefined,
-                              width: "9rem",
-                              border:
-                                patient.status === "Emergency Room"
-                                  ? "1px solid #2E823B"
-                                  : patient.status === "On Leave"
-                                  ? " 1px solid #E1473D"
-                                  : patient.status === "Idle"
-                                  ? " 1px solid #878787"
-                                  : patient.status === "With Patient"
-                                  ? " 1px solid #2E823B"
-                                  : patient.status === "In Meeting"
-                                  ? " 1px solid #2E823B"
-                                  : undefined,
+                          <TableCell>
+                            <Avatar
+                              src={patient.profile}
+                              alt="Profile"
+                              sx={{ width: 40, height: 40 }} // Adjust size
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body1"
+                              sx={{ fontWeight: "bold", color: "#25307F" }}
+                            >
+                              {truncateText(patient?._id, 8)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body1"
+                              sx={{ color: "#25307F", fontWeight: "bold" }}
+                            >
+                              {truncateText(patient?.name, 13)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell
+                            sx={{ color: "#747474", fontWeight: "bold" }}
+                          >
+                            {patient.phone}
+                          </TableCell>
+                          <TableCell
+                            sx={{ color: "#747474", fontWeight: "bold" }}
+                          >
+                            {patient?.specialization || "Not Assigned"}
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip
+                              label={patient.status}
+                              color={
+                                patient.status === "Active"
+                                  ? "success"
+                                  : "default"
+                              }
+                              size="small"
+                              sx={{
+                                bgcolor:
+                                  patient.status === "Emergency Room"
+                                    ? "#D3E4D5"
+                                    : patient.status === "With Patient"
+                                    ? "#D3E4D5"
+                                    : patient.status === "In Meeting"
+                                    ? "#D3E4D5"
+                                    : patient.status === "On Leave"
+                                    ? "#E4D6D3"
+                                    : patient.status === "Idle"
+                                    ? " #EBEBEB"
+                                    : undefined,
+                                color:
+                                  patient.status === "Emergency Room"
+                                    ? "#2E823B"
+                                    : patient.status === "On Leave"
+                                    ? "#E1473D"
+                                    : patient.status === "In Meeting"
+                                    ? "#2E823B"
+                                    : patient.status === "Idle"
+                                    ? "#878787"
+                                    : patient.status === "With Patient"
+                                    ? "#2E823B"
+                                    : undefined,
+                                width: "9rem",
+                                border:
+                                  patient.status === "Emergency Room"
+                                    ? "1px solid #2E823B"
+                                    : patient.status === "On Leave"
+                                    ? " 1px solid #E1473D"
+                                    : patient.status === "Idle"
+                                    ? " 1px solid #878787"
+                                    : patient.status === "With Patient"
+                                    ? " 1px solid #2E823B"
+                                    : patient.status === "In Meeting"
+                                    ? " 1px solid #2E823B"
+                                    : undefined,
 
-                              // fontSize: "12px"
-                              py: 1.7,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              border: "1px solidrgb(28, 30, 49)",
-                              borderRadius: "18px", // Rounded corners
-                              color: " #25307F",
-                              textTransform: "none", // Prevents uppercase text
-                              fontSize: "12px", // Adjust text size if needed
-                            }}
-                            onClick={() => handleBookAppointment(patient)}
-                          >
-                            Book Appointment
-                          </Button>
+                                // fontSize: "12px"
+                                py: 1.7,
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell align="center">
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                border: "1px solidrgb(28, 30, 49)",
+                                borderRadius: "18px", // Rounded corners
+                                color: " #25307F",
+                                textTransform: "none", // Prevents uppercase text
+                                fontSize: "12px", // Adjust text size if needed
+                              }}
+                              onClick={() => handleBookAppointment(patient)}
+                            >
+                              Book Appointment
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={7}
+                          align="center"
+                          sx={{
+                            background: "#fff",
+                            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                            borderRadius: "8px",
+                            "&:hover": {
+                              backgroundColor: "#f9f9f9",
+                            },
+                            "& > *": {
+                              borderBottom: "unset",
+                            },
+                          }}
+                        >
+                          No doctors found!
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

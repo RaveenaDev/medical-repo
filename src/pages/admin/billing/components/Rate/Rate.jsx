@@ -422,7 +422,17 @@ const Rate = () => {
               ))
           ) : (
             <div className="service-container">
-              <div className="rate-table-row">No Services Found</div>
+              <div
+                className="rate-table-row"
+                style={{
+                  gridTemplateColumns: "1fr",
+                  textAlign: "center",
+                  fontSize: "1rem",
+                  fontWeight: "500",
+                }}
+              >
+                No Services Found
+              </div>
             </div>
           )}
         </div>

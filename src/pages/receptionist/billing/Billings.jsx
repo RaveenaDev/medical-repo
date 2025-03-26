@@ -79,42 +79,59 @@ const Billings = (props) => {
           <span>Actions</span>
         </div>
 
-        {allBills.map((item) => (
-          <div className="table-row" key={item._id}>
-            <span className="blue">{item.caseId}</span>
-            <span className="blue">{item.patient.name}</span>
-            <span className="grey">{item.patient.phone}</span>
-            <span className="grey">
-              {new Date(item.updatedAt).toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
-            </span>
-            <span className="grey"> {item.totalAmount}</span>
-            <span className={`status ${item.status.toLowerCase()}`}>
-              {item.status}
-            </span>
-            <Button onClick={() => handleViewClick(item)} className="view-btn">
-              View
-            </Button>
+        {allBills > 0 ? (
+          allBills.map((item) => (
+            <div className="table-row" key={item._id}>
+              <span className="blue">{item.caseId}</span>
+              <span className="blue">{item.patient.name}</span>
+              <span className="grey">{item.patient.phone}</span>
+              <span className="grey">
+                {new Date(item.updatedAt).toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </span>
+              <span className="grey"> {item.totalAmount}</span>
+              <span className={`status ${item.status.toLowerCase()}`}>
+                {item.status}
+              </span>
+              <Button
+                onClick={() => handleViewClick(item)}
+                className="view-btn"
+              >
+                View
+              </Button>
 
-            <IconButton
-              disableRipple
-              className="menu-btn"
-              sx={{
-                height: "42px",
-                width: "42px",
-                "&:focus": {
-                  outline: "none",
-                  boxShadow: "none",
-                },
-              }}
-            >
-              <MoreVertIcon />
-            </IconButton>
+              <IconButton
+                disableRipple
+                className="menu-btn"
+                sx={{
+                  height: "42px",
+                  width: "42px",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </div>
+          ))
+        ) : (
+          <div
+            className="table-row blue"
+            style={{
+              gridTemplateColumns: "1fr",
+              textAlign: "center",
+              fontSize: "1rem",
+              fontWeight: "500",
+            }}
+          >
+            No Bills found!
           </div>
-        ))}
+        )}
       </div>
       {/* Use the separate BillingModal Component */}
       <BillingModal

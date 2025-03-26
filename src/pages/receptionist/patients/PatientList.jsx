@@ -246,100 +246,122 @@ const PatientList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {totalPatients.map((patient, index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  background: "#fff",
-                  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "8px",
-                  "&:hover": {
-                    backgroundColor: "#f9f9f9",
-                  },
-                  "& > *": {
-                    borderBottom: "unset",
-                  },
-                }}
-              >
-                <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                  {patient.appointments[patient.appointments.length - 1]
-                    ?.caseId || "Not Assigned"}
-                </TableCell>
-                <TableCell>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      color: "#25307F",
-                    }}
-                    onClick={() => handleClick(patient)}
-                  >
-                    {patient.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {patient.email}
-                  </Typography>
-                </TableCell>
-                <TableCell>{patient.phone}</TableCell>
-                <TableCell>{patient?.typeVisit || "Not Assigned"}</TableCell>
-                <TableCell>
-                  {patient.appointments[patient.appointments.length - 1]
-                    ?.branch || "Not Assigned"}
-                </TableCell>
-                <TableCell>
-                  {new Date(patient.registrationDate).toLocaleDateString(
-                    "en-IN",
-                    {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    }
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={
-                      patient.status.charAt(0).toUpperCase() +
-                      patient.status.slice(1)
-                    }
-                    color={
-                      patient.status.toLowerCase() === "active"
-                        ? "success"
-                        : "default"
-                    }
-                    size="small"
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      bgcolor:
+            {totalPatients.length > 0 ? (
+              totalPatients.map((patient, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    background: "#fff",
+                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "#f9f9f9",
+                    },
+                    "& > *": {
+                      borderBottom: "unset",
+                    },
+                  }}
+                >
+                  <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                    {patient.appointments[patient.appointments.length - 1]
+                      ?.caseId || "Not Assigned"}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        color: "#25307F",
+                      }}
+                      onClick={() => handleClick(patient)}
+                    >
+                      {patient.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {patient.email}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{patient.phone}</TableCell>
+                  <TableCell>{patient?.typeVisit || "Not Assigned"}</TableCell>
+                  <TableCell>
+                    {patient.appointments[patient.appointments.length - 1]
+                      ?.branch || "Not Assigned"}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(patient.registrationDate).toLocaleDateString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      }
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={
+                        patient.status.charAt(0).toUpperCase() +
+                        patient.status.slice(1)
+                      }
+                      color={
                         patient.status.toLowerCase() === "active"
-                          ? "#d4edda"
-                          : "#f0f0f0",
-                      color:
-                        patient.status.toLowerCase() === "active"
-                          ? "#155724"
-                          : "#757575",
-                      fontWeight: "bold",
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    sx={{
-                      "&:focus": {
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                    onClick={(event) => handleMenuOpen(event, patient)}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
+                          ? "success"
+                          : "default"
+                      }
+                      size="small"
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        bgcolor:
+                          patient.status.toLowerCase() === "active"
+                            ? "#d4edda"
+                            : "#f0f0f0",
+                        color:
+                          patient.status.toLowerCase() === "active"
+                            ? "#155724"
+                            : "#757575",
+                        fontWeight: "bold",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      sx={{
+                        "&:focus": {
+                          outline: "none",
+                          boxShadow: "none",
+                        },
+                      }}
+                      onClick={(event) => handleMenuOpen(event, patient)}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  align="center"
+                  sx={{
+                    background: "#fff",
+                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "#f9f9f9",
+                    },
+                    "& > *": {
+                      borderBottom: "unset",
+                    },
+                  }}
+                >
+                  No Patients found!
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
