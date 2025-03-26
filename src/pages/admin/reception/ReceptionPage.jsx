@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import {
+  Chip,
   Paper,
   Table,
   TableBody,
@@ -243,18 +244,32 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                               color: "#747474",
                             }}
                           >
-                            <span
-                              style={{
-                                color: "white",
-                                backgroundColor: "#3DB461", // Replace with your desired color
-                                padding: "3px 8px", // Add padding for spacing
-                                borderRadius: "12px", // Add rounded corners
-                                display: "inline-block", // Ensures the span wraps only the text
-                                fontSize: "12px",
+                            <Chip
+                              label={row.status}
+                              size="small"
+                              sx={{
+                                bgcolor:
+                                  row.status === "Ongoing"
+                                    ? "#3DB461"
+                                    : row.status === "Scheduled"
+                                    ? "#25307F"
+                                    : row.status === "Waiting"
+                                    ? "#ffffff"
+                                    : "white",
+                                color:
+                                  row.status === "Ongoing"
+                                    ? "#FFFFFF"
+                                    : row.status === "Completed"
+                                    ? "orange"
+                                    : row.status === "Scheduled"
+                                    ? "white"
+                                    : row.status === "Waiting"
+                                    ? "#878787"
+                                    : "#757575",
+                                fontWeight: "bold",
+                                px: 0.7,
                               }}
-                            >
-                              Ongoing
-                            </span>
+                            />
                           </TableCell>
                         </TableRow>
                       ))
@@ -442,7 +457,7 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                       <TableRow>
                         <TableCell
                           align="center"
-                          colSpan={7}
+                          colSpan={5}
                           sx={{ backgroundColor: "#EEF8F1" }}
                         >
                           No patients found.
