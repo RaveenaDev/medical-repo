@@ -43,6 +43,7 @@ import Tracking from "./pages/admin/patient/Tracking.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Register from "./pages/register/Register.jsx";
 import Information from "./pages/register/info/Information.jsx";
+import Base from "./pages/landing/Base.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -75,6 +76,8 @@ function App() {
     "/register",
   ].includes(location.pathname);
 
+  const isHomePage = "/".includes(location.pathname)
+
   return (
     <>
       <ToastContainer />
@@ -91,12 +94,16 @@ function App() {
               // overflowY: "auto", // Allows scrolling inside the sidebar if needed
             }}
           >
-            <div className={styles.logo}>
-              <Logo />
-            </div>
-            {!isLoginPage && (
-              <div>
-                <Sidebar role={role} />
+              {
+                  !isHomePage && (
+                      <div className={styles.logo}>
+                          <Logo/>
+                      </div>
+                  )
+              }
+              {!isLoginPage && (
+                  <div>
+                  <Sidebar role={role} />
               </div>
             )}
           </div>
@@ -112,8 +119,14 @@ function App() {
           }} // Prevent content from going under the sidebar
         >
           <Routes>
+              <Route
+                  path="/"
+                  element={
+                      <Base/>
+                  }
+              />
             <Route
-              path="/"
+              path="/login"
               element={
                 <Login
                   setShouldShowSidebar={setShouldShowSidebar}
