@@ -59,7 +59,9 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
   const totalRejectedAppointments = admin.rejectedAppointments;
 
   const handleAppointments = () => {
-    navigate("/admin/reception/appointments");
+    navigate("/admin/reception/appointments", {
+      state: { selectedDate: selectedDate.format() }, // Ensure it's a serializable string
+    });
   };
 
   const handlePatients = () => {
