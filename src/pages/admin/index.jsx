@@ -308,14 +308,14 @@ function Admin(props) {
                       <Grid
                         size={3}
                         sx={{
-                          backgroundColor: "white",
+                          backgroundColor: "#fff",
                           borderRadius: "0.2rem",
                         }}
                       >
                         <Select
-                          inputId="input-department"
-                          selectId="select-department"
-                          label="Department"
+                          // inputId="input-department"
+                          // selectId="select-department"
+                          // label="Department"
                           list={branches}
                           size="small"
                         />
@@ -344,9 +344,9 @@ function Admin(props) {
                   <YAxis tick={{ fill: "#fff" }} />
                   {/* Customize the Tooltip */}
                   <Tooltip
+                    cursor={{ fill: "transparent" }}
                     contentStyle={{
-                      backgroundColor: "#333", // Dark background for the tooltip
-                      color: "#fff", // White text color
+                      color: "#000",
                       borderRadius: "5px", // Optional: for rounded corners
                       padding: "10px", // Optional: for more spacing inside the tooltip
                     }}
@@ -390,7 +390,7 @@ function Admin(props) {
                 onClick={() => navigate(`/admin/earnings`)}
                 sx={{
                   width: "100%",
-                  backgroundColor: "white",
+                  backgroundColor: "#fff",
                   py: 2,
                   borderRadius: "0.4rem",
                   cursor: "pointer",
@@ -476,7 +476,7 @@ function Admin(props) {
               <Box
                 sx={{
                   width: "100%",
-                  backgroundColor: "white",
+                  backgroundColor: "#fff",
                   py: 2,
                   borderRadius: "0.4rem",
                 }}

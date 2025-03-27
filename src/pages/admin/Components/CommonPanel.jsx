@@ -98,7 +98,7 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
       sx={{
         ...shapeStyles,
         ...shapeCircleStyles,
-        color: "white",
+        color: "#ffffff",
         marginTop: "2px",
         paddingTop: "2px",
         paddingBottom: "2px",
@@ -271,7 +271,7 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                     height: "8px",
                     width: "8px",
                     borderRadius: "50%",
-                    backgroundColor: "red",
+                    backgroundColor: "#F14400",
                     position: "absolute",
                     left: "31px",
                     top: "6px",
@@ -292,20 +292,12 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
               <div
                 style={{
                   backgroundColor: "#25307F",
-                  color: "white !important",
+                  color: "#FFFFFF !important",
                   borderRadius: "5px",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
                 }}
               >
                 {branches.length && (
-                  // <Select1
-                  //   inputId="input-department"
-                  //   selectId="select-department"
-                  //   label="Department"
-                  //   list={branches}
-                  //   size="small"
-                  //   color="white"
-                  // />
                   <Dropdown
                     options={branches}
                     optionLabel="All Branches"
@@ -320,8 +312,8 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                     }}
                     panelStyle={{
                       zIndex: 105000, // Dropdown options panel
-                      backgroundColor: "white", // Background color of the open dropdown
-                      color: "black",
+                      backgroundColor: "#FFFFFF", // Background color of the open dropdown
+                      color: "#000000",
                     }}
                     itemTemplate={(option) => (
                       <div
@@ -333,11 +325,11 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                         }}
                         onMouseEnter={(e) => {
                           (e.currentTarget.style.backgroundColor = "#25307F"),
-                            (e.currentTarget.style.color = "white");
+                            (e.currentTarget.style.color = "#FFFFFF");
                         }}
                         onMouseLeave={(e) => {
-                          (e.currentTarget.style.backgroundColor = "white"),
-                            (e.currentTarget.style.color = "black");
+                          (e.currentTarget.style.backgroundColor = "#FFFFFF"),
+                            (e.currentTarget.style.color = "#000000");
                         }}
                       >
                         {option}
