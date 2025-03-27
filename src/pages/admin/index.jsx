@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ayu from "../receptionist/patients/patients.module.scss";
 import CommonPanel from "./Components/CommonPanel.jsx";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Select } from "@mui/material";
 import {
   Area,
   AreaChart,
@@ -14,14 +14,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import Select from "../../components/Select/index.jsx";
 import DonutChart from "./Components/DonutChart.jsx";
-import { useNavigate } from "react-router-dom"; // Use Grid from MUI instead
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAppointmentCounts } from "../../components/State/Admin/Action.js";
 
 function Admin(props) {
-  const [branches, setBranches] = useState(["Monthly", "Yearly"]);
+  const [selectedFilter, setSelectedFilter] = useState("Monthly"); // Keep track of selected option
+  const filterOptions = ["Monthly", "Yearly"]; // Static options
 
   // Initial state where all bars are visible
   const [visibleBars, setVisibleBars] = useState({
@@ -186,6 +186,7 @@ function Admin(props) {
                 outline: "none",
                 boxShadow: "none",
               },
+              boxShadow: "0px 4px 4px 0px #C2C2C240",
             }}
           >
             <span
@@ -238,7 +239,6 @@ function Admin(props) {
                 >
                   <h4 style={{ fontWeight: 400 }}>Appointment Statistics</h4>
                 </div>
-
                 <Box sx={{ display: "flex", gap: 3, marginTop: "-20px" }}>
                   {" "}
                   {/* Adjust gap for spacing */}
@@ -254,7 +254,7 @@ function Admin(props) {
                         width: 10,
                         height: 10,
                         borderRadius: "50%",
-                        backgroundColor: "#8884d8",
+                        backgroundColor: "#ACDDE7",
                       }}
                     />
                     Appointments
@@ -271,7 +271,7 @@ function Admin(props) {
                         width: 10,
                         height: 10,
                         borderRadius: "50%",
-                        backgroundColor: "#82ca9d",
+                        backgroundColor: "#3DB461",
                       }}
                     />
                     Completed
@@ -294,34 +294,34 @@ function Admin(props) {
                     Canceled
                   </Box>
                 </Box>
-
-                <div>
-                  {branches.length && (
-                    <Grid
-                      container
-                      justifyContent="flex-end"
-                      alignItems="center"
-                      flexDirection={{ md: "row" }}
-                      size={12}
-                      sx={{ margin: "0 0 1px 0" }}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    marginBottom: "4px",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#fff",
+                      borderRadius: "0.2rem",
+                      width: "120px", // Fixed width to prevent size changes
+                    }}
+                  >
+                    <Select
+                      size="small"
+                      value={selectedFilter} // Use selected value
+                      onChange={(e) => setSelectedFilter(e.target.value)} // Update selected value
+                      style={{ width: "100%" }} // Ensure dropdown fills the container
                     >
-                      <Grid
-                        size={3}
-                        sx={{
-                          backgroundColor: "white",
-                          borderRadius: "0.2rem",
-                        }}
-                      >
-                        <Select
-                          inputId="input-department"
-                          selectId="select-department"
-                          label="Department"
-                          list={branches}
-                          size="small"
-                        />
-                      </Grid>
-                    </Grid>
-                  )}
+                      {filterOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
                 </div>
               </Box>
 
@@ -344,9 +344,9 @@ function Admin(props) {
                   <YAxis tick={{ fill: "#fff" }} />
                   {/* Customize the Tooltip */}
                   <Tooltip
+                    cursor={{ fill: "transparent" }}
                     contentStyle={{
-                      backgroundColor: "#333", // Dark background for the tooltip
-                      color: "#fff", // White text color
+                      color: "#000",
                       borderRadius: "5px", // Optional: for rounded corners
                       padding: "10px", // Optional: for more spacing inside the tooltip
                     }}
@@ -356,7 +356,7 @@ function Admin(props) {
                   {visibleBars.appointments && (
                     <Bar
                       dataKey="total"
-                      fill="#8884d8"
+                      fill="#ACDDE7"
                       radius={[10, 10, 0, 0]}
                       barSize={15}
                     />
@@ -364,7 +364,7 @@ function Admin(props) {
                   {visibleBars.completed && (
                     <Bar
                       dataKey="completed"
-                      fill="#82ca9d"
+                      fill="#3DB461"
                       radius={[10, 10, 0, 0]}
                       barSize={15}
                     />
@@ -390,7 +390,7 @@ function Admin(props) {
                 onClick={() => navigate(`/admin/earnings`)}
                 sx={{
                   width: "100%",
-                  backgroundColor: "white",
+                  backgroundColor: "#fff",
                   py: 2,
                   borderRadius: "0.4rem",
                   cursor: "pointer",
@@ -476,7 +476,7 @@ function Admin(props) {
               <Box
                 sx={{
                   width: "100%",
-                  backgroundColor: "white",
+                  backgroundColor: "#fff",
                   py: 2,
                   borderRadius: "0.4rem",
                 }}

@@ -3,12 +3,13 @@ import ReactApexChart from "react-apexcharts";
 
 const DonutChart = () => {
     const [state, setState] = useState({
-        series: [44, 55, 41, 17, 15],
+        series: [30, 15, 10, 15, 30],
         options: {
             chart: {
                 type: 'donut',
             },
             labels: ['Cardiology', 'Dentistry', 'Orthopedic', 'Pulmonology', 'Gynecology'], // Labels for each section of the donut
+            colors: ["#F14400", "#2E823B", "#5461BE", "#66A7B4", "#EAA000"], // Custom colors
             responsive: [
                 {
                     breakpoint: 480,
@@ -16,18 +17,18 @@ const DonutChart = () => {
                         chart: {
                             width: 200
                         },
-                        legend: {
-                            position: 'bottom'
-                        }
+                        // legend: {
+                        //     position: 'bottom'
+                        // }
                     }
                 }
             ],
             legend: {
                 position: 'top', // Position of the legend
                 horizontalAlign: 'center', // Horizontal alignment
-                labels: {
-                    colors: '#25307F', // Change legend label color
-                },
+                // labels: {
+                //     colors: '#25307F', // Change legend label color
+                // },
             },
             plotOptions: {
                 pie: {
@@ -35,6 +36,9 @@ const DonutChart = () => {
                         size: '60%', // Adjust the size of the donut hole
                     }
                 }
+            },
+            tooltip: {
+                enabled: false, // Disable tooltip
             },
         },
     });
