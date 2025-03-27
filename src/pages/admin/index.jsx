@@ -41,6 +41,16 @@ function Admin(props) {
   const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
   const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
 
+    // console.log("A",data)
+
+    const newData = data.map(dat => ({
+        ...dat, // Spread existing properties
+        name: dat.name.slice(0, 3) // Modify name field
+    }));
+
+    // console.log(newData);
+
+
   const areaData = [
     {
       name: "Jan",
@@ -78,14 +88,14 @@ function Admin(props) {
       ayu: 3200,
     },
     {
-      name: "June",
+      name: "Jun",
       uv: 2390,
       pv: 3800,
       amt: 2500,
       ayu: 2600,
     },
     {
-      name: "July",
+      name: "Jul",
       uv: 5490,
       pv: 4300,
       amt: 2100,
@@ -331,7 +341,7 @@ function Admin(props) {
                   barGap={5} // Adjust space between bars
                   width={500}
                   height={300}
-                  data={data}
+                  data={newData}
                   margin={{
                     top: 5,
                     right: 30,
