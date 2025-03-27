@@ -6,9 +6,20 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllDepartments } from "../../../components/State/Admin/Action.js";
 import CommonPanel from "../Components/CommonPanel.jsx";
+import addAppointments from "../../../assets/plus.svg";
+import styles from "../../receptionist/styles.module.scss";
+import {Box, Button, FormControl, IconButton, MenuItem, Modal} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const Departments1 = (props) => {
   const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
@@ -18,7 +29,22 @@ const Departments1 = (props) => {
     navigate("/admin");
   };
 
-  const dispatch = useDispatch();
+    const [department, setDepartment] = useState({
+        departmentName: '',
+        departmentHead: '',
+        doctors: [],
+        staffs: [],
+        services: []
+    });
+
+    const handleChange = (e) => {
+        setDepartment({
+            ...department,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllDepartments());
@@ -48,20 +74,124 @@ const Departments1 = (props) => {
       >
         <CommonPanel />
       </div>
-      <div style={{ marginTop: "200px" }}>
-        <div className={ayu.headerContainer}>
-          <button className={ayu.backButton} onClick={handleBack}>
-            <ArrowBackIosIcon />
-          </button>
-          <h2 className={ayu.departmentTitle}>Department</h2>
+      <div style={{ marginTop: "190px" }}>
+        <div className={ayu.headerContainer} style={{justifyContent:'space-between',marginBottom:'0'}}>
+            <div style={{display:'flex',alignItems:'center',}}>
+                <button className={ayu.backButton} onClick={handleBack}>
+                    <ArrowBackIosIcon/>
+                </button>
+                <h2 className={ayu.departmentTitle}>Department</h2>
+            </div>
+            <div>
+                <Button
+                    variant="contained"
+                    onClick={handleOpen}
+                    sx={{
+                        fontSize: "16px",
+                        color: "#ffffff",
+                        textTransform: "capitalize",
+                        padding: {
+                            xs: "0px 8px",
+                            sm: "0px 10px",
+                            md: "4px 10px",
+                        }, // Adjust padding
+                        backgroundColor: "#25307F",
+                        boxShadow: "0px 4px 4px 0px #C2C2C240",
+                        "&:hover": {
+                            background: "#AEC3FF",
+                        },
+                        "&:active": {
+                            backgroundColor: "#181F52",
+                            outline: "none",
+                            boxShadow: "none",
+                        },
+                        "&:focus": {
+                            outline: "none",
+                            boxShadow: "none",
+                        },
+                    }}
+                >
+                    <img
+                        src={addAppointments}
+                        className={styles.appointmentBlock__plusIcon}
+                    />
+                    New Department
+                </Button>
+
+                {/* Department Modal */}
+                <Modal open={open} onClose={handleClose}>
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            bgcolor: "background.paper",
+                            boxShadow: 24,
+                            width: 500,
+                            p: 2,
+                            borderRadius: 2,
+                        }}
+                    >
+                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid #25307F',padding:'5px 8px 1rem 8px'}}>
+                            <h4 style={{color:'#000000',fontWeight:500}}>Add New Department</h4>
+                            <IconButton
+                                sx={{
+                                    padding:0,
+                                    "&:focus": {
+                                        outline: "none",
+                                        boxShadow: "none",
+                                    },
+                                    color: "black",
+                                }}
+                                onClick={handleClose}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </div>
+
+                        <FormControl sx={{ m: 1, minWidth: 200,
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': { borderColor: '#25307F' }, // Blue border
+                                '&:hover fieldset': { borderColor: '#25307F' }, // Blue border on hover
+                                '&.Mui-focused fieldset': { borderColor: '#25307F' } // Blue border on focus
+                            }}} size="small">
+                            <InputLabel id="demo-select-small-label"
+                                        sx={{ color: '#25307F' }}>
+                                 Department Name
+                            </InputLabel>
+                            <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                name="departmentName"
+                                value={department.departmentName}
+                                label="Department Name"
+                                onChange={handleChange}
+                                sx={{
+                                    color: '#25307F', // Blue text color for selected value
+                                    '& .MuiSvgIcon-root': { color: '#25307F' } // Blue color for dropdown arrow icon
+                                }}
+                                IconComponent={(props) => <KeyboardArrowDownIcon {...props} sx={{ color: 'blue' }} />}
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </Modal>
+            </div>
         </div>
 
-        {/* Horizontal line */}
-        <hr style={{ border: "1px solid #d3d3d3", margin: "20px 0" }} />
+          {/* Horizontal line */}
+          <hr style={{border: "1px solid #d3d3d3", margin: "20px 0"}}/>
 
-        {/* Cards */}
+          {/* Cards */}
 
-        <div className={ayu.superCardContainer}>
+          <div className={ayu.superCardContainer}>
           {allDepartments.map((department, index) => (
             <DepartCard key={index} department={department} index={index} />
           ))}
