@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@canvasjs/react-charts": "^1.0.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.1.5",
@@ -18,6 +19,7 @@
     "@mui/material": "^6.4.2",
     "@mui/x-data-grid": "^7.22.2",
     "@mui/x-date-pickers": "^7.24.1",
+    "ag-charts-react": "^11.2.1",
     "apexcharts": "^4.4.0",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
