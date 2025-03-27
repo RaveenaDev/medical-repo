@@ -185,7 +185,7 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box
                   sx={{
-                    backgroundColor: "white",
+                    backgroundColor: "#FFFFFF",
 
                     borderRadius: 1,
                     width: 180, // Adjust width here
