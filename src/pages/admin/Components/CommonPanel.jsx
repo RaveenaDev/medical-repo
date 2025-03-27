@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
-import styles from "../../receptionist/styles.module.scss";
 import { Box, Button } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,6 +32,17 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
 
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
+
+  // Default to today's date if props are not provided
+  const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
+
+  const handleDateChange = (newValue) => {
+    if (setSelectedDate) {
+      setSelectedDate(newValue);
+    } else {
+      setInternalSelectedDate(newValue);
+    }
+  };
 
   useEffect(() => {
     dispatch(getPatients());
@@ -71,6 +81,7 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
     "/admin/rooms",
     "/admin/requests",
     "/admin/billings",
+    "/admin/reception/patients",
   ];
 
   // Check if the current route is in the excluded routes list
@@ -184,8 +195,8 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                   }}
                 >
                   <DatePicker
-                    value={selectedDate}
-                    onChange={(newValue) => setSelectedDate(newValue)}
+                    value={selectedDate || internalSelectedDate}
+                    onChange={handleDateChange}
                     sx={{
                       width: "100%", // Ensure the date picker takes up 100% of the container's width
                       fontSize: "24px", // Adjust font size inside the date picker

@@ -165,7 +165,7 @@ const PatientPanel = (props) => {
       >
         <CommonPanel />
       </div>
-      <div style={{ marginTop: "200px" }}>
+      <div style={{ marginTop: "140px" }}>
         <Box sx={{ padding: 2 }}>
           {/* Header Section */}
           <Box
@@ -257,7 +257,7 @@ const PatientPanel = (props) => {
           {/* Table Section */}
           <TableContainer
             sx={{
-              maxHeight: "60vh", // Adjust this to fit your layout needs
+              maxHeight: "64vh", // Adjust this to fit your layout needs
               overflowY: "auto",
             }}
           >
@@ -266,6 +266,7 @@ const PatientPanel = (props) => {
                 borderCollapse: "separate",
                 borderSpacing: "0 10px",
                 background: "#F1F1F1",
+                marginBottom: "20px",
               }}
             >
               <TableHead

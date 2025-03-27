@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CommonPanel from "../../Components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
 import Select from "../../../../components/Select/index.jsx";
@@ -42,7 +42,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAppointments } from "../../../../components/State/Admin/Action.js";
 
 function Appointments(props) {
-  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const location = useLocation();
+  const [selectedDate, setSelectedDate] = useState(
+    location.state?.selectedDate ? dayjs(location.state.selectedDate) : dayjs()
+  );
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);

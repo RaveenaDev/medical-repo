@@ -34,32 +34,17 @@ const CommonPanel = ({
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const dummyRequests = [
-    {
-      id: 1,
-      name: "Rahul Sharma",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/men/1.jpg",
-    },
-    {
-      id: 2,
-      name: "Sneha Kapoor",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/women/2.jpg",
-    },
-    {
-      id: 3,
-      name: "Amit Verma",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/men/3.jpg",
-    },
-    {
-      id: 4,
-      name: "Priya Singh",
-      detail: "Appointment for ENT, 28 September",
-      img: "https://randomuser.me/api/portraits/women/4.jpg",
-    },
-  ];
+  // Default to today's date if props are not provided
+  const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
+
+  const handleDateChange = (newValue) => {
+    if (setSelectedDate) {
+      setSelectedDate(newValue);
+    } else {
+      setInternalSelectedDate(newValue);
+    }
+  };
+
   useEffect(() => {
     dispatch(getPatients());
     dispatch(getDoctors());
@@ -199,8 +184,8 @@ const CommonPanel = ({
                   }}
                 >
                   <DatePicker
-                    value={selectedDate}
-                    onChange={(newValue) => setSelectedDate(newValue)}
+                    value={selectedDate || internalSelectedDate}
+                    onChange={handleDateChange}
                     slotProps={{
                       textField: {
                         sx: {
@@ -272,7 +257,6 @@ const CommonPanel = ({
               <AppointmentRequestModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                requests={dummyRequests}
                 appointmentRequests={appointmentRequests}
               >
                 <p>This is where appointment requests will appear.</p>
