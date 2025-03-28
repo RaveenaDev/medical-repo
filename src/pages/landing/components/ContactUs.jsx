@@ -107,7 +107,8 @@ const ContactUs = () => {
                                 borderRadius: "12px",
                                 cursor: "pointer",
                                 border: "none",
-                                width:'fit-content'
+                                width:'fit-content',
+                                outline: "none"
                             }}
                         >
                             Send

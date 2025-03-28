@@ -117,6 +117,7 @@ export const Services = () => {
                 viewBox="0 0 29 28"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                style={{marginTop:'-26px'}}
               >
                 <mask
                   id="mask0_4930_1972"
