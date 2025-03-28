@@ -2,10 +2,10 @@ import React from "react";
 import Navbar from "./components/Navbar.jsx";
 import background from "../../assets/image 7.png";
 import play from "../landing/assets/Frame 1.png";
-import { Services } from "./components/Services.jsx";
-import About from "./components/About.jsx";
 import ContactUs from "./components/ContactUs.jsx";
-import Solutions from "./components/Solutions.jsx";
+import Solutions from "./components/solutions/Solutions.jsx";
+import About from "./components/About/About.jsx";
+import { Services } from "./components/services/Services.jsx";
 
 const Base = () => {
   return (
