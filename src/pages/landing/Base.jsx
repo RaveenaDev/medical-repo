@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from "./components/Navbar.jsx";
 import background from "../../assets/image 7.png"
 import play from "../landing/assets/Frame 1.png"
+import ContactUs from "./components/ContactUs.jsx";
 
 const Base = () => {
     return (
@@ -111,6 +112,8 @@ const Base = () => {
                     <p style={{fontSize:'22px',fontWeight:500}}>Explore More</p>
                 </div>
             </div>
+
+            <ContactUs/>
         </>
 
     )

@@ -69,7 +69,7 @@ function App() {
 
   // Determine if the current path is a login or signup page
   const isLoginPage = [
-    "/",
+    "/login",
     "/password-reset",
     "/recovery-link",
     "/update-password",
@@ -136,12 +136,6 @@ function App() {
                       }} // Prevent content from going under the sidebar
                   >
                       <Routes>
-                          <Route
-                              path="/"
-                              element={
-                                  <Base/>
-                              }
-                          />
                           <Route
                               path="/login"
                               element={
