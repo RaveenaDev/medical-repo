@@ -1,43 +1,72 @@
-import React from 'react'
+import React from "react";
 import Navbar from "./components/Navbar.jsx";
-import background from "../../assets/image 7.png"
-import play from "../landing/assets/Frame 1.png"
+import background from "../../assets/image 7.png";
+import play from "../landing/assets/Frame 1.png";
+import { Services } from "./components/Services.jsx";
+import About from "./components/About.jsx";
 import ContactUs from "./components/ContactUs.jsx";
 
 const Base = () => {
-    return (
-        <>
-            <div style={{
-                backgroundImage: `url(${background})`,
-                backgroundSize: "cover",
-                height: "94.9vh", // ye full screen height 100vh isliye nhi di because humne padding use kr rkhi hai
-                padding: '18px 3rem 18px 22px'
-            }}>
-                <Navbar/>
+  return (
+    <>
+      <div
+        style={{
+          backgroundImage: `url(${background})`,
+          backgroundSize: "cover",
+          height: "95.5vh", // ye full screen height 100vh isliye nhi di because humne padding use kr rkhi hai
+          padding: "18px 3rem 18px 22px",
+        }}
+      >
+        <Navbar />
 
-                <div style={{
-                    marginLeft: '20px',
-                    marginTop: '8rem',
-                    width: '34rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)', // Semi-transparent white
-                    backdropFilter: 'blur(10px)', // Blurred effect
-                    padding: '15px 22px',
-                    borderRadius: '8px' // Optional for a softer look
-                }}>
-                    <h2 style={{fontSize: '30px', fontWeight: 500, color: '#555555',height:'2.4rem'}}>Transform Hospital Operations with
-                        Our</h2>
-                    <h2 style={{fontSize: '30px', fontWeight: 500, color: '#25307F', marginBottom: '14px'}}>All-in-One
-                        Management Portal</h2>
-                    <p style={{color: '#555555', fontSize: '19px', width: "485px"}}>Streamline workflows, enhance patient
-                        care, and optimize revenue with role-based access for Admin,Reception, and Doctors.</p>
-                    <button style={{
-                        color: 'white', marginTop: "22px", padding: '6px 28px',
-                        backgroundColor: '#25307F', borderRadius: '16px', outline: "none",
-                    }}>
-                        Show More
-                    </button>
-
-                </div>
+        <div
+          style={{
+            marginLeft: "20px",
+            marginTop: "8rem",
+            width: "34rem",
+            backgroundColor: "rgba(255, 255, 255, 0.6)", // Semi-transparent white
+            backdropFilter: "blur(10px)", // Blurred effect
+            padding: "15px 22px",
+            borderRadius: "8px", // Optional for a softer look
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "30px",
+              fontWeight: 500,
+              color: "#555555",
+              height: "2.4rem",
+            }}
+          >
+            Transform Hospital Operations with Our
+          </h2>
+          <h2
+            style={{
+              fontSize: "30px",
+              fontWeight: 500,
+              color: "#25307F",
+              marginBottom: "14px",
+            }}
+          >
+            All-in-One Management Portal
+          </h2>
+          <p style={{ color: "#555555", fontSize: "19px", width: "485px" }}>
+            Streamline workflows, enhance patient care, and optimize revenue
+            with role-based access for Admin,Reception, and Doctors.
+          </p>
+          <button
+            style={{
+              color: "white",
+              marginTop: "22px",
+              padding: "6px 28px",
+              backgroundColor: "#25307F",
+              borderRadius: "16px",
+              outline: "none",
+            }}
+          >
+            Show More
+          </button>{" "}
+        </div>
 
                 <div style={{display:'flex',alignItems:'center',paddingLeft:'3rem',paddingTop:'2rem'}}>
                     <svg style={{cursor:'pointer'}} width="95" height="67" viewBox="131 290 144 97" fill="none" xmlns="http://www.w3.org/2000/svg">
