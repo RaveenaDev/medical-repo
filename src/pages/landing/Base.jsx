@@ -25,7 +25,7 @@ const Base = () => {
             marginLeft: "20px",
             marginTop: "8rem",
             width: "34rem",
-            backgroundColor: "rgba(255, 255, 255, 0.6)", // Semi-transparent white
+            backgroundColor: "rgba(210, 213, 238, 0.5)", // Semi-transparent white
             backdropFilter: "blur(10px)", // Blurred effect
             padding: "15px 22px",
             borderRadius: "8px", // Optional for a softer look
