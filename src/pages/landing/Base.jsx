@@ -6,6 +6,7 @@ import ContactUs from "./components/ContactUs.jsx";
 import Solutions from "./components/solutions/Solutions.jsx";
 import About from "./components/About/About.jsx";
 import { Services } from "./components/services/Services.jsx";
+import Footer from "./components/footer/footer.jsx";
 
 const Base = () => {
   return (
@@ -182,6 +183,7 @@ const Base = () => {
       <About />
       <Solutions />
       <ContactUs />
+      <Footer />
     </>
   );
 };
