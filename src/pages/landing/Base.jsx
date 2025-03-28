@@ -5,6 +5,7 @@ import play from "../landing/assets/Frame 1.png";
 import { Services } from "./components/Services.jsx";
 import About from "./components/About.jsx";
 import ContactUs from "./components/ContactUs.jsx";
+import Solutions from "./components/Solutions.jsx";
 
 const Base = () => {
   return (
@@ -179,6 +180,7 @@ const Base = () => {
       </div>
       <Services />
       <About />
+      <Solutions />
       <ContactUs />
     </>
   );

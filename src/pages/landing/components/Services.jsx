@@ -70,17 +70,53 @@ const ServiceCard = ({ bgColor, icon, title, description }) => {
 export const Services = () => {
   const sliderSettings = {
     infinite: false,
-    speed: 200,
-    slidesToShow: 4.7, // Show 4 full slides and part of the 5th
+    speed: 300,
+    slidesToShow: 4.7, // Default: Show 4 slides
     slidesToScroll: 1,
+    centerMode: false, // Prevents unwanted shifting
+    variableWidth: false, // Ensures slides are equal width
     responsive: [
       {
-        breakpoint: 1024,
-        settings: { slidesToShow: 2.7, slidesToScroll: 1 }, // Adjust for medium screens
+        breakpoint: 1400, // Laptops
+        settings: {
+          slidesToShow: 3.7,
+          slidesToScroll: 1,
+        },
       },
       {
-        breakpoint: 768,
-        settings: { slidesToShow: 2.5, slidesToScroll: 1 }, // Adjust for mobile screens
+        breakpoint: 1160, // Laptops
+        settings: {
+          slidesToShow: 3.4,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 1060, // Laptops
+        settings: {
+          slidesToShow: 3.1,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 1000, // Tablets
+        settings: {
+          slidesToShow: 2.7,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 768, // Mobile landscape
+        settings: {
+          slidesToShow: 2.2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 576, // Mobile portrait
+        settings: {
+          slidesToShow: 1.2,
+          slidesToScroll: 1,
+        },
       },
     ],
   };
@@ -117,7 +153,7 @@ export const Services = () => {
                 viewBox="0 0 29 28"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{marginTop:'-26px'}}
+                style={{ marginTop: "-26px", marginLeft: "12px" }}
               >
                 <mask
                   id="mask0_4930_1972"
