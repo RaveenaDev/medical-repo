@@ -192,13 +192,13 @@ const CommonPanel = ({
                         sx: {
                           "& .MuiOutlinedInput-root": {
                             "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important", // Force remove the border
+                              borderColor: "transparent !important",
                             },
                             "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important", // Prevents border on hover
+                              borderColor: "transparent !important",
                             },
                             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important", // Prevents border on focus
+                              borderColor: "transparent !important",
                               boxShadow: "none !important",
                             },
                           },
@@ -206,12 +206,18 @@ const CommonPanel = ({
                             fontSize: "14px",
                             padding: "10px",
                             "&:focus": {
-                              outline: "none !important", // Removes input focus outline
+                              outline: "none !important",
                             },
                           },
-                          "&:focus": {
-                            outline: "none !important",
-                            boxShadow: "none !important",
+                          "& .MuiIconButton-root": {
+                            color: "#666", // Adjust icon color if needed
+                            "&:hover": {
+                              backgroundColor: "transparent !important",
+                            },
+                            "&:focus": {
+                              outline: "none !important",
+                              boxShadow: "none !important",
+                            },
                           },
                         },
                       },
