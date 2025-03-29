@@ -197,6 +197,7 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                   <DatePicker
                     value={selectedDate || internalSelectedDate}
                     onChange={handleDateChange}
+                    format="DD/MM/YYYY" // Set the date format
                     sx={{
                       width: "100%", // Ensure the date picker takes up 100% of the container's width
                       fontSize: "24px", // Adjust font size inside the date picker

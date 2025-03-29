@@ -186,6 +186,7 @@ const CommonPanel = ({
                   <DatePicker
                     value={selectedDate || internalSelectedDate}
                     onChange={handleDateChange}
+                    format="DD/MM/YYYY" // Set the date format
                     slotProps={{
                       textField: {
                         sx: {
