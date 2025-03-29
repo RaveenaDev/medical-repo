@@ -236,8 +236,7 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
     // dispatch(getAppointments("Scheduled"));
 
     dispatch({ type: BOOK_APPOINTMENT, payload: data });
-
-    console.log("Booked: ",data)
+    // console.log("Booked: ",data)
   } catch (error) {
     console.log(error);
     toast.error("Failed to book appointment. Please try again!", {

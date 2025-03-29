@@ -66,6 +66,8 @@ function Receptionist(props) {
     setSelectedBranch(value);
   };
 
+  const refreshAppointments = useSelector((state) => state.receptionist.refreshAppointments);
+
   useEffect(() => {
     const startDate = selectedDate.startOf("day").toISOString();
     const endDate = selectedDate.endOf("day").toISOString();
@@ -75,7 +77,7 @@ function Receptionist(props) {
     ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
       dispatch(getAppointments(status, startDate, endDate, selectedBranch));
     });
-  }, [dispatch, selectedBranch, selectedDate]);
+  }, [dispatch, selectedBranch, selectedDate,refreshAppointments]);
 
   // const startDate = new Date(selectedDate).toISOString().setHours(0, 0, 0, 0);
   // const endDate = new Date(selectedDate).toISOString();

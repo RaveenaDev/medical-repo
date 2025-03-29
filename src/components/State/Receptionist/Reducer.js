@@ -45,7 +45,8 @@ const initialState = {
   isLoading: true,
   error: null,
   success: null,
-  bookAppointment: null
+  bookAppointment: null,
+  refreshAppointments: false,
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -173,7 +174,8 @@ export const receptionistReducer = (state = initialState, action) => {
         // totalAppointments: action.payload.updatedPatientAppointments.length,
         // appointments: [...state.appointments, action.payload.appointment],
         bookAppointment: "Appointment Booked Successfully",
-        scheduledAppointments: [...state.scheduledAppointments,action.payload.appointment]
+        refreshAppointments: !state.refreshAppointments,
+        // scheduledAppointments: [...state.scheduledAppointments,action.payload.appointment]
       };
 
     case REMOVE_BOOK_APPOINTMENT_DATA:
