@@ -70,12 +70,12 @@ const DepartCard = ({ department, index }) => {
               componentsProps={{
                 tooltip: {
                   sx: {
-                    backgroundColor: "rgba(37, 48, 127, 0.8)",
+                    backgroundColor: "rgba(37, 48, 127, 0.75)",
                     color: "white",
                     fontSize: "12px",
                     padding: "8px",
                     borderRadius: "8px",
-                    backdropFilter: "blur(15px)",
+                    // backdropFilter: "blur(15px)",
                   },
                 },
                 arrow: {
@@ -109,12 +109,12 @@ const DepartCard = ({ department, index }) => {
               componentsProps={{
                 tooltip: {
                   sx: {
-                    backgroundColor: "rgba(46, 130, 59, 0.85)", // 85% opacity (green)
+                    backgroundColor: "rgba(46, 130, 59, 0.75)", // 85% opacity (green)
                     color: "white",
                     fontSize: "12px",
                     padding: "8px",
                     borderRadius: "8px",
-                    backdropFilter: "blur(5px)", // Optional blur effect
+                    // backdropFilter: "blur(5px)", // Optional blur effect
                   },
                 },
                 arrow: {
