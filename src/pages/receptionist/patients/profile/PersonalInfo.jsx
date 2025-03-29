@@ -38,7 +38,7 @@ const PersonalInfo = ({ patient }) => {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "space-between",
-              padding: "10px",
+              padding: "10px 5px",
               paddingBottom: '18px',
               borderRadius: "8px",
               marginTop: '8px'
@@ -50,7 +50,6 @@ const PersonalInfo = ({ patient }) => {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  minWidth: "100px",
                 }}
               >
                 <p
@@ -68,7 +67,7 @@ const PersonalInfo = ({ patient }) => {
                     fontSize: "15px",
                     fontWeight: "600",
                     color: "#1A1A1A",
-                    width: "8rem",
+                    width:'8.2rem'
                   }}
                 >
                   {section.values[i]}

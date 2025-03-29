@@ -110,7 +110,7 @@ const Profile = (props) => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    borderRadius: "10px",
+                    borderRadius: "2px",
                     boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
                     textAlign: "center",
                     color: "black",
@@ -297,7 +297,7 @@ const Profile = (props) => {
                     minWidth: "400px",
                     backgroundColor: "#ffffff",
                     padding: "20px",
-                    borderRadius: "10px",
+                    borderRadius: "2px",
                     boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   }}
                 >
@@ -307,11 +307,11 @@ const Profile = (props) => {
                 {/* Box 3 - Medical Info */}
                 <div
                   style={{
-                    width: "25%",
+                    width: "28%",
                     backgroundColor: "#ffffff",
                     height: "auto",
-                    padding: "16px 20px",
-                    borderRadius: "10px",
+                    padding: "16px 8px",
+                    borderRadius: "2px",
                     boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   }}
                 >

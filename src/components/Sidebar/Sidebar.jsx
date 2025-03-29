@@ -149,7 +149,7 @@ const Sidebar = ({ role }) => {
         <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
           <Avatar sx={{ width: 50, height: 50 }} />
           <div style={{ paddingTop: "2px" }}>
-            <p style={{ color: "black", fontWeight: 500 }}>Hospital</p>
+            <p style={{ color: "#25307F", fontWeight: 500 }}>Hospital</p>
             <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
           </div>
         </div>
