@@ -261,11 +261,11 @@ function Receptionist(props) {
                             alignItems: "center",
                             justifyContent: "center",
                             borderRadius: 1,
-                            boxShadow: 1,
+                            boxShadow: 'none',
                             cursor: "pointer",
                             borderBottom:
                               activeBox === box.id
-                                ? "4px solid #25307F"
+                                ? "3.5px solid #25307F"
                                 : "none",
                             transition: "all 0.3s ease-in-out",
                           }}

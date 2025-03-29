@@ -357,6 +357,12 @@ const BookAppointment = ({
                 className="submit-btn"
                 fullWidth
                 onClick={handleClick}
+                sx={{
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                }}
               >
                 Confirm
               </Button>

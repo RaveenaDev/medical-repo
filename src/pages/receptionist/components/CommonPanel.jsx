@@ -309,6 +309,7 @@ const CommonPanel = ({
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
                   "&:hover": {
                     background: "#AEC3FF",
+                    boxShadow: "none",
                   },
                   "&:active": {
                     backgroundColor: "#181F52",
