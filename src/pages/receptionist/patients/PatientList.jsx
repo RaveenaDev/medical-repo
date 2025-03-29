@@ -138,7 +138,6 @@ const PatientList = () => {
           borderTop: "0.5px solid #4A4A4A8C",
           borderBottom: "0.5px solid #4A4A4A8C",
           paddingY: 1.5,
-          marginBottom: 3,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
