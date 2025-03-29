@@ -8,31 +8,32 @@ const About = () => {
         display: "grid",
         gridTemplateColumns: "1.3fr 1fr 1fr",
         gap: "2rem",
-        margin: "0 4rem",
+        margin: "1rem 4rem 0",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div
           style={{
             color: "#5663C2",
-            // fontFamily: " Inter",
+            fontFamily: " Inter",
             fontWeight: " 600",
             fontSize: "1.75rem",
             lineHeight: "100%",
             letterSpacing: " 0%",
+            marginTop: "1rem",
           }}
         >
           About
         </div>
         <div
           style={{
-            // font-family: Poppins;
+            fontFamily: "Poppins",
             fontWeight: "600",
             fontSize: "2.5rem",
             lineHeight: "100%",
             letterSpacing: "0%",
             color: "#555555",
-            marginTop: "1rem",
+            marginTop: "1.25rem",
           }}
         >
           Hospital Management Software for{" "}
@@ -43,9 +44,9 @@ const About = () => {
         <div
           style={{
             color: "#555555B8",
-            // fontFamily: "Inter",
+            fontFamily: "Inter",
             fontWeight: "400",
-            fontSize: "1.75rem",
+            fontSize: "1.5rem",
             lineHeight: "100%",
             letterSpacing: "0%",
             marginTop: "2.25rem",
@@ -75,7 +76,7 @@ const About = () => {
       <div style={{ padding: "7rem 0 0 3rem" }}>
         <div
           style={{
-            // fontFamily: "Inter",
+            fontFamily: "Inter",
             fontWeight: "600",
             fontSize: "1.5rem",
             lineHeight: "100%",

@@ -39,7 +39,7 @@ const ServiceCard = ({ bgColor, icon, title, description }) => {
         <span
           style={{
             color: "#555555",
-            //   fontFamily: "Poppins",
+            fontFamily: "Poppins",
             fontWeight: "600",
             fontSize: "1.35rem",
             lineHeight: "150%",

@@ -19,7 +19,7 @@ const Solutions = () => {
     >
       <div
         style={{
-          //   fontFamily: "Inter",
+          fontFamily: "Inter",
           fontWeight: "600",
           fontSize: "30px",
           lineHeight: "100%",
@@ -34,20 +34,21 @@ const Solutions = () => {
       <div
         style={{
           color: "#25307F",
-          //   fontFamily: "Open Sans Hebrew",
+          fontFamily: "Open Sans",
           fontWeight: "700",
           fontSize: "45px",
           lineHeight: "100%",
           letterSpacing: "0%",
           display: "flex",
           justifyContent: "center",
+          marginTop: "1rem",
         }}
       >
         Hospital Software
       </div>
       <div
         style={{
-          marginTop: "6.5rem",
+          marginTop: "5rem",
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
           gap: "4rem",
@@ -74,7 +75,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#000000",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "700",
               fontSize: "24px",
               lineHeight: "100%",
@@ -86,7 +87,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#555555B8",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "400",
               fontSize: "16px",
               lineHeight: "100%",
@@ -120,7 +121,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#000000",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "700",
               fontSize: "24px",
               lineHeight: "100%",
@@ -132,7 +133,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#555555B8",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "400",
               fontSize: "16px",
               lineHeight: "100%",
@@ -165,7 +166,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#000000",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "700",
               fontSize: "24px",
               lineHeight: "100%",
@@ -177,7 +178,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#555555B8",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "400",
               fontSize: "16px",
               lineHeight: "100%",
@@ -211,7 +212,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#000000",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "700",
               fontSize: "24px",
               lineHeight: "100%",
@@ -223,7 +224,7 @@ const Solutions = () => {
           <div
             style={{
               color: "#555555B8",
-              // fontFamily: "Inter",
+              fontFamily: "Inter",
               fontWeight: "400",
               fontSize: "16px",
               lineHeight: "100%",
@@ -241,7 +242,7 @@ const Solutions = () => {
           color: "#555555",
           fontFamily: "Inter",
           fontWeight: "400",
-          fontSize: "24px",
+          fontSize: "1.5rem",
           lineHeight: "100%",
           letterSpacing: "0%",
           textAlign: "center",
