@@ -22,16 +22,31 @@ const logout = ({ isLogout, setIsLogout }) => {
   return (
     <div className={styles.popup_overlay}>
       <div className={styles.popup_box}>
-        <Typography variant="h6" sx={{marginTop: 2}} gutterBottom>
+        <Typography variant="h6" sx={{marginTop: 2,fontWeight:500,color:'#000000'}} gutterBottom>
           Are you sure you want to logout?
         </Typography>
-        <Box sx={{ display: 'flex' ,flexDirection: "column", marginTop: 5, gap: 2 }}>
-          <Button variant="outlined" onClick={handleClose} sx={{color:"#878787", backgroundColor: "white", borderColor: "#25037F"}}>
-          No, Keep In
-          </Button>
-          <Button variant="contained" color="error" onClick={handleClick} sx={{color:"white", backgroundColor: "#25037F"}}>
-          Yes, Log Out
-          </Button>
+        <Box sx={{ display: 'flex' ,flexDirection: "column",justifyContent:'center', marginTop: 3, gap: 2}}>
+          <div>
+              <Button variant="outlined" onClick={handleClose}
+                      sx={{color:"#878787",textTransform:'none', backgroundColor: "white", borderColor: "#25037F",
+                          width:'70%',
+                          "&:focus": {
+                              outline: "none",
+                              boxShadow: "none",
+                          },}}>
+                  No, Keep In
+              </Button>
+          </div>
+          <div>
+              <Button variant="contained" color="error" onClick={handleClick} sx={{color:"white",textTransform:'none', backgroundColor: "#25037F",
+                  width:'70%',
+                  "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                  },}}>
+                  Yes, Log Out
+              </Button>
+          </div>
         </Box>
       </div>
     </div>
