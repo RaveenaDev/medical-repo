@@ -21,6 +21,7 @@ const Base = () => {
       >
         <Navbar />
 
+
         <div
           style={{
             marginLeft: "20px",

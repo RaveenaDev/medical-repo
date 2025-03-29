@@ -43,7 +43,7 @@ const About = () => {
         <div
           style={{
             color: "#555555B8",
-            fontFamily: "Inter",
+            // fontFamily: "Inter",
             fontWeight: "400",
             fontSize: "1.75rem",
             lineHeight: "100%",
