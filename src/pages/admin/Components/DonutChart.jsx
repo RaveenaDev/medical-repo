@@ -8,7 +8,7 @@ const DonutChart = () => {
             chart: {
                 type: 'donut',
             },
-            labels: ['Cardiology', 'Dentistry', 'Orthopedic', 'Pulmonology', 'Gynecology'], // Labels for each section of the donut
+            labels: ["Cardiology", "Dentistry", "Orthopedic", "Pulmonology", "Gynecology"], // Add meaningful labels
             colors: ["#F14400", "#2E823B", "#5461BE", "#66A7B4", "#EAA000"], // Custom colors
             responsive: [
                 {
@@ -17,40 +17,48 @@ const DonutChart = () => {
                         chart: {
                             width: 200
                         },
-                        // legend: {
-                        //     position: 'bottom'
-                        // }
                     }
                 }
             ],
             legend: {
-                position: 'top', // Position of the legend
-                horizontalAlign: 'center', // Horizontal alignment
-                // labels: {
-                //     colors: '#25307F', // Change legend label color
-                // },
+                show: true, // Enable legend
+                position: "top", // Position: 'top', 'right', 'bottom', 'left'
+                fontSize: "10px",
+                labels: {
+                    colors: "#333", // Legend text color
+                    useSeriesColors: false, // Use the same colors as the chart series
+                }
             },
             plotOptions: {
                 pie: {
                     donut: {
-                        size: '60%', // Adjust the size of the donut hole
+                        size: '70%', // Adjust the size of the donut hole
                     }
                 }
             },
             tooltip: {
                 enabled: false, // Disable tooltip
             },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return Math.round(val) + "%"; // Ensures whole numbers without decimals
+                },
+                style: {
+                    fontSize: "12px",
+                },
+            },
         },
     });
 
     return (
-        <div style={{height:'18.1rem'}}>
+        <div style={{ height: "18.1rem" }}>
             <div id="chart">
                 <ReactApexChart
                     options={state.options}
                     series={state.series}
                     type="donut"
-                    height={300} // Adjust the height of the chart
+                    height={250} // Adjust the height of the chart
                 />
             </div>
         </div>

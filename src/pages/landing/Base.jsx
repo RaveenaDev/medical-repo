@@ -80,7 +80,7 @@ const Base = () => {
           }}
         >
           <svg
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer"}}
             width="95"
             height="67"
             viewBox="131 290 144 97"
