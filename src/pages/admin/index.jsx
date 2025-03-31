@@ -42,15 +42,14 @@ function Admin(props) {
   const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
   const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
 
-    // console.log("A",data)
+  // console.log("A",data)
 
-    const newData = data.map(dat => ({
-        ...dat, // Spread existing properties
-        name: dat.name.slice(0, 3) // Modify name field
-    }));
+  const newData = data.map((dat) => ({
+    ...dat, // Spread existing properties
+    name: dat.name.slice(0, 3), // Modify name field
+  }));
 
-    // console.log(newData);
-
+  // console.log(newData);
 
   const areaData = [
     {
@@ -234,9 +233,9 @@ function Admin(props) {
                 width: "95%",
                 backgroundColor: "#25307F",
                 // px: 3,
-                  paddingLeft: 2,
-                  marginLeft:1,
-                  paddingRight: 4.5,
+                paddingLeft: 1,
+                marginLeft: 1,
+                paddingRight: 4.5,
                 py: 2,
                 borderRadius: "0.4rem",
               }}
@@ -328,22 +327,22 @@ function Admin(props) {
                       value={selectedFilter} // Use selected value
                       onChange={(e) => setSelectedFilter(e.target.value)} // Update selected value
                       style={{ width: "100%" }} // Ensure dropdown fills the container
-                        IconComponent={KeyboardArrowDownIcon}
+                      IconComponent={KeyboardArrowDownIcon}
                       sx={{
-                          paddingX: 1,
-                          height: "35px",
-                          "& .MuiSelect-icon": {
-                              color: "#25307F", // Change the color of the arrow icon
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                              border: "none", // Remove the border
-                          },
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                              border: "none", // Remove border on hover
-                          },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              border: "none", // Remove border when focused
-                          },
+                        paddingX: 1,
+                        height: "35px",
+                        "& .MuiSelect-icon": {
+                          color: "#25307F", // Change the color of the arrow icon
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Remove the border
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Remove border on hover
+                        },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Remove border when focused
+                        },
                       }}
                     >
                       {filterOptions.map((option) => (
@@ -371,16 +370,19 @@ function Admin(props) {
                   }}
                 >
                   <CartesianGrid vertical={false} />
-                  <XAxis dataKey="name" tick={{ fill: "#fff",fontSize: 14 }}
-                         tickLine={false} // Removes the dash/tick marks from Y-axis
-                         tickMargin={10}
-                         axisLine={{ stroke: "#fff" }}
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fill: "#fff", fontSize: 14 }}
+                    tickLine={false} // Removes the dash/tick marks from Y-axis
+                    tickMargin={10}
+                    axisLine={{ stroke: "#fff" }}
                   />
-                  <YAxis tick={{ fill: "#fff",fontSize: 12 }}
-                         axisLine={false} // Removes the Y-axis line
-                         tickMargin={10} // Adds spacing between the Y-axis ticks and bars
-                         dx={-5} // Moves the Y-axis labels slightly to the left for more spacing
-                         tickLine={false} // Removes the dash/tick marks from Y-axis
+                  <YAxis
+                    tick={{ fill: "#fff", fontSize: 12 }}
+                    axisLine={false} // Removes the Y-axis line
+                    tickMargin={10} // Adds spacing between the Y-axis ticks and bars
+                    dx={-5} // Moves the Y-axis labels slightly to the left for more spacing
+                    tickLine={false} // Removes the dash/tick marks from Y-axis
                   />
                   {/* Customize the Tooltip */}
                   <Tooltip
@@ -459,34 +461,58 @@ function Admin(props) {
 
                 {/* Add spacing before the graph */}
                 <Box sx={{ marginLeft: "1.8rem" }}>
-                    <ResponsiveContainer width="100%" height={280}>
-                        <AreaChart
-                            data={areaData}
-                            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                        >
-                            {/* X & Y Axes */}
-                            <XAxis dataKey="name" hide />
-                            <YAxis
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 12, fill: '#000000' }}
-                                tickCount={6}
-                            />
+                  <ResponsiveContainer width="95%" height={280}>
+                    <AreaChart
+                      data={areaData}
+                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                    >
+                      {/* X & Y Axes */}
+                      <XAxis dataKey="name" hide />
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: "#000000" }}
+                        tickCount={6}
+                      />
 
-                            {/* Tooltip */}
-                            <Tooltip />
+                      {/* Tooltip */}
+                      <Tooltip />
 
-                            {/* Area Graphs */}
-                            <Area type="monotone" dataKey="uv" stroke="none" fill="#D7DCFF" />
-                            <Area type="monotone" dataKey="pv" stroke="none" fill="#7A8AFF" />
-                            <Area type="monotone" dataKey="amt" stroke="none" fill="#25307F" />
-                            <Area type="monotone" dataKey="ayu" stroke="none" fill="#1F2659" />
+                      {/* Area Graphs */}
+                      <Area
+                        type="monotone"
+                        dataKey="uv"
+                        stroke="none"
+                        fill="#D7DCFF"
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="pv"
+                        stroke="none"
+                        fill="#7A8AFF"
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="amt"
+                        stroke="none"
+                        fill="#25307F"
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="ayu"
+                        stroke="none"
+                        fill="#1F2659"
+                      />
 
-                            {/* Move Grid Here to Appear Above */}
-                            <CartesianGrid horizontal vertical={false} stroke="#D7DCFF" strokeWidth={0.5} />
-                        </AreaChart>
-                    </ResponsiveContainer>
-
+                      {/* Move Grid Here to Appear Above */}
+                      <CartesianGrid
+                        horizontal
+                        vertical={false}
+                        stroke="#D7DCFF"
+                        strokeWidth={0.5}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </Box>
               </Box>
             </Grid>
