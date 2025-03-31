@@ -45,7 +45,7 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
     const startDate = selectedDate.startOf("day").toISOString();
     const endDate = selectedDate.endOf("day").toISOString();
 
-    dispatch(getAppointments("Scheduled", startDate, endDate));
+    dispatch(getAppointments("Ongoing", startDate, endDate));
     dispatch(getAppointmentRequests());
     dispatch(getRejectedAppointments());
     dispatch(getPatients());
