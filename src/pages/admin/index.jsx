@@ -18,6 +18,7 @@ import DonutChart from "./Components/DonutChart.jsx";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAppointmentCounts } from "../../components/State/Admin/Action.js";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 function Admin(props) {
   const [selectedFilter, setSelectedFilter] = useState("Monthly"); // Keep track of selected option
@@ -54,86 +55,86 @@ function Admin(props) {
   const areaData = [
     {
       name: "Jan",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
+      uv: 8000,
+      pv: 7400,
+      amt: 2800,
       ayu: 2200,
     },
     {
       name: "Feb",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
+      uv: 8000,
+      pv: 6398,
+      amt: 5810,
       ayu: 2100,
     },
     {
       name: "Mar",
-      uv: 5000,
+      uv: 9000,
       pv: 7800,
-      amt: 2290,
+      amt: 4290,
       ayu: 2400,
     },
     {
       name: "Apr",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
+      uv: 8780,
+      pv: 7908,
+      amt: 4000,
       ayu: 1200,
     },
     {
       name: "May",
-      uv: 4890,
-      pv: 4800,
-      amt: 2181,
+      uv: 7890,
+      pv: 6800,
+      amt: 4181,
       ayu: 3200,
     },
     {
       name: "Jun",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
+      uv: 8390,
+      pv: 6800,
+      amt: 5000,
       ayu: 2600,
     },
     {
       name: "Jul",
-      uv: 5490,
-      pv: 4300,
-      amt: 2100,
+      uv: 8490,
+      pv: 7300,
+      amt: 4000,
       ayu: 2500,
     },
     {
       name: "Aug",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      uv: 9490,
+      pv: 6300,
+      amt: 4100,
       ayu: 2300,
     },
     {
       name: "Sep",
-      uv: 5490,
-      pv: 4300,
-      amt: 2100,
+      uv: 8490,
+      pv: 6300,
+      amt: 3700,
       ayu: 2100,
     },
     {
       name: "Oct",
-      uv: 2490,
-      pv: 4300,
-      amt: 2100,
+      uv: 7490,
+      pv: 6300,
+      amt: 3100,
       ayu: 1800,
     },
     {
       name: "Nov",
-      uv: 3490,
-      pv: 4300,
+      uv: 8490,
+      pv: 5300,
       amt: 2100,
       ayu: 1200,
     },
     {
       name: "Dec",
-      uv: 6490,
-      pv: 4300,
-      amt: 2100,
+      uv: 8490,
+      pv: 5300,
+      amt: 4100,
       ayu: 3200,
     },
   ];
@@ -232,7 +233,10 @@ function Admin(props) {
               sx={{
                 width: "95%",
                 backgroundColor: "#25307F",
-                px: 3,
+                // px: 3,
+                  paddingLeft: 2,
+                  marginLeft:1,
+                  paddingRight: 4.5,
                 py: 2,
                 borderRadius: "0.4rem",
               }}
@@ -261,8 +265,8 @@ function Admin(props) {
                   >
                     <Box
                       sx={{
-                        width: 10,
-                        height: 10,
+                        width: 12,
+                        height: 12,
                         borderRadius: "50%",
                         backgroundColor: "#ACDDE7",
                       }}
@@ -278,8 +282,8 @@ function Admin(props) {
                   >
                     <Box
                       sx={{
-                        width: 10,
-                        height: 10,
+                        width: 12,
+                        height: 12,
                         borderRadius: "50%",
                         backgroundColor: "#3DB461",
                       }}
@@ -295,8 +299,8 @@ function Admin(props) {
                   >
                     <Box
                       sx={{
-                        width: 10,
-                        height: 10,
+                        width: 12,
+                        height: 12,
                         borderRadius: "50%",
                         backgroundColor: "#EAA000",
                       }}
@@ -324,6 +328,23 @@ function Admin(props) {
                       value={selectedFilter} // Use selected value
                       onChange={(e) => setSelectedFilter(e.target.value)} // Update selected value
                       style={{ width: "100%" }} // Ensure dropdown fills the container
+                        IconComponent={KeyboardArrowDownIcon}
+                      sx={{
+                          paddingX: 1,
+                          height: "35px",
+                          "& .MuiSelect-icon": {
+                              color: "#25307F", // Change the color of the arrow icon
+                          },
+                          "& .MuiOutlinedInput-notchedOutline": {
+                              border: "none", // Remove the border
+                          },
+                          "&:hover .MuiOutlinedInput-notchedOutline": {
+                              border: "none", // Remove border on hover
+                          },
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              border: "none", // Remove border when focused
+                          },
+                      }}
                     >
                       {filterOptions.map((option) => (
                         <MenuItem key={option} value={option}>
@@ -350,8 +371,17 @@ function Admin(props) {
                   }}
                 >
                   <CartesianGrid vertical={false} />
-                  <XAxis dataKey="name" tick={{ fill: "#fff" }} />
-                  <YAxis tick={{ fill: "#fff" }} />
+                  <XAxis dataKey="name" tick={{ fill: "#fff",fontSize: 14 }}
+                         tickLine={false} // Removes the dash/tick marks from Y-axis
+                         tickMargin={10}
+                         axisLine={{ stroke: "#fff" }}
+                  />
+                  <YAxis tick={{ fill: "#fff",fontSize: 12 }}
+                         axisLine={false} // Removes the Y-axis line
+                         tickMargin={10} // Adds spacing between the Y-axis ticks and bars
+                         dx={-5} // Moves the Y-axis labels slightly to the left for more spacing
+                         tickLine={false} // Removes the dash/tick marks from Y-axis
+                  />
                   {/* Customize the Tooltip */}
                   <Tooltip
                     cursor={{ fill: "transparent" }}
@@ -368,7 +398,7 @@ function Admin(props) {
                       dataKey="total"
                       fill="#ACDDE7"
                       radius={[10, 10, 0, 0]}
-                      barSize={15}
+                      barSize={10}
                     />
                   )}
                   {visibleBars.completed && (
@@ -376,7 +406,7 @@ function Admin(props) {
                       dataKey="completed"
                       fill="#3DB461"
                       radius={[10, 10, 0, 0]}
-                      barSize={15}
+                      barSize={10}
                     />
                   )}
                   {visibleBars.canceled && (
@@ -384,7 +414,7 @@ function Admin(props) {
                       dataKey="cancelled"
                       fill="#EAA000"
                       radius={[10, 10, 0, 0]}
-                      barSize={15}
+                      barSize={10}
                     />
                   )}
                 </BarChart>
@@ -429,54 +459,34 @@ function Admin(props) {
 
                 {/* Add spacing before the graph */}
                 <Box sx={{ marginLeft: "1.8rem" }}>
-                  <ResponsiveContainer width="100%" height={280}>
-                    <AreaChart
-                      width={500}
-                      height={100}
-                      data={areaData}
-                      margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                      }}
-                    >
-                      {/*<CartesianGrid strokeDasharray="3 3" />*/}
-                      <CartesianGrid horizontal={true} vertical={false} />{" "}
-                      {/* Horizontal lines only */}
-                      <XAxis dataKey="name" hide />
-                      <YAxis
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fontSize: 14 }}
-                      />
-                      <Tooltip />
-                      <Area
-                        type="monotone"
-                        dataKey="uv"
-                        stroke="#8884d8"
-                        fill="#444FA2"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="pv"
-                        stroke="#8884d8"
-                        fill="#2765CA"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="amt"
-                        stroke="#8884d8"
-                        fill="#7A8AFF"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="ayu"
-                        stroke="#8884d8"
-                        fill="#D7DCFF"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                    <ResponsiveContainer width="100%" height={280}>
+                        <AreaChart
+                            data={areaData}
+                            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                        >
+                            {/* X & Y Axes */}
+                            <XAxis dataKey="name" hide />
+                            <YAxis
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fontSize: 12, fill: '#000000' }}
+                                tickCount={6}
+                            />
+
+                            {/* Tooltip */}
+                            <Tooltip />
+
+                            {/* Area Graphs */}
+                            <Area type="monotone" dataKey="uv" stroke="none" fill="#D7DCFF" />
+                            <Area type="monotone" dataKey="pv" stroke="none" fill="#7A8AFF" />
+                            <Area type="monotone" dataKey="amt" stroke="none" fill="#25307F" />
+                            <Area type="monotone" dataKey="ayu" stroke="none" fill="#1F2659" />
+
+                            {/* Move Grid Here to Appear Above */}
+                            <CartesianGrid horizontal vertical={false} stroke="#D7DCFF" strokeWidth={0.5} />
+                        </AreaChart>
+                    </ResponsiveContainer>
+
                 </Box>
               </Box>
             </Grid>

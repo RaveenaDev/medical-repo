@@ -307,6 +307,7 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                       width: "9rem",
                       height: "2.4rem",
                       padding: "6px 14px",
+                      color:'white',
                       display: "flex",
                       flexDirection: "row-reverse",
                       gap: "8px",
