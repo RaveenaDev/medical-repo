@@ -198,12 +198,39 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                     value={selectedDate || internalSelectedDate}
                     onChange={handleDateChange}
                     format="DD/MM/YYYY" // Set the date format
-                    sx={{
-                      width: "100%", // Ensure the date picker takes up 100% of the container's width
-                      fontSize: "24px", // Adjust font size inside the date picker
-                      input: {
-                        fontSize: "14px", // Adjust input field font size if needed
-                        padding: "10px", // Adjust input field padding to make it smaller
+                    slotProps={{
+                      textField: {
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
+                            },
+                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
+                            },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
+                              boxShadow: "none !important",
+                            },
+                          },
+                          "& .MuiInputBase-input": {
+                            fontSize: "14px",
+                            padding: "10px",
+                            "&:focus": {
+                              outline: "none !important",
+                            },
+                          },
+                          "& .MuiIconButton-root": {
+                            color: "#666", // Adjust icon color if needed
+                            "&:hover": {
+                              backgroundColor: "transparent !important",
+                            },
+                            "&:focus": {
+                              outline: "none !important",
+                              boxShadow: "none !important",
+                            },
+                          },
+                        },
                       },
                     }}
                   />
@@ -307,7 +334,7 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
                       width: "9rem",
                       height: "2.4rem",
                       padding: "6px 14px",
-                      color:'white',
+                      color: "white",
                       display: "flex",
                       flexDirection: "row-reverse",
                       gap: "8px",
