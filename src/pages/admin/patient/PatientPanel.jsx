@@ -91,14 +91,6 @@ const PatientPanel = (props) => {
     handleMenuClose();
   };
 
-  // Handle Delete Action
-  const handleDelete = () => {
-    setPatients((prev) =>
-      prev.filter((patient) => patient.id !== selectedPatient.id)
-    );
-    handleMenuClose();
-  };
-
   // Handle Filter Changes
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -432,12 +424,6 @@ const PatientPanel = (props) => {
                 <EditIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Edit</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleDelete}>
-              <ListItemIcon>
-                <DeleteIcon fontSize="small" color="error" />
-              </ListItemIcon>
-              <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
             </MenuItem>
           </Menu>
 
