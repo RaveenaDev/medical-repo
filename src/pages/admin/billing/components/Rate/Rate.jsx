@@ -2,10 +2,16 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Chip, Drawer, FormControl, FormControlLabel, FormLabel,
+  Chip,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   IconButton,
   Menu,
-  MenuItem, Radio, RadioGroup,
+  MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   Typography,
 } from "@mui/material";
@@ -130,7 +136,7 @@ const Rate = () => {
           borderTop: "0.5px solid #4A4A4A8C",
           borderBottom: "0.5px solid #4A4A4A8C",
           paddingY: 2,
-          marginBottom: 3,
+          marginBottom: 1,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -238,26 +244,25 @@ const Rate = () => {
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
-                startIcon={<FilterAltIcon sx={{color:"#878787"}}/>}
-                sx={{
-                  textTransform: "none",
-                  padding: "6px 20px",
+              startIcon={<FilterAltIcon sx={{ color: "#878787" }} />}
+              sx={{
+                textTransform: "none",
+                padding: "6px 20px",
+                backgroundColor: "white",
+                borderRadius: "5px",
+                fontSize: "16px",
+                color: "#4A4A4A",
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
                   backgroundColor: "white",
-                  borderRadius: "5px",
-                  fontSize: "16px",
-                  color: "#4A4A4A",
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                    backgroundColor: "white",
-                  },
-                }}
-                onClick={() => setFilterDrawerOpen(true)}
+                },
+              }}
+              onClick={() => setFilterDrawerOpen(true)}
             >
               Filter
             </Button>
           </Box>
-
         </Box>
       </Box>
       <div className="rate-table">
@@ -461,38 +466,38 @@ const Rate = () => {
 
       {/* Filter Drawer */}
       <Drawer
-          anchor="right"
-          open={filterDrawerOpen}
-          onClose={() => setFilterDrawerOpen(false)}
-          sx={{
-            "& .MuiDrawer-paper": {
-              height: "45vh", // Adjust height as needed
-              top: "25vh", // Center it vertically
-              borderRadius: "10px 0 0 10px", // Optional rounded corners
-            },
-          }}
+        anchor="right"
+        open={filterDrawerOpen}
+        onClose={() => setFilterDrawerOpen(false)}
+        sx={{
+          "& .MuiDrawer-paper": {
+            height: "45vh", // Adjust height as needed
+            top: "25vh", // Center it vertically
+            borderRadius: "10px 0 0 10px", // Optional rounded corners
+          },
+        }}
       >
         <Box sx={{ width: 220, padding: 2, paddingLeft: 4 }}>
           <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 1,
-              }}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 1,
+            }}
           >
             <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
               Filter By
             </Typography>
             <IconButton
-                sx={{
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                  color: "black",
-                }}
-                onClick={() => setFilterDrawerOpen(false)}
+              sx={{
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
+                color: "black",
+              }}
+              onClick={() => setFilterDrawerOpen(false)}
             >
               <CloseIcon />
             </IconButton>
@@ -500,86 +505,86 @@ const Rate = () => {
 
           {/* Filter Options */}
           <FormControl
-              sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
-              component="fieldset"
+            sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
+            component="fieldset"
           >
             <FormLabel
-                component="legend"
-                sx={{
-                  marginBottom: 1,
-                  color: "#000000",
-                  "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
-                }}
+              component="legend"
+              sx={{
+                marginBottom: 1,
+                color: "#000000",
+                "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+              }}
             >
               Category
             </FormLabel>
             <RadioGroup
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
             >
               <FormControlLabel
-                  value="consultation"
-                  control={
-                    <Radio
-                        sx={{
-                          color: "#878787", // Default color
-                          "&.Mui-checked": {
-                            color: "#25307F", // Selected dot color
-                          },
-                        }}
-                    />
-                  }
-                  label="Consultation"
-                  sx={{ height: "34px", color: "#878787" }}
+                value="consultation"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="Consultation"
+                sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
-                  value="roomCharges"
-                  control={
-                    <Radio
-                        sx={{
-                          color: "#878787", // Default color
-                          "&.Mui-checked": {
-                            color: "#25307F", // Selected dot color
-                          },
-                        }}
-                    />
-                  }
-                  label="Room Charges"
-                  sx={{ height: "34px", color: "#878787" }}
+                value="roomCharges"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="Room Charges"
+                sx={{ height: "34px", color: "#878787" }}
               />
               <FormControlLabel
-                  value="company"
-                  control={
-                    <Radio
-                        sx={{
-                          color: "#878787", // Default color
-                          "&.Mui-checked": {
-                            color: "#25307F", // Selected dot color
-                          },
-                        }}
-                    />
-                  }
-                  label="Company"
-                  sx={{ height: "34px", color: "#878787" }}
+                value="company"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="Company"
+                sx={{ height: "34px", color: "#878787" }}
               />
             </RadioGroup>
           </FormControl>
 
           <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#25307F",
-                textTransform: "none", // Prevents uppercase transformation
-                borderRadius: "16px",
-                padding: "6px 35px",
-                marginLeft: "1.5rem",
-                "&:focus": {
-                  outline: "none",
-                  boxShadow: "none",
-                },
-              }}
-              onClick={handleSearchResults}
+            variant="contained"
+            sx={{
+              backgroundColor: "#25307F",
+              textTransform: "none", // Prevents uppercase transformation
+              borderRadius: "16px",
+              padding: "6px 35px",
+              marginLeft: "1.5rem",
+              "&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
+            }}
+            onClick={handleSearchResults}
           >
             Search Results
           </Button>
