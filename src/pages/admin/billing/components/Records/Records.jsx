@@ -94,8 +94,8 @@ const Records = () => {
             alignItems: "center",
             borderTop: "0.5px solid #4A4A4A8C",
             borderBottom: "0.5px solid #4A4A4A8C",
-            paddingY: 2,
-            marginBottom: 3,
+            paddingY: 1.5,
+            marginBottom: 1,
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -129,7 +129,15 @@ const Records = () => {
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography
                 variant="body1"
-                sx={{ marginRight: 1, color: "black" }}
+                sx={{
+                  marginRight: 1,
+                  color: "#0B0B0B",
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "1.25rem",
+                  lineHeight: " 100%",
+                  letterSpacing: " 0%",
+                }}
               >
                 Sort by:
               </Typography>
@@ -142,6 +150,13 @@ const Records = () => {
                   background: "#fff",
                   boxShadow: "0px 4px 4px 0px #BDBDBD1C",
                   border: "1px solid transparent",
+                  outline: "none",
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "inherit", // Removes hover effect
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent", // Hides the border
+                  },
                 }}
               >
                 <MenuItem
@@ -216,13 +231,21 @@ const Records = () => {
                 <Button
                   onClick={() => handleViewClick(item._id)}
                   className="view-btn"
+                  sx={{
+                    outline: "none", // Removes focus outline
+                    boxShadow: "none", // Removes MUI focus shadow
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
+                    "&:active": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
+                  }}
                 >
                   View
                 </Button>
-
-                <IconButton className="menu-btn">
-                  <MoreVertIcon />
-                </IconButton>
               </div>
             ))
           ) : (
