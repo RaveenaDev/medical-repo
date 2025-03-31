@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import "./Records.scss";
 import {
-  Box,
-  Button,
-  Chip,
-  IconButton,
-  Menu,
-  MenuItem,
-  Select,
-  Typography,
+    Box,
+    Button,
+    Drawer, FormControl, FormControlLabel, FormLabel,
+    IconButton,
+    Menu,
+    MenuItem, Radio, RadioGroup,
+    Select,
+    Typography,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
 import RecordModal from "./components/RecordsModal.jsx";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getBillDetails,
-  getBillingRecords,
+    getBillDetails,
+    getBillingRecords, getFilteredPatients,
 } from "../../../../../components/State/Admin/Action.js";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Records = () => {
   const [selectedBill, setSelectedBill] = useState(null);
@@ -47,12 +49,12 @@ const Records = () => {
   const [sortOrder, setSortOrder] = useState("Monthly");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const filterOptions = [
-    "Patient",
-    "Company",
-    "Pharmacy",
-    "Research Collaboration",
-  ];
+
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+
+  const [filters, setFilters] = useState({
+    category: "",
+  });
   // Handle Sort Change
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
@@ -69,6 +71,17 @@ const Records = () => {
     setSelectedFilter(option);
     handleClose();
   };
+
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+    // Handle Search Results
+    const handleSearchResults = () => {
+        // dispatch(getFilteredPatients(filters));
+        setFilterDrawerOpen(false);
+    };
 
   return (
     <div className="billing-container">
@@ -163,38 +176,26 @@ const Records = () => {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* Filter Button with Dropdown */}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
-              variant="outlined"
-              startIcon={<FilterAltOutlinedIcon />}
-              sx={{ textTransform: "none" }}
-              onClick={handleOpen}
+                startIcon={<FilterAltIcon sx={{color:"#878787"}}/>}
+                sx={{
+                  textTransform: "none",
+                  padding: "6px 20px",
+                  backgroundColor: "white",
+                  borderRadius: "5px",
+                  fontSize: "16px",
+                  color: "#4A4A4A",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                    backgroundColor: "white",
+                  },
+                }}
+                onClick={() => setFilterDrawerOpen(true)}
             >
-              {selectedFilter ? `Filter: ${selectedFilter}` : "Filter"}
+              Filter
             </Button>
-
-            {/* Dropdown Menu */}
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              {filterOptions.map((option) => (
-                <MenuItem key={option} onClick={() => handleSelect(option)}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Menu>
-
-            {/* Selected Filter Chip */}
-            {selectedFilter && (
-              <Chip
-                label={selectedFilter}
-                onDelete={() => setSelectedFilter("")}
-                sx={{ bgcolor: "#e0e0e0" }}
-              />
-            )}
           </Box>
         </Box>
       </div>
@@ -268,6 +269,148 @@ const Records = () => {
         bill={selectedBill}
         onClose={handleCloseModal}
       />
+
+        {/* Filter Drawer */}
+        <Drawer
+            anchor="right"
+            open={filterDrawerOpen}
+            onClose={() => setFilterDrawerOpen(false)}
+            sx={{
+                "& .MuiDrawer-paper": {
+                    height: "48vh", // Adjust height as needed
+                    top: "20vh", // Center it vertically
+                    borderRadius: "10px 0 0 10px", // Optional rounded corners
+                },
+            }}
+        >
+            <Box sx={{ width: 220, padding: 2, paddingLeft: 4 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: 1,
+                    }}
+                >
+                    <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
+                        Filter By
+                    </Typography>
+                    <IconButton
+                        sx={{
+                            "&:focus": {
+                                outline: "none",
+                                boxShadow: "none",
+                            },
+                            color: "black",
+                        }}
+                        onClick={() => setFilterDrawerOpen(false)}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+
+                {/* Filter Options */}
+                <FormControl
+                    sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
+                    component="fieldset"
+                >
+                    <FormLabel
+                        component="legend"
+                        sx={{
+                            marginBottom: 1,
+                            color: "#000000",
+                            "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                        }}
+                    >
+                        Category
+                    </FormLabel>
+                    <RadioGroup
+                        name="status"
+                        value={filters.status}
+                        onChange={handleFilterChange}
+                    >
+                        <FormControlLabel
+                            value="patient"
+                            control={
+                                <Radio
+                                    sx={{
+                                        color: "#878787", // Default color
+                                        "&.Mui-checked": {
+                                            color: "#25307F", // Selected dot color
+                                        },
+                                    }}
+                                />
+                            }
+                            label="Patient"
+                            sx={{ height: "34px", color: "#878787" }}
+                        />
+                        <FormControlLabel
+                            value="company"
+                            control={
+                                <Radio
+                                    sx={{
+                                        color: "#878787", // Default color
+                                        "&.Mui-checked": {
+                                            color: "#25307F", // Selected dot color
+                                        },
+                                    }}
+                                />
+                            }
+                            label="Company"
+                            sx={{ height: "34px", color: "#878787" }}
+                        />
+                        <FormControlLabel
+                            value="pharmacy"
+                            control={
+                                <Radio
+                                    sx={{
+                                        color: "#878787", // Default color
+                                        "&.Mui-checked": {
+                                            color: "#25307F", // Selected dot color
+                                        },
+                                    }}
+                                />
+                            }
+                            label="Pharmacy"
+                            sx={{ height: "34px", color: "#878787" }}
+                        />
+                        <FormControlLabel
+                            value="researchCollaboration"
+                            control={
+                                <Radio
+                                    sx={{
+                                        color: "#878787", // Default color
+                                        "&.Mui-checked": {
+                                            color: "#25307F", // Selected dot color
+                                        },
+                                    }}
+                                />
+                            }
+                            label="Research Collaboration"
+                            sx={{ height: "34px", color: "#878787" }}
+                        />
+                    </RadioGroup>
+                </FormControl>
+
+                <Button
+                    variant="contained"
+                    sx={{
+                        backgroundColor: "#25307F",
+                        textTransform: "none", // Prevents uppercase transformation
+                        borderRadius: "16px",
+                        padding: "6px 35px",
+                        marginLeft: "1.5rem",
+                        "&:focus": {
+                            outline: "none",
+                            boxShadow: "none",
+                        },
+                    }}
+                    onClick={handleSearchResults}
+                >
+                    Search Results
+                </Button>
+            </Box>
+        </Drawer>
     </div>
   );
 };
