@@ -201,7 +201,15 @@ const PatientPanel = (props) => {
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
                   variant="body1"
-                  sx={{ marginRight: 1, color: "#25307F" }}
+                  sx={{
+                    marginRight: 1,
+                    color: "#25307F",
+                    fontFamily: "Inter",
+                    fontWeight: "500",
+                    fontSize: "1.25rem",
+                    lineHeight: " 100%",
+                    letterSpacing: " 0%",
+                  }}
                 >
                   Sort by:
                 </Typography>
@@ -210,10 +218,18 @@ const PatientPanel = (props) => {
                   onChange={handleSortChange}
                   size="small"
                   sx={{
-                    minWidth: 160,
+                    minWidth: 180,
                     background: "#fff",
                     color: "#4A4A4A",
                     boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                    border: "1px solid transparent",
+                    outline: "none",
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "inherit", // Removes hover effect
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "transparent", // Hides the border
+                    },
                   }}
                 >
                   <MenuItem value="Newest to Oldest">Newest to Oldest</MenuItem>

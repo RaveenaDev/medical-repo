@@ -135,7 +135,7 @@ const Rate = () => {
           alignItems: "center",
           borderTop: "0.5px solid #4A4A4A8C",
           borderBottom: "0.5px solid #4A4A4A8C",
-          paddingY: 2,
+          paddingY: 1.5,
           marginBottom: 1,
         }}
       >
@@ -167,14 +167,37 @@ const Rate = () => {
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography variant="body1" sx={{ marginRight: 1, color: "black" }}>
+            <Typography
+              variant="body1"
+              sx={{
+                marginRight: 1,
+                color: "#0B0B0B",
+                fontFamily: "Inter",
+                fontWeight: "500",
+                fontSize: "1.25rem",
+                lineHeight: " 100%",
+                letterSpacing: " 0%",
+              }}
+            >
               Sort by:
             </Typography>
             <Select
               value={sortOrder}
               onChange={handleSortChange}
               size="small"
-              sx={{ minWidth: 160, background: "#fff" }}
+              sx={{
+                minWidth: 160,
+                background: "#fff",
+                boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                border: "1px solid transparent",
+                outline: "none",
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "inherit", // Removes hover effect
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "transparent", // Hides the border
+                },
+              }}
             >
               <MenuItem
                 value="Weekly"
