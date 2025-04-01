@@ -373,6 +373,24 @@ const Expenses = (props) => {
                         "& input": {
                           padding: "12px", // Internal padding
                         },
+
+                        "& .MuiInputBase-input": {
+                          fontSize: "14px",
+                          padding: "10px",
+                          "&:focus": {
+                            outline: "none !important",
+                          },
+                        },
+                        "& .MuiIconButton-root": {
+                          color: "#666", // Adjust icon color if needed
+                          "&:hover": {
+                            backgroundColor: "transparent !important",
+                          },
+                          "&:focus": {
+                            outline: "none !important",
+                            boxShadow: "none !important",
+                          },
+                        },
                       },
                       error: !!errors.date,
                       helperText: errors.date,

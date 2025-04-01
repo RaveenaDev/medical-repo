@@ -16,6 +16,10 @@ const DepartCard = ({ department, index }) => {
   const handleClickMessage = (e) => {
     e.stopPropagation(); // Prevent navigation from firing
     // You can add further functionality here
+    window.open(
+      `mailto:${department?.departmentHead?.email}?subject=Appointment Details&body=Hello, here are your appointment details.`,
+      "_blank"
+    );
   };
 
   const handleClickContact = (e) => {
@@ -65,7 +69,8 @@ const DepartCard = ({ department, index }) => {
               componentsProps={{
                 tooltip: {
                   sx: {
-                    backgroundColor: "#25307F",
+                    backgroundColor: "rgba(37, 48, 127, 0.75)",
+
                     color: "white",
                     fontSize: "12px",
                     padding: "8px",
@@ -74,7 +79,7 @@ const DepartCard = ({ department, index }) => {
                 },
                 arrow: {
                   sx: {
-                    color: "#25307F",
+                    color: "rgba(37, 48, 127, 0.8)",
                   },
                 },
               }}
@@ -100,7 +105,7 @@ const DepartCard = ({ department, index }) => {
               componentsProps={{
                 tooltip: {
                   sx: {
-                    backgroundColor: " #2E823B",
+                    backgroundColor: "rgba(46, 130, 59, 0.75)", // 85% opacity (green)
                     color: "white",
                     fontSize: "12px",
                     padding: "8px",
@@ -109,7 +114,7 @@ const DepartCard = ({ department, index }) => {
                 },
                 arrow: {
                   sx: {
-                    color: " #2E823B",
+                    backgroundColor: "rgba(46, 130, 59, 0.75)", // 85% opacity (green)
                   },
                 },
               }}
