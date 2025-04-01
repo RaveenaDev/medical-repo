@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Navbar from "./components/Navbar.jsx";
 import background from "../../assets/image 7.png";
 import play from "../landing/assets/Frame 1.png";
@@ -8,7 +8,10 @@ import About from "./components/About/About.jsx";
 import { Services } from "./components/services/Services.jsx";
 import Footer from "./components/footer/footer.jsx";
 
-const Base = () => {
+const Base = (props) => {
+    useEffect(() => {
+        props?.setIsSignUpOrLogin(true);
+    }, []);
   return (
     <>
       <div

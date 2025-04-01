@@ -115,7 +115,7 @@ function App() {
 
         {location.pathname === "/" ? (
           <Routes>
-            <Route path="/" element={<Base />} />
+            <Route path="/" element={<Base setIsSignUpOrLogin={setIsSignUpOrLogin}/>} />
           </Routes>
         ) : (
           <div
