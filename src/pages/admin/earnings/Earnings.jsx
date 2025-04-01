@@ -4,7 +4,7 @@ import { Box, Grid } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   Area,
-  AreaChart,
+  AreaChart, CartesianGrid,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -31,86 +31,86 @@ const Earnings = (props) => {
   const areaData = [
     {
       name: "Jan",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
+      uv: 8000,
+      pv: 7400,
+      amt: 2800,
       ayu: 2200,
     },
     {
       name: "Feb",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
+      uv: 8000,
+      pv: 6398,
+      amt: 5810,
       ayu: 2100,
     },
     {
       name: "Mar",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
+      uv: 9000,
+      pv: 7800,
+      amt: 4290,
       ayu: 2400,
     },
     {
       name: "Apr",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
+      uv: 8780,
+      pv: 7908,
+      amt: 4000,
       ayu: 1200,
     },
     {
       name: "May",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
+      uv: 7890,
+      pv: 6800,
+      amt: 4181,
       ayu: 3200,
     },
     {
       name: "Jun",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
+      uv: 8390,
+      pv: 6800,
+      amt: 5000,
       ayu: 2600,
     },
     {
       name: "Jul",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      uv: 8490,
+      pv: 7300,
+      amt: 4000,
       ayu: 2500,
     },
     {
       name: "Aug",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      uv: 9490,
+      pv: 6300,
+      amt: 4100,
       ayu: 2300,
     },
     {
       name: "Sep",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      uv: 8490,
+      pv: 6300,
+      amt: 3700,
       ayu: 2100,
     },
     {
       name: "Oct",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      uv: 7490,
+      pv: 6300,
+      amt: 3100,
       ayu: 1800,
     },
     {
       name: "Nov",
-      uv: 3490,
-      pv: 4300,
+      uv: 8490,
+      pv: 5300,
       amt: 2100,
       ayu: 1200,
     },
     {
       name: "Dec",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      uv: 8490,
+      pv: 5300,
+      amt: 4100,
       ayu: 3200,
     },
   ];
@@ -138,7 +138,7 @@ const Earnings = (props) => {
     <div
       style={{
         background: "#f1f1f1",
-        height: "96dvh", // Make the entire div take up the full viewport height
+        // height: "98dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >
@@ -231,7 +231,7 @@ const Earnings = (props) => {
             sx={{
               display: "flex",
               gap: 5,
-              marginBottom: "3rem",
+              marginBottom: "1rem",
               marginRight: "2rem",
             }}
             justifyContent="flex-end"
@@ -305,55 +305,69 @@ const Earnings = (props) => {
           </Box>
 
           {/* Add spacing before the graph */}
-          <Box sx={{ marginLeft: "1.8rem" }}>
-            <ResponsiveContainer width="100%" height={300}>
+          <Box sx={{ margin: "0 1.8rem 0 1.8rem",paddingTop:'3rem',backgroundColor:'#F1F1F1'}}>
+            <ResponsiveContainer width="100%" height={330}>
               <AreaChart
                 width={500}
                 height={400}
                 data={areaData}
                 margin={{
-                  top: 10,
-                  right: 30,
+                  top: 20,
+                  right: 0,
                   left: 0,
                   bottom: 0,
                 }}
               >
-                {/*<CartesianGrid strokeDasharray="3 3" />*/}
-                <XAxis dataKey="name" />
-                <YAxis />
+                <XAxis dataKey="name"
+                       tick={{ fontSize: 14}}
+                       tickLine={false}
+                />
+                <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: "#000000" }}
+                    tickCount={6}
+                    domain={['dataMin', 'auto']} // Excludes 0
+                    tickFormatter={(value) => (value === 0 ? '' : value)} // Hides 0
+                />
                 <Tooltip />
                 {visibleGraph.inpatient && (
                   <Area
                     type="monotone"
                     dataKey="uv"
-                    stroke="#444FA2"
-                    fill="#444FA2"
+                    stroke="none"
+                    fill="#D7DCFF"
                   />
                 )}
                 {visibleGraph.outpatient && (
                   <Area
                     type="monotone"
                     dataKey="pv"
-                    stroke="#5765CA"
-                    fill="#5765CA"
+                    stroke="none"
+                    fill="#7A8AFF"
                   />
                 )}
                 {visibleGraph.surgery && (
                   <Area
                     type="monotone"
                     dataKey="amt"
-                    stroke="#7A8AFF"
-                    fill="#7A8AFF"
+                    stroke="#none"
+                    fill="#25307F"
                   />
                 )}
                 {visibleGraph.diagnostics && (
                   <Area
                     type="monotone"
                     dataKey="ayu"
-                    stroke="#D7DCFF"
-                    fill="#D7DCFF"
+                    stroke="none"
+                    fill="#1F2659"
                   />
                 )}
+
+                <CartesianGrid horizontal
+                               vertical={false}
+                               stroke="#BFC5F5"
+                               strokeWidth={0.5} />
               </AreaChart>
             </ResponsiveContainer>
           </Box>

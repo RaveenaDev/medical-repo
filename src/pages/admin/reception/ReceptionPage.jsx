@@ -473,63 +473,87 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid
-        size={3.5}
-        className={styles.container1}
-        sx={{
-          maxHeight: "calc(140vh - 190px)",
-          overflowY: "auto",
-          paddingX: "15px",
-        }}
-      >
-        <div>
-          <div className={styles.heading1} style={{ padding: "0" }}>
-            <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>
-          </div>
+        <Grid
+            size={3.5}
+            className={styles.container1}
+            sx={{
+                maxHeight: "calc(140vh - 190px)",
+                overflowY: "auto",
+                paddingX: "15px",
+            }}
+        >
+            <div>
+                <div className={styles.heading1} style={{padding: "0"}}>
+                    <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>
+                </div>
 
-          {totalAppointmentRequests.map((req, index) => (
-            <div key={index} className={styles.items}>
-              <div className={styles.circle}></div>
-              <div>
-                <h4>{req.patient.name}</h4>
-                <p>
-                  Appointment for {req.department.name},{" "}
-                  {new Date(req.tokenDate).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })}
-                </p>
-                {/*<p>Appointment for ENT, 28 September</p>*/}
-              </div>
+                {totalAppointmentRequests.map((req, index) => (
+                    <div key={index} className={styles.items}>
+                        <div className={styles.circle}></div>
+                        <div>
+                            <h4>{req.patient.name}</h4>
+                            <p>
+                                Appointment for {req.department.name},{" "}
+                                {new Date(req.tokenDate).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                })}
+                            </p>
+                            {/*<p>Appointment for ENT, 28 September</p>*/}
+                        </div>
+                    </div>
+                ))}
             </div>
-          ))}
-        </div>
 
-        <div>
-          <div className={styles.heading2}>
-            <h3>Canceled ({totalRejectedAppointments.length})</h3>
-          </div>
+            <div>
+                <div className={styles.heading2}>
+                    <h3>Canceled ({totalRejectedAppointments.length})</h3>
+                </div>
 
-          {totalRejectedAppointments.map((req, index) => (
-            <div key={index} className={styles.items}>
-              <div className={styles.circle}></div>
-              <div>
-                <h4>{req.patient.name}</h4>
-                <p>
-                  Appointment for {req.doctor.specialization},{" "}
-                  {new Date(req.dateActioned).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })}
-                </p>
-                {/*<p>Appointment for ENT, 28 September</p>*/}
-              </div>
+                {totalRejectedAppointments.map((req, index) => (
+                    <div key={index} className={styles.items}>
+                        <div className={styles.circle}></div>
+                        <div>
+                            <h4>{req.patient.name}</h4>
+                            <p>
+                                Appointment for {req.doctor.specialization},{" "}
+                                {new Date(req.dateActioned).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                })}
+                            </p>
+                            {/*<p>Appointment for ENT, 28 September</p>*/}
+                        </div>
+                    </div>
+                ))}
             </div>
-          ))}
-        </div>
-      </Grid>
+
+            <div>
+                <div className={styles.heading3}>
+                    <h3>Confirmed (4)</h3>
+                </div>
+
+                {totalRejectedAppointments.map((req, index) => (
+                    <div key={index} className={styles.items}>
+                        <div className={styles.circle}></div>
+                        <div>
+                            <h4>{req.patient.name}</h4>
+                            <p>
+                                Appointment for {req.doctor.specialization},{" "}
+                                {new Date(req.dateActioned).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                })}
+                            </p>
+                            {/*<p>Appointment for ENT, 28 September</p>*/}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </Grid>
     </Grid>
   );
 };
