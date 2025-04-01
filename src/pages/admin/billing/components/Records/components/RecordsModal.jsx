@@ -31,7 +31,7 @@ const RecordModal = ({ open, bill, onClose }) => {
       `,
     });
   };
-  if (!bill) return null;
+  if (!open || !bill) return null;
 
   return (
     <>
