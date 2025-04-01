@@ -427,7 +427,7 @@ function Admin(props) {
           {/* Bottom grid (divided into 2 horizontal blocks) */}
           <Grid container item xs={12} spacing={1}>
             {/* Left half of the bottom grid */}
-            <Grid item xs={8}>
+            <Grid item xs={7}>
               <Box
                 onClick={() => navigate(`/admin/earnings`)}
                 sx={{
@@ -460,8 +460,8 @@ function Admin(props) {
                 </div>
 
                 {/* Add spacing before the graph */}
-                <Box sx={{ marginLeft: "1.8rem" }}>
-                  <ResponsiveContainer width="95%" height={280}>
+                <Box sx={{ marginLeft: "1rem" }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <AreaChart
                       data={areaData}
                       margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -518,12 +518,12 @@ function Admin(props) {
             </Grid>
 
             {/* Right half of the bottom grid */}
-            <Grid item xs={4}>
+            <Grid item xs={5}>
               <Box
                 sx={{
                   width: "100%",
                   backgroundColor: "#fff",
-                  py: 2,
+                  py: 1,
                   borderRadius: "0.4rem",
                 }}
               >
