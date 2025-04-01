@@ -48,7 +48,7 @@ const MedicalInfo = ({
           height: "100%",
         }}
       >
-          <div>
+          <div style={{paddingLeft:'10px'}}>
               <ListSection
                   title="Medical History"
                   items={medicalHistory}
@@ -79,19 +79,20 @@ const MedicalInfo = ({
               {showButton && ( // Conditionally render the button
                   <Button
                       variant="outlined"
-                      endIcon={<ArrowForwardIosIcon sx={{backgroundColor:'white',borderRadius:'50%',padding:'1px',color:'#25307F'}}/>}
+                      endIcon={<ArrowForwardIosIcon sx={{backgroundColor:'white',borderRadius:'50%',padding:'4px',color:'#25307F'}}/>}
                       onClick={handleMoreClick}
                       sx={{
-                          padding: "5px 20px",
+                          padding: "4px 10px 3px 20px",
                           gap:"28px",
                           borderColor: "#25307F",
                           borderRadius: "20px",
                           textTransform: "none",
                           backgroundColor: "#25307F",
-                          fontSize: "14px",
+                          fontSize: "13.5px",
                           color: "#ffffff",
-                          "&:hover": {
-                              backgroundColor: "#1a1a1a",
+                          "&:focus": {
+                              outline: "none",
+                              boxShadow: "none",
                           },
                       }}
                   >

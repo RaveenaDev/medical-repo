@@ -86,7 +86,7 @@ const PatientDetails = (props) => {
                 justifyContent: "space-between",
                 gap: "20px",
                 padding: "5px 0",
-                width: "75vw",
+                width: "77.5vw",
               }}
             >
               {/* Box 1 - Profile Card */}
@@ -99,7 +99,7 @@ const PatientDetails = (props) => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      borderRadius: "10px",
+                      borderRadius: "2px",
                       boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
                       textAlign: "center",
                       color: "black",
@@ -176,6 +176,8 @@ const PatientDetails = (props) => {
                       fontWeight: "bold",
                       borderRadius: "6px",
                       cursor: "pointer",
+                        outline: 'none',
+                        boxShadow:'none',
                       transition: "all 0.3s ease",
                         "&:focus,&:active": {
                           outline: "none",
@@ -284,7 +286,7 @@ const PatientDetails = (props) => {
                   minWidth: "400px",
                   backgroundColor: "#ffffff",
                   padding: "20px",
-                  borderRadius: "10px",
+                  borderRadius: "2px",
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                 }}
               >
@@ -294,11 +296,11 @@ const PatientDetails = (props) => {
               {/* Box 3 - Medical Info */}
               <div
                 style={{
-                  width: "25%",
+                  width: "29%",
                   backgroundColor: "#ffffff",
                   height: "auto",
-                  padding: "16px 20px",
-                  borderRadius: "10px",
+                  padding: "16px 10px",
+                  borderRadius: "2px",
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                 }}
               >
@@ -318,7 +320,7 @@ const PatientDetails = (props) => {
                   backgroundColor: "#FFFFFF", // Set the background color to white
                   padding: "16px 0", // Optional padding for content spacing
                   borderRadius: "8px", // Optional rounded corners
-                  width: "75vw", // Optional
+                  width: "77.5vw", // Optional
                 }}
               >
                 <div style={{ paddingLeft: "38px" }}>

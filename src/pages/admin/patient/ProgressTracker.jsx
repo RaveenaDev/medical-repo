@@ -66,14 +66,18 @@ const ProgressTracker = ({ patient }) => {
       justifyContent="center"
       alignItems="start"
     >
-      <Timeline position="left" style={{ marginTop: "42px", paddingRight: "0", marginLeft: "12px" }}>
+      <Timeline position="left" style={{ marginTop: "3.8rem", paddingRight: "0", marginLeft: "12px" }}>
         {steps.map((step, index) => (
           <TimelineItem key={index} style={{ padding: 0, margin: 0 }}>
             <TimelineSeparator style={{ padding: 0, margin: 0 }}>
               <TimelineDot
                   sx={{
+                    margin: 0,
                     backgroundColor: step.status === "Ongoing" ? "#2E823B" : "#EAA000",
                     borderColor: step.status === "Ongoing" ? "#2E823B" : "#EAAA000",
+                    boxShadow: step.status === "Ongoing"
+                        ? "0px 0px 1px 4px rgba(46, 130, 59, 0.3)" // Green glow
+                        : "none", // Orange glow
                   }}
               />
               {index < steps.length - 1 && <TimelineConnector sx={{ height: "100%" }}/>}
@@ -87,20 +91,17 @@ const ProgressTracker = ({ patient }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{color:'#878787',paddingLeft:"44px"}}>
-                <Typography variant="h6">Phase</Typography>
+              <TableCell align='center' sx={{color:'#878787'}}>
+                <Typography sx={{fontSize:'17px'}} variant="h6">Phase</Typography>
               </TableCell>
-              <TableCell sx={{color:'#878787',paddingLeft:"40px"}}>
-                <Typography variant="h6">Date</Typography>
+              <TableCell align='center' sx={{color:'#878787'}}>
+                <Typography sx={{fontSize:'17px'}} variant="h6">Date</Typography>
               </TableCell>
-              <TableCell sx={{color:'#878787'}}>
-                <Typography variant="h6">Responsible</Typography>
+              <TableCell align='center' sx={{color:'#878787'}}>
+                <Typography sx={{fontSize:'17px'}} variant="h6">Responsible</Typography>
               </TableCell>
-              <TableCell sx={{color:'#878787'}}>
-                <Typography variant="h6">Progress</Typography>
-              </TableCell>
-              <TableCell sx={{color:'#878787',paddingLeft:"20px"}}>
-                <Typography variant="h6">Status</Typography>
+              <TableCell align='center' sx={{color:'#878787'}}>
+                <Typography sx={{fontSize:'17px'}} variant="h6">Progress</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -118,11 +119,11 @@ const ProgressTracker = ({ patient }) => {
                   transition: "background-color 0.3s",
                 }}
               >
-                <TableCell sx={{padding:"24px 12px"}}>{step.phase}</TableCell>
-                <TableCell>{step.date}</TableCell>
-                <TableCell>{step.responsible}</TableCell>
-                <TableCell>{step.progress}</TableCell>
-                <TableCell>
+                <TableCell align='center' sx={{padding:"24px 0"}}>{step.phase}</TableCell>
+                <TableCell align='center'>{step.date}</TableCell>
+                <TableCell align='center'>{step.responsible}</TableCell>
+                <TableCell align='center'>{step.progress}</TableCell>
+                <TableCell align='center'>
                   <Typography
                     style={{
                       color:
@@ -131,7 +132,7 @@ const ProgressTracker = ({ patient }) => {
                           : step.status === "Ongoing"
                           ? "#2E823B"
                           : "black",
-                      fontWeight: 500,
+                      fontWeight: 600,
                       fontSize: "14px"
                     }}
                   >
