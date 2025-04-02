@@ -1,9 +1,10 @@
-import React from 'react'
-import Logo from "../../../components/Logo/index.jsx";
+import React, {useState} from 'react'
+import Logo from "../../../../components/Logo/index.jsx";
 import {useNavigate} from "react-router-dom";
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <div style={{display: 'flex', color: 'black',alignItems:'center',justifyContent:'space-between'}}>
             <img

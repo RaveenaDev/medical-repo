@@ -1,6 +1,6 @@
 import React from 'react'
 import background from "../../../../assets/image 7.png";
-import Navbar from "../Navbar.jsx";
+import Navbar from "../navbar/Navbar.jsx";
 
 const HeroSection = () => {
     return (
@@ -13,7 +13,6 @@ const HeroSection = () => {
             }}
         >
             <Navbar/>
-
             <div
                 style={{
                     marginLeft: "20px",

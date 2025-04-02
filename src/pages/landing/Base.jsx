@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import Navbar from "./components/Navbar.jsx";
+import Navbar from "./components/navbar/Navbar.jsx";
 import background from "../../assets/image 7.png";
 import play from "../landing/assets/Frame 1.png";
 import ContactUs from "./components/ContactUs.jsx";
