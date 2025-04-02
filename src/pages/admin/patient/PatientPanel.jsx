@@ -47,7 +47,7 @@ const PatientPanel = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
-  const [sortOrder, setSortOrder] = useState("Newest to Oldest");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -58,12 +58,20 @@ const PatientPanel = (props) => {
   const [filters, setFilters] = useState({
     status: "",
     type: "",
+      sort: "desc"
   });
 
   // Handle Sort Change
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
+      setFilters({
+          ...filters,
+          sort: event.target.value
+      })
+    // console.log(event.target.value)
   };
+
+    // console.log("Sorting: ",filters)
 
   // Handle Menu Open
   const handleMenuOpen = (event, patient) => {
@@ -127,7 +135,7 @@ const PatientPanel = (props) => {
   useEffect(() => {
     // dispatch(getPatients());
     dispatch(getFilteredPatients(filters));
-  }, [dispatch]);
+  }, [dispatch,sortOrder]);
 
   const admin = useSelector((store) => store.admin);
   const noOfPatients = admin.totalFilteredPatients;
@@ -232,8 +240,8 @@ const PatientPanel = (props) => {
                     },
                   }}
                 >
-                  <MenuItem value="Newest to Oldest">Newest to Oldest</MenuItem>
-                  <MenuItem value="Oldest to Newest">Oldest to Newest</MenuItem>
+                  <MenuItem value="desc">Newest to Oldest</MenuItem>
+                  <MenuItem value="asc">Oldest to Newest</MenuItem>
                 </Select>
               </Box>
             </Box>
