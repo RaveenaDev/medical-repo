@@ -2,67 +2,16 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "./services.scss"; // Import the SCSS file
 
 const ServiceCard = ({ bgColor, icon, title, description }) => {
   return (
-    <div
-      style={{
-        background: bgColor,
-        borderRadius: "1.14rem",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "19.375rem",
-        maxWidth: "16.875rem",
-        width: "100%",
-        padding: "1rem 0.5rem",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          //   alignItems: "center",
-          gap: "0.5rem",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {icon}
-        </div>
-
-        <span
-          style={{
-            color: "#555555",
-            fontFamily: "Poppins",
-            fontWeight: "600",
-            fontSize: "1.35rem",
-            lineHeight: "150%",
-            letterSpacing: "0%",
-            textAlign: "center",
-          }}
-        >
-          {title}
-        </span>
+    <div className="service-card" style={{ background: bgColor }}>
+      <div className="service-card-header">
+        <div className="icon-wrapper">{icon}</div>
+        <span className="service-title">{title}</span>
       </div>
-      <p
-        style={{
-          marginTop: "1.875rem",
-          fontWeight: "400",
-          fontSize: "1rem",
-          lineHeight: "150%",
-          letterSpacing: "0%",
-          textAlign: "center",
-          color: "#555555",
-        }}
-      >
-        {description}
-      </p>
+      <p className="service-description">{description}</p>
     </div>
   );
 };
@@ -71,78 +20,24 @@ export const Services = () => {
   const sliderSettings = {
     infinite: false,
     speed: 300,
-    slidesToShow: 4.7, // Default: Show 4 slides
+    slidesToShow: 4.7,
     slidesToScroll: 1,
-    centerMode: false, // Prevents unwanted shifting
-    variableWidth: false, // Ensures slides are equal width
+    centerMode: false,
+    variableWidth: false,
     responsive: [
-      {
-        breakpoint: 1400, // Laptops
-        settings: {
-          slidesToShow: 3.7,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1160, // Laptops
-        settings: {
-          slidesToShow: 3.4,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1060, // Laptops
-        settings: {
-          slidesToShow: 3.1,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1000, // Tablets
-        settings: {
-          slidesToShow: 2.7,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 768, // Mobile landscape
-        settings: {
-          slidesToShow: 2.2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 576, // Mobile portrait
-        settings: {
-          slidesToShow: 1.2,
-          slidesToScroll: 1,
-        },
-      },
+      { breakpoint: 1400, settings: { slidesToShow: 3.7, slidesToScroll: 1 } },
+      { breakpoint: 1160, settings: { slidesToShow: 3.4, slidesToScroll: 1 } },
+      { breakpoint: 1060, settings: { slidesToShow: 3.1, slidesToScroll: 1 } },
+      { breakpoint: 1000, settings: { slidesToShow: 2.7, slidesToScroll: 1 } },
+      { breakpoint: 768, settings: { slidesToShow: 2.2, slidesToScroll: 1 } },
+      { breakpoint: 576, settings: { slidesToShow: 1.2, slidesToScroll: 1 } },
     ],
   };
 
   return (
-    <div style={{ marginTop: "40px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          color: "#25307F",
-          fontWeight: " 700",
-          fontSize: " 40px",
-          lineHeight: "100%",
-          letterSpacing: " 0%",
-        }}
-      >
-        We Provide The Best Service
-      </div>
-      <div
-        style={{
-          boxShadow: "0px 0px 20px 0px #5663C257",
-          padding: "50px 18px",
-          margin: "40px 28px",
-        }}
-      >
+    <div className="services-container">
+      <div className="services-title">We Provide The Best Service</div>
+      <div className="services-slider-container">
         <Slider {...sliderSettings}>
           <ServiceCard
             bgColor="#D9DDFAAB"
@@ -344,5 +239,3 @@ export const Services = () => {
     </div>
   );
 };
-
-export default Services;
