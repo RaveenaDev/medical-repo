@@ -218,36 +218,29 @@ const Expenses = (props) => {
             style={{
               display: "flex",
               flexDirection: "column",
-              width: "12rem",
+              gap: "7px",
             }}
           >
             <div style={{ paddingLeft: "0.2rem" }}>
               <p style={{ color: "#25307F" }}>Expense Type</p>
             </div>
-            <FormControl sx={{ my: 1 }}>
-              <InputLabel id="demo-simple-select-helper-label">
-                Expense Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
-                label="Expense Type"
-                name="expenseType"
-                value={expenseData.expenseType}
-                onChange={handleChange}
-                error={!!errors.expenseType}
-                sx={{
-                  height: "50px", // Adjust height
-                  "& .MuiSelect-select": {
-                    padding: 1.5, // Removes padding inside Select field
-                  },
-                }}
-              >
-                <MenuItem value="salary">Salary</MenuItem>
-                <MenuItem value="rent">Rent</MenuItem>
-                <MenuItem value="utilities">Utilities</MenuItem>
-              </Select>
-            </FormControl>
+            <TextField
+              id="outlined-basic"
+              label="Expense Type"
+              name="expenseType"
+              variant="outlined"
+              value={expenseData.expenseType}
+              onChange={handleChange}
+              error={!!errors.expenseType}
+              helperText={errors.expenseType}
+              required
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  padding: "0px", // Remove extra padding from the input wrapper
+                  height: "50px", // Ensure height is consistent
+                },
+              }}
+            />
           </div>
           <div
             style={{
