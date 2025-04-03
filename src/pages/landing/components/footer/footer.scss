@@ -24,16 +24,6 @@
       flex-direction: column;
       gap: 1rem;
 
-      .heading {
-        color: #ffffff;
-        font-family: "Poppins";
-        font-weight: 600;
-        font-size: 1.25rem;
-        line-height: 1.75rem;
-        letter-spacing: -0.22px;
-        margin-bottom: 1rem;
-      }
-
       .address {
         margin-bottom: 1.5rem;
         color: #ffffff;
@@ -88,5 +78,15 @@
         }
       }
     }
+  }
+  .heading {
+    color: #ffffff;
+    font-family: "Poppins";
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    letter-spacing: -0.22px;
+    margin-bottom: 1rem;
+    justify-content: flex-start;
   }
 }
