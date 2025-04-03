@@ -1,0 +1,51 @@
+.navbar {
+  display: flex;
+  color: black;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+}
+
+.navItems {
+  display: flex;
+  gap: 4.5rem;
+  align-items: center;
+
+  h4 {
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+  }
+}
+
+.authButtons {
+  display: flex;
+  gap: 16px;
+}
+
+.registerBtn,
+.loginBtn {
+  color: #25307f;
+  padding: 8px 28px;
+  background-color: white;
+  border-radius: 16px;
+  outline: none;
+  cursor: pointer;
+  box-shadow: none; // Prevents any default focus effect
+
+  &:focus {
+    outline: none;
+    border: none;
+    //box-shadow: none;
+  }
+
+  &:active {
+    outline: none;
+    border: none;
+    box-shadow: none;
+  }
+}

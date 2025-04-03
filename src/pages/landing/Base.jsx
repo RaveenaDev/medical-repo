@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import Navbar from "./components/navbar/Navbar.jsx";
 import background from "../../assets/image 7.png";
 import play from "../landing/assets/Frame 1.png";
-import ContactUs from "./components/ContactUs.jsx";
+import ContactUs from "./components/contact/ContactUs.jsx";
 import Solutions from "./components/solutions/Solutions.jsx";
 import About from "./components/About/About.jsx";
 import { Services } from "./components/services/Services.jsx";
