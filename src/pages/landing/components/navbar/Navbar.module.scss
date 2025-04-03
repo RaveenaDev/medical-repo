@@ -52,7 +52,10 @@
       box-shadow: none;
     }
   }
+}
 
+.fullscreenMenu{
+  display: none;
 }
 
   // Responsive styles for smaller screens
@@ -76,8 +79,18 @@
 
       .menu{
         display:block;
-        padding-top: 5px;
+        padding: 5px 5px 0 0;
+        background: none;
+        border: none;
+        outline: none; // Prevent focus outline
         cursor: pointer;
+        &:hover,
+        &:focus,
+        &:active {
+          background: none;
+          outline: none;
+          box-shadow: none;
+        }
       }
 
       .authButtons {
@@ -89,6 +102,80 @@
         padding: 5px 18px;
         border-radius: 10px;
         font-size: 14px;
+      }
+    }
+
+
+    // Full-screen blue menu
+    .fullscreenMenu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #25307F;
+      color: white;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      align-items: end;
+      justify-content: center;
+      z-index: 1000;
+
+      .footer{
+        ul{
+          list-style: none;
+          padding: 0;
+          text-align: center;
+        }
+
+        li{
+          margin: 0;
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: 300;
+        }
+
+        .bottom{
+          width:100vw;
+          margin-top: 1.4rem;
+          text-align: center;
+          padding-top: 0.5rem;
+          border-top: 0.5px solid white;
+          p{
+            color:#a1a1aa;
+            font-size: 8px;
+            font-weight: 300;
+          }
+        }
+      }
+    }
+
+    .fullscreenMenu ul {
+      list-style: none;
+      padding: 0;
+      text-align: center;
+    }
+
+    .fullscreenMenu li {
+      margin: 0;
+      color: #ffffff;
+      font-size: 1.3rem;
+      font-weight: 300;
+      cursor: pointer;
+    }
+
+    .closeMenu {
+      position: absolute;
+      top: 0.5rem;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+
+      svg{
+        width: 2rem;
+        height: 2rem;
       }
     }
   }
