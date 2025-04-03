@@ -4,75 +4,183 @@
   .services-title {
     display: flex;
     justify-content: center;
-    color: #25307f;
     font-weight: 700;
     font-size: 40px;
     line-height: 100%;
     letter-spacing: 0%;
+    color: #25307f;
   }
 
   .services-slider-container {
     box-shadow: 0px 0px 20px 0px #5663c257;
     padding: 50px 18px;
     margin: 40px 28px;
+    overflow: visible;
 
-    .slick-slider {
-      .slick-track {
-        display: flex;
-        align-items: center;
-      }
+    // .slick-slider {
+    //   .slick-track {
+    //     display: flex;
+    //     align-items: center;
+    //     overflow: visible;
+    //   }
 
-      .slick-prev,
-      .slick-next {
-        z-index: 2;
-        &:before {
-          color: #555;
-          font-size: 20px;
-        }
-      }
-    }
+    //   .slick-prev,
+    //   .slick-next {
+    //     z-index: 2;
+    //     &:before {
+    //       color: #555;
+    //       font-size: 20px;
+    //     }
+    //   }
+    // }
   }
 }
 
 .service-card {
+  background-color: #fff;
   border-radius: 1.14rem;
+  min-height: 19.375rem;
+  max-height: 20rem;
+  max-width: 17.5rem;
+  width: 100%;
+  position: relative;
+  overflow: visible;
+}
+.inner-card {
+  margin-top: 0px;
+  height: calc(19.375rem - 35px);
   text-align: center;
   display: flex;
   flex-direction: column;
-  min-height: 19.375rem;
-  max-width: 16.875rem;
+  align-items: center;
+  border-radius: 1.14rem;
+}
+
+.icon-wrapper {
+  height: 35px;
+  object-fit: cover;
+  background-color: #fff;
+  position: relative;
   width: 100%;
-  padding: 1rem 0.5rem;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .service-card-header {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
+// .icon-wrapper::before {
+//   content: "";
+//   position: absolute;
+//   left: 50%;
+//   bottom: -20px;
+//   transform: translateX(-50%); /* Ensures the icon stays centered */
+//   width: 100px; /* Slightly larger than img */
+//   height: 80px; /* Control how much it curves */
+//   background: black;
+//   border-radius: 50%;
+//   z-index: 3;
+// }
 
-    .icon-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+.icon {
+  z-index: 2; /* Ensures image is above the cutout */
+  position: absolute;
+  left: 50%;
+  bottom: -25px;
+  // transform: translateY(-50%); /* Ensures the icon stays centered */
+  transform: translateX(-50%); /* Ensures the icon stays centered */
+  // z-index: 100;
+  // box-shadow: 0px 4.92px 4.92px 0px #b1b6d733;
+  background-color: #fff;
+  // border-radius: 50%;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  width: 50px; /* Adjust width as per your icon */
+  height: 50px; /* Adjust height as per your icon */
+  border-radius: 9999px;
+  border: 5px solid white;
+}
+
+.service-title {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-size: 1.35rem;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: center;
+  height: 4rem;
+  margin-top: 2rem;
+}
+.service-description {
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #555555;
+  padding: 0 0.75rem;
+}
+
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+@media (max-width: 431px) {
+  .services-container {
+    margin-top: 40px;
+
+    .services-title {
+      font-size: 20px;
     }
 
-    .service-title {
-      color: #555555;
-      font-family: Poppins;
-      font-weight: 600;
-      font-size: 1.35rem;
-      line-height: 150%;
-      letter-spacing: 0%;
-      text-align: center;
+    .services-slider-container {
+      box-shadow: 0px 0px 20px 0px #5663c257;
+      padding: 0 13px 13px;
+      margin: 22px 0;
     }
   }
 
-  .service-description {
-    margin-top: 1.875rem;
-    font-weight: 400;
-    font-size: 1rem;
-    line-height: 150%;
-    letter-spacing: 0%;
+  .service-card {
+    border-radius: 0.75rem;
     text-align: center;
-    color: #555555;
+    min-height: 200px;
+    max-height: 200px;
+    max-width: 166px;
+    width: 100%;
+    padding: 0;
+    position: relative;
+    overflow: visible;
+  }
+  .inner-card {
+    margin-top: 0px;
+    height: calc(200px - 35px);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.75rem;
+  }
+
+  .icon {
+    width: 40px; /* Adjust width as per your icon */
+    height: 40px; /* Adjust height as per your icon */
+    border-radius: 9999px;
+    border: 2px solid white;
+
+    svg {
+      width: 40px; /* Adjust width as per your icon */
+      height: 45px; /* Adjust height as per your icon */
+    }
+  }
+
+  .service-title {
+    font-size: 11.5px;
+    margin-top: 42px;
+    height: 2.25rem;
+  }
+  .service-description {
+    margin-top: 0;
+    font-size: 8.67px;
   }
 }
