@@ -33,7 +33,7 @@ const Solutions = () => {
             desc: "Access consultation room, treatment progress, medical history, and prescriptions in one place.",
           },
         ].map((item, index) => (
-          <React.Fragment key={index}>
+          <div key={index} className="card">
             <div
               className="imageBox"
               style={{ backgroundImage: `url(${item.img})` }}
@@ -42,7 +42,7 @@ const Solutions = () => {
               <div className="textTitle">{item.title}</div>
               <div className="textDescription">{item.desc}</div>
             </div>
-          </React.Fragment>
+          </div>
         ))}
       </div>
       <div className="footerText">
