@@ -1,0 +1,83 @@
+.about-container {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 2rem;
+  margin: 1rem 4rem 0;
+}
+
+.about-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-title {
+  color: #5663c2;
+  font-family: "Inter";
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 100%;
+  margin-top: 1rem;
+}
+
+.about-heading {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-size: 2.5rem;
+  line-height: 100%;
+  color: #555555;
+  margin-top: 1.25rem;
+
+  .highlight {
+    color: #25307f;
+  }
+}
+
+.about-description {
+  color: #555555b8;
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 100%;
+  margin-top: 2.25rem;
+}
+
+.about-image {
+  height: 28rem;
+  border-radius: 10px;
+  border-bottom-right-radius: 5rem;
+  background-image: url("../../../../assets/AboutUs.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-top: 3rem;
+}
+
+.about-why-us {
+  padding: 7rem 0 0 3rem;
+}
+
+.why-us-title {
+  font-family: "Inter";
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #5663c2;
+  padding-left: 2rem;
+}
+
+.why-us-list {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 300%;
+  color: #555555;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.why-us-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
