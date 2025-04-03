@@ -7,14 +7,16 @@ const HeroSection = () => {
     return (
         <div className={styles["hero-section"]} style={{ backgroundImage: `url(${background})` }}>
             <Navbar />
-            <div className={styles["hero-content"]}>
-                <h2>Transform Hospital Operations with Our</h2>
-                <h2>All-in-One Management Portal</h2>
-                <p>
-                    Streamline workflows, enhance patient care, and optimize revenue with
-                    role-based access for Admin, Reception, and Doctors.
-                </p>
-                <button className={styles["show-more-btn"]}>Show More</button>
+            <div className={styles["hero-container"]}>
+                <div className={styles["hero-content"]}>
+                    <h2>Transform Hospital Operations with Our</h2>
+                    <h2>All-in-One Management Portal</h2>
+                    <p>
+                        Streamline workflows, enhance patient care, and optimize revenue with
+                        role-based access for Admin, Reception, and Doctors.
+                    </p>
+                    <button className={styles["show-more-btn"]}>See More</button>
+                </div>
             </div>
 
             <div className={styles["explore-section"]}>
@@ -26,18 +28,7 @@ const HeroSection = () => {
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <g filter="url(#filter0_dddddd_4714_1206)">
-                        <rect x="166" y="299" width="79" height="79" rx="39.5" fill="white" />
-                        <mask
-                            id="mask0_4714_1206"
-                            maskType="alpha"
-                            maskUnits="userSpaceOnUse"
-                            x="178"
-                            y="313"
-                            width="50"
-                            height="51"
-                        >
-                            <rect x="178" y="313.5" width="50" height="50" rx="2" fill="#D9D9D9" />
-                        </mask>
+                        <rect x="166" y="299" width="79" height="79" rx="39.5" fill="white"/>
                         <g mask="url(#mask0_4714_1206)">
                             <path
                                 d="M197.74 351.127C196.408 351.974 194.666 351.018 194.666 349.439V327.559C194.666 325.981 196.408 325.025 197.74 325.872L214.931 336.812C216.166 337.598 216.166 339.401 214.931 340.187L197.74 351.127Z"
