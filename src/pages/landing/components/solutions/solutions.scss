@@ -31,9 +31,15 @@
 .gridContainer {
   margin-top: 5rem;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 4rem;
   justify-content: center;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
 }
 
 .imageBox {
@@ -41,7 +47,8 @@
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 20px;
-  //   height: 200px; // Adjust as needed
+  // height: 270px; // Adjust as needed
+  // width: 298px;
 }
 
 .textBox {
@@ -79,4 +86,82 @@
   text-align: center;
   padding: 1rem;
   margin-top: 3rem;
+}
+
+@media (max-width: 431px) {
+  .container {
+    border-radius: 0;
+    margin: 2rem 0;
+    padding: 0.5rem 2rem;
+  }
+
+  .heading {
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .subHeading {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
+
+  .gridContainer {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    justify-content: center;
+    row-gap: 18px;
+  }
+
+  .card {
+    display: grid;
+    grid-template-columns: 1fr;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .imageBox {
+    width: 100%;
+    height: 150px; // Adjust height as needed
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+  }
+
+  .textBox {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.78); // Dark overlay for readability
+    height: 150px; // Adjust height as needed
+    padding: 0;
+    display: flex;
+    // align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .textTitle {
+      font-size: 12px;
+      color: #f3f3f3;
+      padding: 0 15px;
+    }
+
+    .textDescription {
+      font-size: 8px;
+      margin-top: 0.5rem;
+      color: #f3f3f3;
+      padding: 0 15px;
+    }
+  }
+
+  .footerText {
+    font-size: 10px;
+    margin-top: 1rem;
+  }
 }
