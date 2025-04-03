@@ -54,30 +54,111 @@
 
 .about-why-us {
   padding: 7rem 0 0 3rem;
+  .why-us-title {
+    font-family: "Inter";
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #5663c2;
+    padding-left: 2rem;
+  }
+
+  .why-us-list {
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 300%;
+    color: #555555;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .why-us-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    color: #555555;
+  }
 }
 
-.why-us-title {
-  font-family: "Inter";
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: #5663c2;
-  padding-left: 2rem;
-}
+@media (max-width: 426px) {
+  .about-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin: 0;
+  }
 
-.why-us-list {
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 300%;
-  color: #555555;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
+  .about-text {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 0 1rem;
+    justify-content: center;
+    grid-area: 1 / 1 / 2 / 3;
 
-.why-us-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+    .about-title {
+      margin-top: 0;
+      font-size: 14px;
+    }
+
+    .about-heading {
+      font-size: 20px;
+      line-height: 120%;
+      margin-top: 0.5rem;
+    }
+
+    .about-description {
+      font-size: 11px;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .about-image {
+    height: 13rem;
+    border-radius: 5px;
+    border-bottom-right-radius: 2rem;
+    background-image: url("../../../../assets/AboutUs.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-top: 1rem;
+  }
+
+  .about-why-us {
+    padding: 1rem 0;
+    .why-us-title {
+      font-size: 12px;
+      padding-left: 1rem;
+      padding-bottom: 0.75rem;
+    }
+
+    .why-us-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-left: 5px;
+      margin-right: 12px;
+    }
+
+    .why-us-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 2px;
+      margin-bottom: 0rem;
+      color: #555555;
+      font-size: 10px;
+      line-height: 150%;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+
+      svg {
+        width: 11.5px !important;
+        height: 11.5px;
+        flex-shrink: 0;
+      }
+    }
+  }
 }
