@@ -16,11 +16,11 @@ const Base = (props) => {
   return (
     <>
       <HeroSection/>
-      {/*<Services />*/}
-      {/*<About />*/}
-      {/*<Solutions />*/}
-      {/*<ContactUs />*/}
-      {/*<Footer />*/}
+      <Services />
+      <About />
+      <Solutions />
+      <ContactUs />
+      <Footer />
     </>
   );
 };

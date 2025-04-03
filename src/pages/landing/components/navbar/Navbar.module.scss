@@ -141,10 +141,45 @@
           text-align: center;
           padding-top: 0.5rem;
           border-top: 0.5px solid white;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
           p{
             color:#a1a1aa;
             font-size: 8px;
             font-weight: 300;
+          }
+
+          .footer__icons {
+            display: flex;
+            justify-content: center;
+            gap: 0.65rem;
+            background-color: #1d2663;
+            width: 90%;
+            padding: 4px 0 5px;
+            margin-top: 5px;
+
+            a {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 25px;
+              height: 25px;
+              border-radius: 50%;
+              color: #ffffff;
+              background-color: #00000040;
+              transition: 0.3s ease-in-out;
+
+              &:hover {
+                transform: scale(1.25);
+              }
+
+              .icon {
+                width: 11px;
+                height: 11px;
+              }
+            }
           }
         }
       }

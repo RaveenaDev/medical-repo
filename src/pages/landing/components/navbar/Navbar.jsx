@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.scss";
+import {FaFacebook, FaGithub, FaInstagram, FaTwitter} from "react-icons/fa";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -81,7 +82,39 @@ const Navbar = () => {
                         <div className={styles.bottom}>
                             <p>@ Copyright 2025</p>
                             <p>All Rights Reserved By NaturaLeaf</p>
+
+                            <div className={styles.footer__icons}>
+                                <a
+                                    href="https://twitter.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <FaTwitter className={styles.icon}/>
+                                </a>
+                                <a
+                                    href="https://facebook.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <FaFacebook className={styles.icon}/>
+                                </a>
+                                <a
+                                    href="https://instagram.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <FaInstagram className={styles.icon}/>
+                                </a>
+                                <a
+                                    href="https://github.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <FaGithub className={styles.icon}/>
+                                </a>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             )}
