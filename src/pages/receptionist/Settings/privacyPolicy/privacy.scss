@@ -1,0 +1,73 @@
+.privacy-policy-container {
+  background: "#f1f1f1";
+  height: 94vh; // Make the entire div take up the full viewport height
+  overflow: "hidden"; // Prevent scrolling on the rest of the page
+  padding: 0.5rem 0;
+
+  .privacy-policy-header {
+    font-family: "Karla", sans-serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #000000;
+  }
+
+  .privacy-policy-content {
+    background: #fff;
+    margin-top: 0.75rem;
+    padding: 1rem;
+    height: 87vh;
+
+    .content-box {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .content-heading {
+      font-family: "Inter";
+      font-weight: 500;
+      font-size: 1.25rem;
+      line-height: 100%;
+      letter-spacing: 0%;
+      color: #25307f;
+    }
+
+    .content-text {
+      font-family: "Inter";
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 100%;
+      letter-spacing: 0%;
+      color: #747474;
+    }
+
+    .content-list {
+      padding-left: 20px;
+      font-family: "Inter";
+      font-weight: 400;
+      font-size: 0.75rem;
+      line-height: 100%;
+      letter-spacing: 0%;
+      color: #747474;
+
+      .list-item {
+        font-size: 1rem;
+        margin: 5px 0;
+        padding-left: 10px;
+        position: relative;
+
+        &::before {
+          content: "•";
+          color: #747474;
+          font-size: 1rem;
+          position: absolute;
+          left: -10px;
+          top: -1px;
+        }
+      }
+    }
+  }
+}

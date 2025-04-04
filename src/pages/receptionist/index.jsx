@@ -66,6 +66,8 @@ function Receptionist(props) {
     setSelectedBranch(value);
   };
 
+  const refreshAppointments = useSelector((state) => state.receptionist.refreshAppointments);
+
   useEffect(() => {
     const startDate = selectedDate.startOf("day").toISOString();
     const endDate = selectedDate.endOf("day").toISOString();
@@ -75,7 +77,7 @@ function Receptionist(props) {
     ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
       dispatch(getAppointments(status, startDate, endDate, selectedBranch));
     });
-  }, [dispatch, selectedBranch, selectedDate]);
+  }, [dispatch, selectedBranch, selectedDate,refreshAppointments]);
 
   // const startDate = new Date(selectedDate).toISOString().setHours(0, 0, 0, 0);
   // const endDate = new Date(selectedDate).toISOString();
@@ -259,11 +261,11 @@ function Receptionist(props) {
                             alignItems: "center",
                             justifyContent: "center",
                             borderRadius: 1,
-                            boxShadow: 1,
+                            boxShadow: 'none',
                             cursor: "pointer",
                             borderBottom:
                               activeBox === box.id
-                                ? "4px solid #25307F"
+                                ? "3.5px solid #25307F"
                                 : "none",
                             transition: "all 0.3s ease-in-out",
                           }}

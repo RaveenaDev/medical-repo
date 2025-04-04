@@ -75,7 +75,7 @@ const AdminDoctors = (props) => {
     phone: "",
     role: "doctor",
     specialization: "",
-    status: "",
+    status: "Idle",
     department: "",
     hospitalName: hospitalName,
   });
@@ -91,6 +91,7 @@ const AdminDoctors = (props) => {
         key !== "profile" &&
         key !== "role" &&
         key !== "hospitalName" &&
+        key !== "status" &&
         (isEdit ? key !== "department" : true) // Skip department if in edit mode
       ) {
         newErrors[key] = "This field is required";
@@ -251,6 +252,9 @@ const AdminDoctors = (props) => {
                       label="Department"
                       list={branches}
                       size="small"
+                      sx={{
+                        background: "#fff",
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -398,27 +402,6 @@ const AdminDoctors = (props) => {
                 ))}
               </Select1>
             </FormControl>
-
-            <TextField
-              select
-              label="Status"
-              name="status"
-              value={newDoctor.status}
-              onChange={(e) =>
-                setNewDoctor({ ...newDoctor, status: e.target.value })
-              }
-              fullWidth
-              margin="dense"
-              error={!!errors.status}
-              helperText={errors.status}
-              required
-            >
-              <MenuItem value="Idle">Idle</MenuItem>
-              <MenuItem value="On Leave">On Leave</MenuItem>
-              <MenuItem value="Emergency Room">Emergency Room</MenuItem>
-              <MenuItem value="In Meeting">In Meeting</MenuItem>
-              <MenuItem value="With Patient">With Patient</MenuItem>
-            </TextField>
           </DialogContent>
           <DialogActions sx={{ justifyContent: "center" }}>
             {/*<Button onClick={handleAddDialogClose}>Cancel</Button>*/}

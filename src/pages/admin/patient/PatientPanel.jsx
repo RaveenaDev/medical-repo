@@ -47,7 +47,7 @@ const PatientPanel = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
-  const [sortOrder, setSortOrder] = useState("Newest to Oldest");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -58,12 +58,20 @@ const PatientPanel = (props) => {
   const [filters, setFilters] = useState({
     status: "",
     type: "",
+      sort: "desc"
   });
 
   // Handle Sort Change
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
+      setFilters({
+          ...filters,
+          sort: event.target.value
+      })
+    // console.log(event.target.value)
   };
+
+    // console.log("Sorting: ",filters)
 
   // Handle Menu Open
   const handleMenuOpen = (event, patient) => {
@@ -88,14 +96,6 @@ const PatientPanel = (props) => {
     }
 
     setEditDialogOpen(true);
-    handleMenuClose();
-  };
-
-  // Handle Delete Action
-  const handleDelete = () => {
-    setPatients((prev) =>
-      prev.filter((patient) => patient.id !== selectedPatient.id)
-    );
     handleMenuClose();
   };
 
@@ -135,7 +135,7 @@ const PatientPanel = (props) => {
   useEffect(() => {
     // dispatch(getPatients());
     dispatch(getFilteredPatients(filters));
-  }, [dispatch]);
+  }, [dispatch,sortOrder]);
 
   const admin = useSelector((store) => store.admin);
   const noOfPatients = admin.totalFilteredPatients;
@@ -176,7 +176,6 @@ const PatientPanel = (props) => {
               borderTop: "0.5px solid #4A4A4A8C",
               borderBottom: "0.5px solid #4A4A4A8C",
               paddingY: 1.5,
-              marginBottom: 3,
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -210,7 +209,15 @@ const PatientPanel = (props) => {
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
                   variant="body1"
-                  sx={{ marginRight: 1, color: "#25307F" }}
+                  sx={{
+                    marginRight: 1,
+                    color: "#25307F",
+                    fontFamily: "Inter",
+                    fontWeight: "500",
+                    fontSize: "1.25rem",
+                    lineHeight: " 100%",
+                    letterSpacing: " 0%",
+                  }}
                 >
                   Sort by:
                 </Typography>
@@ -219,14 +226,22 @@ const PatientPanel = (props) => {
                   onChange={handleSortChange}
                   size="small"
                   sx={{
-                    minWidth: 160,
+                    minWidth: 180,
                     background: "#fff",
                     color: "#4A4A4A",
                     boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                    border: "1px solid transparent",
+                    outline: "none",
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "inherit", // Removes hover effect
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "transparent", // Hides the border
+                    },
                   }}
                 >
-                  <MenuItem value="Newest to Oldest">Newest to Oldest</MenuItem>
-                  <MenuItem value="Oldest to Newest">Oldest to Newest</MenuItem>
+                  <MenuItem value="desc">Newest to Oldest</MenuItem>
+                  <MenuItem value="asc">Oldest to Newest</MenuItem>
                 </Select>
               </Box>
             </Box>
@@ -432,12 +447,6 @@ const PatientPanel = (props) => {
                 <EditIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Edit</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleDelete}>
-              <ListItemIcon>
-                <DeleteIcon fontSize="small" color="error" />
-              </ListItemIcon>
-              <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
             </MenuItem>
           </Menu>
 

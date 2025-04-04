@@ -8,11 +8,12 @@
   display: flex;
   justify-content: end;
   z-index: 1000;
-  font-size: 16px;
+  font-size: 1rem;
 
   .billing-modal-content {
     position: relative;
-    width: 45%;
+    width: 90%;
+    max-width: 600px; // Adjust max width for larger screens
     height: 100%;
     background-color: #f1f1f1;
     padding-top: 1rem;
@@ -36,7 +37,7 @@
 
       h2 {
         font-weight: 600;
-        padding-bottom: 0.7rem;
+        padding-bottom: 0.6rem;
         span {
           color: gray;
         }
@@ -171,5 +172,45 @@
   .status.paid {
     color: #3db461;
     font-weight: 600;
+  }
+}
+
+@media (max-width: 768px) {
+  .billing-modal-overlay {
+    width: 100%; // Make modal full width on smaller screens
+  }
+
+  .billing-modal-content {
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  .billing-no {
+    grid-template-columns: 1fr; // Stack elements instead of side-by-side
+    padding: 1rem;
+  }
+
+  .billing-amount-details {
+    grid-template-columns: 1fr 1fr; // Reduce to two columns
+  }
+
+  .billing-summary {
+    flex-direction: column; // Stack summary items
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .print-btn {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  .billing-modal-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

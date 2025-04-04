@@ -68,19 +68,23 @@ const ProgressTracker = ({ patient }) => {
     >
       <Timeline
           position="left"
-          style={{ marginTop: "42px", paddingRight: "0", marginLeft: "12px" }}
+          style={{ marginTop: "3.2rem", paddingRight: "0", marginLeft: "12px" }}
       >
         {steps.map((step, index) => (
             <TimelineItem key={index} style={{ padding: 0, margin: 0 }}>
               <TimelineSeparator style={{ padding: 0, margin: 0 }}>
                 <TimelineDot
                     sx={{
+                      margin:0,
                       backgroundColor: step.status === "Ongoing" ? "#2E823B" : "#EAA000",
-                      borderColor: step.status === "Ongoing" ? "#2E823B" : "#EAAA000",
+                      borderColor: step.status === "Ongoing" ? "#2E823B" : "#EAA000",
+                      boxShadow: step.status === "Ongoing"
+                          ? "0px 0px 0px 3px rgba(46, 130, 59, 0.3)" // Green glow
+                          : "none", // Orange glow
                     }}
                 />
                 {index < steps.length - 1 && (
-                    <TimelineConnector sx={{ height: "100%" }} />
+                    <TimelineConnector sx={{width:'13%' }} />
                 )}
               </TimelineSeparator>
               <TimelineContent style={{ padding: 0 }}></TimelineContent>
@@ -102,11 +106,8 @@ const ProgressTracker = ({ patient }) => {
               <TableCell sx={{color:'#878787'}}>
                 Responsible
               </TableCell>
-              <TableCell sx={{color:'#878787'}}>
+              <TableCell sx={{color:'#878787',paddingLeft:'2rem'}}>
                 Progress
-              </TableCell>
-              <TableCell sx={{color:'#878787',paddingLeft:"20px"}}>
-                Status
               </TableCell>
             </TableRow>
           </TableHead>
@@ -137,7 +138,7 @@ const ProgressTracker = ({ patient }) => {
                           : step.status === "Ongoing"
                           ? "#2E823B"
                           : "black",
-                      fontWeight:500,
+                      fontWeight:600,
                       fontSize: "14px"
                     }}
                   >

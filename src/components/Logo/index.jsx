@@ -5,8 +5,8 @@ const Logo = () => {
   return (
     <div>
       <img
-        style={{ width: "100px", height: "100px" }}
-        src="/stepcarelogo.png"
+        style={{ width: "170px", height: "70px",marginTop:'1rem',marginBottom:'0.8rem' }}
+        src="/sidebar_logo.jpg"
       />
     </div>
   );

@@ -19,7 +19,7 @@ import Profile from "./pages/receptionist/patients/profile/Profile.jsx";
 import Settings from "./pages/receptionist/Settings/Settings.jsx";
 import Departments1 from "./pages/admin/departments/Departments1.jsx";
 import DepartDetails1 from "./pages/admin/departments/DepartDetails/DepartDetails1.jsx";
-import PrivacyPolicy from "./pages/receptionist/Settings/PrivacyPolicy.jsx";
+import PrivacyPolicy from "./pages/receptionist/Settings/privacyPolicy/PrivacyPolicy.jsx";
 import Help from "./pages/receptionist/Settings/Help.jsx";
 import ProgressReport from "./pages/receptionist/patients/profile/ProgressReport.jsx";
 import PatientPanel from "./pages/admin/patient/PatientPanel.jsx";
@@ -74,12 +74,20 @@ function App() {
 
   // Determine if the current path is a login or signup page
   const isLoginPage = [
-    "/login",
+    "/loginlogin",
     "/password-reset",
     "/recovery-link",
     "/update-password",
     "/register",
   ].includes(location.pathname);
+
+  const isHomePage = "/".includes(location.pathname);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setShouldShowSidebar(false);
+    }
+  }, [location.pathname]);
 
   return (
     <>
@@ -97,9 +105,11 @@ function App() {
               // overflowY: "auto", // Allows scrolling inside the sidebar if needed
             }}
           >
-            <div className={styles.logo}>
-              <Logo />
-            </div>
+            {!isHomePage && (
+              <div className={styles.logo}>
+                <Logo />
+              </div>
+            )}
             {!isLoginPage && (
               <div>
                 <Sidebar role={role} />
@@ -107,483 +117,494 @@ function App() {
             )}
           </div>
         )}
-        {/* if login or register page is active, add this class ${styles.loginPageActive} */}
-        <div
-          className={`${styles.register} ${
-            isSignUpOrLogin ? styles.loginPageActive : styles.otherPages
-          }`}
-          style={{
-            marginLeft: shouldShowSidebar ? "20%" : "0",
-            height: "100%",
-          }} // Prevent content from going under the sidebar
-        >
+
+        {location.pathname === "/" ? (
           <Routes>
-            <Route path="/" element={<RedirectToLanding />} />
             <Route
-              path="/login"
-              element={
-                <Login
-                  setShouldShowSidebar={setShouldShowSidebar}
-                  setIsSignUpOrLogin={setIsSignUpOrLogin}
-                />
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <Register
-                  setIsSignUpOrLogin={setIsSignUpOrLogin}
-                  setShouldShowSidebar={setShouldShowSidebar}
-                  setEntity={setEntity}
-                  entity={entity}
-                />
-              }
-            />
-            <Route
-              path="/information"
-              element={
-                <Information
-                  setIsSignUpOrLogin={setIsSignUpOrLogin}
-                  setShouldShowSidebar={setShouldShowSidebar}
-                  setEntity={setEntity}
-                  entity={entity}
-                />
-              }
-            />
-            <Route
-              path="/password-reset"
-              element={
-                <PasswordReset setIsSignUpOrLogin={setIsSignUpOrLogin} />
-              }
-            />
-            <Route
-              path="/recovery-link"
-              element={<RecoveryLink setIsSignUpOrLogin={setIsSignUpOrLogin} />}
-            />
-            <Route
-              path="/reset-password"
-              element={
-                <UpdatePassword setIsSignUpOrLogin={setIsSignUpOrLogin} />
-              }
-            />
-            <Route
-              path="/receptionist"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Receptionist
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/patients"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Patients
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/billing"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Billings
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/doctors"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Doctors
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/staffs"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Staffs
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/rooms"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Rooms
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/patients/profile"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Profile
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/patients/profile/more-info"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <MoreInfo
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/patients/profile/progressReport"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <ProgressReport
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/departments"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Departments
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/departments/departDetails"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <DepartDetails
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/settings"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Settings
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/settings/privacyPolicy"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <PrivacyPolicy
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/receptionist/settings/helpAndSupport"
-              element={
-                <ProtectedRoute allowedRoles={["receptionist"]}>
-                  <Help
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Admin
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/earnings"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Earnings
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/requests"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <RequestTabs
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/billings"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <BillingAdmin
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/doctors"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <AdminDoctors
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/staffs"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <AdminStaffs
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/rooms"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <AdminRooms
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/reception"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Reception
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/reception/appointments"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Appointments
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/departments"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Departments1
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/departments/departDetails"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <DepartDetails1
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/reception/patients"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <PatientPanel
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            ></Route>
-            <Route
-              path="/admin/reception/patients/PatientDetails"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <PatientDetails
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            ></Route>
-            <Route
-              path="/admin/reception/patients/Billing"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Billing
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            ></Route>
-            <Route
-              path="/admin/reception/patients/History"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <History
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            ></Route>
-            <Route
-              path="/admin/reception/patients/Tracking"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Tracking
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            ></Route>
-
-            <Route
-              path="/admin/expenses"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Expenses
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/settings"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Settings
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/settings/privacyPolicy"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <PrivacyPolicy
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/settings/helpAndSupport"
-              element={
-                <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
-                  <Help
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}
-                  />
-                </ProtectedRoute>
-              }
+              path="/"
+              element={<Base setIsSignUpOrLogin={setIsSignUpOrLogin} />}
             />
           </Routes>
-        </div>
+        ) : (
+          <div
+            className={`${styles.register} ${
+              isSignUpOrLogin ? styles.loginPageActive : styles.otherPages
+            }`}
+            style={{
+              marginLeft: shouldShowSidebar ? "20%" : "0",
+              height: "100%",
+            }} // Prevent content from going under the sidebar
+          >
+            <Routes>
+              <Route
+                path="/login"
+                element={
+                  <Login
+                    setShouldShowSidebar={setShouldShowSidebar}
+                    setIsSignUpOrLogin={setIsSignUpOrLogin}
+                  />
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <Register
+                    setIsSignUpOrLogin={setIsSignUpOrLogin}
+                    setShouldShowSidebar={setShouldShowSidebar}
+                    setEntity={setEntity}
+                    entity={entity}
+                  />
+                }
+              />
+              <Route
+                path="/information"
+                element={
+                  <Information
+                    setIsSignUpOrLogin={setIsSignUpOrLogin}
+                    setShouldShowSidebar={setShouldShowSidebar}
+                    setEntity={setEntity}
+                    entity={entity}
+                  />
+                }
+              />
+              <Route
+                path="/password-reset"
+                element={
+                  <PasswordReset setIsSignUpOrLogin={setIsSignUpOrLogin} />
+                }
+              />
+              <Route
+                path="/recovery-link"
+                element={
+                  <RecoveryLink setIsSignUpOrLogin={setIsSignUpOrLogin} />
+                }
+              />
+              <Route
+                path="/reset-password"
+                element={
+                  <UpdatePassword setIsSignUpOrLogin={setIsSignUpOrLogin} />
+                }
+              />
+              <Route
+                path="/receptionist"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Receptionist
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/patients"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Patients
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/billing"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Billings
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/doctors"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Doctors
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/staffs"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Staffs
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/rooms"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Rooms
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/patients/profile"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Profile
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/patients/profile/more-info"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <MoreInfo
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/patients/profile/progressReport"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <ProgressReport
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/departments"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Departments
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/departments/departDetails"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <DepartDetails
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/settings"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Settings
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/settings/privacyPolicy"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <PrivacyPolicy
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/settings/helpAndSupport"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <Help
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Admin
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/earnings"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Earnings
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/requests"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <RequestTabs
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/billings"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <BillingAdmin
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/doctors"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <AdminDoctors
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/staffs"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <AdminStaffs
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/rooms"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <AdminRooms
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/reception"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Reception
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/reception/appointments"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Appointments
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/departments"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Departments1
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/departments/departDetails"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <DepartDetails1
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/reception/patients"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <PatientPanel
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/reception/patients/PatientDetails"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <PatientDetails
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/reception/patients/Billing"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Billing
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/reception/patients/History"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <History
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/reception/patients/Tracking"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Tracking
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              ></Route>
+
+              <Route
+                path="/admin/expenses"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Expenses
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/settings"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Settings
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/privacyPolicy"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <PrivacyPolicy
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/helpAndSupport"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Help
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        )}
+        {/* if login or register page is active, add this class ${styles.loginPageActive} */}
       </div>
     </>
   );

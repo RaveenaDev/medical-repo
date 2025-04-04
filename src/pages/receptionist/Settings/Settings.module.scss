@@ -18,8 +18,12 @@
   cursor: pointer;
 
   .selected {
-    color: darkgreen !important;
-
+    color: #25307f !important;
+    // font-family: "Karla";
+    font-weight: 600;
+    // font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
     border-radius: 5px;
     width: 100%;
   }

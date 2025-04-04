@@ -301,7 +301,7 @@ export const getFilteredPatients = (filteredData) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
-      params: { status: filteredData.status, typeVisit: filteredData.type }, // Sending status as a query parameter
+      params: { status: filteredData.status, typeVisit: filteredData.type, sort: filteredData.sort }, // Sending status as a query parameter
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },

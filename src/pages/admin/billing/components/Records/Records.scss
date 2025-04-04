@@ -8,36 +8,33 @@
     justify-content: flex-end;
     align-items: center;
     padding: 2px;
-    gap: 10px;
+    gap: 0.6rem;
   }
 
   .divider {
     width: 100%;
     height: 0.5px;
     background: #4a4a4a8c;
-    margin: 10px 0 20px 0;
+    margin: 10px 0 10px 0;
   }
 
   .billings-table {
     max-height: 60vh; /* Ensure vertical scrolling */
     overflow-y: auto; /* Enable scrolling */
-
     border-radius: 8px;
-
     display: flex;
     flex-direction: column;
 
     .table-header,
     .table-row {
       display: grid;
-      grid-template-columns: 1.25fr 1.5fr 1.5fr 1.25fr 1.25fr 1.25fr 1fr 0.5fr;
-      padding: 15px;
-
+      grid-template-columns: 1.25fr 1.5fr 1.5fr 1.25fr 1.25fr 1.25fr 1fr;
+      padding: 0.7rem;
       align-items: center;
     }
 
     .table-header {
-      font-size: 16px;
+      font-size: 1rem;
       padding-left: 1.5rem;
       position: sticky;
       top: 0;
@@ -46,9 +43,9 @@
     }
 
     .table-row {
-      font-size: 14px;
+      font-size: 0.85rem;
       background: white;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
       span {
         padding-left: 1rem;
       }
@@ -93,5 +90,9 @@
         color: hsl(354, 90%, 51%);
       }
     }
+  }
+  .css-7reshl-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root:hover
+    .MuiOutlinedInput-notchedOutline {
+    border-color: inherit !important;
   }
 }

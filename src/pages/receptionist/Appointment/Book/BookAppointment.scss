@@ -113,7 +113,7 @@
 
   .react-calendar__tile--active {
     background: #181f52 !important;
-    color: white !important;
+    color: #ffffff !important;
     border-radius: 5px;
   }
 
@@ -131,5 +131,10 @@
 
   .MuiTextField-root {
     font-size: 14px !important;
+  }
+
+  .react-calendar__tile--now {
+    background: #eaecff;
+    border: 1.5px solid #181f52;
   }
 }
