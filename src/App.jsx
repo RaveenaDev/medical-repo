@@ -44,6 +44,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Register from "./pages/register/Register.jsx";
 import Information from "./pages/register/info/Information.jsx";
 import { Navigate } from "react-router-dom";
+import Base from "./pages/landing/Base.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
