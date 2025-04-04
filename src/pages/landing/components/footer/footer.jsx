@@ -50,28 +50,28 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaTwitter className="icon" />
+            <FaTwitter className="footer-icon" />
           </a>
           <a
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaFacebook className="icon" />
+            <FaFacebook className="footer-icon" />
           </a>
           <a
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaInstagram className="icon" />
+            <FaInstagram className="footer-icon" />
           </a>
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaGithub className="icon" />
+            <FaGithub className="footer-icon" />
           </a>
         </div>
       </div>
