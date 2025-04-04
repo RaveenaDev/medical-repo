@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.scss";
 import {FaFacebook, FaGithub, FaInstagram, FaTwitter} from "react-icons/fa";
@@ -11,6 +11,20 @@ const Navbar = () => {
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
+
+    // 👇 Lock scroll when menu is open
+    useEffect(() => {
+        if (menuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+
+        // Optional: clean up in case component unmounts
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [menuOpen]);
 
     return (
         <>
