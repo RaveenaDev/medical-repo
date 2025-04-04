@@ -5,7 +5,7 @@ const Logo = () => {
   return (
     <div>
       <img
-        style={{ width: "170px", height: "70px",marginTop:'1rem' }}
+        style={{ width: "170px", height: "70px",marginTop:'1rem',marginBottom:'0.8rem' }}
         src="/sidebar_logo.jpg"
       />
     </div>
