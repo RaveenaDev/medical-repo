@@ -75,7 +75,7 @@ function App() {
 
   // Determine if the current path is a login or signup page
   const isLoginPage = [
-    "/loginlogin",
+    "/login",
     "/password-reset",
     "/recovery-link",
     "/update-password",
