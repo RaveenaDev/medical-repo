@@ -20,7 +20,7 @@ const BillingAdmin = ({ setIsSignUpOrLogin }) => {
         <Notifications />
       </div>
 
-      <div className="heading">
+      <div className="bill-heading">
         <svg
           width="30"
           height="30"
