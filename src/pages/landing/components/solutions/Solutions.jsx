@@ -7,7 +7,7 @@ import doc4 from "../../../../assets/doc4.png";
 
 const Solutions = () => {
   return (
-    <div className="container">
+    <div className="container" id="products">
       <div className="heading">Our Solution</div>
       <div className="subHeading">Hospital Software</div>
       <div className="gridContainer">

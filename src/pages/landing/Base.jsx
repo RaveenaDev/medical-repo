@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Navbar from "./components/navbar/Navbar.jsx";
 import background from "../../assets/image 7.png";
 import play from "../landing/assets/Frame 1.png";
@@ -10,12 +10,12 @@ import Footer from "./components/footer/footer.jsx";
 import HeroSection from "./components/hero/HeroSection.jsx";
 
 const Base = (props) => {
-    useEffect(() => {
-        props?.setIsSignUpOrLogin(true);
-    }, []);
+  useEffect(() => {
+    props?.setIsSignUpOrLogin(true);
+  }, []);
   return (
     <>
-      <HeroSection/>
+      <HeroSection />
       <Services />
       <About />
       <Solutions />

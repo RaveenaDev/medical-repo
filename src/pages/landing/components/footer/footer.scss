@@ -19,6 +19,14 @@
       flex-direction: column;
       gap: 1rem;
 
+      a {
+        color: #e4e4e7;
+        text-decoration: none;
+
+        &:hover {
+          transform: scale(1.01);
+        }
+      }
       .address {
         margin-bottom: 1.5rem;
         color: #ffffff;

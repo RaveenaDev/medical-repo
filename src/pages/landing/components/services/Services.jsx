@@ -38,6 +38,7 @@ export const Services = () => {
       { breakpoint: 576, settings: { slidesToShow: 1.2, slidesToScroll: 1 } },
       { breakpoint: 431, settings: { slidesToShow: 2.2, slidesToScroll: 1 } },
       { breakpoint: 376, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+      { breakpoint: 320, settings: { slidesToShow: 1.7, slidesToScroll: 1 } },
     ],
   };
 

@@ -8,10 +8,10 @@ const Footer = () => {
       <div className="footer__content">
         <div className="footer__column">
           <div className="heading">Company</div>
-          <div>Home</div>
-          <div>About</div>
-          <div>Products</div>
-          <div>News</div>
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#products">Products</a>
+          <a href="#contact">Contact Us</a>
         </div>
         <div className="footer__column">
           <div className="heading">Help</div>
