@@ -9,13 +9,17 @@ const HeroSection = () => {
             <Navbar />
             <div className={styles["hero-container"]}>
                 <div className={styles["hero-content"]}>
-                    <h2>Transform Hospital Operations with Our</h2>
-                    <h2>All-in-One Management Portal</h2>
-                    <p>
-                        Streamline workflows, enhance patient care, and optimize revenue with
-                        role-based access for Admin, Reception, and Doctors.
-                    </p>
-                    <button className={styles["show-more-btn"]}>See More</button>
+                    <div>
+                        <h2>Transform Hospital Operations with Our</h2>
+                        <h2>All-in-One Management Portal</h2>
+                        <p>
+                            Streamline workflows, enhance patient care, and optimize revenue with
+                            role-based access for Admin, Reception, and Doctors.
+                        </p>
+                    </div>
+                    <div>
+                        <button className={styles["show-more-btn"]}>See More</button>
+                    </div>
                 </div>
             </div>
 

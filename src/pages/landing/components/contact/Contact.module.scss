@@ -74,8 +74,53 @@ $text-color: black;
 @media (max-width: 480px) {
   .contact-container {
     grid-template-columns: 1fr;
-    padding: 2rem 1rem;
-    height: 80vh;
+    padding: 0 1rem;
+    height: 50vh;
+
+    .image-container {
+      display: none;
+    }
+
+    .form-container {
+      text-align: center;
+      h2 {
+        font-size: 24px;
+      }
+
+      h3 {
+        font-size: 18px;
+        font-weight: 500;
+        height: auto;
+      }
+
+      .form-wrapper {
+        form {
+          align-items: center;
+          gap: 1.2rem;
+          input,
+          textarea {
+            width: 80%;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            color: #6e6e6e;
+          }
+
+          .submit-btn {
+            margin-top: 0.4rem;
+            align-self: center;
+            padding: 10px 2rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+    height: 65vh;
 
     .image-container {
       display: none;

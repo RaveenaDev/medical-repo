@@ -1,6 +1,7 @@
 $primary-color: #25307F;
 $text-color: #555555;
-$bg-overlay: rgba(210, 213, 238, 0.5);
+$bg-overlay: rgba(230, 232, 238, 0.3);
+
 
 .hero-section {
   background-size: cover;
@@ -11,7 +12,7 @@ $bg-overlay: rgba(210, 213, 238, 0.5);
     margin-left: 20px;
     margin-top: 8rem;
     width: 34rem;
-    background-color: $bg-overlay;
+    background-color: rgba(210, 212, 238, 0.4);
     backdrop-filter: blur(10px);
     padding: 15px 22px;
     border-radius: 8px;
@@ -68,6 +69,8 @@ $bg-overlay: rgba(210, 213, 238, 0.5);
 
 @media (max-width: 480px) {
   .hero-section {
+    background-position: center;    // Keeps the focal point in the center
+    background-repeat: no-repeat;   // Prevents tiling
     padding: 0;
     height: 100vh;
 
@@ -77,10 +80,14 @@ $bg-overlay: rgba(210, 213, 238, 0.5);
       align-items: center;
     }
     .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       text-align:center;
       width: 80%;
-      padding: 2rem 1.1rem 1rem 1.1rem;
-      margin: 2rem 0 0 0;
+      height: 43vh;
+      padding: 3.4rem 1.1rem 1rem 1.1rem;
+      margin: 7vh 0 0 0;
 
       h2 {
         font-size: 1.8rem;
@@ -89,31 +96,41 @@ $bg-overlay: rgba(210, 213, 238, 0.5);
         line-height: 1.2; // Adjust this value as needed
 
         &:first-of-type {
-          font-weight: 400;
+          font-weight: 300;
           color: #e9e9e9
+        }
+
+        &:last-of-type {
+          font-weight: 600;
         }
       }
 
       p {
+        margin-top:1rem;
         text-align:center;
         padding: 0 2.4%;
-        font-size: 1rem;
+        font-size: 1.2rem;
+        font-weight: 300;
+        line-height: 1.3;
         color: #dadada;
         width: auto;
       }
 
       .show-more-btn {
-        margin-top: 2rem;
-        padding: 0.5rem 1.8rem;
-        border-radius: 14px;
-        font-size: 13px;
+        padding: 0.8rem 2.5rem;
+        border-radius: 1.2rem;
+        font-size: 1.2rem;
+        font-weight: 300;
         color:#dadada;
+        margin-bottom: 1rem;
       }
     }
 
     .explore-section {
+      height: 20vh;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       padding:0;
       margin-top: 2rem;
 
@@ -129,7 +146,7 @@ $bg-overlay: rgba(210, 213, 238, 0.5);
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 380px) {
   .hero-section{
     .hero-content{
       h2 {
@@ -150,6 +167,15 @@ $bg-overlay: rgba(210, 213, 238, 0.5);
         font-size: 0.9rem;
         color: #dadada;
         width: auto;
+      }
+
+      .show-more-btn {
+        padding: 0.6rem 2rem;
+        border-radius: 1.2rem;
+        font-size: 1rem;
+        font-weight: 300;
+        color:#dadada;
+        margin-bottom: 1rem;
       }
     }
 
