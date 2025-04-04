@@ -1,4 +1,8 @@
 :root {
+
+  // Add this to remove the blue touch highlight on mobile
+  -webkit-tap-highlight-color: transparent;
+
   --color-ongoing: #3db46117;
   --color-waiting: #fcfcfc;
   --color-additional: #ffce00;
