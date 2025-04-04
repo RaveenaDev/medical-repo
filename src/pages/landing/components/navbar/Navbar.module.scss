@@ -19,11 +19,16 @@
       color: white;
       cursor: pointer;
       font-weight: 500;
+
+      a {
+        text-decoration: none;
+        color: white;
+      }
     }
   }
 
-  .menu{
-    display:none;
+  .menu {
+    display: none;
   }
 
   .authButtons {
@@ -54,163 +59,166 @@
   }
 }
 
-.fullscreenMenu{
+.fullscreenMenu {
   display: none;
 }
 
-  // Responsive styles for smaller screens
-  @media (max-width: 480px) {
-    .navbar {
-      padding: 2vh 0.5rem;
-      background-color: #25307F;
+// Responsive styles for smaller screens
+@media (max-width: 480px) {
+  .navbar {
+    padding: 2vh 0.5rem;
+    background-color: #25307f;
 
-      .logo {
-        width: 150px;
-        height: 45px;
-      }
+    .logo {
+      width: 150px;
+      height: 45px;
+    }
 
-      .navItems {
-        display: none;
-      }
+    .navItems {
+      display: none;
+    }
 
-      .navItems.active {
-        right: 0;
-      }
+    .navItems.active {
+      right: 0;
+    }
 
-      .menu{
-        display:block;
-        padding: 5px 15px 0 0;
+    .menu {
+      display: block;
+      padding: 5px 15px 0 0;
+      background: none;
+      border: none;
+      outline: none; // Prevent focus outline
+      cursor: pointer;
+      &:hover,
+      &:focus,
+      &:active {
         background: none;
-        border: none;
-        outline: none; // Prevent focus outline
-        cursor: pointer;
-        &:hover,
-        &:focus,
-        &:active {
-          background: none;
-          outline: none;
-          box-shadow: none;
-        }
-      }
-
-      .authButtons {
-        display: none; // Hide auth buttons on mobile
-      }
-
-      .registerBtn,
-      .loginBtn {
-        padding: 5px 18px;
-        border-radius: 10px;
-        font-size: 14px;
+        outline: none;
+        box-shadow: none;
       }
     }
 
+    .authButtons {
+      display: none; // Hide auth buttons on mobile
+    }
 
-    // Full-screen blue menu
-    .fullscreenMenu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #25307F;
-      color: white;
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      align-items: end;
-      justify-content: center;
-      z-index: 1000;
+    .registerBtn,
+    .loginBtn {
+      padding: 5px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+  }
 
-      .footer{
-        ul{
-          list-style: none;
-          padding: 0;
-          text-align: center;
-        }
+  // Full-screen blue menu
+  .fullscreenMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #25307f;
+    color: white;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    align-items: end;
+    justify-content: center;
+    z-index: 1000;
 
-        li{
-          margin: 0;
-          color: #ffffff;
-          font-size: 12px;
+    .footer {
+      ul {
+        list-style: none;
+        padding: 0;
+        text-align: center;
+      }
+
+      li {
+        margin: 0;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 300;
+      }
+
+      .bottom {
+        width: 100vw;
+        margin-top: 1.4rem;
+        text-align: center;
+        padding-top: 0.5rem;
+        border-top: 0.5px solid white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        p {
+          color: #a1a1aa;
+          font-size: 8px;
           font-weight: 300;
         }
 
-        .bottom{
-          width:100vw;
-          margin-top: 1.4rem;
-          text-align: center;
-          padding-top: 0.5rem;
-          border-top: 0.5px solid white;
+        .footer__icons {
           display: flex;
-          flex-direction: column;
           justify-content: center;
-          align-items: center;
-          p{
-            color:#a1a1aa;
-            font-size: 8px;
-            font-weight: 300;
-          }
+          gap: 0.65rem;
+          background-color: #1d2663;
+          width: 90%;
+          padding: 4px 0 5px;
+          margin-top: 5px;
 
-          .footer__icons {
+          a {
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 0.65rem;
-            background-color: #1d2663;
-            width: 90%;
-            padding: 4px 0 5px;
-            margin-top: 5px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: #ffffff;
+            background-color: #00000040;
+            transition: 0.3s ease-in-out;
 
-            a {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 25px;
-              height: 25px;
-              border-radius: 50%;
-              color: #ffffff;
-              background-color: #00000040;
-              transition: 0.3s ease-in-out;
+            &:hover {
+              transform: scale(1.25);
+            }
 
-              &:hover {
-                transform: scale(1.25);
-              }
-
-              .icon {
-                width: 11px;
-                height: 11px;
-              }
+            .icon {
+              width: 11px;
+              height: 11px;
             }
           }
         }
       }
     }
+  }
 
-    .fullscreenMenu ul {
-      list-style: none;
-      padding: 0;
-      text-align: center;
-    }
+  .fullscreenMenu ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+  }
 
-    .fullscreenMenu li {
-      margin: 0;
+  .fullscreenMenu li {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.3rem;
+    font-weight: 300;
+    cursor: pointer;
+    a {
+      text-decoration: none;
       color: #ffffff;
-      font-size: 1.3rem;
-      font-weight: 300;
-      cursor: pointer;
-    }
-
-    .closeMenu {
-      position: absolute;
-      top: 0.5rem;
-      right: 0;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-
-      svg{
-        width: 2rem;
-        height: 2rem;
-      }
     }
   }
+
+  .closeMenu {
+    position: absolute;
+    top: 0.5rem;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+}

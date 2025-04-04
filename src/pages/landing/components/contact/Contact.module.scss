@@ -1,6 +1,6 @@
-$primary-color: #25307F;
-$secondary-color: #5663C2;
-$input-bg: #E9EDF0;
+$primary-color: #25307f;
+$secondary-color: #5663c2;
+$input-bg: #e9edf0;
 $text-color: black;
 
 .contact-container {
@@ -38,7 +38,8 @@ $text-color: black;
         flex-direction: column;
         gap: 1.5rem;
 
-        input, textarea {
+        input,
+        textarea {
           width: 70%;
           padding: 10px 20px;
           border: 1px solid $input-bg;
@@ -75,7 +76,7 @@ $text-color: black;
   .contact-container {
     grid-template-columns: 1fr;
     padding: 0 1rem;
-    height: 50vh;
+    // height: 50vh;
 
     .image-container {
       display: none;
@@ -120,7 +121,7 @@ $text-color: black;
   .contact-container {
     grid-template-columns: 1fr;
     padding: 0 1rem;
-    height: 65vh;
+    // height: 65vh;
 
     .image-container {
       display: none;
