@@ -216,12 +216,14 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
 };
 
 export const getAppointments =
-  (activeLabel, startDate, endDate) => async (dispatch) => {
+  (activeLabel, startDate, endDate, selectedBranch) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
 
+      if(selectedBranch === "All Branches") selectedBranch = null;
+
       const { data } = await axios.get(`${API_URL}/getAppointments`, {
-        params: { status: activeLabel, start: startDate, end: endDate }, // Sending status as a query parameter
+        params: { status: activeLabel, start: startDate, end: endDate,departmentId: selectedBranch }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },

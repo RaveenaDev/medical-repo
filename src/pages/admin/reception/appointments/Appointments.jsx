@@ -39,7 +39,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useDispatch, useSelector } from "react-redux";
-import { getAppointments } from "../../../../components/State/Admin/Action.js";
+import {getAllDepartments, getAppointments} from "../../../../components/State/Admin/Action.js";
 
 function Appointments(props) {
   const location = useLocation();
@@ -62,25 +62,37 @@ function Appointments(props) {
     navigate("/admin/reception");
   };
 
-  const [branches, setBranches] = useState([
-    "All Branches",
-    "Cardiology",
-    "Therapy",
-    "Dermatology",
-  ]);
-
   const [activeBox, setActiveBox] = useState(1);
 
   const dispatch = useDispatch();
+
+  const [selectedBranch, setSelectedBranch] = useState();
+  const handleSelectChange = (value) => {
+    // console.log("Selected Value: ",value);
+    setSelectedBranch(value);
+  };
 
   useEffect(() => {
     const startDate = selectedDate.startOf("day").toISOString();
     const endDate = selectedDate.endOf("day").toISOString();
 
+    dispatch(getAllDepartments());
+
     ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
-      dispatch(getAppointments(status, startDate, endDate));
+      dispatch(getAppointments(status, startDate, endDate, selectedBranch));
     });
-  }, [dispatch, selectedDate]);
+  }, [dispatch, selectedDate,selectedBranch]);
+
+  const departments = useSelector((store) => store.admin.departments);
+
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    if (departments && Array.isArray(departments)) {
+      // setBranches(["All Branches",...departments.map((dept) => dept.departmentName)]);
+      setBranches(departments);
+    }
+  }, [departments]);
 
   const scheduledAppointments = useSelector(
     (store) => store.admin.scheduledAppointments
@@ -228,13 +240,14 @@ function Appointments(props) {
                     Appointments
                   </h3>
                 </Grid>
-                <Grid size={3}>
+                <Grid >
                   <Select
                     inputId="input-department"
                     selectId="select-department"
                     label="Department"
                     list={branches}
                     size="small"
+                    onChange={handleSelectChange}
                   />
                 </Grid>
               </Grid>
