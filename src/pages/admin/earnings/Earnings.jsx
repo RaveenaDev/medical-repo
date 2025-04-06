@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CommonPanel from "../Components/CommonPanel.jsx";
 import { Box, Grid } from "@mui/material";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   Area,
   AreaChart, CartesianGrid,
@@ -12,6 +11,8 @@ import {
 } from "recharts";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Select from "../../../components/Select/index.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {getEarnings} from "../../../components/State/Admin/Action.js";
 
 const Earnings = (props) => {
   useEffect(() => {
@@ -27,6 +28,16 @@ const Earnings = (props) => {
     surgery: true,
     diagnostics: true,
   });
+
+  const dispatch = useDispatch();
+
+  const totalEarnings = useSelector((store) => store.admin.totalEarnings)
+  // const areaData = useSelector((store) => store.admin.monthlyEarnings)
+
+  useEffect(() => {
+    dispatch(getEarnings(2025))
+  }, [dispatch]);
+
 
   const areaData = [
     {
@@ -187,7 +198,7 @@ const Earnings = (props) => {
                   margin: "0 10px 0 0",
                 }}
               >
-                ₹ 40000
+                ₹ {totalEarnings}
               </p>
               <ArrowUpwardIcon
                 style={{
@@ -305,7 +316,7 @@ const Earnings = (props) => {
           </Box>
 
           {/* Add spacing before the graph */}
-          <Box sx={{ margin: "0 1.8rem 0 1.8rem",paddingTop:'3rem',backgroundColor:'#F1F1F1'}}>
+          <Box sx={{height:'18.8rem', margin: "0 1.8rem 2rem 1.8rem",paddingTop:'3rem',backgroundColor:'#F1F1F1'}}>
             <ResponsiveContainer width="100%" height={330}>
               <AreaChart
                 width={500}
@@ -336,7 +347,7 @@ const Earnings = (props) => {
                     type="monotone"
                     dataKey="uv"
                     stroke="none"
-                    fill="#D7DCFF"
+                    fill="#5765CB"
                   />
                 )}
                 {visibleGraph.outpatient && (
@@ -344,15 +355,15 @@ const Earnings = (props) => {
                     type="monotone"
                     dataKey="pv"
                     stroke="none"
-                    fill="#7A8AFF"
+                    fill="#434FA3"
                   />
                 )}
                 {visibleGraph.surgery && (
                   <Area
                     type="monotone"
                     dataKey="amt"
-                    stroke="#none"
-                    fill="#25307F"
+                    stroke="none"
+                    fill="#7A8AFF"
                   />
                 )}
                 {visibleGraph.diagnostics && (
@@ -360,7 +371,7 @@ const Earnings = (props) => {
                     type="monotone"
                     dataKey="ayu"
                     stroke="none"
-                    fill="#1F2659"
+                    fill="#D7DCFF"
                   />
                 )}
 

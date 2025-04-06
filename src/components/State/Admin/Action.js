@@ -38,15 +38,18 @@ import {
 
 import { toast } from "react-toastify";
 
-export const getEarnings = () => async (dispatch) => {
+export const getEarnings = (year) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
+    const { data } = await axios.get(`${API_URL}/getRevenueByYear`, {
+      params: { year: year },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
+
+    console.log("Earnings : ",data)
 
     dispatch({ type: GET_EARNINGS, payload: data });
   } catch (error) {

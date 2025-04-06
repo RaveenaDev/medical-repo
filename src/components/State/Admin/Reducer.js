@@ -18,7 +18,7 @@ import {
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS,
+  GET_DOCTORS, GET_EARNINGS,
   GET_EXPENSES, GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
@@ -35,6 +35,8 @@ import {
 } from "./ActionType.js";
 
 const inititalState = {
+  totalEarnings: null,
+  monthlyEarnings: [],
   totalPatients: null,
   totalFilteredPatients: null,
   totalDoctors: null,
@@ -68,6 +70,13 @@ const inititalState = {
 
 export const adminReducer = (state = inititalState, action) => {
   switch (action.type) {
+
+    case GET_EARNINGS:
+      return{
+        ...state,
+        totalEarnings: action.payload.totalRevenue,
+        monthlyEarnings: action.payload.monthlyRevenue
+      }
     case GET_APPOINTMENT_COUNTS:
       return {
         ...state,
