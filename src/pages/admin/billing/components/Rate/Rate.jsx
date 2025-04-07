@@ -16,7 +16,6 @@ import {
   Typography,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
-import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import "./Rate.scss";
 
 import RateModal from "./components/RateModal";
@@ -123,6 +122,7 @@ const Rate = () => {
   // Handle Search Results
   const handleSearchResults = () => {
     // dispatch(getFilteredPatients(filters));
+      console.log("Filter: ",filters)
     setFilterDrawerOpen(false);
   };
 
@@ -542,7 +542,7 @@ const Rate = () => {
               Category
             </FormLabel>
             <RadioGroup
-              name="status"
+              name="category"
               value={filters.status}
               onChange={handleFilterChange}
             >
