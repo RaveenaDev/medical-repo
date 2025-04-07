@@ -38,9 +38,11 @@ const renderCustomizedLabel = ({
         x={insideX}
         y={insideY}
         textAnchor="middle"
+        dominantBaseline="middle"
+        alignmentBaseline="middle"
         fill="#FFFFFF"
-        fontSize="12px"
-        fontWeight="600"
+        fontSize="11px"
+        fontWeight="500"
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -83,23 +85,32 @@ const DonutChart = () => {
     <div style={{ width: "100%", height: 303 }}>
       {" "}
       {/* Ensure parent has defined height */}
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={480} height={300}>
+      <ResponsiveContainer
+        width="100%"
+        height="100%"
+        style={{ outline: "none" }}
+      >
+        <PieChart width={480} height={300} style={{ outline: "none" }}>
           <Pie
             data={data}
             cx={240}
             cy={140}
-            innerRadius={68}
-            outerRadius={105}
+            innerRadius={70}
+            outerRadius={102}
             fill="#8884d8"
             dataKey="value"
             labelLine={false}
             label={renderCustomizedLabel}
             stroke="white"
             strokeWidth={4}
+            style={{ outline: "none" }}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell
+                key={`cell-${index}`}
+                fill={entry.color}
+                style={{ outline: "none" }}
+              />
             ))}
           </Pie>
         </PieChart>
