@@ -73,6 +73,8 @@ const renderCustomizedLabel = ({
         fill="#878787"
         fontSize="14px"
         fontWeight="500"
+        dominantBaseline="middle"
+        alignmentBaseline="middle"
       >
         {`${data[index].name} `}
       </text>
