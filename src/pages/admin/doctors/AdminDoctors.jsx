@@ -15,6 +15,7 @@ import {
   Menu,
   MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -27,7 +28,7 @@ import {
 import ayu from "../../receptionist/doctors/doctors.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Grid from "@mui/material/Grid2";
-import Select from "../../../components/Select/index.jsx";
+
 import addIcon from "../../../assets/plus.svg";
 import styles from "../../receptionist/styles.module.scss";
 import Avatar from "@mui/material/Avatar";
@@ -35,6 +36,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   addDoctor,
   deleteDoctor,
+  fetchDoctorsByDepartment,
   getDoctors,
   updateDoctor,
 } from "../../../components/State/Admin/Action.js";
@@ -203,6 +205,28 @@ const AdminDoctors = (props) => {
     dispatch(deleteDoctor(selectedDoctor._id));
     handleMenuClose();
   };
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+
+  const handleDepartmentChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedDepartment(selectedValue);
+
+    if (selectedValue === "all") {
+      // If "All Branches" is selected, show all doctors
+
+      dispatch(getDoctors()); // Fetch all doctors
+    } else {
+      dispatch(fetchDoctorsByDepartment(selectedValue));
+    }
+  };
+
+  const departmentOptions = [
+    { label: "All Branches", value: "all" }, // default option
+    ...departments.map((dept) => ({
+      label: dept.departmentName,
+      value: dept.departmentId,
+    })),
+  ];
 
   return (
     <div
@@ -241,24 +265,34 @@ const AdminDoctors = (props) => {
             <h2 className={ayu.departmentTitleDetails}>{noOfDoctors}</h2>
 
             <div style={{ marginLeft: "25px" }}>
-              {branches.length && (
-                <Grid xs={3}>
-                  <Box sx={{ width: "200px" }}>
-                    {" "}
-                    {/* Adjust width here */}
-                    <Select
-                      inputId="input-department"
-                      selectId="select-department"
-                      label="Department"
-                      list={branches}
-                      size="small"
-                      sx={{
-                        background: "#fff",
-                      }}
-                    />
-                  </Box>
-                </Grid>
-              )}
+              <Grid xs={3}>
+                <Box
+                  sx={{
+                    width: "250px",
+                    background: "#ffffff",
+                    outline: "none",
+                  }}
+                >
+                  <Select
+                    value={selectedDepartment}
+                    onChange={handleDepartmentChange}
+                    displayEmpty
+                    size="small"
+                    sx={{
+                      background: "#ffffff",
+                      outline: "none",
+                      border: "1px solid #9797978F",
+                      width: "100%",
+                    }}
+                  >
+                    {departmentOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
+              </Grid>
             </div>
 
             <div style={{ marginLeft: "auto" }}>

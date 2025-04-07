@@ -22,7 +22,9 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_EARNINGS,
-  GET_EXPENSES, GET_FILTERED_PATIENTS,
+  GET_EXPENSES,
+  GET_FILTERED_DOCTORS,
+  GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -49,7 +51,7 @@ export const getEarnings = (year) => async (dispatch) => {
       },
     });
 
-    console.log("Earnings : ",data)
+    console.log("Earnings : ", data);
 
     dispatch({ type: GET_EARNINGS, payload: data });
   } catch (error) {
@@ -70,6 +72,32 @@ export const getDoctors = () => async (dispatch) => {
     dispatch({ type: GET_DOCTORS, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+export const fetchDoctorsByDepartment = (selectedValue) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+      `${API_URL}/getDoctorsByDepartment/${selectedValue}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
+
+    dispatch({ type: GET_FILTERED_DOCTORS, payload: data });
+  } catch (error) {
+    console.error(
+      "Error filtering doctor:",
+      error.response?.data || error.message
+    );
+
+    toast.error("Error  filtering Doctor!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 export const addDoctor = (doctorData) => async (dispatch) => {
@@ -223,10 +251,15 @@ export const getAppointments =
     try {
       const token = localStorage.getItem("jwt");
 
-      if(selectedBranch === "All Branches") selectedBranch = null;
+      if (selectedBranch === "All Branches") selectedBranch = null;
 
       const { data } = await axios.get(`${API_URL}/getAppointments`, {
-        params: { status: activeLabel, start: startDate, end: endDate,departmentId: selectedBranch }, // Sending status as a query parameter
+        params: {
+          status: activeLabel,
+          start: startDate,
+          end: endDate,
+          departmentId: selectedBranch,
+        }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
@@ -306,7 +339,11 @@ export const getFilteredPatients = (filteredData) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
-      params: { status: filteredData.status, typeVisit: filteredData.type, sort: filteredData.sort }, // Sending status as a query parameter
+      params: {
+        status: filteredData.status,
+        typeVisit: filteredData.type,
+        sort: filteredData.sort,
+      }, // Sending status as a query parameter
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -725,25 +762,26 @@ export const getAppointmentCounts = () => async (dispatch) => {
   }
 };
 
-export const updatePatient = (patientId, updatedData,filters) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const { data } = await axios.put(`${API_URL}/${patientId}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+export const updatePatient =
+  (patientId, updatedData, filters) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const { data } = await axios.put(`${API_URL}/${patientId}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    dispatch(getFilteredPatients(filters));
-    toast.success("Patient Status Updated Successfully!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.error("Error updating Patient:", error);
-    toast.error(" Patient Updation Error!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  }
-};
+      dispatch(getFilteredPatients(filters));
+      toast.success("Patient Status Updated Successfully!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Error updating Patient:", error);
+      toast.error(" Patient Updation Error!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    }
+  };

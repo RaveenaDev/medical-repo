@@ -18,8 +18,11 @@ import {
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
-  GET_DOCTORS, GET_EARNINGS,
-  GET_EXPENSES, GET_FILTERED_PATIENTS,
+  GET_DOCTORS,
+  GET_EARNINGS,
+  GET_EXPENSES,
+  GET_FILTERED_DOCTORS,
+  GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -70,13 +73,12 @@ const inititalState = {
 
 export const adminReducer = (state = inititalState, action) => {
   switch (action.type) {
-
     case GET_EARNINGS:
-      return{
+      return {
         ...state,
         totalEarnings: action.payload.totalRevenue,
-        monthlyEarnings: action.payload.monthlyRevenue
-      }
+        monthlyEarnings: action.payload.monthlyRevenue,
+      };
     case GET_APPOINTMENT_COUNTS:
       return {
         ...state,
@@ -86,6 +88,11 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         totalDoctors: action.payload.count,
+        doctors: action.payload.doctors,
+      };
+    case GET_FILTERED_DOCTORS:
+      return {
+        ...state,
         doctors: action.payload.doctors,
       };
     case ADD_DOCTORS:
@@ -160,12 +167,12 @@ export const adminReducer = (state = inititalState, action) => {
       };
 
     case GET_FILTERED_PATIENTS:
-      return{
+      return {
         ...state,
         isLoading: false,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
-      }
+      };
 
     case GET_STAFFS:
       return {
