@@ -59,12 +59,6 @@ const AdminDoctors = (props) => {
   const doctors = useSelector((state) => state.admin.doctors);
   const departments = useSelector((state) => state.admin.departments);
   const noOfDoctors = doctors.length;
-  const [branches, setBranches] = useState([
-    "All Branches",
-    "Cardiology",
-    "Therapy",
-    "Dermatology",
-  ]);
 
   const hospitalName = localStorage.getItem("hospitalName");
 

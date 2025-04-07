@@ -746,21 +746,25 @@ export const deleteService = (serviceId) => async (dispatch) => {
 
 // GET APPOINTMENTS COUNTS FOR GRAPHS
 
-export const getAppointmentCounts = () => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getAppointmentCounts =
+  (selectedDepartment) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getAppointmentCounts`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getAppointmentCounts`, {
+        params: {
+          department: selectedDepartment,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const updatePatient =
   (patientId, updatedData, filters) => async (dispatch) => {

@@ -22,8 +22,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 function Admin(props) {
   const [selectedFilter, setSelectedFilter] = useState("Monthly"); // Keep track of selected option
-  const filterOptions = ["Monthly", "Yearly"]; // Static options
-
+  const filterOptions = ["Monthly", "Yearly", "Weekly"]; // Static options
   // Initial state where all bars are visible
   const [visibleBars, setVisibleBars] = useState({
     appointments: true,
@@ -37,6 +36,8 @@ function Admin(props) {
     dispatch(getAppointmentCounts());
   }, []);
 
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+
   const appointmentData =
     useSelector((state) => state.admin.appointmentCount) || {}; // Default to empty object
   const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
@@ -48,6 +49,16 @@ function Admin(props) {
     ...dat, // Spread existing properties
     name: dat.name.slice(0, 3), // Modify name field
   }));
+
+  useEffect(() => {
+    if (selectedDepartment === "all") {
+      // If "All Branches" is selected, show all doctors
+      dispatch(getAppointmentCounts()); // Fetch all doctors
+    } else {
+      console.log("Selected Department:", selectedDepartment);
+      dispatch(getAppointmentCounts(selectedDepartment)); // Fetch all doctors
+    }
+  }, [selectedDepartment, dispatch]);
 
   // console.log(newData);
 
@@ -177,7 +188,10 @@ function Admin(props) {
         }}
       >
         <div className={ayu.patients} style={{ position: "relative" }}>
-          <CommonPanel />
+          <CommonPanel
+            setSelectedDepartment={setSelectedDepartment}
+            selectedDepartment={selectedDepartment}
+          />
 
           <Button
             variant="contained"
