@@ -349,13 +349,12 @@ const CommonPanel = ({
                   sx={{
                     background: "transparent", // keep outer div background
                     color: "#FFFFFF",
-                    width: "9.5rem",
-                    height: "2.4rem",
+                    width: "9.2rem",
+                    height: "2rem",
                     ".MuiSelect-select": {
                       padding: "6px 14px",
                       display: "flex",
-
-                      gap: "8px",
+                      gap: "10px",
                     },
                     ".MuiOutlinedInput-notchedOutline": {
                       border: "none", // remove border
