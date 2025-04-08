@@ -21,22 +21,28 @@ import "./Rate.scss";
 import RateModal from "./components/RateModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteService,
-  deleteServiceCategory,
-  getServices,
+    deleteService,
+    deleteServiceCategory, getAllDepartments,
+    getServices,
 } from "../../../../../components/State/Admin/Action.js";
 import EditRateModal from "./components/EditRateModal.jsx";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Rate = () => {
+    const [filters, setFilters] = useState({
+        department: "",
+    });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getServices());
+    dispatch(getServices(filters.department));
+    dispatch(getAllDepartments())
   }, [dispatch]);
 
   const reduxServices = useSelector((store) => store.admin.services);
+  const departments = useSelector((store) => store.admin.departments);
 
   const services = reduxServices.map((service) => ({
     serviceId: service._id,
@@ -64,10 +70,6 @@ const Rate = () => {
   const [selectedService, setSelectedService] = useState(null);
 
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
-
-  const [filters, setFilters] = useState({
-    category: "",
-  });
 
   // Handle Sort Change
   const handleSortChange = (event) => {
@@ -121,10 +123,12 @@ const Rate = () => {
 
   // Handle Search Results
   const handleSearchResults = () => {
-    // dispatch(getFilteredPatients(filters));
       console.log("Filter: ",filters)
+      dispatch(getServices(filters.department))
     setFilterDrawerOpen(false);
   };
+
+
 
   return (
     <div className="rate-container">
@@ -494,11 +498,12 @@ const Rate = () => {
         onClose={() => setFilterDrawerOpen(false)}
         sx={{
           "& .MuiDrawer-paper": {
-            height: "45vh", // Adjust height as needed
-            top: "25vh", // Center it vertically
+            height: "52vh", // Adjust height as needed
+            top: "22vh", // Center it vertically
             borderRadius: "10px 0 0 10px", // Optional rounded corners
           },
         }}
+        style={{position:'relative'}}
       >
         <Box sx={{ width: 220, padding: 2, paddingLeft: 4 }}>
           <Box
@@ -539,59 +544,50 @@ const Rate = () => {
                 "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
               }}
             >
-              Category
+              Departments
             </FormLabel>
-            <RadioGroup
-              name="category"
-              value={filters.status}
-              onChange={handleFilterChange}
-            >
-              <FormControlLabel
-                value="consultation"
-                control={
-                  <Radio
-                    sx={{
-                      color: "#878787", // Default color
-                      "&.Mui-checked": {
-                        color: "#25307F", // Selected dot color
-                      },
-                    }}
-                  />
-                }
-                label="Consultation"
-                sx={{ height: "34px", color: "#878787" }}
-              />
-              <FormControlLabel
-                value="roomCharges"
-                control={
-                  <Radio
-                    sx={{
-                      color: "#878787", // Default color
-                      "&.Mui-checked": {
-                        color: "#25307F", // Selected dot color
-                      },
-                    }}
-                  />
-                }
-                label="Room Charges"
-                sx={{ height: "34px", color: "#878787" }}
-              />
-              <FormControlLabel
-                value="company"
-                control={
-                  <Radio
-                    sx={{
-                      color: "#878787", // Default color
-                      "&.Mui-checked": {
-                        color: "#25307F", // Selected dot color
-                      },
-                    }}
-                  />
-                }
-                label="Company"
-                sx={{ height: "34px", color: "#878787" }}
-              />
-            </RadioGroup>
+            <Box sx={{ height: "23.5vh", overflowY: "auto" }}>
+                <RadioGroup
+                    name="department"
+                    value={filters.department}
+                    onChange={handleFilterChange}
+                >
+                    <FormControlLabel
+                        value=""
+                        control={
+                            <Radio
+                                sx={{
+                                    color: "#878787", // Default color
+                                    "&.Mui-checked": {
+                                        color: "#25307F", // Selected dot color
+                                    },
+                                }}
+                            />
+                        }
+                        label="All"
+                        sx={{ height: "34px", color: "#878787" }}
+                    />
+                    {
+                        departments.map((department,index) => (
+                            <FormControlLabel
+                                value={department.departmentId}
+                                control={
+                                    <Radio
+                                        sx={{
+                                            color: "#878787", // Default color
+                                            "&.Mui-checked": {
+                                                color: "#25307F", // Selected dot color
+                                            },
+                                        }}
+                                    />
+                                }
+                                label={department.departmentName}
+                                sx={{ height: "34px", color: "#878787" }}
+                            />
+                        ))
+                    }
+                </RadioGroup>
+            </Box>
           </FormControl>
 
           <Button
@@ -607,6 +603,7 @@ const Rate = () => {
                 boxShadow: "none",
               },
             }}
+            style={{position:'absolute',right:'15%',bottom:'7%'}}
             onClick={handleSearchResults}
           >
             Search Results

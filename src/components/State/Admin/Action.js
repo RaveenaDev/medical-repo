@@ -623,11 +623,14 @@ export const getBillDetails = (billId) => async (dispatch) => {
   }
 };
 
-export const getServices = () => async (dispatch) => {
+export const getServices = (departmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getServices`, {
+      params: {
+        departmentId: departmentId
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
