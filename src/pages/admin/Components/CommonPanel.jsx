@@ -342,14 +342,14 @@ const CommonPanel = ({
                 }}
               >
                 <Select
-                  value={selectedDepartment}
+                  value={selectedDepartment || "all"}
                   onChange={handleDepartmentChange}
                   displayEmpty
                   size="small"
                   sx={{
                     background: "transparent", // keep outer div background
                     color: "#FFFFFF",
-                    width: "9rem",
+                    width: "9.5rem",
                     height: "2.4rem",
                     ".MuiSelect-select": {
                       padding: "6px 14px",
