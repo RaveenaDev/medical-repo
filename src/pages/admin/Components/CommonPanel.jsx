@@ -337,7 +337,7 @@ const CommonPanel = ({
                   color: "#FFFFFF",
                   borderRadius: "5px",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
-                  padding: "4px 8px",
+                  padding: "0 8px",
                   width: "fit-content",
                 }}
               >
@@ -350,12 +350,7 @@ const CommonPanel = ({
                     background: "transparent", // keep outer div background
                     color: "#FFFFFF",
                     width: "9.2rem",
-                    height: "2rem",
-                    ".MuiSelect-select": {
-                      padding: "6px 14px",
-                      display: "flex",
-                      gap: "10px",
-                    },
+                    height: "2.4rem",
                     ".MuiOutlinedInput-notchedOutline": {
                       border: "none", // remove border
                     },
@@ -372,6 +367,12 @@ const CommonPanel = ({
                         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
                       },
                     },
+                    MenuListProps: {
+                      sx: {
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                      },
+                    },
                   }}
                 >
                   {departmentOptions.map((option) => (
@@ -380,6 +381,7 @@ const CommonPanel = ({
                       value={option.value}
                       sx={{
                         padding: "8px 8px",
+                        margin: 0,
                         borderBottom: "1px solid #ccc",
                         "&:hover": {
                           backgroundColor: "#25307F",
