@@ -99,6 +99,7 @@
     font-size: 14px;
     display: flex;
     justify-content: center;
+    margin-top: 1rem;
   }
 
   .subHeading {
@@ -109,19 +110,18 @@
   }
 
   .gridContainer {
-    margin-top: 1rem;
+    margin-top: 2rem;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    justify-content: center;
-    row-gap: 18px;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 1rem;
   }
 
   .card {
     display: grid;
     grid-template-columns: 1fr;
     position: relative;
-    border-radius: 20px;
+    border-radius: 5px;
     overflow: hidden;
   }
 
@@ -131,37 +131,41 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 10px;
+    border-radius: 0;
   }
 
   .textBox {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.78); // Dark overlay for readability
-    height: 150px; // Adjust height as needed
+    border-radius: 5px;
+    bottom: 10px;
+    left: 15px;
+    height: 17vw;
+    width: 90%;
+    background: rgba(255, 255, 255, 0.8);
     padding: 0;
     display: flex;
-    // align-items: center;
+     align-items: center;
     justify-content: center;
     flex-direction: column;
+
     .textTitle {
-      font-size: 12px;
-      color: #f3f3f3;
+      font-size: 13px;
+      color: #25307F;
       padding: 0 15px;
     }
 
     .textDescription {
-      font-size: 8px;
+      text-align:center;
+      font-size: 11px;
       margin-top: 0.5rem;
-      color: #f3f3f3;
+      font-weight:300;
+      color: #71748B;
       padding: 0 15px;
     }
   }
 
   .footerText {
-    font-size: 10px;
-    margin-top: 1rem;
+    font-size: 8px;
+    margin-top: 0.1rem;
   }
 }

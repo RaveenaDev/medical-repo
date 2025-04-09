@@ -1,9 +1,9 @@
 import React from "react";
 import "./solutions.scss";
-import doc1 from "../../../../assets/Doc1.png";
-import doc2 from "../../../../assets/doc2.png";
-import doc3 from "../../../../assets/doc3.png";
-import doc4 from "../../../../assets/doc4.png";
+import doc1 from "../../../../assets/sol1.png";
+import doc2 from "../../../../assets/sol2.png";
+import doc3 from "../../../../assets/sol3.png";
+import doc4 from "../../../../assets/sol4.png";
 
 const Solutions = () => {
   return (
@@ -25,12 +25,12 @@ const Solutions = () => {
           {
             img: doc3,
             title: "Revenue Insights",
-            desc: "Track earnings across services, rooms, and consultations in real-time.",
+            desc: "Access consultation room, treatment progress, medical history, and prescriptions in one place.",
           },
           {
             img: doc4,
             title: "Patient Management",
-            desc: "Access consultation room, treatment progress, medical history, and prescriptions in one place.",
+            desc: "Track earnings across services, rooms, and consultations in real-time.",
           },
         ].map((item, index) => (
           <div key={index} className="card">
