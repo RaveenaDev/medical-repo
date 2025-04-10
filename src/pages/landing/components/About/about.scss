@@ -1,8 +1,8 @@
 .about-container {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
-  gap: 2rem;
-  margin: 1rem 4rem 0;
+  grid-template-columns: 1.3fr 1fr 1.1fr;
+  gap: 1.5rem;
+  margin: 1rem 0.5rem 0 3rem;
 }
 
 .about-text {
@@ -53,13 +53,13 @@
 }
 
 .about-why-us {
-  padding: 7rem 0 0 3rem;
+  padding: 6rem 0 0 2.5rem;
   .why-us-title {
     font-family: "Inter";
     font-weight: 600;
     font-size: 1.5rem;
     color: #5663c2;
-    padding-left: 2rem;
+    padding-left: 1.5rem;
   }
 
   .why-us-list {
@@ -79,6 +79,11 @@
     gap: 1rem;
     margin-bottom: 0.5rem;
     color: #555555;
+    font-size: 16px;
+    .why-us-icon {
+      display: flex;
+      align-items: center;
+    }
   }
 }
 
@@ -138,35 +143,80 @@
   .about-why-us {
     padding: 1rem 0;
     .why-us-title {
-      font-size: 12px;
+      font-size: 14px;
       padding-left: 1rem;
       padding-bottom: 0.75rem;
+      text-align: center;
     }
 
     .why-us-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding-left: 5px;
-      margin-right: 12px;
+      display: grid;
+      grid-template-columns: 0.9fr 0.9fr 1.3fr 1.3fr 0.9fr 0.9fr;
+      grid-template-rows: repeat(2, 1fr);
+      padding: 1rem 0rem;
+      margin-right: 0;
+      background-color: #f6f7ff;
+      row-gap: 2rem;
+    }
+
+    .why-us-item:nth-child(1) {
+      grid-area: 1 / 1 / 2 / 3;
+    }
+    .why-us-item:nth-child(2) {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .why-us-item:nth-child(3) {
+      grid-area: 1 / 5 / 2 / 7;
+    }
+
+    /* Push row 2 to center */
+    .why-us-item:nth-child(4) {
+      grid-area: 2 / 1 / 3 / 4;
+    }
+
+    .why-us-item:nth-child(5) {
+      grid-area: 2 / 4 / 3 / 7;
     }
 
     .why-us-item {
       display: flex;
-      align-items: flex-start;
-      gap: 2px;
+      flex-direction: column;
+      // align-items: center;
+      gap: 10px;
       margin-bottom: 0rem;
       color: #555555;
       font-size: 10px;
       line-height: 150%;
       list-style-type: none;
-      padding: 0;
       margin: 0;
+      padding: 0;
 
-      svg {
-        width: 11.5px !important;
-        height: 11.5px;
+      .why-us-icon {
+        width: 26px !important;
+        height: 26px;
         flex-shrink: 0;
+        background-color: #dde1ff;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 2px 2px 4px 0px #25307f12;
+
+        svg {
+          width: 15px !important;
+          height: 12px;
+        }
+      }
+
+      .why-us-text {
+        color: #25307f;
+        font-family: "Inter";
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 140%;
+        letter-spacing: 0%;
+        text-align: center;
+        width: 75%;
       }
     }
   }
