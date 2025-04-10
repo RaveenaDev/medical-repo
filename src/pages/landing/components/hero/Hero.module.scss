@@ -71,7 +71,7 @@ $bg-overlay: rgba(230, 232, 238, 0.3);
   .hero-section {
     background-position: center;    // Keeps the focal point in the center
     background-repeat: no-repeat;   // Prevents tiling
-    padding: 0;
+    padding: 10vh 0 0 0;
     height: 100vh;
 
     .hero-container{

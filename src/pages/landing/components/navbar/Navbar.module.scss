@@ -66,8 +66,14 @@
 // Responsive styles for smaller screens
 @media (max-width: 480px) {
   .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     padding: 2vh 0.5rem;
-    background-color: #25307f;
+    background-color: rgba(37, 48, 127, 0.8); // Transparent navy blue
+    z-index: 1000; // Ensures it stays above other elements
+    backdrop-filter: blur(5px); // Optional: gives a nice blur effect behind
 
     .logo {
       width: 150px;
