@@ -82,7 +82,7 @@
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 100%;
-  letter-spacing: 0%;
+  letter-spacing: 0;
   text-align: center;
   padding: 1rem;
   margin-top: 3rem;
@@ -91,8 +91,9 @@
 @media (max-width: 431px) {
   .container {
     border-radius: 0;
-    margin: 2rem 0;
-    padding: 0.5rem 2rem;
+    margin: 0;
+    padding: 0.5rem 0;
+    background-color:#ffffff;
   }
 
   .heading {
@@ -109,6 +110,11 @@
     margin-top: 0.25rem;
   }
 
+  .subContainer{
+    background-color: #f6f7ff;
+    padding: 0.1rem 2rem;
+    margin-top: 1rem;
+  }
   .gridContainer {
     margin-top: 2rem;
     display: grid;
