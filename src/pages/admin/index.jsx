@@ -42,8 +42,7 @@ function Admin(props) {
     useSelector((state) => state.admin.appointmentCount) || {}; // Default to empty object
   const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
   const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
-  const weeklyData = [appointmentData?.Weekly] || {}; // Ensure it's an object
-  // console.log(" Data", yearlyData);
+  const weeklyData = appointmentData?.Weekly?.daily || {}; // Ensure it's an object
 
   const [newData, setNewData] = useState([]);
 
