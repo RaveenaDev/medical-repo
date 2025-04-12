@@ -59,7 +59,7 @@ const AdminDoctors = (props) => {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5); // You can change this default
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
   const [selectedDepartment, setSelectedDepartment] = useState("all");
 
   const handleChangePage = (event, newPage) => {
@@ -222,6 +222,7 @@ const AdminDoctors = (props) => {
       dispatch(fetchDoctorsByDepartment(selectedDepartment, page, rowsPerPage));
     }
   }, [page, rowsPerPage]);
+
   const handleDepartmentChange = (event) => {
     const selectedValue = event.target.value;
     setSelectedDepartment(selectedValue);

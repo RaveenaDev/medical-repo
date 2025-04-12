@@ -56,7 +56,7 @@ const AdminStaffs = (props) => {
   }, []);
   const [errors, setErrors] = useState({}); // Added error state
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5); // You can change this default
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

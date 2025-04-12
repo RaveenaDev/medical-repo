@@ -65,7 +65,7 @@ export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
 
     const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
       params: {
-        page: page,
+        page: page + 1,
         limit: rowsPerPage,
       },
       headers: {
