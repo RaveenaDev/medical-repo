@@ -25,6 +25,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -43,6 +44,7 @@ import {
   addStaff,
   deleteStaff,
   getDoctors,
+  getStaffs,
   updateStaff,
 } from "../../../components/State/Admin/Action.js";
 import { toast } from "react-toastify";
@@ -53,7 +55,20 @@ const AdminStaffs = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
   const [errors, setErrors] = useState({}); // Added error state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5); // You can change this default
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
+  useEffect(() => {
+    dispatch(getStaffs(page, rowsPerPage)); // Fetch all doctors
+  }, [page, rowsPerPage]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -213,8 +228,7 @@ const AdminStaffs = (props) => {
         <Box
           sx={{
             borderBottom: "0.5px solid #4A4A4A8C",
-            paddingBottom: 0.5,
-            marginBottom: 1,
+            paddingBottom: 1.5,
           }}
         >
           <div className={ayu.headerContainer}>
@@ -406,6 +420,7 @@ const AdminStaffs = (props) => {
           sx={{
             maxHeight: "70vh", // Adjust this to fit your layout needs
             overflowY: "auto",
+            position: "relative",
           }}
         >
           <Table
@@ -603,6 +618,22 @@ const AdminStaffs = (props) => {
               )}
             </TableBody>
           </Table>
+          <TablePagination
+            component="div"
+            count={noOfStaffs}
+            page={page} // current page
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage} // items per page
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+            sx={{
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 11,
+            }}
+          />
         </TableContainer>
 
         {/* Actions Menu */}
