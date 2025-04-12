@@ -21,6 +21,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -52,13 +53,27 @@ import "react-toastify/dist/ReactToastify.css";
 const AdminDoctors = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
+    dispatch(getDoctors(page, rowsPerPage));
   }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5); // You can change this default
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
+
   const doctors = useSelector((state) => state.admin.doctors);
   const departments = useSelector((state) => state.admin.departments);
-  const noOfDoctors = doctors.length;
+  const noOfDoctors = useSelector((state) => state.admin.doctorCount);
 
   const hospitalName = localStorage.getItem("hospitalName");
 
@@ -199,18 +214,23 @@ const AdminDoctors = (props) => {
     dispatch(deleteDoctor(selectedDoctor._id));
     handleMenuClose();
   };
-  const [selectedDepartment, setSelectedDepartment] = useState("all");
-
+  useEffect(() => {
+    if (selectedDepartment === "all") {
+      // If "All Branches" is selected, show all doctors
+      dispatch(getDoctors(page, rowsPerPage)); // Fetch all doctors
+    } else {
+      dispatch(fetchDoctorsByDepartment(selectedDepartment, page, rowsPerPage));
+    }
+  }, [page, rowsPerPage]);
   const handleDepartmentChange = (event) => {
     const selectedValue = event.target.value;
     setSelectedDepartment(selectedValue);
 
     if (selectedValue === "all") {
       // If "All Branches" is selected, show all doctors
-
-      dispatch(getDoctors()); // Fetch all doctors
+      dispatch(getDoctors(page, rowsPerPage)); // Fetch all doctors
     } else {
-      dispatch(fetchDoctorsByDepartment(selectedValue));
+      dispatch(fetchDoctorsByDepartment(selectedValue, page, rowsPerPage));
     }
   };
 
@@ -450,8 +470,9 @@ const AdminDoctors = (props) => {
         {/* Table Section */}
         <TableContainer
           sx={{
-            maxHeight: "70vh", // Adjust this to fit your layout needs
+            maxHeight: "72vh", // Adjust this to fit your layout needs
             overflowY: "auto",
+            position: "relative",
           }}
         >
           <Table
@@ -613,7 +634,24 @@ const AdminDoctors = (props) => {
               )}
             </TableBody>
           </Table>
+          <TablePagination
+            component="div"
+            count={noOfDoctors}
+            page={page} // current page
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage} // items per page
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+            sx={{
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 11,
+            }}
+          />
         </TableContainer>
+
         {/* Actions Menu */}
         <Menu
           anchorEl={anchorEl}

@@ -43,6 +43,7 @@ const inititalState = {
   totalPatients: null,
   totalFilteredPatients: null,
   totalDoctors: null,
+  doctorCount: null,
   totalStaffs: null,
   totalRooms: null,
   patient: null,
@@ -87,12 +88,14 @@ export const adminReducer = (state = inititalState, action) => {
     case GET_DOCTORS:
       return {
         ...state,
-        totalDoctors: action.payload.count,
+        totalDoctors: action.payload.totalDoctors,
+        doctorCount: action.payload.totalDoctors,
         doctors: action.payload.doctors,
       };
     case GET_FILTERED_DOCTORS:
       return {
         ...state,
+        doctorCount: action.payload.totalDoctors,
         doctors: action.payload.doctors,
       };
     case ADD_DOCTORS:

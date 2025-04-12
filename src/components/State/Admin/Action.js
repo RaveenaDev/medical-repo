@@ -59,11 +59,15 @@ export const getEarnings = (year) => async (dispatch) => {
   }
 };
 
-export const getDoctors = () => async (dispatch) => {
+export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
+      params: {
+        page: page,
+        limit: rowsPerPage,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -74,32 +78,38 @@ export const getDoctors = () => async (dispatch) => {
     console.log(error);
   }
 };
-export const fetchDoctorsByDepartment = (selectedValue) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const fetchDoctorsByDepartment =
+  (selectedValue, page, rowsPerPage) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-      `${API_URL}/getDoctorsByDepartment/${selectedValue}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-        },
-      }
-    );
+      const { data } = await axios.get(
+        `${API_URL}/getDoctorsByDepartment/${selectedValue}`,
 
-    dispatch({ type: GET_FILTERED_DOCTORS, payload: data });
-  } catch (error) {
-    console.error(
-      "Error filtering doctor:",
-      error.response?.data || error.message
-    );
+        {
+          params: {
+            page: page + 1, // Incrementing page by 1 to match the API requirement
+            limit: rowsPerPage,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+      );
 
-    toast.error("Error  filtering Doctor!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  }
-};
+      dispatch({ type: GET_FILTERED_DOCTORS, payload: data });
+    } catch (error) {
+      console.error(
+        "Error filtering doctor:",
+        error.response?.data || error.message
+      );
+
+      toast.error("Error  filtering Doctor!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    }
+  };
 export const addDoctor = (doctorData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -629,7 +639,7 @@ export const getServices = (departmentId) => async (dispatch) => {
 
     const { data } = await axios.get(`${API_URL}/getServices`, {
       params: {
-        departmentId: departmentId
+        departmentId: departmentId,
       },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
