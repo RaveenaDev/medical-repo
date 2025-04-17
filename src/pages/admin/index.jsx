@@ -22,8 +22,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 function Admin(props) {
   const [selectedFilter, setSelectedFilter] = useState("Monthly"); // Keep track of selected option
-  const filterOptions = ["Monthly", "Yearly"]; // Static options
-
+  const filterOptions = ["Monthly", "Yearly", "Weekly"]; // Static options
   // Initial state where all bars are visible
   const [visibleBars, setVisibleBars] = useState({
     appointments: true,
@@ -37,17 +36,59 @@ function Admin(props) {
     dispatch(getAppointmentCounts());
   }, []);
 
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+
   const appointmentData =
     useSelector((state) => state.admin.appointmentCount) || {}; // Default to empty object
   const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
   const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
+  const weeklyData = appointmentData?.Weekly?.daily || {}; // Ensure it's an object
 
-  // console.log("A",data)
+  const [newData, setNewData] = useState([]);
 
-  const newData = data.map((dat) => ({
-    ...dat, // Spread existing properties
-    name: dat.name.slice(0, 3), // Modify name field
-  }));
+  useEffect(() => {
+    if (selectedFilter === "Monthly") {
+      setNewData(
+        data.map((dat) => ({
+          ...dat, // Spread existing properties
+          name: dat.name.slice(0, 3), // Modify name field
+        }))
+      );
+    }
+    if (selectedFilter === "Weekly") {
+      // console.log("Selected Filter:", selectedFilter);
+      setNewData(
+        weeklyData.map((dat) => ({
+          ...dat, // Spread existing properties
+          name: dat.name.slice(0, 3), // Modify name field
+        }))
+      );
+    }
+    if (selectedFilter === "Yearly") {
+      // Transform yearlyData into an array for the graph
+      const yearlyGraphData = Object.entries(yearlyData).map(
+        ([year, stats]) => ({
+          name: year, // Using the year as the name, can modify if needed
+          ...stats, // Spread in the metrics (cancelled, completed, total)
+        })
+      );
+
+      // Optional: sort the data if necessary
+      yearlyGraphData.sort((a, b) => +a.name - +b.name);
+
+      setNewData(yearlyGraphData);
+    }
+  }, [appointmentData, selectedFilter, selectedDepartment, dispatch]);
+
+  useEffect(() => {
+    if (selectedDepartment === "all") {
+      // If "All Branches" is selected, show all doctors
+      dispatch(getAppointmentCounts()); // Fetch all doctors
+    } else {
+      // console.log("Selected Department:", selectedDepartment);
+      dispatch(getAppointmentCounts(selectedDepartment)); // Fetch all doctors
+    }
+  }, [selectedDepartment, dispatch]);
 
   // console.log(newData);
 
@@ -177,7 +218,10 @@ function Admin(props) {
         }}
       >
         <div className={ayu.patients} style={{ position: "relative" }}>
-          <CommonPanel />
+          <CommonPanel
+            setSelectedDepartment={setSelectedDepartment}
+            selectedDepartment={selectedDepartment}
+          />
 
           <Button
             variant="contained"
@@ -319,7 +363,7 @@ function Admin(props) {
                     style={{
                       backgroundColor: "#fff",
                       borderRadius: "0.2rem",
-                      width: "120px", // Fixed width to prevent size changes
+                      width: "130px", // Fixed width to prevent size changes
                     }}
                   >
                     <Select

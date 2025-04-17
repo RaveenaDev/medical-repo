@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
-import { Box, Button } from "@mui/material";
+import { Box, Button, MenuItem, Select } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -22,13 +22,13 @@ import {
 
 import { Dropdown } from "primereact/dropdown";
 
-const CommonPanel = ({ setSelectedDate, selectedDate }) => {
+const CommonPanel = ({
+  setSelectedDate,
+  selectedDate,
+  setSelectedDepartment,
+  selectedDepartment,
+}) => {
   const navigate = useNavigate();
-  const [branches, setBranches] = useState([
-    "All Branches",
-    "Cardiology",
-    "Physiology",
-  ]);
 
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
@@ -63,6 +63,8 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
 
   const noOfRooms = admin.totalRooms;
   const rooms = admin.rooms;
+
+  const departments = useSelector((state) => state.admin.departments);
 
   const handleRoomClick = (rooms) => {
     navigate(`/admin/rooms`, { state: { rooms } });
@@ -109,6 +111,18 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
       20
     </Box>
   );
+  const handleDepartmentChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedDepartment(selectedValue);
+  };
+
+  const departmentOptions = [
+    { label: "All Branches", value: "all" }, // default option
+    ...departments.map((dept) => ({
+      label: dept.departmentName,
+      value: dept.departmentId,
+    })),
+  ];
   return (
     <>
       <div className={ayu.patients}>
@@ -320,52 +334,65 @@ const CommonPanel = ({ setSelectedDate, selectedDate }) => {
               <div
                 style={{
                   backgroundColor: "#25307F",
-                  color: "#FFFFFF !important",
+                  color: "#FFFFFF",
                   borderRadius: "5px",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  padding: "0 8px",
+                  width: "fit-content",
                 }}
               >
-                {branches.length && (
-                  <Dropdown
-                    options={branches}
-                    optionLabel="All Branches"
-                    placeholder="All Branches"
-                    style={{
-                      width: "9rem",
-                      height: "2.4rem",
-                      padding: "6px 14px",
-                      color: "#FFFFFF",
-                      display: "flex",
-                      flexDirection: "row-reverse",
-                      gap: "8px",
-                    }}
-                    panelStyle={{
-                      zIndex: 105000, // Dropdown options panel
-                      backgroundColor: "#FFFFFF", // Background color of the open dropdown
-                      color: "#000000",
-                    }}
-                    itemTemplate={(option) => (
-                      <div
-                        style={{
-                          padding: "8px 8px",
-                          borderBottom: "1px solid #ccc", // Border between items
-                          cursor: "pointer",
-                          zIndex: 1000000,
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget.style.backgroundColor = "#25307F"),
-                            (e.currentTarget.style.color = "#FFFFFF");
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget.style.backgroundColor = "#FFFFFF"),
-                            (e.currentTarget.style.color = "#000000");
-                        }}
-                      >
-                        {option}
-                      </div>
-                    )}
-                  />
-                )}
+                <Select
+                  value={selectedDepartment || "all"}
+                  onChange={handleDepartmentChange}
+                  displayEmpty
+                  size="small"
+                  sx={{
+                    background: "transparent", // keep outer div background
+                    color: "#FFFFFF",
+                    width: "9.2rem",
+                    height: "2.4rem",
+                    ".MuiOutlinedInput-notchedOutline": {
+                      border: "none", // remove border
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                    svg: { color: "#FFFFFF" }, // arrow icon color
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: "#FFFFFF",
+                        color: "#000000",
+                        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                      },
+                    },
+                    MenuListProps: {
+                      sx: {
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                      },
+                    },
+                  }}
+                >
+                  {departmentOptions.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      sx={{
+                        padding: "8px 8px",
+                        margin: 0,
+                        borderBottom: "1px solid #ccc",
+                        "&:hover": {
+                          backgroundColor: "#25307F",
+                          color: "#FFFFFF",
+                        },
+                      }}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
               </div>
             </Grid>
           </Grid>

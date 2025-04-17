@@ -79,27 +79,6 @@ function Receptionist(props) {
     });
   }, [dispatch, selectedBranch, selectedDate,refreshAppointments]);
 
-  // const startDate = new Date(selectedDate).toISOString().setHours(0, 0, 0, 0);
-  // const endDate = new Date(selectedDate).toISOString();
-  // console.log("START DATE: ", startDate);
-  // console.log("END DATE: ", endDate);
-
-  // useEffect(() => {
-  //   dispatch(getAllDepartments());
-  //   if (selectedBranch === null || selectedBranch === "All Branches") {
-  //     dispatch(getAppointments("Scheduled"));
-  //     dispatch(getAppointments("Ongoing"));
-  //     dispatch(getAppointments("Waiting"));
-  //     dispatch(getAppointments("Completed"));
-  //   } else {
-  //     // console.log(selectedBranch)
-  //     dispatch(getFilteredAppointments("Scheduled", selectedBranch));
-  //     dispatch(getFilteredAppointments("Ongoing", selectedBranch));
-  //     dispatch(getFilteredAppointments("Waiting", selectedBranch));
-  //     dispatch(getFilteredAppointments("Completed", selectedBranch));
-  //   }
-  // }, [dispatch, selectedBranch]);
-
   const departments = useSelector((store) => store.receptionist.departments);
 
   const [branches, setBranches] = useState([]);
@@ -226,7 +205,7 @@ function Receptionist(props) {
                         alignItems="center"
                         sx={{ margin: "10px 30px 10px 0" }}
                       >
-                        <Grid item xs={4}>
+                        <Grid xs={4}>
                           <Select
                             inputId="input-department"
                             selectId="select-department"

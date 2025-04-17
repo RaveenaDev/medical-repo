@@ -1,5 +1,4 @@
 :root {
-
   // Add this to remove the blue touch highlight on mobile
   -webkit-tap-highlight-color: transparent;
 
@@ -19,6 +18,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+svg:focus,
+svg *:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 a {

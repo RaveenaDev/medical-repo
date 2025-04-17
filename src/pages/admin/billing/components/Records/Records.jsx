@@ -176,27 +176,27 @@ const Records = () => {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Button
-                startIcon={<FilterAltIcon sx={{color:"#878787"}}/>}
-                sx={{
-                  textTransform: "none",
-                  padding: "6px 20px",
-                  backgroundColor: "white",
-                  borderRadius: "5px",
-                  fontSize: "16px",
-                  color: "#4A4A4A",
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                    backgroundColor: "white",
-                  },
-                }}
-                onClick={() => setFilterDrawerOpen(true)}
-            >
-              Filter
-            </Button>
-          </Box>
+          {/*<Box sx={{ display: "flex", alignItems: "center" }}>*/}
+          {/*  <Button*/}
+          {/*      startIcon={<FilterAltIcon sx={{color:"#878787"}}/>}*/}
+          {/*      sx={{*/}
+          {/*        textTransform: "none",*/}
+          {/*        padding: "6px 20px",*/}
+          {/*        backgroundColor: "white",*/}
+          {/*        borderRadius: "5px",*/}
+          {/*        fontSize: "16px",*/}
+          {/*        color: "#4A4A4A",*/}
+          {/*        "&:focus": {*/}
+          {/*          outline: "none",*/}
+          {/*          boxShadow: "none",*/}
+          {/*          backgroundColor: "white",*/}
+          {/*        },*/}
+          {/*      }}*/}
+          {/*      onClick={() => setFilterDrawerOpen(true)}*/}
+          {/*  >*/}
+          {/*    Filter*/}
+          {/*  </Button>*/}
+          {/*</Box>*/}
         </Box>
       </div>
 

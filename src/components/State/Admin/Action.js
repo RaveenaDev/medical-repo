@@ -22,7 +22,9 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_EARNINGS,
-  GET_EXPENSES, GET_FILTERED_PATIENTS,
+  GET_EXPENSES,
+  GET_FILTERED_DOCTORS,
+  GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -38,15 +40,18 @@ import {
 
 import { toast } from "react-toastify";
 
-export const getEarnings = () => async (dispatch) => {
+export const getEarnings = (year) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
+    const { data } = await axios.get(`${API_URL}/getRevenueByYear`, {
+      params: { year: year },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
+
+    console.log("Earnings : ", data);
 
     dispatch({ type: GET_EARNINGS, payload: data });
   } catch (error) {
@@ -54,11 +59,15 @@ export const getEarnings = () => async (dispatch) => {
   }
 };
 
-export const getDoctors = () => async (dispatch) => {
+export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
+      params: {
+        page: page + 1,
+        limit: rowsPerPage,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -69,6 +78,38 @@ export const getDoctors = () => async (dispatch) => {
     console.log(error);
   }
 };
+export const fetchDoctorsByDepartment =
+  (selectedValue, page, rowsPerPage) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(
+        `${API_URL}/getDoctorsByDepartment/${selectedValue}`,
+
+        {
+          params: {
+            page: page + 1, // Incrementing page by 1 to match the API requirement
+            limit: rowsPerPage,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+      );
+
+      dispatch({ type: GET_FILTERED_DOCTORS, payload: data });
+    } catch (error) {
+      console.error(
+        "Error filtering doctor:",
+        error.response?.data || error.message
+      );
+
+      toast.error("Error  filtering Doctor!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    }
+  };
 export const addDoctor = (doctorData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -216,12 +257,22 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
 };
 
 export const getAppointments =
-  (activeLabel, startDate, endDate) => async (dispatch) => {
+  (activeLabel, startDate, endDate, selectedBranch, page, rowsPerPage) =>
+  async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
 
+      if (selectedBranch === "All Branches") selectedBranch = null;
+
       const { data } = await axios.get(`${API_URL}/getAppointments`, {
-        params: { status: activeLabel, start: startDate, end: endDate }, // Sending status as a query parameter
+        params: {
+          status: activeLabel,
+          start: startDate,
+          end: endDate,
+          departmentId: selectedBranch,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
@@ -295,25 +346,32 @@ export const getPatients = () => async (dispatch) => {
   }
 };
 
-export const getFilteredPatients = (filteredData) => async (dispatch) => {
-  // console.log("Fil:",filteredData)
-  try {
-    const token = localStorage.getItem("jwt");
+export const getFilteredPatients =
+  (filteredData, page, rowsPerPage) => async (dispatch) => {
+    // console.log("Fil:",filteredData)
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
-      params: { status: filteredData.status, typeVisit: filteredData.type, sort: filteredData.sort }, // Sending status as a query parameter
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
+        params: {
+          status: filteredData.status,
+          typeVisit: filteredData.type,
+          sort: filteredData.sort,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    // console.log("Filtered Data: ",data)
+      // console.log("Filtered Data: ",data)
 
-    dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 // ADD ROOMS
 
@@ -581,11 +639,14 @@ export const getBillDetails = (billId) => async (dispatch) => {
   }
 };
 
-export const getServices = () => async (dispatch) => {
+export const getServices = (departmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getServices`, {
+      params: {
+        departmentId: departmentId,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -704,41 +765,46 @@ export const deleteService = (serviceId) => async (dispatch) => {
 
 // GET APPOINTMENTS COUNTS FOR GRAPHS
 
-export const getAppointmentCounts = () => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getAppointmentCounts =
+  (selectedDepartment) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getAppointmentCounts`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getAppointmentCounts`, {
+        params: {
+          department: selectedDepartment,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-export const updatePatient = (patientId, updatedData,filters) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const { data } = await axios.put(`${API_URL}/${patientId}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+export const updatePatient =
+  (patientId, updatedData, filters) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const { data } = await axios.put(`${API_URL}/${patientId}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    dispatch(getFilteredPatients(filters));
-    toast.success("Patient Status Updated Successfully!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.error("Error updating Patient:", error);
-    toast.error(" Patient Updation Error!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  }
-};
+      dispatch(getFilteredPatients(filters));
+      toast.success("Patient Status Updated Successfully!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Error updating Patient:", error);
+      toast.error(" Patient Updation Error!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    }
+  };

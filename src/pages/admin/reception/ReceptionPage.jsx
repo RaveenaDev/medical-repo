@@ -477,7 +477,7 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
             size={3.5}
             className={styles.container1}
             sx={{
-                maxHeight: "calc(140vh - 190px)",
+                maxHeight: "78.5vh",
                 overflowY: "auto",
                 paddingX: "15px",
             }}
