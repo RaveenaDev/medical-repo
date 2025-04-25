@@ -182,6 +182,7 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         totalStaffs: action.payload.length,
         staffs: action.payload,
+        isLoading: false
       };
     case ADD_STAFFS:
       return {
@@ -212,6 +213,7 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         totalRooms: action.payload.rooms.length,
         rooms: action.payload.rooms,
+        isLoading: false
       };
 
     case GET_APPOINTMENT_REQUESTS:
@@ -253,6 +255,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         expenses: action.payload.expenses,
+        isLoading: false
       };
 
     case ADD_EXPENSE:

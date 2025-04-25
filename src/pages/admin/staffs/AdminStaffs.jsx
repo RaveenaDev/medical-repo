@@ -183,6 +183,7 @@ const AdminStaffs = (props) => {
   const dispatch = useDispatch();
 
   const staffs = useSelector((state) => state.admin.staffs);
+  const loading = useSelector((state) => state.admin.isLoading);
   const noOfStaffs = staffs.length;
 // const noOfStaffs = null;
   const departments = useSelector((state) => state.admin.departments);
@@ -221,7 +222,7 @@ const AdminStaffs = (props) => {
       <div style={{ marginTop: "150px" }}>
 
           {
-              noOfStaffs === null || noOfStaffs === undefined || staffs === undefined ? (
+              loading ? (
                   <Box
                       sx={{
                           display: "flex",

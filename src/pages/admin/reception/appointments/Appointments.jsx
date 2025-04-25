@@ -233,8 +233,7 @@ function Appointments(props) {
       </div>
 
       <div style={{ marginTop: "200px" }}>
-        {scheduledAppointments === null ||
-        scheduledAppointments === undefined ? (
+        {!scheduledAppointments ? (
           <Box
             sx={{
               display: "flex",

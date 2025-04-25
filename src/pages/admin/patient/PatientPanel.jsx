@@ -176,7 +176,7 @@ const PatientPanel = (props) => {
         <CommonPanel />
       </div>
       <div style={{ marginTop: "140px" }}>
-        {admin === null || admin === undefined ? (
+        {!admin?.filteredPatients || !admin?.totalFilteredPatients ? (
           <Box
             sx={{
               display: "flex",
