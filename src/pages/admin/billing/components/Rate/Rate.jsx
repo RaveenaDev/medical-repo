@@ -13,6 +13,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  TablePagination,
   Typography,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
@@ -21,24 +22,25 @@ import "./Rate.scss";
 import RateModal from "./components/RateModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    deleteService,
-    deleteServiceCategory, getAllDepartments,
-    getServices,
+  deleteService,
+  deleteServiceCategory,
+  getAllDepartments,
+  getServices,
 } from "../../../../../components/State/Admin/Action.js";
 import EditRateModal from "./components/EditRateModal.jsx";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Rate = () => {
-    const [filters, setFilters] = useState({
-        department: "",
-    });
+  const [filters, setFilters] = useState({
+    department: "",
+  });
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getServices(filters.department));
-    dispatch(getAllDepartments())
+    dispatch(getAllDepartments());
   }, [dispatch]);
 
   const reduxServices = useSelector((store) => store.admin.services);
@@ -123,12 +125,25 @@ const Rate = () => {
 
   // Handle Search Results
   const handleSearchResults = () => {
-      console.log("Filter: ",filters)
-      dispatch(getServices(filters.department))
+    console.log("Filter: ", filters);
+    dispatch(getServices(filters.department));
     setFilterDrawerOpen(false);
   };
+  const [page, setPage] = useState(0); // page number
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
 
+  const paginatedServices = services.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
 
   return (
     <div className="rate-container">
@@ -292,7 +307,7 @@ const Rate = () => {
           </Box>
         </Box>
       </Box>
-      <div className="rate-table">
+      <div className="rate-table" style={{ position: "relative" }}>
         <div className="rate-table-header">
           <span>Service Name</span>
           <span>Department</span>
@@ -305,7 +320,7 @@ const Rate = () => {
         </div>
         <div>
           {services.length > 0 ? (
-            services
+            paginatedServices
               .filter(
                 (service) =>
                   !selectedFilter || service.serviceName === selectedFilter
@@ -480,6 +495,28 @@ const Rate = () => {
             </div>
           )}
         </div>
+        <Box
+          sx={{
+            width: "100%",
+
+            position: "sticky",
+            bottom: 0,
+            backgroundColor: "#fff",
+            borderTop: "2px solid #ddd",
+            zIndex: 11,
+          }}
+        >
+          <TablePagination
+            component="div"
+            count={services.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 20, 50, 100]}
+            sx={{}}
+          />
+        </Box>
       </div>
       {/* Use the separate BillingModal Component */}
       <RateModal open={modalOpen} handleClose={() => setModalOpen(false)} />
@@ -503,7 +540,7 @@ const Rate = () => {
             borderRadius: "10px 0 0 10px", // Optional rounded corners
           },
         }}
-        style={{position:'relative'}}
+        style={{ position: "relative" }}
       >
         <Box sx={{ width: 220, padding: 2, paddingLeft: 4 }}>
           <Box
@@ -547,46 +584,44 @@ const Rate = () => {
               Departments
             </FormLabel>
             <Box sx={{ height: "23.5vh", overflowY: "auto" }}>
-                <RadioGroup
-                    name="department"
-                    value={filters.department}
-                    onChange={handleFilterChange}
-                >
-                    <FormControlLabel
-                        value=""
-                        control={
-                            <Radio
-                                sx={{
-                                    color: "#878787", // Default color
-                                    "&.Mui-checked": {
-                                        color: "#25307F", // Selected dot color
-                                    },
-                                }}
-                            />
-                        }
-                        label="All"
-                        sx={{ height: "34px", color: "#878787" }}
+              <RadioGroup
+                name="department"
+                value={filters.department}
+                onChange={handleFilterChange}
+              >
+                <FormControlLabel
+                  value=""
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#878787", // Default color
+                        "&.Mui-checked": {
+                          color: "#25307F", // Selected dot color
+                        },
+                      }}
                     />
-                    {
-                        departments.map((department,index) => (
-                            <FormControlLabel
-                                value={department.departmentId}
-                                control={
-                                    <Radio
-                                        sx={{
-                                            color: "#878787", // Default color
-                                            "&.Mui-checked": {
-                                                color: "#25307F", // Selected dot color
-                                            },
-                                        }}
-                                    />
-                                }
-                                label={department.departmentName}
-                                sx={{ height: "34px", color: "#878787" }}
-                            />
-                        ))
+                  }
+                  label="All"
+                  sx={{ height: "34px", color: "#878787" }}
+                />
+                {departments.map((department, index) => (
+                  <FormControlLabel
+                    value={department.departmentId}
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
                     }
-                </RadioGroup>
+                    label={department.departmentName}
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                ))}
+              </RadioGroup>
             </Box>
           </FormControl>
 
@@ -603,7 +638,7 @@ const Rate = () => {
                 boxShadow: "none",
               },
             }}
-            style={{position:'absolute',right:'15%',bottom:'7%'}}
+            style={{ position: "absolute", right: "15%", bottom: "7%" }}
             onClick={handleSearchResults}
           >
             Search Results
