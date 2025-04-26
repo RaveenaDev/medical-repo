@@ -1,5 +1,4 @@
-import
-  React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommonPanel from "../Components/CommonPanel.jsx";
 import {
   Box,
@@ -506,7 +505,7 @@ const AdminDoctors = (props) => {
                 sx={{
                   borderCollapse: "separate",
                   borderSpacing: "0 10px",
-                  marginBottom: "30px",
+                  marginBottom: "20px",
                 }}
               >
                 <TableHead

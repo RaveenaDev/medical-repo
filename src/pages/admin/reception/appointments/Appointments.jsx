@@ -374,7 +374,7 @@ function Appointments(props) {
               {/* Table Section */}
               <TableContainer
                 sx={{
-                  maxHeight: "50vh", // Adjust this to fit your layout needs
+                  maxHeight: "47vh", // Adjust this to fit your layout needs
                   overflowY: "auto",
                   position: "relative",
                 }}
