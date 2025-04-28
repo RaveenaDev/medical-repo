@@ -20,7 +20,7 @@
   color: #25307f;
   font-family: "Open Sans", sans-serif;
   font-weight: 700;
-  font-size: 45px;
+  font-size: 40px;
   line-height: 100%;
   letter-spacing: 0%;
   display: flex;
@@ -29,17 +29,17 @@
 }
 
 .gridContainer {
-  margin-top: 5rem;
+  margin-top: 3rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 4rem;
+  gap: 3rem;
   justify-content: center;
 }
 
 .card {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 4rem;
+  gap: 3rem;
 }
 
 .imageBox {
@@ -53,7 +53,7 @@
 
 .textBox {
   background-color: #ffffff;
-  padding: 4rem 1rem;
+  padding: 2rem 1rem;
   border-radius: 20px;
 }
 
@@ -61,7 +61,7 @@
   color: #000;
   font-family: "Inter", sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 100%;
   letter-spacing: 0%;
 }
@@ -70,8 +70,8 @@
   color: #555555b8;
   font-family: "Inter", sans-serif;
   font-weight: 400;
-  font-size: 16px;
-  margin-top: 1rem;
+  font-size: 14px;
+  margin-top: 0.5rem;
   line-height: 100%;
   letter-spacing: 0%;
 }
@@ -80,7 +80,7 @@
   color: #555555;
   font-family: "Inter", sans-serif;
   font-weight: 400;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   line-height: 100%;
   letter-spacing: 0;
   text-align: center;
@@ -93,7 +93,7 @@
     border-radius: 0;
     margin: 0;
     padding: 0.5rem 0;
-    background-color:#ffffff;
+    background-color: #ffffff;
   }
 
   .heading {
@@ -110,7 +110,7 @@
     margin-top: 0.25rem;
   }
 
-  .subContainer{
+  .subContainer {
     background-color: #f6f7ff;
     padding: 0.1rem 2rem;
     margin-top: 1rem;
@@ -150,22 +150,22 @@
     background: rgba(255, 255, 255, 0.8);
     padding: 0;
     display: flex;
-     align-items: center;
+    align-items: center;
     justify-content: center;
     flex-direction: column;
 
     .textTitle {
       font-size: 13px;
-      color: #25307F;
+      color: #25307f;
       padding: 0 15px;
     }
 
     .textDescription {
-      text-align:center;
+      text-align: center;
       font-size: 11px;
       margin-top: 0.5rem;
-      font-weight:300;
-      color: #71748B;
+      font-weight: 300;
+      color: #71748b;
       padding: 0 15px;
     }
   }
