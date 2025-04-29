@@ -23,12 +23,16 @@ const ServiceCard = ({ bgColor, textColor, icon, title, description }) => {
 
 export const Services = () => {
   const sliderSettings = {
-    infinite: false,
+    infinite: true,
+    pauseOnHover: true,
+    cssEase: "linear",
     speed: 300,
     slidesToShow: 4.7,
     slidesToScroll: 1,
     centerMode: false,
     variableWidth: false,
+    autoplay: true, // Enable auto scroll
+    autoplaySpeed: 2000, // Time between scrolls in ms
     responsive: [
       { breakpoint: 1400, settings: { slidesToShow: 3.7, slidesToScroll: 1 } },
       { breakpoint: 1160, settings: { slidesToShow: 3.4, slidesToScroll: 1 } },
@@ -37,8 +41,9 @@ export const Services = () => {
       { breakpoint: 768, settings: { slidesToShow: 2.2, slidesToScroll: 1 } },
       { breakpoint: 576, settings: { slidesToShow: 1.2, slidesToScroll: 1 } },
       { breakpoint: 431, settings: { slidesToShow: 2.2, slidesToScroll: 1 } },
+      { breakpoint: 400, settings: { slidesToShow: 2.1, slidesToScroll: 1 } },
       { breakpoint: 376, settings: { slidesToShow: 2, slidesToScroll: 1 } },
-      { breakpoint: 320, settings: { slidesToShow: 1.7, slidesToScroll: 1 } },
+      { breakpoint: 366, settings: { slidesToShow: 1.7, slidesToScroll: 1 } },
     ],
   };
 
