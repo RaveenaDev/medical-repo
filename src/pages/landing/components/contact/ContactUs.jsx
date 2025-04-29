@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import imageMed from "../../assets/imagemed.png";
 import styles from "./Contact.module.scss";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Import AOS styles
 
 const ContactUs = () => {
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: false });
+    AOS.refresh(); // Refresh manually if needed
+  }, []);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,10 +28,10 @@ const ContactUs = () => {
 
   return (
     <div className={styles["contact-container"]} id="contact">
-      <div className={styles["image-container"]}>
+      <div className={styles["image-container"]} data-aos="fade-right">
         <img src={imageMed} alt="Medicine" />
       </div>
-      <div className={styles["form-container"]}>
+      <div className={styles["form-container"]} data-aos="fade-left">
         <h3>Contact Us</h3>
         <h2>We're Here to Help !</h2>
         <div className={styles["form-wrapper"]}>

@@ -1,8 +1,8 @@
 .container {
   background: #e9edf0;
   border-radius: 0 40px 40px 40px;
-  margin: 4rem 4rem;
-  padding: 1rem 6.5rem;
+  margin: 4rem 2rem 2rem;
+  padding: 2rem 6.5rem;
 }
 
 .heading {
@@ -26,6 +26,7 @@
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+  animation: scaleUpDown 4s infinite;
 }
 
 .gridContainer {
@@ -57,7 +58,7 @@
 
 .textBox {
   background-color: #ffffff;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem;
   border-radius: 20px;
 }
 
@@ -89,7 +90,22 @@
   letter-spacing: 0;
   text-align: center;
   padding: 1rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
+  //
+}
+
+@keyframes scaleUpDown {
+  0% {
+    transform: scale(0.95);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(0.95);
+  }
 }
 
 @media (max-width: 431px) {
