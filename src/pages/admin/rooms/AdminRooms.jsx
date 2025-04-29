@@ -167,6 +167,7 @@ const AdminRooms = (props) => {
   const navigate = useNavigate();
 
   const rooms = useSelector((state) => state.admin.rooms);
+  const loading = useSelector((state) => state.admin.isLoading);
   // const rooms = undefined;
   const doctors = useSelector((state) => state.admin.doctors);
 
@@ -192,7 +193,7 @@ const AdminRooms = (props) => {
       </div>
       <div style={{ marginTop: "150px" }}>
         {
-          rooms === undefined || doctors === undefined ? (
+          loading ? (
               <Box
                   sx={{
                     display: "flex",

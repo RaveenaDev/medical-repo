@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
 import "./Records.scss";
 import {
-    Box,
-    Button,
-    Drawer, FormControl, FormControlLabel, FormLabel,
-    IconButton,
-    Menu,
-    MenuItem, Radio, RadioGroup,
-    Select,
-    Typography,
+  Box,
+  Button,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  IconButton,
+  Menu,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  TablePagination,
+  Typography,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
 import RecordModal from "./components/RecordsModal.jsx";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    getBillDetails,
-    getBillingRecords, getFilteredPatients,
+  getBillDetails,
+  getBillingRecords,
+  getFilteredPatients,
 } from "../../../../../components/State/Admin/Action.js";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CloseIcon from "@mui/icons-material/Close";
@@ -77,11 +84,26 @@ const Records = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-    // Handle Search Results
-    const handleSearchResults = () => {
-        // dispatch(getFilteredPatients(filters));
-        setFilterDrawerOpen(false);
-    };
+  // Handle Search Results
+  const handleSearchResults = () => {
+    // dispatch(getFilteredPatients(filters));
+    setFilterDrawerOpen(false);
+  };
+  const [page, setPage] = useState(0); // page number
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+
+  const paginatedBillingRecords = billingRecords.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
 
   return (
     <div className="billing-container">
@@ -200,7 +222,7 @@ const Records = () => {
         </Box>
       </div>
 
-      <div className="billings-table">
+      <div className="billings-table" style={{ position: "relative" }}>
         <div className="table-header">
           <span>Case ID</span>
           <span>Name</span>
@@ -212,7 +234,7 @@ const Records = () => {
         </div>
         <div style={{ paddingBottom: "2rem" }}>
           {billingRecords.length > 0 ? (
-            billingRecords.map((item) => (
+            paginatedBillingRecords.map((item) => (
               <div className="table-row" key={item._id}>
                 <span className="blue">{item.caseId}</span>
                 <span className="blue">{item.patient.name}</span>
@@ -262,6 +284,28 @@ const Records = () => {
             </div>
           )}
         </div>
+        <Box
+          sx={{
+            width: "100%",
+
+            position: "sticky",
+            bottom: 0,
+            backgroundColor: "#fff",
+            borderTop: "2px solid #ddd",
+            zIndex: 11,
+          }}
+        >
+          <TablePagination
+            component="div"
+            count={billingRecords.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 20, 50, 100]}
+            sx={{}}
+          />
+        </Box>
       </div>
       {/* Use the separate BillingModal Component */}
       <RecordModal
@@ -270,147 +314,147 @@ const Records = () => {
         onClose={handleCloseModal}
       />
 
-        {/* Filter Drawer */}
-        <Drawer
-            anchor="right"
-            open={filterDrawerOpen}
-            onClose={() => setFilterDrawerOpen(false)}
+      {/* Filter Drawer */}
+      <Drawer
+        anchor="right"
+        open={filterDrawerOpen}
+        onClose={() => setFilterDrawerOpen(false)}
+        sx={{
+          "& .MuiDrawer-paper": {
+            height: "48vh", // Adjust height as needed
+            top: "20vh", // Center it vertically
+            borderRadius: "10px 0 0 10px", // Optional rounded corners
+          },
+        }}
+      >
+        <Box sx={{ width: 220, padding: 2, paddingLeft: 4 }}>
+          <Box
             sx={{
-                "& .MuiDrawer-paper": {
-                    height: "48vh", // Adjust height as needed
-                    top: "20vh", // Center it vertically
-                    borderRadius: "10px 0 0 10px", // Optional rounded corners
-                },
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 1,
             }}
-        >
-            <Box sx={{ width: 220, padding: 2, paddingLeft: 4 }}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: 1,
-                    }}
-                >
-                    <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
-                        Filter By
-                    </Typography>
-                    <IconButton
-                        sx={{
-                            "&:focus": {
-                                outline: "none",
-                                boxShadow: "none",
-                            },
-                            color: "black",
-                        }}
-                        onClick={() => setFilterDrawerOpen(false)}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </Box>
+          >
+            <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
+              Filter By
+            </Typography>
+            <IconButton
+              sx={{
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
+                color: "black",
+              }}
+              onClick={() => setFilterDrawerOpen(false)}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
 
-                {/* Filter Options */}
-                <FormControl
-                    sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
-                    component="fieldset"
-                >
-                    <FormLabel
-                        component="legend"
-                        sx={{
-                            marginBottom: 1,
-                            color: "#000000",
-                            "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
-                        }}
-                    >
-                        Category
-                    </FormLabel>
-                    <RadioGroup
-                        name="status"
-                        value={filters.status}
-                        onChange={handleFilterChange}
-                    >
-                        <FormControlLabel
-                            value="patient"
-                            control={
-                                <Radio
-                                    sx={{
-                                        color: "#878787", // Default color
-                                        "&.Mui-checked": {
-                                            color: "#25307F", // Selected dot color
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Patient"
-                            sx={{ height: "34px", color: "#878787" }}
-                        />
-                        <FormControlLabel
-                            value="company"
-                            control={
-                                <Radio
-                                    sx={{
-                                        color: "#878787", // Default color
-                                        "&.Mui-checked": {
-                                            color: "#25307F", // Selected dot color
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Company"
-                            sx={{ height: "34px", color: "#878787" }}
-                        />
-                        <FormControlLabel
-                            value="pharmacy"
-                            control={
-                                <Radio
-                                    sx={{
-                                        color: "#878787", // Default color
-                                        "&.Mui-checked": {
-                                            color: "#25307F", // Selected dot color
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Pharmacy"
-                            sx={{ height: "34px", color: "#878787" }}
-                        />
-                        <FormControlLabel
-                            value="researchCollaboration"
-                            control={
-                                <Radio
-                                    sx={{
-                                        color: "#878787", // Default color
-                                        "&.Mui-checked": {
-                                            color: "#25307F", // Selected dot color
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Research Collaboration"
-                            sx={{ height: "34px", color: "#878787" }}
-                        />
-                    </RadioGroup>
-                </FormControl>
-
-                <Button
-                    variant="contained"
+          {/* Filter Options */}
+          <FormControl
+            sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
+            component="fieldset"
+          >
+            <FormLabel
+              component="legend"
+              sx={{
+                marginBottom: 1,
+                color: "#000000",
+                "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+              }}
+            >
+              Category
+            </FormLabel>
+            <RadioGroup
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
+            >
+              <FormControlLabel
+                value="patient"
+                control={
+                  <Radio
                     sx={{
-                        backgroundColor: "#25307F",
-                        textTransform: "none", // Prevents uppercase transformation
-                        borderRadius: "16px",
-                        padding: "6px 35px",
-                        marginLeft: "1.5rem",
-                        "&:focus": {
-                            outline: "none",
-                            boxShadow: "none",
-                        },
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
                     }}
-                    onClick={handleSearchResults}
-                >
-                    Search Results
-                </Button>
-            </Box>
-        </Drawer>
+                  />
+                }
+                label="Patient"
+                sx={{ height: "34px", color: "#878787" }}
+              />
+              <FormControlLabel
+                value="company"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="Company"
+                sx={{ height: "34px", color: "#878787" }}
+              />
+              <FormControlLabel
+                value="pharmacy"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="Pharmacy"
+                sx={{ height: "34px", color: "#878787" }}
+              />
+              <FormControlLabel
+                value="researchCollaboration"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#878787", // Default color
+                      "&.Mui-checked": {
+                        color: "#25307F", // Selected dot color
+                      },
+                    }}
+                  />
+                }
+                label="Research Collaboration"
+                sx={{ height: "34px", color: "#878787" }}
+              />
+            </RadioGroup>
+          </FormControl>
+
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#25307F",
+              textTransform: "none", // Prevents uppercase transformation
+              borderRadius: "16px",
+              padding: "6px 35px",
+              marginLeft: "1.5rem",
+              "&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
+            }}
+            onClick={handleSearchResults}
+          >
+            Search Results
+          </Button>
+        </Box>
+      </Drawer>
     </div>
   );
 };

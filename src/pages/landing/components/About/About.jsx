@@ -1,8 +1,15 @@
 import React from "react";
 import aboutUs from "../../../../assets/AboutUs.png";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Import AOS styles
 import "./about.scss";
 
 const About = () => {
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: false });
+    AOS.refresh(); // Refresh manually if needed
+  }, []);
   return (
     <div className="about-container" id="about">
       <div className="about-text">
@@ -19,9 +26,9 @@ const About = () => {
         </div>
       </div>
 
-      <div className="about-image"></div>
+      <div className="about-image" data-aos="zoom-in-right"></div>
 
-      <div className="about-why-us">
+      <div className="about-why-us" data-aos="zoom-in-left">
         <div className="why-us-title">Why Us</div>
         <ul className="why-us-list">
           <li className="why-us-item">

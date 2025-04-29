@@ -102,6 +102,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalRooms: action.payload.rooms.length,
         rooms: action.payload.rooms,
+        isLoading: false
       };
 
     case ADD_ROOM:
@@ -129,6 +130,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         departments: action.payload,
+        isLoading: false
       };
 
     case GET_DEPARTMENT_BY_ID:
@@ -148,6 +150,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         scheduledAppointments: action.payload.appointments,
+        isLoading: false
       };
 
     case GET_ONGOING_APPOINTMENTS:

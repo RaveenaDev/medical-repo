@@ -1,8 +1,7 @@
 .patients {
-  height: auto;
   background: #f1f1f1;
-  height: 96dvh; // Make the entire div take up the full viewport height
-  overflow: "hidden"; // Prevent scrolling on the rest of the page
+  height: 96vh; // Make the entire div take up the full viewport height
+  // overflow: "hidden"; // Prevent scrolling on the rest of the page
 
   display: flex;
   flex-direction: column;

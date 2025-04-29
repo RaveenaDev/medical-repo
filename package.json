@@ -38,6 +38,7 @@
     "@progress/kendo-react-tooltip": "^10.1.0",
     "@progress/kendo-theme-default": "^10.4.0",
     "ag-charts-react": "^11.2.1",
+    "aos": "^2.3.4",
     "apexcharts": "^4.4.0",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",

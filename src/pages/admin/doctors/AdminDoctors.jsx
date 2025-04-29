@@ -9,12 +9,10 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
-  Paper,
   Select,
   Table,
   TableBody,
@@ -507,7 +505,7 @@ const AdminDoctors = (props) => {
                 sx={{
                   borderCollapse: "separate",
                   borderSpacing: "0 10px",
-                  marginBottom: "30px",
+                  marginBottom: "20px",
                 }}
               >
                 <TableHead

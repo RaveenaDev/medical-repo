@@ -2,7 +2,6 @@
   background: #f1f1f1;
   color: black;
   padding: 0;
-  height: auto;
 
   .header {
     display: flex;
@@ -26,10 +25,9 @@
   }
 
   .rate-table {
-    max-height: 60vh; /* Ensure vertical scrolling */
+    height: 64vh; /* Ensure vertical scrolling */
     overflow-y: auto; /* Enable scrolling */
     border-radius: 8px;
-
     display: flex;
     flex-direction: column;
 

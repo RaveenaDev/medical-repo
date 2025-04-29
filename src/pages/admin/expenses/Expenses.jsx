@@ -43,6 +43,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Expenses = (props) => {
   useEffect(() => {
@@ -122,6 +123,7 @@ const Expenses = (props) => {
   }, [dispatch]);
 
   const expenses = useSelector((store) => store.admin.expenses);
+  const loader = useSelector((store) => store.admin.isLoading);
   const validateExpenseData = (data) => {
     let newErrors = {};
 
@@ -182,6 +184,8 @@ const Expenses = (props) => {
     });
   };
 
+  // console.log(expenses)
+
   return (
     <div
       style={{
@@ -204,510 +208,529 @@ const Expenses = (props) => {
       </div>
 
       <div style={{ marginTop: "200px" }}>
-        <h2 style={{ color: "black", fontWeight: 500 }}>Expenses</h2>
-
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            mt: 2,
-            justifyContent: "space-between",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "7px",
-            }}
-          >
-            <div style={{ paddingLeft: "0.2rem" }}>
-              <p style={{ color: "#25307F" }}>Expense Type</p>
-            </div>
-            <TextField
-              id="outlined-basic"
-              label="Expense Type"
-              name="expenseType"
-              variant="outlined"
-              value={expenseData.expenseType}
-              onChange={handleChange}
-              error={!!errors.expenseType}
-              helperText={errors.expenseType}
-              required
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  padding: "0px", // Remove extra padding from the input wrapper
-                  height: "50px", // Ensure height is consistent
-                },
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "7px",
-            }}
-          >
-            <div style={{ paddingLeft: "0.2rem" }}>
-              <p style={{ color: "#25307F" }}>Amount</p>
-            </div>
-            <TextField
-              id="outlined-basic"
-              label="Enter Amount"
-              variant="outlined"
-              name="amount"
-              value={expenseData.amount}
-              onChange={handleChange}
-              error={!!errors.amount}
-              helperText={errors.amount}
-              required
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  padding: "0px", // Remove extra padding from the input wrapper
-                  height: "50px", // Ensure height is consistent
-                },
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-
-              gap: "7px",
-            }}
-          >
-            <div style={{ paddingLeft: "0.2rem" }}>
-              <p style={{ color: "#25307F" }}>Paid To</p>
-            </div>
-            <TextField
-              id="outlined-basic"
-              label="Paid To"
-              variant="outlined"
-              name="paidTo"
-              value={expenseData.paidTo}
-              onChange={handleChange}
-              error={!!errors.paidTo}
-              helperText={errors.paidTo}
-              required
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  padding: "0px", // Remove extra padding from the input wrapper
-                  height: "50px", // Ensure height is consistent
-                },
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-
-              gap: "7px",
-            }}
-          >
-            <div style={{ paddingLeft: "0.2rem" }}>
-              <p style={{ color: "#25307F" }}>Details</p>
-            </div>
-            <TextField
-              id="outlined-basic"
-              label="Details"
-              variant="outlined"
-              name="details"
-              value={expenseData.details}
-              onChange={handleChange}
-              error={!!errors.details}
-              helperText={errors.details}
-              required
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  padding: "0px", // Remove extra padding from the input wrapper
-                  height: "50px", // Ensure height is consistent
-                },
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "7px",
-            }}
-          >
-            <div style={{ paddingLeft: "0.2rem" }}>
-              <p style={{ color: "#25307F" }}>Date</p>
-            </div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Box
-                sx={{
-                  borderRadius: 1,
-                  width: 180, // Adjust width here
-                  textAlign: "center",
-                  // boxShadow: "0px 4px 4px 0px #C2C2C240",
-                  // padding: "4px", // Reduce padding to make the container smaller
-                }}
-              >
-                <DatePicker
-                  name="date"
-                  value={date}
-                  onChange={handleDateChange}
-                  sx={{
-                    width: "100%", // Ensure full width
-                    // fontSize: "24px",
-                  }}
-                  slotProps={{
-                    textField: {
-                      sx: {
-                        "& .MuiInputBase-root": {
-                          minHeight: "50px", // Increase height
-                          fontSize: "16px", // Adjust text size
-                        },
-                        "& input": {
-                          padding: "12px", // Internal padding
-                        },
-
-                        "& .MuiInputBase-input": {
-                          fontSize: "14px",
-                          padding: "10px",
-                          "&:focus": {
-                            outline: "none !important",
-                          },
-                        },
-                        "& .MuiIconButton-root": {
-                          color: "#666", // Adjust icon color if needed
-                          "&:hover": {
-                            backgroundColor: "transparent !important",
-                          },
-                          "&:focus": {
-                            outline: "none !important",
-                            boxShadow: "none !important",
-                          },
-                        },
-                      },
-                      error: !!errors.date,
-                      helperText: errors.date,
-                    },
-                  }}
-                />
-              </Box>
-            </LocalizationProvider>
-          </div>
-          <Button
-            variant="contained"
-            onClick={handleClick}
-            sx={{
-              fontSize: { xs: "1rem", sm: "1rem", md: "1.05rem" }, // Smaller font on small screens
-              color: "#ffffff",
-              textTransform: "capitalize",
-              padding: {
-                xs: "0px 5px",
-                sm: "0px 5px",
-                md: "0px 5px",
-              }, // Adjust padding
-              backgroundColor: "#25307F",
-              height: "50px",
-              width: "11rem",
-              marginTop: "1.9rem",
-              outline: "none",
-              boxShadow: "none",
-              "&:hover": {
-                background: "#AEC3FF",
-              },
-              "&:focus": {
-                outline: "none",
-                boxShadow: "none",
-              },
-              "&:active": {
-                outline: "none",
-                boxShadow: "none",
-              },
-            }}
-          >
-            <img src={addAppointments} alt="Img" />
-            <h5 style={{ marginLeft: "1rem" }}>Add Expense</h5>
-          </Button>
-        </Box>
-
-        <div style={{ marginTop: "1.5rem" }}>
-          <TableContainer
-            component={Paper}
-            sx={{
-              maxHeight: "50vh", // Adjust this to fit your layout needs
-              overflowY: "auto",
-            }}
-          >
-            <Table
-              sx={{
-                borderCollapse: "separate", // Ensure border-spacing works
-                borderSpacing: "0 8px", // Adds vertical spacing between rows
-                marginBottom: "30px",
-              }}
-              aria-label="simple table"
-            >
-              <TableHead
-                sx={{
-                  position: "sticky",
-                  top: 0,
-                  backgroundColor: "white", // Ensure it's visible
-                  zIndex: 10, // Keep it above other elements
-                }}
-              >
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Expense Type
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      paddingRight: "28px",
-                      border: "none",
-                    }}
-                  >
-                    Amount
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Paid To
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Details
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Date
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "15px",
-                      color: "#959595",
-                      padding: "0.5rem 0.8rem",
-                      border: "none",
-                    }}
-                  >
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {expenses.length > 0 ? (
-                  expenses.map((row, index) => (
-                    <TableRow
-                      key={index}
+          {
+            loader ? (
+                  <Box
                       sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        backgroundColor: "#F1F5FF",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "50vh", // or full height you need
                       }}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ color: "#25307f", border: "none" }}
-                      >
-                        {row.expenseType}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          color: "#25307f",
-                          border: "none",
-                          paddingRight: "38px",
-                        }}
-                      >
-                        {truncateText(row.amount, 13)}
-                      </TableCell>
-                      <TableCell align="center" sx={{ border: "none" }}>
-                        {truncateText(row.paidTo, 14)}
-                      </TableCell>
-                      <TableCell align="center" sx={{ border: "none" }}>
-                        {row.details}
-                      </TableCell>
-                      <TableCell align="center" sx={{ border: "none" }}>
-                        {new Date(row.date).toLocaleDateString("en-IN", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })}
-                      </TableCell>
-                      <TableCell align="center">
-                        <IconButton
-                          onClick={(event) => handleMenuOpen(event, row)}
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      align="center"
-                      colSpan={6}
-                      sx={{ backgroundColor: "#F1F5FF" }}
-                    >
-                      No data found!
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                  >
+                      <CircularProgress sx={{ color: "#25307F" }} size={58} />
+                  </Box>
+              ):
+                  (
+                      <>
+                          <h2 style={{color: "black", fontWeight: 500}}>Expenses</h2>
 
-          {/* Actions Menu */}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            PaperProps={{
-              elevation: 2,
-              sx: { padding: 1 },
-            }}
-          >
-            <MenuItem onClick={handleEdit}>
-              <ListItemIcon>
-                <EditIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Edit</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleDelete}>
-              <ListItemIcon>
-                <DeleteIcon fontSize="small" color="error" />
-              </ListItemIcon>
-              <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
-            </MenuItem>
-          </Menu>
+                          <Box
+                              sx={{
+                                  display: "flex",
+                                  gap: 1,
+                                  mt: 2,
+                                  justifyContent: "space-between",
+                              }}
+                          >
+                              <div
+                                  style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      gap: "7px",
+                                  }}
+                              >
+                                  <div style={{paddingLeft: "0.2rem"}}>
+                                      <p style={{color: "#25307F"}}>Expense Type</p>
+                                  </div>
+                                  <TextField
+                                      id="outlined-basic"
+                                      label="Expense Type"
+                                      name="expenseType"
+                                      variant="outlined"
+                                      value={expenseData.expenseType}
+                                      onChange={handleChange}
+                                      error={!!errors.expenseType}
+                                      helperText={errors.expenseType}
+                                      required
+                                      sx={{
+                                          "& .MuiOutlinedInput-root": {
+                                              padding: "0px", // Remove extra padding from the input wrapper
+                                              height: "50px", // Ensure height is consistent
+                                          },
+                                      }}
+                                  />
+                              </div>
+                              <div
+                                  style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      gap: "7px",
+                                  }}
+                              >
+                                  <div style={{paddingLeft: "0.2rem"}}>
+                                      <p style={{color: "#25307F"}}>Amount</p>
+                                  </div>
+                                  <TextField
+                                      id="outlined-basic"
+                                      label="Enter Amount"
+                                      variant="outlined"
+                                      name="amount"
+                                      value={expenseData.amount}
+                                      onChange={handleChange}
+                                      error={!!errors.amount}
+                                      helperText={errors.amount}
+                                      required
+                                      sx={{
+                                          "& .MuiOutlinedInput-root": {
+                                              padding: "0px", // Remove extra padding from the input wrapper
+                                              height: "50px", // Ensure height is consistent
+                                          },
+                                      }}
+                                  />
+                              </div>
+                              <div
+                                  style={{
+                                      display: "flex",
+                                      flexDirection: "column",
 
-          {/* Edit Patient Dialog */}
-          <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-            <DialogTitle>Edit Expense</DialogTitle>
-            <DialogContent>
-              <TextField
-                select
-                label="Expense Type"
-                name="expenseType"
-                value={editedExpense.expenseType}
-                onChange={(e) =>
-                  setEditedExpense({
-                    ...editedExpense,
-                    expenseType: e.target.value,
-                  })
-                }
-                fullWidth
-                margin="dense"
-                error={!!errors.expenseType}
-                helperText={errors.expenseType}
-              >
-                <MenuItem value="salary">Salary</MenuItem>
-                <MenuItem value="rent">Rent</MenuItem>
-                <MenuItem value="utilities">Utilities</MenuItem>
-              </TextField>
+                                      gap: "7px",
+                                  }}
+                              >
+                                  <div style={{paddingLeft: "0.2rem"}}>
+                                      <p style={{color: "#25307F"}}>Paid To</p>
+                                  </div>
+                                  <TextField
+                                      id="outlined-basic"
+                                      label="Paid To"
+                                      variant="outlined"
+                                      name="paidTo"
+                                      value={expenseData.paidTo}
+                                      onChange={handleChange}
+                                      error={!!errors.paidTo}
+                                      helperText={errors.paidTo}
+                                      required
+                                      sx={{
+                                          "& .MuiOutlinedInput-root": {
+                                              padding: "0px", // Remove extra padding from the input wrapper
+                                              height: "50px", // Ensure height is consistent
+                                          },
+                                      }}
+                                  />
+                              </div>
+                              <div
+                                  style={{
+                                      display: "flex",
+                                      flexDirection: "column",
 
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Amount"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={editedExpense.amount}
-                onChange={(e) =>
-                  setEditedExpense({ ...editedExpense, amount: e.target.value })
-                }
-                error={!!errors.amount}
-                helperText={errors.amount}
-              />
+                                      gap: "7px",
+                                  }}
+                              >
+                                  <div style={{paddingLeft: "0.2rem"}}>
+                                      <p style={{color: "#25307F"}}>Details</p>
+                                  </div>
+                                  <TextField
+                                      id="outlined-basic"
+                                      label="Details"
+                                      variant="outlined"
+                                      name="details"
+                                      value={expenseData.details}
+                                      onChange={handleChange}
+                                      error={!!errors.details}
+                                      helperText={errors.details}
+                                      required
+                                      sx={{
+                                          "& .MuiOutlinedInput-root": {
+                                              padding: "0px", // Remove extra padding from the input wrapper
+                                              height: "50px", // Ensure height is consistent
+                                          },
+                                      }}
+                                  />
+                              </div>
+                              <div
+                                  style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      gap: "7px",
+                                  }}
+                              >
+                                  <div style={{paddingLeft: "0.2rem"}}>
+                                      <p style={{color: "#25307F"}}>Date</p>
+                                  </div>
+                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                      <Box
+                                          sx={{
+                                              borderRadius: 1,
+                                              width: 180, // Adjust width here
+                                              textAlign: "center",
+                                              // boxShadow: "0px 4px 4px 0px #C2C2C240",
+                                              // padding: "4px", // Reduce padding to make the container smaller
+                                          }}
+                                      >
+                                          <DatePicker
+                                              name="date"
+                                              value={date}
+                                              onChange={handleDateChange}
+                                              sx={{
+                                                  width: "100%", // Ensure full width
+                                                  // fontSize: "24px",
+                                              }}
+                                              slotProps={{
+                                                  textField: {
+                                                      sx: {
+                                                          "& .MuiInputBase-root": {
+                                                              minHeight: "50px", // Increase height
+                                                              fontSize: "16px", // Adjust text size
+                                                          },
+                                                          "& input": {
+                                                              padding: "12px", // Internal padding
+                                                          },
 
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Paid To"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={editedExpense.paidTo}
-                onChange={(e) =>
-                  setEditedExpense({ ...editedExpense, paidTo: e.target.value })
-                }
-                error={!!errors.paidTo}
-                helperText={errors.paidTo}
-              />
-              <TextField
-                margin="dense"
-                label="Details"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={editedExpense.details}
-                onChange={(e) =>
-                  setEditedExpense({
-                    ...editedExpense,
-                    details: e.target.value,
-                  })
-                }
-                error={!!errors.details}
-                helperText={errors.details}
-              />
+                                                          "& .MuiInputBase-input": {
+                                                              fontSize: "14px",
+                                                              padding: "10px",
+                                                              "&:focus": {
+                                                                  outline: "none !important",
+                                                              },
+                                                          },
+                                                          "& .MuiIconButton-root": {
+                                                              color: "#666", // Adjust icon color if needed
+                                                              "&:hover": {
+                                                                  backgroundColor: "transparent !important",
+                                                              },
+                                                              "&:focus": {
+                                                                  outline: "none !important",
+                                                                  boxShadow: "none !important",
+                                                              },
+                                                          },
+                                                      },
+                                                      error: !!errors.date,
+                                                      helperText: errors.date,
+                                                  },
+                                              }}
+                                          />
+                                      </Box>
+                                  </LocalizationProvider>
+                              </div>
+                              <Button
+                                  variant="contained"
+                                  onClick={handleClick}
+                                  sx={{
+                                      fontSize: {xs: "1rem", sm: "1rem", md: "1.05rem"}, // Smaller font on small screens
+                                      color: "#ffffff",
+                                      textTransform: "capitalize",
+                                      padding: {
+                                          xs: "0px 5px",
+                                          sm: "0px 5px",
+                                          md: "0px 5px",
+                                      }, // Adjust padding
+                                      backgroundColor: "#25307F",
+                                      height: "50px",
+                                      width: "11rem",
+                                      marginTop: "1.9rem",
+                                      outline: "none",
+                                      boxShadow: "none",
+                                      "&:hover": {
+                                          background: "#AEC3FF",
+                                      },
+                                      "&:focus": {
+                                          outline: "none",
+                                          boxShadow: "none",
+                                      },
+                                      "&:active": {
+                                          outline: "none",
+                                          boxShadow: "none",
+                                      },
+                                  }}
+                              >
+                                  <img src={addAppointments} alt="Img"/>
+                                  <h5 style={{marginLeft: "1rem"}}>Add Expense</h5>
+                              </Button>
+                          </Box>
 
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]} sx={{ padding: 0 }}>
-                  <DatePicker
-                    name="date"
-                    value={dayjs(editedExpense.date)}
-                    onChange={(newDate) =>
-                      setEditedExpense({
-                        ...editedExpense,
-                        date: dayjs(newDate).format("YYYY-MM-DD"),
-                      })
-                    }
-                    slotProps={{
-                      textField: {
-                        error: !!errors.date,
-                        helperText: errors.date,
-                      },
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleEditDialogClose}>Cancel</Button>
-              <Button onClick={handleSaveEditedExpense}>Save</Button>
-            </DialogActions>
-          </Dialog>
-        </div>
+                          <div style={{marginTop: "1.5rem"}}>
+                              <TableContainer
+                                  component={Paper}
+                                  sx={{
+                                      maxHeight: "50vh", // Adjust this to fit your layout needs
+                                      overflowY: "auto",
+                                  }}
+                              >
+                                  <Table
+                                      sx={{
+                                          borderCollapse: "separate", // Ensure border-spacing works
+                                          borderSpacing: "0 8px", // Adds vertical spacing between rows
+                                          marginBottom: "30px",
+                                      }}
+                                      aria-label="simple table"
+                                  >
+                                      <TableHead
+                                          sx={{
+                                              position: "sticky",
+                                              top: 0,
+                                              backgroundColor: "white", // Ensure it's visible
+                                              zIndex: 10, // Keep it above other elements
+                                          }}
+                                      >
+                                          <TableRow>
+                                              <TableCell
+                                                  sx={{
+                                                      fontSize: "15px",
+                                                      color: "#959595",
+                                                      padding: "0.5rem 0.8rem",
+                                                      border: "none",
+                                                  }}
+                                              >
+                                                  Expense Type
+                                              </TableCell>
+                                              <TableCell
+                                                  align="center"
+                                                  sx={{
+                                                      fontSize: "15px",
+                                                      color: "#959595",
+                                                      padding: "0.5rem 0.8rem",
+                                                      paddingRight: "28px",
+                                                      border: "none",
+                                                  }}
+                                              >
+                                                  Amount
+                                              </TableCell>
+                                              <TableCell
+                                                  align="center"
+                                                  sx={{
+                                                      fontSize: "15px",
+                                                      color: "#959595",
+                                                      padding: "0.5rem 0.8rem",
+                                                      border: "none",
+                                                  }}
+                                              >
+                                                  Paid To
+                                              </TableCell>
+                                              <TableCell
+                                                  align="center"
+                                                  sx={{
+                                                      fontSize: "15px",
+                                                      color: "#959595",
+                                                      padding: "0.5rem 0.8rem",
+                                                      border: "none",
+                                                  }}
+                                              >
+                                                  Details
+                                              </TableCell>
+                                              <TableCell
+                                                  align="center"
+                                                  sx={{
+                                                      fontSize: "15px",
+                                                      color: "#959595",
+                                                      padding: "0.5rem 0.8rem",
+                                                      border: "none",
+                                                  }}
+                                              >
+                                                  Date
+                                              </TableCell>
+                                              <TableCell
+                                                  align="center"
+                                                  sx={{
+                                                      fontSize: "15px",
+                                                      color: "#959595",
+                                                      padding: "0.5rem 0.8rem",
+                                                      border: "none",
+                                                  }}
+                                              >
+                                                  Action
+                                              </TableCell>
+                                          </TableRow>
+                                      </TableHead>
+                                      <TableBody>
+                                          {expenses.length > 0 ? (
+                                              expenses.map((row, index) => (
+                                                  <TableRow
+                                                      key={index}
+                                                      sx={{
+                                                          "&:last-child td, &:last-child th": {border: 0},
+                                                          backgroundColor: "#F1F5FF",
+                                                      }}
+                                                  >
+                                                      <TableCell
+                                                          component="th"
+                                                          scope="row"
+                                                          sx={{color: "#25307f", border: "none"}}
+                                                      >
+                                                          {row.expenseType}
+                                                      </TableCell>
+                                                      <TableCell
+                                                          align="center"
+                                                          sx={{
+                                                              color: "#25307f",
+                                                              border: "none",
+                                                              paddingRight: "38px",
+                                                          }}
+                                                      >
+                                                          {truncateText(row.amount, 13)}
+                                                      </TableCell>
+                                                      <TableCell align="center" sx={{border: "none"}}>
+                                                          {truncateText(row.paidTo, 14)}
+                                                      </TableCell>
+                                                      <TableCell align="center" sx={{border: "none"}}>
+                                                          {row.details}
+                                                      </TableCell>
+                                                      <TableCell align="center" sx={{border: "none"}}>
+                                                          {new Date(row.date).toLocaleDateString("en-IN", {
+                                                              day: "2-digit",
+                                                              month: "2-digit",
+                                                              year: "numeric",
+                                                          })}
+                                                      </TableCell>
+                                                      <TableCell align="center">
+                                                          <IconButton
+                                                              onClick={(event) => handleMenuOpen(event, row)}
+                                                          >
+                                                              <MoreVertIcon/>
+                                                          </IconButton>
+                                                      </TableCell>
+                                                  </TableRow>
+                                              ))
+                                          ) : (
+                                              <TableRow>
+                                                  <TableCell
+                                                      align="center"
+                                                      colSpan={6}
+                                                      sx={{backgroundColor: "#F1F5FF"}}
+                                                  >
+                                                      No data found!
+                                                  </TableCell>
+                                              </TableRow>
+                                          )}
+                                      </TableBody>
+                                  </Table>
+                              </TableContainer>
+
+                              {/* Actions Menu */}
+                              <Menu
+                                  anchorEl={anchorEl}
+                                  open={Boolean(anchorEl)}
+                                  onClose={handleMenuClose}
+                                  PaperProps={{
+                                      elevation: 2,
+                                      sx: {padding: 1},
+                                  }}
+                              >
+                                  <MenuItem onClick={handleEdit}>
+                                      <ListItemIcon>
+                                          <EditIcon fontSize="small"/>
+                                      </ListItemIcon>
+                                      <ListItemText>Edit</ListItemText>
+                                  </MenuItem>
+                                  <MenuItem onClick={handleDelete}>
+                                      <ListItemIcon>
+                                          <DeleteIcon fontSize="small" color="error"/>
+                                      </ListItemIcon>
+                                      <ListItemText sx={{color: "error.main"}}>Delete</ListItemText>
+                                  </MenuItem>
+                              </Menu>
+
+                              {/* Edit Patient Dialog */}
+                              <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+                                  <DialogTitle>Edit Expense</DialogTitle>
+                                  <DialogContent>
+                                      <TextField
+                                          select
+                                          label="Expense Type"
+                                          name="expenseType"
+                                          value={editedExpense.expenseType}
+                                          onChange={(e) =>
+                                              setEditedExpense({
+                                                  ...editedExpense,
+                                                  expenseType: e.target.value,
+                                              })
+                                          }
+                                          fullWidth
+                                          margin="dense"
+                                          error={!!errors.expenseType}
+                                          helperText={errors.expenseType}
+                                      >
+                                          <MenuItem value="salary">Salary</MenuItem>
+                                          <MenuItem value="rent">Rent</MenuItem>
+                                          <MenuItem value="utilities">Utilities</MenuItem>
+                                      </TextField>
+
+                                      <TextField
+                                          autoFocus
+                                          margin="dense"
+                                          label="Amount"
+                                          type="text"
+                                          fullWidth
+                                          variant="outlined"
+                                          value={editedExpense.amount}
+                                          onChange={(e) =>
+                                              setEditedExpense({...editedExpense, amount: e.target.value})
+                                          }
+                                          error={!!errors.amount}
+                                          helperText={errors.amount}
+                                      />
+
+                                      <TextField
+                                          autoFocus
+                                          margin="dense"
+                                          label="Paid To"
+                                          type="text"
+                                          fullWidth
+                                          variant="outlined"
+                                          value={editedExpense.paidTo}
+                                          onChange={(e) =>
+                                              setEditedExpense({...editedExpense, paidTo: e.target.value})
+                                          }
+                                          error={!!errors.paidTo}
+                                          helperText={errors.paidTo}
+                                      />
+                                      <TextField
+                                          margin="dense"
+                                          label="Details"
+                                          type="text"
+                                          fullWidth
+                                          variant="outlined"
+                                          value={editedExpense.details}
+                                          onChange={(e) =>
+                                              setEditedExpense({
+                                                  ...editedExpense,
+                                                  details: e.target.value,
+                                              })
+                                          }
+                                          error={!!errors.details}
+                                          helperText={errors.details}
+                                      />
+
+                                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                          <DemoContainer components={["DatePicker"]} sx={{padding: 0}}>
+                                              <DatePicker
+                                                  name="date"
+                                                  value={dayjs(editedExpense.date)}
+                                                  onChange={(newDate) =>
+                                                      setEditedExpense({
+                                                          ...editedExpense,
+                                                          date: dayjs(newDate).format("YYYY-MM-DD"),
+                                                      })
+                                                  }
+                                                  slotProps={{
+                                                      textField: {
+                                                          error: !!errors.date,
+                                                          helperText: errors.date,
+                                                      },
+                                                  }}
+                                              />
+                                          </DemoContainer>
+                                      </LocalizationProvider>
+                                  </DialogContent>
+                                  <DialogActions>
+                                      <Button onClick={handleEditDialogClose}>Cancel</Button>
+                                      <Button onClick={handleSaveEditedExpense}>Save</Button>
+                                  </DialogActions>
+                              </Dialog>
+                          </div>
+                      </>
+                  )
+          }
+
       </div>
     </div>
   );

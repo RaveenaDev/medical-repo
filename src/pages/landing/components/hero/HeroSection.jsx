@@ -2,8 +2,15 @@ import React from "react";
 import background from "../../../../assets/image 7.png";
 import Navbar from "../navbar/Navbar.jsx";
 import styles from "./Hero.module.scss";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Import AOS styles
 
 const HeroSection = () => {
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: false });
+    AOS.refresh(); // Refresh manually if needed
+  }, []);
   return (
     <div
       className={styles["hero-section"]}
@@ -11,7 +18,7 @@ const HeroSection = () => {
     >
       <Navbar />
       <div className={styles["hero-container"]} id="home">
-        <div className={styles["hero-content"]}>
+        <div className={styles["hero-content"]} data-aos="fade-right">
           <div>
             <h2>Transform Hospital Operations with Our</h2>
             <h2>All-in-One Management Portal</h2>
@@ -26,7 +33,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <div className={styles["explore-section"]}>
+      <div className={styles["explore-section"]} data-aos="fade-right">
         <svg
           width="95"
           height="67"
