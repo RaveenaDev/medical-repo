@@ -14,14 +14,14 @@ const Base = (props) => {
     props?.setIsSignUpOrLogin(true);
   }, []);
   return (
-    <>
+    <div style={{ overflowX: "hidden" }}>
       <HeroSection />
       <Services />
       <About />
       <Solutions />
       <ContactUs />
       <Footer />
-    </>
+    </div>
   );
 };
 export default Base;

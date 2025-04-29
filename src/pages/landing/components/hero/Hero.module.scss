@@ -6,6 +6,7 @@ $bg-overlay: rgba(230, 232, 238, 0.3);
   background-size: cover;
   height: 95.5vh;
   padding: 18px 3rem 18px 22px;
+  overflow-x: hidden;
 
   .hero-content {
     margin-left: 20px;
