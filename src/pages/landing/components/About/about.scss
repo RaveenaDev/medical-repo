@@ -119,6 +119,7 @@
     padding: 0 1rem;
     justify-content: center;
     position: relative;
+    grid-area: span 1 / span 1;
 
     .about-title {
       margin-top: 0;
@@ -148,13 +149,17 @@
 
   .about-image {
     height: 13rem;
+    min-height: 13rem;
     border-radius: 0px;
-    background-image: url("../../../../assets/about-mobile.png");
+    background-image: url("/assets/about-mobile.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     margin-top: 10px;
-    filter: blur(2px);
+
+    display: block;
+    visibility: visible;
+    opacity: 1;
   }
 
   .about-why-us {
