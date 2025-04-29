@@ -75,7 +75,7 @@
 .textDescription {
   color: #555555b8;
   font-family: "Inter", sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 14px;
   margin-top: 0.5rem;
   line-height: 100%;
@@ -159,6 +159,7 @@
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 0;
+    filter: brightness(0.9) contrast(0.7);
   }
 
   .textBox {
@@ -185,7 +186,7 @@
       text-align: center;
       font-size: 11px;
       margin-top: 0.5rem;
-      font-weight: 300;
+      font-weight: 500;
       color: #71748b;
       padding: 0 15px;
     }
