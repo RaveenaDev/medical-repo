@@ -1,4 +1,5 @@
 import {
+  ADD_DEPARTMENT,
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_ROOM,
@@ -132,6 +133,13 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         department: action.payload,
       };
+
+
+    case ADD_DEPARTMENT:
+      return{
+        ...state,
+        departments: [...state.departments,action.payload]
+      }
 
     case GET_APPOINTMENTS:
       return {
