@@ -233,6 +233,7 @@ export const getAllDepartments = () => async (dispatch) => {
     });
 
     dispatch({ type: GET_ALL_DEPARTMENTS, payload: data });
+    console.log("DEP: ",data)
   } catch (error) {
     console.log(error);
   }
