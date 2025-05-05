@@ -539,7 +539,7 @@ function Appointments(props) {
                   onPageChange={handleChangePage}
                   rowsPerPage={rowsPerPage} // items per page
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[2, 5, 10, 20, 50, 100]} // 👈 Custom options
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
                   sx={{
                     position: "sticky",
                     bottom: 0,
