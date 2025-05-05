@@ -606,11 +606,15 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
 };
 
 // BILLING
-export const getBillingRecords = () => async (dispatch) => {
+export const getBillingRecords = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getAllBills`, {
+      params: {
+        page: page + 1, // Incrementing page by 1 to match the API requirement
+        limit: rowsPerPage,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },

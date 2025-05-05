@@ -20,10 +20,10 @@ const Base = (props) => {
     <div style={{ overflowX: "hidden" }}>
       <HeroSection />
       <About />
+      <Works />
       <Services />
       {/* <Features /> */}
       <Solutions />
-      <Works />
       <Testimonials />
       <ContactUs />
       <Footer />
