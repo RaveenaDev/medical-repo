@@ -123,6 +123,7 @@ function Appointments(props) {
   let scheduledAppointments = useSelector(
     (store) => store.admin.scheduledAppointments
   );
+  const scheduledCount = useSelector((store) => store.admin.scheduledCount);
 
   // let scheduledAppointments = null;
 
@@ -135,18 +136,21 @@ function Appointments(props) {
   const ongoingAppointments = useSelector(
     (store) => store.admin.ongoingAppointments
   );
+  const ongoingCount = useSelector((store) => store.admin.ongoingCount);
   const waitingAppointments = useSelector(
     (store) => store.admin.waitingAppointments
   );
+  const waitingCount = useSelector((store) => store.admin.waitingCount);
   const completedAppointments = useSelector(
     (store) => store.admin.completedAppointments
   );
+  const completedCount = useSelector((store) => store.admin.completedCount);
 
   const boxData = [
-    { id: 1, label: "Scheduled", count: scheduledAppointments?.length },
-    { id: 2, label: "Ongoing", count: ongoingAppointments.length },
-    { id: 3, label: "Waiting", count: waitingAppointments.length },
-    { id: 4, label: "Completed", count: completedAppointments.length },
+    { id: 1, label: "Scheduled", count: scheduledCount },
+    { id: 2, label: "Ongoing", count: ongoingCount },
+    { id: 3, label: "Waiting", count: waitingCount },
+    { id: 4, label: "Completed", count: completedCount },
   ];
 
   const handleBoxClick = (id) => {
@@ -191,18 +195,24 @@ function Appointments(props) {
 
   let totalAppointments = [];
 
+  let totalAppointmentsCount = 0;
+
   switch (activeLabel) {
     case "Scheduled":
       totalAppointments = scheduledAppointments;
+      totalAppointmentsCount = scheduledCount;
       break;
     case "Ongoing":
       totalAppointments = ongoingAppointments;
+      totalAppointmentsCount = ongoingCount;
       break;
     case "Waiting":
       totalAppointments = waitingAppointments;
+      totalAppointmentsCount = waitingCount;
       break;
     case "Completed":
       totalAppointments = completedAppointments;
+      totalAppointmentsCount = completedCount;
       break;
     default:
       totalAppointments = [];
@@ -524,12 +534,12 @@ function Appointments(props) {
                 </Table>
                 <TablePagination
                   component="div"
-                  count={totalAppointments.length}
+                  count={totalAppointmentsCount}
                   page={page} // current page
                   onPageChange={handleChangePage}
                   rowsPerPage={rowsPerPage} // items per page
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                  rowsPerPageOptions={[2, 5, 10, 20, 50, 100]} // 👈 Custom options
                   sx={{
                     position: "sticky",
                     bottom: 0,

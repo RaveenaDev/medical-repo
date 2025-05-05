@@ -58,6 +58,10 @@ const inititalState = {
   expenses: [],
   totalAppointments: [],
   scheduledAppointments: [],
+  scheduledCount: null,
+  ongoingCount: null,
+  waitingCount: null,
+  completedCount: null,
   ongoingAppointments: [],
   waitingAppointments: [],
   completedAppointments: [],
@@ -143,24 +147,28 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         scheduledAppointments: action.payload.appointments,
+        scheduledCount: action.payload.totalAppointments,
       };
 
     case GET_ONGOING_APPOINTMENTS:
       return {
         ...state,
         ongoingAppointments: action.payload.appointments,
+        ongoingCount: action.payload.totalAppointments,
       };
 
     case GET_WAITING_APPOINTMENTS:
       return {
         ...state,
         waitingAppointments: action.payload.appointments,
+        waitingCount: action.payload.totalAppointments,
       };
 
     case GET_COMPLETED_APPOINTMENTS:
       return {
         ...state,
         completedAppointments: action.payload.appointments,
+        completedCount: action.payload.totalAppointments,
       };
 
     case GET_PATIENTS:
@@ -182,7 +190,7 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         totalStaffs: action.payload.length,
         staffs: action.payload,
-        isLoading: false
+        isLoading: false,
       };
     case ADD_STAFFS:
       return {
@@ -213,7 +221,7 @@ export const adminReducer = (state = inititalState, action) => {
         ...state,
         totalRooms: action.payload.rooms.length,
         rooms: action.payload.rooms,
-        isLoading: false
+        isLoading: false,
       };
 
     case GET_APPOINTMENT_REQUESTS:
@@ -255,7 +263,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         expenses: action.payload.expenses,
-        isLoading: false
+        isLoading: false,
       };
 
     case ADD_EXPENSE:

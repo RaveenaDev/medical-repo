@@ -262,6 +262,8 @@ export const getAppointments =
     try {
       const token = localStorage.getItem("jwt");
 
+      console.log("In action ");
+
       if (selectedBranch === "All Branches") selectedBranch = null;
 
       const { data } = await axios.get(`${API_URL}/getAppointments`, {
@@ -279,6 +281,7 @@ export const getAppointments =
       });
 
       dispatch({ type: GET_APPOINTMENTS, payload: data });
+      console.log("Data: ", data);
 
       if (data.message === "Scheduled appointments retrieved successfully") {
         dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
