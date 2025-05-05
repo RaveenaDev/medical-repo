@@ -130,6 +130,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         departments: action.payload,
+        isLoading: false
       };
 
     case GET_DEPARTMENT_BY_ID:

@@ -15,6 +15,7 @@ import Select from "@mui/material/Select";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import {useTheme} from "@mui/material/styles";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const names = [
     'Oliver Hansen',
@@ -100,6 +101,8 @@ const Departments1 = (props) => {
         dispatch(addDepartment(department))
     }
 
+    const loading = useSelector((state) => state.admin.isLoading);
+
   return (
     <div
       style={{
@@ -121,319 +124,345 @@ const Departments1 = (props) => {
         <CommonPanel />
       </div>
       <div style={{ marginTop: "190px" }}>
-        <div className={ayu.headerContainer} style={{justifyContent:'space-between',marginBottom:'0'}}>
-            <div style={{display:'flex',alignItems:'center',}}>
-                <button className={ayu.backButton} onClick={handleBack}>
-                    <ArrowBackIosIcon/>
-                </button>
-                <h2 className={ayu.departmentTitle}>Department</h2>
-            </div>
-            <div>
-                <Button
-                    variant="contained"
-                    onClick={handleOpen}
-                    sx={{
-                        fontSize: "16px",
-                        color: "#ffffff",
-                        textTransform: "capitalize",
-                        padding: {
-                            xs: "0px 8px",
-                            sm: "0px 10px",
-                            md: "4px 10px",
-                        }, // Adjust padding
-                        backgroundColor: "#25307F",
-                        boxShadow: "0px 4px 4px 0px #C2C2C240",
-                        "&:hover": {
-                            background: "#AEC3FF",
-                        },
-                        "&:active": {
-                            backgroundColor: "#181F52",
-                            outline: "none",
-                            boxShadow: "none",
-                        },
-                        "&:focus": {
-                            outline: "none",
-                            boxShadow: "none",
-                        },
-                    }}
-                >
-                    <img
-                        src={addAppointments}
-                        className={styles.appointmentBlock__plusIcon}
-                    />
-                    New Department
-                </Button>
+          {
+              loading ? (
+                  <Box
+                      sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "50vh", // or full height you need
+                      }}
+                  >
+                      <CircularProgress sx={{color:'#25307F'}} size={58} />
+                  </Box>
+              ) : (
+                  <>
+                      <div className={ayu.headerContainer} style={{justifyContent: 'space-between', marginBottom: '0'}}>
+                          <div style={{display: 'flex', alignItems: 'center',}}>
+                              <button className={ayu.backButton} onClick={handleBack}>
+                                  <ArrowBackIosIcon/>
+                              </button>
+                              <h2 className={ayu.departmentTitle}>Department</h2>
+                          </div>
+                          <div>
+                              <Button
+                                  variant="contained"
+                                  onClick={handleOpen}
+                                  sx={{
+                                      fontSize: "16px",
+                                      color: "#ffffff",
+                                      textTransform: "capitalize",
+                                      padding: {
+                                          xs: "0px 8px",
+                                          sm: "0px 10px",
+                                          md: "4px 10px",
+                                      }, // Adjust padding
+                                      backgroundColor: "#25307F",
+                                      boxShadow: "0px 4px 4px 0px #C2C2C240",
+                                      "&:hover": {
+                                          background: "#AEC3FF",
+                                      },
+                                      "&:active": {
+                                          backgroundColor: "#181F52",
+                                          outline: "none",
+                                          boxShadow: "none",
+                                      },
+                                      "&:focus": {
+                                          outline: "none",
+                                          boxShadow: "none",
+                                      },
+                                  }}
+                              >
+                                  <img
+                                      src={addAppointments}
+                                      className={styles.appointmentBlock__plusIcon}
+                                  />
+                                  New Department
+                              </Button>
 
-                {/* Department Modal */}
-                <Modal open={open} onClose={handleClose}>
-                    <Box
-                        sx={{
-                            position: "absolute",
-                            top: "47%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            bgcolor: "background.paper",
-                            boxShadow: 24,
-                            width: 510,
-                            p: 2,
-                            // borderRadius: 2,
-                        }}
-                    >
-                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid #25307F',padding:'5px 8px 1rem 8px'}}>
-                            <h4 style={{color:'#000000',fontWeight:500}}>Add New Department</h4>
-                            <IconButton
-                                sx={{
-                                    padding:0,
-                                    "&:focus": {
-                                        outline: "none",
-                                        boxShadow: "none",
-                                    },
-                                    color: "black",
-                                }}
-                                onClick={handleClose}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </div>
+                              {/* Department Modal */}
+                              <Modal open={open} onClose={handleClose}>
+                                  <Box
+                                      sx={{
+                                          position: "absolute",
+                                          top: "47%",
+                                          left: "50%",
+                                          transform: "translate(-50%, -50%)",
+                                          bgcolor: "background.paper",
+                                          boxShadow: 24,
+                                          width: 510,
+                                          p: 2,
+                                          // borderRadius: 2,
+                                      }}
+                                  >
+                                      <div style={{
+                                          display: 'flex',
+                                          justifyContent: 'space-between',
+                                          alignItems: 'center',
+                                          borderBottom: '1px solid #25307F',
+                                          padding: '5px 8px 1rem 8px'
+                                      }}>
+                                          <h4 style={{color: '#000000', fontWeight: 500}}>Add New Department</h4>
+                                          <IconButton
+                                              sx={{
+                                                  padding: 0,
+                                                  "&:focus": {
+                                                      outline: "none",
+                                                      boxShadow: "none",
+                                                  },
+                                                  color: "black",
+                                              }}
+                                              onClick={handleClose}
+                                          >
+                                              <CloseIcon/>
+                                          </IconButton>
+                                      </div>
 
-                        <div style={{display:'inline-block'}}>
-                            <TextField
-                                label="Department Name"
-                                name="name"
-                                value={department.name}
-                                onChange={handleChange}
-                                variant="outlined"
-                                size="small"
-                                sx={{
-                                    m: 1,
-                                    minWidth: 200,
-                                    marginTop: 3,
-                                    '& .MuiOutlinedInput-root': {
-                                        '& fieldset': { borderColor: '#25307F' },
-                                        '&:hover fieldset': { borderColor: '#25307F' },
-                                        '&.Mui-focused fieldset': { borderColor: '#25307F' },
-                                    },
-                                    '& .MuiInputLabel-root': {
-                                        color: '#25307F',
-                                        '&.Mui-focused': {
-                                            color: '#25307F',
-                                        },
-                                    },
-                                    '& .MuiInputBase-input': {
-                                        color: '#25307F',
-                                    },
-                                }}
-                            />
+                                      <div style={{display: 'inline-block'}}>
+                                          <TextField
+                                              label="Department Name"
+                                              name="name"
+                                              value={department.name}
+                                              onChange={handleChange}
+                                              variant="outlined"
+                                              size="small"
+                                              sx={{
+                                                  m: 1,
+                                                  minWidth: 200,
+                                                  marginTop: 3,
+                                                  '& .MuiOutlinedInput-root': {
+                                                      '& fieldset': {borderColor: '#25307F'},
+                                                      '&:hover fieldset': {borderColor: '#25307F'},
+                                                      '&.Mui-focused fieldset': {borderColor: '#25307F'},
+                                                  },
+                                                  '& .MuiInputLabel-root': {
+                                                      color: '#25307F',
+                                                      '&.Mui-focused': {
+                                                          color: '#25307F',
+                                                      },
+                                                  },
+                                                  '& .MuiInputBase-input': {
+                                                      color: '#25307F',
+                                                  },
+                                              }}
+                                          />
 
-                            <FormControl size="small" sx={{width:'18rem',marginTop:2,marginLeft:1}}>
-                                <InputLabel id="department-head-label"
-                                sx={{
-                                    "&.Mui-focused": {
-                                        color: "#747474", // Keep the color same when focused
-                                    },
-                                }}
-                                >Select Department Head</InputLabel>
-                                <Select
-                                    labelId="department-head-label"
-                                    name="head"
-                                    value={department.head ? JSON.stringify(department.head) : ""}
-                                    label="Select Department Head"
-                                    onChange={handleChange}
-                                    style={{ width: "100%" }}
-                                    IconComponent={KeyboardArrowDownIcon}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            style: {
-                                                maxHeight: 200, // Fixed height
-                                                overflowY: 'auto',
-                                            },
-                                            sx: {
-                                                '&::-webkit-scrollbar': {
-                                                    width: '4px',
-                                                },
-                                                '&::-webkit-scrollbar-track': {
-                                                    backgroundColor: '#f1f1f1',
-                                                },
-                                                '&::-webkit-scrollbar-thumb': {
-                                                    backgroundColor: '#25307F',
-                                                    borderRadius: '4px',
-                                                },
-                                            }
-                                        }
-                                    }}
-                                    sx={{
-                                        backgroundColor: '#F7F7F7',
-                                        borderRadius: 0,
-                                        "& .MuiSelect-icon": {
-                                            color: "#25307F",
-                                        },
-                                        "& .MuiOutlinedInput-notchedOutline": {
-                                            border: "none",
-                                        },
-                                    }}
-                                >
-                                    {doctors.map((doctor, index) => (
-                                        <MenuItem key={index} value={JSON.stringify({ id: doctor._id, name: doctor.name })}>
-                                            {doctor.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                          <FormControl size="small" sx={{width: '18rem', marginTop: 2, marginLeft: 1}}>
+                                              <InputLabel id="department-head-label"
+                                                          sx={{
+                                                              "&.Mui-focused": {
+                                                                  color: "#747474", // Keep the color same when focused
+                                                              },
+                                                          }}
+                                              >Select Department Head</InputLabel>
+                                              <Select
+                                                  labelId="department-head-label"
+                                                  name="head"
+                                                  value={department.head ? JSON.stringify(department.head) : ""}
+                                                  label="Select Department Head"
+                                                  onChange={handleChange}
+                                                  style={{width: "100%"}}
+                                                  IconComponent={KeyboardArrowDownIcon}
+                                                  MenuProps={{
+                                                      PaperProps: {
+                                                          style: {
+                                                              maxHeight: 200, // Fixed height
+                                                              overflowY: 'auto',
+                                                          },
+                                                          sx: {
+                                                              '&::-webkit-scrollbar': {
+                                                                  width: '4px',
+                                                              },
+                                                              '&::-webkit-scrollbar-track': {
+                                                                  backgroundColor: '#f1f1f1',
+                                                              },
+                                                              '&::-webkit-scrollbar-thumb': {
+                                                                  backgroundColor: '#25307F',
+                                                                  borderRadius: '4px',
+                                                              },
+                                                          }
+                                                      }
+                                                  }}
+                                                  sx={{
+                                                      backgroundColor: '#F7F7F7',
+                                                      borderRadius: 0,
+                                                      "& .MuiSelect-icon": {
+                                                          color: "#25307F",
+                                                      },
+                                                      "& .MuiOutlinedInput-notchedOutline": {
+                                                          border: "none",
+                                                      },
+                                                  }}
+                                              >
+                                                  {doctors.map((doctor, index) => (
+                                                      <MenuItem key={index} value={JSON.stringify({
+                                                          id: doctor._id,
+                                                          name: doctor.name
+                                                      })}>
+                                                          {doctor.name}
+                                                      </MenuItem>
+                                                  ))}
+                                              </Select>
 
-                            </FormControl>
+                                          </FormControl>
 
-                            <FormControl size="small" sx={{ m: 1, width:'30rem',marginTop:2.4}}>
-                                <InputLabel id="demo-multiple-name-label"
-                                            sx={{
-                                                "&.Mui-focused": {
-                                                    color: "#747474", // Keep the color same when focused
-                                                },
-                                            }}
-                                >Select Doctors</InputLabel>
-                                <Select
-                                    labelId="demo-multiple-name-label"
-                                    id="demo-multiple-name"
-                                    name="doctors"
-                                    multiple
-                                    value={department.doctors}
-                                    onChange={handleMultipleChange}
-                                    input={<OutlinedInput label="Select Doctors" />}
-                                    // MenuProps={MenuProps}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            style: {
-                                                maxHeight: 200, // Fixed height
-                                                overflowY: 'auto',
-                                            },
-                                            sx: {
-                                                '&::-webkit-scrollbar': {
-                                                    width: '4px',
-                                                },
-                                                '&::-webkit-scrollbar-track': {
-                                                    backgroundColor: '#f1f1f1',
-                                                },
-                                                '&::-webkit-scrollbar-thumb': {
-                                                    backgroundColor: '#25307F',
-                                                    borderRadius: '4px',
-                                                },
-                                            }
-                                        }
-                                    }}
-                                    IconComponent={KeyboardArrowDownIcon}
-                                    sx={{
-                                        backgroundColor:'#F7F7F7',
-                                        borderRadius: 0,
-                                        "& .MuiSelect-icon": {
-                                            color: "#25307F", // Change the color of the arrow icon
-                                        },
-                                        "& .MuiOutlinedInput-notchedOutline": {
-                                            border: "none", // Remove border
-                                        },
-                                    }}
-                                >
-                                    {doctors.map((doctor,index) => (
-                                        <MenuItem
-                                            key={index}
-                                            value={doctor._id}
-                                            style={getStyles(doctor.name, department.doctors, theme)}
-                                        >
-                                            {doctor.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                          <FormControl size="small" sx={{m: 1, width: '30rem', marginTop: 2.4}}>
+                                              <InputLabel id="demo-multiple-name-label"
+                                                          sx={{
+                                                              "&.Mui-focused": {
+                                                                  color: "#747474", // Keep the color same when focused
+                                                              },
+                                                          }}
+                                              >Select Doctors</InputLabel>
+                                              <Select
+                                                  labelId="demo-multiple-name-label"
+                                                  id="demo-multiple-name"
+                                                  name="doctors"
+                                                  multiple
+                                                  value={department.doctors}
+                                                  onChange={handleMultipleChange}
+                                                  input={<OutlinedInput label="Select Doctors"/>}
+                                                  // MenuProps={MenuProps}
+                                                  MenuProps={{
+                                                      PaperProps: {
+                                                          style: {
+                                                              maxHeight: 200, // Fixed height
+                                                              overflowY: 'auto',
+                                                          },
+                                                          sx: {
+                                                              '&::-webkit-scrollbar': {
+                                                                  width: '4px',
+                                                              },
+                                                              '&::-webkit-scrollbar-track': {
+                                                                  backgroundColor: '#f1f1f1',
+                                                              },
+                                                              '&::-webkit-scrollbar-thumb': {
+                                                                  backgroundColor: '#25307F',
+                                                                  borderRadius: '4px',
+                                                              },
+                                                          }
+                                                      }
+                                                  }}
+                                                  IconComponent={KeyboardArrowDownIcon}
+                                                  sx={{
+                                                      backgroundColor: '#F7F7F7',
+                                                      borderRadius: 0,
+                                                      "& .MuiSelect-icon": {
+                                                          color: "#25307F", // Change the color of the arrow icon
+                                                      },
+                                                      "& .MuiOutlinedInput-notchedOutline": {
+                                                          border: "none", // Remove border
+                                                      },
+                                                  }}
+                                              >
+                                                  {doctors.map((doctor, index) => (
+                                                      <MenuItem
+                                                          key={index}
+                                                          value={doctor._id}
+                                                          style={getStyles(doctor.name, department.doctors, theme)}
+                                                      >
+                                                          {doctor.name}
+                                                      </MenuItem>
+                                                  ))}
+                                              </Select>
+                                          </FormControl>
 
-                            <FormControl size="small" sx={{ m: 1, width:'30rem',marginTop:2}}>
-                                <InputLabel id="demo-multiple-name-label"
-                                            sx={{
-                                                "&.Mui-focused": {
-                                                    color: "#747474", // Keep the color same when focused
-                                                },
-                                            }}
-                                >List of Nurses/ Support Staff</InputLabel>
-                                <Select
-                                    labelId="demo-multiple-name-label"
-                                    id="demo-multiple-name"
-                                    name="nurses"
-                                    multiple
-                                    value={department.nurses}
-                                    onChange={handleMultipleChange}
-                                    input={<OutlinedInput label="List of Nurses/ Support Staff" />}
-                                    // MenuProps={MenuProps}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            style: {
-                                                maxHeight: 200, // Fixed height
-                                                overflowY: 'auto',
-                                            },
-                                            sx: {
-                                                '&::-webkit-scrollbar': {
-                                                    width: '4px',
-                                                },
-                                                '&::-webkit-scrollbar-track': {
-                                                    backgroundColor: '#f1f1f1',
-                                                },
-                                                '&::-webkit-scrollbar-thumb': {
-                                                    backgroundColor: '#25307F',
-                                                    borderRadius: '4px',
-                                                },
-                                            }
-                                        }
-                                    }}
-                                    IconComponent={KeyboardArrowDownIcon}
-                                    sx={{
-                                        backgroundColor:'#F7F7F7',
-                                        borderRadius: 0,
-                                        "& .MuiSelect-icon": {
-                                            color: "#25307F", // Change the color of the arrow icon
-                                        },
-                                        "& .MuiOutlinedInput-notchedOutline": {
-                                            border: "none", // Remove border
-                                        },
-                                    }}
-                                >
-                                    {names.map((name) => (
-                                        <MenuItem
-                                            key={name}
-                                            value={name}
-                                            style={getStyles(name, department.doctors, theme)}
-                                        >
-                                            {name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                          <FormControl size="small" sx={{m: 1, width: '30rem', marginTop: 2}}>
+                                              <InputLabel id="demo-multiple-name-label"
+                                                          sx={{
+                                                              "&.Mui-focused": {
+                                                                  color: "#747474", // Keep the color same when focused
+                                                              },
+                                                          }}
+                                              >List of Nurses/ Support Staff</InputLabel>
+                                              <Select
+                                                  labelId="demo-multiple-name-label"
+                                                  id="demo-multiple-name"
+                                                  name="nurses"
+                                                  multiple
+                                                  value={department.nurses}
+                                                  onChange={handleMultipleChange}
+                                                  input={<OutlinedInput label="List of Nurses/ Support Staff"/>}
+                                                  // MenuProps={MenuProps}
+                                                  MenuProps={{
+                                                      PaperProps: {
+                                                          style: {
+                                                              maxHeight: 200, // Fixed height
+                                                              overflowY: 'auto',
+                                                          },
+                                                          sx: {
+                                                              '&::-webkit-scrollbar': {
+                                                                  width: '4px',
+                                                              },
+                                                              '&::-webkit-scrollbar-track': {
+                                                                  backgroundColor: '#f1f1f1',
+                                                              },
+                                                              '&::-webkit-scrollbar-thumb': {
+                                                                  backgroundColor: '#25307F',
+                                                                  borderRadius: '4px',
+                                                              },
+                                                          }
+                                                      }
+                                                  }}
+                                                  IconComponent={KeyboardArrowDownIcon}
+                                                  sx={{
+                                                      backgroundColor: '#F7F7F7',
+                                                      borderRadius: 0,
+                                                      "& .MuiSelect-icon": {
+                                                          color: "#25307F", // Change the color of the arrow icon
+                                                      },
+                                                      "& .MuiOutlinedInput-notchedOutline": {
+                                                          border: "none", // Remove border
+                                                      },
+                                                  }}
+                                              >
+                                                  {names.map((name) => (
+                                                      <MenuItem
+                                                          key={name}
+                                                          value={name}
+                                                          style={getStyles(name, department.doctors, theme)}
+                                                      >
+                                                          {name}
+                                                      </MenuItem>
+                                                  ))}
+                                              </Select>
+                                          </FormControl>
 
-                            <div style={{display:'flex',justifyContent:'center',marginTop:'10%'}}>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleAdd}
-                                    sx={{
-                                        backgroundColor: "#25307F",
-                                        textTransform: "none", // Prevents uppercase transformation
-                                        borderRadius: "2px",
-                                        padding: "6px 4rem",
-                                        marginLeft: "4px",
-                                    }}
-                                >
-                                    Add
-                                </Button>
-                            </div>
-                        </div>
-                    </Box>
-                </Modal>
-            </div>
-        </div>
+                                          <div style={{display: 'flex', justifyContent: 'center', marginTop: '10%'}}>
+                                              <Button
+                                                  variant="contained"
+                                                  onClick={handleAdd}
+                                                  sx={{
+                                                      backgroundColor: "#25307F",
+                                                      textTransform: "none", // Prevents uppercase transformation
+                                                      borderRadius: "2px",
+                                                      padding: "6px 4rem",
+                                                      marginLeft: "4px",
+                                                  }}
+                                              >
+                                                  Add
+                                              </Button>
+                                          </div>
+                                      </div>
+                                  </Box>
+                              </Modal>
+                          </div>
+                      </div>
 
-          {/* Horizontal line */}
-          <hr style={{border: "1px solid #d3d3d3", margin: "20px 0"}}/>
+                      {/* Horizontal line */}
+                      <hr style={{border: "1px solid #d3d3d3", margin: "20px 0"}}/>
 
-          {/* Cards */}
+                      {/* Cards */}
 
-          <div className={ayu.superCardContainer}>
-          {allDepartments.map((department, index) => (
-            <DepartCard key={index} department={department} index={index} />
-          ))}
-        </div>
+                      <div className={ayu.superCardContainer}>
+                          {allDepartments.map((department, index) => (
+                              <DepartCard key={index} department={department} index={index}/>
+                          ))}
+                      </div>
+                  </>
+              )
+          }
       </div>
     </div>
   );
