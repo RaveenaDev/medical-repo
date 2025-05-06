@@ -23,6 +23,15 @@ function Searchbar() {
         width: '190px', // Custom width
         '& .MuiOutlinedInput-root': {
           borderRadius: '15px', // Rounded corners
+            '& fieldset': {
+                borderColor: 'transparent', // default
+            },
+            '&:hover fieldset': {
+                borderColor: 'white', // your custom hover color
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: '#25307F', // your custom focus/click color
+            },
         },
           '& .MuiOutlinedInput-notchedOutline': {
               borderWidth: '2px', // Bold border
