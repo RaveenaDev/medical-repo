@@ -33,6 +33,8 @@ const CommonPanel = ({
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
 
+  const [department, setDepartment] = useState("")
+
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
 
@@ -113,7 +115,7 @@ const CommonPanel = ({
   );
   const handleDepartmentChange = (event) => {
     const selectedValue = event.target.value;
-    setSelectedDepartment(selectedValue);
+    setDepartment(selectedValue);
   };
 
   const departmentOptions = [
@@ -342,7 +344,7 @@ const CommonPanel = ({
                 }}
               >
                 <Select
-                  value={selectedDepartment || "all"}
+                  value={department || "all"}
                   onChange={handleDepartmentChange}
                   displayEmpty
                   size="small"
@@ -365,12 +367,18 @@ const CommonPanel = ({
                         backgroundColor: "#FFFFFF",
                         color: "#000000",
                         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                        maxHeight: "200px", // fixed height
+                        overflowY: "auto",  // scrollable when content overflows
                       },
                     },
                     MenuListProps: {
                       sx: {
                         paddingTop: 0,
                         paddingBottom: 0,
+                        "& .MuiMenuItem-root.Mui-selected:focus, & .MuiMenuItem-root.Mui-selected:hover": {
+                          backgroundColor: "rgba(0, 0, 255, 0.1)", // soft blue background
+                          color: "#25307F", // blue text color
+                        }
                       },
                     },
                   }}
