@@ -251,7 +251,8 @@ export const removeBookAppointmentData = () => async (dispatch) => {
 };
 
 export const getAppointments =
-  (activeLabel, startDate, endDate, selectedBranch) => async (dispatch) => {
+  (activeLabel, startDate, endDate, selectedBranch, page, rowsPerPage) =>
+  async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
       if (selectedBranch === "All Branches") selectedBranch = null;
@@ -261,6 +262,8 @@ export const getAppointments =
           start: startDate,
           end: endDate,
           departmentId: selectedBranch,
+          page: page + 1,
+          limit: rowsPerPage,
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
