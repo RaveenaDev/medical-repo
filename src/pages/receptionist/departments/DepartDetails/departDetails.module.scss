@@ -1,0 +1,119 @@
+$blue : #25307f;
+
+
+*{
+  margin: 0;
+  padding: 0;
+}
+.boxContainer{
+  background-color: white;
+  padding: 10px 40px;
+  .heading{
+    color: $blue;
+    margin: 12px 0;
+  }
+
+  .icons{
+    position: absolute;
+    margin-top: 0.4rem;
+    margin-left: 3.5rem;
+    right: 100px;
+    top: 95px;
+
+    .message{
+      color: #25307f;
+    }
+
+    .phone{
+      color: green;
+    }
+
+  }
+
+  .pro{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    border: 2px solid rgba(116, 116, 116, 0.3);
+    padding: 2px 10px;
+    width: fit-content;
+    border-radius: 8px;
+
+    .img{
+      height: 38px;
+      width: 38px;
+      border-radius: 50%;
+      margin-top: 2px;
+    }
+    .name{
+      color: #1a1a1a;
+      margin-top: 8px;
+    }
+  }
+
+  .section1{
+    margin-bottom: 25px;
+    .heading{
+      color: black;
+      font-size: medium;
+      font-weight: 700;
+    }
+
+    .details{
+      border: 1px solid lightgray;
+      border-radius: 6px;
+      padding: 12px;
+      h3{
+        color: black;
+        font-weight: 500;
+        font-size: medium;
+        height: 22px;
+        margin-bottom: 14px;
+      }
+    }
+  }
+
+  .section2{
+    height: 320px;
+    width: 520px;
+    li{
+      padding-bottom: 14px;
+      .text1{
+        height: 22px;
+        margin: 0;
+        color: #747474;
+        font-weight: 500;
+      }
+      .text2{
+        height: auto;
+        margin: 0;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .section3{
+    border: 1px solid rgba(116, 116, 116, 0.3);
+    width: 1010px;
+    margin-left: 20px;
+    border-radius: 6px;
+    h4{
+      color: black;
+      font-size: medium;
+      font-weight: 500;
+    }
+    .box3{
+      width: 400px;
+      h4{
+        color: black;
+      }
+    }
+
+    .box4{
+      width: 500px;
+      h4{
+        color: black;
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 14px;
+}
+.headerContainer .icon {
+  padding: 4px 0 0 8px;
+  margin-top: 2px;
+  background-color: white;
+  color: #25307f;
+}
+.headerContainer .departmentTitle {
+  margin: 0;
+  color: #25307f;
+  font-weight: 500;
+}/*# sourceMappingURL=appointments.module.css.map */
