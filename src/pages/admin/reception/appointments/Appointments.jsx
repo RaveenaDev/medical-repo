@@ -221,7 +221,7 @@ function Appointments(props) {
   return (
     <div
       style={{
-        height: "96dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
         background: " #F1F1F1",
       }}
@@ -332,7 +332,7 @@ function Appointments(props) {
                         alignItems: "center",
                         justifyContent: "center",
                         borderRadius: 1,
-                        boxShadow: 1,
+                        // boxShadow: 1,
                         cursor: "pointer",
                         borderBottom:
                           activeBox === box.id ? "4px solid #25307F" : "none",
