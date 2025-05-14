@@ -4,16 +4,17 @@
   gap: 1rem;
 
   .requestCard {
-    color: black !important;
+    color: #000000 !important;
     background: white;
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 5px;
     display: flex;
-    gap: 1rem;
+    justify-content: space-around;
     align-items: start;
 
     .requestDetails {
-      width: 75%;
+      width: 70%;
+      font-weight: 600;
     }
 
     .progress {
@@ -21,7 +22,8 @@
         color: #25307f;
         background: white;
         border: 1px solid #25307f;
-        padding: 0.5rem 1.5rem;
+        padding: 0.6rem 1.75rem;
+        border-radius: 5px;
       }
       button:hover {
         color: white;

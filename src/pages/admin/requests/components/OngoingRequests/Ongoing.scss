@@ -4,8 +4,8 @@
   gap: 1rem;
 
   .requestCard {
-    color: black !important;
-    background: white;
+    color: #000000 !important;
+    background: #ffffff;
     padding: 1rem;
     border-radius: 5px;
     display: flex;
@@ -15,14 +15,13 @@
     .requestDetails {
       width: 70%;
       display: flex;
-
       flex-direction: column;
 
       div {
         color: #25307f;
         font-weight: 600;
         font-style: italic;
-        border-bottom: 0.5px solid #747474;
+        // border-bottom: 0.5px solid #747474;
         width: max-content;
       }
     }
@@ -44,5 +43,18 @@
         font-style: italic;
       }
     }
+  }
+
+  @keyframes flicker {
+    0%,
+    100% {
+      background-color: #d8dbf1;
+    }
+    50% {
+      background-color: #ffffff;
+    }
+  }
+  .flicker-card {
+    animation: flicker 1s infinite;
   }
 }
