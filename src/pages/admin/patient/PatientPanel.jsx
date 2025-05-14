@@ -158,7 +158,7 @@ const PatientPanel = (props) => {
   return (
     <div
       style={{
-        height: "96dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
         background: " #F1F1F1",
       }}
@@ -294,7 +294,7 @@ const PatientPanel = (props) => {
             {/* Table Section */}
             <TableContainer
               sx={{
-                maxHeight: "66vh", // Adjust this to fit your layout needs
+                maxHeight: "69vh", // Adjust this to fit your layout needs
                 overflowY: "auto",
                 position: "relative",
               }}
