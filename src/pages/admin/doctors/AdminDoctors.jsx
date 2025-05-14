@@ -245,7 +245,7 @@ const AdminDoctors = (props) => {
   return (
     <div
       style={{
-        height: "96dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
         background: " #F1F1F1",
       }}
@@ -262,7 +262,7 @@ const AdminDoctors = (props) => {
       >
         <CommonPanel />
       </div>
-      <div style={{ marginTop: "150px" }}>
+      <div style={{ marginTop: "155px" }}>
         {noOfDoctors === null ||
         noOfDoctors === undefined ||
         doctors === undefined ? (
@@ -496,7 +496,7 @@ const AdminDoctors = (props) => {
             {/* Table Section */}
             <TableContainer
               sx={{
-                maxHeight: "70vh", // Adjust this to fit your layout needs
+                maxHeight: "72vh", // Adjust this to fit your layout needs
                 overflowY: "auto",
                 position: "relative",
               }}

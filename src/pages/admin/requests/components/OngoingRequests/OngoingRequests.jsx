@@ -70,7 +70,12 @@ const OngoingRequests = () => {
   return (
     <div className="ongoingRequests">
       {ongoingRequests.map((req) => (
-        <div key={req.id} className="requestCard">
+        <div
+          key={req.id}
+          className={`requestCard ${
+            req.lastupdate === "Yesterday" ? "flicker-card" : ""
+          }`}
+        >
           <img src={req.img ?? "/img.svg"} alt="request" />
           <div className="requestDetails">
             <p>{req.text}</p>

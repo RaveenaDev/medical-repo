@@ -3,7 +3,8 @@ import CommonPanel from "../Components/CommonPanel.jsx";
 import { Box, Grid } from "@mui/material";
 import {
   Area,
-  AreaChart, CartesianGrid,
+  AreaChart,
+  CartesianGrid,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -11,8 +12,8 @@ import {
 } from "recharts";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Select from "../../../components/Select/index.jsx";
-import {useDispatch, useSelector} from "react-redux";
-import {getEarnings} from "../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getEarnings } from "../../../components/State/Admin/Action.js";
 
 const Earnings = (props) => {
   useEffect(() => {
@@ -31,13 +32,12 @@ const Earnings = (props) => {
 
   const dispatch = useDispatch();
 
-  const totalEarnings = useSelector((store) => store.admin.totalEarnings)
+  const totalEarnings = useSelector((store) => store.admin.totalEarnings);
   // const areaData = useSelector((store) => store.admin.monthlyEarnings)
 
   useEffect(() => {
-    dispatch(getEarnings(2025))
+    dispatch(getEarnings(2025));
   }, [dispatch]);
-
 
   const areaData = [
     {
@@ -149,7 +149,7 @@ const Earnings = (props) => {
     <div
       style={{
         background: "#f1f1f1",
-        // height: "98dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >
@@ -316,7 +316,14 @@ const Earnings = (props) => {
           </Box>
 
           {/* Add spacing before the graph */}
-          <Box sx={{height:'18.8rem', margin: "0 1.8rem 2rem 1.8rem",paddingTop:'3rem',backgroundColor:'#F1F1F1'}}>
+          <Box
+            sx={{
+              height: "18.8rem",
+              margin: "0 1.8rem 2rem 1.8rem",
+              paddingTop: "3rem",
+              backgroundColor: "#F1F1F1",
+            }}
+          >
             <ResponsiveContainer width="100%" height={330}>
               <AreaChart
                 width={500}
@@ -329,17 +336,18 @@ const Earnings = (props) => {
                   bottom: 0,
                 }}
               >
-                <XAxis dataKey="name"
-                       tick={{ fontSize: 14}}
-                       tickLine={false}
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 14 }}
+                  tickLine={false}
                 />
                 <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 12, fill: "#000000" }}
-                    tickCount={6}
-                    domain={['dataMin', 'auto']} // Excludes 0
-                    tickFormatter={(value) => (value === 0 ? '' : value)} // Hides 0
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: "#000000" }}
+                  tickCount={6}
+                  domain={["dataMin", "auto"]} // Excludes 0
+                  tickFormatter={(value) => (value === 0 ? "" : value)} // Hides 0
                 />
                 <Tooltip />
                 {visibleGraph.inpatient && (
@@ -375,10 +383,12 @@ const Earnings = (props) => {
                   />
                 )}
 
-                <CartesianGrid horizontal
-                               vertical={false}
-                               stroke="#BFC5F5"
-                               strokeWidth={0.5} />
+                <CartesianGrid
+                  horizontal
+                  vertical={false}
+                  stroke="#BFC5F5"
+                  strokeWidth={0.5}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </Box>

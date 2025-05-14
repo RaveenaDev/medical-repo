@@ -37,6 +37,22 @@ export default function NewRequests() {
       lastupdate: "Yesterday",
     },
     {
+      id: 4,
+      name: "Dr. Shrama",
+      department: "Head of General Medicine",
+      date: "Friday, 27 Sept at 100:00 AM",
+      request: "Request for Medicine",
+      text: "Dr. Shetty (Head of Cardiology) has requested on Friday, 27 Sept at 10:00 AM.",
+      status: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+      img: "/img.svg",
+      medicines: [
+        "Paracetamol 500mg tablets (1000 units)",
+        "Ibuprofen 400mg tablets (500 units)",
+      ],
+      attachment: "Medication list.pdf",
+      lastupdate: "Yesterday",
+    },
+    {
       id: 5,
       name: "Dr. Shrama",
       department: "Head of General Medicine",

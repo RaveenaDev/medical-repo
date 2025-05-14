@@ -18,7 +18,7 @@ const History = (props) => {
 
   return (
     <>
-      <div style={{ height: "88vh" }}>
+      <div style={{ height: "92vh" }}>
         <>
           <PatientHeader showEditPatients={false} patient={patient} />
           <Grid

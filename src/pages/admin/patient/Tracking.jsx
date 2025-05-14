@@ -58,7 +58,7 @@ const Tracking = (props) => {
   const { patient } = location.state || {};
 
   return (
-    <div style={{ height: "88vh" }}>
+    <div style={{ height: "91vh" }}>
       <PatientHeader showEditPatients={false} patient={patient} />
       <Box
         sx={{
