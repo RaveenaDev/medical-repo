@@ -69,10 +69,26 @@ const PastRequests = () => {
         "Request for Medicines by Dr. Shetty (Head of Cardiology) on Friday, 27 Sept at 10:00 AM has been completed on Friday, 29 Sept.",
       status: "Order has been shipped from Chennai on Saturday, 28 Sept.",
     },
+    {
+      id: 9,
+      text: "Dr. Shetty (Head of Cardiology) has requested on Friday, 27 Sept at 10:00 AM.",
+      lastupdate: "Today",
+      complete:
+        "Request for Medicines by Dr. Shetty (Head of Cardiology) on Friday, 27 Sept at 10:00 AM has been completed on Friday, 29 Sept.",
+      status: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+    },
+    {
+      id: 10,
+      text: "Dr. Shetty (Head of Cardiology) has requested on Friday, 27 Sept at 10:00 AM.",
+      lastupdate: "Today",
+      complete:
+        "Request for Medicines by Dr. Shetty (Head of Cardiology) on Friday, 27 Sept at 10:00 AM has been completed on Friday, 29 Sept.",
+      status: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+    },
   ];
 
   return (
-    <div className="ongoingRequests">
+    <div className="pastRequests">
       {ongoingRequests.map((req) => (
         <div key={req.id} className="requestCard">
           <img src={req.img ?? "/img.svg"} alt="request" />
