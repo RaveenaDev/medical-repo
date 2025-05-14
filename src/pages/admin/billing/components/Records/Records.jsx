@@ -31,15 +31,17 @@ import CloseIcon from "@mui/icons-material/Close";
 const Records = () => {
   const [selectedBill, setSelectedBill] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [page, setPage] = useState(0); // page number
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
 
   const billingRecords = useSelector((store) => store.admin.billingRecords);
 
   const dispatch = useDispatch();
   useEffect(() => {
     if (!billingRecords || billingRecords.length === 0) {
-      dispatch(getBillingRecords());
+      dispatch(getBillingRecords(page, rowsPerPage)); // Fetch billing records from API
     }
-  }, [dispatch, billingRecords]);
+  }, [dispatch, billingRecords, page, rowsPerPage]);
   const billDetails = useSelector((store) => store.admin.billingRecord);
   useEffect(() => {
     setSelectedBill(billDetails);
@@ -89,8 +91,6 @@ const Records = () => {
     // dispatch(getFilteredPatients(filters));
     setFilterDrawerOpen(false);
   };
-  const [page, setPage] = useState(0); // page number
-  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
 
   const paginatedBillingRecords = billingRecords.slice(
     page * rowsPerPage,

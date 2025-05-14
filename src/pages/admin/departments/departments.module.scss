@@ -277,9 +277,22 @@ $blue: #25307f;
 }
 
 .superCardContainer {
+  height: 56vh; // or any height you want
+  overflow-y: auto;
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(3, 1fr);
+
+  /* Hide scrollbar for Chrome, Edge, Safari */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+
+  /* Hide scrollbar for IE/Edge */
+  -ms-overflow-style: none;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);

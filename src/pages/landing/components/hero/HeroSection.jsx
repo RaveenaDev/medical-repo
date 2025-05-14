@@ -20,15 +20,18 @@ const HeroSection = () => {
       <div className={styles["hero-container"]} id="home">
         <div className={styles["hero-content"]} data-aos="fade-right">
           <div>
-            <h2>Transform Hospital Operations with Our</h2>
-            <h2>All-in-One Management Portal</h2>
+            <h2>AI-Powered Hospital Management System</h2>
+            <h2>for Smarter Care Delivery</h2>
             <p>
-              Streamline workflows, enhance patient care, and optimize revenue
-              with role-based access for Admin, Reception, and Doctors.
+              Transform hospital operations with StepCare — the intelligent HMS
+              software built to optimize scheduling, streamline workflows, and
+              enhance patient care through automation and real-time insights.{" "}
             </p>
           </div>
           <div>
-            <button className={styles["show-more-btn"]}>See More</button>
+            <button className={styles["show-more-btn"]}>
+              Book a Free Demo
+            </button>
           </div>
         </div>
       </div>
@@ -58,7 +61,7 @@ const HeroSection = () => {
             </g>
           </g>
         </svg>
-        <p>Explore More</p>
+        <p>Explore Features</p>
       </div>
     </div>
   );

@@ -125,193 +125,207 @@ const Login = (props) => {
   }
 
   return (
-    <div className={styles.login}>
-      <p className={styles.login__title}>Login</p>
-      <Stack component="form" spacing={3} noValidate autoComplete="off">
-        <TextField
-          id="user_id"
-          placeholder="Enter ID"
-          name="email"
-          value={userDetails.email}
-          onChange={handleChange}
-          error={!!emailError}
-          helperText={emailError}
-          InputProps={{
-              sx: {
-                  height: '58px', // Adjust height of the input box
-                  fontSize: '1rem', // Adjust font size if needed
-                  padding: '0 14px', // Adjust padding inside input
-              }
-          }}
-          sx={{
-              '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                      borderWidth: '2px', // Bold border
-                      borderRadius: '10px' // Ensure the input's border radius matches
-                  },
-                  '&:hover fieldset': {
-                      borderWidth: '2px', // Keep bold on hover
-                  },
-                  '&.Mui-focused fieldset': {
-                      borderWidth: '2px', // Keep bold on focus
-                  }
-              }
-          }}
-        />
-        {/* <TextFieldHiddenLabel name="Password" id="password" type="password" placeholder="Enter Password" /> */}
-        <OutlinedInput
-          placeholder="Enter Password"
-          id="outlined-adornment-password"
-          type={showPassword ? "text" : "password"}
-          name="password"
-          value={userDetails.password}
-          onChange={handleChange}
-          error={!!passwordError}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label={
-                  showPassword ? "hide the password" : "display the password"
-                }
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                onMouseUp={handleMouseUpPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          sx={{
-              height: '60px', // Adjust outer height
-              fontSize: '1rem', // Adjust font size
-              borderRadius: '10px',
-              padding: '0 14px', // Adjust padding inside input
-              '& .MuiOutlinedInput-notchedOutline': {
-                  borderWidth: '2px', // Bold border
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderWidth: '2px', // Keep bold on hover
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderWidth: '2px', // Keep bold on focus
-              }
-          }}
-        />
-          {passwordError && <p style={{ color: "#D32F2F", fontSize: "0.77rem", marginTop: "2px",marginLeft:"16px"}}>{passwordError}</p>}
-         <Grid container spacing={6} justifyContent="space-between" alignItems="center" flexDirection={{ xs: 'column', md: 'row' }} size={12}>
-             <Grid size={6} sx={{display:'flex'}}>
-                 <Box sx={{
-                     backgroundColor: '#25307F',
-                     color: 'white',
-                     padding: '7px 2px',
-                     paddingLeft: '12px',
-                     borderRadius: '8px',
-                     textAlign: 'center',
-                     fontSize: '1.8rem', // Bigger font size
-                     letterSpacing: '0.8rem', // Gap between digits
-                     fontWeight: 600
-                 }}>
-                     {captcha}
-                 </Box>
-                 <Grid sx={{transform: 'translateY(10px)'}}>
-                     <Tooltip title="Refresh CAPTCHA">
-                         <IconButton onClick={refreshCaptcha} sx={{
-                             outline: "none", // Remove the focus outline
-                             "&:focus": {
-                                 outline: "none",
-                             },
-                             "&:focus-visible": {
-                                 outline: "none",
-                             },
-                         }}>
-                             <RefreshIcon />
-                         </IconButton>
-                     </Tooltip>
-                 </Grid>
-             </Grid>
-                    <Grid size={6}>
-                        <TextField name="captcha" id="captcha_write" placeholder="Enter Captcha"
-                                   value={captchaInput}
-                                   onChange={handleCaptchaChange}
-                                   InputProps={{
-                                       sx: {
-                                           height: '58px', // Adjust height of the input box
-                                           fontSize: '1rem', // Adjust font size if needed
-                                           padding: '0 14px', // Adjust padding inside input
-                                       }
-                                   }}
-                                   sx={{
-                                       '& .MuiOutlinedInput-root': {
-                                           '& fieldset': {
-                                               borderWidth: '2px', // Bold border
-                                               borderRadius: '10px' // Ensure the input's border radius matches
-                                           },
-                                           '&:hover fieldset': {
-                                               borderWidth: '2px', // Keep bold on hover
-                                           },
-                                           '&.Mui-focused fieldset': {
-                                               borderWidth: '2px', // Keep bold on focus
-                                           }
-                                       }
-                                   }}
-                        />
-                    </Grid>
-         </Grid>
-          {captchaError && (
-              <p style={{display:'flex',justifyContent:'flex-end', color: "red", fontSize: "0.9rem", marginTop: "8px" }}>{captchaError}</p>
-          )}
-        <Button
-          variant="contained"
-          sx={{
-            fontSize: "24px",
-              height: '55px',
-            textTransform: "capitalize",
-            backgroundColor: "#25307F",
-              borderRadius: '8px',
-              border: "none", // Remove any border
-              boxShadow: "none", // Remove any box shadow that might look like a border
-              "&:hover": {
-                  backgroundColor: "#1F276B", // Optional: adjust hover color without border
-                  boxShadow: "none", // Remove hover shadow
-              },
-          }}
-          onClick={handleLoginClick}
-        >
-            {loading ? <CircularProgress size={30} thickness={5}
-                                         sx={{
-                                             color: "white",
-                                         }}/> : "Login"}
-        </Button>
-        <Grid
-          container
-          spacing={2}
-          justifyContent="space-between"
-          alignItems="center"
-          flexDirection={{ xs: "column", sm: "row" }}
-          size={12}
-        >
-          <Grid size={6} offset={{ md: "0" }}>
-            {/* <Button variant="text" sx={{fontSize: "22px", color: "#0150EA", textTransform: "capitalize", padding: "0px"}}>Forgot ID</Button> */}
-          </Grid>
-          <Grid size={6} offset={{ md: "10" }} sx={{ textAlign: "right" }}>
-            <Button
-              variant="text"
-              sx={{
-                fontSize: "17px",
-                color: "#0150EA",
-                textTransform: "capitalize",
-                padding: "0px",
-                  fontWeight: 300
-              }}
-              onClick={handleForgetPassword}
-            >
-              Forgot password
-            </Button>
-          </Grid>
-        </Grid>
-      </Stack>
-    </div>
+      <div style={{display:'flex',alignItems:'center',height:'100vh'}}>
+          <div className={styles.login}>
+              <p className={styles.login__title}>Login</p>
+              <Stack component="form" spacing={3} noValidate autoComplete="off">
+                  <TextField
+                      id="user_id"
+                      placeholder="Enter ID"
+                      name="email"
+                      value={userDetails.email}
+                      onChange={handleChange}
+                      error={!!emailError}
+                      helperText={emailError}
+                      InputProps={{
+                          sx: {
+                              height: '58px', // Adjust height of the input box
+                              fontSize: '1rem', // Adjust font size if needed
+                              padding: '0 14px', // Adjust padding inside input
+                          }
+                      }}
+                      sx={{
+                          '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                  borderWidth: '2px', // Bold border
+                                  borderRadius: '10px' // Ensure the input's border radius matches
+                              },
+                              '&:hover fieldset': {
+                                  borderWidth: '2px', // Keep bold on hover
+                              },
+                              '&.Mui-focused fieldset': {
+                                  borderWidth: '2px', // Keep bold on focus
+                              }
+                          }
+                      }}
+                  />
+                  {/* <TextFieldHiddenLabel name="Password" id="password" type="password" placeholder="Enter Password" /> */}
+                  <OutlinedInput
+                      placeholder="Enter Password"
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={userDetails.password}
+                      onChange={handleChange}
+                      error={!!passwordError}
+                      endAdornment={
+                          <InputAdornment position="end">
+                              <IconButton
+                                  aria-label={
+                                      showPassword ? "hide the password" : "display the password"
+                                  }
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  onMouseUp={handleMouseUpPassword}
+                                  edge="end"
+                              >
+                                  {showPassword ? <VisibilityOff/> : <Visibility/>}
+                              </IconButton>
+                          </InputAdornment>
+                      }
+                      sx={{
+                          height: '60px', // Adjust outer height
+                          fontSize: '1rem', // Adjust font size
+                          borderRadius: '10px',
+                          padding: '0 14px', // Adjust padding inside input
+                          '& .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '2px', // Bold border
+                          },
+                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '2px', // Keep bold on hover
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '2px', // Keep bold on focus
+                          }
+                      }}
+                  />
+                  {passwordError && <p style={{
+                      color: "#D32F2F",
+                      fontSize: "0.77rem",
+                      marginTop: "2px",
+                      marginLeft: "16px"
+                  }}>{passwordError}</p>}
+                  <Grid container spacing={6} justifyContent="space-between" alignItems="center"
+                        flexDirection={{xs: 'column', md: 'row'}} size={12}>
+                      <Grid size={6} sx={{display: 'flex'}}>
+                          <Box sx={{
+                              backgroundColor: '#25307F',
+                              color: 'white',
+                              padding: '7px 2px',
+                              paddingLeft: '12px',
+                              borderRadius: '8px',
+                              textAlign: 'center',
+                              fontSize: '1.8rem', // Bigger font size
+                              letterSpacing: '0.8rem', // Gap between digits
+                              fontWeight: 600
+                          }}>
+                              {captcha}
+                          </Box>
+                          <Grid sx={{transform: 'translateY(10px)'}}>
+                              <Tooltip title="Refresh CAPTCHA">
+                                  <IconButton onClick={refreshCaptcha} sx={{
+                                      outline: "none", // Remove the focus outline
+                                      "&:focus": {
+                                          outline: "none",
+                                      },
+                                      "&:focus-visible": {
+                                          outline: "none",
+                                      },
+                                  }}>
+                                      <RefreshIcon/>
+                                  </IconButton>
+                              </Tooltip>
+                          </Grid>
+                      </Grid>
+                      <Grid size={6}>
+                          <TextField name="captcha" id="captcha_write" placeholder="Enter Captcha"
+                                     value={captchaInput}
+                                     onChange={handleCaptchaChange}
+                                     InputProps={{
+                                         sx: {
+                                             height: '58px', // Adjust height of the input box
+                                             fontSize: '1rem', // Adjust font size if needed
+                                             padding: '0 14px', // Adjust padding inside input
+                                         }
+                                     }}
+                                     sx={{
+                                         '& .MuiOutlinedInput-root': {
+                                             '& fieldset': {
+                                                 borderWidth: '2px', // Bold border
+                                                 borderRadius: '10px' // Ensure the input's border radius matches
+                                             },
+                                             '&:hover fieldset': {
+                                                 borderWidth: '2px', // Keep bold on hover
+                                             },
+                                             '&.Mui-focused fieldset': {
+                                                 borderWidth: '2px', // Keep bold on focus
+                                             }
+                                         }
+                                     }}
+                          />
+                      </Grid>
+                  </Grid>
+                  {captchaError && (
+                      <p style={{
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          color: "red",
+                          fontSize: "0.9rem",
+                          marginTop: "8px"
+                      }}>{captchaError}</p>
+                  )}
+                  <Button
+                      variant="contained"
+                      sx={{
+                          fontSize: "24px",
+                          height: '55px',
+                          textTransform: "capitalize",
+                          backgroundColor: "#25307F",
+                          borderRadius: '8px',
+                          border: "none", // Remove any border
+                          boxShadow: "none", // Remove any box shadow that might look like a border
+                          "&:hover": {
+                              backgroundColor: "#1F276B", // Optional: adjust hover color without border
+                              boxShadow: "none", // Remove hover shadow
+                          },
+                      }}
+                      onClick={handleLoginClick}
+                  >
+                      {loading ? <CircularProgress size={30} thickness={5}
+                                                   sx={{
+                                                       color: "white",
+                                                   }}/> : "Login"}
+                  </Button>
+                  <Grid
+                      container
+                      spacing={2}
+                      justifyContent="space-between"
+                      alignItems="center"
+                      flexDirection={{xs: "column", sm: "row"}}
+                      size={12}
+                  >
+                      <Grid size={6} offset={{md: "0"}}>
+                          {/* <Button variant="text" sx={{fontSize: "22px", color: "#0150EA", textTransform: "capitalize", padding: "0px"}}>Forgot ID</Button> */}
+                      </Grid>
+                      <Grid size={6} offset={{md: "10"}} sx={{textAlign: "right"}}>
+                          <Button
+                              variant="text"
+                              sx={{
+                                  fontSize: "17px",
+                                  color: "#0150EA",
+                                  textTransform: "capitalize",
+                                  padding: "0px",
+                                  fontWeight: 300
+                              }}
+                              onClick={handleForgetPassword}
+                          >
+                              Forgot password
+                          </Button>
+                      </Grid>
+                  </Grid>
+              </Stack>
+          </div>
+      </div>
   );
 };
 

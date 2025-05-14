@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
+  ADD_DEPARTMENT,
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_ROOM,
@@ -232,6 +233,7 @@ export const getAllDepartments = () => async (dispatch) => {
     });
 
     dispatch({ type: GET_ALL_DEPARTMENTS, payload: data });
+    console.log("DEP: ",data)
   } catch (error) {
     console.log(error);
   }
@@ -253,6 +255,32 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
     dispatch({ type: GET_DEPARTMENT_BY_ID, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const addDepartment = (department) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addDepartments`,department, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Response: ",data)
+    toast.success("Department Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+
+    dispatch({ type: ADD_DEPARTMENT, payload: data.department });
+  } catch (error) {
+    console.log(error);
+    toast.error("Error while adding Department!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -606,11 +634,15 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
 };
 
 // BILLING
-export const getBillingRecords = () => async (dispatch) => {
+export const getBillingRecords = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getAllBills`, {
+      params: {
+        page: page + 1, // Incrementing page by 1 to match the API requirement
+        limit: rowsPerPage,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
