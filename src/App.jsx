@@ -600,7 +600,10 @@ function App() {
               <Route
               path="/doctor/*"
               element={
-                <DoctorRoutes/>
+                <DoctorRoutes
+                    setIsSignUpOrLogin={setIsSignUpOrLogin}
+                    setEntity={setEntity}
+                    entity={entity}/>
               }
               />
             </Routes>
