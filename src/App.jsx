@@ -44,6 +44,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Register from "./pages/register/Register.jsx";
 import Information from "./pages/register/info/Information.jsx";
 import Base from "./pages/landing/Base.jsx";
+import DoctorRoutes from "./pages/doctor/DoctorRoutes.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -592,6 +593,15 @@ function App() {
                     />
                   </ProtectedRoute>
                 }
+              />
+
+              {/* DOCTOR ROUTES */}
+
+              <Route
+              path="/doctor/*"
+              element={
+                <DoctorRoutes/>
+              }
               />
             </Routes>
           </div>

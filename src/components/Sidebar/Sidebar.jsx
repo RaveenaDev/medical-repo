@@ -27,6 +27,13 @@ const roleOptions = {
     { title: "Prescriptions", path: "/patient/prescriptions" },
     { title: "Settings", path: "/patient/settings" },
   ],
+  doctor: [
+    {title: "Overview", path:"/doctor"},
+    {title: "Calender", path:"/doctor/calendar"},
+    {title: "Patient", path:"/doctor/patient"},
+    {title: "Department", path:"/doctor/department"},
+    {title: "Setting", path:"/doctor/settings"},
+  ]
 };
 
 const Sidebar = ({ role }) => {
@@ -60,7 +67,11 @@ const Sidebar = ({ role }) => {
       navigate(`/admin/settings/${path}`);
     } else if (role === "receptionist") {
       navigate(`/receptionist/settings/${path}`);
-    } else {
+    }
+    else if(role === "doctor"){
+      navigate(`/doctor/settings/${path}`);
+    }
+    else {
       navigate(`/doctor/settings/${path}`);
     }
   };
