@@ -1,0 +1,130 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1%;
+  padding-bottom: 2%;
+  button {
+    background-color: #25307f;
+    color: white;
+    display: flex;
+    align-items: center;
+    height: 42px;
+  }
+}
+.title {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 21px;
+}
+
+.chevron-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 5%;
+}
+.month-selection-container {
+  display: flex;
+  background-color: white;
+  border-radius: 35px;
+  align-items: center;
+  padding: 0px;
+  height: 55px;
+}
+.month-selection {
+  display: flex;
+  align-items: center;
+  margin-left: 18px;
+  gap: 25px;
+
+  button {
+    background-color: white;
+    outline: none;
+    box-shadow: none;
+    border: none;
+    padding: 0px;
+    margin-top: 4px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+  }
+  .btn {
+    background-color: #d9d9d9;
+    padding: 5px;
+    border-radius: 500px;
+  }
+}
+
+.calendar-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0px;
+  font-family: "Inter", sans-serif;
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-left: 80px;
+  margin-top: 8px;
+  .calendar-day {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+
+    div:last-child {
+      font-size: 12px;
+      color: #666;
+    }
+  }
+}
+
+.calendar-body {
+  display: flex;
+  height: 600px;
+  overflow-y: auto;
+
+  .calendar-times {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+
+    .time-slot {
+      height: 60px;
+      text-align: right;
+      padding-right: 10px;
+      padding-bottom: 100px;
+      font-size: 12px;
+      color: #999;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      p {
+        padding-top: 35px;
+        color: black;
+        padding-bottom: 0px;
+      }
+    }
+  }
+
+  .calendar-columns {
+    flex: 1;
+    display: flex;
+
+    .calendar-column {
+      flex: 1;
+      border-left: 1px solid #f0f0f0;
+      position: relative;
+    }
+  }
+}
