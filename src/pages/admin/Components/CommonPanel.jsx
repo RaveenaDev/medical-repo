@@ -60,7 +60,7 @@ const CommonPanel = ({
   const noOfDoctors = admin.totalDoctors;
   const doctors = admin.doctors;
 
-  const noOfStaffs = admin.totalStaffs;
+  const noOfStaffs = admin.staffCount;
   const staffs = admin.staffs;
 
   const noOfRooms = admin.totalRooms;
@@ -88,6 +88,7 @@ const CommonPanel = ({
     "/admin/reception/patients",
     "/admin/departments",
     "/admin/reception",
+    "/admin/expenses",
     // "/admin/reception/appointments",
   ];
 
@@ -162,7 +163,7 @@ const CommonPanel = ({
                 backgroundColor: "#EAA000",
               }}
               title="Total Doctors"
-              subtitle={noOfDoctors}
+              subtitle={noOfDoctors ?? 0}
               handleClickCb={() => handleDocClick(doctors)}
             />
           </Grid>
@@ -172,7 +173,7 @@ const CommonPanel = ({
                 backgroundColor: "#2E823B",
               }}
               title="Total Staffs"
-              subtitle={noOfStaffs}
+              subtitle={noOfStaffs ?? 0}
               handleClickCb={() => handleStaffClick(staffs)}
             />
           </Grid>
@@ -182,7 +183,7 @@ const CommonPanel = ({
                 backgroundColor: "#66A7B4",
               }}
               title="Total Rooms"
-              subtitle={noOfRooms}
+              subtitle={noOfRooms ?? 0}
               handleClickCb={() => handleRoomClick(rooms)}
             />
           </Grid>

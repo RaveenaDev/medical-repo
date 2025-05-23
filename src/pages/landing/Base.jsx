@@ -8,7 +8,7 @@ import About from "./components/About/About.jsx";
 import { Services } from "./components/services/Services.jsx";
 import Footer from "./components/footer/footer.jsx";
 import HeroSection from "./components/hero/HeroSection.jsx";
-import Testimonials from "./components/testimonials/testimonials.jsx";
+import Testimonials from "./components/testimonials/Testimonials.jsx";
 import Works from "./components/Works/Works.jsx";
 import Features from "./components/features/Features.jsx";
 

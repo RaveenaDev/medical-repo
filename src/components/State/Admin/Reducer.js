@@ -1,3 +1,4 @@
+import Records from "../../../pages/admin/billing/components/Records/Records.jsx";
 import {
   ADD_DEPARTMENT,
   ADD_DOCTORS,
@@ -46,6 +47,7 @@ const inititalState = {
   totalDoctors: null,
   doctorCount: null,
   totalStaffs: null,
+  staffCount: null,
   totalRooms: null,
   patient: null,
   appointmentCount: null,
@@ -57,6 +59,7 @@ const inititalState = {
   departments: [],
   department: null,
   expenses: [],
+  totalExpenses: null,
   totalAppointments: [],
   scheduledAppointments: [],
   scheduledCount: null,
@@ -75,6 +78,7 @@ const inititalState = {
   isLoading: true,
   error: null,
   success: null,
+  recordsCount: null,
 };
 
 export const adminReducer = (state = inititalState, action) => {
@@ -130,7 +134,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         departments: action.payload,
-        isLoading: false
+        isLoading: false,
       };
 
     case GET_DEPARTMENT_BY_ID:
@@ -139,12 +143,11 @@ export const adminReducer = (state = inititalState, action) => {
         department: action.payload,
       };
 
-
     case ADD_DEPARTMENT:
-      return{
+      return {
         ...state,
-        departments: [...state.departments,action.payload]
-      }
+        departments: [...state.departments, action.payload],
+      };
 
     case GET_APPOINTMENTS:
       return {
@@ -197,8 +200,9 @@ export const adminReducer = (state = inititalState, action) => {
     case GET_STAFFS:
       return {
         ...state,
-        totalStaffs: action.payload.length,
-        staffs: action.payload,
+
+        staffCount: action.payload.totalStaff,
+        staffs: action.payload.staff,
         isLoading: false,
       };
     case ADD_STAFFS:
@@ -272,6 +276,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         expenses: action.payload.expenses,
+        totalExpenses: action.payload.totalExpenses,
         isLoading: false,
       };
 
@@ -302,6 +307,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         billingRecords: action.payload.bills,
+        recordsCount: action.payload.totalBills,
       };
     case GET_BILL_DETAILS:
       return {

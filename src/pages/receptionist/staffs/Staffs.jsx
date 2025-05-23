@@ -25,6 +25,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -39,11 +40,31 @@ import addIcon from "../../../assets/plus.svg";
 import styles from "../styles.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getStaffs } from "../../../components/State/Receptionist/Action.js";
 
 const Staffs = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
+
+  const dispatch = useDispatch();
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
+  useEffect(() => {
+    console.log("Page:", page, "Rows per page:", rowsPerPage);
+    dispatch(getStaffs(page, rowsPerPage)); // Fetch all doctors
+  }, [page, rowsPerPage]);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -85,14 +106,15 @@ const Staffs = (props) => {
   };
 
   const location = useLocation();
-  const staffs = location.state?.staffs;
+  const staffs = useSelector((state) => state.receptionist.staffs);
+  const noOfStaffs = useSelector((state) => state.receptionist.totalStaffs);
 
   const navigate = useNavigate();
   return (
     <div
       style={{
         background: "#f1f1f1",
-        height: "96dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >
@@ -139,6 +161,7 @@ const Staffs = (props) => {
             sx={{
               maxHeight: "70vh", // Adjust this to fit your layout needs
               overflowY: "auto",
+              position: "relative",
             }}
           >
             <Table
@@ -325,6 +348,22 @@ const Staffs = (props) => {
                 )}
               </TableBody>
             </Table>
+            <TablePagination
+              component="div"
+              count={noOfStaffs}
+              page={page} // current page
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage} // items per page
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+              sx={{
+                position: "sticky",
+                bottom: 0,
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 11,
+              }}
+            />
           </TableContainer>
 
           {/* Actions Menu */}
