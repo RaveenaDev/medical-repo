@@ -183,8 +183,9 @@ const AdminStaffs = (props) => {
   const dispatch = useDispatch();
 
   const staffs = useSelector((state) => state.admin.staffs);
+
   const loading = useSelector((state) => state.admin.isLoading);
-  const noOfStaffs = staffs.length;
+  const noOfStaffs = useSelector((state) => state.admin.staffCount);
   // const noOfStaffs = null;
   const departments = useSelector((state) => state.admin.departments);
 

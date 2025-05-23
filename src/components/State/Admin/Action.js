@@ -52,8 +52,6 @@ export const getEarnings = (year) => async (dispatch) => {
       },
     });
 
-    console.log("Earnings : ", data);
-
     dispatch({ type: GET_EARNINGS, payload: data });
   } catch (error) {
     console.log(error);
@@ -190,11 +188,15 @@ export const deleteDoctor = (doctorId) => async (dispatch) => {
   }
 };
 
-export const getStaffs = () => async (dispatch) => {
+export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getStaff`, {
+      params: {
+        page: page + 1,
+        limit: rowsPerPage,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -233,7 +235,6 @@ export const getAllDepartments = () => async (dispatch) => {
     });
 
     dispatch({ type: GET_ALL_DEPARTMENTS, payload: data });
-    console.log("DEP: ",data)
   } catch (error) {
     console.log(error);
   }
@@ -262,13 +263,13 @@ export const addDepartment = (department) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/addDepartments`,department, {
+    const { data } = await axios.post(`${API_URL}/addDepartments`, department, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
 
-    console.log("Response: ",data)
+    console.log("Response: ", data);
     toast.success("Department Added Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,

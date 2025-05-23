@@ -46,6 +46,7 @@ const inititalState = {
   totalDoctors: null,
   doctorCount: null,
   totalStaffs: null,
+  staffCount: null,
   totalRooms: null,
   patient: null,
   appointmentCount: null,
@@ -130,7 +131,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         departments: action.payload,
-        isLoading: false
+        isLoading: false,
       };
 
     case GET_DEPARTMENT_BY_ID:
@@ -139,12 +140,11 @@ export const adminReducer = (state = inititalState, action) => {
         department: action.payload,
       };
 
-
     case ADD_DEPARTMENT:
-      return{
+      return {
         ...state,
-        departments: [...state.departments,action.payload]
-      }
+        departments: [...state.departments, action.payload],
+      };
 
     case GET_APPOINTMENTS:
       return {
@@ -198,7 +198,8 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         totalStaffs: action.payload.length,
-        staffs: action.payload,
+        staffCount: action.payload.totalStaff,
+        staffs: action.payload.staff,
         isLoading: false,
       };
     case ADD_STAFFS:
