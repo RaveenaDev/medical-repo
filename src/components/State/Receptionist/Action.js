@@ -96,25 +96,32 @@ export const getPatients = () => async (dispatch) => {
   }
 };
 
-export const getFilteredPatients = (filteredData) => async (dispatch) => {
-  // console.log("Fil:",filteredData)
-  try {
-    const token = localStorage.getItem("jwt");
+export const getFilteredPatients =
+  (filteredData, page, rowsPerPage) => async (dispatch) => {
+    // console.log("Fil:",filteredData)
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
-      params: { status: filteredData.status, typeVisit: filteredData.type }, // Sending status as a query parameter
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
+        params: {
+          status: filteredData.status,
+          typeVisit: filteredData.type,
+          sort: filteredData.sort,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-    // console.log("Filtered Data: ",data)
+      // console.log("Filtered Data: ",data)
 
-    dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {
@@ -395,13 +402,17 @@ export const rejectAppointmentRequests = (id) => async (dispatch) => {
   }
 };
 
-export const getBills = () => async (dispatch) => {
+export const getBills = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getAllBills`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+      params: {
+        page: page + 1, // Incrementing page by 1 to match the API requirement
+        limit: rowsPerPage,
       },
     });
 

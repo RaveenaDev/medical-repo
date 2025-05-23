@@ -1,3 +1,4 @@
+import Records from "../../../pages/admin/billing/components/Records/Records.jsx";
 import {
   ADD_DEPARTMENT,
   ADD_DOCTORS,
@@ -77,6 +78,7 @@ const inititalState = {
   isLoading: true,
   error: null,
   success: null,
+  recordsCount: null,
 };
 
 export const adminReducer = (state = inititalState, action) => {
@@ -305,6 +307,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         billingRecords: action.payload.bills,
+        recordsCount: action.payload.totalBills,
       };
     case GET_BILL_DETAILS:
       return {

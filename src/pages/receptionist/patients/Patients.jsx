@@ -18,7 +18,7 @@ const Patients = (props) => {
       className={styles.patients}
       style={{
         background: "#f1f1f1",
-        height: "96dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >

@@ -29,19 +29,22 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Records = () => {
+  const dispatch = useDispatch();
   const [selectedBill, setSelectedBill] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0); // page number
   const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
-
+  useEffect(() => {
+    dispatch(getBillingRecords(page, rowsPerPage)); // Fetch billing records from API
+  }, [dispatch, page, rowsPerPage]);
   const billingRecords = useSelector((store) => store.admin.billingRecords);
 
-  const dispatch = useDispatch();
   useEffect(() => {
     if (!billingRecords || billingRecords.length === 0) {
       dispatch(getBillingRecords(page, rowsPerPage)); // Fetch billing records from API
     }
   }, [dispatch, billingRecords, page, rowsPerPage]);
+
   const billDetails = useSelector((store) => store.admin.billingRecord);
   useEffect(() => {
     setSelectedBill(billDetails);
@@ -92,11 +95,6 @@ const Records = () => {
     setFilterDrawerOpen(false);
   };
 
-  const paginatedBillingRecords = billingRecords.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -104,6 +102,7 @@ const Records = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page when rows per page changes
   };
+  const billsCount = useSelector((store) => store.admin.recordsCount);
 
   return (
     <div className="billing-container">
@@ -234,7 +233,7 @@ const Records = () => {
         </div>
         <div style={{ paddingBottom: "2rem" }}>
           {billingRecords.length > 0 ? (
-            paginatedBillingRecords.map((item) => (
+            billingRecords.map((item) => (
               <div className="table-row" key={item._id}>
                 <span className="blue">{item.caseId}</span>
                 <span className="blue">{item.patient.name}</span>
@@ -297,12 +296,12 @@ const Records = () => {
         >
           <TablePagination
             component="div"
-            count={billingRecords.length}
+            count={billsCount}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[5, 10, 20, 50, 100]}
+            rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
             sx={{}}
           />
         </Box>
