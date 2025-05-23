@@ -190,7 +190,7 @@ function Receptionist(props) {
   return (
     <div
       style={{
-        height: "96dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
         background: " #F1F1F1",
       }}

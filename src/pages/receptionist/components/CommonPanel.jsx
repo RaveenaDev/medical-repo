@@ -117,7 +117,7 @@ const CommonPanel = ({
           <Grid size={3}>
             <Card
               title="Total Patient"
-              subtitle={noOfPatients}
+              subtitle={noOfPatients ?? 0}
               handleClickCb={() => navigate(`/receptionist/patients`)}
             />
           </Grid>
@@ -127,7 +127,7 @@ const CommonPanel = ({
                 backgroundColor: "#EAA000",
               }}
               title="Total Doctors"
-              subtitle={noOfDoctors}
+              subtitle={noOfDoctors ?? 0}
               handleClickCb={() =>
                 navigate(`/receptionist/doctors`, { state: { doctors } })
               }
@@ -139,7 +139,7 @@ const CommonPanel = ({
                 backgroundColor: "#2E823B",
               }}
               title="Total Staffs"
-              subtitle={noOfStaffs}
+              subtitle={noOfStaffs ?? 0}
               handleClickCb={() =>
                 navigate(`/receptionist/staffs`, { state: { staffs } })
               }
@@ -151,7 +151,7 @@ const CommonPanel = ({
                 backgroundColor: "#66A7B4",
               }}
               title="Total Rooms"
-              subtitle={noOfRooms}
+              subtitle={noOfRooms ?? 0}
               handleClickCb={() =>
                 navigate(`/receptionist/rooms`, {
                   state: { rooms: [...rooms], doctors: [...doctors] },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./billings.scss";
+import "./billingsReception.scss";
 import Searchbar from "../../../components/Searchbar";
 import NotificationIcon from "../../../components/Notification";
 import { Box, Button, IconButton, TablePagination } from "@mui/material";
@@ -53,7 +53,7 @@ const Billings = (props) => {
   const allBills = useSelector((store) => store.receptionist.allBills);
   const billsCount = useSelector((store) => store.receptionist.allBillsCount);
   return (
-    <div className="billings-container">
+    <div className="billingsReception-container">
       <div
         style={{
           position: "fixed",
@@ -64,7 +64,7 @@ const Billings = (props) => {
           zIndex: 100,
         }}
       >
-        <div className="header">
+        <div className="header-Reception">
           <Searchbar />
           <Notifications />
         </div>

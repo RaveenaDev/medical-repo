@@ -1,11 +1,11 @@
-.billings-container {
+.billingsReception-container {
   background: #f1f1f1;
   height: 94dvh; // Make the entire div take up the full viewport height
   overflow: "hidden"; // Prevent scrolling on the rest of the page
   padding: 20px;
   color: black;
 
-  .header {
+  .header-Reception {
     display: flex;
     justify-content: flex-end;
     align-items: center;
