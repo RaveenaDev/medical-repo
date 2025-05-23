@@ -105,8 +105,8 @@ export const receptionistReducer = (state = initialState, action) => {
     case GET_STAFFS:
       return {
         ...state,
-        totalStaffs: action.payload.length,
-        staffs: action.payload,
+        totalStaffs: action.payload.totalStaff,
+        staffs: action.payload.staff,
       };
 
     case GET_ROOMS:

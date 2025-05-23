@@ -131,11 +131,15 @@ export const getDoctors = () => async (dispatch) => {
   }
 };
 
-export const getStaffs = () => async (dispatch) => {
+export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getStaff`, {
+      params: {
+        page: page + 1,
+        limit: rowsPerPage,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
