@@ -549,13 +549,17 @@ export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
   }
 };
 
-export const getExpenses = () => async (dispatch) => {
+export const getExpenses = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getExpenses`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+      params: {
+        page: page + 1,
+        limit: rowsPerPage,
       },
     });
 

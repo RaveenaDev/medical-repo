@@ -58,6 +58,7 @@ const inititalState = {
   departments: [],
   department: null,
   expenses: [],
+  totalExpenses: null,
   totalAppointments: [],
   scheduledAppointments: [],
   scheduledCount: null,
@@ -197,7 +198,7 @@ export const adminReducer = (state = inititalState, action) => {
     case GET_STAFFS:
       return {
         ...state,
-        totalStaffs: action.payload.length,
+
         staffCount: action.payload.totalStaff,
         staffs: action.payload.staff,
         isLoading: false,
@@ -273,6 +274,7 @@ export const adminReducer = (state = inititalState, action) => {
       return {
         ...state,
         expenses: action.payload.expenses,
+        totalExpenses: action.payload.totalExpenses,
         isLoading: false,
       };
 
