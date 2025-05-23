@@ -11,7 +11,7 @@ $bg-overlay: rgba(230, 232, 238, 0.3);
   .hero-content {
     margin-left: 20px;
     margin-top: 8rem;
-    width: 36rem;
+    width: 38rem;
     background-color: rgba(210, 212, 238, 0.4);
     backdrop-filter: blur(10px);
     padding: 15px 22px;
@@ -63,6 +63,7 @@ $bg-overlay: rgba(230, 232, 238, 0.3);
     p {
       font-size: 22px;
       font-weight: 500;
+      color: #ffffff;
     }
   }
 }
