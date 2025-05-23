@@ -12,6 +12,7 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_DOCTORS_BY_DEPARTMENT,
+  GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
@@ -30,6 +31,7 @@ const initialState = {
   totalPatients: null,
   totalFilteredPatients: null,
   totalDoctors: null,
+  doctorCount: null,
   totalStaffs: null,
   totalRooms: null,
   totalAppointments: [],
@@ -93,6 +95,14 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         totalDoctors: action.payload.count,
+        doctors: action.payload.doctors,
+        doctorCount: action.payload.totalDoctors,
+      };
+
+    case GET_FILTERED_DOCTORS:
+      return {
+        ...state,
+        doctorCount: action.payload.totalDoctors,
         doctors: action.payload.doctors,
       };
 
