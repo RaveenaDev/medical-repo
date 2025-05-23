@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import BookAppointment from "../Appointment/Book/BookAppointment.jsx";
 import dayjs from "dayjs";
 import CircularProgress from "@mui/material/CircularProgress";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 
 const Departments = (props) => {
   const [tableIndex, setTableIndex] = useState(null);
@@ -44,8 +44,8 @@ const Departments = (props) => {
     <div
       style={{
         background: "#f1f1f1",
-        height: "96dvh", // Make the entire div take up the full viewport height
-        overflow: "hidden", // Prevent scrolling on the rest of the page
+        height: "99dvh", // Make the entire div take up the full viewport height
+        overflowY: "hidden", // Enable vertical scrolling
       }}
     >
       <div className={styles.receptionist}>
@@ -62,79 +62,78 @@ const Departments = (props) => {
           <CommonPanel setIsBookAppointment={setIsBookAppointment} />
         </div>
         <div style={{ marginTop: "210px" }}>
-            {
-                loading ? (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            height: "50vh", // or full height you need
-                        }}
-                    >
-                        <CircularProgress sx={{color:'#25307F'}} size={58} />
-                    </Box>
-                ) :
-                    (
-                        <div>
-                            {!props.entity ? (
-                                <>
-                                    {/* Main Table */}
+          {loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "50vh", // or full height you need
+              }}
+            >
+              <CircularProgress sx={{ color: "#25307F" }} size={58} />
+            </Box>
+          ) : (
+            <div>
+              {!props.entity ? (
+                <>
+                  {/* Main Table */}
 
-                                    {/* Conditionally render BookAppointment or Dashboard based on state */}
-                                    {isBookAppointment ? (
-                                        <BookAppointment
-                                            isOpen={isBookAppointment}
-                                            onClose={() => setIsBookAppointment(false)}
-                                        />
-                                    ) : (
-                                        <div className="departments">
-                                            <div className={ayu.headerContainer}>
-                                                <div className={ayu.backButton}>
-                                                    <ArrowBackIosIcon />
-                                                </div>
-                                                <h2 className={ayu.departmentTitle}>Department</h2>
-                                            </div>
-
-                                            {/* Horizontal line */}
-                                            <hr
-                                                style={{ border: "1px solid #d3d3d3", margin: "20px 0" }}
-                                            />
-
-                                            {/* Cards */}
-
-                                            <div className={ayu.superCardContainer}>
-                                                {allDepartments.map((department, index) => (
-                                                    <DepartCard
-                                                        key={index}
-                                                        department={department}
-                                                        index={index}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <>
-                                    {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
-                                    {isBookAppointment ? (
-                                        <BookAppointment
-                                            isBookAppointment={isBookAppointment}
-                                            onClose={() => setIsBookAppointment(false)}
-                                        />
-                                    ) : (
-                                        <EntityBasedTable
-                                            entity={props?.entity}
-                                            tableIndex={tableIndex}
-                                        />
-                                    )}
-                                </>
-                            )}
+                  {/* Conditionally render BookAppointment or Dashboard based on state */}
+                  {isBookAppointment ? (
+                    <BookAppointment
+                      isOpen={isBookAppointment}
+                      onClose={() => setIsBookAppointment(false)}
+                    />
+                  ) : (
+                    <div className="departments">
+                      <div className={ayu.headerContainer}>
+                        <div className={ayu.backButton}>
+                          <ArrowBackIosIcon />
                         </div>
-                    )
-            }
+                        <h2 className={ayu.departmentTitle}>Department</h2>
+                      </div>
 
+                      {/* Horizontal line */}
+                      <hr
+                        style={{
+                          border: "1px solid #d3d3d3",
+                          margin: "10px 0 20px",
+                        }}
+                      />
+
+                      {/* Cards */}
+
+                      <div className={ayu.superCardContainer}>
+                        {allDepartments.map((department, index) => (
+                          <DepartCard
+                            key={index}
+                            department={department}
+                            index={index}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* Render either EntityBasedTable or BookAppointment based on props.entity and isBookAppointment */}
+                  {isBookAppointment ? (
+                    <BookAppointment
+                      isBookAppointment={isBookAppointment}
+                      onClose={() => setIsBookAppointment(false)}
+                    />
+                  ) : (
+                    <EntityBasedTable
+                      entity={props?.entity}
+                      tableIndex={tableIndex}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

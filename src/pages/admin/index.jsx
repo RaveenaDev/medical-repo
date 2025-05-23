@@ -294,7 +294,9 @@ function Admin(props) {
                   }}
                   onClick={handleResetBars} // Clicking on Appointment Statistics resets the bars
                 >
-                  <h4 style={{ fontWeight: 400 }}>Appointment Statistics</h4>
+                  <h4 style={{ fontWeight: 400, color: "#fff" }}>
+                    Appointment Statistics
+                  </h4>
                 </div>
                 <Box sx={{ display: "flex", gap: 3, marginTop: "-20px" }}>
                   {" "}
@@ -314,7 +316,7 @@ function Admin(props) {
                         backgroundColor: "#ACDDE7",
                       }}
                     />
-                    Appointments
+                    <p style={{ color: "#fff" }}>Appointments</p>
                   </Box>
                   <Box
                     display="flex"
@@ -331,7 +333,7 @@ function Admin(props) {
                         backgroundColor: "#3DB461",
                       }}
                     />
-                    Completed
+                    <p style={{ color: "#fff" }}>Completed</p>
                   </Box>
                   <Box
                     display="flex"
@@ -348,7 +350,7 @@ function Admin(props) {
                         backgroundColor: "#EAA000",
                       }}
                     />
-                    Canceled
+                    <p style={{ color: "#fff" }}>Canceled</p>
                   </Box>
                 </Box>
                 <div
