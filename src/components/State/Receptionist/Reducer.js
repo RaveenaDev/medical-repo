@@ -12,6 +12,7 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_DOCTORS_BY_DEPARTMENT,
+  GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
@@ -30,6 +31,7 @@ const initialState = {
   totalPatients: null,
   totalFilteredPatients: null,
   totalDoctors: null,
+  doctorCount: null,
   totalStaffs: null,
   totalRooms: null,
   totalAppointments: [],
@@ -53,6 +55,7 @@ const initialState = {
   appointments: [],
   appointmentRequests: [],
   allBills: [],
+  allBillsCount: null,
   bill: null,
   isLoading: true,
   error: null,
@@ -94,6 +97,14 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalDoctors: action.payload.count,
         doctors: action.payload.doctors,
+        doctorCount: action.payload.totalDoctors,
+      };
+
+    case GET_FILTERED_DOCTORS:
+      return {
+        ...state,
+        doctorCount: action.payload.totalDoctors,
+        doctors: action.payload.doctors,
       };
 
     case GET_DOCTORS_BY_DEPARTMENT:
@@ -105,8 +116,8 @@ export const receptionistReducer = (state = initialState, action) => {
     case GET_STAFFS:
       return {
         ...state,
-        totalStaffs: action.payload.length,
-        staffs: action.payload,
+        totalStaffs: action.payload.totalStaff,
+        staffs: action.payload.staff,
       };
 
     case GET_ROOMS:
@@ -232,6 +243,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         allBills: action.payload.bills,
+        allBillsCount: action.payload.totalBills,
       };
 
     case GET_BILL_BY_ID:

@@ -45,6 +45,7 @@ import Register from "./pages/register/Register.jsx";
 import Information from "./pages/register/info/Information.jsx";
 import { Navigate } from "react-router-dom";
 import Base from "./pages/landing/Base.jsx";
+import DoctorRoutes from "./pages/doctor/DoctorRoutes.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -601,6 +602,18 @@ function App() {
                     />
                   </ProtectedRoute>
                 }
+              />
+
+              {/* DOCTOR ROUTES */}
+
+              <Route
+              path="/doctor/*"
+              element={
+                <DoctorRoutes
+                    setIsSignUpOrLogin={setIsSignUpOrLogin}
+                    setEntity={setEntity}
+                    entity={entity}/>
+              }
               />
             </Routes>
           </div>

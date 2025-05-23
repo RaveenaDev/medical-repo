@@ -69,7 +69,7 @@ const ProgressTracker = ({ patient }) => {
       <Timeline position="left" style={{ marginTop: "3.8rem", paddingRight: "0", marginLeft: "12px" }}>
         {steps.map((step, index) => (
           <TimelineItem key={index} style={{ padding: 0, margin: 0 }}>
-            <TimelineSeparator style={{ padding: 0, margin: 0 }}>
+            <TimelineSeparator style={{padding: '0 1px', margin: 0 }}>
               <TimelineDot
                   sx={{
                     margin: 0,

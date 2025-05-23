@@ -60,7 +60,7 @@ const CommonPanel = ({
   const noOfDoctors = admin.totalDoctors;
   const doctors = admin.doctors;
 
-  const noOfStaffs = admin.totalStaffs;
+  const noOfStaffs = admin.staffCount;
   const staffs = admin.staffs;
 
   const noOfRooms = admin.totalRooms;
@@ -88,6 +88,7 @@ const CommonPanel = ({
     "/admin/reception/patients",
     "/admin/departments",
     "/admin/reception",
+    "/admin/expenses",
     // "/admin/reception/appointments",
   ];
 

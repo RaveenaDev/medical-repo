@@ -17,6 +17,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
@@ -51,6 +52,16 @@ const Expenses = (props) => {
   }, []);
 
   const [date, setDate] = useState(dayjs());
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
 
   const [expenseData, setExpenseData] = useState({
     expenseType: "",
@@ -119,10 +130,12 @@ const Expenses = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getExpenses());
-  }, [dispatch]);
+    dispatch(getExpenses(page, rowsPerPage));
+  }, [dispatch, page, rowsPerPage]);
 
   const expenses = useSelector((store) => store.admin.expenses);
+  const totalExpenses = useSelector((state) => state.admin.totalExpenses);
+
   const loader = useSelector((store) => store.admin.isLoading);
   const validateExpenseData = (data) => {
     let newErrors = {};
@@ -207,7 +220,7 @@ const Expenses = (props) => {
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: "200px" }}>
+      <div style={{ marginTop: "150px" }}>
         {loader ? (
           <Box
             sx={{
@@ -450,8 +463,9 @@ const Expenses = (props) => {
               <TableContainer
                 component={Paper}
                 sx={{
-                  maxHeight: "50vh", // Adjust this to fit your layout needs
+                  maxHeight: "58vh", // Adjust this to fit your layout needs
                   overflowY: "auto",
+                  position: "relative",
                 }}
               >
                 <Table
@@ -601,6 +615,22 @@ const Expenses = (props) => {
                     )}
                   </TableBody>
                 </Table>
+                <TablePagination
+                  component="div"
+                  count={totalExpenses}
+                  page={page} // current page
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage} // items per page
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                  sx={{
+                    position: "sticky",
+                    bottom: 0,
+                    backgroundColor: "#fff",
+                    borderTop: "2px solid #ddd",
+                    zIndex: 11,
+                  }}
+                />
               </TableContainer>
 
               {/* Actions Menu */}

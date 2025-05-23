@@ -4,40 +4,60 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ayu from "./doctors.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Grid from "@mui/material/Grid2";
-import Select from "../../../components/Select/index.jsx";
+
 import {
   Box,
   Button,
   Chip,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   Typography,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import BookAppointment from "../Appointment/Book/BookAppointment.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchDoctorsByDepartment,
+  getAllDepartments,
+  getDoctors,
+  getDoctorsByDepartment,
+} from "../../../components/State/Receptionist/Action.js";
 
 const Doctors = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
+    dispatch(getDoctors(page, rowsPerPage));
+    dispatch(getAllDepartments());
   }, []);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [branches, setBranches] = useState([
-    "All Branches",
-    "Cardiology",
-    "Therapy",
-    "Dermatology",
-  ]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
 
   const location = useLocation();
 
-  const doctors = location.state?.doctors;
+  const doctors = useSelector((state) => state.receptionist.doctors);
+  const departments = useSelector((state) => state.receptionist.departments);
 
-  const navigate = useNavigate();
+  const noOfDoctors = useSelector((state) => state.receptionist.doctorCount);
 
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -51,11 +71,39 @@ const Doctors = (props) => {
     setIsBookAppointment(true);
   };
 
+  useEffect(() => {
+    if (selectedDepartment === "all") {
+      // If "All Branches" is selected, show all doctors
+      dispatch(getDoctors(page, rowsPerPage)); // Fetch all doctors
+    } else {
+      dispatch(fetchDoctorsByDepartment(selectedDepartment, page, rowsPerPage));
+    }
+  }, [page, rowsPerPage]);
+  const handleDepartmentChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedDepartment(selectedValue);
+
+    if (selectedValue === "all") {
+      // If "All Branches" is selected, show all doctors
+      dispatch(getDoctors(page, rowsPerPage)); // Fetch all doctors
+    } else {
+      dispatch(fetchDoctorsByDepartment(selectedValue, page, rowsPerPage));
+    }
+  };
+
+  const departmentOptions = [
+    { label: "All Branches", value: "all" }, // default option
+    ...departments.map((dept) => ({
+      label: dept.departmentName,
+      value: dept.departmentId,
+    })),
+  ];
+
   return (
     <div
       style={{
         background: "#f1f1f1",
-        height: "96dvh", // Make the entire div take up the full viewport height
+        height: "99dvh", // Make the entire div take up the full viewport height
         overflow: "hidden", // Prevent scrolling on the rest of the page
       }}
     >
@@ -72,7 +120,7 @@ const Doctors = (props) => {
         >
           <CommonPanel />
         </div>
-        <div style={{ marginTop: "150px" }}>
+        <div style={{ marginTop: "160px" }}>
           {isBookAppointment ? (
             <BookAppointment
               isOpen={isBookAppointment}
@@ -106,21 +154,30 @@ const Doctors = (props) => {
                   </h2>
 
                   <div style={{ marginLeft: "25px" }}>
-                    {branches.length && (
-                      <Grid xs={3}>
-                        <Box sx={{ width: "250px", background: "#FFFFFF" }}>
-                          {" "}
-                          {/* Adjust width here */}
-                          <Select
-                            inputId="input-department"
-                            selectId="select-department"
-                            label="Department"
-                            list={branches}
-                            size="small"
-                          />
-                        </Box>
-                      </Grid>
-                    )}
+                    <Grid xs={3}>
+                      <Box sx={{ width: "250px", background: "#FFFFFF" }}>
+                        {" "}
+                        {/* Adjust width here */}
+                        <Select
+                          value={selectedDepartment}
+                          onChange={handleDepartmentChange}
+                          displayEmpty
+                          size="small"
+                          sx={{
+                            background: "#ffffff",
+                            outline: "none",
+                            border: "1px solid #9797978F",
+                            width: "100%",
+                          }}
+                        >
+                          {departmentOptions.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                    </Grid>
                   </div>
                 </div>
               </Box>
@@ -130,13 +187,14 @@ const Doctors = (props) => {
                 sx={{
                   maxHeight: "70vh", // Adjust this to fit your layout needs
                   overflowY: "auto",
+                  position: "relative",
                 }}
               >
                 <Table
                   sx={{
                     borderCollapse: "separate",
                     borderSpacing: "0 10px",
-                    marginBottom: "30px",
+                    marginBottom: "20px",
                   }}
                 >
                   <TableHead
@@ -308,6 +366,22 @@ const Doctors = (props) => {
                     )}
                   </TableBody>
                 </Table>
+                <TablePagination
+                  component="div"
+                  count={noOfDoctors}
+                  page={page} // current page
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage} // items per page
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                  sx={{
+                    position: "sticky",
+                    bottom: 0,
+                    backgroundColor: "#fff",
+                    borderTop: "2px solid #ddd",
+                    zIndex: 11,
+                  }}
+                />
               </TableContainer>
             </div>
           )}
