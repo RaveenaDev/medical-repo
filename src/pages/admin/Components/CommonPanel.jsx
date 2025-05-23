@@ -163,7 +163,7 @@ const CommonPanel = ({
                 backgroundColor: "#EAA000",
               }}
               title="Total Doctors"
-              subtitle={noOfDoctors}
+              subtitle={noOfDoctors ?? 0}
               handleClickCb={() => handleDocClick(doctors)}
             />
           </Grid>
@@ -173,7 +173,7 @@ const CommonPanel = ({
                 backgroundColor: "#2E823B",
               }}
               title="Total Staffs"
-              subtitle={noOfStaffs}
+              subtitle={noOfStaffs ?? 0}
               handleClickCb={() => handleStaffClick(staffs)}
             />
           </Grid>
@@ -183,7 +183,7 @@ const CommonPanel = ({
                 backgroundColor: "#66A7B4",
               }}
               title="Total Rooms"
-              subtitle={noOfRooms}
+              subtitle={noOfRooms ?? 0}
               handleClickCb={() => handleRoomClick(rooms)}
             />
           </Grid>
