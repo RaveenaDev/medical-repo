@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CommonPanel from "../components/CommonPanel.jsx";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import "./Calender.scss";
 import AddEventPanel from "../components/AddEventPanel.jsx";
 import dayjs from "dayjs";
+import EventDetails from "../components/EventDetails.jsx";
 
 const Calender = () => {
   const dummyEvents = [
@@ -34,12 +35,28 @@ const Calender = () => {
   ];
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [week, setWeek] = useState([]);
   const [currentTimeTop, setCurrentTimeTop] = useState("0px");
+  const [hoveredEventId, setHoveredEventId] = useState(null);
 
   const handleOpenPanel = () => setIsPanelOpen(true);
   const handleClosePanel = () => setIsPanelOpen(false);
+
+  useEffect(() => {
+    if (isPanelOpen || selectedEvent) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isPanelOpen, selectedEvent]);
 
   const handlePrevWeek = () => {
     const updated = currentDate.subtract(7, "day");
@@ -61,7 +78,7 @@ const Calender = () => {
     updateWeek(currentDate);
   }, [currentDate]);
 
-  const hours = Array.from({ length: 29 }, (_, i) => {
+  const hours = Array.from({ length: 28 }, (_, i) => {
     const hour = 9 + Math.floor(i / 2);
     const minute = i % 2 === 0 ? "00" : "30";
     return dayjs().hour(hour).minute(minute).format("h:mm A");
@@ -73,9 +90,9 @@ const Calender = () => {
       const startHour = 9;
       const totalMinutes = 14 * 60;
       const slotHeight = 160;
-      const visualOffset = -100;
+      const visualOffset = 0;
 
-      const calendarHeight = slotHeight * 29;
+      const calendarHeight = slotHeight * 28;
 
       const minutesFromStart = now.diff(
         now.startOf("day").add(startHour, "hour"),
@@ -106,14 +123,27 @@ const Calender = () => {
     return (duration / 30) * slotHeight;
   };
 
-  const getRandomColor = () => {
+  const getColorById = (id) => {
     const colorMap = [
-      { bg: "#f4f7ff", border: "#1A2A85" },
-      { bg: "#faf5f9", border: "#D81B60" },
-      { bg: "#e9f0ec", border: "#2E7D32" },
+      { bg: "#f4f7ff", border: "#9ca8dc" },
+      { bg: "#faf5f9", border: "#e5b5b8" },
+      { bg: "#e9f0ec", border: "#69bd85" },
     ];
-    return colorMap[Math.floor(Math.random() * colorMap.length)];
+    return colorMap[id % colorMap.length];
   };
+
+  useEffect(() => {
+    if (isPanelOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    // Cleanup when component unmounts
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isPanelOpen]);
 
   return (
     <>
@@ -131,7 +161,7 @@ const Calender = () => {
             <Plus /> Add New Event
           </button>
         </div>
-
+        {isPanelOpen && <div className="backdrop-overlay" />}
         {isPanelOpen && <AddEventPanel onClose={handleClosePanel} />}
       </div>
 
@@ -186,19 +216,32 @@ const Calender = () => {
                         day.format("DD-MM-YYYY")
                     )
                     .map((event) => {
-                      const color = getRandomColor();
+                      const color = getColorById(event.id);
+                      const isHovered = hoveredEventId === event.id;
+                      const backgroundColor = isHovered
+                        ? color.border
+                        : color.bg;
 
                       return (
                         <div
                           key={event.id}
                           className="calendar-event"
+                          onMouseEnter={() => setHoveredEventId(event.id)}
+                          onMouseLeave={() => setHoveredEventId(null)}
+                          onClick={() => setSelectedEvent(event)}
                           style={{
                             top: `${getTop(event.startTime)}px`,
                             height: `${
                               getHeight(event.startTime, event.endTime) * 0.7
                             }px`,
-                            backgroundColor: color.bg,
+                            backgroundColor,
                             border: `1.5px solid ${color.border}`,
+                            color: "#000",
+                            position: "absolute",
+                            borderRadius: "15px",
+                            padding: "8px",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease-in-out",
                           }}
                         >
                           <div>
@@ -218,6 +261,15 @@ const Calender = () => {
                 </div>
               ))}
             </div>
+            {selectedEvent && (
+              <>
+                <div className="backdrop-overlay" />
+                <EventDetails
+                  event={selectedEvent}
+                  onClose={() => setSelectedEvent(null)}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
