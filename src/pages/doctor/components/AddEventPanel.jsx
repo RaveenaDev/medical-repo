@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { X, Plus } from "lucide-react";
-import { Close, CalendarToday } from "@mui/icons-material";
+import { CalendarToday } from "@mui/icons-material";
 import "./AddEventPanel.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
-import { ChevronUp } from "lucide-react";
+
 const AddEventPanel = ({ onClose }) => {
   const panelRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);

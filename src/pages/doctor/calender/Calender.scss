@@ -97,7 +97,7 @@
 
 .calendar-body {
   display: flex;
-  height: 4640px; // 60px * 28 time slots (9 AM to 11 PM)
+  height: 4480px; // 60px * 28 time slots (9 AM to 11 PM)
   overflow-y: auto;
   position: relative;
 
@@ -214,4 +214,14 @@
       font-weight: 300;
     }
   }
+}
+
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2); // subtle darkening
+  z-index: 1100; // just below your AddEventPanel z-index
 }
