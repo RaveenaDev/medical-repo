@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import CommonPanel from "../components/CommonPanel.jsx";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, ChevronDown } from "lucide-react";
 import "./Calender.scss";
 import AddEventPanel from "../components/AddEventPanel.jsx";
 import dayjs from "dayjs";
+import Select from "react-select";
+
 import EventDetails from "../components/EventDetails.jsx";
 
 const Calender = () => {
@@ -34,6 +36,21 @@ const Calender = () => {
     },
   ];
 
+  const monthOptions = [
+    { value: "January", label: "January" },
+    { value: "February", label: "February" },
+    { value: "March", label: "March" },
+    { value: "April", label: "April" },
+    { value: "May", label: "May" },
+    { value: "June", label: "June" },
+    { value: "July", label: "July" },
+    { value: "August", label: "August" },
+    { value: "September", label: "September" },
+    { value: "October", label: "October" },
+    { value: "November", label: "November" },
+    { value: "December", label: "December" },
+  ];
+
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -42,9 +59,68 @@ const Calender = () => {
   const [week, setWeek] = useState([]);
   const [currentTimeTop, setCurrentTimeTop] = useState("0px");
   const [hoveredEventId, setHoveredEventId] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(
+    monthOptions[dayjs().month()]
+  );
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenPanel = () => setIsPanelOpen(true);
   const handleClosePanel = () => setIsPanelOpen(false);
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      border: "#e0e0e0",
+      borderRadius: "8px",
+      paddingLeft: "20px",
+      backgroundColor: "#fff",
+      fontSize: "14px",
+      fontWeight: 500,
+      color: "#333",
+      fontFamily: "Inter, sans-serif",
+      width: "150px",
+      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      width: "150px",
+      borderRadius: "8px",
+      marginTop: "4px",
+      zIndex: 10,
+    }),
+    option: (base, state) => ({
+      ...base,
+      fontFamily: "Inter, sans-serif",
+      backgroundColor: state.isFocused ? "#f3f4f8" : "#fff",
+      color: "#000",
+      padding: "10px",
+      cursor: "pointer",
+      fontSize: "13px",
+    }),
+    dropdownIndicator: () => ({
+      display: "none",
+    }),
+    indicatorSeparator: () => ({
+      display: "none",
+    }),
+  };
+
+  const handleMonthChange = (selected) => {
+    setSelectedMonth(selected);
+    setIsOpen(false);
+
+    const newMonthIndex = monthOptions.findIndex(
+      (m) => m.value === selected.value
+    );
+    const newDate = currentDate.month(newMonthIndex).startOf("month");
+    setCurrentDate(newDate);
+  };
+
+  useEffect(() => {
+    updateWeek(currentDate);
+  }, [currentDate]);
 
   useEffect(() => {
     if (isPanelOpen || selectedEvent) {
@@ -83,6 +159,7 @@ const Calender = () => {
     const minute = i % 2 === 0 ? "00" : "30";
     return dayjs().hour(hour).minute(minute).format("h:mm A");
   });
+
   let slotHeight = 160;
   useEffect(() => {
     const updateCurrentTime = () => {
@@ -167,7 +244,7 @@ const Calender = () => {
 
       {/* Month & Week Navigation */}
       <div className="month-selection-container">
-        <div className="month-selection">
+        <div className="week-selection">
           <button onClick={handlePrevWeek}>
             <ChevronLeft className="btn" size={20} />
           </button>
@@ -175,6 +252,28 @@ const Calender = () => {
           <button onClick={handleNextWeek}>
             <ChevronRight className="btn" size={20} />
           </button>
+        </div>
+
+        <div className="month-selection">
+          <div className="month-button-wrapper">
+            <Select
+              options={monthOptions}
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              styles={customStyles}
+              isSearchable={false}
+              onMenuOpen={() => setIsOpen(true)}
+              onMenuClose={() => setIsOpen(false)}
+              components={{
+                DropdownIndicator: () => (
+                  <ChevronDown
+                    size={22}
+                    className={`chevron-icon ${isOpen ? "rotate" : ""}`}
+                  />
+                ),
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -188,88 +287,92 @@ const Calender = () => {
             </div>
           ))}
         </div>
-
-        <div className="calendar-body">
-          {/* Left Time Column */}
-          <div className="calendar-times">
-            {hours.map((hour) => (
-              <div key={hour} className="time-slot">
-                <p>{hour}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Columns & Current Time */}
-          <div className="calendar-columns-wrapper">
-            <div className="current-time-line" style={{ top: currentTimeTop }}>
-              <span className="time-label">{dayjs().format("h:mm A")}</span>
-              <div className="dot" />
-            </div>
-
-            <div className="calendar-columns">
-              {week.map((day) => (
-                <div className="calendar-column" key={day.format()}>
-                  {dummyEvents
-                    .filter(
-                      (event) =>
-                        event.startTime.format("DD-MM-YYYY") ===
-                        day.format("DD-MM-YYYY")
-                    )
-                    .map((event) => {
-                      const color = getColorById(event.id);
-                      const isHovered = hoveredEventId === event.id;
-                      const backgroundColor = isHovered
-                        ? color.border
-                        : color.bg;
-
-                      return (
-                        <div
-                          key={event.id}
-                          className="calendar-event"
-                          onMouseEnter={() => setHoveredEventId(event.id)}
-                          onMouseLeave={() => setHoveredEventId(null)}
-                          onClick={() => setSelectedEvent(event)}
-                          style={{
-                            top: `${getTop(event.startTime)}px`,
-                            height: `${
-                              getHeight(event.startTime, event.endTime) * 0.7
-                            }px`,
-                            backgroundColor,
-                            border: `1.5px solid ${color.border}`,
-                            color: "#000",
-                            position: "absolute",
-                            borderRadius: "15px",
-                            padding: "8px",
-                            cursor: "pointer",
-                            transition: "all 0.3s ease-in-out",
-                          }}
-                        >
-                          <div>
-                            <p className="event-title">{event.title}</p>
-                            <p className="event-time">
-                              {event.startTime.format("h:mm A")} -{" "}
-                              {event.endTime.format("h:mm A")}
-                            </p>
-                          </div>
-                          <div className="event-user">
-                            <img src={event.profileUrl} alt="user" />
-                            <p className="user-name">{event.name}</p>
-                          </div>
-                        </div>
-                      );
-                    })}
+        <div className="calendar-cols">
+          <div className="calendar-body">
+            {/* Left Time Column */}
+            <div className="calendar-times">
+              {hours.map((hour) => (
+                <div key={hour} className="time-slot">
+                  <p>{hour}</p>
                 </div>
               ))}
             </div>
-            {selectedEvent && (
-              <>
-                <div className="backdrop-overlay" />
-                <EventDetails
-                  event={selectedEvent}
-                  onClose={() => setSelectedEvent(null)}
-                />
-              </>
-            )}
+
+            {/* Columns & Current Time */}
+            <div className="calendar-columns-wrapper">
+              <div
+                className="current-time-line"
+                style={{ top: currentTimeTop }}
+              >
+                <span className="time-label">{dayjs().format("h:mm A")}</span>
+                <div className="dot" />
+              </div>
+
+              <div className="calendar-columns">
+                {week.map((day) => (
+                  <div className="calendar-column" key={day.format()}>
+                    {dummyEvents
+                      .filter(
+                        (event) =>
+                          event.startTime.format("DD-MM-YYYY") ===
+                          day.format("DD-MM-YYYY")
+                      )
+                      .map((event) => {
+                        const color = getColorById(event.id);
+                        const isHovered = hoveredEventId === event.id;
+                        const backgroundColor = isHovered
+                          ? color.border
+                          : color.bg;
+
+                        return (
+                          <div
+                            key={event.id}
+                            className="calendar-event"
+                            onMouseEnter={() => setHoveredEventId(event.id)}
+                            onMouseLeave={() => setHoveredEventId(null)}
+                            onClick={() => setSelectedEvent(event)}
+                            style={{
+                              top: `${getTop(event.startTime)}px`,
+                              height: `${
+                                getHeight(event.startTime, event.endTime) * 0.7
+                              }px`,
+                              backgroundColor,
+                              border: `1.5px solid ${color.border}`,
+                              color: "#000",
+                              position: "absolute",
+                              borderRadius: "15px",
+                              padding: "8px",
+                              cursor: "pointer",
+                              transition: "all 0.3s ease-in-out",
+                            }}
+                          >
+                            <div>
+                              <p className="event-title">{event.title}</p>
+                              <p className="event-time">
+                                {event.startTime.format("h:mm A")} -{" "}
+                                {event.endTime.format("h:mm A")}
+                              </p>
+                            </div>
+                            <div className="event-user">
+                              <img src={event.profileUrl} alt="user" />
+                              <p className="user-name">{event.name}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                ))}
+              </div>
+              {selectedEvent && (
+                <>
+                  <div className="backdrop-overlay" />
+                  <EventDetails
+                    event={selectedEvent}
+                    onClose={() => setSelectedEvent(null)}
+                  />
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
