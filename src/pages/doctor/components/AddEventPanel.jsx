@@ -4,8 +4,65 @@ import { CalendarToday } from "@mui/icons-material";
 import "./AddEventPanel.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
-
+import Select from "react-select";
 const AddEventPanel = ({ onClose }) => {
+  const eventOptions = [
+    { value: "Appointment", label: "Appointment" },
+    { value: "Task", label: "Task" },
+    { value: "Meeting", label: "Meeting" },
+    { value: "Call", label: "Call" },
+    { value: "Note", label: "Note" },
+  ];
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      color: "black",
+      fontFamily: "Karla, sans-serif",
+      borderColor: "#7279ad",
+      boxShadow: "none",
+      backgroundColor: "#f9faff",
+      width: "40%",
+      "&:hover": {
+        borderColor: "#7279ad",
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: "none", //
+    }),
+    dropdownIndicator: () => ({
+      display: "none",
+    }),
+    menu: (base) => ({
+      ...base,
+      marginTop: 0,
+      width: "40%",
+      borderRadius: "2px 2px 0 0",
+    }),
+    menuList: (base) => ({
+      ...base,
+      padding: 0,
+    }),
+    option: (base, state) => ({
+      ...base,
+
+      fontFamily: "Karla, sans-serif",
+      fontWeight: "350",
+      backgroundColor: state.isFocused ? "#dae4ff" : "#f9faff",
+
+      color: "#000",
+      padding: "8px 15px",
+      borderRadius: state.data.value === "Appointment" ? "2px 2px 0 0" : "0",
+      cursor: "pointer",
+    }),
+    placeholder: (base) => ({
+      ...base,
+      fontFamily: "Karla, sans-serif",
+      color: "#000",
+      fontWeight: "350",
+    }),
+  };
+
   const panelRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedTag, setSelectedTag] = useState("");
@@ -92,23 +149,17 @@ const AddEventPanel = ({ onClose }) => {
             <input type="text" placeholder="Enter Patient Name" />
           </div>
           <div className="dropdown-wrapper">
-            <label htmlFor="eventType"></label>
             <div className={`select-container ${isFocused ? "focused" : ""}`}>
-              <select
-                id="eventType"
-                defaultValue=""
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-              >
-                <option value="" disabled>
-                  Type of Event
-                </option>
-                <option value="Appointment">Appointment</option>
-                <option value="Task">Task</option>
-                <option value="Meeting">Meeting</option>
-                <option value="Call">Call</option>
-                <option value="Note">Note</option>
-              </select>
+              <Select
+                className="react-select-container"
+                classNamePrefix="react-select"
+                placeholder="Type of event"
+                options={eventOptions}
+                styles={customStyles}
+                isSearchable={false}
+                onMenuOpen={() => setIsFocused(true)}
+                onMenuClose={() => setIsFocused(false)}
+              />
             </div>
           </div>
           <div className="note">
@@ -123,7 +174,10 @@ const AddEventPanel = ({ onClose }) => {
           <div className="label-tags">
             <span>Label Tags</span>
             <div className="tags-row">
-              {["Urgent", "Checkups", "Follow-ups"].map((tag) => (
+              <div className="tag-label">
+                <p>Priority:</p>
+              </div>
+              {["High", "Medium", "Low"].map((tag) => (
                 <button
                   key={tag}
                   type="button"
