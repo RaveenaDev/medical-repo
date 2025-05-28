@@ -127,9 +127,9 @@
 .calendar-body {
   display: flex;
   height: 4480px; // 60px * 28 time slots (9 AM to 11 PM)
-  overflow-y: auto;
+  // overflow-y: auto;
   position: relative;
-
+  top: 0px;
   .calendar-times {
     width: 80px;
     display: flex;
@@ -207,7 +207,7 @@
 }
 .calendar-event {
   position: absolute;
-  margin-top: 15px;
+  margin-top: 2px;
   left: 10px;
   right: 10px;
   border-radius: 10px;
@@ -256,6 +256,24 @@
 }
 
 .calendar-cols {
-  height: 368px;
-  overflow-y: auto;
+  /* iPad / tablet */
+  @media (min-width: 768px) and (max-width: 1370px) {
+    height: 660px;
+    overflow-y: auto;
+  }
+
+  @media (min-width: 768px) and (max-width: 1180px) {
+    height: 462px;
+    overflow-y: auto;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    height: 413px;
+    overflow-y: auto;
+  }
+  /* Laptop / desktop */
+  @media (min-width: 1440px) {
+    height: 370px;
+    overflow-y: auto;
+  }
 }
