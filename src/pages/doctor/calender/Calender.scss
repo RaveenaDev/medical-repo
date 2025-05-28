@@ -273,7 +273,18 @@
   }
   /* Laptop / desktop */
   @media (min-width: 1440px) {
-    height: 370px;
+    height: 70vh;
     overflow-y: auto;
+    /* Hide scrollbar for IE, Edge */
+    -ms-overflow-style: none;
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
   }
 }
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+.calender-cols::-webkit-scrollbar {
+  display: none;
+}
+
