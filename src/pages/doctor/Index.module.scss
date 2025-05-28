@@ -1,4 +1,4 @@
-body{
+body {
   color: black;
 }
 
@@ -10,58 +10,58 @@ body{
   margin-top: 1rem;
   margin-bottom: 1rem;
 
-  .child1{
+  .child1 {
     display: grid;
     grid-template-columns: 65% 34%;
     grid-template-rows: 1fr;
     gap: 8px;
 
-    .card{
+    .card {
       background-color: #ffffff;
-      padding:1rem;
+      padding: 1rem;
       padding-bottom: 0;
 
-      .cardChild{
+      .cardChild {
         display: flex;
         justify-content: space-between;
 
-        h4{
-          color: #25307F;
+        h4 {
+          color: #25307f;
           font-weight: 600;
           font-size: 1.1rem;
         }
-        p{
+        p {
           font-size: 12px;
           font-weight: 500;
-          color:#25307F;
+          color: #25307f;
         }
       }
     }
   }
 
-  .child2{
+  .child2 {
     background-color: #ffffff;
     margin-top: 1rem;
     padding: 1rem;
 
-    .heading{
+    .heading {
       display: flex;
       cursor: pointer;
-      h3{
-        color: #25307F;
+      h3 {
+        color: #25307f;
         font-weight: 500;
         font-size: 1.1em;
       }
 
-      span{
-        color: #25307F;
+      span {
+        color: #25307f;
         margin-top: 3.5px;
         margin-left: 0.5rem;
       }
     }
   }
 
-  .child3{
+  .child3 {
     margin-top: 1rem;
     background: #fff;
     padding: 1rem;
@@ -70,7 +70,7 @@ body{
     .card {
       border-radius: 8px;
       padding: 0 0.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .title {
@@ -80,7 +80,7 @@ body{
     }
 
     .subtitle {
-      color: #6B7280;
+      color: #6b7280;
       font-size: 0.65rem;
     }
 
@@ -132,10 +132,10 @@ body{
     }
   }
 
-  .div2{
+  .div2 {
     background-color: #ffffff;
     border-radius: 2px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     display: grid;
     /* 4 rows: header / date-picker / list / footer */
     grid-template-rows: auto auto 1fr auto;
@@ -151,28 +151,33 @@ body{
       align-items: center;
     }
     .eventsHeader h3 {
-      margin: 0; font-size: 1rem; color: #000000;font-weight:500;
+      margin: 0;
+      font-size: 1rem;
+      color: #000000;
+      font-weight: 500;
     }
     .eventsHeader small {
-      display: block; color: #A3A3A3; font-size: 11px;
+      display: block;
+      color: #a3a3a3;
+      font-size: 11px;
     }
     .createBtn {
       background: #fff;
-      border: 1px solid #D3D6E5;
+      border: 1px solid #d3d6e5;
       border-radius: 4px;
       padding: 7px 14px;
       cursor: pointer;
       gap: 6px;
       display: flex;
 
-      svg{
+      svg {
         margin-top: 1px;
       }
 
-      span{
+      span {
         font-size: 12px;
         font-weight: 600;
-        color: #25307F;
+        color: #25307f;
       }
     }
 
@@ -193,9 +198,10 @@ body{
       display: none;
     }
 
-    .dateBtn, .dateActive {
+    .dateBtn,
+    .dateActive {
       background: #ffffff;
-      border: 1px solid #DBDBDB;
+      border: 1px solid #dbdbdb;
       border-radius: 6px;
       padding: 8px;
       min-width: 52px;
@@ -206,12 +212,17 @@ body{
       font-weight: 400;
     }
     .dateActive {
-      background: #25307F;
+      background: #25307f;
       border: none;
       color: #fff;
     }
-    .dateDay { display: block; font-weight: 600; }
-    .dateMon { font-size: 0.75rem; }
+    .dateDay {
+      display: block;
+      font-weight: 600;
+    }
+    .dateMon {
+      font-size: 0.75rem;
+    }
 
     .eventList {
       display: flex;
@@ -236,26 +247,33 @@ body{
       align-items: center;
       gap: 8px;
     }
-    .eventTime { font-weight: 500; color: #4B5563; }
+    .eventTime {
+      font-weight: 500;
+      color: #4b5563;
+    }
 
-    .commonEventCard{
+    .commonEventCard {
       padding: 12px 16px;
       border-radius: 8px;
     }
 
     // Active events: blue background + blue border
     .eventCardActive {
-      background: #EEF2FF;
-      border: 2px solid #5461BE;
+      background: #eef2ff;
+      border: 2px solid #5461be;
       display: flex;
       align-items: center;
       gap: 8px;
-      .eventTitle { font-weight: 600;font-size:14px; color: #25307F; }
+      .eventTitle {
+        font-weight: 600;
+        font-size: 14px;
+        color: #25307f;
+      }
     }
 
     // Queued events: same as active
     .eventCardQueued {
-      background: #EEF2FF;
+      background: #eef2ff;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -273,28 +291,47 @@ body{
       .eventTitle,
       .eventDuration {
         text-decoration: line-through;
-        color: #6B7280;  // optional: make the text a bit lighter
+        color: #6b7280; // optional: make the text a bit lighter
       }
     }
 
-    .eventTitle { font-weight: 500;font-size:14px; color: #1F2937; }
-    .eventDuration { font-size: 0.75rem; color: #25307F;font-weight:600 }
+    .eventTitle {
+      font-weight: 500;
+      font-size: 14px;
+      color: #1f2937;
+    }
+    .eventDuration {
+      font-size: 0.75rem;
+      color: #25307f;
+      font-weight: 600;
+    }
 
-    .arrowIcon { width: 16px; height: 16px; }
+    .arrowIcon {
+      width: 16px;
+      height: 16px;
+    }
 
     .eventsFooter {
       text-align: right;
     }
     .seeAllBtn {
       background: none;
-      border: 1px solid #9F9F9F;
+      border: 1px solid #9f9f9f;
       color: #333333;
       font-weight: 600;
       cursor: pointer;
       padding: 0 11px 8px 1.2rem;
       border-radius: 6px;
     }
-
   }
 }
 
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.02); // subtle darkening
+  z-index: 50; // just below your AddEventPanel z-index
+}
