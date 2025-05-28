@@ -213,7 +213,8 @@ const Calender = () => {
             <p>Calendar</p>
           </div>
           <button onClick={handleOpenPanel}>
-            <Plus /> Add New Event
+            <Plus size={18} />
+            <p className="add-event-text">Add New Event</p>
           </button>
         </div>
         {isPanelOpen && <div className="backdrop-overlay" />}
@@ -319,7 +320,7 @@ const Calender = () => {
                             style={{
                               top: `${getTop(event.startTime)}px`,
                               height: `${
-                                getHeight(event.startTime, event.endTime) * 0.98
+                                getHeight(event.startTime, event.endTime) * 0.8
                               }px`,
                               backgroundColor,
                               border: `1.5px solid ${borderColor}`,
