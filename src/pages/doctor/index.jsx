@@ -191,7 +191,7 @@ const DoctorOverview = () => {
       typeVisit: "Consultation",
       department: { name: "Neurology" },
       tokenNumber: "TKN002",
-      status: "Scheduled",
+      status: "Waiting",
     },
     {
       caseId: "CASE3456789012",
