@@ -29,7 +29,7 @@ const roleOptions = {
   ],
   doctor: [
     {title: "Overview", path:"/doctor"},
-    {title: "Calender", path:"/doctor/calendar"},
+    {title: "Consultation", path:"/doctor/consultation"},
     {title: "Patient", path:"/doctor/patient"},
     {title: "Department", path:"/doctor/department"},
     {title: "Setting", path:"/doctor/settings"},

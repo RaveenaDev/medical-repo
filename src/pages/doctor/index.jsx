@@ -301,6 +301,10 @@ const DoctorOverview = () => {
 
   const [selected, setSelected] = useState(24);
 
+  const handleFooterBtn = () => {
+    navigate('/doctor/calendar');
+  }
+
   return (
     <>
       <div>
@@ -978,7 +982,7 @@ const DoctorOverview = () => {
 
               {/* Footer */}
               <div className={styles.eventsFooter}>
-                <button className={styles.seeAllBtn}>
+                <button className={styles.seeAllBtn} onClick={handleFooterBtn}>
                   See All
                   <svg
                     width="26"

@@ -264,10 +264,21 @@ body {
       display: flex;
       align-items: center;
       gap: 8px;
+      animation: blinkBorder 2s infinite;
       .eventTitle {
         font-weight: 600;
         font-size: 14px;
         color: #25307f;
+      }
+    }
+
+    // Blinking border animation
+    @keyframes blinkBorder {
+      0%, 100% {
+        border-color: #5461be;
+      }
+      50% {
+        border-color: transparent;
       }
     }
 
