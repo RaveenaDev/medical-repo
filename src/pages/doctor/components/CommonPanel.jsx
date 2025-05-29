@@ -5,10 +5,7 @@ import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
-import { Box, Button, MenuItem, Select } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { Box} from "@mui/material";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,7 +17,6 @@ import {
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
 
-import { Dropdown } from "primereact/dropdown";
 
 const CommonPanel = ({
   setSelectedDate,
@@ -68,14 +64,14 @@ const CommonPanel = ({
 
   const departments = useSelector((state) => state.admin.departments);
 
-  const handleRoomClick = (rooms) => {
-    navigate(`/admin/rooms`, { state: { rooms } });
+  const handleRoomsClick = (rooms) => {
+    navigate(`/doctor/rooms`, { state: { rooms } });
   };
-  const handleDocClick = (doctors) => {
-    navigate(`/admin/doctors`, { state: { doctors } });
+  const handleInpatientsClick = (doctors) => {
+    navigate(`/doctor/inpatients`, { state: { doctors } });
   };
-  const handleStaffClick = (staffs) => {
-    navigate(`/admin/staffs`, { state: { staffs } });
+  const handleSurgeriesClick = (staffs) => {
+    navigate(`/doctor/surgeries`, { state: { staffs } });
   };
 
   // Define the routes where you want to hide the div
@@ -94,28 +90,6 @@ const CommonPanel = ({
   // Check if the current route is in the excluded routes list
   const shouldHideDiv = excludedRoutes.includes(location.pathname);
 
-  // const [selectedDate, setSelectedDate] = useState(dayjs());
-
-  const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
-  const shapeCircleStyles = { borderRadius: "50%" };
-
-  const circle = (
-    <Box
-      component="span"
-      sx={{
-        ...shapeStyles,
-        ...shapeCircleStyles,
-        color: "#ffffff",
-        marginTop: "2px",
-        paddingTop: "2px",
-        paddingBottom: "2px",
-        fontSize: "15px",
-        paddingLeft: "1px",
-      }}
-    >
-      20
-    </Box>
-  );
   const handleDepartmentChange = (event) => {
     const selectedValue = event.target.value;
     setDepartment(selectedValue);
@@ -137,7 +111,8 @@ const CommonPanel = ({
         </div>
 
         <div className={ayu.cardhandling}>
-          <h3 className={ayu.heading}>Dashboard Overview</h3>
+          <h4 className={ayu.heading}>Good Morning, Dr. Amit Patil</h4>
+          <p>I hope you are in good mood because there are 45 patients waiting for you.</p>
         </div>
 
         <Grid
@@ -152,7 +127,7 @@ const CommonPanel = ({
           <Grid size={3}>
             <Card
               title="Total Patients"
-              subtitle="200+"
+              subtitle="250+"
               handleClickCb={() => navigate(`/admin/earnings`)}
             />
           </Grid>
@@ -161,9 +136,9 @@ const CommonPanel = ({
               customStyle={{
                 backgroundColor: "#EAA000",
               }}
-              title="Total Doctors"
+              title="Total Inpatients"
               subtitle="20"
-              handleClickCb={() => handleDocClick(doctors)}
+              handleClickCb={() => handleInpatientsClick(doctors)}
             />
           </Grid>
           <Grid size={3}>
@@ -171,9 +146,9 @@ const CommonPanel = ({
               customStyle={{
                 backgroundColor: "#2E823B",
               }}
-              title="Total Staffs"
+              title="Total Surgeries"
               subtitle="250"
-              handleClickCb={() => handleStaffClick(staffs)}
+              handleClickCb={() => handleSurgeriesClick(staffs)}
             />
           </Grid>
           <Grid size={3}>
@@ -183,7 +158,7 @@ const CommonPanel = ({
               }}
               title="Total Rooms"
               subtitle="80"
-              handleClickCb={() => handleRoomClick(rooms)}
+              handleClickCb={() => handleRoomsClick(rooms)}
             />
           </Grid>
         </Grid>
