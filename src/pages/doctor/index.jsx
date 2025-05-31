@@ -1,664 +1,1011 @@
-import React, {useState} from 'react'
-import styles from './Index.module.scss'
+import React, { useState } from "react";
+import styles from "./Index.module.scss";
 import CommonPanel from "./components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
-    Box,
-    Button, Chip,
-    MenuItem,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
+  Box,
+  Button,
+  Chip,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
-import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DoughnutChart from "./components/DoughnutChart.jsx";
-import ayu from "../admin/departments/departments.module.scss";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import EventDetails from "./components/EventDetails.jsx";
+const DATES = [
+  { day: 24, month: "Sep" },
+  { day: 25, month: "Sep" },
+  { day: 26, month: "Sep" },
+  { day: 27, month: "Sep" },
+  { day: 28, month: "Sep" },
+  { day: 29, month: "Sep" },
+  { day: 30, month: "Sep" },
+  { day: 1, month: "Oct" },
+  { day: 2, month: "Oct" },
+  { day: 3, month: "Oct" },
+  { day: 4, month: "Oct" },
+];
+
+const EVENTS = [
+  {
+    time: "10:00",
+    type: "call",
+    title: "Call Dr. Jyoti Bharwe",
+    duration: "1:30–2:30 pm",
+    status: "cancelled",
+  },
+  {
+    time: "11:00",
+    type: "meeting",
+    title: "Meeting",
+    duration: "11:00–12:30 pm",
+    status: "active",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  {
+    time: "12:30",
+    type: "call",
+    title: "Call Dr. Yash Sharma",
+    duration: "12:30–1:00 pm",
+    status: "queued",
+  },
+  /* …etc */
+];
 const DoctorOverview = () => {
-    // Default to today's date if props are not provided
-    const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
-    const navigate = useNavigate();
+  // Default to today's date if props are not provided
+  const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
+  const navigate = useNavigate();
 
-    const dummyDiagnosisData = [
-        { name: 'Respiratory Infections', value: 1800, color: '#D8E4FD' },
-        { name: 'Hypertension',          value: 2400, color: '#5E73D4' },
-        { name: 'Hyperlipidemia',        value: 3800, color: '#2D3179' },
-        { name: 'Osteoarthritis',        value: 2200, color: '#A3A3A3' },
-        { name: 'GERD',                  value:  840, color: '#F1F1F1' },
-    ];
+  const dummyDiagnosisData = [
+    { name: "Respiratory Infections", value: 1800, color: "#D8E4FD" },
+    { name: "Hypertension", value: 2400, color: "#5E73D4" },
+    { name: "Hyperlipidemia", value: 3800, color: "#2D3179" },
+    { name: "Osteoarthritis", value: 2200, color: "#A3A3A3" },
+    { name: "GERD", value: 840, color: "#F1F1F1" },
+  ];
 
-    const criticalPatients = [
-        {
-            name: "John Doe",
-            disease: "Respiratory Failure",
-            status: "Critical"
-        },
-        {
-            name: "Jane Smith",
-            disease: "Hypertension",
-            status: "Ongoing"
-        },
-        {
-            name: "Alice Johnson",
-            disease: "Diabetes",
-            status: "Moderate"
-        },
-        {
-            name: "Bob Lee",
-            disease: "Heart Disease",
-            status: "High"
-        },
-    ];
+  const criticalPatients = [
+    {
+      name: "John Doe",
+      disease: "Respiratory Failure",
+      status: "Critical",
+    },
+    {
+      name: "Jane Smith",
+      disease: "Hypertension",
+      status: "Ongoing",
+    },
+    {
+      name: "Alice Johnson",
+      disease: "Diabetes",
+      status: "Moderate",
+    },
+    {
+      name: "Bob Lee",
+      disease: "Heart Disease",
+      status: "High",
+    },
+  ];
 
-    const totalAppointments = [
-        {
-            caseId: "CASE1234567890",
-            patient: { name: "John Doe" },
-            doctor: { name: "Dr. Smith" },
-            typeVisit: "Follow-up",
-            department: { name: "Cardiology" },
-            tokenNumber: "TKN001",
-            status: "Ongoing"
-        },
-        {
-            caseId: "CASE2345678901",
-            patient: { name: "Jane Roe" },
-            doctor: { name: "Dr. Adams" },
-            typeVisit: "Consultation",
-            department: { name: "Neurology" },
-            tokenNumber: "TKN002",
-            status: "Scheduled"
-        },
-        {
-            caseId: "CASE3456789012",
-            patient: { name: "Michael Lee" },
-            doctor: { name: "Dr. Watson" },
-            typeVisit: "First Visit",
-            department: { name: "Orthopedics" },
-            tokenNumber: "TKN003",
-            status: "Waiting"
-        },
-        {
-            caseId: "CASE4567890123",
-            patient: { name: "Emily Clark" },
-            doctor: { name: "Dr. Patel" },
-            typeVisit: "Follow-up",
-            department: { name: "Pediatrics" },
-            tokenNumber: "TKN004",
-            status: "Completed"
-        }
-    ];
+  const totalAppointments = [
+    {
+      caseId: "CASE1234567890",
+      patient: { name: "John Doe" },
+      doctor: { name: "Dr. Smith" },
+      typeVisit: "Follow-up",
+      department: { name: "Cardiology" },
+      tokenNumber: "TKN001",
+      status: "Ongoing",
+    },
+    {
+      caseId: "CASE2345678901",
+      patient: { name: "Jane Roe" },
+      doctor: { name: "Dr. Adams" },
+      typeVisit: "Consultation",
+      department: { name: "Neurology" },
+      tokenNumber: "TKN002",
+      status: "Waiting",
+    },
+    {
+      caseId: "CASE3456789012",
+      patient: { name: "Michael Lee" },
+      doctor: { name: "Dr. Watson" },
+      typeVisit: "First Visit",
+      department: { name: "Orthopedics" },
+      tokenNumber: "TKN003",
+      status: "Waiting",
+    },
+    {
+      caseId: "CASE4567890123",
+      patient: { name: "Emily Clark" },
+      doctor: { name: "Dr. Patel" },
+      typeVisit: "Follow-up",
+      department: { name: "Pediatrics" },
+      tokenNumber: "TKN004",
+      status: "Completed",
+    },
+  ];
 
-    const phases = [
-        { name: 'Early stage', count: 26, color: '#25307F' },
-        { name: 'Ongoing',    count: 13, color: '#5752CB' },
-        { name: 'Maintenance',count:  5, color: '#D6DAFD' },
-    ]
+  const phases = [
+    { name: "Early stage", count: 26, color: "#25307F" },
+    { name: "Ongoing", count: 13, color: "#5752CB" },
+    { name: "Maintenance", count: 5, color: "#D6DAFD" },
+  ];
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const truncateText = (text, maxLength) => {
+    if (!text) return "";
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  };
 
-    const truncateText = (text, maxLength) => {
-        if (!text) return "";
-        return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  const handleDateChange = (newValue) => {
+    setInternalSelectedDate(newValue);
+  };
+
+  const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
+  const shapeCircleStyles = { borderRadius: "50%" };
+
+  const circle = (
+    <Box
+      component="span"
+      sx={{
+        ...shapeStyles,
+        ...shapeCircleStyles,
+        color: "#ffffff",
+        marginTop: "2px",
+        paddingTop: "2px",
+        paddingBottom: "2px",
+        fontSize: "15px",
+        paddingLeft: "1px",
+      }}
+    >
+      20
+    </Box>
+  );
+
+  const getStatusStyle = (status) => {
+    const baseStyle = {
+      padding: "4px 1px",
+      width: "4.4rem",
+      borderRadius: "12px",
+      fontSize: "12px",
+      fontWeight: 500,
+      textTransform: "capitalize",
+      border: "1px solid",
+      display: "inline-block",
+      marginTop: "4px",
+      textAlign: "center",
     };
 
-
-    const handleDateChange = (newValue) => {
-        setInternalSelectedDate(newValue);
-    };
-
-    const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
-    const shapeCircleStyles = { borderRadius: "50%" };
-
-    const circle = (
-        <Box
-            component="span"
-            sx={{
-                ...shapeStyles,
-                ...shapeCircleStyles,
-                color: "#ffffff",
-                marginTop: "2px",
-                paddingTop: "2px",
-                paddingBottom: "2px",
-                fontSize: "15px",
-                paddingLeft: "1px",
-            }}
-        >
-            20
-        </Box>
-    );
-
-    const getStatusStyle = (status) => {
-        const baseStyle = {
-            padding: "4px 1px",
-            width:'4.4rem',
-            borderRadius: "12px",
-            fontSize: "12px",
-            fontWeight: 500,
-            textTransform: "capitalize",
-            border: "1px solid",
-            display: "inline-block",
-            marginTop: "4px",
-            textAlign:'center'
+    switch (status.toLowerCase()) {
+      case "critical":
+        return {
+          ...baseStyle,
+          backgroundColor: "#f14400",
+          color: "#ffffff",
+          borderColor: "#f14400",
         };
+      case "ongoing":
+        return {
+          ...baseStyle,
+          backgroundColor: "#ffffff",
+          color: "#2e823b",
+          borderColor: "#2e823b",
+        };
+      case "moderate":
+        return {
+          ...baseStyle,
+          backgroundColor: "#ffffff",
+          color: "#eaa000",
+          borderColor: "#eaa000",
+        };
+      case "high":
+        return {
+          ...baseStyle,
+          backgroundColor: "#ffffff",
+          color: "#f14400",
+          borderColor: "#f14400",
+        };
+      default:
+        return baseStyle;
+    }
+  };
 
-        switch (status.toLowerCase()) {
-            case "critical":
-                return { ...baseStyle, backgroundColor: "#f14400", color: "#ffffff", borderColor: "#f14400" };
-            case "ongoing":
-                return { ...baseStyle, backgroundColor: "#ffffff", color: "#2e823b", borderColor: "#2e823b" };
-            case "moderate":
-                return { ...baseStyle, backgroundColor: "#ffffff", color: "#eaa000", borderColor: "#eaa000" };
-            case "high":
-                return { ...baseStyle, backgroundColor: "#ffffff", color: "#f14400", borderColor: "#f14400" };
-            default:
-                return baseStyle;
-        }
-    };
+  const totalPatients = phases.reduce((sum, p) => sum + p.count, 0);
 
-    const totalPatients = phases.reduce((sum, p) => sum + p.count, 0)
+  const [selected, setSelected] = useState(24);
 
-    return (
-        <>
+  const handleFooterBtn = () => {
+    navigate('/doctor/calendar');
+  }
+
+  return (
+    <>
+      <div>
+        <CommonPanel />
+
+        <div>
+          <Grid
+            container
+            // sx={{ margin: "0 0 20px 0" }}
+          >
+            <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Box
+                  sx={{
+                    backgroundColor: "#FFFFFF",
+
+                    borderRadius: 1,
+                    width: 180, // Adjust width here
+                    textAlign: "center",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    // padding: "4px", // Reduce padding to make the container smaller
+                  }}
+                >
+                  <DatePicker
+                    value={internalSelectedDate}
+                    onChange={handleDateChange}
+                    format="DD/MM/YYYY" // Set the date format
+                    slotProps={{
+                      textField: {
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
+                            },
+                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
+                            },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
+                              boxShadow: "none !important",
+                            },
+                          },
+                          "& .MuiInputBase-input": {
+                            fontSize: "14px",
+                            padding: "10px",
+                            "&:focus": {
+                              outline: "none !important",
+                            },
+                          },
+                          "& .MuiIconButton-root": {
+                            color: "#666", // Adjust icon color if needed
+                            "&:hover": {
+                              backgroundColor: "transparent !important",
+                            },
+                            "&:focus": {
+                              outline: "none !important",
+                              boxShadow: "none !important",
+                            },
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </Box>
+              </LocalizationProvider>
+            </Grid>
+            <Grid size={8} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="contained"
+                onClick={() => navigate(`/admin/requests`)}
+                sx={{
+                  fontSize: "14px",
+                  color: "#878787",
+                  textTransform: "capitalize",
+                  padding: "2px 6px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                }}
+              >
+                <div
+                  style={{
+                    height: "8px",
+                    width: "8px",
+                    borderRadius: "50%",
+                    backgroundColor: "#F14400",
+                    position: "absolute",
+                    left: "31px",
+                    top: "6px",
+                  }}
+                ></div>
+                {circle}
+                <span
+                  style={{
+                    marginLeft: "16px",
+                    marginRight: "8px",
+                    marginTop: "2px",
+                  }}
+                >
+                  Appointment Requests
+                </span>
+              </Button>
+            </Grid>
+          </Grid>
+
+          <div className={styles.parent1}>
             <div>
-                <CommonPanel/>
-
-                <div>
-                    <Grid
-                        container
-                        // sx={{ margin: "0 0 20px 0" }}
-                    >
-                        <Grid size={4} sx={{display: "flex", alignItems: "center"}}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <Box
-                                    sx={{
-                                        backgroundColor: "#FFFFFF",
-
-                                        borderRadius: 1,
-                                        width: 180, // Adjust width here
-                                        textAlign: "center",
-                                        boxShadow: "0px 4px 4px 0px #C2C2C240",
-                                        // padding: "4px", // Reduce padding to make the container smaller
-                                    }}
-                                >
-                                    <DatePicker
-                                        value={internalSelectedDate}
-                                        onChange={handleDateChange}
-                                        format="DD/MM/YYYY" // Set the date format
-                                        slotProps={{
-                                            textField: {
-                                                sx: {
-                                                    "& .MuiOutlinedInput-root": {
-                                                        "& .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "transparent !important",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "transparent !important",
-                                                        },
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "transparent !important",
-                                                            boxShadow: "none !important",
-                                                        },
-                                                    },
-                                                    "& .MuiInputBase-input": {
-                                                        fontSize: "14px",
-                                                        padding: "10px",
-                                                        "&:focus": {
-                                                            outline: "none !important",
-                                                        },
-                                                    },
-                                                    "& .MuiIconButton-root": {
-                                                        color: "#666", // Adjust icon color if needed
-                                                        "&:hover": {
-                                                            backgroundColor: "transparent !important",
-                                                        },
-                                                        "&:focus": {
-                                                            outline: "none !important",
-                                                            boxShadow: "none !important",
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        }}
-                                    />
-                                </Box>
-                            </LocalizationProvider>
-                        </Grid>
-                        <Grid size={8} sx={{display: "flex", justifyContent: "flex-end"}}>
-                            <Button
-                                variant="contained"
-                                onClick={() => navigate(`/admin/requests`)}
-                                sx={{
-                                    fontSize: "14px",
-                                    color: "#878787",
-                                    textTransform: "capitalize",
-                                    padding: "2px 6px",
-                                    backgroundColor: "#fff",
-                                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                                    "&:focus": {
-                                        outline: "none",
-                                        boxShadow: "none",
-                                    },
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        height: "8px",
-                                        width: "8px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "#F14400",
-                                        position: "absolute",
-                                        left: "31px",
-                                        top: "6px",
-                                    }}
-                                ></div>
-                                {circle}
-                                <span
-                                    style={{
-                                        marginLeft: "16px",
-                                        marginRight: "8px",
-                                        marginTop: "2px",
-                                    }}
-                                >
-                                  Appointment Requests
-                                </span>
-                            </Button>
-                        </Grid>
-                    </Grid>
-
-
-                    <div className={styles.parent1}>
-                        <div>
-                            <div className={styles.child1}>
-                                <div className={styles.card}>
-                                    <div className={styles.cardChild}>
-                                        <h4>Most Common Diagnosis</h4>
-                                        <div style={{display: 'flex', gap: '4px'}}>
-                                            <p>This Month</p>
-                                            <svg
-                                                width="14"
-                                                height="18"
-                                                viewBox="0 0 16 16"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <mask
-                                                    id="mask0_3306_7145"
-                                                    style={{maskType: 'alpha'}}
-                                                    maskUnits="userSpaceOnUse"
-                                                    x="0"
-                                                    y="0"
-                                                    width="16"
-                                                    height="16"
-                                                >
-                                                    <rect
-                                                        y="16"
-                                                        width="16"
-                                                        height="16"
-                                                        transform="rotate(-90 0 16)"
-                                                        fill="#D9D9D9"
-                                                    />
-                                                </mask>
-                                                <g mask="url(#mask0_3306_7145)">
-                                                    <path
-                                                        d="M14.6663 5.33333L7.99967 12L1.33301 5.33333L2.51634 4.15L7.99967 9.63333L13.483 4.15L14.6663 5.33333Z"
-                                                        fill="#25307F"
-                                                    />
-                                                </g>
-                                            </svg>
-                                        </div>
-                                    </div>
-
-                                    <DoughnutChart data={dummyDiagnosisData}/>
-                                </div>
-                                <div className={styles.card}>
-                                    <div className={styles.cardChild} style={{marginBottom:'10px'}}>
-                                        <h4>Critical Alerts</h4>
-                                        <svg
-                                            width="20"
-                                            height="25"
-                                            viewBox="0 0 20 18"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M10 1.5L19 18.5H1L10 1.5Z"
-                                                stroke="#25307F"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                            <path
-                                                d="M10 8.5V12.5"
-                                                stroke="#25307F"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                            <path
-                                                d="M10 15.5V15.51"
-                                                stroke="#25307F"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    </div>
-
-                                    <div>
-                                        {criticalPatients.map((patient, index) => (
-                                            <div
-                                                key={index}
-                                                style={{
-                                                    borderBottom: "1px solid #eee",
-                                                    padding: "8px 0",
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    alignItems: "center",
-                                                }}
-                                            >
-                                                <div>
-                                                    <div style={{
-                                                        fontWeight: "bold",
-                                                        fontSize: "14px",
-                                                        color: "#2d3179"
-                                                    }}>
-                                                        {patient.name}
-                                                    </div>
-                                                    <div style={{
-                                                        fontSize: "12px",
-                                                        color: "#878787"
-                                                    }}>{patient.disease}</div>
-                                                </div>
-                                                <div style={getStatusStyle(patient.status)}>
-                                                    {patient.status}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={styles.child2}>
-                                <div className={styles.heading}>
-                                    <h3>Appointments</h3>
-                                    <span>
-                                        <ArrowForwardIosIcon sx={{ fontSize: 18 }}/>
-                                    </span>
-                                </div>
-
-                                <div style={{marginTop:'1rem'}}>
-                                    <TableContainer>
-                                        <Table
-                                            sx={{
-                                                borderCollapse: "separate", // Ensure border-spacing works
-                                                borderSpacing: "0 8px", // Adds vertical spacing between rows
-                                            }}
-                                        >
-                                            <TableHead>
-                                                <TableRow
-                                                    sx={{
-                                                        "&:last-child td, &:last-child th": {border: 0},
-                                                        "& td, & th": {py: 0}, // Removes padding from all cells
-                                                    }}
-                                                >
-                                                    <TableCell
-                                                        sx={{
-                                                            fontSize: "14px",
-                                                            color: "#000000",
-                                                            fontWeight: 500,
-                                                            border: "none",
-                                                            px: 2.6,
-                                                        }}
-                                                    >
-                                                        Case Id
-                                                    </TableCell>
-                                                    <TableCell
-                                                        align="left"
-                                                        sx={{
-                                                            fontSize: "14px",
-                                                            color: "#000000",
-                                                            fontWeight: 500,
-                                                            padding: "0.5 1",
-                                                            border: "none",
-                                                            px: 0.6,
-                                                        }}
-                                                    >
-                                                        Name
-                                                    </TableCell>
-                                                    <TableCell
-                                                        align="center"
-                                                        sx={{
-                                                            fontSize: "14px",
-                                                            color: "#000000",
-                                                            fontWeight: 500,
-                                                            padding: "0.5 1",
-                                                            border: "none",
-                                                            px: 0.6,
-                                                        }}
-                                                    >
-                                                        Appointment With
-                                                    </TableCell>
-                                                    <TableCell
-                                                        align="center"
-                                                        sx={{
-                                                            fontSize: "14px",
-                                                            color: "#000000",
-                                                            fontWeight: 500,
-                                                            padding: "0.5 1",
-                                                            border: "none",
-                                                            px: 0.6,
-                                                        }}
-                                                    >
-                                                        Type Visit
-                                                    </TableCell>
-                                                    <TableCell
-                                                        align="center"
-                                                        sx={{
-                                                            fontSize: "14px",
-                                                            color: "#000000",
-                                                            fontWeight: 500,
-                                                            padding: "0.5 1",
-                                                            border: "none",
-                                                            px: 0.6,
-                                                        }}
-                                                    >
-                                                        Branch
-                                                    </TableCell>
-                                                    <TableCell
-                                                        align="center"
-                                                        sx={{
-                                                            fontSize: "14px",
-                                                            color: "#000000",
-                                                            fontWeight: 500,
-                                                            padding: "0.5 1",
-                                                            border: "none",
-                                                            px: 0.6,
-                                                        }}
-                                                    >
-                                                        Token&nbsp;No.
-                                                    </TableCell>
-                                                    <TableCell
-                                                        align="center"
-                                                        sx={{
-                                                            fontSize: "14px",
-                                                            color: "#000000",
-                                                            fontWeight: 500,
-                                                            padding: "0.5 1",
-                                                            border: "none",
-                                                            px: 0.6,
-                                                        }}
-                                                    >
-                                                        Status
-                                                    </TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {totalAppointments.length > 0 ? (
-                                                    totalAppointments.slice(0, 5).map((row, index) => (
-                                                        <TableRow
-                                                            key={index}
-                                                            sx={{
-                                                                "&:last-child td, &:last-child th": {border: 0},
-                                                                backgroundColor: row.status === 'Ongoing' ?
-                                                                    "#EEF8F1" : "#ffffff",
-                                                                "& td, & th": {py: 1.5}, // Removes padding from all cells
-                                                            }}
-                                                        >
-                                                            <TableCell
-                                                                component="th"
-                                                                scope="row"
-                                                                sx={{
-                                                                    color: "#25307f",
-                                                                    border: "none",
-                                                                    px: 0.6,
-                                                                    pl: 2,
-                                                                    fontSize: "12px",
-                                                                    fontWeight: 600
-                                                                }}
-                                                            >
-                                                                {truncateText(row.caseId, 8)}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                component="th"
-                                                                scope="row"
-                                                                sx={{color: "#25307f",fontSize: "12px",
-                                                                    fontWeight: 600, border: "none", px: 0.6}}
-                                                            >
-                                                                {truncateText(row.patient?.name, 13)}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                align="center"
-                                                                sx={{border: "none",fontSize: "12px", px: 0.6, color: "#747474"}}
-                                                            >
-                                                                {truncateText(row.doctor?.name, 14)}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                align="center"
-                                                                sx={{border: "none",fontSize: "12px", px: 0.6, color: "#747474"}}
-                                                            >
-                                                                {row.typeVisit}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                align="center"
-                                                                sx={{border: "none",fontSize: "12px", px: 0.6, color: "#747474"}}
-                                                            >
-                                                                {row.department.name}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                align="center"
-                                                                sx={{border: "none",fontSize: "12px", px: 0.6, color: "#747474"}}
-                                                            >
-                                                                {truncateText(row?.tokenNumber || "N/A", 13)}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                align="center"
-                                                                sx={{
-                                                                    border: "none",
-                                                                    px: 0.6,
-                                                                    pr: 2,
-                                                                    color: "#747474",fontSize: "12px",
-                                                                }}
-                                                            >
-                                                                <Chip
-                                                                    label={row.status}
-                                                                    size="small"
-                                                                    sx={{
-                                                                        bgcolor:
-                                                                            row.status === "Ongoing"
-                                                                                ? "#3DB461"
-                                                                                : row.status === "Scheduled"
-                                                                                    ? "#25307F"
-                                                                                    : row.status === "Waiting"
-                                                                                        ? "#ffffff"
-                                                                                        : "white",
-                                                                        color:
-                                                                            row.status === "Ongoing"
-                                                                                ? "#FFFFFF"
-                                                                                : row.status === "Completed"
-                                                                                    ? "orange"
-                                                                                    : row.status === "Scheduled"
-                                                                                        ? "white"
-                                                                                        : row.status === "Waiting"
-                                                                                            ? "#878787"
-                                                                                            : "#757575",
-                                                                        fontWeight: 500,
-                                                                        px: 0.7,
-                                                                    }}
-                                                                />
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    ))
-                                                ) : (
-                                                    <TableRow>
-                                                        <TableCell
-                                                            align="center"
-                                                            colSpan={7}
-                                                            sx={{backgroundColor: "#EEF8F1"}}
-                                                        >
-                                                            No appointments found.
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )}
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                </div>
-                            </div>
-                            <div className={styles.child3}>
-                                <div className={styles.card}>
-                                    <div style={{display:'flex',justifyContent:'space-between'}}>
-                                        <div>
-                                            <h3 className={styles.title}>Patients’ treatment phases</h3>
-                                            <p className={styles.subtitle}>
-                                                You are coach to {totalPatients} active patients
-                                            </p>
-                                        </div>
-
-                                        <div className={styles.legend}>
-                                            {phases.map(p => (
-                                                <div key={p.name} className={styles.legendItem}>
-                                                  <span
-                                                      className={styles.legendSwatch}
-                                                      style={{backgroundColor: p.color}}
-                                                  />
-                                                    <span>{p.name}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div className={styles.bars}>
-                                        {phases.map(p => (
-                                            <div key={p.name} style={{ flexGrow: p.count, display: 'flex', flexDirection: 'column' }}>
-                                                  <span className={styles.phaseLabel}>
-                                                    {p.count} Patients
-                                                  </span>
-                                                <div className={styles.barTrack}>
-                                                    <div
-                                                        className={styles.barFill}
-                                                        style={{
-                                                            width: '100%',
-                                                            backgroundColor: p.color,
-                                                        }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="div2">2</div>
+              <div className={styles.child1}>
+                <div className={styles.card}>
+                  <div className={styles.cardChild}>
+                    <h4>Most Common Diagnosis</h4>
+                    <div style={{ display: "flex", gap: "4px" }}>
+                      <p>This Month</p>
+                      <svg
+                        width="14"
+                        height="18"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <mask
+                          id="mask0_3306_7145"
+                          style={{ maskType: "alpha" }}
+                          maskUnits="userSpaceOnUse"
+                          x="0"
+                          y="0"
+                          width="16"
+                          height="16"
+                        >
+                          <rect
+                            y="16"
+                            width="16"
+                            height="16"
+                            transform="rotate(-90 0 16)"
+                            fill="#D9D9D9"
+                          />
+                        </mask>
+                        <g mask="url(#mask0_3306_7145)">
+                          <path
+                            d="M14.6663 5.33333L7.99967 12L1.33301 5.33333L2.51634 4.15L7.99967 9.63333L13.483 4.15L14.6663 5.33333Z"
+                            fill="#25307F"
+                          />
+                        </g>
+                      </svg>
                     </div>
+                  </div>
+
+                  <DoughnutChart data={dummyDiagnosisData} />
                 </div>
+                <div className={styles.card}>
+                  <div
+                    className={styles.cardChild}
+                    style={{ marginBottom: "10px" }}
+                  >
+                    <h4>Critical Alerts</h4>
+                    <svg
+                      width="20"
+                      height="25"
+                      viewBox="0 0 20 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 1.5L19 18.5H1L10 1.5Z"
+                        stroke="#25307F"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M10 8.5V12.5"
+                        stroke="#25307F"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M10 15.5V15.51"
+                        stroke="#25307F"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <div>
+                    {criticalPatients.map((patient, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          borderBottom: "1px solid #eee",
+                          padding: "8px 0",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <div
+                            style={{
+                              fontWeight: "bold",
+                              fontSize: "14px",
+                              color: "#2d3179",
+                            }}
+                          >
+                            {patient.name}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              color: "#878787",
+                            }}
+                          >
+                            {patient.disease}
+                          </div>
+                        </div>
+                        <div style={getStatusStyle(patient.status)}>
+                          {patient.status}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.child2}>
+                <div className={styles.heading}>
+                  <h3>Appointments</h3>
+                  <span>
+                    <ArrowForwardIosIcon sx={{ fontSize: 18 }} />
+                  </span>
+                </div>
+
+                <div style={{ marginTop: "1rem" }}>
+                  <TableContainer>
+                    <Table
+                      sx={{
+                        borderCollapse: "separate", // Ensure border-spacing works
+                        borderSpacing: "0 8px", // Adds vertical spacing between rows
+                      }}
+                    >
+                      <TableHead>
+                        <TableRow
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                            "& td, & th": { py: 0 }, // Removes padding from all cells
+                          }}
+                        >
+                          <TableCell
+                            sx={{
+                              fontSize: "14px",
+                              color: "#000000",
+                              fontWeight: 500,
+                              border: "none",
+                              px: 2.6,
+                            }}
+                          >
+                            Case Id
+                          </TableCell>
+                          <TableCell
+                            align="left"
+                            sx={{
+                              fontSize: "14px",
+                              color: "#000000",
+                              fontWeight: 500,
+                              padding: "0.5 1",
+                              border: "none",
+                              px: 0.6,
+                            }}
+                          >
+                            Name
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              fontSize: "14px",
+                              color: "#000000",
+                              fontWeight: 500,
+                              padding: "0.5 1",
+                              border: "none",
+                              px: 0.6,
+                            }}
+                          >
+                            Appointment With
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              fontSize: "14px",
+                              color: "#000000",
+                              fontWeight: 500,
+                              padding: "0.5 1",
+                              border: "none",
+                              px: 0.6,
+                            }}
+                          >
+                            Type Visit
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              fontSize: "14px",
+                              color: "#000000",
+                              fontWeight: 500,
+                              padding: "0.5 1",
+                              border: "none",
+                              px: 0.6,
+                            }}
+                          >
+                            Branch
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              fontSize: "14px",
+                              color: "#000000",
+                              fontWeight: 500,
+                              padding: "0.5 1",
+                              border: "none",
+                              px: 0.6,
+                            }}
+                          >
+                            Token&nbsp;No.
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              fontSize: "14px",
+                              color: "#000000",
+                              fontWeight: 500,
+                              padding: "0.5 1",
+                              border: "none",
+                              px: 0.6,
+                            }}
+                          >
+                            Status
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {totalAppointments.length > 0 ? (
+                          totalAppointments.slice(0, 5).map((row, index) => (
+                            <TableRow
+                              key={index}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                                backgroundColor:
+                                  row.status === "Ongoing"
+                                    ? "#EEF8F1"
+                                    : "#ffffff",
+                                "& td, & th": { py: 1.5 }, // Removes padding from all cells
+                              }}
+                            >
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                sx={{
+                                  color: "#25307f",
+                                  border: "none",
+                                  px: 0.6,
+                                  pl: 2,
+                                  fontSize: "12px",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {truncateText(row.caseId, 8)}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                sx={{
+                                  color: "#25307f",
+                                  fontSize: "12px",
+                                  fontWeight: 600,
+                                  border: "none",
+                                  px: 0.6,
+                                }}
+                              >
+                                {truncateText(row.patient?.name, 13)}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                sx={{
+                                  border: "none",
+                                  fontSize: "12px",
+                                  px: 0.6,
+                                  color: "#747474",
+                                }}
+                              >
+                                {truncateText(row.doctor?.name, 14)}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                sx={{
+                                  border: "none",
+                                  fontSize: "12px",
+                                  px: 0.6,
+                                  color: "#747474",
+                                }}
+                              >
+                                {row.typeVisit}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                sx={{
+                                  border: "none",
+                                  fontSize: "12px",
+                                  px: 0.6,
+                                  color: "#747474",
+                                }}
+                              >
+                                {row.department.name}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                sx={{
+                                  border: "none",
+                                  fontSize: "12px",
+                                  px: 0.6,
+                                  color: "#747474",
+                                }}
+                              >
+                                {truncateText(row?.tokenNumber || "N/A", 13)}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                sx={{
+                                  border: "none",
+                                  px: 0.6,
+                                  pr: 2,
+                                  color: "#747474",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                <Chip
+                                  label={row.status}
+                                  size="small"
+                                  sx={{
+                                    bgcolor:
+                                      row.status === "Ongoing"
+                                        ? "#3DB461"
+                                        : row.status === "Scheduled"
+                                        ? "#25307F"
+                                        : row.status === "Waiting"
+                                        ? "#ffffff"
+                                        : "white",
+                                    color:
+                                      row.status === "Ongoing"
+                                        ? "#FFFFFF"
+                                        : row.status === "Completed"
+                                        ? "orange"
+                                        : row.status === "Scheduled"
+                                        ? "white"
+                                        : row.status === "Waiting"
+                                        ? "#878787"
+                                        : "#757575",
+                                    fontWeight: 500,
+                                    px: 0.7,
+                                  }}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell
+                              align="center"
+                              colSpan={7}
+                              sx={{ backgroundColor: "#EEF8F1" }}
+                            >
+                              No appointments found.
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </div>
+              <div className={styles.child3}>
+                <div className={styles.card}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <div>
+                      <h3 className={styles.title}>
+                        Patients’ treatment phases
+                      </h3>
+                      <p className={styles.subtitle}>
+                        You are coach to {totalPatients} active patients
+                      </p>
+                    </div>
+
+                    <div className={styles.legend}>
+                      {phases.map((p) => (
+                        <div key={p.name} className={styles.legendItem}>
+                          <span
+                            className={styles.legendSwatch}
+                            style={{ backgroundColor: p.color }}
+                          />
+                          <span>{p.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className={styles.bars}>
+                    {phases.map((p) => (
+                      <div
+                        key={p.name}
+                        style={{
+                          flexGrow: p.count,
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <span className={styles.phaseLabel}>
+                          {p.count} Patients
+                        </span>
+                        <div className={styles.barTrack}>
+                          <div
+                            className={styles.barFill}
+                            style={{
+                              width: "100%",
+                              backgroundColor: p.color,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-        </>
-    )
-}
-export default DoctorOverview
+            <div className={styles.div2}>
+              {/* Header */}
+              <div className={styles.eventsHeader}>
+                <div>
+                  <h3>Upcoming Events</h3>
+                  <small>6 events left today</small>
+                </div>
+                <button className={styles.createBtn}>
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15.9997 9.08317H9.49967V15.5832H7.33301V9.08317H0.833008V6.9165H7.33301V0.416504H9.49967V6.9165H15.9997V9.08317Z"
+                      fill="#25307F"
+                    />
+                  </svg>
+                  <span>Create Visit</span>
+                </button>
+              </div>
+
+              {/* Date pills */}
+              <div className={styles.datePicker}>
+                {DATES.map((d) => (
+                  <button
+                    key={d.day}
+                    className={
+                      d.day === selected ? styles.dateActive : styles.dateBtn
+                    }
+                    onClick={() => setSelected(d.day)}
+                  >
+                    <span className={styles.dateDay}>{d.day}</span>
+                    <span className={styles.dateMon}>{d.month}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Event list */}
+              <div className={styles.eventList}>
+                {EVENTS.map((e, i) => (
+                  <div
+                    key={i}
+                    className={styles.eventRow}
+                    onClick={() => setSelectedEvent(e)}
+                  >
+                    <div className={styles.eventTime}>{e.time}</div>
+                    <div
+                      className={`${styles.commonEventCard} ${
+                        e.status === "active"
+                          ? styles.eventCardActive
+                          : e.status === "queued"
+                          ? styles.eventCardQueued
+                          : styles.eventCardCancelled
+                      }`}
+                    >
+                      {e.type === "call" ? (
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M16.95 18C14.8667 18 12.8083 17.546 10.775 16.638C8.74167 15.73 6.89167 14.4423 5.225 12.775C3.55833 11.1077 2.271 9.25767 1.363 7.225C0.455 5.19233 0.000666667 3.134 0 1.05C0 0.75 0.0999999 0.5 0.3 0.3C0.5 0.0999999 0.75 0 1.05 0H5.1C5.33333 0 5.54167 0.0793332 5.725 0.238C5.90833 0.396667 6.01667 0.584 6.05 0.8L6.7 4.3C6.73333 4.56667 6.725 4.79167 6.675 4.975C6.625 5.15833 6.53333 5.31667 6.4 5.45L3.975 7.9C4.30833 8.51667 4.704 9.11233 5.162 9.687C5.62 10.2617 6.12433 10.816 6.675 11.35C7.19167 11.8667 7.73333 12.346 8.3 12.788C8.86667 13.23 9.46667 13.634 10.1 14L12.45 11.65C12.6 11.5 12.796 11.3877 13.038 11.313C13.28 11.2383 13.5173 11.2173 13.75 11.25L17.2 11.95C17.4333 12.0167 17.625 12.1377 17.775 12.313C17.925 12.4883 18 12.684 18 12.9V16.95C18 17.25 17.9 17.5 17.7 17.7C17.5 17.9 17.25 18 16.95 18Z"
+                            fill="#616AA5"
+                          />
+                        </svg>
+                      ) : e.type === "meeting" ? (
+                        <svg
+                          width="19"
+                          height="18"
+                          viewBox="0 0 19 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            opacity="0.7"
+                            d="M9.03886 3.02125C9.039 2.62449 8.96094 2.23159 8.80917 1.86501C8.6574 1.49842 8.43488 1.16534 8.15433 0.884787C7.87377 0.604236 7.54069 0.381715 7.17411 0.229942C6.80752 0.0781693 6.41462 0.00011862 6.01786 0.00025002H3.05986C2.6599 -0.00489579 2.2629 0.0694369 1.8919 0.218935C1.52089 0.368433 1.18327 0.590121 0.898616 0.871134C0.613964 1.15215 0.387951 1.48689 0.233693 1.85594C0.0794339 2.22499 0 2.62101 0 3.021C0 3.42099 0.0794339 3.81701 0.233693 4.18606C0.387951 4.55511 0.613964 4.88985 0.898616 5.17087C1.18327 5.45188 1.52089 5.67357 1.8919 5.82306C2.2629 5.97256 2.6599 6.0469 3.05986 6.04175H3.63886V7.50025C3.63886 7.50025 9.03886 6.77125 9.03886 3.02125ZM6.28886 11.0002C6.28886 12.1052 5.39386 13.0002 4.28886 13.0002C3.18386 13.0002 2.28886 12.1052 2.28886 11.0002C2.28886 9.89525 3.18386 9.00025 4.28886 9.00025C5.39386 9.00025 6.28886 9.89525 6.28886 11.0002ZM4.28886 14.0002C2.87036 14.0002 0.0388644 14.7152 0.0388644 16.1337V18.0002H8.53886V16.1337C8.53886 14.7147 5.70736 14.0002 4.28886 14.0002ZM13.7889 13.0002C14.8939 13.0002 15.7889 12.1052 15.7889 11.0002C15.7889 9.89525 14.8939 9.00025 13.7889 9.00025C12.6839 9.00025 11.7889 9.89525 11.7889 11.0002C11.7889 12.1052 12.6839 13.0002 13.7889 13.0002ZM13.7889 14.0002C12.3704 14.0002 9.53886 14.7152 9.53886 16.1337V18.0002H18.0389V16.1337C18.0389 14.7147 15.2074 14.0002 13.7889 14.0002ZM13.0599 0.50025C12.6631 0.500119 12.2702 0.578169 11.9036 0.729942C11.537 0.881715 11.204 1.10424 10.9234 1.38479C10.6428 1.66534 10.4203 1.99842 10.2686 2.36501C10.1168 2.73159 10.0387 3.12449 10.0389 3.52125C10.0389 7.27125 14.8389 8.00025 14.8389 8.00025V6.54175H15.0179C15.4178 6.5469 15.8148 6.47256 16.1858 6.32306C16.5568 6.17357 16.8945 5.95188 17.1791 5.67087C17.4638 5.38985 17.6898 5.05511 17.844 4.68606C17.9983 4.31701 18.0777 3.92099 18.0777 3.521C18.0777 3.12101 17.9983 2.72499 17.844 2.35594C17.6898 1.98689 17.4638 1.65215 17.1791 1.37113C16.8945 1.09012 16.5568 0.868433 16.1858 0.718935C15.8148 0.569437 15.4178 0.495104 15.0179 0.50025H13.0599Z"
+                            fill="#25307F"
+                          />
+                        </svg>
+                      ) : null}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "100%",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            width: "100%",
+                            marginRight: "1rem",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <div className={styles.eventTitle}>{e.title}</div>
+                          <div className={styles.eventDuration}>
+                            {e.duration}
+                          </div>
+                        </div>
+                        <svg
+                          width="11"
+                          height="18"
+                          viewBox="0 0 11 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            opacity="0.6"
+                            d="M0.380428 17.2593C0.870428 17.7085 1.66043 17.7085 2.15043 17.2593L10.4604 9.64182C10.8504 9.28432 10.8504 8.70682 10.4604 8.34932L2.15043 0.731815C1.66043 0.282648 0.870428 0.282648 0.380428 0.731815C-0.109572 1.18098 -0.109572 1.90515 0.380428 2.35432L7.62043 9.00015L0.37043 15.646C-0.109571 16.086 -0.109572 16.8193 0.380428 17.2593Z"
+                            fill="#333333"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Event Details Modal */}
+              {selectedEvent && (
+                <>
+                  <div className="backdrop-overlay" />
+                  <EventDetails
+                    event={selectedEvent}
+                    onClose={() => setSelectedEvent(null)}
+                  />
+                </>
+              )}
+
+              {/* Footer */}
+              <div className={styles.eventsFooter}>
+                <button className={styles.seeAllBtn} onClick={handleFooterBtn}>
+                  See All
+                  <svg
+                    width="26"
+                    height="26"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    transform="translate(0, 7)"
+                  >
+                    <path
+                      d="M6.125 4.25L9.875 8L6.125 11.75"
+                      stroke="#333333"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+export default DoctorOverview;

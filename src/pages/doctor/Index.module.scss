@@ -1,4 +1,4 @@
-body{
+body {
   color: black;
 }
 
@@ -8,68 +8,69 @@ body{
   grid-template-rows: 1fr;
   gap: 8px;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 
-  .child1{
+  .child1 {
     display: grid;
     grid-template-columns: 65% 34%;
     grid-template-rows: 1fr;
     gap: 8px;
 
-    .card{
+    .card {
       background-color: #ffffff;
-      padding:1rem;
+      padding: 1rem;
       padding-bottom: 0;
 
-      .cardChild{
+      .cardChild {
         display: flex;
         justify-content: space-between;
 
-        h4{
-          color: #25307F;
+        h4 {
+          color: #25307f;
           font-weight: 600;
           font-size: 1.1rem;
         }
-        p{
+        p {
           font-size: 12px;
           font-weight: 500;
-          color:#25307F;
+          color: #25307f;
         }
       }
     }
   }
 
-  .child2{
+  .child2 {
     background-color: #ffffff;
     margin-top: 1rem;
     padding: 1rem;
 
-    .heading{
+    .heading {
       display: flex;
       cursor: pointer;
-      h3{
-        color: #25307F;
+      h3 {
+        color: #25307f;
         font-weight: 500;
         font-size: 1.1em;
       }
 
-      span{
-        color: #25307F;
+      span {
+        color: #25307f;
         margin-top: 3.5px;
         margin-left: 0.5rem;
       }
     }
   }
 
-  .child3{
+  .child3 {
     margin-top: 1rem;
     background: #fff;
     padding: 1rem;
-    margin-bottom: 1rem;
-    padding-bottom: 2rem;
+    //margin-bottom: 1rem;
+    padding-bottom: 2.4rem;
     .card {
       border-radius: 8px;
       padding: 0 0.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .title {
@@ -79,7 +80,7 @@ body{
     }
 
     .subtitle {
-      color: #6B7280;
+      color: #6b7280;
       font-size: 0.65rem;
     }
 
@@ -130,5 +131,219 @@ body{
       transition: width 0.3s ease;
     }
   }
+
+  .div2 {
+    background-color: #ffffff;
+    border-radius: 2px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: grid;
+    /* 4 rows: header / date-picker / list / footer */
+    grid-template-rows: auto auto 1fr auto;
+    gap: 16px;
+    padding: 1rem;
+    //margin-bottom: 1rem;
+    //box-sizing: border-box;
+    /* Dashboard.module.css (continued) */
+
+    .eventsHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .eventsHeader h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #000000;
+      font-weight: 500;
+    }
+    .eventsHeader small {
+      display: block;
+      color: #a3a3a3;
+      font-size: 11px;
+    }
+    .createBtn {
+      background: #fff;
+      border: 1px solid #d3d6e5;
+      border-radius: 4px;
+      padding: 7px 14px;
+      cursor: pointer;
+      gap: 6px;
+      display: flex;
+
+      svg {
+        margin-top: 1px;
+      }
+
+      span {
+        font-size: 12px;
+        font-weight: 600;
+        color: #25307f;
+      }
+    }
+
+    .datePicker {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+
+      /* Hide scrollbar for IE, Edge */
+      -ms-overflow-style: none;
+
+      /* Hide scrollbar for Firefox */
+      scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+    .datePicker::-webkit-scrollbar {
+      display: none;
+    }
+
+    .dateBtn,
+    .dateActive {
+      background: #ffffff;
+      border: 1px solid #dbdbdb;
+      border-radius: 6px;
+      padding: 8px;
+      min-width: 52px;
+      height: 3.5rem;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 400;
+    }
+    .dateActive {
+      background: #25307f;
+      border: none;
+      color: #fff;
+    }
+    .dateDay {
+      display: block;
+      font-weight: 600;
+    }
+    .dateMon {
+      font-size: 0.75rem;
+    }
+
+    .eventList {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      overflow-y: auto;
+      height: 78vh;
+      /* Hide scrollbar for IE, Edge */
+      -ms-overflow-style: none;
+
+      /* Hide scrollbar for Firefox */
+      scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+    .eventList::-webkit-scrollbar {
+      display: none;
+    }
+    .eventRow {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .eventTime {
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .commonEventCard {
+      padding: 12px 16px;
+      border-radius: 8px;
+    }
+
+    // Active events: blue background + blue border
+    .eventCardActive {
+      background: #eef2ff;
+      border: 2px solid #5461be;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: blinkBorder 2s infinite;
+      .eventTitle {
+        font-weight: 600;
+        font-size: 14px;
+        color: #25307f;
+      }
+    }
+
+    // Blinking border animation
+    @keyframes blinkBorder {
+      0%, 100% {
+        border-color: #5461be;
+      }
+      50% {
+        border-color: transparent;
+      }
+    }
+
+    // Queued events: same as active
+    .eventCardQueued {
+      background: #eef2ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    // Cancelled events: greyed out + strike-through text
+    .eventCardCancelled {
+      background: #f1f1f1;
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      // target the text elements inside
+      .eventTitle,
+      .eventDuration {
+        text-decoration: line-through;
+        color: #6b7280; // optional: make the text a bit lighter
+      }
+    }
+
+    .eventTitle {
+      font-weight: 500;
+      font-size: 14px;
+      color: #1f2937;
+    }
+    .eventDuration {
+      font-size: 0.75rem;
+      color: #25307f;
+      font-weight: 600;
+    }
+
+    .arrowIcon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .eventsFooter {
+      text-align: right;
+    }
+    .seeAllBtn {
+      background: none;
+      border: 1px solid #9f9f9f;
+      color: #333333;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0 11px 8px 1.2rem;
+      border-radius: 6px;
+    }
+  }
 }
 
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.02); // subtle darkening
+  z-index: 50; // just below your AddEventPanel z-index
+}

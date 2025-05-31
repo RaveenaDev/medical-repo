@@ -4,8 +4,69 @@ import { CalendarToday } from "@mui/icons-material";
 import "./AddEventPanel.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
-
+import TextField from "@mui/material/TextField";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import Select from "react-select";
 const AddEventPanel = ({ onClose }) => {
+  const eventOptions = [
+    { value: "Appointment", label: "Appointment" },
+    { value: "Task", label: "Task" },
+    { value: "Meeting", label: "Meeting" },
+    { value: "Call", label: "Call" },
+    { value: "Note", label: "Note" },
+  ];
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      color: "black",
+      fontFamily: "Karla, sans-serif",
+      borderColor: "#7279ad",
+      boxShadow: "none",
+      backgroundColor: "#f9faff",
+      width: "96%",
+      "&:hover": {
+        borderColor: "#7279ad",
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: "none", //
+    }),
+    dropdownIndicator: () => ({
+      display: "none",
+    }),
+    menu: (base) => ({
+      ...base,
+      marginTop: 0,
+      width: "96%",
+      borderRadius: "2px 2px 0 0",
+    }),
+    menuList: (base) => ({
+      ...base,
+      padding: 0,
+    }),
+    option: (base, state) => ({
+      ...base,
+
+      fontFamily: "Karla, sans-serif",
+      fontWeight: "350",
+      backgroundColor: state.isFocused ? "#dae4ff" : "#f9faff",
+
+      color: "#000",
+      padding: "8px 15px",
+      borderRadius: state.data.value === "Appointment" ? "2px 2px 0 0" : "0",
+      cursor: "pointer",
+    }),
+    placeholder: (base) => ({
+      ...base,
+      fontFamily: "Karla, sans-serif",
+      color: "#000",
+      fontWeight: "350",
+    }),
+  };
+  const [value, setValue] = useState();
   const panelRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedTag, setSelectedTag] = useState("");
@@ -54,61 +115,126 @@ const AddEventPanel = ({ onClose }) => {
             <label>Event Title</label>
             <input type="text" placeholder="Enter Event" />
           </div>
+          <div className="date-selection">
+            <div className="today-row">
+              <div className="text">
+                <span className="label">
+                  {selectedDate === dayjs().format("YYYY-MM-DD")
+                    ? "Today"
+                    : "Selected Date"}
+                </span>
+                <span className="date">
+                  {dayjs(selectedDate).format("DD-MM-YYYY")}
+                </span>
+              </div>
 
-          <div className="today-row">
-            <div className="text">
-              <span className="label">
-                {selectedDate === dayjs().format("YYYY-MM-DD")
-                  ? "Today"
-                  : "Selected Date"}
-              </span>
-              <span className="date">
-                {dayjs(selectedDate).format("DD-MM-YYYY")}
-              </span>
+              <div className="calendar-wrapper-in">
+                <label htmlFor="datePicker">
+                  <CalendarToday className="calendar-icon" />
+                </label>
+                <input
+                  type="date"
+                  id="datePicker"
+                  value={selectedDate}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
-            <div className="calendar-wrapper-in">
-              <label htmlFor="datePicker">
-                <CalendarToday className="calendar-icon" />
+            <div className="allday-row">
+              <label className="toggle-switch">
+                <input type="checkbox" id="allday" />
+                <span className="slider"></span>
               </label>
-              <input
-                type="date"
-                id="datePicker"
-                value={selectedDate}
-                onChange={handleChange}
-              />
+              <label htmlFor="allday">All day event</label>
             </div>
           </div>
 
-          <div className="allday-row">
-            <label className="toggle-switch">
-              <input type="checkbox" id="allday" />
-              <span className="slider"></span>
-            </label>
-            <label htmlFor="allday">All day event</label>
+          <div className="time">
+            <label htmlFor="timePicker">Time</label>
+            <div className="time-selection">
+              <div className="time-picker-container">
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  className="time-picker"
+                >
+                  <p className="time-label-from">From:</p>
+                  <TimePicker
+                    className="time-picker-1"
+                    label=""
+                    value={value}
+                    onChange={(newValue) => setValue(newValue)}
+                    slots={{
+                      openPickerIcon: () => null, // removes the clock icon
+                    }}
+                    slotProps={{
+                      textField: {
+                        sx: {
+                          height: "45px", // overall height
+                          "& .MuiInputBase-root": {
+                            height: "45px", // input container
+                            width: "180px",
+                          },
+                          "& input": {
+                            padding: "10px 12px", // input padding
+                          },
+                        },
+                        variant: "outlined",
+                        inputProps: {
+                          placeholder: "Start time", // ✅ your placeholder here
+                        },
+                      },
+                    }}
+                    open={false}
+                  />
+                  <p className="time-label-to">To:</p>
+                  <TimePicker
+                    className="time-picker-2"
+                    label=""
+                    value={value}
+                    onChange={(newValue) => setValue(newValue)}
+                    slots={{
+                      openPickerIcon: () => null, // removes the clock icon
+                    }}
+                    slotProps={{
+                      textField: {
+                        sx: {
+                          height: "45px", // overall height
+                          "& .MuiInputBase-root": {
+                            height: "45px", // input container
+                            width: "180px",
+                          },
+                          "& input": {
+                            padding: "10px 12px", // input padding
+                          },
+                        },
+                        inputProps: {
+                          placeholder: "End time", // ✅ your placeholder here
+                        },
+                      },
+                    }}
+                    open={false}
+                  />
+                </LocalizationProvider>
+              </div>
+            </div>
           </div>
           <div className="patient-name">
-            <label>Patient Name</label>
-            <input type="text" placeholder="Enter Patient Name" />
+            <label>Participants Name</label>
+            <input type="text" placeholder="Enter Name" />
           </div>
           <div className="dropdown-wrapper">
-            <label htmlFor="eventType"></label>
             <div className={`select-container ${isFocused ? "focused" : ""}`}>
-              <select
-                id="eventType"
-                defaultValue=""
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-              >
-                <option value="" disabled>
-                  Type of Event
-                </option>
-                <option value="Appointment">Appointment</option>
-                <option value="Task">Task</option>
-                <option value="Meeting">Meeting</option>
-                <option value="Call">Call</option>
-                <option value="Note">Note</option>
-              </select>
+              <Select
+                className="react-select-container"
+                classNamePrefix="react-select"
+                placeholder="Type of event"
+                options={eventOptions}
+                styles={customStyles}
+                isSearchable={false}
+                onMenuOpen={() => setIsFocused(true)}
+                onMenuClose={() => setIsFocused(false)}
+              />
             </div>
           </div>
           <div className="note">
@@ -123,7 +249,10 @@ const AddEventPanel = ({ onClose }) => {
           <div className="label-tags">
             <span>Label Tags</span>
             <div className="tags-row">
-              {["Urgent", "Checkups", "Follow-ups"].map((tag) => (
+              <div className="tag-label">
+                <p>Priority:</p>
+              </div>
+              {["High", "Medium", "Low"].map((tag) => (
                 <button
                   key={tag}
                   type="button"
