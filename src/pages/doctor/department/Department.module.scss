@@ -1,0 +1,150 @@
+.parent{
+  .headingSection{
+    background-color: #ffffff;
+    margin-bottom: 0.7rem;
+    margin-top: 1rem;
+    padding: 7px;
+    border-radius: 4px;
+    .heading{
+      display: flex;
+      gap: 0.8rem;
+      svg{
+        margin-top: 3.5px;
+      }
+      h4{
+        color: #25307F;
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+    }
+
+    p{
+      padding-left: 2.5rem;
+      font-size: 13px;
+      color: #A4A4A4;
+    }
+
+
+  }
+
+  .gridContainer {
+    background-color: #dae4ff;
+    display: grid;
+    grid-template-columns: 1fr 1.7fr 1fr;
+    gap: 16px;
+    padding: 16px;
+
+    .left {
+      display: grid;
+      gap: 1rem;
+
+
+      /* ───────────── Section Wrappers ───────────── */
+      .section {
+        background-color: #ffffff;
+        padding: 12px;
+        border-radius: 4px;
+      }
+
+      .sectionTitle {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #25307F;
+      }
+
+      .scrollableList {
+        max-height: 35vh;
+        overflow-y: auto;
+        border-radius: 4px;
+        padding: 8px 0;
+      }
+
+      /* ───────────── Individual List Item ───────────── */
+      .listItem {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background-color 0.1s ease;
+      }
+
+      .listItem:hover {
+        background-color: #f1f1f5;
+      }
+
+      /* Avatar on the left */
+      .avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 12px;
+      }
+
+      /* Text info (name & role) stacked vertically */
+      .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333333;
+        line-height: 1.2;
+      }
+
+      .role {
+        font-size: 11px;
+        color: #A4A4A4;
+        line-height: 1.2;
+        margin-top: 2px;
+      }
+
+      /* Make sure .checkbox is always clearly visible */
+      .checkbox {
+        /* Force a visible border and default appearance */
+        appearance: auto;            /* revert any custom styling */
+        margin-left: 8px;            /* space it out from text */
+        accent-color: #3b4b94;       /* set a visible accent color for the tick/check */
+        /* Optionally add a light border if needed: */
+        border: 1px solid #ccc;
+        background-color: white;     /* ensure the box itself is white */
+        width: 16px;
+        height: 16px;
+      }
+      .assignButton {
+        margin-top: 8px;
+        width: 100%;
+        padding: 8px 0;
+        background-color: #3b4b94;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+      }
+
+      .notAssigned{
+        margin-top: 8px;
+        width: 100%;
+        padding: 8px 0;
+        background-color: gray;
+        color: white;
+        cursor: default;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.15s ease;
+      }
+
+      .assignButton:hover {
+        background-color: #323e7d;
+      }
+    }
+  }
+}

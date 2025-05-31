@@ -3,8 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import DoctorOverview from "./index.jsx";
 import Calender from "./calender/Calender.jsx";
 import Patients from "./patient/Patients.jsx";
-import {  getAppointmentCounts  } from "../../components/State/Admin/Action.js";
 import { Consultation } from "./consultation/consultation.jsx";
+import Department from "./department/Department.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -16,6 +16,7 @@ const DoctorRoutes = (props) => {
       <Route path="/calendar" element={<Calender />} />
       <Route path="/consultation" element={<Consultation />} />
       <Route path="/patient" element={<Patients />} />
+      <Route path="/department" element={<Department/>} />
     </Routes>
   );
 };
