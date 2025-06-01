@@ -30,8 +30,8 @@
   .gridContainer {
     background-color: #dae4ff;
     display: grid;
-    grid-template-columns: 1fr 1.7fr 1fr;
-    gap: 16px;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 5px;
     padding: 16px;
 
     .left {
@@ -144,6 +144,90 @@
 
       .assignButton:hover {
         background-color: #323e7d;
+      }
+    }
+
+    .center {
+      display: grid;
+      grid-template-rows: 1fr 1.26fr;
+      gap: 16px;
+      padding: 0 10px;
+
+      .card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+
+        .cardHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+          padding: 16px 16px 0 16px;
+
+          h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 600;
+          }
+
+          .subTitle {
+            font-size: 0.875rem; /* 14px */
+            color: #ffffff;
+          }
+        }
+
+        .cardContent {
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          /* -----------------------------------------------------------------
+             Headline above the bar chart (“93 (+10% last month)”)
+             ----------------------------------------------------------------- */
+          .headline {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 12px;
+            padding: 0 16px;
+
+            h1 {
+              font-size: 2rem;     /* 32px */
+              line-height: 1;
+              color: #ffffff;
+              margin: 0;
+              display: flex;
+              align-items: baseline;
+            }
+
+            .percentage {
+              font-size: 0.77rem; /* 14px */
+              color: #dae4ff;
+              margin-left: 6px;
+            }
+          }
+
+          .totalLabel {
+            text-align: center;
+            margin-top: 12px;
+
+            span {
+              font-size: 0.875rem; /* 14px */
+              color: #64748b;      /* slate-500 */
+              display: block;
+            }
+
+            h2 {
+              font-size: 1.5rem;   /* 24px */
+              margin: 4px 0 0;
+              color: #1e293b;      /* slate-900 */
+            }
+          }
+        }
       }
     }
   }

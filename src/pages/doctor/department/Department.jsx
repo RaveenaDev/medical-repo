@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import CommonPanel from "../components/CommonPanel.jsx";
 import style from './Department.module.scss';
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Legend,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis
+} from "recharts";
 
 const doctors = [
     {
@@ -55,6 +68,26 @@ const staffMembers = [
         avatar: 'https://randomuser.me/api/portraits/women/67.jpg',
     },
 ];
+
+const medicalData = [
+    { name: 'Angioplasty', value: 30, color: '#F14400' },
+    { name: 'Surgeries',   value: 20, color: '#66A7B4' },
+    { name: 'Stenting',    value: 15, color: '#EAA000' },
+    { name: 'Pacemaker',   value: 28, color: '#2E823B' }
+];
+
+/* -----------------------------------------------------------------------
+   Dummy data for “Cardiology Inventory”
+   ----------------------------------------------------------------------- */
+const inventoryData = [
+    { name: 'Medicines',         value: 400 },
+    { name: 'Surgical tools',    value: 300 },
+    { name: 'Devices',           value: 100 },
+    { name: 'Emergency Supplies',value:  65 }
+];
+
+/* A simple color palette for the Pie chart slices */
+const COLORS = ['#4F46E5', '#CBD5E1', '#A5B4FC', '#93C5FD'];
 
 const Department = () => {
     // Use two independent Sets: one for selected doctor IDs, one for selected staff IDs.
@@ -203,8 +236,138 @@ const Department = () => {
                     </div>
 
                     <div className={style.center}>
-                        <div>Center Row 1</div>
-                        <div>Center Row 2</div>
+                        {/*** Card 1: Number of medical procedures ***/}
+                        <div className={style.card} style={{backgroundColor:'#25307F'}}>
+                            <div className={style.cardHeader}>
+                                <h3>Number of medical procedures</h3>
+                                <div>
+                                    <span className={style.subTitle}>This Month</span>
+                                    <svg
+                                        style={{marginLeft:'4px',transform: 'translateY(3px)' }}
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 16 16"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <mask
+                                            id="mask0_3883_12068"
+                                            maskType="alpha"
+                                            maskUnits="userSpaceOnUse"
+                                            x="0"
+                                            y="0"
+                                            width="16"
+                                            height="16"
+                                        >
+                                            <rect
+                                                y="16"
+                                                width="16"
+                                                height="16"
+                                                transform="rotate(-90 0 16)"
+                                                fill="#D9D9D9"
+                                            />
+                                        </mask>
+                                        <g mask="url(#mask0_3883_12068)">
+                                            <path
+                                                d="M14.6663 5.33333L7.99967 12L1.33301 5.33333L2.51634 4.15L7.99967 9.63333L13.483 4.15L14.6663 5.33333Z"
+                                                fill="#DAE4FF"
+                                            />
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div className={style.cardContent}>
+                                <div className={style.headline}>
+                                    <h1>
+                                        93
+                                        <p style={{fontSize:'15px',marginLeft:'6px', fontWeight:'500'}}>cases</p>
+                                        <span className={style.percentage}>(+10% last month)</span>
+                                    </h1>
+                                </div>
+
+                                <ResponsiveContainer height={200}>
+                                    <BarChart
+                                        data={medicalData}
+                                        margin={{top: 20, right: 10, left: -20, bottom: 0}}
+                                    >
+                                        {/* ─────────── X Axis ─────────── */}
+                                        <XAxis
+                                            dataKey="name"
+                                            tick={{fontSize: 12, fill: '#DAE4FF'}}
+                                            axisLine={{stroke: '#475569', strokeWidth: 1}}
+                                            tickLine={false}
+                                        />
+
+                                        {/* ─────────── Y Axis ─────────── */}
+                                        <YAxis
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tick={{fontSize: 12, fill: '#999999'}}
+                                        />
+
+                                        {/* ─────────── Horizontal Grid Lines Only (solid) ─────────── */}
+                                        <CartesianGrid
+                                            horizontal={true}
+                                            vertical={false}
+                                            stroke="#DAE4FF"    /* a light gray color—adjust as needed */
+                                            strokeDasharray=""  /* empty = solid, not dashed */
+                                        />
+
+                                        <Tooltip />
+
+                                        {/* ─────────── Bars with rounded tops ─────────── */}
+                                        <Bar dataKey="value" barSize={70} radius={[10, 10, 0, 0]}>
+                                            {medicalData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+
+                            </div>
+                        </div>
+
+                        {/*** Card 2: Cardiology Inventory ***/}
+                        <div className={style.card}>
+                            <div className={style.cardHeader}>
+                                <h3>Cardiology Inventory</h3>
+                            </div>
+
+                            <div className={style.cardContent}>
+                                {/* Responsive donut/pie chart */}
+                                <ResponsiveContainer width="100%" height={200}>
+                                    <PieChart>
+                                        <Pie
+                                            data={inventoryData}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={50}
+                                            outerRadius={70}
+                                            paddingAngle={2}
+                                        >
+                                            {inventoryData.map((entry, index) => (
+                                                <Cell key={`slice-${index}`} fill={COLORS[index % COLORS.length]}/>
+                                            ))}
+                                        </Pie>
+                                        <Legend
+                                            layout="horizontal"
+                                            verticalAlign="bottom"
+                                            align="center"
+                                            iconType="circle"
+                                            wrapperStyle={{fontSize: 12, color: '#475569'}}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+
+                                <div className={style.totalLabel}>
+                                    <span>Total</span>
+                                    <h2>33K</h2>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className={style.right}>
                         <div>Right Row 1</div>
