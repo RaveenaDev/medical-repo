@@ -170,7 +170,7 @@
           h3 {
             margin: 0;
             font-size: 1rem;
-            color: #ffffff;
+            color: #25307F;
             font-weight: 600;
           }
 
@@ -181,6 +181,7 @@
         }
 
         .cardContent {
+          position: relative;
           flex-grow: 1;
           display: flex;
           flex-direction: column;
@@ -212,19 +213,22 @@
           }
 
           .totalLabel {
+            position: absolute;
+            left: 14rem;
+            top: 5.5rem;
             text-align: center;
             margin-top: 12px;
 
             span {
               font-size: 0.875rem; /* 14px */
-              color: #64748b;      /* slate-500 */
+              color: #BEBEBE;      /* slate-500 */
               display: block;
             }
 
             h2 {
-              font-size: 1.5rem;   /* 24px */
-              margin: 4px 0 0;
-              color: #1e293b;      /* slate-900 */
+              font-size: 1.4rem;   /* 24px */
+              color: #333333;
+              font-weight: 500;
             }
           }
         }

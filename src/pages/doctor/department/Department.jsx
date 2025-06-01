@@ -76,18 +76,15 @@ const medicalData = [
     { name: 'Pacemaker',   value: 28, color: '#2E823B' }
 ];
 
-/* -----------------------------------------------------------------------
-   Dummy data for “Cardiology Inventory”
-   ----------------------------------------------------------------------- */
 const inventoryData = [
-    { name: 'Medicines',         value: 400 },
-    { name: 'Surgical tools',    value: 300 },
-    { name: 'Devices',           value: 100 },
-    { name: 'Emergency Supplies',value:  65 }
+    { name: 'Medicines',         value: 2000, percentage: '49' },
+    { name: 'Surgical tools',    value: 150, percentage: '9'  },
+    { name: 'Devices',           value: 1000, percentage: '19'  },
+    { name: 'Emergency Supplies',value:  105, percentage: '29'  }
 ];
 
 /* A simple color palette for the Pie chart slices */
-const COLORS = ['#4F46E5', '#CBD5E1', '#A5B4FC', '#93C5FD'];
+const COLORS = ['#25307F', '#5461BE', '#586EB4', '#DAE4FF'];
 
 const Department = () => {
     // Use two independent Sets: one for selected doctor IDs, one for selected staff IDs.
@@ -118,6 +115,17 @@ const Department = () => {
     const anyDoctorSelected = selectedDoctors.size > 0;
     // If at least one staff ID is in selectedStaff, enable Staff's Assign button.
     const anyStaffSelected = selectedStaff.size > 0;
+
+    // Helper to format large numbers (e.g. 40000 → “40k”)
+    const formatValue = (val) => {
+        if (val >= 1000) {
+            // If exactly divisible by 1000, show “40k”, otherwise show one decimal “40.5k”
+            const remainder = val % 1000;
+            const thousands = val / 1000;
+            return remainder === 0 ? `${thousands.toFixed(0)}k` : `${thousands.toFixed(1)}k`;
+        }
+        return val.toString();
+    };
 
     return (
         <>
@@ -336,7 +344,7 @@ const Department = () => {
 
                             <div className={style.cardContent}>
                                 {/* Responsive donut/pie chart */}
-                                <ResponsiveContainer width="100%" height={200}>
+                                <ResponsiveContainer width="100%" height={270}>
                                     <PieChart>
                                         <Pie
                                             data={inventoryData}
@@ -344,23 +352,70 @@ const Department = () => {
                                             nameKey="name"
                                             cx="50%"
                                             cy="50%"
-                                            innerRadius={50}
-                                            outerRadius={70}
-                                            paddingAngle={2}
+                                            innerRadius={70}
+                                            outerRadius={105}
+                                            paddingAngle={4}
+                                            cornerRadius={8}
                                         >
                                             {inventoryData.map((entry, index) => (
                                                 <Cell key={`slice-${index}`} fill={COLORS[index % COLORS.length]}/>
                                             ))}
                                         </Pie>
-                                        <Legend
-                                            layout="horizontal"
-                                            verticalAlign="bottom"
-                                            align="center"
-                                            iconType="circle"
-                                            wrapperStyle={{fontSize: 12, color: '#475569'}}
-                                        />
                                     </PieChart>
                                 </ResponsiveContainer>
+
+                                {/* ───── Custom legend below ───── */}
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'space-between',
+                                        gap: 4,
+                                        marginTop: 4,
+                                        padding: '1rem'
+                                    }}
+                                >
+                                    {inventoryData.map((entry, index) => {
+                                        const displayValue = formatValue(entry.value);
+                                        const color = COLORS[index % COLORS.length];
+
+                                        return (
+                                            <div
+                                                key={`legend-item-${index}`}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    fontSize: 14,
+                                                    color: '#2E3A59',
+                                                    lineHeight: 1.2,
+                                                }}
+                                            >
+                                                {/* Colored marker with slight border-radius */}
+                                                <div
+                                                    style={{
+                                                        width: 12,
+                                                        height: 12,
+                                                        backgroundColor: color,
+                                                        borderRadius: 3,
+                                                        marginRight: 6,
+                                                    }}
+                                                />
+                                                <div style={{
+                                                    display:'flex',
+                                                    justifyContent:'space-between',
+                                                    width:'13vw'
+                                                }}>
+                                                    <div style={{color: '#00000',fontWeight:600,fontSize:'13px'}}>
+                                                        {entry.name}
+                                                    </div>
+                                                    <div style={{color: '#00000',fontWeight:600,fontSize:'13px'}}>
+                                                        {displayValue} ({entry.percentage})%
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
 
                                 <div className={style.totalLabel}>
                                     <span>Total</span>
