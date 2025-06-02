@@ -1,0 +1,32 @@
+.medicalHistory {
+}
+
+.container1 {
+  display: flex;
+  justify-content: flex-start;
+  width: 90%;
+  height: 100%;
+  margin-left: 1.2vw;
+  margin-top: 2vh;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  p {
+    font-size: 2.4vh;
+    font-weight: 500;
+    color: #25307f;
+  }
+
+  .attachments {
+    background-color: #eaebf3;
+    display: flex;
+    border-radius: 5px;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+    opacity: 70%;
+  }
+}
