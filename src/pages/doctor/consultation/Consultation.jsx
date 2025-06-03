@@ -3,7 +3,7 @@ import CommonPanel from "../components/CommonPanel";
 import styles from "./Consultation.module.scss";
 import dayjs from "dayjs";
 import { CalendarToday } from "@mui/icons-material";
-import { ClockFading, LibraryBig, Plus } from "lucide-react";
+import { ClockFading, LibraryBig, Plus, CircleCheck } from "lucide-react";
 import DiagnosisAndVital from "./components/DiagnosisAndVital";
 import TreatmentAndTest from "./components/TreatmentAndTest";
 import PerceptionAndMedicines from "./components/PerceptionAndMedicines";
@@ -214,6 +214,17 @@ export const Consultation = () => {
               <Plus className={styles["lp-7-icon"]} size={38} />
               <p>Add Question</p>
             </div>
+
+            <div className={styles["lp-8"]}>
+              <button>
+                <CircleCheck size={15} />
+                <p>Complete</p>
+              </button>
+              <button className={styles["lp-8-refBtn"]}>
+                <img src="/assets/healthicons_referral.svg" sizes={""} alt="" />
+                <p>Refer</p>
+              </button>
+            </div>
           </div>
 
           {/* Right Panel */}
@@ -227,16 +238,30 @@ export const Consultation = () => {
                 />
               )}
               {selectedComponent === "MedicalHistory" && (
-                <MedicalHistory patient={ongoingPatients[0]} />
+                <MedicalHistory
+                  patient={ongoingPatients[0]}
+                  onConfirm={() => setSelectedComponent("CurrentMedication")}
+                />
               )}
               {selectedComponent === "CurrentMedication" && (
-                <CurrentMedication patient={ongoingPatients[0]} />
+                <CurrentMedication
+                  patient={ongoingPatients[0]}
+                  onConfirm={() => setSelectedComponent("DiagnosisAndVital")}
+                />
               )}
               {selectedComponent === "DiagnosisAndVital" && (
-                <DiagnosisAndVital patient={ongoingPatients[0]} />
+                <DiagnosisAndVital
+                  patient={ongoingPatients[0]}
+                  onConfirm={() =>
+                    setSelectedComponent("PerceptionAndMedicines")
+                  }
+                />
               )}
               {selectedComponent === "PerceptionAndMedicines" && (
-                <PerceptionAndMedicines patient={ongoingPatients[0]} />
+                <PerceptionAndMedicines
+                  patient={ongoingPatients[0]}
+                  onConfirm={() => setSelectedComponent("TreatmentAndTest")}
+                />
               )}
               {selectedComponent === "TreatmentAndTest" && (
                 <TreatmentAndTest patient={ongoingPatients[0]} />
