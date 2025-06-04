@@ -1,7 +1,6 @@
 import styles from "./MedicalHistory.module.scss";
 import { Image, Type, Plus, SquarePlay } from "lucide-react";
-import Box from "@mui/joy/Box";
-import Radio from "@mui/joy/Radio";
+
 import { useState } from "react";
 
 const CONDITIONS = [
@@ -94,81 +93,9 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
 
           <div>
             <p className={styles.question}>Do you smoke?</p>
-            <Box sx={{ display: "flex", gap: 4, marginTop: "1.5vh" }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={smoke === "yes"}
-                  onChange={() => setSmoke("yes")}
-                  value="yes"
-                  name="smoke"
-                  slotProps={{ input: { "aria-label": "Yes" } }}
-                />
-                Yes
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={smoke === "no"}
-                  onChange={() => setSmoke("no")}
-                  value="no"
-                  name="smoke"
-                  slotProps={{ input: { "aria-label": "No" } }}
-                />
-                No
-              </label>
-            </Box>
           </div>
           <div>
             <p className={styles.question}>Do you drink alcohol?</p>
-            <Box sx={{ display: "flex", gap: 4, marginTop: "1.5vh" }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={alcohol === "yes"}
-                  onChange={() => setAlcohol("yes")}
-                  value="yes"
-                  name="alcohol"
-                  slotProps={{ input: { "aria-label": "Yes" } }}
-                />
-                Yes
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={alcohol === "no"}
-                  onChange={() => setAlcohol("no")}
-                  value="no"
-                  name="alcohol"
-                  slotProps={{ input: { "aria-label": "No" } }}
-                />
-                No
-              </label>
-            </Box>
           </div>
         </div>
 
