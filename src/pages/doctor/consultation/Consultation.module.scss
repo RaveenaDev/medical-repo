@@ -227,7 +227,7 @@
   background-color: #fff;
   margin-top: 1.5vh;
   width: 30vw;
-  height: 90vh;
+  height: 88.5vh;
   padding-top: 1vh;
   display: flex;
   justify-content: flex-start;
@@ -403,5 +403,26 @@
   }
   .lp-7-icon {
     color: #25307f;
+  }
+}
+
+.lp-8 {
+  display: flex;
+  gap: 1vw;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4.5vh;
+    width: 13.4vw;
+    color: #25307f;
+    display: flex;
+    border-radius: 5px;
+    background-color: #ecf1ff;
+    gap: 8px;
+    font-size: 1.8vh;
+    border: none;
+    box-shadow: 0 2px 8px #c5dafb42;
   }
 }
