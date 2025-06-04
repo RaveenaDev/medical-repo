@@ -1,7 +1,6 @@
 import styles from "./CurrentMedication.module.scss";
 import { Image, Type, Plus, SquarePlay } from "lucide-react";
-import Box from "@mui/joy/Box";
-import Radio from "@mui/joy/Radio";
+
 import { useState } from "react";
 const CurrentMedication = ({ onConfirm }) => {
   const [frequency1, setFrequency1] = useState("");
@@ -52,42 +51,6 @@ const CurrentMedication = ({ onConfirm }) => {
           </div>
           <div>
             <p className={styles.question}>Frequency:</p>
-            <Box sx={{ display: "flex", gap: 4, marginTop: "1.5vh" }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={frequency1 === "Weekly"}
-                  onChange={() => setFrequency1("Weekly")}
-                  value="Weekly"
-                  name="frequency1"
-                  slotProps={{ input: { "aria-label": "Weekly" } }}
-                />
-                Weekly
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={frequency1 === "Daily"}
-                  onChange={() => setFrequency1("Daily")}
-                  value="Daily"
-                  name="frequency1"
-                  slotProps={{ input: { "aria-label": "Daily" } }}
-                />
-                Daily
-              </label>
-            </Box>
           </div>
         </div>
 
@@ -109,42 +72,6 @@ const CurrentMedication = ({ onConfirm }) => {
           </div>
           <div>
             <p className={styles.question}>Frequency:</p>
-            <Box sx={{ display: "flex", gap: 4, marginTop: "1.5vh" }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={frequency2 === "Weekly"}
-                  onChange={() => setFrequency2("Weekly")}
-                  value="Weekly"
-                  name="frequency2"
-                  slotProps={{ input: { "aria-label": "Weekly" } }}
-                />
-                Weekly
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: "1.6vh",
-                }}
-              >
-                <Radio
-                  checked={frequency2 === "Daily"}
-                  onChange={() => setFrequency2("Daily")}
-                  value="Daily"
-                  name="frequency2"
-                  slotProps={{ input: { "aria-label": "Daily" } }}
-                />
-                Daily
-              </label>
-            </Box>
           </div>
         </div>
 
