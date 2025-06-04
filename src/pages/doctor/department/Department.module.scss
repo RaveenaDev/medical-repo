@@ -220,8 +220,8 @@
             margin-top: 12px;
 
             span {
-              font-size: 0.875rem; /* 14px */
-              color: #BEBEBE;      /* slate-500 */
+              font-size: 0.875rem;
+              color: #BEBEBE;
               display: block;
             }
 
@@ -230,6 +230,207 @@
               color: #333333;
               font-weight: 500;
             }
+          }
+        }
+      }
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;               // Space between each section
+      width: 100%;
+      padding: 16px;
+      background-color: #f0f4ff; // light bluish background for the entire right panel
+      box-sizing: border-box;
+    }
+
+    /* -------------------------------------------------------------
+       1. Patient Overview Section
+       ------------------------------------------------------------- */
+    .patientOverview {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+
+      .sectionTitle {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e213f;
+        margin-bottom: 12px;
+      }
+
+      .overviewCards {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+
+        .card {
+          flex: 1; /* each card takes equal width */
+          background-color: #f5faff; /* very light blue */
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          padding: 12px;
+          transition: transform 0.2s ease-in-out;
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+
+          .cardIcon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            fill: #3f64ff; /* darker blue accent for icon */
+          }
+
+          .cardInfo {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+
+            .cardNumber {
+              font-size: 18px;
+              font-weight: 700;
+              color: #1e213f;
+              line-height: 1;
+            }
+
+            .cardLabel {
+              font-size: 13px;
+              font-weight: 500;
+              color: #596080;
+              margin-top: 4px;
+            }
+          }
+        }
+      }
+    }
+
+
+    /* -------------------------------------------------------------
+       2. Statistics Section
+       ------------------------------------------------------------- */
+    .statisticsSection {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+
+      .sectionTitle {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e213f;
+        margin-bottom: 12px;
+      }
+
+      .statsList {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .statItem {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #f5faff; /* slightly tinted background */
+          padding: 10px 12px;
+          border-radius: 6px;
+
+          .statLabel {
+            font-size: 14px;
+            font-weight: 500;
+            color: #596080;
+          }
+
+          .statValue {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e213f;
+          }
+        }
+      }
+    }
+
+
+    /* -------------------------------------------------------------
+       3. Cases Bar Section
+       ------------------------------------------------------------- */
+    .casesSection {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+
+      .casesHeader {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e213f;
+        margin-bottom: 10px;
+      }
+
+      .casesContent {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .caseLabel {
+          font-size: 13px;
+          font-weight: 500;
+          color: #596080;
+          white-space: nowrap;
+        }
+
+        .progressBar {
+          flex: 1;
+          height: 8px;
+          background-color: #e0e0e0;
+          border-radius: 4px;
+          overflow: hidden;
+
+          .progressInner {
+            height: 100%;
+            background-color: #3f64ff; /* highlight for IPD portion */
+            border-radius: 4px 0 0 4px;
+          }
+        }
+      }
+    }
+
+
+    /* -------------------------------------------------------------
+       4. Alerts & Notifs Section
+       ------------------------------------------------------------- */
+    .alertsSection {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+
+      .alertsTitle {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e213f;
+        margin-bottom: 10px;
+      }
+
+      .alertsList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .alertItem {
+          font-size: 13px;
+          font-weight: 500;
+          color: #596080;
+          background-color: #f5faff;
+          padding: 6px 10px;
+          border-radius: 5px;
+
+          strong {
+            color: #1e213f;
           }
         }
       }

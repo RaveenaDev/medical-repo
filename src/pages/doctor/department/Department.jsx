@@ -245,13 +245,13 @@ const Department = () => {
 
                     <div className={style.center}>
                         {/*** Card 1: Number of medical procedures ***/}
-                        <div className={style.card} style={{backgroundColor:'#25307F'}}>
+                        <div className={style.card} style={{backgroundColor: '#25307F'}}>
                             <div className={style.cardHeader}>
                                 <h3>Number of medical procedures</h3>
                                 <div>
                                     <span className={style.subTitle}>This Month</span>
                                     <svg
-                                        style={{marginLeft:'4px',transform: 'translateY(3px)' }}
+                                        style={{marginLeft: '4px', transform: 'translateY(3px)'}}
                                         width="16"
                                         height="16"
                                         viewBox="0 0 16 16"
@@ -289,7 +289,7 @@ const Department = () => {
                                 <div className={style.headline}>
                                     <h1>
                                         93
-                                        <p style={{fontSize:'15px',marginLeft:'6px', fontWeight:'500'}}>cases</p>
+                                        <p style={{fontSize: '15px', marginLeft: '6px', fontWeight: '500'}}>cases</p>
                                         <span className={style.percentage}>(+10% last month)</span>
                                     </h1>
                                 </div>
@@ -322,12 +322,12 @@ const Department = () => {
                                             strokeDasharray=""  /* empty = solid, not dashed */
                                         />
 
-                                        <Tooltip />
+                                        <Tooltip/>
 
                                         {/* ─────────── Bars with rounded tops ─────────── */}
                                         <Bar dataKey="value" barSize={70} radius={[10, 10, 0, 0]}>
                                             {medicalData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                                <Cell key={`cell-${index}`} fill={entry.color}/>
                                             ))}
                                         </Bar>
                                     </BarChart>
@@ -401,14 +401,14 @@ const Department = () => {
                                                     }}
                                                 />
                                                 <div style={{
-                                                    display:'flex',
-                                                    justifyContent:'space-between',
-                                                    width:'13vw'
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    width: '13vw'
                                                 }}>
-                                                    <div style={{color: '#00000',fontWeight:600,fontSize:'13px'}}>
+                                                    <div style={{color: '#00000', fontWeight: 600, fontSize: '13px'}}>
                                                         {entry.name}
                                                     </div>
-                                                    <div style={{color: '#00000',fontWeight:600,fontSize:'13px'}}>
+                                                    <div style={{color: '#00000', fontWeight: 600, fontSize: '13px'}}>
                                                         {displayValue} ({entry.percentage})%
                                                     </div>
                                                 </div>
@@ -425,9 +425,78 @@ const Department = () => {
                         </div>
                     </div>
                     <div className={style.right}>
-                        <div>Right Row 1</div>
-                        <div>Right Row 2</div>
-                        <div>Right Row 3</div>
+                        {/* ===== 1. Patient Overview Section ===== */}
+                        <section className={style.patientOverview}>
+                            <h3 className={style.sectionTitle}>Patient Overview</h3>
+                            <div className={style.overviewCards}>
+                                <div className={style.card}>
+                                    {/*<UserIcon className={style.cardIcon}/>*/}
+                                    <div className={style.cardInfo}>
+                                        <span className={style.cardNumber}>24</span>
+                                        <span className={style.cardLabel}>Admitted</span>
+                                    </div>
+                                </div>
+                                <div className={style.card}>
+                                    {/*<BedIcon className={style.cardIcon}/>*/}
+                                    <div className={style.cardInfo}>
+                                        <span className={style.cardNumber}>8</span>
+                                        <span className={style.cardLabel}>Discharged</span>
+                                    </div>
+                                </div>
+                                <div className={style.card}>
+                                    {/*<CalendarIcon className={style.cardIcon}/>*/}
+                                    <div className={style.cardInfo}>
+                                        <span className={style.cardNumber}>12</span>
+                                        <span className={style.cardLabel}>Scheduled</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* ===== 2. Statistics Section ===== */}
+                        <section className={style.statisticsSection}>
+                            <h3 className={style.sectionTitle}>Statistics</h3>
+                            <div className={style.statsList}>
+                                <div className={style.statItem}>
+                                    <span className={style.statLabel}>Total Patients:</span>
+                                    <span className={style.statValue}>342</span>
+                                </div>
+                                <div className={style.statItem}>
+                                    <span className={style.statLabel}>Total Beds Available :</span>
+                                    <span className={style.statValue}>32</span>
+                                </div>
+                                <div className={style.statItem}>
+                                    <span className={style.statLabel}>Total Rooms Available :</span>
+                                    <span className={style.statValue}>9</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* ===== 3. Cases Bar Section ===== */}
+                        <section className={style.casesSection}>
+                            <div className={style.casesHeader}>1228 cases</div>
+                            <div className={style.casesContent}>
+                                <span className={style.caseLabel}>122 IPD</span>
+                                <div className={style.progressBar}>
+                                    <div
+                                        className={style.progressInner}
+                                        style={{width: '26%' /* e.g. 122/466 total = 26% */}}
+                                    />
+                                </div>
+                                <span className={style.caseLabel}>344 OPD</span>
+                            </div>
+                        </section>
+
+                        {/* ===== 4. Alerts & Notifs Section ===== */}
+                        <section className={style.alertsSection}>
+                            <h4 className={style.alertsTitle}>Alerts and Notifs</h4>
+                            <div className={style.alertsList}>
+                                <span className={style.alertItem}>Doctors: <strong>12</strong></span>
+                                <span className={style.alertItem}>Patients: <strong>45</strong></span>
+                                <span className={style.alertItem}>Rooms: <strong>8</strong></span>
+                                <span className={style.alertItem}>Beds: <strong>24</strong></span>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>
