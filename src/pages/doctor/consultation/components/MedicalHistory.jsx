@@ -93,9 +93,110 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
 
           <div>
             <p className={styles.question}>Do you smoke?</p>
+            <div className={styles.customRadios}>
+              <label>
+                <input
+                  type="radio"
+                  name="smoke"
+                  value="yes"
+                  checked={smoke === "yes"}
+                  onChange={() => setSmoke("yes")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    smoke === "yes" ? styles.checked : ""
+                  }`}
+                >
+                  {smoke === "yes" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                Yes
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="smoke"
+                  value="no"
+                  checked={smoke === "no"}
+                  onChange={() => setSmoke("no")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    smoke === "no" ? styles.checked : ""
+                  }`}
+                >
+                  {smoke === "no" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                No
+              </label>
+            </div>
           </div>
+
           <div>
             <p className={styles.question}>Do you drink alcohol?</p>
+            <div className={styles.customRadios}>
+              <label>
+                <input
+                  type="radio"
+                  name="alcohol"
+                  value="yes"
+                  checked={alcohol === "yes"}
+                  onChange={() => setAlcohol("yes")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    alcohol === "yes" ? styles.checked : ""
+                  }`}
+                >
+                  {alcohol === "yes" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                Yes
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="alcohol"
+                  value="no"
+                  checked={alcohol === "no"}
+                  onChange={() => setAlcohol("no")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    alcohol === "no" ? styles.checked : ""
+                  }`}
+                >
+                  {alcohol === "no" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                No
+              </label>
+            </div>
           </div>
         </div>
 

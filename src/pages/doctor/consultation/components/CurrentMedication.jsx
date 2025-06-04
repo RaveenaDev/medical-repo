@@ -51,6 +51,56 @@ const CurrentMedication = ({ onConfirm }) => {
           </div>
           <div>
             <p className={styles.question}>Frequency:</p>
+            <div className={styles.customRadios}>
+              <label>
+                <input
+                  type="radio"
+                  name="smoke"
+                  value="weekly"
+                  checked={frequency1 === "weekly"}
+                  onChange={() => setFrequency1("weekly")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    frequency1 === "weekly" ? styles.checked : ""
+                  }`}
+                >
+                  {frequency1 === "weekly" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                Weekly
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="frequency"
+                  value="daily"
+                  checked={frequency1 === "daily"}
+                  onChange={() => setFrequency1("daily")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    frequency1 === "daily" ? styles.checked : ""
+                  }`}
+                >
+                  {frequency1 === "daily" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                Daily
+              </label>
+            </div>
           </div>
         </div>
 
@@ -72,6 +122,56 @@ const CurrentMedication = ({ onConfirm }) => {
           </div>
           <div>
             <p className={styles.question}>Frequency:</p>
+            <div className={styles.customRadios}>
+              <label>
+                <input
+                  type="radio"
+                  name="frequency"
+                  value="weekly"
+                  checked={frequency2 === "weekly"}
+                  onChange={() => setFrequency2("weekly")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    frequency2 === "weekly" ? styles.checked : ""
+                  }`}
+                >
+                  {frequency2 === "weekly" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                Weekly
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="frequency"
+                  value="daily"
+                  checked={frequency2 === "daily"}
+                  onChange={() => setFrequency2("daily")}
+                />
+                <span
+                  className={`${styles.circle} ${
+                    frequency2 === "daily" ? styles.checked : ""
+                  }`}
+                >
+                  {frequency2 === "daily" && (
+                    <img
+                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                      alt="Checked Icon"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </span>
+                Daily
+              </label>
+            </div>
           </div>
         </div>
 
