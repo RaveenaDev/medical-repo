@@ -30,7 +30,7 @@
   .gridContainer {
     background-color: #dae4ff;
     display: grid;
-    grid-template-columns: 0.9fr 1.6fr 1.14fr;
+    grid-template-columns: 0.9fr 1.6fr 1.07fr;
     gap: 5px;
     padding: 16px;
 
@@ -240,9 +240,6 @@
       flex-direction: column;
       gap: 16px;               // Space between each section
       width: 100%;
-      padding: 16px;
-      background-color: #f0f4ff; // light bluish background for the entire right panel
-      box-sizing: border-box;
     }
 
     /* -------------------------------------------------------------
@@ -254,11 +251,26 @@
       padding: 16px;
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 
-      .sectionTitle {
-        font-size: 18px;
-        font-weight: 600;
-        color: #25307F;
-        margin-bottom: 12px;
+      .title{
+        display: flex;
+        justify-content: space-between;
+        .sectionTitle {
+          font-size: 18px;
+          font-weight: 600;
+          color: #25307F;
+          margin-bottom: 12px;
+        }
+
+        .drop{
+          display: flex;
+          margin-top: 4px;
+          gap: 0.4rem;
+          span{
+            font-size: 12px;
+            color:#25307F;
+            font-weight: 600;
+          }
+        }
       }
 
       .overviewCards {
@@ -314,91 +326,110 @@
     }
 
 
-    /* -------------------------------------------------------------
+    .parent2{
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background-color: #ffffff;
+      padding: 16px 12px;
+      /* -------------------------------------------------------------
        2. Statistics Section
        ------------------------------------------------------------- */
-    .statisticsSection {
-      background-color: #ffffff;
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+      .statisticsSection {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 4px;
 
-      .sectionTitle {
-        font-size: 16px;
-        font-weight: 600;
-        color: #25307F;
-        margin-bottom: 12px;
+        .sectionTitle {
+          font-size: 16px;
+          font-weight: 600;
+          color: #25307F;
+          margin-bottom: 12px;
+        }
+
+        .statsList {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .statItem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f1f1f1;
+            padding: 8px 15px;
+            border-radius: 6px;
+
+            .statLabel {
+              font-size: 13px;
+              margin-top: 2px;
+              font-weight: 600;
+              color: #25307F;
+            }
+
+            .statValue {
+              font-size: 14px;
+              font-weight: 700;
+              color: #1e213f;
+            }
+          }
+        }
       }
 
-      .statsList {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
 
-        .statItem {
+      /* -------------------------------------------------------------
+         3. Cases Bar Section
+         ------------------------------------------------------------- */
+      .casesSection {
+        background-color: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #dae4ff;
+        padding: 16px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+
+        .casesHeader {
+          font-size: 17px;
+          font-weight: 700;
+          color: #25307F;
+          margin-bottom: 0.8rem;
+        }
+
+        .casesTop{
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          background-color: #f1f1f1;
-          padding: 8px 15px;
-          border-radius: 6px;
 
-          .statLabel {
+          .caseLabel {
             font-size: 13px;
-            margin-top: 2px;
-            font-weight: 600;
-            color: #25307F;
-          }
+            font-weight: 500;
+            color: #596080;
+            white-space: nowrap;
 
-          .statValue {
-            font-size: 14px;
-            font-weight: 700;
-            color: #1e213f;
+            span{
+              color: #25307F;
+              font-weight: 600;
+              font-size: 14px;
+            }
           }
         }
-      }
-    }
 
+        .casesContent {
+          display: flex;
+          align-items: center;
+          gap: 10px;
 
-    /* -------------------------------------------------------------
-       3. Cases Bar Section
-       ------------------------------------------------------------- */
-    .casesSection {
-      background-color: #ffffff;
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+          .progressBar {
+            flex: 1;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
 
-      .casesHeader {
-        font-size: 17px;
-        font-weight: 700;
-        color: #25307F;
-        margin-bottom: 10px;
-      }
-
-      .casesContent {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        .caseLabel {
-          font-size: 13px;
-          font-weight: 500;
-          color: #596080;
-          white-space: nowrap;
-        }
-
-        .progressBar {
-          flex: 1;
-          height: 8px;
-          background-color: #e0e0e0;
-          border-radius: 4px;
-          overflow: hidden;
-
-          .progressInner {
-            height: 100%;
-            background-color: #3f64ff; /* highlight for IPD portion */
-            border-radius: 4px 0 0 4px;
+            .progressInner {
+              height: 100%;
+              background-color: #25307F; /* highlight for IPD portion */
+              border-radius: 4px;
+              transition: width 0.3s ease; /* Animate width change if desired */
+            }
           }
         }
       }
@@ -413,18 +444,20 @@
       border-radius: 8px;
       padding: 16px;
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+      height: 100%;
 
       .alertsTitle {
         font-size: 15px;
         font-weight: 600;
-        color: #1e213f;
-        margin-bottom: 10px;
+        color: #333333;
+        margin-bottom: 1rem;
       }
 
       .alertsList {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
+        justify-content: space-between;
 
         .alertItem {
           font-size: 13px;
@@ -432,6 +465,7 @@
           color: #596080;
           background-color: #f5faff;
           padding: 6px 10px;
+          width: 6rem;
           border-radius: 5px;
 
           strong {
