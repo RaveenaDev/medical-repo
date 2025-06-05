@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.container1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 90%;
+  height: 100%;
+  margin-left: 1.2vw;
+  margin-top: 2vh;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  p {
+    font-size: 2.4vh;
+    font-weight: 500;
+    color: #25307f;
+  }
+}
+
+.row2 {
+  font-family: "Inter", sans-serif;
+  font-size: 1.9vh;
+  color: #4a4a4a;
+}
+
+.container {
+  margin-top: 4vh;
+  height: 78vh;
+  width: 43vw;
+  border: 3px solid #c4acff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 0px 8px #c4acff;
+}
+
+.bot {
+  margin-bottom: 1vh;
+}
+.text {
+  display: flex;
+  color: #25307f;
+  font-weight: 500;
+  font-family: "Karla";
+  font-style: italic;
+}
+
+.dotsLoader {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  height: 22px;
+  margin-top: 18px;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #25307f;
+  display: inline-block;
+  animation: bounce 1s infinite;
+}
+
+.dot:nth-child(1) {
+  background: #25307f;
+  animation-delay: 0s;
+}
+.dot:nth-child(2) {
+  background: #3648b3;
+  animation-delay: 0.15s;
+}
+.dot:nth-child(3) {
+  background: #7893e7;
+  animation-delay: 0.3s;
+}
+.dot:nth-child(4) {
+  background: #4279fd;
+  animation-delay: 0.45s;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-13px);
+  }
+  60% {
+    transform: translateY(-7px);
+  }
+}
