@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid2";
 import Card from "../../../components/Card/index.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
-import { Box} from "@mui/material";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -74,34 +73,6 @@ const CommonPanel = ({
     navigate(`/doctor/surgeries`, { state: { staffs } });
   };
 
-  // Define the routes where you want to hide the div
-  const excludedRoutes = [
-    "/admin/doctors",
-    "/admin/staffs",
-    "/admin/rooms",
-    "/admin/requests",
-    "/admin/billings",
-    "/admin/reception/patients",
-    "/admin/departments",
-    "/admin/reception",
-    // "/admin/reception/appointments",
-  ];
-
-  // Check if the current route is in the excluded routes list
-  const shouldHideDiv = excludedRoutes.includes(location.pathname);
-
-  const handleDepartmentChange = (event) => {
-    const selectedValue = event.target.value;
-    setDepartment(selectedValue);
-  };
-
-  const departmentOptions = [
-    { label: "All Branches", value: "all" }, // default option
-    ...departments.map((dept) => ({
-      label: dept.departmentName,
-      value: dept.departmentId,
-    })),
-  ];
   return (
     <>
       <div className={ayu.patients}>
@@ -128,7 +99,7 @@ const CommonPanel = ({
             <Card
               title="Total Patients"
               subtitle="250+"
-              handleClickCb={() => navigate(`/admin/earnings`)}
+              handleClickCb={() => navigate(`/doctor/patient`)}
             />
           </Grid>
           <Grid size={3}>

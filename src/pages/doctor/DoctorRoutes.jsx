@@ -5,6 +5,7 @@ import Calender from "./calender/Calender.jsx";
 import Patients from "./patient/Patients.jsx";
 import { Consultation } from "./consultation/consultation.jsx";
 import Department from "./department/Department.jsx";
+import Rooms from "./rooms/Rooms.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -17,6 +18,7 @@ const DoctorRoutes = (props) => {
       <Route path="/consultation" element={<Consultation />} />
       <Route path="/patient" element={<Patients />} />
       <Route path="/department" element={<Department/>} />
+      <Route path="/rooms" element={<Rooms/>} />
     </Routes>
   );
 };
