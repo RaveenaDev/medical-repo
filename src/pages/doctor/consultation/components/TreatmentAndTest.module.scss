@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.container1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 95%;
+  height: 100%;
+  margin-left: 1.2vw;
+  margin-top: 2vh;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  p {
+    font-size: 2.4vh;
+    font-weight: 500;
+    color: #25307f;
+  }
+}
+
+.input1 {
+  font-family: "Karla", sans-serif;
+  font-weight: 400;
+  font-size: 2.2vh;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  width: 21.5%;
+  padding: 1.2vh 0.5vw;
+  border-radius: 5px;
+  margin-top: 2vh;
+}
+
+.row2 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row3 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.4vh;
+  button {
+    font-family: "Karla", sans-serif;
+    font-weight: 600;
+    background-color: white;
+    width: auto;
+    display: flex;
+    align-items: center;
+    border: 1px solid #9298bf;
+    font-size: 2vh;
+    height: 4.6vh;
+    border-radius: 5px;
+    gap: 0.2vw;
+  }
+}
+
+.row4 {
+  display: flex;
+  justify-content: space-between;
+  gap: 0vw;
+  margin-top: 7.5vh;
+  .r4Left {
+    display: flex;
+    justify-content: center;
+    color: #25307f;
+    font-family: "Inter", sans-serif;
+    font-weight: 550;
+    font-size: 2.2vh;
+    margin-left: 1.5vw;
+    width: auto;
+  }
+
+  .r4Right {
+    width: 32vw;
+    border: 1px solid #25307f;
+    padding: 0.6vw 0.1vw;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px #25307f;
+    .r4RightContent {
+      display: flex;
+      justify-content: space-between;
+      padding: 0vw 1vw;
+      align-items: center;
+      button {
+        font-family: "Karla", sans-serif;
+        background-color: white;
+        border: 1px solid #d4d6e5;
+        height: 3.6vh;
+        padding: 1px 10px;
+        display: flex;
+        align-items: center;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px #c5dafb42;
+        font-size: 1.7vh;
+      }
+    }
+
+    p {
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 1.8vh;
+      color: #25307f;
+    }
+  }
+}
+
+.row5 {
+  display: flex;
+  margin-top: 8vh;
+  color: #25307f;
+  font-family: "Inter", sans-serif;
+  font-weight: 550;
+  font-size: 2.2vh;
+  margin-left: 1.5vw;
+  width: auto;
+}
+.row6 {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 1.5vw;
+  input {
+    font-family: "Karla", sans-serif;
+    font-weight: 400;
+    font-size: 2.2vh;
+    border: 1px solid #cfcfcf;
+    outline: none;
+    width: 21.5%;
+    padding: 1.2vh 0.5vw;
+    border-radius: 5px;
+    margin-top: 2vh;
+  }
+
+  .in1 {
+    width: 45%;
+  }
+}
+
+.row7 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.4vh;
+  button {
+    font-family: "Karla", sans-serif;
+    font-weight: 600;
+    background-color: white;
+    width: auto;
+    display: flex;
+    align-items: center;
+    border: 1px solid #9298bf;
+    font-size: 2vh;
+    height: 4.6vh;
+    border-radius: 5px;
+    gap: 0.2vw;
+    padding: 0px 30px;
+  }
+}
+
+.row9 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4vh;
+  button {
+    background-color: #25307f;
+    display: flex;
+    color: white;
+    align-items: center;
+    font-family: "Karla", sans-serif;
+    font-size: 1.9vh;
+    gap: 0.5vw;
+    border-radius: 5px;
+  }
+}

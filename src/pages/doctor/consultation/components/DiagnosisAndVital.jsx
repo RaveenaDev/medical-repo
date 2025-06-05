@@ -18,10 +18,10 @@ const DiagnosisAndVital = ({ onConfirm }) => {
             <p>Diagnosis and Vital</p>
           </div>
           <div className={styles.attachments}>
-            <Image size={19} />
-            <Type size={19} />
-            <Plus size={19} />
-            <SquarePlay size={21} />
+            <img src="/assets/gallery-icon.svg" alt="" />
+            <img src="/assets/formkit-icon.svg" alt="" />
+            <img src="/assets/Plus.svg" alt="" />
+            <img src="/assets/video-icon.svg" alt="" />
           </div>
         </div>
 
