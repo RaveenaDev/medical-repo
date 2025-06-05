@@ -30,7 +30,7 @@
   .gridContainer {
     background-color: #dae4ff;
     display: grid;
-    grid-template-columns: 1fr 1.6fr 1fr;
+    grid-template-columns: 0.9fr 1.6fr 1.14fr;
     gap: 5px;
     padding: 16px;
 
@@ -255,25 +255,26 @@
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 
       .sectionTitle {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 600;
-        color: #1e213f;
+        color: #25307F;
         margin-bottom: 12px;
       }
 
       .overviewCards {
         display: flex;
         justify-content: space-between;
-        gap: 12px;
 
         .card {
-          flex: 1; /* each card takes equal width */
           background-color: #f5faff; /* very light blue */
-          border-radius: 6px;
+          border: 1px solid #d3d6e5;
+          border-radius: 4px;
+          padding: 9px;
           display: flex;
+          justify-content: center;
           align-items: center;
-          padding: 12px;
           transition: transform 0.2s ease-in-out;
+          width: 4.3rem;
 
           &:hover {
             transform: translateY(-2px);
@@ -289,20 +290,23 @@
           .cardInfo {
             display: flex;
             flex-direction: column;
-            margin-left: 10px;
+            justify-content: center;
+            align-items: center;
+
 
             .cardNumber {
-              font-size: 18px;
-              font-weight: 700;
+              font-size: 17px;
+              font-weight: 600;
               color: #1e213f;
               line-height: 1;
+              margin-top: 3px;
             }
 
             .cardLabel {
-              font-size: 13px;
+              font-size: 12px;
               font-weight: 500;
-              color: #596080;
-              margin-top: 4px;
+              color: #A4A4A4;
+              margin-top: 2px;
             }
           }
         }
@@ -322,7 +326,7 @@
       .sectionTitle {
         font-size: 16px;
         font-weight: 600;
-        color: #1e213f;
+        color: #25307F;
         margin-bottom: 12px;
       }
 
@@ -335,14 +339,15 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background-color: #f5faff; /* slightly tinted background */
-          padding: 10px 12px;
+          background-color: #f1f1f1;
+          padding: 8px 15px;
           border-radius: 6px;
 
           .statLabel {
-            font-size: 14px;
-            font-weight: 500;
-            color: #596080;
+            font-size: 13px;
+            margin-top: 2px;
+            font-weight: 600;
+            color: #25307F;
           }
 
           .statValue {
@@ -365,9 +370,9 @@
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 
       .casesHeader {
-        font-size: 14px;
-        font-weight: 600;
-        color: #1e213f;
+        font-size: 17px;
+        font-weight: 700;
+        color: #25307F;
         margin-bottom: 10px;
       }
 
