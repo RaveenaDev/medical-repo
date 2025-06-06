@@ -308,7 +308,6 @@ const Rooms = () => {
                                         position: "sticky",
                                         backgroundColor: "#f1f1f1",
                                         top: 0,
-                                        width: "100%",
                                         zIndex: 10, // Keep it above other elements
                                     }}
                                 >
@@ -321,6 +320,7 @@ const Rooms = () => {
                                             Status
                                         </TableCell>
                                         <TableCell align="center" sx={{ pl:8 }}>Doctor Assigned</TableCell>
+                                        <TableCell align="right" sx={{ pr: 2 }}>{/* Optional: Add label or keep empty */}</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
