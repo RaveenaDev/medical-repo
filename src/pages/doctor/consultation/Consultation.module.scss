@@ -73,8 +73,14 @@
   border-radius: 4px;
   margin-left: 0.5vw;
   color: #25307f;
-  border: none;
+  //border: none;
   height: 6vh;
+
+  border: 1px solid #a3a3a3;
+
+  &:hover {
+    border: 1px solid #a3a3a3;
+  }
   p {
     margin-left: 0.6vw;
     color: #25307f;
@@ -99,7 +105,11 @@
   cursor: pointer;
   outline: none;
   border: none;
+  border: 1px solid #a3a3a3;
 
+  &:hover {
+    border: 1px solid #a3a3a3;
+  }
   //align-content: center;
   align-items: center;
   .clock-icon {
