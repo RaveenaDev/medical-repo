@@ -1,15 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CommonPanel from "../components/CommonPanel";
 import styles from "./Consultation.module.scss";
 import dayjs from "dayjs";
 import { CalendarToday } from "@mui/icons-material";
 import { ClockFading, LibraryBig, Plus } from "lucide-react";
-
+import Library from "./components/Library";
 import ConsultBody from "./components/ConsultBody";
 import AppointmentHistory from "./components/AppointmentHistory";
 import PatientNewForm from "./components/PatientNewForm";
 
 export const Consultation = () => {
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openLibrary = () => setActiveModal("library");
+  const closeModal = () => setActiveModal(null);
+
   const [selectedDate, setSelectedDate] = useState(
     dayjs().format("YYYY-MM-DD")
   );
@@ -53,12 +65,23 @@ export const Consultation = () => {
               </div>
             </div>
 
-            <button className={styles["from-library"]}>
+            {activeModal === "library" && (
+              <>
+                <div
+                  className={styles["backdrop-overlay"]}
+                  onClick={closeModal}
+                />
+                <div className={styles["library-modal"]}>
+                  <Library onClose={closeModal} />
+                </div>
+              </>
+            )}
+          </div>
+          <div className={styles["header-right"]}>
+            <button className={styles["from-library"]} onClick={openLibrary}>
               <LibraryBig />
               <p>From Library</p>
             </button>
-          </div>
-          <div className={styles["header-right"]}>
             <button
               className={styles["appointment-container"]}
               onClick={() => setActiveView("appointmentHistory")}

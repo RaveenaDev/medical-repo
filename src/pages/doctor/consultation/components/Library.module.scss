@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+.row1 {
+  display: flex;
+  background-color: #dae4ff;
+  padding: 0.7vh;
+  border-radius: 5px;
+  width: fit-content;
+  gap: 1vh;
+  button {
+    background: #ffffff;
+    border: 1px solid #656ca4;
+    height: 4.8vh;
+    font-size: 1.9vh;
+    font-family: "Karla", sans-serif;
+    padding: 0.2vh 1vh 0.2vh 1vh;
+  }
+}
