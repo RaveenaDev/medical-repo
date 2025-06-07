@@ -182,29 +182,30 @@
   }
 
   .current-time-line {
-    position: absolute;
+    position: sticky;
+    top: 40%;
     left: 0px;
     right: 0;
     height: 2px;
     background-color: #5461be;
-    z-index: 5;
+    z-index: 15;
     display: flex;
     align-items: center;
 
     .time-label {
       position: absolute;
-      left: -65px;
+      left: -75px;
       top: -10px;
-      font-size: 12px;
+      font-size: 11px;
       color: #25307f;
       background: white;
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 4px;
       white-space: nowrap;
       font-weight: 600;
       background-color: #dae4ff;
       border-radius: 20px;
-      padding: 1px 8px 1px 8px;
+      padding: 1px 7px 1px 7px;
     }
 
     .dot {
@@ -213,7 +214,7 @@
       left: 20px;
       border-radius: 50%;
       background-color: #5461be;
-      margin-left: 5px;
+      margin-left: -8px;
     }
   }
 }
@@ -298,4 +299,47 @@
 /* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
 .calender-cols::-webkit-scrollbar {
   display: none;
+}
+
+.calendar-event-current {
+  position: sticky;
+  margin-left: 10px;
+  top: 21%;
+  left: 20px;
+  width: 110px;
+  z-index: 10;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 12px;
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .event-title {
+    margin-bottom: 4px;
+    font-weight: 700;
+    color: #25307f;
+  }
+
+  .event-time {
+    font-size: 11px;
+    color: #333;
+  }
+
+  .event-user {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+    p {
+      font-weight: 400;
+      color: #25307f;
+    }
+  }
 }
