@@ -20,16 +20,16 @@ const Calender = () => {
     {
       id: 2,
       title: "Follow-up",
-      startTime: dayjs().add(-1, "day").hour(10).minute(0),
-      endTime: dayjs().add(-1, "day").hour(10).minute(30),
+      startTime: dayjs().add(1, "day").hour(10).minute(0),
+      endTime: dayjs().add(1, "day").hour(10).minute(30),
       profileUrl: "https://i.pravatar.cc/30?img=2",
       name: "Aditi Sharma",
     },
     {
       id: 3,
       title: "Consultation",
-      startTime: dayjs().add(0, "day").hour(18).minute(30),
-      endTime: dayjs().add(0, "day").hour(19).minute(15),
+      startTime: dayjs().add(0, "day").hour(11).minute(30),
+      endTime: dayjs().add(0, "day").hour(12).minute(5),
       profileUrl: "https://i.pravatar.cc/30?img=3",
       name: "Rahul Verma",
     },
@@ -200,6 +200,10 @@ const Calender = () => {
     ];
     return map[id % map.length];
   };
+  const activeEvent = dummyEvents.find((event) => {
+    const now = dayjs();
+    return now.isAfter(event.startTime) && now.isBefore(event.endTime);
+  });
 
   return (
     <>
@@ -271,13 +275,54 @@ const Calender = () => {
               ))}
             </div>
             <div className="calendar-columns-wrapper">
-              <div
-                className="current-time-line"
-                style={{ top: currentTimeTop }}
-              >
+              <div className="current-time-line">
                 <span className="time-label">{dayjs().format("h:mm A")}</span>
                 <div className="dot" />
               </div>
+              {activeEvent && (
+                <div
+                  className="calendar-event-current"
+                  onMouseEnter={() => setHoveredEventId(activeEvent.id)}
+                  onMouseLeave={() => setHoveredEventId(null)}
+                  onClick={() => setSelectedEvent(activeEvent)}
+                  style={{
+                    height: `${
+                      getHeight(activeEvent.startTime, activeEvent.endTime) *
+                      0.7
+                    }px`,
+                    backgroundColor: "#DAE4FF",
+                    border: `2px solid #25307F`,
+                    color: "#000",
+                    borderRadius: "15px",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease-in-out",
+                  }}
+                >
+                  <div>
+                    <p className="event-title">{activeEvent.title}</p>
+                    <p className="event-time">
+                      {activeEvent.startTime.format("h:mm A")} -{" "}
+                      {activeEvent.endTime.format("h:mm A")}
+                    </p>
+                  </div>
+                  <div
+                    className="event-user"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <img
+                      src={activeEvent.profileUrl}
+                      alt={activeEvent.name}
+                      style={{ borderRadius: "50%" }}
+                    />
+                    <p className="user-name">{activeEvent.name}</p>
+                  </div>
+                </div>
+              )}
               <div className="calendar-columns">
                 {week.map((day) => (
                   <div className="calendar-column" key={day.format()}>
