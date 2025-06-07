@@ -136,7 +136,9 @@ const Department = () => {
 
     return (
         <>
-            <CommonPanel />
+            <div style={{position:'fixed',zIndex:1000,top:0,width:'77.6vw',background: " #F1F1F1",paddingBottom:'1rem'}}>
+                <CommonPanel />
+            </div>
 
             <div className={style.parent}>
                 <div className={style.headingSection}>
