@@ -82,6 +82,7 @@ const ConsultBody = () => {
   ];
 
   const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
+  const [activePanel, setActivePanel] = useState("lp1");
 
   const ongoingPatients = dummyPatient.filter(
     (patient) => patient.consultStatus === "Ongoing"
@@ -108,7 +109,9 @@ const ConsultBody = () => {
         {/* Left Panel */}
         <div className={styles["left-panel"]}>
           <div
-            className={styles["lp-1"]}
+            className={`${styles["lp-1"]} ${
+              selectedComponent === "PatientInfo" ? styles.active : ""
+            }`}
             onClick={() => setSelectedComponent("PatientInfo")}
           >
             <img
@@ -123,32 +126,44 @@ const ConsultBody = () => {
           </div>
 
           <div
-            className={styles["lp-2"]}
+            className={`${styles["lp-2"]} ${
+              selectedComponent === "MedicalHistory" ? styles.active : ""
+            }`}
             onClick={() => setSelectedComponent("MedicalHistory")}
           >
             <p>Medical History</p>
           </div>
           <div
-            className={styles["lp-3"]}
+            className={`${styles["lp-3"]} ${
+              selectedComponent === "CurrentMedication" ? styles.active : ""
+            }`}
             onClick={() => setSelectedComponent("CurrentMedication")}
           >
             <p>Current Medication</p>
           </div>
           <div
-            className={styles["lp-4"]}
+            className={`${styles["lp-4"]} ${
+              selectedComponent === "DiagnosisAndVital" ? styles.active : ""
+            }`}
             onClick={() => setSelectedComponent("DiagnosisAndVital")}
           >
             <p>Diagnosis & Vital</p>
           </div>
           <div
-            className={styles["lp-5"]}
+            className={`${styles["lp-5"]} ${
+              selectedComponent === "PerceptionAndMedicines"
+                ? styles.active
+                : ""
+            }`}
             onClick={() => setSelectedComponent("PerceptionAndMedicines")}
           >
             <p>Perception & Medicines</p>
           </div>
           <div
-            className={styles["lp-6"]}
             onClick={() => setSelectedComponent("TreatmentAndTest")}
+            className={`${styles["lp-6"]} ${
+              selectedComponent === "TreatmentAndTest" ? styles.active : ""
+            }`}
           >
             <p>Treatment and Tests</p>
           </div>
