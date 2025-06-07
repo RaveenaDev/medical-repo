@@ -27,3 +27,58 @@
     padding: 0.2vh 1vh 0.2vh 1vh;
   }
 }
+
+.formsContainer {
+  margin-top: 2vh;
+  padding-right: 2vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vh;
+}
+
+.row2 {
+  border: 1px solid #bebebe;
+  padding: 2.4vh 1vw 1.6vh 1vw;
+
+  h4 {
+    color: #25307f;
+    font-weight: 500;
+  }
+
+  p {
+    color: #909090;
+    font-size: 1.8vh;
+  }
+
+  .btnContainer {
+    display: flex;
+    justify-content: end;
+    gap: 1vw;
+    margin-top: 0.5vh;
+    button {
+      height: 4.5vh;
+      border-radius: 5px;
+      gap: 1vw;
+      padding: 0px 10px;
+      border: none;
+    }
+  }
+}
+
+.previewBtn {
+  background: #f1f1f1;
+
+  color: #25307f;
+  display: flex;
+  align-items: center;
+  font-size: 1.9vh;
+}
+
+.applyBtn {
+  background: #25307f;
+
+  color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  font-size: 1.9vh;
+}
