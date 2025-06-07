@@ -191,10 +191,10 @@ const Rooms = () => {
                 style={{
                     position: "fixed",
                     top: "0px",
-                    padding: "10px",
                     width: "77%",
                     background: " #F1F1F1",
                     zIndex: 100,
+                    padding: '4px 0'
                 }}
             >
                 <CommonPanel />
