@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import DoughnutChart from "./components/DoughnutChart.jsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import EventDetails from "./components/EventDetails.jsx";
+import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 const DATES = [
   { day: 24, month: "Sep" },
   { day: 25, month: "Sep" },
@@ -139,6 +140,8 @@ const EVENTS = [
   /* …etc */
 ];
 const DoctorOverview = () => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
   const navigate = useNavigate();
@@ -211,6 +214,51 @@ const DoctorOverview = () => {
       tokenNumber: "TKN004",
       status: "Completed",
     },
+  ];
+
+  const appointmentRequests = [
+    {
+      _id: "req001",
+      patient: {
+        name: "John Doe"
+      },
+      note: "Needs consultation for back pain."
+    },
+    {
+      _id: "req002",
+      patient: {
+        name: "Jane Smith"
+      },
+      note: "Follow-up appointment for diabetes check-up."
+    },
+    {
+      _id: "req003",
+      patient: {
+        name: "Alice Johnson"
+      },
+      note: "Wants to discuss lab report results."
+    },
+    {
+      _id: "req004",
+      patient: {
+        name: "Bob Brown"
+      },
+      note: "First-time appointment for general check-up."
+    },
+    {
+      _id: "req005",
+      patient: {
+        name: "Charlie Wilson"
+      },
+      note: "Consultation regarding skin allergy."
+    },
+    {
+      _id: "req006",
+      patient: {
+        name: "Emily Davis"
+      },
+      note: "Needs a prescription refill for blood pressure medication."
+    }
   ];
 
   const phases = [
@@ -305,6 +353,11 @@ const DoctorOverview = () => {
     navigate('/doctor/calendar');
   }
 
+  const handleAppointmentRequests = () => {
+    // Any other logic before opening the modal
+    setIsModalOpen(true);
+  };
+
   return (
     <>
       <div>
@@ -374,7 +427,7 @@ const DoctorOverview = () => {
             <Grid size={8} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                   variant="contained"
-                  onClick={() => navigate(`/admin/requests`)}
+                  onClick={handleAppointmentRequests}
                   sx={{
                     fontSize: "14px",
                     color: "#878787",
@@ -410,6 +463,15 @@ const DoctorOverview = () => {
                   Appointment Requests
                 </span>
               </Button>
+
+              {/* Modal Component */}
+              <AppointmentRequestModal
+                  isOpen={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                  appointmentRequests={appointmentRequests}
+              >
+                <p>This is where appointment requests will appear.</p>
+              </AppointmentRequestModal>
             </Grid>
           </Grid>
         </div>
