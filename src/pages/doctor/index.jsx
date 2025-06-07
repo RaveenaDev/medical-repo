@@ -308,111 +308,113 @@ const DoctorOverview = () => {
   return (
     <>
       <div>
-        <CommonPanel />
+        <div style={{position:'fixed',zIndex:1000,top:0,width:'77.6vw',background: " #F1F1F1",paddingBottom:'1rem'}}>
+          <CommonPanel />
 
-        <div>
           <Grid
-            container
-            // sx={{ margin: "0 0 20px 0" }}
+              container
+              // sx={{ margin: "0 0 20px 0" }}
           >
             <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box
-                  sx={{
-                    backgroundColor: "#FFFFFF",
+                    sx={{
+                      backgroundColor: "#FFFFFF",
 
-                    borderRadius: 1,
-                    width: 180, // Adjust width here
-                    textAlign: "center",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    // padding: "4px", // Reduce padding to make the container smaller
-                  }}
+                      borderRadius: 1,
+                      width: 180, // Adjust width here
+                      textAlign: "center",
+                      boxShadow: "0px 4px 4px 0px #C2C2C240",
+                      // padding: "4px", // Reduce padding to make the container smaller
+                    }}
                 >
                   <DatePicker
-                    value={internalSelectedDate}
-                    onChange={handleDateChange}
-                    format="DD/MM/YYYY" // Set the date format
-                    slotProps={{
-                      textField: {
-                        sx: {
-                          "& .MuiOutlinedInput-root": {
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
+                      value={internalSelectedDate}
+                      onChange={handleDateChange}
+                      format="DD/MM/YYYY" // Set the date format
+                      slotProps={{
+                        textField: {
+                          sx: {
+                            "& .MuiOutlinedInput-root": {
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "transparent !important",
+                              },
+                              "&:hover .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "transparent !important",
+                              },
+                              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "transparent !important",
+                                boxShadow: "none !important",
+                              },
                             },
-                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
+                            "& .MuiInputBase-input": {
+                              fontSize: "14px",
+                              padding: "10px",
+                              "&:focus": {
+                                outline: "none !important",
+                              },
                             },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                              boxShadow: "none !important",
-                            },
-                          },
-                          "& .MuiInputBase-input": {
-                            fontSize: "14px",
-                            padding: "10px",
-                            "&:focus": {
-                              outline: "none !important",
-                            },
-                          },
-                          "& .MuiIconButton-root": {
-                            color: "#666", // Adjust icon color if needed
-                            "&:hover": {
-                              backgroundColor: "transparent !important",
-                            },
-                            "&:focus": {
-                              outline: "none !important",
-                              boxShadow: "none !important",
+                            "& .MuiIconButton-root": {
+                              color: "#666", // Adjust icon color if needed
+                              "&:hover": {
+                                backgroundColor: "transparent !important",
+                              },
+                              "&:focus": {
+                                outline: "none !important",
+                                boxShadow: "none !important",
+                              },
                             },
                           },
                         },
-                      },
-                    }}
+                      }}
                   />
                 </Box>
               </LocalizationProvider>
             </Grid>
             <Grid size={8} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
-                variant="contained"
-                onClick={() => navigate(`/admin/requests`)}
-                sx={{
-                  fontSize: "14px",
-                  color: "#878787",
-                  textTransform: "capitalize",
-                  padding: "2px 6px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0px 4px 4px 0px #C2C2C240",
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                }}
+                  variant="contained"
+                  onClick={() => navigate(`/admin/requests`)}
+                  sx={{
+                    fontSize: "14px",
+                    color: "#878787",
+                    textTransform: "capitalize",
+                    padding: "2px 6px",
+                    backgroundColor: "#fff",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
+                  }}
               >
                 <div
-                  style={{
-                    height: "8px",
-                    width: "8px",
-                    borderRadius: "50%",
-                    backgroundColor: "#F14400",
-                    position: "absolute",
-                    left: "31px",
-                    top: "6px",
-                  }}
+                    style={{
+                      height: "8px",
+                      width: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: "#F14400",
+                      position: "absolute",
+                      left: "31px",
+                      top: "6px",
+                    }}
                 ></div>
                 {circle}
                 <span
-                  style={{
-                    marginLeft: "16px",
-                    marginRight: "8px",
-                    marginTop: "2px",
-                  }}
+                    style={{
+                      marginLeft: "16px",
+                      marginRight: "8px",
+                      marginTop: "2px",
+                    }}
                 >
                   Appointment Requests
                 </span>
               </Button>
             </Grid>
           </Grid>
+        </div>
 
+        <div style={{marginTop:'32vh'}}>
           <div className={styles.parent1}>
             <div>
               <div className={styles.child1}>
