@@ -6,14 +6,34 @@ import {
     BarChart,
     CartesianGrid,
     Cell,
-    Legend,
     Pie,
     PieChart,
-    ResponsiveContainer,
+    ResponsiveContainer, Sector,
     Tooltip,
     XAxis,
     YAxis
 } from "recharts";
+import {Box, Button, FormControl, IconButton, MenuItem, Modal, TextField} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import {useTheme} from "@mui/material/styles";
+import {addDepartment} from "../../../components/State/Admin/Action.js";
+
+const names = [
+    "Oliver Hansen",
+    "Van Henry",
+    "April Tucker",
+    "Ralph Hubbard",
+    "Omar Alexander",
+    "Carlos Abbott",
+    "Miriam Wagner",
+    "Bradley Wilkerson",
+    "Virginia Andrews",
+    "Kelly Snyder",
+];
 
 const doctors = [
     {
@@ -77,16 +97,33 @@ const medicalData = [
 ];
 
 const inventoryData = [
-    { name: 'Medicines',         value: 2000, percentage: '49' },
-    { name: 'Surgical tools',    value: 150, percentage: '9'  },
-    { name: 'Devices',           value: 1000, percentage: '19'  },
+    { name: 'Medicines',         value: 200, percentage: '15' },
+    { name: 'Surgical tools',    value: 150, percentage: '29'  },
+    { name: 'Devices',           value: 100, percentage: '19'  },
     { name: 'Emergency Supplies',value:  105, percentage: '29'  }
+];
+
+const doctors1 = [
+    { _id: "607f1f77bcf86cd799439011", name: "Dr. Amit Sharma" },
+    { _id: "607f1f77bcf86cd799439012", name: "Dr. Priya Singh" },
+    { _id: "607f1f77bcf86cd799439013", name: "Dr. Rohit Patel" },
+    { _id: "607f1f77bcf86cd799439014", name: "Dr. Neha Verma" },
+    { _id: "607f1f77bcf86cd799439015", name: "Dr. Sunita Rao" }
 ];
 
 /* A simple color palette for the Pie chart slices */
 const COLORS = ['#25307F', '#5461BE', '#586EB4', '#DAE4FF'];
 
+function getStyles(name, personName, theme) {
+    return {
+        fontWeight: personName.includes(name)
+            ? theme.typography.fontWeightMedium
+            : theme.typography.fontWeightRegular,
+    };
+}
+
 const Department = () => {
+    const theme = useTheme();
     // Use two independent Sets: one for selected doctor IDs, one for selected staff IDs.
     const [selectedDoctors, setSelectedDoctors] = useState(new Set());
     const [selectedStaff, setSelectedStaff] = useState(new Set());
@@ -109,6 +146,55 @@ const Department = () => {
             else next.add(staffId);
             return next;
         });
+    };
+
+    const [activeIndex, setActiveIndex] = useState(null);
+
+    const onPieEnter = (_, idx) => setActiveIndex(idx);
+    const onPieLeave = () => setActiveIndex(null);
+
+    const renderActiveShape = (props) => {
+        const {
+            cx, cy,
+            innerRadius, outerRadius,
+            startAngle, endAngle,
+            fill, percent
+        } = props;
+
+        const RADIAN = Math.PI / 180;
+        // midpoint angle of this slice
+        const midAngle = (startAngle + endAngle) / 2;
+        // radius halfway between inner & outer
+        const labelRadius = innerRadius + (outerRadius - innerRadius) / 2;
+        // compute label coords
+        const x = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+        const y = cy + labelRadius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <g>
+                {/* Popped-out slice */}
+                <Sector
+                    cx={cx}
+                    cy={cy -3}
+                    innerRadius={innerRadius + 2}
+                    outerRadius={outerRadius + 7}
+                    startAngle={startAngle}
+                    cornerRadius={8}
+                    endAngle={endAngle}
+                    fill={fill}
+                />
+                {/* Percentage inside the slice */}
+                <text
+                    x={x}
+                    y={y - 3}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    style={{ fontSize: 9, fontWeight: 'bold', fill: '#ffffff' }}
+                >
+                    {Math.round(percent * 100)}%
+                </text>
+            </g>
+        );
     };
 
     // If at least one doctor ID is in selectedDoctors, enable Doctors' Assign button.
@@ -134,6 +220,42 @@ const Department = () => {
     const ipdPercent = totalCases > 0 ? (ipdCount / totalCases) * 100 : 0;
     const opdPercent = totalCases > 0 ? (opdCount / totalCases) * 100 : 0;
 
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const [department, setDepartment] = useState({
+        name: "",
+        head: "",
+        doctors: [],
+        nurses: [],
+        // services: []
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setDepartment((prev) => ({
+            ...prev,
+            [name]: name === "head" && value !== "" ? JSON.parse(value) : value,
+        }));
+    };
+
+    const handleMultipleChange = (event) => {
+        const {
+            target: { name, value },
+        } = event;
+
+        setDepartment((prevDepartment) => ({
+            ...prevDepartment,
+            [name]: typeof value === "string" ? value.split(",") : value,
+        }));
+    };
+
+    const handleAdd = () => {
+        console.log("Adding new Dep... : ", department);
+    };
+
     return (
         <>
             <div style={{position:'fixed',zIndex:1000,top:0,width:'77.6vw',background: " #F1F1F1",paddingBottom:'1rem'}}>
@@ -141,30 +263,381 @@ const Department = () => {
             </div>
 
             <div className={style.parent}>
-                <div className={style.headingSection}>
-                    <div className={style.heading}>
-                        <svg
-                            width="22"
-                            height="22"
-                            viewBox="0 0 26 26"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <g clipPath="url(#clip0_3883_12162)">
-                                <path
-                                    d="M18.0054 3.23919C17.4746 2.70836 16.6188 2.70836 16.0879 3.23919L7.08543 12.2417C6.66293 12.6642 6.66293 13.3467 7.08543 13.7692L16.0879 22.7717C16.6188 23.3025 17.4746 23.3025 18.0054 22.7717C18.5363 22.2409 18.5363 21.385 18.0054 20.8542L10.1621 13L18.0163 5.14586C18.5363 4.62586 18.5363 3.75919 18.0054 3.23919Z"
-                                    fill="black"
-                                />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_3883_12162">
-                                    <rect width="26" height="26" rx="13" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        <h4>Cardiology Department</h4>
+                <div className={style.head}>
+                    <div className={style.headingSection}>
+                        <div className={style.heading}>
+                            <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 26 26"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <g clipPath="url(#clip0_3883_12162)">
+                                    <path
+                                        d="M18.0054 3.23919C17.4746 2.70836 16.6188 2.70836 16.0879 3.23919L7.08543 12.2417C6.66293 12.6642 6.66293 13.3467 7.08543 13.7692L16.0879 22.7717C16.6188 23.3025 17.4746 23.3025 18.0054 22.7717C18.5363 22.2409 18.5363 21.385 18.0054 20.8542L10.1621 13L18.0163 5.14586C18.5363 4.62586 18.5363 3.75919 18.0054 3.23919Z"
+                                        fill="black"
+                                    />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_3883_12162">
+                                        <rect width="26" height="26" rx="13" fill="white"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <h4>Cardiology Department</h4>
+                        </div>
+                        <p>Head: Dr. Amit Patil</p>
                     </div>
-                    <p>Head: Dr. Amit Patil</p>
+
+                    <div style={{marginTop:'0.3rem'}}>
+                        <Button
+                            variant="contained"
+                            onClick={handleOpen}
+                            sx={{
+                                display:'flex',
+                                gap:'0.8rem',
+                                fontSize: "16px",
+                                color: "#ffffff",
+                                textTransform: "capitalize",
+                                padding: {
+                                    xs: "0px 8px",
+                                    sm: "0px 10px",
+                                    md: "4px 10px",
+                                }, // Adjust padding
+                                backgroundColor: "#25307F",
+                                boxShadow: "0px 4px 4px 0px #C2C2C240",
+                                "&:hover": {
+                                    background: "#AEC3FF",
+                                },
+                                "&:active": {
+                                    backgroundColor: "#181F52",
+                                    outline: "none",
+                                    boxShadow: "none",
+                                },
+                                "&:focus": {
+                                    outline: "none",
+                                    boxShadow: "none",
+                                },
+                            }}
+                        >
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M13 13V20C13 20.2652 12.8946 20.5196 12.7071 20.7071C12.5196 20.8946 12.2652 21 12 21C11.7348 21 11.4804 20.8946 11.2929 20.7071C11.1054 20.5196 11 20.2652 11 20V13H4C3.73478 13 3.48043 12.8946 3.29289 12.7071C3.10536 12.5196 3 12.2652 3 12C3 11.7348 3.10536 11.4804 3.29289 11.2929C3.48043 11.1054 3.73478 11 4 11H11V4C11 3.73478 11.1054 3.48043 11.2929 3.29289C11.4804 3.10536 11.7348 3 12 3C12.2652 3 12.5196 3.10536 12.7071 3.29289C12.8946 3.48043 13 3.73478 13 4V11H20C20.2652 11 20.5196 11.1054 20.7071 11.2929C20.8946 11.4804 21 11.7348 21 12C21 12.2652 20.8946 12.5196 20.7071 12.7071C20.5196 12.8946 20.2652 13 20 13H13Z"
+                                      fill="white"/>
+                            </svg>
+                            New Department
+                        </Button>
+
+                        {/* Department Modal */}
+                        <Modal open={open} onClose={handleClose}>
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    top: "47%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    bgcolor: "background.paper",
+                                    boxShadow: 24,
+                                    width: 510,
+                                    p: 2,
+                                    // borderRadius: 2,
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        borderBottom: "1px solid #25307F",
+                                        padding: "5px 8px 1rem 8px",
+                                    }}
+                                >
+                                    <h4 style={{ color: "#000000", fontWeight: 500 }}>
+                                        Add New Department
+                                    </h4>
+                                    <IconButton
+                                        sx={{
+                                            padding: 0,
+                                            "&:focus": {
+                                                outline: "none",
+                                                boxShadow: "none",
+                                            },
+                                            color: "black",
+                                        }}
+                                        onClick={handleClose}
+                                    >
+                                        <CloseIcon />
+                                    </IconButton>
+                                </div>
+
+                                <div style={{ display: "inline-block" }}>
+                                    <TextField
+                                        label="Department Name"
+                                        name="name"
+                                        value={department.name}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{
+                                            m: 1,
+                                            minWidth: 200,
+                                            marginTop: 3,
+                                            "& .MuiOutlinedInput-root": {
+                                                "& fieldset": { borderColor: "#25307F" },
+                                                "&:hover fieldset": { borderColor: "#25307F" },
+                                                "&.Mui-focused fieldset": {
+                                                    borderColor: "#25307F",
+                                                },
+                                            },
+                                            "& .MuiInputLabel-root": {
+                                                color: "#25307F",
+                                                "&.Mui-focused": {
+                                                    color: "#25307F",
+                                                },
+                                            },
+                                            "& .MuiInputBase-input": {
+                                                color: "#25307F",
+                                            },
+                                        }}
+                                    />
+
+                                    <FormControl
+                                        size="small"
+                                        sx={{ width: "18rem", marginTop: 2, marginLeft: 1 }}
+                                    >
+                                        <InputLabel
+                                            id="department-head-label"
+                                            sx={{
+                                                "&.Mui-focused": {
+                                                    color: "#747474", // Keep the color same when focused
+                                                },
+                                            }}
+                                        >
+                                            Select Department Head
+                                        </InputLabel>
+                                        <Select
+                                            labelId="department-head-label"
+                                            name="head"
+                                            value={
+                                                department.head
+                                                    ? JSON.stringify(department.head)
+                                                    : ""
+                                            }
+                                            label="Select Department Head"
+                                            onChange={handleChange}
+                                            style={{ width: "100%" }}
+                                            IconComponent={KeyboardArrowDownIcon}
+                                            MenuProps={{
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 200, // Fixed height
+                                                        overflowY: "auto",
+                                                    },
+                                                    sx: {
+                                                        "&::-webkit-scrollbar": {
+                                                            width: "4px",
+                                                        },
+                                                        "&::-webkit-scrollbar-track": {
+                                                            backgroundColor: "#f1f1f1",
+                                                        },
+                                                        "&::-webkit-scrollbar-thumb": {
+                                                            backgroundColor: "#25307F",
+                                                            borderRadius: "4px",
+                                                        },
+                                                    },
+                                                },
+                                            }}
+                                            sx={{
+                                                backgroundColor: "#F7F7F7",
+                                                borderRadius: 0,
+                                                "& .MuiSelect-icon": {
+                                                    color: "#25307F",
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none",
+                                                },
+                                            }}
+                                        >
+                                            {doctors1.map((doctor, index) => (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={JSON.stringify({
+                                                        id: doctor._id,
+                                                        name: doctor.name,
+                                                    })}
+                                                >
+                                                    {doctor.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
+                                    <FormControl
+                                        size="small"
+                                        sx={{ m: 1, width: "30rem", marginTop: 2.4 }}
+                                    >
+                                        <InputLabel
+                                            id="demo-multiple-name-label"
+                                            sx={{
+                                                "&.Mui-focused": {
+                                                    color: "#747474", // Keep the color same when focused
+                                                },
+                                            }}
+                                        >
+                                            Select Doctors
+                                        </InputLabel>
+                                        <Select
+                                            labelId="demo-multiple-name-label"
+                                            id="demo-multiple-name"
+                                            name="doctors"
+                                            multiple
+                                            value={department.doctors}
+                                            onChange={handleMultipleChange}
+                                            input={<OutlinedInput label="Select Doctors" />}
+                                            // MenuProps={MenuProps}
+                                            MenuProps={{
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 200, // Fixed height
+                                                        overflowY: "auto",
+                                                    },
+                                                    sx: {
+                                                        "&::-webkit-scrollbar": {
+                                                            width: "4px",
+                                                        },
+                                                        "&::-webkit-scrollbar-track": {
+                                                            backgroundColor: "#f1f1f1",
+                                                        },
+                                                        "&::-webkit-scrollbar-thumb": {
+                                                            backgroundColor: "#25307F",
+                                                            borderRadius: "4px",
+                                                        },
+                                                    },
+                                                },
+                                            }}
+                                            IconComponent={KeyboardArrowDownIcon}
+                                            sx={{
+                                                backgroundColor: "#F7F7F7",
+                                                borderRadius: 0,
+                                                "& .MuiSelect-icon": {
+                                                    color: "#25307F", // Change the color of the arrow icon
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none", // Remove border
+                                                },
+                                            }}
+                                        >
+                                            {doctors.map((doctor, index) => (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={doctor._id}
+                                                    style={getStyles(
+                                                        doctor.name,
+                                                        department.doctors,
+                                                        theme
+                                                    )}
+                                                >
+                                                    {doctor.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
+                                    <FormControl
+                                        size="small"
+                                        sx={{ m: 1, width: "30rem", marginTop: 2 }}
+                                    >
+                                        <InputLabel
+                                            id="demo-multiple-name-label"
+                                            sx={{
+                                                "&.Mui-focused": {
+                                                    color: "#747474", // Keep the color same when focused
+                                                },
+                                            }}
+                                        >
+                                            List of Nurses/ Support Staff
+                                        </InputLabel>
+                                        <Select
+                                            labelId="demo-multiple-name-label"
+                                            id="demo-multiple-name"
+                                            name="nurses"
+                                            multiple
+                                            value={department.nurses}
+                                            onChange={handleMultipleChange}
+                                            input={
+                                                <OutlinedInput label="List of Nurses/ Support Staff" />
+                                            }
+                                            // MenuProps={MenuProps}
+                                            MenuProps={{
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 200, // Fixed height
+                                                        overflowY: "auto",
+                                                    },
+                                                    sx: {
+                                                        "&::-webkit-scrollbar": {
+                                                            width: "4px",
+                                                        },
+                                                        "&::-webkit-scrollbar-track": {
+                                                            backgroundColor: "#f1f1f1",
+                                                        },
+                                                        "&::-webkit-scrollbar-thumb": {
+                                                            backgroundColor: "#25307F",
+                                                            borderRadius: "4px",
+                                                        },
+                                                    },
+                                                },
+                                            }}
+                                            IconComponent={KeyboardArrowDownIcon}
+                                            sx={{
+                                                backgroundColor: "#F7F7F7",
+                                                borderRadius: 0,
+                                                "& .MuiSelect-icon": {
+                                                    color: "#25307F", // Change the color of the arrow icon
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none", // Remove border
+                                                },
+                                            }}
+                                        >
+                                            {names.map((name) => (
+                                                <MenuItem
+                                                    key={name}
+                                                    value={name}
+                                                    style={getStyles(name, department.doctors, theme)}
+                                                >
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            marginTop: "10%",
+                                        }}
+                                    >
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleAdd}
+                                            sx={{
+                                                backgroundColor: "#25307F",
+                                                textTransform: "none", // Prevents uppercase transformation
+                                                borderRadius: "2px",
+                                                padding: "6px 4rem",
+                                                marginLeft: "4px",
+                                            }}
+                                        >
+                                            Add
+                                        </Button>
+                                    </div>
+                                </div>
+                            </Box>
+                        </Modal>
+                    </div>
                 </div>
 
                 <div className={style.gridContainer}>
@@ -365,6 +838,10 @@ const Department = () => {
                                             outerRadius={105}
                                             paddingAngle={4}
                                             cornerRadius={8}
+                                            activeIndex={activeIndex}
+                                            activeShape={renderActiveShape}
+                                            onMouseEnter={onPieEnter}
+                                            onMouseLeave={onPieLeave}
                                         >
                                             {inventoryData.map((entry, index) => (
                                                 <Cell key={`slice-${index}`} fill={COLORS[index % COLORS.length]}/>

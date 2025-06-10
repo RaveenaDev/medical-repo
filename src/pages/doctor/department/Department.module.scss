@@ -1,31 +1,35 @@
 .parent{
   margin-top: 24.6vh;
-  .headingSection{
+  .head{
+    display: flex;
+    justify-content: space-between;
     background-color: #ffffff;
     margin-bottom: 0.7rem;
     margin-top: 1rem;
     padding: 7px;
     border-radius: 4px;
-    .heading{
-      display: flex;
-      gap: 0.8rem;
-      svg{
-        margin-top: 3.5px;
+    .headingSection{
+      .heading{
+        display: flex;
+        gap: 0.8rem;
+        svg{
+          margin-top: 3.5px;
+        }
+        h4{
+          color: #25307F;
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
       }
-      h4{
-        color: #25307F;
-        font-size: 1.2rem;
-        font-weight: 500;
+
+      p{
+        padding-left: 2.5rem;
+        font-size: 13px;
+        color: #A4A4A4;
       }
+
+
     }
-
-    p{
-      padding-left: 2.5rem;
-      font-size: 13px;
-      color: #A4A4A4;
-    }
-
-
   }
 
   .gridContainer {
