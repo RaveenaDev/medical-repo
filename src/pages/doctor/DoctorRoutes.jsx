@@ -7,6 +7,9 @@ import { Consultation } from "./consultation/consultation.jsx";
 import Department from "./department/Department.jsx";
 import Rooms from "./rooms/Rooms.jsx";
 import DoctorRequest from "../doctorRequest/doctorRequest.jsx";
+import Settings from "../receptionist/Settings/Settings.jsx";
+import PrivacyPolicy from "./settings/privacyPolicy/PrivacyPolicy.jsx";
+import Help from "./settings/Help.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -21,6 +24,22 @@ const DoctorRoutes = (props) => {
       <Route path="/patient" element={<Patients />} />
       <Route path="/department" element={<Department />} />
       <Route path="/rooms" element={<Rooms />} />
+        <Route
+            path="/settings"
+            element={<Settings/>}
+        />
+        <Route
+            path="/settings/privacyPolicy"
+            element={
+                    <PrivacyPolicy/>
+            }
+        />
+        <Route
+            path="/settings/helpAndSupport"
+            element={
+            <Help/>
+            }
+        />
     </Routes>
   );
 };

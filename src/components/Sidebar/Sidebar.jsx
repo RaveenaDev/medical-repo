@@ -32,7 +32,7 @@ const roleOptions = {
     {title: "Consultation", path:"/doctor/consultation"},
     {title: "Patient", path:"/doctor/patient"},
     {title: "Department", path:"/doctor/department"},
-    {title: "Setting", path:"/doctor/settings"},
+    {title: "Settings", path:"/doctor/settings"},
   ]
 };
 
@@ -69,9 +69,6 @@ const Sidebar = ({ role }) => {
       navigate(`/receptionist/settings/${path}`);
     }
     else if(role === "doctor"){
-      navigate(`/doctor/settings/${path}`);
-    }
-    else {
       navigate(`/doctor/settings/${path}`);
     }
   };
