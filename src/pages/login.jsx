@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
