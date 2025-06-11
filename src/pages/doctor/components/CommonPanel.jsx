@@ -12,9 +12,9 @@ import {
   getBillingRecords,
   getDoctors,
   getPatients,
-  getRooms,
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
+import {getRooms} from "../../../components/State/Doctor/Action.js";
 
 
 const CommonPanel = ({
@@ -50,16 +50,16 @@ const CommonPanel = ({
     dispatch(getBillingRecords());
   }, [dispatch]);
 
-  const admin = useSelector((store) => store.admin);
+  const doctor = useSelector((store) => store.admin);
 
-  const noOfDoctors = admin.totalDoctors;
-  const doctors = admin.doctors;
+  const noOfDoctors = doctor.totalDoctors;
+  const doctors = doctor.doctors;
 
-  const noOfStaffs = admin.totalStaffs;
-  const staffs = admin.staffs;
+  const noOfStaffs = doctor.totalStaffs;
+  const staffs = doctor.staffs;
 
-  const noOfRooms = admin.totalRooms;
-  const rooms = admin.rooms;
+  const noOfRooms = doctor.totalRooms;
+  const rooms = doctor.rooms;
 
   const departments = useSelector((state) => state.admin.departments);
 

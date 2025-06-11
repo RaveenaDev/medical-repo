@@ -1,4 +1,3 @@
-import Records from "../../../pages/admin/billing/components/Records/Records.jsx";
 import {
   ADD_DEPARTMENT,
   ADD_DOCTORS,
@@ -39,7 +38,7 @@ import {
   UPDATE_STAFFS,
 } from "./ActionType.js";
 
-const inititalState = {
+const initialState = {
   totalEarnings: null,
   monthlyEarnings: [],
   totalPatients: null,
@@ -81,7 +80,7 @@ const inititalState = {
   recordsCount: null,
 };
 
-export const adminReducer = (state = inititalState, action) => {
+export const adminReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_EARNINGS:
       return {
