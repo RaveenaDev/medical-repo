@@ -140,7 +140,6 @@ const EVENTS = [
   /* …etc */
 ];
 const DoctorOverview = () => {
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
@@ -220,45 +219,45 @@ const DoctorOverview = () => {
     {
       _id: "req001",
       patient: {
-        name: "John Doe"
+        name: "John Doe",
       },
-      note: "Needs consultation for back pain."
+      note: "Needs consultation for back pain.",
     },
     {
       _id: "req002",
       patient: {
-        name: "Jane Smith"
+        name: "Jane Smith",
       },
-      note: "Follow-up appointment for diabetes check-up."
+      note: "Follow-up appointment for diabetes check-up.",
     },
     {
       _id: "req003",
       patient: {
-        name: "Alice Johnson"
+        name: "Alice Johnson",
       },
-      note: "Wants to discuss lab report results."
+      note: "Wants to discuss lab report results.",
     },
     {
       _id: "req004",
       patient: {
-        name: "Bob Brown"
+        name: "Bob Brown",
       },
-      note: "First-time appointment for general check-up."
+      note: "First-time appointment for general check-up.",
     },
     {
       _id: "req005",
       patient: {
-        name: "Charlie Wilson"
+        name: "Charlie Wilson",
       },
-      note: "Consultation regarding skin allergy."
+      note: "Consultation regarding skin allergy.",
     },
     {
       _id: "req006",
       patient: {
-        name: "Emily Davis"
+        name: "Emily Davis",
       },
-      note: "Needs a prescription refill for blood pressure medication."
-    }
+      note: "Needs a prescription refill for blood pressure medication.",
+    },
   ];
 
   const phases = [
@@ -350,8 +349,12 @@ const DoctorOverview = () => {
   const [selected, setSelected] = useState(24);
 
   const handleFooterBtn = () => {
-    navigate('/doctor/calendar');
-  }
+    navigate("/doctor/calendar");
+  };
+
+  const handleDoctorRequest = () => {
+    navigate("/doctor/doctor-request");
+  };
 
   const handleAppointmentRequests = () => {
     // Any other logic before opening the modal
@@ -361,104 +364,121 @@ const DoctorOverview = () => {
   return (
     <>
       <div>
-        <div style={{position:'fixed',zIndex:1000,top:0,width:'77.6vw',background: " #F1F1F1",paddingBottom:'1rem'}}>
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 1000,
+            top: 0,
+            width: "77.6vw",
+            background: " #F1F1F1",
+            paddingBottom: "1rem",
+          }}
+        >
           <CommonPanel />
 
           <Grid
-              container
-              // sx={{ margin: "0 0 20px 0" }}
+            container
+            // sx={{ margin: "0 0 20px 0" }}
           >
             <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box
-                    sx={{
-                      backgroundColor: "#FFFFFF",
+                  sx={{
+                    backgroundColor: "#FFFFFF",
 
-                      borderRadius: 1,
-                      width: 180, // Adjust width here
-                      textAlign: "center",
-                      boxShadow: "0px 4px 4px 0px #C2C2C240",
-                      // padding: "4px", // Reduce padding to make the container smaller
-                    }}
+                    borderRadius: 1,
+                    width: 180, // Adjust width here
+                    textAlign: "center",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    // padding: "4px", // Reduce padding to make the container smaller
+                  }}
                 >
                   <DatePicker
-                      value={internalSelectedDate}
-                      onChange={handleDateChange}
-                      format="DD/MM/YYYY" // Set the date format
-                      slotProps={{
-                        textField: {
-                          sx: {
-                            "& .MuiOutlinedInput-root": {
-                              "& .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "transparent !important",
-                              },
-                              "&:hover .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "transparent !important",
-                              },
-                              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "transparent !important",
-                                boxShadow: "none !important",
-                              },
+                    value={internalSelectedDate}
+                    onChange={handleDateChange}
+                    format="DD/MM/YYYY" // Set the date format
+                    slotProps={{
+                      textField: {
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
                             },
-                            "& .MuiInputBase-input": {
-                              fontSize: "14px",
-                              padding: "10px",
-                              "&:focus": {
-                                outline: "none !important",
-                              },
+                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
                             },
-                            "& .MuiIconButton-root": {
-                              color: "#666", // Adjust icon color if needed
-                              "&:hover": {
-                                backgroundColor: "transparent !important",
-                              },
-                              "&:focus": {
-                                outline: "none !important",
-                                boxShadow: "none !important",
-                              },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent !important",
+                              boxShadow: "none !important",
+                            },
+                          },
+                          "& .MuiInputBase-input": {
+                            fontSize: "14px",
+                            padding: "10px",
+                            "&:focus": {
+                              outline: "none !important",
+                            },
+                          },
+                          "& .MuiIconButton-root": {
+                            color: "#666", // Adjust icon color if needed
+                            "&:hover": {
+                              backgroundColor: "transparent !important",
+                            },
+                            "&:focus": {
+                              outline: "none !important",
+                              boxShadow: "none !important",
                             },
                           },
                         },
-                      }}
+                      },
+                    }}
                   />
                 </Box>
               </LocalizationProvider>
             </Grid>
-            <Grid size={8} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid
+              size={8}
+              sx={{ display: "flex", justifyContent: "flex-end", gap: "1vw" }}
+            >
+              <button className={styles.DRBtn} onClick={handleDoctorRequest}>
+                {circle}
+                <span>Requests</span>
+              </button>
+
               <Button
-                  variant="contained"
-                  onClick={handleAppointmentRequests}
-                  sx={{
-                    fontSize: "14px",
-                    color: "#878787",
-                    textTransform: "capitalize",
-                    padding: "2px 6px",
-                    backgroundColor: "#fff",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    "&:focus": {
-                      outline: "none",
-                      boxShadow: "none",
-                    },
-                  }}
+                variant="contained"
+                onClick={handleAppointmentRequests}
+                sx={{
+                  fontSize: "14px",
+                  color: "#878787",
+                  textTransform: "capitalize",
+                  padding: "2px 6px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                }}
               >
                 <div
-                    style={{
-                      height: "8px",
-                      width: "8px",
-                      borderRadius: "50%",
-                      backgroundColor: "#F14400",
-                      position: "absolute",
-                      left: "31px",
-                      top: "6px",
-                    }}
+                  style={{
+                    height: "8px",
+                    width: "8px",
+                    borderRadius: "50%",
+                    backgroundColor: "#F14400",
+                    position: "absolute",
+                    left: "31px",
+                    top: "6px",
+                  }}
                 ></div>
                 {circle}
                 <span
-                    style={{
-                      marginLeft: "16px",
-                      marginRight: "8px",
-                      marginTop: "2px",
-                    }}
+                  style={{
+                    marginLeft: "16px",
+                    marginRight: "8px",
+                    marginTop: "2px",
+                  }}
                 >
                   Appointment Requests
                 </span>
@@ -466,9 +486,9 @@ const DoctorOverview = () => {
 
               {/* Modal Component */}
               <AppointmentRequestModal
-                  isOpen={isModalOpen}
-                  onClose={() => setIsModalOpen(false)}
-                  appointmentRequests={appointmentRequests}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                appointmentRequests={appointmentRequests}
               >
                 <p>This is where appointment requests will appear.</p>
               </AppointmentRequestModal>
@@ -476,7 +496,7 @@ const DoctorOverview = () => {
           </Grid>
         </div>
 
-        <div style={{marginTop:'32vh'}}>
+        <div style={{ marginTop: "32vh" }}>
           <div className={styles.parent1}>
             <div>
               <div className={styles.child1}>
