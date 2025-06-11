@@ -440,10 +440,45 @@ const DoctorOverview = () => {
               size={8}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "1vw" }}
             >
-              <button className={styles.DRBtn} onClick={handleDoctorRequest}>
+
+              <Button
+                  variant="contained"
+                  onClick={handleDoctorRequest}
+                  sx={{
+                    fontSize: "14px",
+                    color: "#878787",
+                    textTransform: "capitalize",
+                    padding: "2px 6px",
+                    backgroundColor: "#fff",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
+                  }}
+              >
+                <div
+                    style={{
+                      height: "8px",
+                      width: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: "#F14400",
+                      position: "absolute",
+                      left: "31px",
+                      top: "6px",
+                    }}
+                ></div>
                 {circle}
-                <span>Requests</span>
-              </button>
+                <span
+                    style={{
+                      marginLeft: "16px",
+                      marginRight: "8px",
+                      marginTop: "2px",
+                    }}
+                >
+                  Requests
+                </span>
+              </Button>
 
               <Button
                 variant="contained"
