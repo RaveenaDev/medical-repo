@@ -6,7 +6,8 @@ import Patients from "./patient/Patients.jsx";
 import { Consultation } from "./consultation/consultation.jsx";
 import Department from "./department/Department.jsx";
 import Rooms from "./rooms/Rooms.jsx";
-import DoctorRequest from "../doctorRequest/doctorRequest.jsx";
+import DoctorRequest from "./doctorRequest/doctorRequest.jsx";
+import DoctorNewRequest from "./doctorRequest/DoctorNewRequest.jsx";
 import Settings from "../receptionist/Settings/Settings.jsx";
 import PrivacyPolicy from "./settings/privacyPolicy/PrivacyPolicy.jsx";
 import Help from "./settings/Help.jsx";
@@ -19,27 +20,18 @@ const DoctorRoutes = (props) => {
     <Routes>
       <Route index element={<DoctorOverview />} />
       <Route path="/doctor-request" element={<DoctorRequest />} />
+      <Route
+        path="/doctor-request/new-request"
+        element={<DoctorNewRequest />}
+      />
       <Route path="/calendar" element={<Calender />} />
       <Route path="/consultation" element={<Consultation />} />
       <Route path="/patient" element={<Patients />} />
       <Route path="/department" element={<Department />} />
       <Route path="/rooms" element={<Rooms />} />
-        <Route
-            path="/settings"
-            element={<Settings/>}
-        />
-        <Route
-            path="/settings/privacyPolicy"
-            element={
-                    <PrivacyPolicy/>
-            }
-        />
-        <Route
-            path="/settings/helpAndSupport"
-            element={
-            <Help/>
-            }
-        />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/settings/privacyPolicy" element={<PrivacyPolicy />} />
+      <Route path="/settings/helpAndSupport" element={<Help />} />
     </Routes>
   );
 };

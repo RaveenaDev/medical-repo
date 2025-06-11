@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CommonPanel from "../doctor/components/CommonPanel";
+import CommonPanel from "../components/CommonPanel";
 import styles from "./DoctorRequest.module.scss";
 import { ChevronLeft, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 const DoctorRequest = () => {
   const now = dayjs();
   const yesterday = now.subtract(1, "day");
-
   const requests = [
     {
       id: 1,
@@ -138,6 +137,9 @@ const DoctorRequest = () => {
     navigate("/doctor");
   };
 
+  const handleNewRequestButton = () => {
+    navigate("/doctor/doctor-request/new-request");
+  };
   // Filter requests based on selected tab
   const filteredRequests = requests.filter((req) =>
     selectedTab === "active" ? req.active : !req.active
@@ -158,7 +160,7 @@ const DoctorRequest = () => {
             <span>Request</span>
           </div>
           <div className={styles.rightHeader}>
-            <button>
+            <button onClick={handleNewRequestButton}>
               <SquarePen size={18} />
               <span>New Request</span>
             </button>
