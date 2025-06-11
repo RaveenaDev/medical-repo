@@ -20,7 +20,6 @@ import Select from "@mui/material/Select";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import {useTheme} from "@mui/material/styles";
-import {addDepartment} from "../../../components/State/Admin/Action.js";
 
 const names = [
     "Oliver Hansen",
