@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import styles from "./sidebar.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, IconButton, Typography } from "@mui/material";
@@ -6,6 +7,137 @@ import adi from "../../pages/receptionist/Settings/Settings.module.scss";
 import Logout from "../../pages/receptionist/Settings/Logout.jsx";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+const DoctorNotesPopup = ({ anchorRef, onClose }) => {
+  const [position, setPosition] = useState({ top: 100, left: 0 });
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (anchorRef.current) {
+      const rect = anchorRef.current.getBoundingClientRect();
+      setPosition({
+        top: rect.top + window.scrollY - 310,
+        left: rect.right + window.scrollX - 10,
+      });
+    }
+
+    const handleClickOutside = (e) => {
+      if (!anchorRef.current?.contains(e.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [anchorRef, onClose]);
+
+  const execCommand = (command, value = null) => {
+    document.execCommand(command, false, value);
+  };
+
+  const handleImageUpload = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        execCommand("insertImage", event.target.result);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
+
+  return ReactDOM.createPortal(
+    <div
+      style={{
+        position: "fixed",
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        backgroundColor: "#fff",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        width: "400px",
+        height: "400px",
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15)",
+        zIndex: 9999999,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
+      {/* Top Bar */}
+      <div
+        style={{
+          backgroundColor: "#25307F",
+          color: "white",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "8px 12px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ fontSize: "20px", cursor: "pointer" }}>☰</span>
+          <span style={{ fontSize: "20px", cursor: "pointer" }}>＋</span>
+        </div>
+        <span style={{ fontSize: "20px", cursor: "pointer" }} onClick={onClose}>
+          ×
+        </span>
+      </div>
+
+      {/* Toolbar */}
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+          padding: "6px 10px",
+          borderBottom: "1px solid #ccc",
+          backgroundColor: "#f9f9f9",
+        }}
+      >
+        <button onClick={() => execCommand("bold")}>B</button>
+        <button onClick={() => execCommand("italic")}>I</button>
+        <button onClick={() => execCommand("underline")}>U</button>
+        <button
+          onClick={() =>
+            execCommand("styleWithCSS") ||
+            execCommand("foreColor", "#25307F") ||
+            execCommand(
+              "insertHTML",
+              '<span style="text-decoration: overline;">Overline</span>'
+            )
+          }
+        >
+          O̅
+        </button>
+        <button onClick={() => execCommand("insertUnorderedList")}>
+          • List
+        </button>
+        <button onClick={handleImageUpload}>🖼️</button>
+      </div>
+
+      {/* Editable Content */}
+      <div
+        ref={editorRef}
+        contentEditable
+        style={{
+          flex: 1,
+          padding: "10px",
+          overflowY: "auto",
+          fontSize: "14px",
+          outline: "none",
+        }}
+        placeholder="Write notes here..."
+        suppressContentEditableWarning={true}
+      ></div>
+    </div>,
+    document.body
+  );
+};
 
 const roleOptions = {
   receptionist: [
@@ -28,12 +160,12 @@ const roleOptions = {
     { title: "Settings", path: "/patient/settings" },
   ],
   doctor: [
-    {title: "Overview", path:"/doctor"},
-    {title: "Consultation", path:"/doctor/consultation"},
-    {title: "Patient", path:"/doctor/patient"},
-    {title: "Department", path:"/doctor/department"},
-    {title: "Settings", path:"/doctor/settings"},
-  ]
+    { title: "Overview", path: "/doctor" },
+    { title: "Consultation", path: "/doctor/consultation" },
+    { title: "Patient", path: "/doctor/patient" },
+    { title: "Department", path: "/doctor/department" },
+    { title: "Settings", path: "/doctor/settings" },
+  ],
 };
 
 const Sidebar = ({ role }) => {
@@ -41,6 +173,9 @@ const Sidebar = ({ role }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLogout, setIsLogout] = useState(false);
+
+  const [showDoctorNotes, setShowDoctorNotes] = useState(false);
+  const buttonRef = useRef(null);
 
   // Get side options based on role
   const sideOptions = roleOptions[role] || [];
@@ -67,8 +202,7 @@ const Sidebar = ({ role }) => {
       navigate(`/admin/settings/${path}`);
     } else if (role === "receptionist") {
       navigate(`/receptionist/settings/${path}`);
-    }
-    else if(role === "doctor"){
+    } else if (role === "doctor") {
       navigate(`/doctor/settings/${path}`);
     }
   };
@@ -99,7 +233,6 @@ const Sidebar = ({ role }) => {
           </div>
         ))}
       </div>
-
       {/* Conditionally render settings options when "Settings" is active */}
       {activeIndex ===
         sideOptions.findIndex((option) => option.title === "Settings") && (
@@ -146,36 +279,70 @@ const Sidebar = ({ role }) => {
 
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
           marginTop: "auto",
           paddingBottom: "5px",
           paddingTop: "20px",
-          borderTop: "1px solid #E2E2E2 ",
+          position: "relative", // start a new stacking context
+          zIndex: 9999999, // very high
         }}
       >
-        <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
-          <Avatar sx={{ width: 50, height: 50 }} />
-          <div style={{ paddingTop: "2px" }}>
-            <p style={{ color: "#25307F", fontWeight: 500 }}>Hospital</p>
-            <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
+        {role === "doctor" && (
+          <div style={{ position: "relative", margin: "0 25px 10px 25px" }}>
+            <button
+              ref={buttonRef}
+              onClick={() => setShowDoctorNotes((prev) => !prev)}
+              style={{
+                backgroundColor: "#25307F",
+                color: "white",
+                padding: "8px 16px",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                width: "100%",
+                fontWeight: 500,
+              }}
+            >
+              Doctor's Notes
+            </button>
+            {showDoctorNotes && (
+              <DoctorNotesPopup
+                anchorRef={buttonRef}
+                onClose={() => setShowDoctorNotes(false)}
+              />
+            )}
+          </div>
+        )}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingBottom: "5px",
+            paddingTop: "20px",
+            borderTop: "1px solid #E2E2E2 ",
+          }}
+        >
+          <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
+            <Avatar sx={{ width: 50, height: 50 }} />
+            <div style={{ paddingTop: "2px" }}>
+              <p style={{ color: "#25307F", fontWeight: 500 }}>Hospital</p>
+              <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
+            </div>
+          </div>
+
+          <div style={{ paddingRight: "0.7rem" }}>
+            <IconButton
+              sx={{
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
+            </IconButton>
           </div>
         </div>
-
-        <div style={{ paddingRight: "0.7rem" }}>
-          <IconButton
-            sx={{
-              "&:focus": {
-                outline: "none",
-                boxShadow: "none",
-              },
-            }}
-          >
-            <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
-          </IconButton>
-        </div>
       </div>
-
       {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout} />}
     </div>
   );

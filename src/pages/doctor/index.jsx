@@ -545,7 +545,12 @@ const DoctorOverview = () => {
           <div className={styles.parent1}>
             <div>
               <div className={styles.child1}>
-                <div className={styles.card}>
+                <div
+                  className={styles.card}
+                  style={{
+                    zIndex: "1 !important", // ensure it appears above other content
+                  }}
+                >
                   <div className={styles.cardChild}>
                     <h4>Most Common Diagnosis</h4>
                     <div style={{ display: "flex", gap: "4px" }}>
