@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CommonPanel from "../components/CommonPanel";
+import CommonPanelMini from "../components/CommonPanelMini";
 import styles from "./Consultation.module.scss";
 import dayjs from "dayjs";
 import { CalendarToday } from "@mui/icons-material";
@@ -35,7 +35,7 @@ export const Consultation = () => {
   return (
     <div>
       <div>
-        <CommonPanel />
+        <CommonPanelMini />
 
         {/* Header 1 */}
         <div className={styles["header-1"]}>

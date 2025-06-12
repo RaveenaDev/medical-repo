@@ -1,9 +1,40 @@
 import { useNavigate } from "react-router-dom";
-import CommonPanel from "../components/CommonPanel";
+import CommonPanelMini from "../components/CommonPanelMini";
 import styles from "./DoctorNewRequest.module.scss";
 import { ChevronLeft, Paperclip } from "lucide-react";
 
 const DoctorNewRequest = () => {
+  const messages = [
+    {
+      id: 1,
+      text: "Your package of 12 medicines has been shipped and will arrive to you shortly.",
+      avatarUrl: "https://i.pravatar.cc/40?img=1",
+      sender: "ADMIN",
+      timestamp: "Sept 27 at 9:00 pm",
+    },
+    {
+      id: 2,
+      text: "The medicines have been packed and ready to ship.",
+      avatarUrl: "https://i.pravatar.cc/40?img=1",
+      sender: "ADMIN",
+      timestamp: "Sept 27 at 9:00 pm",
+    },
+    {
+      id: 3,
+      text: "The medicines have been packed and ready to ship.",
+      avatarUrl: "https://i.pravatar.cc/40?img=1",
+      sender: "ADMIN",
+      timestamp: "Sept 27 at 9:00 pm",
+    },
+    {
+      id: 4,
+      text: "The medicines have been packed and ready to ship.",
+      avatarUrl: "https://i.pravatar.cc/40?img=1",
+      sender: "ADMIN",
+      timestamp: "Sept 27 at 9:00 pm",
+    },
+  ];
+
   const navigate = useNavigate();
 
   const handleBackButton = () => {
@@ -11,7 +42,7 @@ const DoctorNewRequest = () => {
   };
   return (
     <div>
-      <CommonPanel />
+      <CommonPanelMini />
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.header1}>
@@ -58,6 +89,40 @@ const DoctorNewRequest = () => {
           <div className={styles.YRDateTime}>
             <p>Sept 27 at 10:00 am</p>
           </div>
+        </div>
+
+        <div className={styles.content}>
+          {messages.map((msg, index) => (
+            <div key={msg.id} className={styles.messageRow}>
+              <div className={styles.avatarContainer}>
+                <img
+                  src={msg.avatarUrl}
+                  alt="avatar"
+                  className={styles.avatar}
+                />
+                {index !== messages.length - 1 && (
+                  <div className={styles.verticalLine}></div>
+                )}
+              </div>
+              <div className={styles.messageContainer}>
+                <div className={styles.messageContent}>
+                  <div className={styles.row1}>
+                    <p className={styles.messageText}>{msg.text}</p>
+                    <span className={styles.sender}>{msg.sender}</span>
+                  </div>
+
+                  <div className={styles.messageMeta}>
+                    <span className={styles.timestamp}>{msg.timestamp}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.submitContainer}>
+          <input type="text" placeholder="Add comments and request updates" />
+          <button>Send</button>
         </div>
       </div>
     </div>

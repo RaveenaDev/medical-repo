@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CommonPanel from "../components/CommonPanel";
+import CommonPanelMini from "../components/CommonPanelMini";
 import styles from "./DoctorRequest.module.scss";
 import { ChevronLeft, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -150,7 +150,7 @@ const DoctorRequest = () => {
 
   return (
     <div>
-      <CommonPanel />
+      <CommonPanelMini />
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.leftHeader}>

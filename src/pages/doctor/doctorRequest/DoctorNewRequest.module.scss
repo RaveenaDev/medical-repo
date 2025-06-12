@@ -1,6 +1,9 @@
 .container {
   background-color: white;
-  height: 90vh;
+  height: 100vh;
+  overflow-y: auto;
+  margin-bottom: 3vh;
+  margin-top: 3vh;
 }
 
 .header {
@@ -9,7 +12,7 @@
 .header1 {
   display: flex;
   justify-content: space-between;
-  padding: 6vh 1.4vw 0vh 1.4vw;
+  padding: 5vh 1.4vw 0vh 1.4vw;
 }
 
 .h1Left {
@@ -82,4 +85,146 @@
   justify-content: end;
   font-size: 1.8vh;
   color: #747474;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 6vh;
+  // font-family: "Karla", sans-serif;
+}
+
+.messageRow {
+  display: flex;
+
+  width: 96%;
+
+  gap: 1rem;
+  position: relative;
+}
+
+.avatarContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: relative;
+}
+
+.avatar {
+  width: 3vw;
+
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2b3d66;
+  // margin-top: 2vh;
+}
+
+.verticalLine {
+  width: 2px;
+  height: 60px; /* adjust as needed */
+  margin-top: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #000,
+    #000 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  transform: translateY(-2vh);
+}
+
+.messageContent {
+  background-color: white;
+  padding: 3vh 2vh 1vh 2vh;
+  border-radius: 5px;
+  border-left: 3.5px solid #25307f;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.messageText {
+  font-size: 1.9vh;
+}
+
+.messageMeta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #25307f;
+  font-weight: 600;
+}
+
+.sender {
+  text-transform: uppercase;
+  color: #25307f;
+  font-weight: 500;
+  font-size: 1.8vh;
+}
+
+.timestamp {
+  color: #636363;
+  font-weight: 400;
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox */
+.container {
+  scrollbar-width: none; /* hides scrollbar but keeps scrolling */
+}
+
+/* For IE, Edge */
+.container {
+  -ms-overflow-style: none; /* hides scrollbar */
+}
+
+.messageContainer {
+  width: 95%;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: min-content;
+}
+
+.submitContainer {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 4vh 1.6vw 3vh 1.6vw;
+
+  button {
+    background-color: #25307f;
+    color: white;
+    border-radius: 4px;
+    width: 10%;
+    height: 5.6vh;
+    font-size: 2vh;
+  }
+
+  input {
+    width: 85%;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid #4c5597;
+    background-color: #f3f5ff;
+    padding: 0vh 2vh;
+    height: 5.6vh;
+
+    &::placeholder {
+      color: #bfc0c6;
+    }
+  }
 }

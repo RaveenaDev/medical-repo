@@ -29,6 +29,8 @@
 }
 
 .formsContainer {
+  height: 70vh;
+  overflow-y: auto;
   margin-top: 2vh;
   padding-right: 2vw;
   display: flex;
@@ -81,4 +83,8 @@
   display: flex;
   align-items: center;
   font-size: 1.9vh;
+}
+
+.container {
+  //overflow-y: auto;
 }
