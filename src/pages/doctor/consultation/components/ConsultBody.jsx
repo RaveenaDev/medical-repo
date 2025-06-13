@@ -1,7 +1,5 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import styles from "./ConsultBody.module.scss";
-
 import { Plus, CircleCheck } from "lucide-react";
 import DiagnosisAndVital from "./DiagnosisAndVital";
 import TreatmentAndTest from "./TreatmentAndTest";
@@ -9,6 +7,9 @@ import PerceptionAndMedicines from "./PerceptionAndMedicines";
 import PatientInfo from "./PatientInfo";
 import { MedicalHistory } from "./MedicalHistory";
 import CurrentMedication from "./CurrentMedication";
+import Complete from "./Complete";
+import Refer from "./Refer";
+import NextAppointment from "./NextAppointment";
 
 const ConsultBody = () => {
   const dummyPatient = [
@@ -81,6 +82,21 @@ const ConsultBody = () => {
     },
   ];
 
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openComplete = () => setActiveModal("complete");
+  const openRefer = () => setActiveModal("refer");
+  const openNextAppointment = () => setActiveModal("nextAppointment");
+
+  const closeModal = () => setActiveModal(null);
+
   const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
   const [activePanel, setActivePanel] = useState("lp1");
 
@@ -97,7 +113,7 @@ const ConsultBody = () => {
           <p className={styles["pat-name-l"]}>Jaismine Kaur</p>
           <p className={styles["pat-status-l"]}>Ongoing</p>
         </div>
-        <div className={styles["h2-right"]}>
+        <div className={styles["h2-right"]} onClick={openNextAppointment}>
           <p className={styles["pat-num-r"]}>XXXXXXX</p>
           <p className={styles["pat-name-r"]}>Amit Tripati</p>
           <p className={styles["pat-status-r"]}>Next</p>
@@ -174,16 +190,43 @@ const ConsultBody = () => {
           </div>
 
           <div className={styles["lp-8"]}>
-            <button>
+            <button onClick={openComplete}>
               <CircleCheck size={15} />
               <p>Complete</p>
             </button>
-            <button className={styles["lp-8-refBtn"]}>
+            <button className={styles["lp-8-refBtn"]} onClick={openRefer}>
               <img src="/assets/healthicons_referral.svg" sizes={""} alt="" />
               <p>Refer</p>
             </button>
           </div>
         </div>
+
+        {activeModal === "complete" && (
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["complete-modal"]}>
+              <Complete onClose={closeModal} onComplete={openNextAppointment} />
+            </div>
+          </>
+        )}
+
+        {activeModal === "refer" && (
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["refer-modal"]}>
+              <Refer onClose={closeModal} />
+            </div>
+          </>
+        )}
+
+        {activeModal === "nextAppointment" && (
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["nextAppointment-modal"]}>
+              <NextAppointment onClose={closeModal} />
+            </div>
+          </>
+        )}
 
         {/* Right Panel */}
 

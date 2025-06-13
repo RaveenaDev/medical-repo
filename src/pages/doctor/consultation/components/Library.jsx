@@ -1,4 +1,3 @@
-// Library.js
 import styles from "./Library.module.scss";
 import { X } from "lucide-react";
 export default function Library({ onClose }) {

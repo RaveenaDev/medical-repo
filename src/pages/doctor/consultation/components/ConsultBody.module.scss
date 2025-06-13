@@ -171,6 +171,7 @@
   align-items: center;
   align-content: center;
   justify-content: space-between;
+  cursor: pointer;
   padding: 0px 12px;
   border-radius: 8px;
   background-color: #f1f1f1;
@@ -441,4 +442,65 @@
 .lp-6:not(.active):hover {
   background: #f5fbf7;
   border-color: #b7ebc3;
+}
+
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+
+.complete-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: 30%;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  //padding: 0vh 0vw 3vh 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.refer-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: 36vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  // padding: 0vh 0vw 3vh 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.nextAppointment-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: 40%;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  // padding: 0vh 0vw 3vh 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
