@@ -25,6 +25,7 @@ const AddEventPanel = ({ onClose }) => {
       fontFamily: "Karla, sans-serif",
       borderColor: "#7279ad",
       boxShadow: "none",
+      cursor: "pointer",
       backgroundColor: "#f9faff",
       width: "96%",
       "&:hover": {
@@ -67,6 +68,8 @@ const AddEventPanel = ({ onClose }) => {
     }),
   };
   const [value, setValue] = useState();
+  const [value2, setValue2] = useState();
+
   const panelRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedTag, setSelectedTag] = useState("");
@@ -191,8 +194,8 @@ const AddEventPanel = ({ onClose }) => {
                   <TimePicker
                     className="time-picker-2"
                     label=""
-                    value={value}
-                    onChange={(newValue) => setValue(newValue)}
+                    value={value2}
+                    onChange={(newValue) => setValue2(newValue)}
                     slots={{
                       openPickerIcon: () => null, // removes the clock icon
                     }}

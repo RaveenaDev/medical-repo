@@ -6,6 +6,7 @@ import AddEventPanel from "../components/AddEventPanel.jsx";
 import dayjs from "dayjs";
 import Select from "react-select";
 import EventDetails from "../components/EventDetails.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Calender = () => {
   const dummyEvents = [
@@ -66,6 +67,7 @@ const Calender = () => {
     { value: "December", label: "December" },
   ];
 
+  const navigate = useNavigate();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -75,6 +77,10 @@ const Calender = () => {
   const [selectedMonth, setSelectedMonth] = useState(
     monthOptions[dayjs().month()]
   );
+
+  const handleBackBtn = () => {
+    navigate("/doctor");
+  };
   const [isMonthOpen, setIsMonthOpen] = useState(false);
 
   const slotHeight = 160;
@@ -211,7 +217,7 @@ const Calender = () => {
         <CommonPanel />
         <div className="header">
           <div className="title">
-            <div className="chevron-icon">
+            <div className="chevron-icon" onClick={handleBackBtn}>
               <ChevronLeft />
             </div>
             <p>Calendar</p>

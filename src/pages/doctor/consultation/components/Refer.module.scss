@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 2.5vw 1vw 2.5vw;
+  font-family: "Karla", sans-serif;
+}
+
+.header {
+  .head {
+    color: #25307f;
+    font-size: 2.5vh;
+    font-weight: 520;
+  }
+
+  .patientInfo {
+    margin-top: 1vh;
+    display: flex;
+    gap: 2vw;
+    font-size: 1.9vh;
+    font-weight: 450;
+  }
+}
+.referralUrgency {
+  h4 {
+    font-weight: 500;
+  }
+  background-color: #f2f5ff;
+  padding: 2vh 1vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  margin-top: 2vh;
+}
+
+.referralUrgencyIn {
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  font-family: "Karla", sans-serif;
+  font-weight: 500;
+  font-size: 1.8vh;
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  .customRadio {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #25307f;
+    border-radius: 50%;
+    margin-right: 8px;
+    position: relative;
+    box-sizing: border-box;
+    color: #25307f;
+  }
+
+  input[type="radio"]:checked + .customRadio::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  .routineText {
+    color: #4caf50;
+  }
+
+  .urgentText {
+    color: #ff9800;
+  }
+
+  .emergencyText {
+    color: #f44336;
+  }
+}
+
+.selectionRef {
+  margin-top: 1.5vh;
+  .selection {
+    display: flex;
+    gap: 2vw;
+
+    div {
+      width: 9vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.1vh;
+      font-weight: 450;
+      height: 4.2vh;
+    }
+  }
+}
+
+.activeTab {
+  border-bottom: 2px solid #25307f;
+}
