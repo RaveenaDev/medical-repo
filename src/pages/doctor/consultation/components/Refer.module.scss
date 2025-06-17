@@ -25,7 +25,7 @@
   }
 
   .patientInfo {
-    margin-top: 1vh;
+    margin-top: 0vh;
     display: flex;
     gap: 2vw;
     font-size: 1.9vh;
@@ -37,11 +37,11 @@
     font-weight: 500;
   }
   background-color: #f2f5ff;
-  padding: 2vh 1vh;
+  padding: 1vh 1vh;
   display: flex;
   flex-direction: column;
   gap: 1vh;
-  margin-top: 2vh;
+  margin-top: 1vh;
 }
 
 .referralUrgencyIn {
@@ -99,23 +99,431 @@
 }
 
 .selectionRef {
-  margin-top: 1.5vh;
+  margin-top: 1vh;
   .selection {
     display: flex;
     gap: 2vw;
-
+    cursor: pointer;
     div {
-      width: 9vw;
+      width: 10vw;
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 2.1vh;
       font-weight: 450;
       height: 4.2vh;
+
+      @media (min-width: 728px) and (max-width: 1367px) {
+        width: 13vw;
+      }
     }
   }
 }
 
 .activeTab {
   border-bottom: 2px solid #25307f;
+}
+
+.dropdown,
+.dropdown2 {
+  position: relative;
+  width: 100%; // Use a percentage of viewport width for the dropdown
+  min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #f2f5ff;
+  border: none;
+  border: 1px solid #bebebe;
+  border-radius: 4px;
+  padding: 0vh 0.7vw; // Vertical and horizontal padding using vh and vw
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.8vh;
+
+  &:hover {
+    border: none;
+    border: 1px solid #bebebe;
+  }
+}
+
+.arrow {
+  color: #777;
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 1vh rgba(60, 64, 67, 0.08);
+  border-radius: 0.7vh;
+  width: 100%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.7vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}
+
+.placeholderDropdown {
+  color: #bebebe;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.8vh;
+}
+
+.r1Dropdown {
+  width: 46%;
+  display: flex;
+  flex-direction: column;
+  gap: 0vh;
+}
+
+.label {
+  font-size: 1.8vh;
+  font-weight: 450;
+}
+
+.row2 {
+  margin-top: 2vh;
+
+  input {
+    position: relative;
+    margin-top: 0vh;
+    height: 7vh;
+    background-color: #f2f5ff;
+    border: none;
+    border: 1px solid #bebebe;
+    border-radius: 4px;
+    width: 95%;
+    font-size: 2vh;
+    outline: none;
+    padding: 0vh 1vw;
+
+    &::placeholder {
+      color: #bebebe;
+      font-family: "Karla", sans-serif;
+    }
+  }
+
+  .pencilLine {
+    position: absolute;
+    top: 2.5vh;
+    left: 11vw;
+    z-index: 1;
+    opacity: 0.3;
+    @media (max-width: 1367px) {
+      left: 14vw;
+    }
+  }
+}
+.inputRFR {
+  position: relative;
+}
+.row3 {
+  margin-top: 2vh;
+  h5 {
+    font-size: 2vh;
+    font-weight: 500;
+  }
+}
+
+.referralTracking {
+  h4 {
+    font-weight: 420;
+    font-size: 2.15vh;
+  }
+  background-color: #f2f5ff;
+  margin-top: 2vh;
+  padding: 1vh 2vh;
+}
+
+.referralTrackingIn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4vh;
+  p {
+    font-size: 1.9vh;
+    font-weight: 450;
+  }
+}
+
+.refIDInput {
+  outline: none;
+  border-radius: 4px;
+  border: none;
+  border: 1px solid #bebebe;
+  height: 4vh;
+  width: 100%;
+}
+
+.dropdown3 {
+  position: relative;
+  width: 100%; // Use a percentage of viewport width for the dropdown
+  //min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+}
+
+.triggerStatus {
+  position: relative;
+  width: 100%;
+  background-color: white;
+  border: none;
+  border: 1px solid #bebebe;
+  border-radius: 4px;
+  padding: 0vh 0.7vw; // Vertical and horizontal padding using vh and vw
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.8vh;
+
+  &:hover {
+    border: none;
+    border: 1px solid #bebebe;
+  }
+}
+
+.arrow {
+  color: #777;
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 1vh rgba(60, 64, 67, 0.08);
+  border-radius: 0.7vh;
+  width: 100%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.7vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}
+
+.placeholderDropdown {
+  color: #bebebe;
+}
+
+.submitBtn {
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+  button {
+    background: #25307f;
+    color: #ffff;
+    border: none;
+    border-radius: 3px;
+    padding: 0.6vh 3vw;
+    font-weight: 350;
+  }
+}
+
+.refId {
+  width: 26%;
+}
+
+.status {
+  width: 25%;
+}
+
+.followUpDate {
+  width: 36%;
+}
+
+.rightRow {
+  width: 46%;
+  display: flex;
+  flex-direction: column;
+  gap: 0vh;
+
+  input[type="text"] {
+    outline: none;
+    background: #f2f5ff;
+    border: none;
+    border: 1px solid #bebebe;
+    border-radius: 4px;
+    padding: 0vh 0.7vw;
+    font-size: 1.8vh;
+    font-family: "Karla", sans-serif;
+    min-height: 4.8vh;
+
+    &::placeholder {
+      opacity: 0.6;
+    }
+  }
+}
+
+.referralTypeContainer {
+  margin: 1rem 0;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 3vw;
+  row-gap: 1.3vh;
+}
+
+.card {
+  border: 1px solid #bebebe;
+  border-radius: 4px;
+  padding: 0.6vh 1vh;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  font-size: 1.8vh;
+  font-weight: 450;
+  height: 3vh;
+}
+
+.card:hover {
+  //border-color: #1976d2;
+}
+
+.selected {
+  // border-color: #3f51b5;
+  //background-color: #f5f8ff;
+}
+
+.radioStyle {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.radioStyle input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.fakeRadio {
+  height: 2vh;
+  width: 2vh;
+  border: 1px solid black;
+  border-radius: 50%;
+  position: relative;
+}
+
+input[type="checkbox"]:checked + .fakeRadio::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  background: #25307f;
+  border-radius: 50%;
+}
+
+.supportingDocument {
+  h4 {
+    font-size: 1.9vh;
+    font-weight: 600;
+  }
+}
+
+.DragAndDropContainer {
+  background: #f2f5ff;
+  border: 1px solid #bebebe;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6vh;
+  height: 11vh;
+  margin-top: 1vh;
+  img {
+    width: 1.7vw;
+  }
+
+  span {
+    color: #a1a2a4;
+    font-size: 1.8vh;
+  }
+}
+
+.submitBtn2 {
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+
+  button {
+    background: #25307f;
+    color: #ffff;
+    border: none;
+    border-radius: 3px;
+    padding: 0.6vh 3vw;
+    font-weight: 350;
+  }
 }
