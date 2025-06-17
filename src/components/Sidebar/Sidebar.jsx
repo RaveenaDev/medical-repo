@@ -79,6 +79,22 @@ const Sidebar = ({ role }) => {
   const handlelogout = () => {
     setIsLogout((prev) => !prev);
   };
+
+  const [showChildPopup, setShowChildPopup] = useState(false);
+  const popupRef = useRef(null);
+  const [childPopupPosition, setChildPopupPosition] = useState({
+    left: 550,
+  });
+  const handleAdd = () => {
+    if (popupRef.current) {
+      const rect = popupRef.current.getBoundingClientRect();
+      setChildPopupPosition({
+        top: rect.top,
+        left: rect.right + 16, // 16px gap to the right
+      });
+      setShowChildPopup(true);
+    }
+  };
   return (
     <div
       className={styles.sidebar}
@@ -177,7 +193,26 @@ const Sidebar = ({ role }) => {
             {showDoctorNotes && (
               <DoctorNotesPopup
                 anchorRef={buttonRef}
-                onClose={() => setShowDoctorNotes(false)}
+                onClose={() => {
+                  setShowDoctorNotes(false);
+                  setShowChildPopup(false);
+                }}
+                onAdd={() => setShowChildPopup(true)}
+                disableAdd={showChildPopup}
+                popupRef={popupRef}
+              />
+            )}
+            {showChildPopup && (
+              <DoctorNotesPopup
+                anchorRef={buttonRef}
+                onClose={() => setShowChildPopup(false)}
+                onAdd={() => {}}
+                disableAdd={true}
+                popupRef={null}
+                // override position manually
+                customStyle={{
+                  left: childPopupPosition.left,
+                }}
               />
             )}
           </div>

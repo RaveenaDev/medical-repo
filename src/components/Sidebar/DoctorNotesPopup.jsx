@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
-const DoctorNotesPopup = ({ anchorRef, onClose }) => {
+const DoctorNotesPopup = ({
+  anchorRef,
+  onClose,
+  onAdd,
+  disableAdd,
+  popupRef,
+  customStyle = {},
+}) => {
   const [position, setPosition] = useState({ top: 100, left: 0 });
   const editorRef = useRef(null);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -112,23 +119,26 @@ const DoctorNotesPopup = ({ anchorRef, onClose }) => {
     cursor: "pointer",
   };
 
+  const defaultStyle = {
+    position: "fixed",
+    top: `${position.top}px`,
+    left: `${position.left}px`,
+    backgroundColor: "#fff",
+    border: "1px solid #ccc",
+    borderRadius: "12px",
+    width: "315px",
+    height: "366px",
+    zIndex: 9999999,
+    display: "flex",
+    flexDirection: "column",
+    boxShadow: "0px 0px 15px -5px #25307F66",
+  };
+
   return ReactDOM.createPortal(
     <div
+      ref={popupRef}
       className="popup-note"
-      style={{
-        position: "fixed",
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-        backgroundColor: "#fff",
-        border: "1px solid #ccc",
-        borderRadius: "12px",
-        width: "315px",
-        height: "366px",
-        zIndex: 9999999,
-        display: "flex",
-        flexDirection: "column",
-        boxShadow: "0px 0px 15px -5px #25307F66",
-      }}
+      style={{ ...defaultStyle, ...customStyle }}
     >
       {/* Top Bar */}
       <div
@@ -144,7 +154,16 @@ const DoctorNotesPopup = ({ anchorRef, onClose }) => {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <span style={{ fontSize: "20px", cursor: "pointer" }}>＋</span>
+          <span
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            onClick={() => {
+              if (!disableAdd) {
+                onAdd();
+              }
+            }}
+          >
+            ＋
+          </span>
           <span
             style={{
               fontSize: "20px",
