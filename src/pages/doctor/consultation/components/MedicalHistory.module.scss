@@ -26,6 +26,47 @@
     align-items: center;
     width: 40%;
     opacity: 100%;
+    height: 3.6vh;
+  }
+
+  .tooltipWrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      padding: 0.6vh;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    &:hover img {
+      //  background-color: #d4d8e6;
+    }
+
+    &:hover .tooltipText {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  .tooltipText {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dae4ff;
+    color: black;
+    padding: 0.4vh 0.5vw;
+    border-radius: 4px;
+    font-size: 1.4vh;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    z-index: 10;
   }
 }
 

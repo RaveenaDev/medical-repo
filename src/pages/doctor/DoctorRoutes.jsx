@@ -6,8 +6,8 @@ import Patients from "./patient/Patients.jsx";
 import { Consultation } from "./consultation/consultation.jsx";
 import Department from "./department/Department.jsx";
 import Rooms from "./rooms/Rooms.jsx";
-import DoctorRequest from "./doctorRequest/doctorRequest.jsx";
-import DoctorNewRequest from "./doctorRequest/DoctorNewRequest.jsx";
+import DoctorRequest from "./doctorRequest/DoctorRequest.jsx";
+import DoctorNewRequest from "./doctorRequest/DoctorRequestDetail.jsx";
 import Settings from "../receptionist/Settings/Settings.jsx";
 import PrivacyPolicy from "./settings/privacyPolicy/PrivacyPolicy.jsx";
 import Help from "./settings/Help.jsx";
@@ -21,7 +21,7 @@ const DoctorRoutes = (props) => {
       <Route index element={<DoctorOverview />} />
       <Route path="/doctor-request" element={<DoctorRequest />} />
       <Route
-        path="/doctor-request/new-request"
+        path="/doctor-request/request-details"
         element={<DoctorNewRequest />}
       />
       <Route path="/calendar" element={<Calender />} />

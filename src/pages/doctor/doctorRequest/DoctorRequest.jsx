@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CommonPanelMini from "../components/CommonPanelMini";
 import styles from "./DoctorRequest.module.scss";
 import { ChevronLeft, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import DoctorNewRequest from "./DoctorNewRequest";
 
 const DoctorRequest = () => {
   const now = dayjs();
@@ -137,8 +138,8 @@ const DoctorRequest = () => {
     navigate("/doctor");
   };
 
-  const handleNewRequestButton = () => {
-    navigate("/doctor/doctor-request/new-request");
+  const handleRequestDetail = () => {
+    navigate("/doctor/doctor-request/request-details");
   };
   // Filter requests based on selected tab
   const filteredRequests = requests.filter((req) =>
@@ -147,6 +148,19 @@ const DoctorRequest = () => {
 
   // Group filtered requests by day
   const groupedRequests = groupRequestsByDay(filteredRequests);
+
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openNewRequest = () => setActiveModal("NewRequest");
+
+  const closeModal = () => setActiveModal(null);
 
   return (
     <div>
@@ -160,7 +174,7 @@ const DoctorRequest = () => {
             <span>Request</span>
           </div>
           <div className={styles.rightHeader}>
-            <button onClick={handleNewRequestButton}>
+            <button onClick={openNewRequest}>
               <SquarePen size={18} />
               <span>New Request</span>
             </button>
@@ -183,6 +197,17 @@ const DoctorRequest = () => {
             </div>
           </div>
 
+          {activeModal === "NewRequest" && (
+            <>
+              <div
+                className={styles["backdrop-overlay"]}
+                onClick={closeModal}
+              />
+              <div className={styles["newRequest"]}>
+                <DoctorNewRequest onClose={closeModal} />
+              </div>
+            </>
+          )}
           <div className={styles.activeReq}>
             {selectedTab === "active" &&
               Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
@@ -191,6 +216,7 @@ const DoctorRequest = () => {
                   {reqs.map((req) => (
                     <div
                       key={req.id}
+                      onClick={handleRequestDetail}
                       className={`${styles.requestItem} ${
                         req.background === "blue"
                           ? styles.blueBackground
@@ -237,6 +263,7 @@ const DoctorRequest = () => {
                   {reqs.map((req) => (
                     <div
                       key={req.id}
+                      onClick={handleRequestDetail}
                       className={`${styles.requestItem} ${
                         req.background === "blue"
                           ? styles.blueBackground

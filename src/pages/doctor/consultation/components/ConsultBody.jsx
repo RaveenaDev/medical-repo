@@ -10,6 +10,7 @@ import CurrentMedication from "./CurrentMedication";
 import Complete from "./Complete";
 import Refer from "./Refer";
 import NextAppointment from "./NextAppointment";
+import AddQuestion from "./AddQuestion";
 
 const ConsultBody = () => {
   const dummyPatient = [
@@ -94,6 +95,7 @@ const ConsultBody = () => {
   const openComplete = () => setActiveModal("complete");
   const openRefer = () => setActiveModal("refer");
   const openNextAppointment = () => setActiveModal("nextAppointment");
+  const openAddQuestion = () => setActiveModal("addQuestion");
 
   const closeModal = () => setActiveModal(null);
 
@@ -184,7 +186,7 @@ const ConsultBody = () => {
             <p>Treatment and Tests</p>
           </div>
 
-          <div className={styles["lp-7"]}>
+          <div className={styles["lp-7"]} onClick={openAddQuestion}>
             <Plus className={styles["lp-7-icon"]} size={38} />
             <p>Add Question</p>
           </div>
@@ -224,6 +226,15 @@ const ConsultBody = () => {
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["nextAppointment-modal"]}>
               <NextAppointment onClose={closeModal} />
+            </div>
+          </>
+        )}
+
+        {activeModal === "addQuestion" && (
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["addQuestion-modal"]}>
+              <AddQuestion onClose={closeModal} />
             </div>
           </>
         )}

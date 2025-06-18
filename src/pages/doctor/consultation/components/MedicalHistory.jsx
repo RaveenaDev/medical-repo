@@ -43,10 +43,25 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
             <p>Medical History</p>
           </div>
           <div className={styles.attachments}>
-            <img src="/assets/gallery-icon.svg" alt="" />
-            <img src="/assets/formkit-icon.svg" alt="" />
-            <img src="/assets/Plus.svg" alt="" />
-            <img src="/assets/video-icon.svg" alt="" />
+            <div className={styles.tooltipWrapper}>
+              <img src="/assets/gallery-icon.svg" alt="" />
+              <span className={styles.tooltipText}>Image</span>
+            </div>
+
+            <div className={styles.tooltipWrapper}>
+              <img src="/assets/formkit-icon.svg" alt="" />
+              <span className={styles.tooltipText}>Text</span>
+            </div>
+
+            <div className={styles.tooltipWrapper}>
+              <img src="/assets/Plus.svg" alt="" />
+              <span className={styles.tooltipText}>Add</span>
+            </div>
+
+            <div className={styles.tooltipWrapper}>
+              <img src="/assets/video-icon.svg" alt="" />
+              <span className={styles.tooltipText}>Video</span>
+            </div>
           </div>
         </div>
 
