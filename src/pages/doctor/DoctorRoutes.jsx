@@ -13,6 +13,7 @@ import PrivacyPolicy from "./settings/privacyPolicy/PrivacyPolicy.jsx";
 import Help from "./settings/Help.jsx";
 import InPatient from "./patient/InPatient.jsx";
 import TotalSurgeries from "./surgeries/TotalSurgeries.jsx";
+import PatientsList from "./patientsList/patientsList.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -29,6 +30,7 @@ const DoctorRoutes = (props) => {
       <Route path="/calendar" element={<Calender />} />
       <Route path="/consultation" element={<Consultation />} />
       <Route path="/patient" element={<Patients />} />
+      <Route path="/patientList" element={<PatientsList />} />
       <Route path="/inpatients" element={<InPatient />} />
       <Route path="/surgeries" element={<TotalSurgeries />} />
       <Route path="/department" element={<Department />} />
