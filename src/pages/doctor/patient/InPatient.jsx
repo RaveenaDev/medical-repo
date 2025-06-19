@@ -2,131 +2,17 @@ import CommonPanel from "../components/CommonPanel";
 import { FaUserCircle } from "react-icons/fa";
 import { FiFilter } from "react-icons/fi";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { patientData } from "../../../constants/patientsData";
 import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
-import styles from "./Patients.module.scss";
+import styles from "./InPatient.module.scss";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppointmentRequestModal from "../components/appointmentRequests/AppointmentRequest";
-const Patients = () => {
-  const patientData = [
-    {
-      id: "XXXXXXX",
-      name: "Jatindra kaur",
-      email: "jatindra@gmail.com",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Active",
-      bed: "C-108",
-      condition: "Valve Repair",
-      doctor: "Dr. Patel",
-      status: "Critical",
-    },
-    {
-      id: "XXXXXXX",
-      name: "Amit Tripathi",
-      email: "amittripathi@gmail.com",
-      bed: "C-109",
-      condition: "Heart Failure",
-      doctor: "Dr. Patel",
-      status: "Stable",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Inactive",
-    },
-    {
-      id: "XXXXXXX",
-      name: "Arvind Sharma",
-      email: "arvind.sharma@gmail.com",
-      bed: "C-108",
-      condition: "Arrhythmia",
-      doctor: "Dr. Patel",
-      status: "Stable",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Active",
-    },
-    {
-      id: "XXXXXXX",
-      name: "Kumari Sneha",
-      email: "kumari.sneha@gmail.com",
-      bed: "D-108",
-      condition: "Angioplasty",
-      doctor: "Dr. Patel",
-      status: "Stable",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Inactive",
-    },
-    {
-      id: "XXXXXXX",
-      name: "Aditya Soni",
-      email: "aditya.soni@gmail.com",
-      bed: "C-108",
-      condition: "Stent Replacement",
-      doctor: "Dr. Patel",
-      status: "Stable",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Active",
-    },
-    {
-      id: "XXXXXXX",
-      name: "Khushi Saini",
-      email: "khushi.saini@gmail.com",
-      bed: "C-108",
-      condition: "Angioplasty",
-      doctor: "Dr. Patel",
-      status: "Stable",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Active",
-    },
-    {
-      id: "XXXXXXX",
-      name: "Yash Sharma",
-      email: "yash.sharma@gmail.com",
-      bed: "C-108",
-      condition: "Heart Failure",
-      doctor: "Dr. Patel",
-      status: "Critical",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Active",
-    },
-    {
-      id: "XXXXXXX",
-      name: "Ayush Trivedi",
-      email: "ayush.trivedi@gmail.com",
-      bed: "C-108",
-      condition: "Valve Repair",
-      doctor: "Dr. Patel",
-      status: "Stable",
-      phoneNo: "1234567890",
-      typeVisit: "Walk in",
-      branch: "Cardiology",
-      date: "08-1-2025",
-      booking: "Active",
-    },
-  ];
 
+const InPatients = () => {
   const sortOptions = ["Newest to Oldest", "Oldest to Newest"];
   const [openSort, setOpenSort] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Newest to Oldest");
-
   const navigate = useNavigate();
 
   const handleRequestBtn = () => {
@@ -194,10 +80,10 @@ const Patients = () => {
         <div className={styles.headerTop}>
           <div className={styles.headerLeft}>
             <ChevronLeft size={28} strokeWidth={1.7} />
-            <span className={styles.backText}>Patient List</span>
+            <span className={styles.backText}>Inpatient List</span>
           </div>
           <div className={styles.headerRight}>
-            <button onClick={handleRequestBtn} className={styles.requestButton}>
+            <button className={styles.requestButton} onClick={handleRequestBtn}>
               <div className={styles.badgeCircle}>
                 10
                 <span className={styles.notificationDot}></span>
@@ -217,7 +103,7 @@ const Patients = () => {
         <hr />
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
-            56 <span>Patients</span>
+            56 <span>Inpatients</span>
           </span>
           <div className={styles.verticalDivider}></div>
           <div className={styles.sortFilterSection}>
@@ -275,13 +161,12 @@ const Patients = () => {
         <table className={styles.patientsTable}>
           <thead>
             <tr>
-              <th>Case ID</th>
-              <th>Name</th>
-              <th>Phone Number</th>
-              <th>Type Visit</th>
-              <th>Branch</th>
-              <th>Date</th>
-              <th>Booking</th>
+              <th>Patient ID</th>
+              <th>Patient</th>
+              <th>Bed</th>
+              <th>Condition</th>
+              <th>Doctor</th>
+              <th>Status</th>
               <th></th>
             </tr>
           </thead>
@@ -295,19 +180,16 @@ const Patients = () => {
                     <div className={styles.patientEmail}>{patient.email}</div>
                   </div>
                 </td>
-                <td className={styles.phoneNumber}>{patient.phoneNo}</td>
-                <td className={styles.typeVisit}>{patient.typeVisit}</td>
-                <td className={styles.branch}>{patient.branch}</td>
-                <td className={styles.date}>{patient.date}</td>
-                <td className={styles.booking}>
+                <td className={styles.bedNumber}>{patient.bed}</td>
+                <td className={styles.condition}>{patient.condition}</td>
+                <td className={styles.doctor}>{patient.doctor}</td>
+                <td className={styles.status}>
                   <span
-                    className={` ${styles.bookingBadge} ${
-                      patient.booking.toLowerCase() === "active"
-                        ? styles.activeBooking
-                        : styles.inactiveBooking
+                    className={`${styles.statusBadge} ${
+                      styles[patient.status.toLowerCase()]
                     }`}
                   >
-                    {patient.booking}
+                    {patient.status}
                   </span>
                 </td>
                 <td className={styles.actions}>
@@ -322,4 +204,4 @@ const Patients = () => {
   );
 };
 
-export default Patients;
+export default InPatients;

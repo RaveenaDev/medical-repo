@@ -1,24 +1,24 @@
-.patients-header {
-  padding: 16px;
+.patientsHeader {
+  padding-top: 1vh;
 
-  .header-top {
+  .headerTop {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    .back-text {
+    .backText {
       font-weight: 500;
       color: #333;
       font-size: 20px;
     }
 
-    .appointment-section {
+    .appointmentSection {
       display: flex;
       align-items: center;
       font-weight: 500;
       color: #555;
-
-      .user-icon {
+      height: 5.2vh;
+      .userIcon {
         font-size: 20px;
         margin-right: 8px;
         color: #0c1b72;
@@ -32,12 +32,12 @@
     border-top: 1px solid #e0e0e0;
   }
 
-  .header-bottom {
+  .headerBottom {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    .patient-count {
+    .patientCount {
       font-size: 28px;
       font-weight: 600;
       color: #0c1b72;
@@ -49,17 +49,17 @@
       }
     }
 
-    .sort-filter-section {
+    .sortFilterSection {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex: 1;
       margin-left: 40px;
 
-      .sort-by {
+      .sortBy {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 1vw;
         color: #0c1b72;
 
         select {
@@ -86,7 +86,7 @@
     }
   }
 
-  .box-style {
+  .boxStyle {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 6px;
@@ -94,7 +94,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
-  .vertical-divider {
+  .verticalDivider {
     width: 2px;
     height: 40px;
     background-color: #ddd;
@@ -102,10 +102,10 @@
   }
 }
 
-.patients-table-container {
-  padding: 0 16px 16px 16px;
+.patientsTableContainer {
+  padding: 0;
 
-  .patients-table {
+  .patientsTable {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 12px;
@@ -113,9 +113,10 @@
 
     thead {
       background-color: transparent;
+
       th {
-        padding: 16px 12px;
-        text-align: left;
+        padding: 1.4vh 12px 16px 12px;
+        text-align: center;
         font-weight: 600;
         font-size: 14px;
         color: #131212;
@@ -148,38 +149,39 @@
           vertical-align: middle;
           font-size: 14px;
           border: none;
+          text-align: center;
+          // &:first-child {
+          //   padding-left: 20px;
+          //   border-top-left-radius: 4px;
+          //   border-bottom-left-radius: 4px;
+          // }
 
-          &:first-child {
-            padding-left: 20px;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-          }
+          // &:last-child {
+          //   padding-right: 20px;
+          //   border-top-right-radius: 4px;
+          //   border-bottom-right-radius: 4px;
+          // }
 
-          &:last-child {
-            padding-right: 20px;
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-          }
-          &.patient-id {
+          &.patientId {
             color: #0c1b72;
             font-weight: 500;
             font-family: monospace;
           }
 
-          &.patient-info {
-            .patient-name {
+          &.patientInfo {
+            .patientName {
               font-weight: 500;
               color: #0c1b72;
               margin-bottom: 4px;
             }
 
-            .patient-email {
+            .patientEmail {
               font-size: 12px;
               color: #888;
             }
           }
 
-          &.bed-number {
+          &.bedNumber {
             color: #0c1b72;
             font-weight: 500;
           }
@@ -194,7 +196,7 @@
           }
 
           &.status {
-            .status-badge {
+            .statusBadge {
               padding: 4px 12px;
               border-radius: 12px;
               font-size: 12px;
@@ -202,12 +204,12 @@
               text-transform: capitalize;
 
               &.critical {
-                background-color: #ffe6e6;
                 color: #d32f2f;
+                font-size: 1.9vh;
               }
 
               &.stable {
-                background-color: #e8f5e8;
+                font-size: 1.9vh;
                 color: #1d831d;
               }
             }
@@ -216,7 +218,7 @@
           &.actions {
             text-align: center;
 
-            .menu-icon {
+            .menuIcon {
               color: #999;
               cursor: pointer;
               font-size: 16px;
@@ -234,4 +236,126 @@
       }
     }
   }
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  color: #58595b;
+}
+
+.requestButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 0.4vh 3vh 0.4vh 1.4vh;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  gap: 1.8vh;
+  border: none;
+  font-weight: 500;
+  font-size: 1.6vh;
+  height: 4.8vh;
+}
+
+.badgeCircle {
+  position: relative;
+  background-color: #25307f;
+  color: white;
+  width: 3.2vh;
+  height: 3.2vh;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7vh;
+  font-weight: 400;
+}
+
+.notificationDot {
+  position: absolute;
+  top: 0.1vh;
+  right: 0.01vh;
+  width: 1vh;
+  height: 1vh;
+  background-color: #ff3d00;
+  border-radius: 50%;
+}
+
+.buttonLabel {
+  font-size: 16px;
+  color: #333;
+}
+
+.headerRight {
+  display: flex;
+  gap: 1.4vh;
+  align-items: center;
+}
+
+.dropdown,
+.dropdown2 {
+  position: relative;
+  width: 11vw;
+  min-width: 120px;
+  font-family: "Inter", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 5vh;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 1vh rgba(60, 64, 67, 0.08);
+  border-radius: 0.7vh;
+  width: 100%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
 }

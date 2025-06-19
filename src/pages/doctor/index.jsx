@@ -445,7 +445,9 @@ const DoctorOverview = () => {
                 onClick={handleDoctorRequest}
                 sx={{
                   fontSize: "14px",
-                  color: "#878787",
+                  color: "#000",
+                  fontFamily: "Inter",
+                  fontWeight: "400",
                   textTransform: "capitalize",
                   padding: "2px 6px",
                   backgroundColor: "#fff",

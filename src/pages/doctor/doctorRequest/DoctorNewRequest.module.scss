@@ -74,9 +74,15 @@
 .reqBtn {
   margin-top: 4vh;
   width: 100%;
+  border: none;
   background: #25307f;
   color: white;
   border-radius: 3px;
   height: 6vh;
   margin-bottom: 2vh;
+
+  &:hover {
+    background: #dae4ff;
+    color: black;
+  }
 }
