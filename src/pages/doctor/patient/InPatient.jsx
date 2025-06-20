@@ -140,7 +140,7 @@ const InPatients = () => {
               </div>
             </div>
             <div className={`${styles.filter} ${styles.boxStyle}`}>
-              <FiFilter />
+              <FiFilter fill="#25307f" />
               <span>Filter</span>
             </div>
           </div>
