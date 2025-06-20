@@ -174,22 +174,60 @@ const Sidebar = ({ role }) => {
       >
         {role === "doctor" && (
           <div style={{ position: "relative", margin: "0 25px 10px 25px" }}>
-            <button
+            <div
               ref={buttonRef}
               onClick={() => setShowDoctorNotes((prev) => !prev)}
               style={{
-                backgroundColor: "#25307F",
-                color: "white",
-                padding: "8px 16px",
+                backgroundColor: "#DAE4FF",
+                color: "#25307F",
+                height: "140px",
                 border: "none",
-                borderRadius: "8px",
                 cursor: "pointer",
                 width: "100%",
-                fontWeight: 500,
+                fontWeight: 600,
+                boxShadow: "0px 1px 8px 0px #0000001C",
+                boxShadow: "0px 0px 3px 0px #00000036",
+                position: "relative",
               }}
             >
-              Doctor's Notes
-            </button>
+              <p
+                style={{
+                  padding: "1rem 0rem 0rem 1rem",
+                }}
+              >
+                Doctor Notes
+              </p>
+              <svg
+                style={{
+                  position: "absolute",
+                  bottom: "0px",
+                  left: "0px",
+                  cursor: "pointer",
+                }}
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 0H20V20L0 0Z" fill="black" fill-opacity="0.2" />
+              </svg>
+              <svg
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  pointerEvents: "none",
+                  zIndex: 1, // ensure it stays behind the button
+                }}
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0,40 L0,0 L40,40 Z" fill="white" />
+              </svg>
+            </div>
             {showDoctorNotes && (
               <DoctorNotesPopup
                 anchorRef={buttonRef}

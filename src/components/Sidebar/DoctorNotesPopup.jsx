@@ -64,7 +64,7 @@ const DoctorNotesPopup = ({
       const popupWidth = 315;
       const padding = 20;
 
-      let top = rect.bottom - 30;
+      let top = rect.bottom;
       let left = rect.left + 200;
 
       if (top + popupHeight > window.innerHeight) {
@@ -121,8 +121,8 @@ const DoctorNotesPopup = ({
 
   const defaultStyle = {
     position: "fixed",
-    top: `${position.top}px`,
-    left: `${position.left}px`,
+    bottom: `${position.top - 60}px`,
+    left: `${position.left + 10}px`,
     backgroundColor: "#fff",
     border: "1px solid #ccc",
     borderRadius: "12px",
