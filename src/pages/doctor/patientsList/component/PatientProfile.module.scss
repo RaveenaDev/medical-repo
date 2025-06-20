@@ -1,0 +1,103 @@
+.section1 {
+  display: flex;
+  margin-top: 1.8vh;
+}
+
+.patientInfo {
+  background-color: white;
+  width: 24vw;
+  padding: 1vh 1.2vw;
+  h4 {
+    font-size: 2.4vh;
+    color: #25307f;
+    font-weight: 640;
+  }
+}
+
+.patientCard {
+  background: #f2f5ff;
+  display: flex;
+  gap: 1.8vh;
+  // justify-content: space-between;
+  padding: 1vh 0vw 1vh 1vw;
+  img {
+    border-radius: 50%;
+  }
+
+  p {
+    font-size: 1.85vh;
+    font-weight: 550;
+  }
+}
+
+.imgWrapper {
+  display: flex;
+  align-items: center;
+}
+.patientCardInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+}
+.patientKey {
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  line-height: 1.4;
+}
+
+.patientValue {
+  color: #25307f;
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.patientKey2 {
+  width: 40%;
+  font-weight: 550;
+  color: #333;
+  font-size: 1.8vh;
+  line-height: 1.4;
+}
+
+.patientValue2 {
+  width: 55%;
+  color: #25307f;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+}
+
+.patientDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+  margin-left: 1vw;
+  margin-top: 2vh;
+  padding-bottom: 1vh;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+.patientValue2 {
+  width: 60%;
+  color: #25307f;
+  font-size: 1.8vh;
+  font-weight: 550;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.patientAddress {
+  display: flex;
+  align-items: center;
+}

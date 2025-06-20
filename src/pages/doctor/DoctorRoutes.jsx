@@ -14,6 +14,7 @@ import Help from "./settings/Help.jsx";
 import InPatient from "./patient/InPatient.jsx";
 import TotalSurgeries from "./surgeries/TotalSurgeries.jsx";
 import PatientsList from "./patientsList/patientsList.jsx";
+import SinglePatientDetail from "./patientsList/SinglePatientDetail.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -31,6 +32,10 @@ const DoctorRoutes = (props) => {
       <Route path="/consultation" element={<Consultation />} />
       <Route path="/patient" element={<Patients />} />
       <Route path="/patientList" element={<PatientsList />} />
+      <Route
+        path="/patientList/patient-details"
+        element={<SinglePatientDetail />}
+      />
       <Route path="/inpatients" element={<InPatient />} />
       <Route path="/surgeries" element={<TotalSurgeries />} />
       <Route path="/department" element={<Department />} />
