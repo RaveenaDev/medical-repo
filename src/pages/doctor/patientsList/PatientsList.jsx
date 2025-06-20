@@ -4,6 +4,8 @@ import Notifications from "../../../components/NotificationFunc/Notification.jsx
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
+import PatientCard from "./component/PatientCard.jsx";
+import { useState } from "react";
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -55,6 +57,100 @@ const PatientsList = () => {
     },
   ];
 
+  const patientsAdmitted = [
+    {
+      name: "Alice",
+      age: "28",
+      gender: "Female",
+      "Upcoming Appointments": "19 Feb 2025",
+      "Last Data Received": "24 Jan 2025",
+      "Major Issue": "Follow-up-Required",
+      status: "Critical",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    },
+    {
+      name: "John",
+      age: "45",
+      gender: "Male",
+      "Upcoming Appointments": "22 Feb 2025",
+      "Last Data Received": "20 Jan 2025",
+      "Major Issue": "Severe Chest Pain",
+      status: "Admitted",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    },
+    {
+      name: "Sophie",
+      age: "33",
+      gender: "Female",
+      "Upcoming Appointments": "25 Feb 2025",
+      "Last Data Received": "21 Jan 2025",
+      "Major Issue": "Regular Checkup",
+      status: "Follow-up",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    },
+    {
+      name: "Raj",
+      age: "39",
+      gender: "Male",
+      "Upcoming Appointments": "27 Feb 2025",
+      "Last Data Received": "19 Jan 2025",
+      "Major Issue": "Surgery Recovery",
+      status: "Critical",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    },
+    {
+      name: "Emily",
+      age: "29",
+      gender: "Female",
+      "Upcoming Appointments": "20 Feb 2025",
+      "Last Data Received": "18 Jan 2025",
+      "Major Issue": "Post-natal Check",
+      status: "Admitted",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    },
+    {
+      name: "Karan",
+      age: "50",
+      gender: "Male",
+      "Upcoming Appointments": "28 Feb 2025",
+      "Last Data Received": "22 Jan 2025",
+      "Major Issue": "Diabetes Management",
+      status: "Follow-up",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    },
+    {
+      name: "Tina",
+      age: "31",
+      gender: "Female",
+      "Upcoming Appointments": "21 Feb 2025",
+      "Last Data Received": "17 Jan 2025",
+      "Major Issue": "Blood Pressure",
+      status: "Admitted",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    },
+  ];
+
+  const [filter, setFilter] = useState("Total");
+
+  const filteredPatients = patientsAdmitted.filter((patient) => {
+    if (filter === "Total") return true;
+    return patient.status === filter;
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const patientsPerPage = 6;
+
+  // Calculate the current page's patients
+  const indexOfLastPatient = currentPage * patientsPerPage;
+  const indexOfFirstPatient = indexOfLastPatient - patientsPerPage;
+  const currentPatients = filteredPatients.slice(
+    indexOfFirstPatient,
+    indexOfLastPatient
+  );
+
+  // Total pages
+  const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
+
   return (
     <div className="patientsListContainer">
       <div className="listHeader">
@@ -73,7 +169,7 @@ const PatientsList = () => {
       <div className="listHeading">
         <div className="headingContainer">
           <ChevronLeft
-            size={28}
+            size={25}
             strokeWidth={1.7}
             onClick={() => {
               navigate("/doctor");
@@ -170,6 +266,39 @@ const PatientsList = () => {
                 </div>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
+      <section className="admittedPatients">
+        <div className="admittedHeader">
+          {["Total", "Critical", "Admitted", "Follow-Up"].map((item) => (
+            <div
+              key={item}
+              className={`headerItem ${item} ${
+                filter === item ? "active" : ""
+              }`}
+              onClick={() => setFilter(item)}
+              style={{ cursor: "pointer" }}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+
+        <div className="admittedList">
+          {currentPatients.map((patient, index) => (
+            <PatientCard key={index} patient={patient} />
+          ))}
+        </div>
+        <div className="pagination">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
           ))}
         </div>
       </section>

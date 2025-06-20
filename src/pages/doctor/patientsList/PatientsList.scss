@@ -1,17 +1,17 @@
 .patientsListContainer {
-  margin-top: 1rem;
-  height: 96vh;
+  margin-top: 0.25rem;
+  height: 98vh;
   .listHeader {
     display: flex; // Enables flexbox layout
     justify-content: flex-end; // Aligns items to the right
     align-items: center; // Vertically centers items
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     gap: 10px; // Optional: Add space between Searchbar and NotificationIcon
   }
 
   .greeting {
     margin-top: -2.7rem;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
     font-family: "Karla", "sans-serif";
     .heading {
       color: #333333;
@@ -31,7 +31,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: 0.25rem;
 
     .headingContainer {
       display: flex;
@@ -43,7 +43,7 @@
         color: #25307f;
         font-family: "Hanken Grotesk", "sans-serif";
         font-weight: 500;
-        font-size: 24px;
+        font-size: 20px;
         line-height: 100%;
         letter-spacing: 0%;
         vertical-align: middle;
@@ -68,7 +68,7 @@
         color: #25307f;
 
         svg {
-          font-size: 16px;
+          font-size: 14px;
           color: #25307f;
         }
       }
@@ -92,8 +92,8 @@
 
   .toAdmit {
     background: #f2f5ff;
-    margin-top: 1rem;
-    padding: 1.25rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
 
     .description {
       font-family: "Karla";
@@ -112,7 +112,7 @@
     .toAdmitList {
       display: flex;
       gap: 1rem;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
 
       .patientCard {
         background: #faf5f9;
@@ -126,8 +126,8 @@
             align-items: center;
 
             .patientAvatar {
-              width: 50px;
-              height: 50px;
+              width: 45px;
+              height: 45px;
               border-radius: 50%;
               background-color: #e0e0e0; // Placeholder for avatar
               margin-right: 10px;
@@ -153,7 +153,7 @@
             }
           }
           .patientDetails {
-            margin-top: 1rem;
+            margin-top: 0.75rem;
             margin-left: 6px;
             display: flex;
             flex-direction: column;
@@ -182,6 +182,90 @@
           cursor: pointer;
         }
       }
+    }
+  }
+
+  .admittedPatients {
+    background: #ffffff;
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    height: 56vh;
+    position: relative;
+
+    .admittedHeader {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .headerItem {
+        font-family: "Karla";
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        padding: 6px 16px;
+
+        &.active {
+          border-bottom: 2px solid #25307f;
+        }
+      }
+
+      .Critical {
+        color: #f14400;
+      }
+
+      .Admitted {
+        color: #eaa000;
+      }
+
+      .Follow-Up {
+        color: #2e823b;
+      }
+    }
+
+    .admittedList {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 columns */
+      grid-auto-rows: auto;
+      row-gap: 10px;
+      column-gap: 1rem;
+      padding: 0.75rem;
+    }
+
+    .pagination {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
+    .page-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 24px;
+      height: 28px;
+
+      border-radius: 5px;
+      background: #f2f5ff;
+      cursor: pointer;
+      transition: background 0.3s;
+      color: #333333;
+      font-family: Karla;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      vertical-align: middle;
+    }
+
+    .page-btn.active {
+      background: #dae4ff;
     }
   }
 }
