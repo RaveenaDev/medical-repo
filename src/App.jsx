@@ -45,6 +45,7 @@ import Register from "./pages/register/Register.jsx";
 import Information from "./pages/register/info/Information.jsx";
 import Base from "./pages/landing/Base.jsx";
 import DoctorRoutes from "./pages/doctor/DoctorRoutes.jsx";
+import IpdRoutes from "./pages/ipd/IpdRoutes.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -75,15 +76,17 @@ function App() {
     "/recovery-link",
     "/update-password",
     "/register",
+      "/ipd"
   ].includes(location.pathname);
 
   const isHomePage = "/".includes(location.pathname);
 
   useEffect(() => {
-    if (location.pathname === "/") {
+    if (location.pathname === "/" || location.pathname === "/ipd") {
       setShouldShowSidebar(false);
     }
   }, [location.pathname]);
+
 
   return (
     <>
@@ -606,7 +609,17 @@ function App() {
                     entity={entity}/>
               }
               />
-            </Routes>
+
+            <Route
+                path="/ipd/*"
+                element={
+                  <IpdRoutes
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}/>
+                }
+            />
+          </Routes>
           </div>
         )}
         {/* if login or register page is active, add this class ${styles.loginPageActive} */}
