@@ -1,0 +1,109 @@
+.container {
+  background: white;
+  margin-top: 1vh;
+  padding: 1.4vh 2vw;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    color: #25307f;
+    font-weight: 600;
+    font-size: 2.4vh;
+    margin-left: 1vw;
+  }
+
+  button {
+    background: #25307f;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.6vh;
+    font-size: 2vh;
+    padding: 0.6vh 1vh;
+    border-radius: 4px;
+  }
+}
+
+.card1 {
+  background: #5461be;
+  width: 16%;
+  display: flex;
+  color: #f2f5ff;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  padding: 3vh 0vh;
+  border-radius: 4px;
+  margin-right: 2vh;
+}
+
+.line {
+  width: 50%;
+  border: none;
+  border-top: 1px solid gray;
+  opacity: 0.5;
+}
+
+.card2 {
+  background: #f2f5ff;
+  width: 16%;
+  display: flex;
+  color: black;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  padding: 3vh 0vh;
+  border-radius: 4px;
+  margin-right: 2vh;
+}
+
+.time {
+  color: #52a3bb;
+  font-weight: 600;
+}
+
+.line2 {
+  width: 50%;
+  border: none;
+  border-top: 1px solid #e1e3eb;
+  opacity: 0.7;
+}
+
+.medication,
+.dose,
+.route,
+.givenBy,
+.notes {
+  color: #222;
+  font-weight: 500;
+}
+
+.status {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.given {
+  color: #2e823b;
+}
+
+.scheduled {
+  color: #eaa000;
+}
+
+.section3 {
+  margin-top: 2vh;
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 2vh;
+  //white-space: nowrap;
+}
+
+.card1,
+.card2 {
+  flex-shrink: 0;
+}
