@@ -1,9 +1,15 @@
+import { useState } from "react";
 import styles from "./PatientProfile.module.scss";
-
+import ProgressTracker2 from "./ProgressTracker2";
+import { Plus } from "lucide-react";
+import MedAdminRecord from "./MedAdminRecord";
+import Nursing from "./Nursing";
+import PastReportsAndDischarge from "./PastReportsAndDischarge";
 const PatientProfile = () => {
+  const [activeTab, setActiveTab] = useState("medical admin");
   return (
-    <main>
-      <section className={styles.section1}>
+    <div>
+      <div className={styles.section1}>
         <div className={styles.patientInfo}>
           <h4>Patient Info</h4>
           <div className={styles.patientCard}>
@@ -75,9 +81,57 @@ const PatientProfile = () => {
             </div>
           </div>
         </div>
-        <div></div>
-      </section>
-    </main>
+        <div className={styles.progressTracker}>
+          <div className={styles.row1PT}>
+            <button>
+              <Plus size={18} />
+              Update
+            </button>
+          </div>
+          <h4>Progress Tracker</h4>
+          <div>
+            <ProgressTracker2 />
+          </div>
+        </div>
+      </div>
+      <div className={styles.section2}>
+        <div className={styles.header2}>
+          <div
+            onClick={() => setActiveTab("medical admin")}
+            className={
+              activeTab === "medical admin"
+                ? styles.activeTab
+                : styles.inactiveTab
+            }
+          >
+            <p>Medical Administration Record</p>
+          </div>
+          <div
+            onClick={() => setActiveTab("nursing")}
+            className={
+              activeTab === "nursing" ? styles.activeTab : styles.inactiveTab
+            }
+          >
+            <p>Nursing Section</p>
+          </div>
+          <div
+            onClick={() => setActiveTab("past reports")}
+            className={
+              activeTab === "past reports"
+                ? styles.activeTab
+                : styles.inactiveTab
+            }
+          >
+            <p>Past Reports & Discharges</p>
+          </div>
+        </div>
+        <div className={styles.content}>
+          {activeTab === "medical admin" && <MedAdminRecord />}
+          {activeTab === "nursing" && <Nursing />}
+          {activeTab === "past reports" && <PastReportsAndDischarge />}
+        </div>
+      </div>
+    </div>
   );
 };
 

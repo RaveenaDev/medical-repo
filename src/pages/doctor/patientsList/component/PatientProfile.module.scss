@@ -1,11 +1,12 @@
 .section1 {
   display: flex;
+  justify-content: space-between;
   margin-top: 1.8vh;
 }
 
 .patientInfo {
   background-color: white;
-  width: 24vw;
+  width: 30%;
   padding: 1vh 1.2vw;
   h4 {
     font-size: 2.4vh;
@@ -100,4 +101,72 @@
 .patientAddress {
   display: flex;
   align-items: center;
+}
+
+.progressTracker {
+  background-color: white;
+  width: 65%;
+
+  h4 {
+    color: #25307f;
+    margin-left: 3vw;
+    margin-top: -2vh;
+    font-size: 2.4vh;
+    margin-bottom: 2vh;
+  }
+}
+
+.row1PT {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin-top: 1vh;
+    margin-right: 3vh;
+    background: #25307f;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.6vh;
+    border-radius: 4px;
+    padding: 0.6vh 1.2vh;
+    font-size: 2vh;
+  }
+}
+
+.section2 {
+  margin-top: 1vh;
+}
+
+.header2 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 12vw;
+  background-color: white;
+  height: 5.4vh;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.activeTab {
+  position: relative;
+  color: #25307f;
+  font-weight: 600;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    transform: translateX(-50%); // center horizontally
+    width: 110%;
+    height: 2px;
+    background-color: #25307f;
+  }
+}
+
+.inactiveTab {
+  color: #878787;
+  font-weight: 600;
 }
