@@ -1,6 +1,6 @@
 .patientsListContainer {
   margin-top: 0.25rem;
-  height: 100vh;
+  height: 98vh;
   .listHeader {
     display: flex; // Enables flexbox layout
     justify-content: flex-end; // Aligns items to the right
@@ -193,7 +193,9 @@
     padding: 0.75rem 1rem;
     border-radius: 5px;
     height: 56vh;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
     .admittedHeader {
       display: flex;
@@ -233,14 +235,10 @@
       grid-auto-rows: auto;
       row-gap: 10px;
       column-gap: 1rem;
-      padding: 0.75rem;
+      padding: 0rem 1rem;
     }
 
     .pagination {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      display: flex;
       justify-content: flex-end;
       align-items: flex-end;
       gap: 0.5rem;
@@ -275,7 +273,6 @@
 @media screen and (max-width: 1250px) {
   .patientsListContainer {
     .listHeading {
-
       .headingContainer {
         margin-left: 0;
         margin-top: 0.5rem;
@@ -312,7 +309,10 @@
       padding: 0.75rem;
 
       .admittedList {
-        grid-template-columns: repeat(2, 1fr); // Reduce columns on smaller screens
+        grid-template-columns: repeat(
+          2,
+          1fr
+        ); // Reduce columns on smaller screens
       }
 
       .pagination {
