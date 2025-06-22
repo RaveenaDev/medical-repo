@@ -50,6 +50,8 @@ const Sidebar = ({ role }) => {
   // Get side options based on role
   const sideOptions = roleOptions[role] || [];
 
+  const isSettingsPage = location.pathname.includes("settings");
+
   // Sync activeIndex with the current route
   useEffect(() => {
     const currentIndex = sideOptions.findIndex(
@@ -172,7 +174,7 @@ const Sidebar = ({ role }) => {
           zIndex: 9999999, // very high
         }}
       >
-        {role === "doctor" && (
+        {role === "doctor" && !isSettingsPage && (
           <div style={{ position: "relative", margin: "0 25px 10px 25px" }}>
             <div
               ref={buttonRef}
@@ -185,7 +187,6 @@ const Sidebar = ({ role }) => {
                 cursor: "pointer",
                 width: "100%",
                 fontWeight: 600,
-                boxShadow: "0px 1px 8px 0px #0000001C",
                 boxShadow: "0px 0px 3px 0px #00000036",
                 position: "relative",
               }}
