@@ -191,7 +191,9 @@
     padding: 0.75rem 1rem;
     border-radius: 5px;
     height: 56vh;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
     .admittedHeader {
       display: flex;
@@ -235,10 +237,8 @@
     }
 
     .pagination {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
       display: flex;
+      margin-top: auto;
       justify-content: flex-end;
       align-items: flex-end;
       gap: 0.5rem;

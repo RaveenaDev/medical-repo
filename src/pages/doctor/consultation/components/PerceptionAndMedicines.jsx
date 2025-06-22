@@ -88,48 +88,221 @@ const PerceptionAndMedicines = ({ patient }) => {
             <button className={styles.row9Button}>Regenerate</button>
           </div>
 
+          {/* Instruct */}
+          <div className={styles.instruct}>
+            {/* row10 */}
+            <div className={styles.row10}>
+              <p>Medications</p>
+            </div>
+
+            {/* row11 */}
+            <div className={styles.row11}>
+              <div>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+              </div>
+              <div className={styles.iconBtn}>
+                <button className={styles.leftArrowBtn}>
+                  <img
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
+                  />
+                </button>
+                <button className={styles.rightArrowBtn}>
+                  <img
+                    src="/assets/ion_return-down-back-outline.svg"
+                    width={30}
+                    alt=""
+                    className={styles.rightArrow}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.lineContainer}>
+              <div className={styles.line} />
+            </div>
+          </div>
+
+          {/* Instruct */}
+          <div className={styles.instruct}>
+            {/* row10 */}
+            <div className={styles.row10}>
+              <p>Injection / Therapies</p>
+            </div>
+
+            {/* row11 */}
+            <div className={styles.row11}>
+              <div>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+              </div>
+              <div className={styles.iconBtn}>
+                <button className={styles.leftArrowBtn}>
+                  <img
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
+                  />
+                </button>
+                <button className={styles.rightArrowBtn}>
+                  <img
+                    src="/assets/ion_return-down-back-outline.svg"
+                    width={30}
+                    alt=""
+                    className={styles.rightArrow}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.lineContainer}>
+              <div className={styles.line} />
+            </div>
+          </div>
+
+          {/* Instruct */}
+          <div className={styles.instruct}>
+            {/* row10 */}
+            <div className={styles.row10}>
+              <p>Non-Drug Recommendation</p>
+            </div>
+
+            {/* row11 */}
+            <div className={styles.row11}>
+              <div>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+              </div>
+              <div className={styles.iconBtn}>
+                <button className={styles.leftArrowBtn}>
+                  <img
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
+                  />
+                </button>
+                <button className={styles.rightArrowBtn}>
+                  <img
+                    src="/assets/ion_return-down-back-outline.svg"
+                    width={30}
+                    alt=""
+                    className={styles.rightArrow}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.lineContainer}>
+              <div className={styles.line} />
+            </div>
+          </div>
+          {/* Instruct */}
+          <div className={styles.instruct}>
+            {/* row10 */}
+            <div className={styles.row10}>
+              <p>Life Style & Diet</p>
+            </div>
+
+            {/* row11 */}
+            <div className={styles.row11}>
+              <div>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+              </div>
+              <div className={styles.iconBtn}>
+                <button className={styles.leftArrowBtn}>
+                  <img
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
+                  />
+                </button>
+                <button className={styles.rightArrowBtn}>
+                  <img
+                    src="/assets/ion_return-down-back-outline.svg"
+                    width={30}
+                    alt=""
+                    className={styles.rightArrow}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.lineContainer}>
+              <div className={styles.line} />
+            </div>
+          </div>
+
+          {/* Instruct */}
+          <div className={styles.instruct}>
+            {/* row10 */}
+            <div className={styles.row10}>
+              <p>Follow-Up Instructions</p>
+            </div>
+
+            {/* row11 */}
+            <div className={styles.row11}>
+              <div>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+                <p>
+                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                </p>
+              </div>
+              <div className={styles.iconBtn}>
+                <button className={styles.leftArrowBtn}>
+                  <img
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
+                  />
+                </button>
+                <button className={styles.rightArrowBtn}>
+                  <img
+                    src="/assets/ion_return-down-back-outline.svg"
+                    width={30}
+                    alt=""
+                    className={styles.rightArrow}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.lineContainer}>
+              <div className={styles.line} />
+            </div>
+          </div>
+
           {/* row10 */}
-          <div className={styles.row10}>
-            <p>Medications</p>
-          </div>
-
-          {/* row11 */}
-          <div className={styles.row11}>
-            <div>
-              <p>
-                <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-              </p>
-              <p>
-                <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-              </p>
-            </div>
-            <div className={styles.iconBtn}>
-              <button className={styles.leftArrowBtn}>
-                <img
-                  src="/assets/Group.svg"
-                  alt=""
-                  className={styles.leftArrow}
-                  width={18}
-                />
-              </button>
-              <button className={styles.rightArrowBtn}>
-                <img
-                  src="/assets/ion_return-down-back-outline.svg"
-                  width={30}
-                  alt=""
-                  className={styles.rightArrow}
-                />
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.lineContainer}>
-            <div className={styles.line} />
-          </div>
-
-          {/* row12 */}
-          <div className={styles.row12}>
-            <p>Injections / Therapies</p>
+          <div className={styles.blackText}>
+            <p>
+              AI Interaction Tracker: Used: Meds, Diet | Edited: Problem |
+              Regenerated: Lifestyle & Diet
+            </p>
           </div>
         </div>
 
