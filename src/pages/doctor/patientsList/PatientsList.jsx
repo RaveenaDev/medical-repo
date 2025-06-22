@@ -4,7 +4,7 @@ import Notifications from "../../../components/NotificationFunc/Notification.jsx
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
-import PatientCard from "./component/PatientCard.jsx";
+import PatientCard from "./component/modals/PatientCard.jsx";
 import { useState } from "react";
 
 const PatientsList = () => {
