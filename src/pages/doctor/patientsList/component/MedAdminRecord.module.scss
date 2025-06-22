@@ -29,7 +29,7 @@
 
 .card1 {
   background: #5461be;
-  width: 16%;
+  width: 12vw;
   display: flex;
   color: #f2f5ff;
   flex-direction: column;
@@ -38,6 +38,10 @@
   padding: 3vh 0vh;
   border-radius: 4px;
   margin-right: 2vh;
+
+  @media (max-width: 1200px) {
+    width: 24vw;
+  }
 }
 
 .line {
@@ -49,7 +53,7 @@
 
 .card2 {
   background: #f2f5ff;
-  width: 16%;
+  width: 12vw;
   display: flex;
   color: black;
   flex-direction: column;
@@ -58,6 +62,10 @@
   padding: 3vh 0vh;
   border-radius: 4px;
   margin-right: 2vh;
+
+  @media (max-width: 1200px) {
+    width: 24vw;
+  }
 }
 
 .time {
