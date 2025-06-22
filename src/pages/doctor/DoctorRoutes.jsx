@@ -13,7 +13,7 @@ import PrivacyPolicy from "./settings/privacyPolicy/PrivacyPolicy.jsx";
 import Help from "./settings/Help.jsx";
 import InPatient from "./patient/InPatient.jsx";
 import TotalSurgeries from "./surgeries/TotalSurgeries.jsx";
-import PatientsList from "./patientsList/patientsList.jsx";
+import PatientsList from "./patientsList/PatientsList.jsx";
 import SinglePatientDetail from "./patientsList/SinglePatientDetail.jsx";
 
 const DoctorRoutes = (props) => {

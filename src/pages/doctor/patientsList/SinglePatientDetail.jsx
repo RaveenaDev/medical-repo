@@ -3,7 +3,7 @@ import CommonPanelMini from "../components/CommonPanelMini";
 import styles from "./SinglePatientDetail.module.scss";
 import { Plus } from "lucide-react";
 import PatientProfile from "./component/PatientProfile";
-import PatientPreviousRecord from "./component/PatientPreviousRecord";
+import PatientPreviousRecord from "./component/records/PatientPreviousRecord.jsx";
 import { useNavigate } from "react-router-dom";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
