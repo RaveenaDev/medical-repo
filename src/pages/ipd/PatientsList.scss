@@ -83,9 +83,9 @@
         border-radius: 6px;
         cursor: pointer;
 
-        &:hover {
-          //background-color: darken(#25307f, 5%);
-        }
+        // &:hover {
+        //   //background-color: darken(#25307f, 5%);
+        // }
       }
     }
   }
@@ -239,6 +239,7 @@
     }
 
     .pagination {
+      margin-top: auto;
       justify-content: flex-end;
       align-items: flex-end;
       gap: 0.5rem;
