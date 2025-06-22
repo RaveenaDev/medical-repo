@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import PatientCard from "./component/modals/PatientCard.jsx";
 import { useState } from "react";
+import AddPatientForm from "./component/form/AddPatientForm.jsx";
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -151,6 +152,12 @@ const PatientsList = () => {
   // Total pages
   const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
 
+  // FORM
+  const [showForm, setShowForm] = useState(false);
+
+  const handleAddPatientClick = () => setShowForm(true);
+  const handleCloseForm = () => setShowForm(false);
+
   return (
     <div className="patientsListContainer">
       <div className="listHeader">
@@ -183,7 +190,7 @@ const PatientsList = () => {
             <FiFilter fill="#25307F" />
             <span>Filter</span>
           </div>
-          <div className="addButton">
+          <div className="addButton" onClick={handleAddPatientClick}>
             <svg
               width="16"
               height="16"
@@ -302,6 +309,8 @@ const PatientsList = () => {
           ))}
         </div>
       </section>
+      {/* Conditionally Render Form */}
+      {showForm && <AddPatientForm onClose={handleCloseForm} />}
     </div>
   );
 };
