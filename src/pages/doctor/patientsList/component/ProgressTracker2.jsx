@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -19,6 +19,8 @@ import {
   TimelineContent,
 } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
+import PostSurgeryFollowUp from "./form/PostSurgeryFollowUp";
+import styles from "./ProgressTracker2.module.scss";
 
 const ProgressTracker2 = ({ patient }) => {
   const navigate = useNavigate();
@@ -59,6 +61,18 @@ const ProgressTracker2 = ({ patient }) => {
       state: { patient },
     });
   };
+
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openFollowUp = () => setActiveModal("followUp");
+  const closeModal = () => setActiveModal(null);
   return (
     <Box
       display="flex"
@@ -134,7 +148,15 @@ const ProgressTracker2 = ({ patient }) => {
                   backgroundColor:
                     step.status === "Ongoing" ? "#e8f5e9" : "inherit",
                 }}
-                onClick={step.status === "Ongoing" ? () => handleClick() : ""}
+                onClick={
+                  step.phase === "Post-Surgery Follow-up"
+                    ? openFollowUp
+                    : step.phase === "Lab Tests"
+                    ? () => console.log("Clicked")
+                    : step.phase === "Initial Consultation"
+                    ? () => console.log("Clicked")
+                    : null
+                }
                 sx={{
                   cursor: step.status === "Ongoing" ? "pointer" : "",
                   transition: "background-color 0.3s",
@@ -164,6 +186,15 @@ const ProgressTracker2 = ({ patient }) => {
                 </TableCell>
               </TableRow>
             ))}
+
+            {activeModal === "followUp" && (
+              <>
+                <div className={styles.backdropOverlay} onClick={closeModal} />
+                <div className={styles.followUpModal}>
+                  <PostSurgeryFollowUp onClose={closeModal} />
+                </div>
+              </>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

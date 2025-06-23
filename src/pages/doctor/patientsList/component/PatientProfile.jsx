@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./PatientProfile.module.scss";
 import ProgressTracker2 from "./ProgressTracker2";
 import { Plus } from "lucide-react";
 import MedAdminRecord from "./MedAdminRecord";
 import Nursing from "./Nursing";
 import PastReportsAndDischarge from "./PastReportsAndDischarge";
+import UpdateProgress from "./form/UpdateProgress";
 const PatientProfile = () => {
   const [activeTab, setActiveTab] = useState("medical admin");
+
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openUpdateProgress = () => setActiveModal("update progress");
+  const closeModal = () => setActiveModal(null);
   return (
     <div>
       <div className={styles.section1}>
@@ -83,7 +96,7 @@ const PatientProfile = () => {
         </div>
         <div className={styles.progressTracker}>
           <div className={styles.row1PT}>
-            <button>
+            <button onClick={openUpdateProgress}>
               <Plus size={18} />
               Update
             </button>
@@ -93,6 +106,15 @@ const PatientProfile = () => {
             <ProgressTracker2 />
           </div>
         </div>
+
+        {activeModal === "update progress" && (
+          <>
+            <div className={styles.backdropOverlay} onClick={closeModal} />
+            <div className={styles.updateProgressModal}>
+              <UpdateProgress onClose={closeModal} />
+            </div>
+          </>
+        )}
       </div>
       <div className={styles.section2}>
         <div className={styles.header2}>

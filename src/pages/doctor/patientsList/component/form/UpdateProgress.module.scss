@@ -1,0 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 1vw 0vw 0vw;
+  font-family: "Karla", sans-serif;
+}
+
+.title {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 550;
+}
+
+.dropdown,
+.dropdown2 {
+  position: relative;
+  //width: 4%; // Use a percentage of viewport width for the dropdown
+  // min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+  border: 1px solid #cfcfcf;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 5vh;
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 1vh rgba(60, 64, 67, 0.08);
+  border-radius: 0.7vh;
+  width: 100%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.7vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}
+
+.label {
+  color: #4a4a4a;
+  font-size: 1.9vh;
+}
+
+.row1 {
+  margin-top: 3.8vh;
+  display: flex;
+  justify-content: space-between;
+  gap: 3vw;
+  div {
+    width: 100%;
+  }
+}
+
+.dateField {
+  display: flex;
+  flex-direction: column;
+  // gap: 0.4rem;
+  //font-family: "Inter", sans-serif;
+  width: 100%;
+  //   p {
+  //     font-size: 0.85rem;
+  //     color: #4b5563; // gray-600
+  //     font-weight: 500;
+  //   }
+
+  input[type="date"] {
+    padding: 0vh 0.8vh;
+    border: 1px solid #d1d5db; // gray-300
+    border-radius: 0px;
+    font-size: 2vh;
+    color: #111827; // gray-900
+    background-color: #fff;
+    outline: none;
+    min-height: 5vh;
+
+    width: 95%;
+    font-family: "Karla", sans-serif;
+    &:focus {
+      border-color: #2563eb; // blue-600
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+    }
+  }
+}
+
+.inputWrapper {
+  position: relative;
+
+  input {
+    padding-right: 2rem; // space for icon
+  }
+
+  .icon {
+    position: absolute;
+    right: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+  }
+}
+
+.textInput {
+  min-height: 5vh;
+  width: 96%;
+  outline: none;
+  padding: 0vh 0.8vh;
+  font-family: "Karla", sans-serif;
+}
+
+.textarea {
+  min-height: 10vh;
+  width: 98%;
+  border-color: #cfcfcf;
+  outline: none;
+  padding: 0.8vh 0.8vh;
+  font-family: "Karla", sans-serif;
+  resize: none;
+}

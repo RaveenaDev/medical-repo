@@ -1,0 +1,16 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 1vw 0vw 0vw;
+  font-family: "Karla", sans-serif;
+}
