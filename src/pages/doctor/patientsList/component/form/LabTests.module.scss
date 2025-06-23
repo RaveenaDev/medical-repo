@@ -1,0 +1,220 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 2vw 2vh 0vw;
+  font-family: "Karla", sans-serif;
+
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 3vh;
+  }
+}
+
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  flex-wrap: wrap;
+}
+
+.customRadio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  cursor: pointer;
+  font-family: "Karla", sans-serif;
+  font-size: 1.9vh;
+  color: #4a4a4a;
+
+  input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  span {
+    position: relative;
+    padding-left: 3.6vh;
+  }
+
+  span::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.15vh;
+    width: 2.8vh;
+    height: 2.8vh;
+    border: 2px solid #25307f;
+    border-radius: 4px;
+    background-color: white;
+    transition: background 0.3s ease, border 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  span::after {
+    content: "";
+    position: absolute;
+    left: 0.37vh;
+    top: 0.8vh;
+    width: 1.9vh;
+    height: 1.9vh;
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  input[type="radio"]:checked + span::before {
+    background-color: #25307f;
+    border-color: #25307f;
+  }
+
+  input[type="radio"]:checked + span::after {
+    opacity: 1;
+  }
+}
+
+.textInput {
+  padding: 0.8vh 1vw;
+  font-size: 1.8vh;
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: "Karla", sans-serif;
+  flex: 1;
+}
+
+.activeRadio {
+  background: #e9efff;
+}
+
+.radioMember {
+  padding: 1.2vh 1vh;
+}
+
+.formGrid {
+  display: flex;
+  gap: 2vw;
+  margin-top: 2vh;
+  // flex-wrap: wrap;
+}
+
+.leftColumn,
+.rightColumn {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  flex: 1;
+  margin-top: 3vh;
+  //min-width: 240px;
+}
+input[type="text"] {
+  outline: none;
+  height: 5vh;
+  font-family: "Karla", sans-serif;
+  padding: 0vh 1vh;
+  width: 94%;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+}
+.textAreaBox {
+  position: relative;
+  width: 95%;
+  textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1vh;
+    font-family: "Karla", sans-serif;
+    font-size: 1.7vh;
+    background: #fff;
+    outline: none;
+    resize: none;
+  }
+}
+
+.editIcon {
+  position: absolute;
+  top: 1vh;
+  right: 1vh;
+  font-size: 1.7vh;
+  color: #888;
+  cursor: pointer;
+}
+
+.attachmentBox {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+h6 {
+  font-weight: 550;
+}
+.fileList {
+  display: flex;
+  gap: 1vw;
+  flex-wrap: wrap;
+  font-size: 1.7vh;
+}
+
+.customFileUpload {
+  display: inline-block;
+  padding: 0.8vh 1.6vw;
+  font-size: 1.8vh;
+  font-weight: 500;
+  color: #25307f;
+  background-color: #f5f8ff;
+  border: 1px solid #c3d2f3;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Karla", sans-serif;
+  text-align: center;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: #e5edff;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
+input[type="file"] {
+  padding: 0.8vh 1vw;
+  font-size: 1.8vh;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ffff;
+  width: 90%;
+}
+
+.submitContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 4vh;
+  button {
+    background: #25307f;
+    color: white;
+    padding: 0.6vh 3vh;
+    border-radius: 4px;
+    font-size: 2vh;
+    font-weight: 400;
+  }
+}

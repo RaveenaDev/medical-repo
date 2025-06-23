@@ -21,6 +21,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import PostSurgeryFollowUp from "./form/PostSurgeryFollowUp";
 import styles from "./ProgressTracker2.module.scss";
+import LabTests from "./form/LabTests";
 
 const ProgressTracker2 = ({ patient }) => {
   const navigate = useNavigate();
@@ -72,6 +73,7 @@ const ProgressTracker2 = ({ patient }) => {
   }, [activeModal]);
 
   const openFollowUp = () => setActiveModal("followUp");
+  const openLabTests = () => setActiveModal("LabTests");
   const closeModal = () => setActiveModal(null);
   return (
     <Box
@@ -152,7 +154,7 @@ const ProgressTracker2 = ({ patient }) => {
                   step.phase === "Post-Surgery Follow-up"
                     ? openFollowUp
                     : step.phase === "Lab Tests"
-                    ? () => console.log("Clicked")
+                    ? openLabTests
                     : step.phase === "Initial Consultation"
                     ? () => console.log("Clicked")
                     : null
@@ -162,7 +164,10 @@ const ProgressTracker2 = ({ patient }) => {
                   transition: "background-color 0.3s",
                 }}
               >
-                <TableCell align="center" sx={{ padding: "24px 0" }}>
+                <TableCell
+                  align="center"
+                  sx={{ padding: "24px 0", cursor: "pointer" }}
+                >
                   {step.phase}
                 </TableCell>
                 <TableCell align="center">{step.date}</TableCell>
@@ -192,6 +197,14 @@ const ProgressTracker2 = ({ patient }) => {
                 <div className={styles.backdropOverlay} onClick={closeModal} />
                 <div className={styles.followUpModal}>
                   <PostSurgeryFollowUp onClose={closeModal} />
+                </div>
+              </>
+            )}
+            {activeModal === "LabTests" && (
+              <>
+                <div className={styles.backdropOverlay} onClick={closeModal} />
+                <div className={styles.labTestsModal}>
+                  <LabTests onClose={closeModal} />
                 </div>
               </>
             )}
