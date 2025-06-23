@@ -7,11 +7,12 @@ const VisitCard = ({
   typeofVisit,
   department,
   color,
+  onClick,
   departmentbgColor = "#FFFFFF", // Default background color if not provided
   departmentColor = "#25307F", // Default color if not provided
 }) => {
   return (
-    <div className="visit-card">
+    <div className="visit-card" onClick={onClick}>
       <div className={`visit-card-color`} style={{ background: color }}></div>
       <div className="visit-card-content">
         <div className="visit-card-row">
