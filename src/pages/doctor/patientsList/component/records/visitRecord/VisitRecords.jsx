@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import "./VisitRecord.scss";
-const VisitRecords = () => {
+const VisitRecords = ({visit,onSelectRecord}) => {
   return (
     <div className="visit-records-container">
-      <div className="record_card">
+      <div onClick={() => onSelectRecord("diagnosis")} className="record_card">
         <div className="record_card_header">
           <svg
             width="43"
@@ -27,8 +27,8 @@ const VisitRecords = () => {
           <div className="record_condition"> Primary Condition</div>
           <div className="record_condition_value">With ICD-10 codes</div>
         </div>
-      </div>
-      <div className="record_card">
+      </div   >
+      <div onClick={() => onSelectRecord("tests")} className="record_card">
         <div className="record_card_header">
           <svg
             width="37"
@@ -54,7 +54,7 @@ const VisitRecords = () => {
         </div>
       </div>
 
-      <div className="record_card">
+      <div onClick={() => onSelectRecord("prescriptions")} className="record_card">
         <div className="record_card_header">
           <svg
             width="37"
@@ -92,7 +92,7 @@ const VisitRecords = () => {
           </div>
         </div>
       </div>
-      <div className="record_card">
+      <div className="record_card" onClick={() => onSelectRecord("procedures")} >
         <div className="record_card_header">
           <svg
             width="43"
@@ -153,7 +153,7 @@ const VisitRecords = () => {
         </div>
       </div>
 
-      <div className="record_card">
+      <div className="record_card" onClick={() => onSelectRecord("notes")}>
         <div className="record_card_header">
           <svg
             width="37"
@@ -192,7 +192,7 @@ const VisitRecords = () => {
           </div>
         </div>
       </div>
-      <div className="record_card">
+      <div className="record_card" onClick={() => onSelectRecord("discharges")}>
         <div className="record_card_header">
           <svg
             width="37"
