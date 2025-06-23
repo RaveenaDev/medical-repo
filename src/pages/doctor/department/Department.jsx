@@ -20,6 +20,7 @@ import Select from "@mui/material/Select";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import {useTheme} from "@mui/material/styles";
+import {useNavigate} from "react-router-dom";
 
 const names = [
     "Oliver Hansen",
@@ -219,6 +220,8 @@ const Department = () => {
     const ipdPercent = totalCases > 0 ? (ipdCount / totalCases) * 100 : 0;
     const opdPercent = totalCases > 0 ? (opdCount / totalCases) * 100 : 0;
 
+    const navigate = useNavigate()
+
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -257,7 +260,7 @@ const Department = () => {
 
     return (
         <>
-            <div style={{position:'fixed',zIndex:1000,top:0,width:'77.6vw',background: " #F1F1F1",paddingBottom:'1rem'}}>
+            <div style={{position:'fixed',zIndex:1000,top:0,width:'77.6vw',background: "#F1F1F1",paddingBottom:'1rem'}}>
                 <CommonPanel />
             </div>
 
@@ -289,7 +292,7 @@ const Department = () => {
                         <p>Head: Dr. Amit Patil</p>
                     </div>
 
-                    <div style={{marginTop:'0.3rem'}}>
+                    <div style={{marginTop:'1.2rem'}}>
                         <Button
                             variant="contained"
                             onClick={handleOpen}
@@ -819,8 +822,32 @@ const Department = () => {
 
                         {/*** Card 2: Cardiology Inventory ***/}
                         <div className={style.card}>
-                            <div className={style.cardHeader}>
+                            <div className={style.cardHeader} style={{justifyContent:'flex-start',gap:'4px',cursor:'pointer'}} onClick={() => navigate('/doctor/department/inventory')}>
                                 <h3>Cardiology Inventory</h3>
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 26 26"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <g clipPath="url(#clip0_3883_12115)">
+                                        <path
+                                            d="M7.99457 3.23919C8.5254 2.70836 9.38124 2.70836 9.91207 3.23919L18.9146 12.2417C19.3371 12.6642 19.3371 13.3467 18.9146 13.7692L9.91207 22.7717C9.38124 23.3025 8.5254 23.3025 7.99457 22.7717C7.46374 22.2409 7.46374 21.385 7.99457 20.8542L15.8379 13L7.98374 5.14586C7.46374 4.62586 7.46374 3.75919 7.99457 3.23919Z"
+                                            fill="#25307F"
+                                        />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_3883_12115">
+                                            <rect
+                                                width="26"
+                                                height="26"
+                                                fill="white"
+                                                transform="matrix(-1 0 0 1 26 0)"
+                                            />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
                             </div>
 
                             <div className={style.cardContent}>
