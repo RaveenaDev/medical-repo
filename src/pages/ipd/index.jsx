@@ -211,7 +211,11 @@ const IpdOverview = () => {
         </div>
         <div className="toAdmitList">
           {patients.slice(0, 4).map((patient, index) => (
-            <div className="patientCard" key={index}>
+            <div
+              className="patientCard"
+              key={index}
+              onClick={handleAddPatientClick}
+            >
               <div className="patientInfo">
                 <div className="patientDetailsContainer">
                   <img
@@ -308,9 +312,9 @@ const IpdOverview = () => {
             </button>
           ))}
         </div>
-        {/* Conditionally Render Form */}
-        {showForm && <AddPatientForm onClose={handleCloseForm} />}
       </section>
+      {/* Conditionally Render Form */}
+      {showForm && <AddPatientForm onClose={handleCloseForm} />}
     </div>
   );
 };
