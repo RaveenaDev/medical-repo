@@ -139,3 +139,26 @@
     color: #25307f;
   }
 }
+
+.patient_records_details {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+
+  .records_details_header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .patient-records-heading {
+      color: #25307f;
+      font-family: "Karla", sans-serif;
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 100%;
+      letter-spacing: 0%;
+    }
+  }
+}
