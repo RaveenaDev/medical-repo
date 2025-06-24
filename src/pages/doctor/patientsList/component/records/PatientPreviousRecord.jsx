@@ -6,6 +6,7 @@ import Diagnosis from "./diagnosis/Diagnosis";
 import Procedures from "./procudures/Procedures.jsx";
 import DoctorNotes from "./doctorNotes/DoctorNotes.jsx";
 import DischargeSummary from "./dischargeSummary/DischargeSummary.jsx";
+import TestsAndRecords from "./testandrecords/TestsAndRecords.jsx";
 
 const PatientPreviousRecord = () => {
   const visitData = [
@@ -54,12 +55,8 @@ const PatientPreviousRecord = () => {
     switch (selectedRecord) {
       case "Diagnosis":
         return <Diagnosis />;
-      case "Test & Reports":
-        return (
-          <div>
-            💉 <b>Test & Reports</b>
-          </div>
-        );
+      case "Tests & Reports":
+        return <TestsAndRecords />;
       case "Prescriptions":
         return (
           <div>
@@ -70,10 +67,10 @@ const PatientPreviousRecord = () => {
         return <Procedures />;
 
       case "Doctor's Notes":
-        return <DoctorNotes/>;
+        return <DoctorNotes />;
 
       case "Hospital Discharge Summary":
-        return <DischargeSummary/>;
+        return <DischargeSummary />;
       default:
         return null;
     }

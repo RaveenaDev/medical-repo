@@ -1,17 +1,19 @@
 .procedures {
   padding: 1rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 
   &__header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 1.5rem;
 
-    .btn-outline, .btn-primary {
+    .btn-outline,
+    .btn-primary {
       padding: 8px 16px;
       border-radius: 6px;
       font-weight: 500;
       cursor: pointer;
+      box-shadow: 0px 4px 4px 0px #c2c2c240;
     }
 
     .btn-outline {
@@ -21,7 +23,7 @@
       display: flex;
       gap: 5px;
 
-      p{
+      p {
         margin-top: 3px;
         font-size: 14px;
         color: #878787;
@@ -33,7 +35,7 @@
         background-color: #dae4ff;
 
         p {
-          color: #25307F; // Blue text on hover
+          color: #25307f; // Blue text on hover
         }
       }
     }
@@ -44,7 +46,7 @@
       display: flex;
       gap: 5px;
 
-      p{
+      p {
         margin-top: 3px;
         font-size: 14px;
         color: #878787;
@@ -56,7 +58,7 @@
         background-color: #dae4ff;
 
         p {
-          color: #25307F; // Blue text on hover
+          color: #25307f; // Blue text on hover
         }
       }
     }
@@ -76,16 +78,16 @@
       .count {
         font-size: 24px;
         font-weight: bold;
-        color:#25307F;
+        color: #25307f;
       }
 
-      .word{
+      .word {
         font-size: 15px;
         font-weight: 500;
       }
 
       .critical {
-        color: #F14400;
+        color: #f14400;
       }
 
       .sub {
@@ -95,19 +97,18 @@
         margin-top: 4px;
       }
     }
-    .last-performed{
+    .last-performed {
       margin-top: 6px;
     }
   }
 
   &__log {
-
-    .head{
+    .head {
       display: flex;
       gap: 10px;
 
-      p{
-        color: #25307F;
+      p {
+        color: #25307f;
         font-weight: 500;
         font-size: 17px;
         margin-top: -2px;
@@ -141,7 +142,7 @@
       .action .details-btn {
         background: none;
         border: none;
-        color: #25307F;
+        color: #25307f;
         display: flex;
         align-items: center;
         gap: 5px;
