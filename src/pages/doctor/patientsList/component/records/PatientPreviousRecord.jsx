@@ -7,6 +7,7 @@ import Procedures from "./procudures/Procedures.jsx";
 import DoctorNotes from "./doctorNotes/DoctorNotes.jsx";
 import DischargeSummary from "./dischargeSummary/DischargeSummary.jsx";
 import TestsAndRecords from "./testandrecords/TestsAndRecords.jsx";
+import Prescriptions from "./prescription/Prescriptions.jsx";
 
 const PatientPreviousRecord = () => {
   const visitData = [
@@ -58,11 +59,7 @@ const PatientPreviousRecord = () => {
       case "Tests & Reports":
         return <TestsAndRecords />;
       case "Prescriptions":
-        return (
-          <div>
-            🧪 <b>Prescriptions</b>
-          </div>
-        );
+        return <Prescriptions />;
       case "Procedures":
         return <Procedures />;
 
