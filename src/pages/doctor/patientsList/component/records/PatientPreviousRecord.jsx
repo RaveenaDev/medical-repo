@@ -4,6 +4,8 @@ import VisitRecords from "./visitRecord/visitRecords";
 import VisitCard from "./VisitCard/VisitCard";
 import Diagnosis from "./diagnosis/Diagnosis";
 import Procedures from "./procudures/Procedures.jsx";
+import DoctorNotes from "./doctorNotes/DoctorNotes.jsx";
+import DischargeSummary from "./dischargeSummary/DischargeSummary.jsx";
 
 const PatientPreviousRecord = () => {
   const visitData = [
@@ -68,17 +70,10 @@ const PatientPreviousRecord = () => {
         return <Procedures />;
 
       case "Doctor's Notes":
-        return (
-          <div>
-            🩻 <b>Doctor's Notes</b>
-          </div>
-        );
+        return <DoctorNotes/>;
+
       case "Hospital Discharge Summary":
-        return (
-          <div>
-            🩻 <b>Discharge Summary</b>
-          </div>
-        );
+        return <DischargeSummary/>;
       default:
         return null;
     }

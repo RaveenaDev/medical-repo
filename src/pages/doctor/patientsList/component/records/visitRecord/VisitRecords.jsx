@@ -161,7 +161,7 @@ const VisitRecords = ({ visit, onSelectRecord }) => {
 
       <div
         className="record_card"
-        onClick={() => onSelectRecord("Doctor’s Notes")}
+        onClick={() => onSelectRecord("Doctor's Notes")}
       >
         <div className="record_card_header">
           <svg
