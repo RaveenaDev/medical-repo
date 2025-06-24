@@ -162,3 +162,26 @@
     }
   }
 }
+
+.search_bar {
+  border: 1px solid #afafaf;
+  border-radius: 20px;
+  padding: 0.25rem 1rem;
+  font-family: "Karla", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #afafaf;
+
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  svg {
+    color: #afafaf;
+    width: 16px;
+    height: 16px;
+  }
+}
