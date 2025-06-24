@@ -3,6 +3,7 @@ import "./PatientPreviousRecord.scss"; // Assuming you have a CSS file for styli
 import VisitRecords from "./visitRecord/visitRecords";
 import VisitCard from "./VisitCard/VisitCard";
 import Diagnosis from "./diagnosis/Diagnosis";
+import Procedures from "./procudures/Procedures.jsx";
 
 const PatientPreviousRecord = () => {
   const visitData = [
@@ -64,11 +65,8 @@ const PatientPreviousRecord = () => {
           </div>
         );
       case "Procedures":
-        return (
-          <div>
-            🩻 <b>Procedures</b>
-          </div>
-        );
+        return <Procedures/>;
+
       case "Doctor's Notes":
         return (
           <div>
@@ -151,6 +149,7 @@ const PatientPreviousRecord = () => {
                 viewBox="0 0 26 26"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                style={{cursor:'pointer'}}
               >
                 <g clip-path="url(#clip0_6149_7254)">
                   <path

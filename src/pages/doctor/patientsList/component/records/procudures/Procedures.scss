@@ -1,0 +1,91 @@
+.procedures {
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .btn-outline, .btn-primary {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-outline {
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    .btn-primary {
+      background-color: #f0f4ff;
+      border: none;
+      color: #25307F;
+    }
+  }
+
+  &__summary {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f9fafe;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+
+    .summary-item {
+      text-align: center;
+
+      .count {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .critical {
+        color: #FF5C5C;
+      }
+
+      .sub {
+        font-size: 14px;
+        color: #888;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  &__log {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+
+      th {
+        text-align: left;
+        padding: 12px;
+        background: #f1f4fb;
+        font-weight: 600;
+      }
+
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .status.completed {
+        color: green;
+        font-weight: 500;
+      }
+
+      .action .details-btn {
+        background: none;
+        border: none;
+        color: #25307F;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+}
