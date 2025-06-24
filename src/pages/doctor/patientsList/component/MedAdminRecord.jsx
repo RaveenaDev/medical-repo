@@ -1,6 +1,8 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import styles from "./MedAdminRecord.module.scss";
 import { Plus } from "lucide-react";
+import UpdateMAR from "./form/UpdateMAR";
+
 const MedAdminRecord = () => {
   const medicationSchedule = [
     {
@@ -86,16 +88,35 @@ const MedAdminRecord = () => {
     },
   ];
 
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openUpdate = () => setActiveModal("Update");
+  const closeModal = () => setActiveModal(null);
+
   return (
     <div className={styles.container}>
       <div className={styles.row1}>
         <p>Record</p>
-        <button>
+        <button onClick={openUpdate}>
           <Plus size={18} />
           Update
         </button>
       </div>
-
+      {activeModal === "Update" && (
+        <>
+          <div className={styles.backdropOverlay} onClick={closeModal} />
+          <div className={styles.followUpModal}>
+            <UpdateMAR onClose={closeModal} />
+          </div>
+        </>
+      )}
       <section className={styles.section3}>
         <div className={styles.card1}>
           <p>Time</p>

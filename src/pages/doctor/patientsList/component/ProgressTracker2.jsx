@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import PostSurgeryFollowUp from "./form/PostSurgeryFollowUp";
 import styles from "./ProgressTracker2.module.scss";
 import LabTests from "./form/LabTests";
+import InitialConsultation from "./form/InitialConsultation";
 
 const ProgressTracker2 = ({ patient }) => {
   const navigate = useNavigate();
@@ -72,8 +73,9 @@ const ProgressTracker2 = ({ patient }) => {
     };
   }, [activeModal]);
 
-  const openFollowUp = () => setActiveModal("followUp");
+  const openFollowUp = () => setActiveModal("FollowUp");
   const openLabTests = () => setActiveModal("LabTests");
+  const openInitialConsultation = () => setActiveModal("InitialConsultation");
   const closeModal = () => setActiveModal(null);
   return (
     <Box
@@ -156,7 +158,7 @@ const ProgressTracker2 = ({ patient }) => {
                     : step.phase === "Lab Tests"
                     ? openLabTests
                     : step.phase === "Initial Consultation"
-                    ? () => console.log("Clicked")
+                    ? openInitialConsultation
                     : null
                 }
                 sx={{
@@ -192,7 +194,7 @@ const ProgressTracker2 = ({ patient }) => {
               </TableRow>
             ))}
 
-            {activeModal === "followUp" && (
+            {activeModal === "FollowUp" && (
               <>
                 <div className={styles.backdropOverlay} onClick={closeModal} />
                 <div className={styles.followUpModal}>
@@ -205,6 +207,14 @@ const ProgressTracker2 = ({ patient }) => {
                 <div className={styles.backdropOverlay} onClick={closeModal} />
                 <div className={styles.labTestsModal}>
                   <LabTests onClose={closeModal} />
+                </div>
+              </>
+            )}
+            {activeModal === "InitialConsultation" && (
+              <>
+                <div className={styles.backdropOverlay} onClick={closeModal} />
+                <div className={styles.initialConsultationModal}>
+                  <InitialConsultation onClose={closeModal} />
                 </div>
               </>
             )}
