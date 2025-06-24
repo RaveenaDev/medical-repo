@@ -79,3 +79,49 @@
   line-height: 100%;
   letter-spacing: 0%;
 }
+
+.diagnosis_details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .diagnosis {
+    display: flex;
+    border: 1px solid #25307f;
+    border-radius: 5px;
+    padding: 0.625rem 1rem;
+    gap: 0.5rem;
+
+    .diagnosis_text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .diagnosis_head {
+        font-family: "Karla";
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #25307f;
+      }
+      .diagnosis_desc {
+        font-family: "Karla", sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+
+        color: #333333;
+      }
+    }
+
+    .diagnosis_info_icon {
+      display: flex;
+      align-items: end;
+    }
+  }
+}
