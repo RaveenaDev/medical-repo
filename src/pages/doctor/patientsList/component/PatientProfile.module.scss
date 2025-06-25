@@ -180,7 +180,7 @@
   position: relative;
   color: #25307f;
   font-weight: 600;
-
+  cursor: pointer;
   &::after {
     content: "";
     position: absolute;
@@ -202,6 +202,7 @@
 .inactiveTab {
   color: #878787;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .backdropOverlay {

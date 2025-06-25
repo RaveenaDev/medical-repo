@@ -15,7 +15,12 @@
     margin-left: 1vw;
   }
 
-  button {
+  .buttons {
+    display: flex;
+    gap: 0.5vw;
+  }
+
+  .updateBtn {
     background: #25307f;
     color: white;
     display: flex;
@@ -24,6 +29,14 @@
     font-size: 2vh;
     padding: 0.6vh 1vh;
     border-radius: 4px;
+  }
+
+  .editBtn {
+    background: #f2f5ff;
+    padding: 0.6vh 1vh;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
   }
 }
 

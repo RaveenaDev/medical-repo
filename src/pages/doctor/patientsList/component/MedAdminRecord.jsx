@@ -104,10 +104,15 @@ const MedAdminRecord = () => {
     <div className={styles.container}>
       <div className={styles.row1}>
         <p>Record</p>
-        <button onClick={openUpdate}>
-          <Plus size={18} />
-          Update
-        </button>
+        <div className={styles.buttons}>
+          <button className={styles.editBtn}>
+            <img src="/assets/Pen.svg" alt="pen icon" width={14} />
+          </button>
+          <button className={styles.updateBtn} onClick={openUpdate}>
+            <Plus size={18} />
+            Update
+          </button>
+        </div>
       </div>
       {activeModal === "Update" && (
         <>
