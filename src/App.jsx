@@ -64,6 +64,8 @@ function App() {
       setRole("receptionist");
     } else if (location.pathname.startsWith("/doctor")) {
       setRole("doctor");
+    } else if (location.pathname.startsWith("/ipd")) {
+      setRole("staff");
     } else {
       setRole(""); // Default or no role
     }
@@ -76,7 +78,7 @@ function App() {
     "/recovery-link",
     "/update-password",
     "/register",
-      "/ipd"
+    "/ipd",
   ].includes(location.pathname);
 
   const isHomePage = "/".includes(location.pathname);
@@ -86,7 +88,6 @@ function App() {
       setShouldShowSidebar(false);
     }
   }, [location.pathname]);
-
 
   return (
     <>
@@ -119,7 +120,10 @@ function App() {
 
         {location.pathname === "/" ? (
           <Routes>
-            <Route path="/" element={<Base setIsSignUpOrLogin={setIsSignUpOrLogin}/>} />
+            <Route
+              path="/"
+              element={<Base setIsSignUpOrLogin={setIsSignUpOrLogin} />}
+            />
           </Routes>
         ) : (
           <div
@@ -601,25 +605,31 @@ function App() {
               {/* DOCTOR ROUTES */}
 
               <Route
-              path="/doctor/*"
-              element={
-                <DoctorRoutes
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}/>
-              }
-              />
-
-            <Route
-                path="/ipd/*"
+                path="/doctor/*"
                 element={
-                  <IpdRoutes
+                  <ProtectedRoute allowedRoles={["doctor"]}>
+                    <DoctorRoutes
                       setIsSignUpOrLogin={setIsSignUpOrLogin}
                       setEntity={setEntity}
-                      entity={entity}/>
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
                 }
-            />
-          </Routes>
+              />
+
+              <Route
+                path="/ipd/*"
+                element={
+                  <ProtectedRoute allowedRoles={["staff"]}>
+                    <IpdRoutes
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
           </div>
         )}
         {/* if login or register page is active, add this class ${styles.loginPageActive} */}
