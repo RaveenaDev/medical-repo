@@ -1,0 +1,57 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0 1vw 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  height: 78vh;
+  overflow-y: auto;
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 3vh;
+  }
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.section1 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.submitContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 4vh;
+
+  button {
+    background: #25307f;
+    color: white;
+    padding: 0.6vh 3vh;
+    border-radius: 4px;
+    font-size: 2vh;
+    font-weight: 400;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border: none;
+    cursor: pointer;
+  }
+}

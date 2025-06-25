@@ -1,0 +1,151 @@
+.container {
+  background: white;
+  margin-top: 1vh;
+  padding: 1.4vh 2vw;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+      color: #25307f;
+      font-weight: 600;
+      font-size: 2.4vh;
+      margin-left: 1vw;
+    }
+    .updateBtn {
+      background: #25307f;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.6vh;
+      font-size: 2vh;
+      padding: 0.6vh 1vh;
+      border-radius: 4px;
+
+      border: none;
+      &:hover {
+        background: #f2f5ff;
+        color: #25307f;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.5vw;
+
+      .editBtn {
+        background: #f2f5ff;
+        padding: 0.6vh 1vh;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        border: none;
+      }
+    }
+  }
+}
+
+.cardWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2vw;
+  height: 30vh;
+  overflow-y: auto;
+  margin-top: 4vh;
+  column-gap: 1vw;
+  @media (max-width: 1050px) {
+    grid-template-columns: repeat(2, 1fr);
+    .card {
+      max-width: 90%;
+    }
+  }
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.card {
+  background: #f6f8ff;
+  padding: 2vh 1vw;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 280px;
+
+  .icon {
+    width: 3.4vh;
+
+    margin-bottom: 0vh;
+  }
+
+  h3 {
+    font-size: 2.2vh;
+    font-weight: 600;
+    color: #1d1e2c;
+  }
+
+  .subtitle {
+    font-size: 1.9vh;
+    color: #999;
+    margin-bottom: 0vh;
+  }
+
+  ul {
+    margin-top: 0;
+    padding: 0vh;
+    padding-left: 1.2em;
+    // enough padding for larger dot
+    list-style: disc;
+
+    li {
+      font-size: 1.7vh;
+      color: #2e2e2e;
+      margin-bottom: 0;
+      padding: 0;
+      line-height: 2.4vh;
+      &::marker {
+        font-size: 1.3em; // increase to make the dot bigger
+        color: #000; // optional: change dot color
+      }
+    }
+  }
+}
+
+.header {
+  display: flex;
+  gap: 0.6vw;
+  align-items: center;
+}
+
+.backdropOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+
+.updateModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: 50vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  //padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
