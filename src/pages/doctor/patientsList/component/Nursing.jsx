@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Nursing.module.scss";
 import {
   Plus,
@@ -9,6 +9,7 @@ import {
   Thermometer,
   HeartPulse,
 } from "lucide-react";
+import UpdateNursing from "./form/UpdateNursing";
 
 const Nursing = () => {
   const vitalsData = [
@@ -62,14 +63,41 @@ const Nursing = () => {
     },
   ];
 
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openUpdate = () => setActiveModal("Update");
+  const closeModal = () => setActiveModal(null);
+
   return (
     <div className={styles.container}>
       <header>
         <p>Vitals Tracker</p>
-        <button>
-          <Plus size={18} /> Record New Vital
-        </button>
+        <div className={styles.buttons}>
+          <button className={styles.editBtn}>
+            <img src="/assets/Pen.svg" alt="pen icon" width={14} />
+          </button>
+          <button className={styles.updateBtn} onClick={openUpdate}>
+            <Plus size={18} />
+            Update
+          </button>
+        </div>
       </header>
+
+      {activeModal === "Update" && (
+        <>
+          <div className={styles.backdropOverlay} onClick={closeModal} />
+          <div className={styles.updateModal}>
+            <UpdateNursing onClose={closeModal} />
+          </div>
+        </>
+      )}
 
       <div className={styles.vitalWrapper}>
         {vitalsData.map((vital, index) => {

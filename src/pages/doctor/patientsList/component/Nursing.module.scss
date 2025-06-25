@@ -2,27 +2,33 @@
   background: white;
   margin-top: 1vh;
   padding: 1.4vh 2vw;
-}
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  p {
-    color: #25307f;
-    font-weight: 600;
-    font-size: 2.4vh;
-    margin-left: 1vw;
-  }
-  button {
-    background: #25307f;
-    color: white;
+  header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.6vh;
-    font-size: 2vh;
-    padding: 0.6vh 1vh;
-    border-radius: 4px;
+    p {
+      color: #25307f;
+      font-weight: 600;
+      font-size: 2.4vh;
+      margin-left: 1vw;
+    }
+    .updateBtn {
+      background: #25307f;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.6vh;
+      font-size: 2vh;
+      padding: 0.6vh 1vh;
+      border-radius: 4px;
+
+      border: none;
+      &:hover {
+        background: #f2f5ff;
+        color: #25307f;
+      }
+    }
   }
 }
 
@@ -222,4 +228,45 @@ header {
 }
 .criticalBar {
   background-color: #e53935;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5vw;
+
+  .editBtn {
+    background: #f2f5ff;
+    padding: 0.6vh 1vh;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    border: none;
+  }
+}
+
+.backdropOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+
+.updateModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: 50vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  //padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }

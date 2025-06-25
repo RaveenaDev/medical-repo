@@ -29,9 +29,16 @@
     font-size: 2vh;
     padding: 0.6vh 1vh;
     border-radius: 4px;
+    border: none;
+
+    &:hover {
+      background: #f2f5ff;
+      color: #25307f;
+    }
   }
 
   .editBtn {
+    border: none;
     background: #f2f5ff;
     padding: 0.6vh 1vh;
     border-radius: 4px;
