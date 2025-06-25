@@ -1,1 +1,6 @@
+export const GET_PATIENTS = "GET_PATIENTS"
+export const GET_INPATIENTS = "GET_INPATIENTS"
+export const GET_SURGERIES = "GET_SURGERIES"
+
 export const GET_ROOMS = "GET_ROOMS";
+

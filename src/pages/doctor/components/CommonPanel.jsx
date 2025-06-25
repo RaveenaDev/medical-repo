@@ -11,10 +11,9 @@ import {
   getAllDepartments,
   getBillingRecords,
   getDoctors,
-  getPatients,
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
-import {getRooms} from "../../../components/State/Doctor/Action.js";
+import {getInpatients, getPatients, getRooms} from "../../../components/State/Doctor/Action.js";
 
 
 const CommonPanel = ({
@@ -43,31 +42,34 @@ const CommonPanel = ({
 
   useEffect(() => {
     dispatch(getPatients());
-    dispatch(getDoctors());
-    dispatch(getStaffs());
+    dispatch(getInpatients());
+    // dispatch(getDoctors());
+    // dispatch(getStaffs());
     dispatch(getRooms());
-    dispatch(getAllDepartments());
-    dispatch(getBillingRecords());
+    // dispatch(getAllDepartments());
+    // dispatch(getBillingRecords());
   }, [dispatch]);
 
-  const doctor = useSelector((store) => store.admin);
+  const doctor = useSelector((store) => store.doctor);
 
-  const noOfDoctors = doctor.totalDoctors;
-  const doctors = doctor.doctors;
+  const noOfPatients = doctor.totalPatients;
+  const patients = doctor.patients;
 
-  const noOfStaffs = doctor.totalStaffs;
-  const staffs = doctor.staffs;
+  const noOfInpatients = doctor.totalInpatients;
+  const inPatients = doctor.inPatients;
 
   const noOfRooms = doctor.totalRooms;
   const rooms = doctor.rooms;
 
-  const departments = useSelector((state) => state.admin.departments);
-
   const handleRoomsClick = (rooms) => {
     navigate(`/doctor/rooms`, { state: { rooms } });
   };
-  const handleInpatientsClick = (doctors) => {
-    navigate(`/doctor/inpatients`, { state: { doctors } });
+
+  const handlePatientsClick = (patients) => {
+    navigate(`/doctor/patient`, {state: {patients}})
+  }
+  const handleInpatientsClick = (inPatients) => {
+    navigate(`/doctor/inpatients`, { state: { inPatients } });
   };
   const handleSurgeriesClick = (staffs) => {
     navigate(`/doctor/surgeries`, { state: { staffs } });
@@ -98,8 +100,8 @@ const CommonPanel = ({
           <Grid size={3}>
             <Card
               title="Total Patients"
-              subtitle="250+"
-              handleClickCb={() => navigate(`/doctor/patient`)}
+              subtitle={noOfPatients}
+              handleClickCb={() => handlePatientsClick(patients)}
             />
           </Grid>
           <Grid size={3}>
@@ -108,8 +110,8 @@ const CommonPanel = ({
                 backgroundColor: "#EAA000",
               }}
               title="Total Inpatients"
-              subtitle="20"
-              handleClickCb={() => handleInpatientsClick(doctors)}
+              subtitle={noOfInpatients}
+              handleClickCb={() => handleInpatientsClick(inPatients)}
             />
           </Grid>
           <Grid size={3}>
@@ -119,7 +121,7 @@ const CommonPanel = ({
               }}
               title="Total Surgeries"
               subtitle="250"
-              handleClickCb={() => handleSurgeriesClick(staffs)}
+              handleClickCb={() => handleSurgeriesClick(inPatients)}
             />
           </Grid>
           <Grid size={3}>
