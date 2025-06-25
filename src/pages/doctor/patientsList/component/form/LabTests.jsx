@@ -4,7 +4,25 @@ import { X } from "lucide-react";
 
 const LabTests = ({ onClose }) => {
   const [selected, setSelected] = useState("blood");
-  const [fileNames, setFileNames] = useState([]);
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const imageFiles = files.map((file) => ({
+      name: file.name,
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setSelectedFiles((prev) => [...prev, ...imageFiles]);
+  };
+
+  const handleRemoveFile = (index) => {
+    setSelectedFiles((prev) => {
+      URL.revokeObjectURL(prev[index].preview); // cleanup
+      return prev.filter((_, i) => i !== index);
+    });
+  };
 
   return (
     <div>
@@ -16,38 +34,38 @@ const LabTests = ({ onClose }) => {
 
         <div className={styles.row1}>
           <div className={styles.radioGroup}>
-            <div
-              className={`${styles.radioMember} ${
-                selected === "blood" ? styles.activeRadio : ""
+            <label
+              className={`${styles.customRadio} ${
+                selected === "blood" ? styles.selectedRadio : ""
               }`}
             >
-              <label className={styles.customRadio}>
-                <input
-                  type="radio"
-                  name="labTest"
-                  value="blood"
-                  checked={selected === "blood"}
-                  onChange={() => setSelected("blood")}
-                />
-                <span>Blood test</span>
-              </label>
-            </div>
-            <div
-              className={`${styles.radioMember} ${
-                selected === "other" ? styles.activeRadio : ""
+              <input
+                type="radio"
+                name="labTest"
+                value="blood"
+                className={styles.inputRadio}
+                checked={selected === "blood"}
+                onChange={() => setSelected("blood")}
+              />
+              <span>Blood test</span>
+            </label>
+
+            <label
+              className={`${styles.customRadio} ${
+                selected === "other" ? styles.selectedRadio : ""
               }`}
             >
-              <label className={styles.customRadio}>
-                <input
-                  type="radio"
-                  name="labTest"
-                  value="other"
-                  checked={selected === "other"}
-                  onChange={() => setSelected("other")}
-                />
-                <span>Other</span>
-              </label>
-            </div>
+              <input
+                type="radio"
+                name="labTest"
+                value="other"
+                className={styles.inputRadio}
+                checked={selected === "other"}
+                onChange={() => setSelected("other")}
+              />
+              <span>Other</span>
+            </label>
+
             {selected === "other" && (
               <input
                 type="text"
@@ -62,15 +80,27 @@ const LabTests = ({ onClose }) => {
           <div className={styles.leftColumn}>
             <div>
               <h6 className={styles.label}>Blood Type</h6>
-              <input type="text" placeholder="Blood Type" />
+              <input
+                type="text"
+                placeholder="Blood Type"
+                className={styles.textInput}
+              />
             </div>
             <div>
               <h6 className={styles.label}>Lipid Profile</h6>
-              <input type="text" placeholder="Lipid Profile" />
+              <input
+                type="text"
+                placeholder="Lipid Profile"
+                className={styles.textInput}
+              />
             </div>
             <div>
               <h6 className={styles.label}>CDC</h6>
-              <input type="text" placeholder="CDC" />
+              <input
+                type="text"
+                placeholder="CDC"
+                className={styles.textInput}
+              />
             </div>
             <div className={styles.textAreaBox}>
               <h6 className={styles.label}>Action Taken</h6>
@@ -80,38 +110,46 @@ const LabTests = ({ onClose }) => {
 
           <div className={styles.rightColumn}>
             <div className={styles.textAreaBox}>
-              {" "}
               <h6 className={styles.label}>Lab Observation</h6>
               <textarea rows={6} />
             </div>
+
             <div className={styles.attachmentBox}>
               <h6 className={styles.label}>Attached File</h6>
               <label className={styles.customFileUpload}>
                 <input
                   type="file"
                   multiple
-                  onChange={(e) => {
-                    const files = Array.from(e.target.files);
-                    const names = files.map((file) => file.name);
-                    setFileNames((prev) => [...prev, ...names]);
-                  }}
+                  onChange={handleFileChange}
+                  className={styles.inputFile}
                 />
                 Choose File
               </label>
 
               <div className={styles.fileList}>
-                <div className={styles.fileNameList}>
-                  {fileNames.map((name, index) => (
-                    <span key={index} className={styles.fileName}>
-                      {name}
-                      <br />
-                    </span>
-                  ))}
-                </div>
+                {selectedFiles.map((item, index) => (
+                  <div key={index} className={styles.filePreviewBox}>
+                    {item.file.type.startsWith("image/") ? (
+                      <img
+                        src={item.preview}
+                        alt={item.name}
+                        className={styles.previewImg}
+                      />
+                    ) : (
+                      <span className={styles.fileName}>{item.name}</span>
+                    )}
+                    <X
+                      className={styles.removeIcon}
+                      size={16}
+                      onClick={() => handleRemoveFile(index)}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
+
         <div className={styles.submitContainer}>
           <button>Save</button>
         </div>

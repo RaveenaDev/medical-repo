@@ -92,7 +92,7 @@ const Nursing = () => {
 
           if (vital.name === "Heart Rate") {
             if (numericValue >= 100) {
-              statusLabel = "High";
+              statusLabel = "Rising";
               Icon = MoveUp;
               statusClass = styles.rising;
               containerClass = styles.risingContainer;
@@ -100,7 +100,7 @@ const Nursing = () => {
             } else if (numericValue >= 60) {
               statusLabel = "Normal";
             } else {
-              statusLabel = "Low";
+              statusLabel = "Dropped";
               Icon = MoveDown;
               statusClass = styles.dropped;
               containerClass = styles.droppedContainer;
@@ -108,7 +108,7 @@ const Nursing = () => {
             }
           } else if (vital.name === "Temperature") {
             if (numericValue >= 99.5) {
-              statusLabel = "Fever";
+              statusLabel = "Rising";
               Icon = MoveUp;
               statusClass = styles.rising;
               containerClass = styles.risingContainer;
@@ -116,7 +116,7 @@ const Nursing = () => {
             } else if (numericValue >= 97) {
               statusLabel = "Normal";
             } else {
-              statusLabel = "Low";
+              statusLabel = "Dropped";
               Icon = MoveDown;
               statusClass = styles.dropped;
               containerClass = styles.droppedContainer;
@@ -124,7 +124,7 @@ const Nursing = () => {
             }
           } else if (vital.name === "Blood Pressure") {
             if (systolic >= 130 || diastolic >= 90) {
-              statusLabel = "High";
+              statusLabel = "Rising";
               Icon = MoveUp;
               statusClass = styles.rising;
               containerClass = styles.risingContainer;
@@ -132,7 +132,7 @@ const Nursing = () => {
             } else if (systolic >= 90 && diastolic >= 60) {
               statusLabel = "Normal";
             } else {
-              statusLabel = "Low";
+              statusLabel = "Dropped";
               Icon = MoveDown;
               statusClass = styles.dropped;
               containerClass = styles.droppedContainer;

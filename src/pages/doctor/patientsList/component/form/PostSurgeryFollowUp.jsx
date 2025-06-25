@@ -8,7 +8,25 @@ const PostSurgeryFollowUp = ({ onClose }) => {
   const [openPhase, setOpenPhase] = useState(false);
 
   const [selectedPhase, setSelectedPhase] = useState("");
-  const [fileName, setFileName] = useState("");
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const imageFiles = files.map((file) => ({
+      name: file.name,
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setSelectedFiles((prev) => [...prev, ...imageFiles]);
+  };
+
+  const handleRemoveFile = (index) => {
+    setSelectedFiles((prev) => {
+      URL.revokeObjectURL(prev[index].preview); // cleanup
+      return prev.filter((_, i) => i !== index);
+    });
+  };
   return (
     <div>
       <div className={styles.crossContainer}>
@@ -20,19 +38,19 @@ const PostSurgeryFollowUp = ({ onClose }) => {
           <div className={styles.column}>
             <div className={`${styles.formGroup} ${styles.row1}`}>
               <p>Surgery Name</p>
-              <input type="text" />
+              <input type="text" className={styles.inputText} />
             </div>
             <div className={styles.formGroup}>
               <p>Surgery Date</p>
-              <input type="date" />
+              <input type="date" className={styles.inputDate} />
             </div>
             <div className={styles.formGroup}>
               <p>Assigned Doctor</p>
-              <input type="text" value="" />
+              <input type="text" value="" className={styles.inputText} />
             </div>
             <div className={styles.formGroup}>
               <p>Room No.</p>
-              <input type="text" />
+              <input type="text" className={styles.inputText} />
             </div>
             <div className={styles.formGroup}>
               <p>Healing status</p>
@@ -78,13 +96,38 @@ const PostSurgeryFollowUp = ({ onClose }) => {
             </div>
             <div className={`${styles.formGroup} ${styles.attachmentWidth} `}>
               <p>Attached Files</p>
-              <label className={styles.customFileUpload}>
-                <input
-                  type="file"
-                  onChange={(e) => setFileName(e.target.files[0]?.name || "")}
-                />
-                <span>{fileName || "No file chosen"}</span>
-              </label>
+              <div className={styles.attachmentBox}>
+                <label className={styles.customFileUpload}>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFileChange}
+                    className={styles.inputFile}
+                  />
+                  Choose File
+                </label>
+
+                <div className={styles.fileList}>
+                  {selectedFiles.map((item, index) => (
+                    <div key={index} className={styles.filePreviewBox}>
+                      {item.file.type.startsWith("image/") ? (
+                        <img
+                          src={item.preview}
+                          alt={item.name}
+                          className={styles.previewImg}
+                        />
+                      ) : (
+                        <span className={styles.fileName}>{item.name}</span>
+                      )}
+                      <X
+                        className={styles.removeIcon}
+                        size={16}
+                        onClick={() => handleRemoveFile(index)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             <div className={styles.formGroup}>
               <p>Observed Symptoms</p>
@@ -95,7 +138,7 @@ const PostSurgeryFollowUp = ({ onClose }) => {
             </div>
             <div className={`${styles.formGroup} ${styles.attachmentWidth}`}>
               <p>Medication Adjustments</p>
-              <input type="text" />
+              <input type="text" className={styles.inputTextMed} />
             </div>
           </div>
         </div>{" "}

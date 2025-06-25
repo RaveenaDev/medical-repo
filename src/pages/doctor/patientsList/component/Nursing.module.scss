@@ -35,11 +35,6 @@ header {
   overflow-y: auto;
   height: 30vh;
   margin-bottom: 2vh;
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(1, 1fr);
-
-    row-gap: 3.8vh;
-  }
 
   /* Hide scrollbar for Chrome, Safari, Opera */
   &::-webkit-scrollbar {
@@ -47,9 +42,14 @@ header {
     background: transparent;
   }
 
-  /* Hide scrollbar for Firefox */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(1, 1fr);
+
+    row-gap: 3.8vh;
+  }
 }
 
 .risingContainer {

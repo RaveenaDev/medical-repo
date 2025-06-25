@@ -11,15 +11,26 @@
 }
 
 .container {
-  padding: 0vh 2vw 2vh 0vw;
+  padding: 0 2vw 2vh 0vw;
   font-family: "Karla", sans-serif;
-
+  height: 78vh;
+  overflow-y: auto;
   h1 {
     font-size: 2.5vh;
     font-weight: 550;
     color: #25307f;
     margin-bottom: 3vh;
   }
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 .radioGroup {
@@ -39,7 +50,7 @@
   font-size: 1.9vh;
   color: #4a4a4a;
 
-  input[type="radio"] {
+  .inputRadio {
     opacity: 0;
     position: absolute;
     pointer-events: none;
@@ -48,44 +59,44 @@
   span {
     position: relative;
     padding-left: 3.6vh;
-  }
 
-  span::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.15vh;
-    width: 2.8vh;
-    height: 2.8vh;
-    border: 2px solid #25307f;
-    border-radius: 4px;
-    background-color: white;
-    transition: background 0.3s ease, border 0.3s ease;
-    box-sizing: border-box;
-  }
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.15vh;
+      width: 2.8vh;
+      height: 2.8vh;
+      border: 2px solid #25307f;
+      border-radius: 4px;
+      background-color: white;
+      transition: background 0.3s ease, border 0.3s ease;
+      box-sizing: border-box;
+    }
 
-  span::after {
-    content: "";
-    position: absolute;
-    left: 0.37vh;
-    top: 0.8vh;
-    width: 1.9vh;
-    height: 1.9vh;
-    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0.37vh;
+      top: 0.8vh;
+      width: 1.9vh;
+      height: 1.9vh;
+      background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg");
+      background-repeat: no-repeat;
+      background-size: contain;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
   }
+}
 
-  input[type="radio"]:checked + span::before {
-    background-color: #25307f;
-    border-color: #25307f;
-  }
+.selectedRadio span::before {
+  background-color: #25307f;
+  border-color: #25307f;
+}
 
-  input[type="radio"]:checked + span::after {
-    opacity: 1;
-  }
+.selectedRadio span::after {
+  opacity: 1;
 }
 
 .textInput {
@@ -96,21 +107,14 @@
   border-radius: 6px;
   font-family: "Karla", sans-serif;
   flex: 1;
-}
-
-.activeRadio {
-  background: #e9efff;
-}
-
-.radioMember {
-  padding: 1.2vh 1vh;
+  width: 90%;
+  height: 4vh;
 }
 
 .formGrid {
   display: flex;
   gap: 2vw;
   margin-top: 2vh;
-  // flex-wrap: wrap;
 }
 
 .leftColumn,
@@ -121,20 +125,12 @@
   gap: 2vh;
   flex: 1;
   margin-top: 3vh;
-  //min-width: 240px;
 }
-.textInput {
-  outline: none;
-  height: 5vh;
-  font-family: "Karla", sans-serif;
-  padding: 0vh 1vh;
-  width: 94%;
-  border: 1px solid #cfcfcf;
-  border-radius: 4px;
-}
+
 .textAreaBox {
   position: relative;
   width: 95%;
+
   textarea {
     width: 100%;
     border: 1px solid #ccc;
@@ -166,12 +162,6 @@
 h6 {
   font-weight: 550;
 }
-.fileList {
-  display: flex;
-  gap: 1vw;
-  flex-wrap: wrap;
-  font-size: 1.7vh;
-}
 
 .customFileUpload {
   display: inline-block;
@@ -191,24 +181,65 @@ h6 {
     background-color: #e5edff;
   }
 
-  input[type="file"] {
+  .inputFile {
     display: none;
   }
 }
 
-input[type="file"] {
-  padding: 0.8vh 1vw;
-  font-size: 1.8vh;
+.fileList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1vh;
+}
+
+.filePreviewBox {
+  position: relative;
+  display: inline-block;
+  margin-right: 1vw;
+
+  img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .fileName {
+    display: block;
+    font-size: 1.5vh;
+    color: #333;
+    padding: 0.5vh;
+    background: #f0f0f0;
+    border-radius: 4px;
+    max-width: 100px;
+    word-wrap: break-word;
+  }
+}
+
+.removeIcon {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #fff;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #ffff;
-  width: 90%;
+  border-radius: 50%;
+  padding: 1px;
+  color: #ed4301;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #ed4301;
+    color: white;
+  }
 }
 
 .submitContainer {
   display: flex;
   justify-content: center;
   margin-top: 4vh;
+
   button {
     background: #25307f;
     color: white;
@@ -216,5 +247,14 @@ input[type="file"] {
     border-radius: 4px;
     font-size: 2vh;
     font-weight: 400;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border: none;
+    cursor: pointer;
   }
+}
+
+.radioGroup {
+  height: 7vh;
+  display: flex;
+  align-items: center;
 }

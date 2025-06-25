@@ -12,42 +12,42 @@ const UpdateMAR = ({ onClose }) => {
         <div className={styles.section1}>
           <div>
             <p>Time of Administration</p>
-            <input type="text" />
+            <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
             <p>Date of Administration</p>
-            <input type="date" />
+            <input type="date" className={styles.inputDate} />
           </div>
           <div>
             {" "}
             <p>Medication Name</p>
-            <input type="text" />
+            <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
             <p>Dose</p>
-            <input type="text" />
+            <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
             <p>Route of Administration</p>
-            <input type="text" />
+            <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
             <p>Assigned By</p>
-            <input type="text" />
+            <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
             <p>Room No.</p>
-            <input type="text" />
+            <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
             <p>Bed No.</p>
-            <input type="text" />
+            <input type="text" className={styles.inputText} />
           </div>
         </div>
         {/* Section 2 */}
