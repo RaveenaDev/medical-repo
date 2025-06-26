@@ -13,7 +13,7 @@ import {
   getDoctors,
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
-import {getInpatients, getPatients, getRooms} from "../../../components/State/Doctor/Action.js";
+import {getInpatients, getPatients, getRooms, getSurgeries} from "../../../components/State/Doctor/Action.js";
 
 
 const CommonPanel = ({
@@ -43,11 +43,8 @@ const CommonPanel = ({
   useEffect(() => {
     dispatch(getPatients());
     dispatch(getInpatients());
-    // dispatch(getDoctors());
-    // dispatch(getStaffs());
+    dispatch(getSurgeries());
     dispatch(getRooms());
-    // dispatch(getAllDepartments());
-    // dispatch(getBillingRecords());
   }, [dispatch]);
 
   const doctor = useSelector((store) => store.doctor);
@@ -57,6 +54,9 @@ const CommonPanel = ({
 
   const noOfInpatients = doctor.totalInpatients;
   const inPatients = doctor.inPatients;
+
+  const noOfSurgeries = doctor.totalSurgeries;
+  const surgeries = doctor.surgeries;
 
   const noOfRooms = doctor.totalRooms;
   const rooms = doctor.rooms;
@@ -71,8 +71,8 @@ const CommonPanel = ({
   const handleInpatientsClick = (inPatients) => {
     navigate(`/doctor/inpatients`, { state: { inPatients } });
   };
-  const handleSurgeriesClick = (staffs) => {
-    navigate(`/doctor/surgeries`, { state: { staffs } });
+  const handleSurgeriesClick = (surgeries) => {
+    navigate(`/doctor/surgeries`, { state: { surgeries } });
   };
 
   return (
@@ -120,8 +120,8 @@ const CommonPanel = ({
                 backgroundColor: "#2E823B",
               }}
               title="Total Surgeries"
-              subtitle="250"
-              handleClickCb={() => handleSurgeriesClick(inPatients)}
+              subtitle={noOfSurgeries}
+              handleClickCb={() => handleSurgeriesClick(surgeries)}
             />
           </Grid>
           <Grid size={3}>
@@ -130,7 +130,7 @@ const CommonPanel = ({
                 backgroundColor: "#66A7B4",
               }}
               title="Total Rooms"
-              subtitle="80"
+              subtitle={noOfRooms}
               handleClickCb={() => handleRoomsClick(rooms)}
             />
           </Grid>

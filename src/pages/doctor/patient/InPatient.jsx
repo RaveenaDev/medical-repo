@@ -73,9 +73,9 @@ const InPatients = () => {
   ];
 
   const location = useLocation();
-  const inPatients = location.state.inPatients;
+  const inPatients = location.state?.inPatients || [];
 
-  console.log("Tranferred: ",inPatients)
+  // console.log("Tranferred: ",inPatients)
 
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -279,49 +279,56 @@ const InPatients = () => {
         <p>This is where appointment requests will appear.</p>
       </AppointmentRequestModal>
 
-      <div className={styles.patientsTableContainer}>
-        <table className={styles.patientsTable}>
-          <thead>
-            <tr>
-              <th>Patient ID</th>
-              <th>Patient</th>
-              <th>Bed</th>
-              <th>Condition</th>
-              <th>Doctor</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {inPatients.map((patient, index) => (
-              <tr key={index}>
-                <td className={styles.patientId}>{truncateText(patient.patientId, 10)}</td>
-                <td className={styles.patientInfo}>
-                  <div>
-                    <div className={styles.patientName}>{patient.patientName}</div>
-                    <div className={styles.patientEmail}>{patient.email}</div>
-                  </div>
-                </td>
-                <td className={styles.bedNumber}>{patient.bed}</td>
-                <td className={styles.condition}>{patient.condition}</td>
-                <td className={styles.doctor}>{patient.doctorName}</td>
-                <td className={styles.status}>
-                  <span
-                    className={`${styles.statusBadge} ${
+        <div className={styles.patientsTableContainer}>
+            {inPatients && inPatients.length > 0 ? (
+                <table className={styles.patientsTable}>
+                    <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient</th>
+                        <th>Bed</th>
+                        <th>Condition</th>
+                        <th>Doctor</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {inPatients.map((patient, index) => (
+                        <tr key={index}>
+                            <td className={styles.patientId}>
+                                {truncateText(patient.patientId, 10)}
+                            </td>
+                            <td className={styles.patientInfo}>
+                                <div>
+                                    <div className={styles.patientName}>{patient.patientName}</div>
+                                    <div className={styles.patientEmail}>{patient.email}</div>
+                                </div>
+                            </td>
+                            <td className={styles.bedNumber}>{patient.bed}</td>
+                            <td className={styles.condition}>{patient.condition}</td>
+                            <td className={styles.doctor}>{patient.doctorName}</td>
+                            <td className={styles.status}>
+              <span
+                  className={`${styles.statusBadge} ${
                       styles[patient.status.toLowerCase()]
-                    }`}
-                  >
-                    {patient.status}
-                  </span>
-                </td>
-                <td className={styles.actions}>
-                  <BsThreeDotsVertical className={styles.menuIcon} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  }`}
+              >
+                {patient.status}
+              </span>
+                            </td>
+                            <td className={styles.actions}>
+                                <BsThreeDotsVertical className={styles.menuIcon}/>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (
+                <div className={styles.noDataMessage}>No inpatients found.</div>
+            )}
+        </div>
+
     </>
   );
 };

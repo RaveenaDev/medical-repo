@@ -39,13 +39,15 @@ export const getSurgeries = () => async (dispatch) => {
     try {
         const token = localStorage.getItem("jwt");
 
-        const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
+        const { data } = await axios.get(`${API_URL}/patients/surgeries`, {
             headers: {
                 Authorization: `Bearer ${token}`, // Includes the token in the authorization header
             },
         });
 
-        dispatch({ type: GET_SURGERIES, payload: data });
+        console.log("Surgeries: ",data.data)
+
+        dispatch({ type: GET_SURGERIES, payload: data.data });
     } catch (error) {
         console.log(error);
     }

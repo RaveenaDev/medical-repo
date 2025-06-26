@@ -31,7 +31,7 @@ import Select from "@mui/material/Select";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addRoom,
@@ -137,7 +137,7 @@ const Rooms = () => {
 
     // const rooms = useSelector((state) => state.admin.rooms);
     // const loading = useSelector((state) => state.admin.isLoading);
-    const rooms = [
+    const dummyRooms = [
         {
             roomID: "RM101",
             name: "Deluxe Room 1",
@@ -175,6 +175,11 @@ const Rooms = () => {
             assignedDoctor: null,
         },
     ];
+
+    const location = useLocation();
+    const rooms = location.state?.rooms || [];
+
+    // console.log("Rooms : ",rooms)
 
     const loading = false;
     const doctors = useSelector((state) => state.admin.doctors);

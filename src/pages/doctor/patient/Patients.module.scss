@@ -105,6 +105,14 @@
 .patientsTableContainer {
   padding: 0;
 
+  .noDataMessage {
+    text-align: center;
+    color: #999;
+    font-size: 18px;
+    padding: 50px 0;
+    font-weight: 500;
+  }
+
   .patientsTable {
     width: 100%;
     border-collapse: separate;

@@ -5,10 +5,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { patientData } from "../../../constants/patientsData";
 import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 import styles from "./TotalSurgeries.module.scss";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 import AppointmentRequestModal from "../components/appointmentRequests/AppointmentRequest";
 import {Box, Button} from "@mui/material";
+import {useDispatch} from "react-redux";
+import {getSurgeries} from "../../../components/State/Doctor/Action.js";
 
 const TotalSurgeries = () => {
   const sortOptions = ["Newest to Oldest", "Oldest to Newest"];
@@ -93,7 +95,10 @@ const TotalSurgeries = () => {
       </Box>
   );
 
-  return (
+    const location = useLocation();
+    const surgeries = location.state?.surgeries || [];
+
+    return (
     <>
       <div style={{ position: "relative" }}>
         <CommonPanel />
@@ -102,7 +107,7 @@ const TotalSurgeries = () => {
         <div className={styles.headerTop}>
           <div className={styles.headerLeft}>
             <ChevronLeft size={28} strokeWidth={1.7} />
-            <span className={styles.backText}>Inpatient List</span>
+            <span className={styles.backText}>Surgeries List</span>
           </div>
           <div className={styles.headerRight}>
             {/*<button className={styles.requestButton} onClick={handleRequestBtn}>*/}
@@ -270,53 +275,58 @@ const TotalSurgeries = () => {
         <p>This is where appointment requests will appear.</p>
       </AppointmentRequestModal>
 
-      <div className={styles.patientsTableContainer}>
-        <table className={styles.patientsTable}>
-          <thead>
-            <tr>
-              <th>Patient ID</th>
-              <th>Patient</th>
-              <th>Date</th>
-              <th>Surgery Type</th>
-              <th>Doctor</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {patientData.map((patient, index) => (
-              <tr key={index}>
-                <td className={styles.patientId}>{patient.id}</td>
-                <td className={styles.patientInfo}>
-                  <div>
-                    <div className={styles.patientName}>{patient.name}</div>
-                    <div className={styles.patientEmail}>{patient.email}</div>
-                  </div>
-                </td>
-                <td className={styles.date}>{patient.date}</td>
-                <td className={styles.surgeryType}>{patient.surgeryType}</td>
-                <td className={styles.doctor}>{patient.doctor}</td>
-                <td className={styles.status2}>
-                  <span
-                    className={`${styles.statusBadge} ${
+        <div className={styles.patientsTableContainer}>
+            {surgeries && surgeries.length > 0 ? (
+                <table className={styles.patientsTable}>
+                    <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Surgery Type</th>
+                        <th>Doctor</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {surgeries.map((patient, index) => (
+                        <tr key={index}>
+                            <td className={styles.patientId}>{patient.id}</td>
+                            <td className={styles.patientInfo}>
+                                <div>
+                                    <div className={styles.patientName}>{patient.name}</div>
+                                    <div className={styles.patientEmail}>{patient.email}</div>
+                                </div>
+                            </td>
+                            <td className={styles.date}>{patient.date}</td>
+                            <td className={styles.surgeryType}>{patient.surgeryType}</td>
+                            <td className={styles.doctor}>{patient.doctor}</td>
+                            <td className={styles.status2}>
+              <span
+                  className={`${styles.statusBadge} ${
                       patient.status2.toLowerCase() === "completed"
-                        ? styles.completed
-                        : patient.status2.toLowerCase() === "cancelled"
-                        ? styles.cancelled
-                        : styles.scheduled
-                    }`}
-                  >
-                    {patient.status2}
-                  </span>
-                </td>
-                <td className={styles.actions}>
-                  <BsThreeDotsVertical className={styles.menuIcon} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                          ? styles.completed
+                          : patient.status2.toLowerCase() === "cancelled"
+                              ? styles.cancelled
+                              : styles.scheduled
+                  }`}
+              >
+                {patient.status2}
+              </span>
+                            </td>
+                            <td className={styles.actions}>
+                                <BsThreeDotsVertical className={styles.menuIcon}/>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (
+                <div className={styles.noDataMessage}>No data found.</div>
+            )}
+        </div>
+
     </>
   );
 };

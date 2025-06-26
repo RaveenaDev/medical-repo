@@ -125,7 +125,7 @@ const Patients = () => {
   ];
 
   const location = useLocation();
-  const patients = location.state.patients;
+    const patients = location.state?.patients || [];
 
   // console.log("Transferred : ",patients)
 
@@ -393,53 +393,58 @@ const Patients = () => {
         <p>This is where appointment requests will appear.</p>
       </AppointmentRequestModal>
 
-      <div className={styles.patientsTableContainer}>
-        <table className={styles.patientsTable}>
-          <thead>
-            <tr>
-              <th>Case ID</th>
-              <th>Name</th>
-              <th>Phone Number</th>
-              <th>Type Visit</th>
-              <th>Branch</th>
-              <th>Date</th>
-              <th>Booking</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {patients.map((patient, index) => (
-              <tr key={index}>
-                <td className={styles.patientId}>{patient.caseId}</td>
-                <td className={styles.patientInfo}>
-                  <div>
-                    <div className={styles.patientName}>{patient.name}</div>
-                    <div className={styles.patientEmail}>{patient.email}</div>
-                  </div>
-                </td>
-                <td className={styles.phoneNumber}>{patient.phone}</td>
-                <td className={styles.typeVisit}>{patient.typeVisit}</td>
-                <td className={styles.branch}>{patient.branch}</td>
-                <td className={styles.date}>{truncateText(patient.date, 10)}</td>
-                <td className={styles.booking}>
-                  <span
-                    className={` ${styles.bookingBadge} ${
+        <div className={styles.patientsTableContainer}>
+            {patients && patients.length > 0 ? (
+                <table className={styles.patientsTable}>
+                    <thead>
+                    <tr>
+                        <th>Case ID</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Type Visit</th>
+                        <th>Branch</th>
+                        <th>Date</th>
+                        <th>Booking</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {patients.map((patient, index) => (
+                        <tr key={index}>
+                            <td className={styles.patientId}>{patient.caseId}</td>
+                            <td className={styles.patientInfo}>
+                                <div>
+                                    <div className={styles.patientName}>{patient.name}</div>
+                                    <div className={styles.patientEmail}>{patient.email}</div>
+                                </div>
+                            </td>
+                            <td className={styles.phoneNumber}>{patient.phone}</td>
+                            <td className={styles.typeVisit}>{patient.typeVisit}</td>
+                            <td className={styles.branch}>{patient.branch}</td>
+                            <td className={styles.date}>{truncateText(patient.date, 10)}</td>
+                            <td className={styles.booking}>
+              <span
+                  className={` ${styles.bookingBadge} ${
                       patient.booking.toLowerCase() === "active"
-                        ? styles.activeBooking
-                        : styles.inactiveBooking
-                    }`}
-                  >
-                    {patient.booking}
-                  </span>
-                </td>
-                <td className={styles.actions}>
-                  <BsThreeDotsVertical className={styles.menuIcon} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                          ? styles.activeBooking
+                          : styles.inactiveBooking
+                  }`}
+              >
+                {patient.booking}
+              </span>
+                            </td>
+                            <td className={styles.actions}>
+                                <BsThreeDotsVertical className={styles.menuIcon}/>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (
+                <div className={styles.noDataMessage}>No patients found.</div>
+            )}
+        </div>
+
     </>
   );
 };
