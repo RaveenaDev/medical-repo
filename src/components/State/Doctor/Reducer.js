@@ -1,5 +1,11 @@
-import {GET_ROOMS} from "../Admin/ActionType.js";
-import {GET_INPATIENTS, GET_PATIENTS, GET_SURGERIES} from "./ActionType.js";
+import {
+    GET_APPOINTMENTS, GET_COMPLETED_APPOINTMENTS,
+    GET_INPATIENTS,
+    GET_MOST_COMMON_DIAGNOSIS, GET_ONGOING_APPOINTMENTS,
+    GET_PATIENTS,
+    GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
+    GET_SURGERIES, GET_WAITING_APPOINTMENTS
+} from "./ActionType.js";
 
 const initialState = {
     totalPatients: null,
@@ -10,6 +16,17 @@ const initialState = {
     surgeries: [],
     totalRooms: null,
     rooms: [],
+    totalDiagnosis: null,
+    diagnosis: [],
+    totalAppointments: [],
+    scheduledAppointments: [],
+    scheduledCount: null,
+    ongoingCount: null,
+    waitingCount: null,
+    completedCount: null,
+    ongoingAppointments: [],
+    waitingAppointments: [],
+    completedAppointments: [],
 }
 
 export const doctorReducer = (state = initialState, action) => {
@@ -43,6 +60,48 @@ export const doctorReducer = (state = initialState, action) => {
                 totalRooms: action.payload.rooms.length,
                 rooms: action.payload.rooms,
                 isLoading: false,
+            };
+
+        case GET_MOST_COMMON_DIAGNOSIS:
+            return {
+                ...state,
+                totalDiagnosis: action.payload.totalDiagnoses,
+                diagnosis: action.payload.data,
+                isLoading: false,
+            };
+
+        case GET_APPOINTMENTS:
+            return {
+                ...state,
+                totalAppointments: action.payload.appointments,
+            };
+
+        case GET_SCHEDULED_APPOINTMENTS:
+            return {
+                ...state,
+                scheduledAppointments: action.payload.appointments,
+                scheduledCount: action.payload.totalAppointments,
+            };
+
+        case GET_ONGOING_APPOINTMENTS:
+            return {
+                ...state,
+                ongoingAppointments: action.payload.appointments,
+                ongoingCount: action.payload.totalAppointments,
+            };
+
+        case GET_WAITING_APPOINTMENTS:
+            return {
+                ...state,
+                waitingAppointments: action.payload.appointments,
+                waitingCount: action.payload.totalAppointments,
+            };
+
+        case GET_COMPLETED_APPOINTMENTS:
+            return {
+                ...state,
+                completedAppointments: action.payload.appointments,
+                completedCount: action.payload.totalAppointments,
             };
 
         default:

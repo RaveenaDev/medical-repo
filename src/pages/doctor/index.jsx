@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./Index.module.scss";
 import CommonPanel from "./components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
@@ -24,6 +24,8 @@ import DoughnutChart from "./components/DoughnutChart.jsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {getAppointments, getMostCommonDiagnosis} from "../../components/State/Doctor/Action.js";
 const DATES = [
   { day: 24, month: "Sep" },
   { day: 25, month: "Sep" },
@@ -145,14 +147,6 @@ const DoctorOverview = () => {
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
   const navigate = useNavigate();
 
-  const dummyDiagnosisData = [
-    { name: "Respiratory Infections", value: 1800, color: "#D8E4FD" },
-    { name: "Hypertension", value: 2400, color: "#5E73D4" },
-    { name: "Hyperlipidemia", value: 3800, color: "#2D3179" },
-    { name: "Osteoarthritis", value: 2200, color: "#A3A3A3" },
-    { name: "GERD", value: 840, color: "#F1F1F1" },
-  ];
-
   const criticalPatients = [
     {
       name: "John Doe",
@@ -176,7 +170,7 @@ const DoctorOverview = () => {
     },
   ];
 
-  const totalAppointments = [
+  const dummyTotalAppointments = [
     {
       caseId: "CASE1234567890",
       patient: { name: "John Doe" },
@@ -348,6 +342,8 @@ const DoctorOverview = () => {
 
   const [selected, setSelected] = useState(24);
 
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
   const handleFooterBtn = () => {
     navigate("/doctor/calendar");
   };
@@ -360,6 +356,47 @@ const DoctorOverview = () => {
     // Any other logic before opening the modal
     setIsModalOpen(true);
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const startDate = selectedDate.startOf("day").toISOString();
+    const endDate = selectedDate.endOf("day").toISOString();
+
+    dispatch(getAppointments("Ongoing", startDate, endDate));
+    dispatch(getMostCommonDiagnosis());
+  }, [dispatch,selectedDate]);
+
+  const doctor = useSelector((store) => store.doctor);
+
+  const totalDiagnosis = doctor.totalDiagnosis
+  const diagnosis = doctor.diagnosis
+
+  const totalAppointments = doctor.totalAppointments;
+
+  const colorPalette = [
+    { color: "#D8E4FD", inColor: "#25307F" },
+    { color: "#5E73D4", inColor: "#ffffff" },
+    { color: "#2D3179", inColor: "#ffffff" },
+    { color: "#A3A3A3", inColor: "#ffffff" },
+    { color: "#F1F1F1", inColor: "#25307F" },
+  ];
+
+  // Transform
+  const resultantData = diagnosis.map((item, index) => ({
+    name: item.diagnosis,
+    value: item.count,
+    color: colorPalette[index % colorPalette.length].color,
+    inColor: colorPalette[index % colorPalette.length].inColor,
+  }));
+
+  // const dummyDiagnosisData = [
+  //   { name: "Respiratory Infections", value: 1800, color: "#D8E4FD",inColor: "#25307F" },
+  //   { name: "Hypertension", value: 2400, color: "#5E73D4",inColor: "#ffffff" },
+  //   { name: "Hyperlipidemia", value: 3800, color: "#2D3179",inColor: "#ffffff" },
+  //   { name: "Osteoarthritis", value: 2200, color: "#A3A3A3",inColor: "#ffffff" },
+  //   { name: "GERD", value: 840, color: "#F1F1F1" ,inColor: "#25307F"},
+  // ];
 
   return (
     <>
@@ -374,7 +411,10 @@ const DoctorOverview = () => {
             paddingBottom: "1rem",
           }}
         >
-          <CommonPanel />
+          <CommonPanel
+              setSelectedDate={setSelectedDate}
+              selectedDate={selectedDate}
+          />
 
           <Grid
             container
@@ -591,7 +631,7 @@ const DoctorOverview = () => {
                     </div>
                   </div>
 
-                  <DoughnutChart data={dummyDiagnosisData} />
+                  <DoughnutChart data={resultantData} />
                 </div>
                 <div className={styles.card}>
                   <div

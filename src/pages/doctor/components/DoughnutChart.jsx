@@ -30,6 +30,7 @@ const DoughnutChart = ({ data, height = 240 }) => {
       endAngle,
       fill,
       percent,
+        payload
     } = props;
 
     const RADIAN = Math.PI / 180;
@@ -60,7 +61,7 @@ const DoughnutChart = ({ data, height = 240 }) => {
           y={y - 3}
           textAnchor="middle"
           dominantBaseline="middle"
-          style={{ fontSize: 9, fontWeight: "bold", fill: "#ffffff" }}
+          style={{ fontSize: 9, fontWeight: "bold", fill: payload.inColor || "#ffffff" }}
         >
           {Math.round(percent * 100)}%
         </text>

@@ -1,6 +1,13 @@
 import axios from "axios";
 import {API_URL} from "../../Config/api.js";
-import {GET_INPATIENTS, GET_PATIENTS, GET_ROOMS, GET_SURGERIES} from "./ActionType.js";
+import {
+    GET_APPOINTMENTS, GET_COMPLETED_APPOINTMENTS,
+    GET_INPATIENTS,
+    GET_MOST_COMMON_DIAGNOSIS, GET_ONGOING_APPOINTMENTS,
+    GET_PATIENTS,
+    GET_ROOMS, GET_SCHEDULED_APPOINTMENTS,
+    GET_SURGERIES, GET_WAITING_APPOINTMENTS
+} from "./ActionType.js";
 
 export const getPatients = () => async (dispatch) => {
     try {
@@ -68,3 +75,65 @@ export const getRooms = () => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const getMostCommonDiagnosis = () => async (dispatch) => {
+    try {
+        const token = localStorage.getItem("jwt");
+
+        const { data } = await axios.get(`${API_URL}/diagnosis/most-common`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            },
+        });
+
+        // console.log("Diag: ",data)
+
+        dispatch({ type: GET_MOST_COMMON_DIAGNOSIS, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getAppointments =
+    (activeLabel, startDate, endDate, selectedBranch, page, rowsPerPage) =>
+        async (dispatch) => {
+            try {
+                const token = localStorage.getItem("jwt");
+
+                if (selectedBranch === "All Branches") selectedBranch = null;
+
+                const { data } = await axios.get(`${API_URL}/getAppointments`, {
+                    params: {
+                        status: activeLabel,
+                        start: startDate,
+                        end: endDate,
+                        departmentId: selectedBranch,
+                        page: page + 1,
+                        limit: rowsPerPage,
+                    }, // Sending status as a query parameter
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+                    },
+                });
+
+                console.log("Getting Appointments : ",data)
+
+                dispatch({ type: GET_APPOINTMENTS, payload: data });
+
+                if (data.message === "Scheduled appointments retrieved successfully") {
+                    dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+                } else if (
+                    data.message === "Ongoing appointments retrieved successfully"
+                ) {
+                    dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+                } else if (
+                    data.message === "Waiting appointments retrieved successfully"
+                ) {
+                    dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+                } else {
+                    dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
