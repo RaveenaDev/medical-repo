@@ -2,7 +2,8 @@ import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS, GET_DOCTOR_REQUESTS,
+  GET_COMPLETED_APPOINTMENTS,
+  GET_DOCTOR_REQUESTS,
   GET_INPATIENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
@@ -125,38 +126,81 @@ export const getAppointments =
 
       dispatch({ type: GET_APPOINTMENTS, payload: data });
 
-                if (data.message === "Scheduled appointments retrieved successfully") {
-                    dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
-                } else if (
-                    data.message === "Ongoing appointments retrieved successfully"
-                ) {
-                    dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
-                } else if (
-                    data.message === "Waiting appointments retrieved successfully"
-                ) {
-                    dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
-                } else {
-                    dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
+      if (data.message === "Scheduled appointments retrieved successfully") {
+        dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Ongoing appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Waiting appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+      } else {
+        dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getDoctorRequests = (status) => async (dispatch) => {
-    try {
-        const token = localStorage.getItem("jwt");
+  try {
+    const token = localStorage.getItem("jwt");
 
-        const { data } = await axios.get(`${API_URL}/requests?status=${status}`, {
-            headers: {
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            },
-        });
+    const { data } = await axios.get(`${API_URL}/requests?status=${status}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        console.log("REQ : ",data)
+    console.log("REQ : ", data);
 
-        dispatch({ type: GET_DOCTOR_REQUESTS, payload: data });
-    } catch (error) {
-        console.log(error);
-    }
+    dispatch({ type: GET_DOCTOR_REQUESTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
 };
+
+// Department Actions
+
+export const getHospitalStatistics = (departmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/statistics`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+      params: {
+        departmentId,
+      },
+    });
+
+    dispatch({ type: GET_STATS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPatientOverview =
+  (departmentId, fromDate, toDate) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/overview`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+        params: {
+          departmentId,
+          fromDate,
+          toDate,
+        },
+      });
+
+      dispatch({ type: GET_PATIENT_OVERVIEW, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
