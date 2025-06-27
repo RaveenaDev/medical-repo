@@ -26,19 +26,38 @@ import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {getAppointments, getMostCommonDiagnosis} from "../../components/State/Doctor/Action.js";
-const DATES = [
-  { day: 24, month: "Sep" },
-  { day: 25, month: "Sep" },
-  { day: 26, month: "Sep" },
-  { day: 27, month: "Sep" },
-  { day: 28, month: "Sep" },
-  { day: 29, month: "Sep" },
-  { day: 30, month: "Sep" },
-  { day: 1, month: "Oct" },
-  { day: 2, month: "Oct" },
-  { day: 3, month: "Oct" },
-  { day: 4, month: "Oct" },
-];
+// const DATES = [
+//   { day: 24, month: "Sep" },
+//   { day: 25, month: "Sep" },
+//   { day: 26, month: "Sep" },
+//   { day: 27, month: "Sep" },
+//   { day: 28, month: "Sep" },
+//   { day: 29, month: "Sep" },
+//   { day: 30, month: "Sep" },
+//   { day: 1, month: "Oct" },
+//   { day: 2, month: "Oct" },
+//   { day: 3, month: "Oct" },
+//   { day: 4, month: "Oct" },
+// ];
+
+const generateNextDates = (count = 11) => {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const today = new Date();
+
+  const dates = Array.from({ length: count }, (_, i) => {
+    const futureDate = new Date(today);
+    futureDate.setDate(today.getDate() + i);
+
+    return {
+      day: futureDate.getDate(),
+      month: months[futureDate.getMonth()],
+    };
+  });
+
+  return dates;
+};
+
+const DATES = generateNextDates();
 
 const EVENTS = [
   {
@@ -340,7 +359,7 @@ const DoctorOverview = () => {
 
   const totalPatients = phases.reduce((sum, p) => sum + p.count, 0);
 
-  const [selected, setSelected] = useState(24);
+  const [selected, setSelected] = useState(DATES[0].day);
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
 

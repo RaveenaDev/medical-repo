@@ -5,6 +5,8 @@ import { ChevronLeft, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import DoctorNewRequest from "./DoctorNewRequest";
+import {useDispatch} from "react-redux";
+import {getDoctorRequests} from "../../../components/State/Doctor/Action.js";
 
 const DoctorRequest = () => {
   const now = dayjs();
@@ -162,6 +164,22 @@ const DoctorRequest = () => {
 
   const closeModal = () => setActiveModal(null);
 
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getDoctorRequests('active'));
+  }, [dispatch]);
+
+  const handleActive = () => {
+    setSelectedTab("active")
+    dispatch(getDoctorRequests('active'))
+  }
+
+  const handleInactive = () => {
+    setSelectedTab("inactive")
+    dispatch(getDoctorRequests('inactive'))
+  }
+
   return (
     <div>
       <CommonPanelMini />
@@ -183,13 +201,13 @@ const DoctorRequest = () => {
         <div className={styles.content}>
           <div className={styles.selection}>
             <div
-              onClick={() => setSelectedTab("active")}
+              onClick={() => handleActive()}
               className={selectedTab === "active" ? styles.selectedTab : ""}
             >
               <span>Active Request</span>
             </div>
             <div
-              onClick={() => setSelectedTab("inactive")}
+              onClick={() => handleInactive()}
               className={selectedTab === "inactive" ? styles.selectedTab : ""}
               style={{ cursor: "pointer" }}
             >
