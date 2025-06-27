@@ -23,6 +23,7 @@ import PostSurgeryFollowUp from "./form/PostSurgeryFollowUp";
 import styles from "./ProgressTracker2.module.scss";
 import LabTests from "./form/LabTests";
 import InitialConsultation from "./form/InitialConsultation";
+import Surgery from "./form/Surgery";
 
 const ProgressTracker2 = ({ patient }) => {
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ const ProgressTracker2 = ({ patient }) => {
   }, [activeModal]);
 
   const openFollowUp = () => setActiveModal("FollowUp");
+  const openSurgery = () => setActiveModal("Surgery");
   const openLabTests = () => setActiveModal("LabTests");
   const openInitialConsultation = () => setActiveModal("InitialConsultation");
   const closeModal = () => setActiveModal(null);
@@ -159,6 +161,8 @@ const ProgressTracker2 = ({ patient }) => {
                     ? openLabTests
                     : step.phase === "Initial Consultation"
                     ? openInitialConsultation
+                    : step.phase === "Surgery"
+                    ? openSurgery
                     : null
                 }
                 sx={{
@@ -199,6 +203,14 @@ const ProgressTracker2 = ({ patient }) => {
                 <div className={styles.backdropOverlay} onClick={closeModal} />
                 <div className={styles.followUpModal}>
                   <PostSurgeryFollowUp onClose={closeModal} />
+                </div>
+              </>
+            )}
+            {activeModal === "Surgery" && (
+              <>
+                <div className={styles.backdropOverlay} onClick={closeModal} />
+                <div className={styles.surgeryModal}>
+                  <Surgery onClose={closeModal} />
                 </div>
               </>
             )}
