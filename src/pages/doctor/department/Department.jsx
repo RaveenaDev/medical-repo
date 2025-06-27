@@ -330,6 +330,7 @@ const Department = () => {
   const totalPatients = hospitalStatistics?.patients?.total || 0;
   const totalBeds = hospitalStatistics?.beds?.available || 0;
   const totalRooms = hospitalStatistics?.rooms?.available || 0;
+
   const patientOverview = useSelector((state) => state.doctor.patientOverview);
 
   // console.log("Hospital Statistics: ", hospitalStatistics);
@@ -808,7 +809,9 @@ const Department = () => {
                       </defs>
                     </svg>
 
-                    <span className={style.cardNumber}>24</span>
+                    <span className={style.cardNumber}>
+                      {patientOverview?.admitted ?? 0}
+                    </span>
                     <span className={style.cardLabel}>Admitted</span>
                   </div>
                 </div>
@@ -827,7 +830,9 @@ const Department = () => {
                         fill="#EAA000"
                       />
                     </svg>
-                    <span className={style.cardNumber}>8</span>
+                    <span className={style.cardNumber}>
+                      {patientOverview?.discharged ?? 0}
+                    </span>
                     <span className={style.cardLabel}>Discharged</span>
                   </div>
                 </div>
@@ -846,7 +851,9 @@ const Department = () => {
                         fill="#2E823B"
                       />
                     </svg>
-                    <span className={style.cardNumber}>12</span>
+                    <span className={style.cardNumber}>
+                      {patientOverview?.scheduled ?? 0}
+                    </span>
                     <span className={style.cardLabel}>Scheduled</span>
                   </div>
                 </div>
