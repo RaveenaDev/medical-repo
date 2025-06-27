@@ -70,9 +70,9 @@
   }
 }
 
-h4{
+h4 {
   margin-top: 1rem;
-  color: #25307F;
+  color: #25307f;
   font-weight: 500;
   font-size: 14px;
 }
@@ -377,4 +377,87 @@ input[type="number"]::-ms-input {
     padding: 10px 60px 10px 60px;
     border-radius: 6px;
   }
+}
+
+.customQuestion {
+  margin-top: 4vh;
+  margin-left: 0.5vw;
+  padding: 2vh 1vw;
+  width: 39vw;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(66, 114, 203, 1);
+  z-index: 20;
+  input {
+    width: 97%;
+    outline: none;
+    border: 2px solid #3498db;
+    font-family: "Inter", sans-serif;
+    padding: 1.9vh 0.5vw;
+    border-radius: 20px;
+  }
+
+  .customQuestionBtns {
+    display: flex;
+    margin-top: 1vh;
+    gap: 1vw;
+    justify-content: flex-end;
+
+    button {
+      padding: 0.5vh 1vw;
+      font-size: 1.9vh;
+    }
+
+    .cancelBtn {
+      background-color: white;
+      color: #25307f;
+      border: 1px solid #25307f;
+      border-radius: 4px;
+    }
+
+    .saveBtn {
+      background: #25307f;
+      color: white;
+      border-radius: 4px;
+      font-weight: 350;
+    }
+  }
+}
+
+.dynamicQuestion {
+  margin-top: 4vh;
+
+  p {
+    font-size: 1.9vh;
+    color: #4a4a4a;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1vh;
+}
+
+.removeButton {
+  background: transparent;
+  border: none;
+  color: #ff4d4f;
+  font-size: 2vh;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.backdropOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 19;
 }
