@@ -5,108 +5,109 @@ import { ChevronLeft, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import DoctorNewRequest from "./DoctorNewRequest";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getDoctorRequests} from "../../../components/State/Doctor/Action.js";
 
 const DoctorRequest = () => {
   const now = dayjs();
   const yesterday = now.subtract(1, "day");
-  const requests = [
-    {
-      id: 1,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: now.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=22",
-      active: true,
-      background: "blue",
-      target: true,
-    },
-    {
-      id: 2,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: now.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=21",
-      active: true,
-      background: "blue",
-      target: true,
-    },
-    {
-      id: 3,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: yesterday.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=26",
-      active: true,
-      background: "gray",
-    },
-    {
-      id: 4,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: now.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=33",
-      active: true,
-      background: "gray",
-    },
-    {
-      id: 5,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: now.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=33",
-      active: false,
-      background: "gray",
-      target: true,
-    },
-    {
-      id: 6,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: now.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=33",
-      active: false,
-      background: "gray",
-      target: true,
-    },
-    {
-      id: 6,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: yesterday.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=33",
-      active: false,
-      background: "gray",
-    },
-    {
-      id: 6,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: yesterday.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=33",
-      active: false,
-      background: "gray",
-    },
-    {
-      id: 6,
-      message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-      requester: "Dr. Shetty",
-      role: "Head of Cardiology",
-      requestedOn: now.toISOString(),
-      avatarUrl: "https://i.pravatar.cc/30?img=33",
-      active: false,
-      background: "gray",
-    },
-  ];
+  // const requests = [
+  //   {
+  //     id: 1,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: now.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=22",
+  //     active: true,
+  //     background: "blue",
+  //     target: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: now.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=21",
+  //     active: true,
+  //     background: "blue",
+  //     target: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: yesterday.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=26",
+  //     active: true,
+  //     background: "gray",
+  //   },
+  //   {
+  //     id: 4,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: now.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
+  //     active: true,
+  //     background: "gray",
+  //   },
+  //   {
+  //     id: 5,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: now.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
+  //     active: false,
+  //     background: "gray",
+  //     target: true,
+  //   },
+  //   {
+  //     id: 6,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: now.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
+  //     active: false,
+  //     background: "gray",
+  //     target: true,
+  //   },
+  //   {
+  //     id: 6,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: yesterday.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
+  //     active: false,
+  //     background: "gray",
+  //   },
+  //   {
+  //     id: 6,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: yesterday.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
+  //     active: false,
+  //     background: "gray",
+  //   },
+  //   {
+  //     id: 6,
+  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
+  //     requester: "Dr. Shetty",
+  //     role: "Head of Cardiology",
+  //     requestedOn: now.toISOString(),
+  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
+  //     active: false,
+  //     background: "gray",
+  //   },
+  // ];
+
 
   function groupRequestsByDay(requests) {
     const groups = {};
@@ -134,6 +135,24 @@ const DoctorRequest = () => {
 
   // State to track selected tab: "active" or "inactive"
   const [selectedTab, setSelectedTab] = useState("active");
+
+  const doctor = useSelector((store) => store.doctor.doctorRequests);
+
+  console.log("Doc: ",doctor)
+
+  const formattedRequests = doctor?.map((item, index) => ({
+    id: item._id || index,
+    message: item.description || item.purpose || "No message provided",
+    requester: item.requestBy?.name || "Unknown Doctor",
+    role: item.requestBy?.specialization || "Unknown Role",
+    requestedOn: item.createdAt,
+    avatarUrl: "https://i.pravatar.cc/30?img=33",
+    active: item.status?.toLowerCase() === "active",
+    background: item.status?.toLowerCase() === "active" ? "blue" : "gray",
+    target: item.status?.toLowerCase() === "active" // customize if needed
+  })) || [];
+
+  const requests = formattedRequests;
 
   const navigate = useNavigate();
   const handleBackButton = () => {
@@ -179,6 +198,10 @@ const DoctorRequest = () => {
     setSelectedTab("inactive")
     dispatch(getDoctorRequests('inactive'))
   }
+
+
+
+
 
   return (
     <div>
@@ -226,95 +249,104 @@ const DoctorRequest = () => {
               </div>
             </>
           )}
-          <div className={styles.activeReq}>
-            {selectedTab === "active" &&
-              Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
-                <div key={dayLabel} className={styles.dateSection}>
-                  <p>{dayLabel}</p>
-                  {reqs.map((req) => (
-                    <div
-                      key={req.id}
-                      onClick={handleRequestDetail}
-                      className={`${styles.requestItem} ${
-                        req.background === "blue"
-                          ? styles.blueBackground
-                          : styles.grayBackground
-                      }`}
-                    >
-                      <img
-                        src={req.avatarUrl}
-                        alt="avatar"
-                        className={styles.avatar}
-                      />
-                      <div className={styles.reqContent}>
-                        <div
-                          className={`styles.message ${
-                            req.background === "blue"
-                              ? styles.blueText
-                              : styles.message
-                          }`}
-                        >
-                          {req.message}
-                        </div>
-                        <div
-                          className={`styles.subText ${
-                            req.background === "blue"
-                              ? styles.blueSubText
-                              : styles.subText
-                          }`}
-                        >
-                          {req.requester} ({req.role}) has requested on{" "}
-                          {dayjs(req.requestedOn).format(
-                            "dddd, D MMM at h:mm A"
-                          )}
-                        </div>
+
+            {filteredRequests.length === 0 ? (
+                      <div className={styles.noData}>
+                        <p>No requests found.</p>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                  )
+            : (
+            <div className={styles.activeReq}>
+          {selectedTab === "active" &&
+              Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
+                  <div key={dayLabel} className={styles.dateSection}>
+                    <p>{dayLabel}</p>
+                    {reqs.map((req) => (
+                        <div
+                            key={req.id}
+                            onClick={handleRequestDetail}
+                            className={`${styles.requestItem} ${
+                                req.background === "blue"
+                                    ? styles.blueBackground
+                                    : styles.grayBackground
+                            }`}
+                        >
+                          <img
+                              src={req.avatarUrl}
+                              alt="avatar"
+                              className={styles.avatar}
+                          />
+                          <div className={styles.reqContent}>
+                            <div
+                                className={`styles.message ${
+                                    req.background === "blue"
+                                        ? styles.blueText
+                                        : styles.message
+                                }`}
+                            >
+                              {req.message}
+                            </div>
+                            <div
+                                className={`styles.subText ${
+                                    req.background === "blue"
+                                        ? styles.blueSubText
+                                        : styles.subText
+                                }`}
+                            >
+                              {req.requester} ({req.role}) has requested on{" "}
+                              {dayjs(req.requestedOn).format(
+                                  "dddd, D MMM at h:mm A"
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                    ))}
+                  </div>
               ))}
 
-            {selectedTab === "inactive" &&
+          {selectedTab === "inactive" &&
               Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
-                <div key={dayLabel} className={styles.dateSection}>
-                  <p>{dayLabel}</p>
-                  {reqs.map((req) => (
-                    <div
-                      key={req.id}
-                      onClick={handleRequestDetail}
-                      className={`${styles.requestItem} ${
-                        req.background === "blue"
-                          ? styles.blueBackground
-                          : styles.grayBackground
-                      }`}
-                    >
-                      <img
-                        src={req.avatarUrl}
-                        alt="avatar"
-                        className={styles.avatar}
-                      />
-                      <div className={styles.reqContent}>
+                  <div key={dayLabel} className={styles.dateSection}>
+                    <p>{dayLabel}</p>
+                    {reqs.map((req) => (
                         <div
-                          className={`${
-                            req.target === true
-                              ? styles.TLMessage
-                              : styles.message
-                          }`}
+                            key={req.id}
+                            onClick={handleRequestDetail}
+                            className={`${styles.requestItem} ${
+                                req.background === "blue"
+                                    ? styles.blueBackground
+                                    : styles.grayBackground
+                            }`}
                         >
-                          {req.message}
+                          <img
+                              src={req.avatarUrl}
+                              alt="avatar"
+                              className={styles.avatar}
+                          />
+                          <div className={styles.reqContent}>
+                            <div
+                                className={`${
+                                    req.target === true
+                                        ? styles.TLMessage
+                                        : styles.message
+                                }`}
+                            >
+                              {req.message}
+                            </div>
+                            <div className={styles.subText}>
+                            {req.requester} ({req.role}) has requested on{" "}
+                              {dayjs(req.requestedOn).format(
+                                  "dddd, D MMM at h:mm A"
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <div className={styles.subText}>
-                          {req.requester} ({req.role}) has requested on{" "}
-                          {dayjs(req.requestedOn).format(
-                            "dddd, D MMM at h:mm A"
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
               ))}
-          </div>
+        </div>
+            )
+          }
         </div>
       </div>
     </div>

@@ -58,7 +58,7 @@ export const getSurgeries = () => async (dispatch) => {
       },
     });
 
-    console.log("Surgeries: ", data.data);
+    // console.log("Surgeries: ", data.data);
 
     dispatch({ type: GET_SURGERIES, payload: data.data });
   } catch (error) {
@@ -122,7 +122,7 @@ export const getAppointments =
         },
       });
 
-      console.log("Getting Appointments : ", data);
+      // console.log("Getting Appointments : ", data);
 
       dispatch({ type: GET_APPOINTMENTS, payload: data });
 
@@ -154,7 +154,7 @@ export const getDoctorRequests = (status) => async (dispatch) => {
       },
     });
 
-    console.log("REQ : ", data);
+    // console.log("REQ : ", data);
 
     dispatch({ type: GET_DOCTOR_REQUESTS, payload: data });
   } catch (error) {

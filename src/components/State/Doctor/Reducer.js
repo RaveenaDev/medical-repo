@@ -1,7 +1,7 @@
 import { getHospitalStatistics } from "./Action.js";
 import {
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS,
+  GET_COMPLETED_APPOINTMENTS, GET_DOCTOR_REQUESTS,
   GET_INPATIENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
@@ -36,6 +36,7 @@ const initialState = {
   completedAppointments: [],
   hospitalStatistics: [],
   patientOverview: [],
+  doctorRequests: []
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -125,6 +126,12 @@ export const doctorReducer = (state = initialState, action) => {
         completedAppointments: action.payload.appointments,
         completedCount: action.payload.totalAppointments,
       };
+
+    case GET_DOCTOR_REQUESTS:
+      return{
+        ...state,
+        doctorRequests: action.payload.data
+      }
 
     default:
       return state;
