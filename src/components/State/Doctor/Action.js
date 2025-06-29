@@ -12,7 +12,7 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STATS,
-  GET_SURGERIES,
+  GET_SURGERIES, GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
 } from "./ActionType.js";
 
@@ -204,3 +204,22 @@ export const getPatientOverview =
       console.log(error);
     }
   };
+
+export const getUpcomingEvents =
+    (date) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+
+        const { data } = await axios.get(`${API_URL}/events?date=${date}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        });
+
+        // console.log("Upcoming Events: ",data)
+        dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+

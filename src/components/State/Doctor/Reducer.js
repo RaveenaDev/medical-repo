@@ -10,7 +10,7 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STATS,
-  GET_SURGERIES,
+  GET_SURGERIES, GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
 } from "./ActionType.js";
 
@@ -36,7 +36,8 @@ const initialState = {
   completedAppointments: [],
   hospitalStatistics: [],
   patientOverview: [],
-  doctorRequests: []
+  doctorRequests: [],
+  events: []
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -131,6 +132,12 @@ export const doctorReducer = (state = initialState, action) => {
       return{
         ...state,
         doctorRequests: action.payload.data
+      }
+
+    case GET_UPCOMING_EVENTS:
+      return{
+        ...state,
+        events: action.payload.events
       }
 
     default:

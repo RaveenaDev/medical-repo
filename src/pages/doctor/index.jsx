@@ -25,7 +25,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getAppointments, getMostCommonDiagnosis} from "../../components/State/Doctor/Action.js";
+import {getAppointments, getMostCommonDiagnosis, getUpcomingEvents} from "../../components/State/Doctor/Action.js";
 // const DATES = [
 //   { day: 24, month: "Sep" },
 //   { day: 25, month: "Sep" },
@@ -59,107 +59,107 @@ const generateNextDates = (count = 11) => {
 
 const DATES = generateNextDates();
 
-const EVENTS = [
-  {
-    time: "10:00",
-    type: "call",
-    title: "Call Dr. Jyoti Bharwe",
-    duration: "1:30–2:30 pm",
-    status: "cancelled",
-  },
-  {
-    time: "11:00",
-    type: "meeting",
-    title: "Meeting",
-    duration: "11:00–12:30 pm",
-    status: "active",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  {
-    time: "12:30",
-    type: "call",
-    title: "Call Dr. Yash Sharma",
-    duration: "12:30–1:00 pm",
-    status: "queued",
-  },
-  /* …etc */
-];
+// const EVENTS = [
+//   {
+//     time: "10:00",
+//     type: "call",
+//     title: "Call Dr. Jyoti Bharwe",
+//     duration: "1:30–2:30 pm",
+//     status: "cancelled",
+//   },
+//   {
+//     time: "11:00",
+//     type: "meeting",
+//     title: "Meeting",
+//     duration: "11:00–12:30 pm",
+//     status: "active",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   {
+//     time: "12:30",
+//     type: "call",
+//     title: "Call Dr. Yash Sharma",
+//     duration: "12:30–1:00 pm",
+//     status: "queued",
+//   },
+//   /* …etc */
+// ];
 const DoctorOverview = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
@@ -384,6 +384,7 @@ const DoctorOverview = () => {
 
     dispatch(getAppointments("Ongoing", startDate, endDate));
     dispatch(getMostCommonDiagnosis());
+    dispatch(getUpcomingEvents(new Date()))
   }, [dispatch,selectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
@@ -392,6 +393,23 @@ const DoctorOverview = () => {
   const diagnosis = doctor.diagnosis
 
   const totalAppointments = doctor.totalAppointments;
+
+  const events = doctor.events;
+
+  const EVENTS = events.map((event) => {
+    const [startHour, startSuffix] = event.startTime.split(" ");
+    const [endHour, endSuffix] = event.endTime.split(" ");
+
+    return {
+      time: startHour, // e.g. "10:00"
+      type: event.eventType.toLowerCase(), // e.g. "meeting"
+      title: event.title,
+      duration: `${event.startTime} – ${event.endTime}`,
+      status: "active", // You can make this dynamic if status is added
+    };
+  });
+
+  console.log("Events: ",events)
 
   const colorPalette = [
     { color: "#D8E4FD", inColor: "#25307F" },
