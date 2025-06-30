@@ -299,13 +299,21 @@ const Department = () => {
 
   // Date range for patient overview
   const [filter, setFilter] = useState("month");
+  const [filter2, setFilter2] = useState("month");
   const [dateRange, setDateRange] = useState(getDateRange("month"));
+  const [dateRange2, setDateRange2] = useState(getDateRange("month"));
 
   const handleFilterChange = (e) => {
     const selected = e.target.value;
     setFilter(selected);
     const range = getDateRange(selected);
     setDateRange(range);
+  };
+  const handleFilterChange2 = (e) => {
+    const selected = e.target.value;
+    setFilter2(selected);
+    const range = getDateRange(selected);
+    setDateRange2(range);
   };
   useEffect(() => {
     // Dispatch an action to get hospital statistics
@@ -342,7 +350,6 @@ const Department = () => {
           top: 0,
           width: "77.6vw",
           background: "#F1F1F1",
-          paddingBottom: "1rem",
         }}
       >
         <CommonPanel />
@@ -374,55 +381,6 @@ const Department = () => {
               <h4>Cardiology Department</h4>
             </div>
             <p>Head: Dr. Amit Patil</p>
-          </div>
-
-          <div style={{ marginTop: "1.2rem" }}>
-            <Button
-              variant="contained"
-              onClick={handleOpen}
-              sx={{
-                display: "flex",
-                gap: "0.8rem",
-                fontSize: "16px",
-                color: "#ffffff",
-                textTransform: "capitalize",
-                padding: {
-                  xs: "0px 8px",
-                  sm: "0px 10px",
-                  md: "4px 10px",
-                }, // Adjust padding
-                backgroundColor: "#25307F",
-                boxShadow: "0px 4px 4px 0px #C2C2C240",
-                "&:hover": {
-                  background: "#AEC3FF",
-                },
-                "&:active": {
-                  backgroundColor: "#181F52",
-                  outline: "none",
-                  boxShadow: "none",
-                },
-                "&:focus": {
-                  outline: "none",
-                  boxShadow: "none",
-                },
-              }}
-            >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M13 13V20C13 20.2652 12.8946 20.5196 12.7071 20.7071C12.5196 20.8946 12.2652 21 12 21C11.7348 21 11.4804 20.8946 11.2929 20.7071C11.1054 20.5196 11 20.2652 11 20V13H4C3.73478 13 3.48043 12.8946 3.29289 12.7071C3.10536 12.5196 3 12.2652 3 12C3 11.7348 3.10536 11.4804 3.29289 11.2929C3.48043 11.1054 3.73478 11 4 11H11V4C11 3.73478 11.1054 3.48043 11.2929 3.29289C11.4804 3.10536 11.7348 3 12 3C12.2652 3 12.5196 3.10536 12.7071 3.29289C12.8946 3.48043 13 3.73478 13 4V11H20C20.2652 11 20.5196 11.1054 20.7071 11.2929C20.8946 11.4804 21 11.7348 21 12C21 12.2652 20.8946 12.5196 20.7071 12.7071C20.5196 12.8946 20.2652 13 20 13H13Z"
-                  fill="white"
-                />
-              </svg>
-              New Department
-            </Button>
           </div>
         </div>
 
@@ -520,40 +478,16 @@ const Department = () => {
             <div className={style.card} style={{ backgroundColor: "#25307F" }}>
               <div className={style.cardHeader}>
                 <h3>Number of medical procedures</h3>
-                <div>
-                  <span className={style.subTitle}>This Month</span>
-                  <svg
-                    style={{ marginLeft: "4px", transform: "translateY(3px)" }}
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                <div className={style.filter}>
+                  <select
+                    className={style.filterdropdown}
+                    value={filter2}
+                    onChange={handleFilterChange2}
                   >
-                    <mask
-                      id="mask0_3883_12068"
-                      maskType="alpha"
-                      maskUnits="userSpaceOnUse"
-                      x="0"
-                      y="0"
-                      width="16"
-                      height="16"
-                    >
-                      <rect
-                        y="16"
-                        width="16"
-                        height="16"
-                        transform="rotate(-90 0 16)"
-                        fill="#D9D9D9"
-                      />
-                    </mask>
-                    <g mask="url(#mask0_3883_12068)">
-                      <path
-                        d="M14.6663 5.33333L7.99967 12L1.33301 5.33333L2.51634 4.15L7.99967 9.63333L13.483 4.15L14.6663 5.33333Z"
-                        fill="#DAE4FF"
-                      />
-                    </g>
-                  </svg>
+                    <option value="month">This Month</option>
+                    <option value="week">This Week</option>
+                    <option value="year">This Year</option>
+                  </select>
                 </div>
               </div>
 

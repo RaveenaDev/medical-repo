@@ -1,11 +1,10 @@
 .parent {
-  margin-top: 24.6vh;
+  margin-top: 22.6vh;
   .head {
     display: flex;
     justify-content: space-between;
     background-color: #ffffff;
     margin-bottom: 0.7rem;
-    margin-top: 1rem;
     padding: 7px;
     border-radius: 4px;
     .headingSection {
@@ -176,9 +175,23 @@
             font-weight: 600;
           }
 
-          .subTitle {
+          .filter {
             font-size: 0.875rem; /* 14px */
             color: #ffffff;
+
+            .filterdropdown {
+              background-color: transparent;
+              border: none;
+              outline: none; // Removes the blue border on click (Chrome/Edge)
+              box-shadow: none; // Removes focus shadow in Firefox
+              font-size: 0.875rem; /* 14px */
+              color: #ffffff;
+              cursor: pointer;
+
+              option {
+                color: #25307f;
+              }
+            }
           }
         }
 
