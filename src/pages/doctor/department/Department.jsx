@@ -308,7 +308,6 @@ const Department = () => {
   const [filter, setFilter] = useState("month");
   const [dateRange, setDateRange] = useState(getDateRange("month"));
 
-  const departmentId = "683d7f91ae6534294cac2e8a"; // Example department ID, replace with actual
   const handleFilterChange = (e) => {
     const selected = e.target.value;
     setFilter(selected);
@@ -317,10 +316,8 @@ const Department = () => {
   };
   useEffect(() => {
     // Dispatch an action to get hospital statistics
-    dispatch(getHospitalStatistics(departmentId));
-    dispatch(
-      getPatientOverview(departmentId, dateRange.fromDate, dateRange.toDate)
-    );
+    dispatch(getHospitalStatistics());
+    dispatch(getPatientOverview(dateRange.fromDate, dateRange.toDate));
   }, [dispatch, dateRange]);
 
   const hospitalStatistics = useSelector(

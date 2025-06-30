@@ -12,7 +12,8 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STATS,
-  GET_SURGERIES, GET_UPCOMING_EVENTS,
+  GET_SURGERIES,
+  GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
 } from "./ActionType.js";
 
@@ -164,9 +165,12 @@ export const getDoctorRequests = (status) => async (dispatch) => {
 
 // Department Actions
 
-export const getHospitalStatistics = (departmentId) => async (dispatch) => {
+export const getHospitalStatistics = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
+
+    console.log("Department ID: ", departmentId);
 
     const { data } = await axios.get(`${API_URL}/statistics`, {
       headers: {
@@ -183,43 +187,41 @@ export const getHospitalStatistics = (departmentId) => async (dispatch) => {
   }
 };
 
-export const getPatientOverview =
-  (departmentId, fromDate, toDate) => async (dispatch) => {
-    try {
-      const token = localStorage.getItem("jwt");
+export const getPatientOverview = (fromDate, toDate) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
 
-      const { data } = await axios.get(`${API_URL}/overview`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-        },
-        params: {
-          departmentId,
-          fromDate,
-          toDate,
-        },
-      });
+    const { data } = await axios.get(`${API_URL}/overview`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+      params: {
+        departmentId,
+        fromDate,
+        toDate,
+      },
+    });
 
-      dispatch({ type: GET_PATIENT_OVERVIEW, payload: data });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    dispatch({ type: GET_PATIENT_OVERVIEW, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const getUpcomingEvents =
-    (date) => async (dispatch) => {
-      try {
-        const token = localStorage.getItem("jwt");
+export const getUpcomingEvents = (date) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-        const { data } = await axios.get(`${API_URL}/events?date=${date}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        });
+    const { data } = await axios.get(`${API_URL}/events?date=${date}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
-        // console.log("Upcoming Events: ",data)
-        dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
+    // console.log("Upcoming Events: ",data)
+    dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
