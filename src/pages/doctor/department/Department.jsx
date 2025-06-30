@@ -259,13 +259,6 @@ const Department = () => {
     return val.toString();
   };
 
-  const ipdCount = 222; // e.g. get this from props or state
-  const opdCount = 344; // e.g. get this from props or state
-
-  const totalCases = ipdCount + opdCount;
-  const ipdPercent = totalCases > 0 ? (ipdCount / totalCases) * 100 : 0;
-  const opdPercent = totalCases > 0 ? (opdCount / totalCases) * 100 : 0;
-
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -329,6 +322,13 @@ const Department = () => {
   const totalRooms = hospitalStatistics?.rooms?.available || 0;
 
   const patientOverview = useSelector((state) => state.doctor.patientOverview);
+  const totalCases = useSelector((state) => state.doctor.totalCases) || 0;
+  const totalInpatientsCount =
+    useSelector((state) => state.doctor.totalInpatientsCount) || 0;
+  const totalOutpatientsCount =
+    useSelector((state) => state.doctor.totalOutpatientsCount) || 0;
+  const totalInpatientsCountPercent =
+    totalCases > 0 ? (totalInpatientsCount / totalCases) * 100 : 0;
 
   // console.log("Hospital Statistics: ", hospitalStatistics);
   // console.log("Patient Overview: ", patientOverview);
@@ -959,10 +959,10 @@ const Department = () => {
                 <div className={style.casesHeader}>{totalCases} cases</div>
                 <div className={style.casesTop}>
                   <p className={style.caseLabel}>
-                    <span>{ipdCount}</span> IPD
+                    <span>{totalInpatientsCount}</span> IPD
                   </p>
                   <p className={style.caseLabel}>
-                    <span>{opdCount}</span> OPD
+                    <span>{totalOutpatientsCount}</span> OPD
                   </p>
                 </div>
                 <div className={style.casesContent}>
@@ -970,7 +970,7 @@ const Department = () => {
                     <div
                       className={style.progressInner}
                       style={{
-                        width: `${ipdPercent}%` /* e.g. 122/466 total = 26% */,
+                        width: `${totalInpatientsCountPercent}%` /* e.g. 122/466 total = 26% */,
                       }}
                     />
                   </div>
