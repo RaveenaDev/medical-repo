@@ -170,8 +170,6 @@ export const getHospitalStatistics = () => async (dispatch) => {
     const token = localStorage.getItem("jwt");
     const departmentId = localStorage.getItem("departmentId");
 
-    console.log("Department ID: ", departmentId);
-
     const { data } = await axios.get(`${API_URL}/statistics`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
