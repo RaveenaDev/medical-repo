@@ -6,6 +6,7 @@ const initialState = {
   jwt: null,
   role: null,
   hospitalName: null,
+  departmentId: [],
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -17,6 +18,7 @@ export const authReducer = (state = initialState, action) => {
         jwt: action.payload.token,
         role: action.payload.role,
         hospitalName: action.payload.hospitalName,
+        departmentId: action.payload.departmentIds,
       };
 
     case LOGOUT:
@@ -25,6 +27,8 @@ export const authReducer = (state = initialState, action) => {
         user: null,
         jwt: null,
         role: null,
+        hospitalName: null,
+        departmentId: [],
       };
 
     default:

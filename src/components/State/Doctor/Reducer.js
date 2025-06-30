@@ -1,6 +1,7 @@
 import {
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS, GET_DOCTOR_REQUESTS,
+  GET_COMPLETED_APPOINTMENTS,
+  GET_DOCTOR_REQUESTS,
   GET_INPATIENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
@@ -9,7 +10,8 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STATS,
-  GET_SURGERIES, GET_UPCOMING_EVENTS,
+  GET_SURGERIES,
+  GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
 } from "./ActionType.js";
 
@@ -36,7 +38,10 @@ const initialState = {
   hospitalStatistics: [],
   patientOverview: [],
   doctorRequests: [],
-  events: []
+  events: [],
+  totalCases: null,
+  totalInpatientsCount: null,
+  totalOutpatientsCount: null,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -76,12 +81,16 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         hospitalStatistics: action.payload.statistics,
+
         isLoading: false,
       };
     case GET_PATIENT_OVERVIEW:
       return {
         ...state,
         patientOverview: action.payload.overview,
+        totalCases: action.payload.totalCases,
+        totalInpatientsCount: action.payload.totalInpatients,
+        totalOutpatientsCount: action.payload.totalOutpatients,
         isLoading: false,
       };
 
@@ -128,16 +137,16 @@ export const doctorReducer = (state = initialState, action) => {
       };
 
     case GET_DOCTOR_REQUESTS:
-      return{
+      return {
         ...state,
-        doctorRequests: action.payload.data
-      }
+        doctorRequests: action.payload.data,
+      };
 
     case GET_UPCOMING_EVENTS:
-      return{
+      return {
         ...state,
-        events: action.payload.events
-      }
+        events: action.payload.events,
+      };
 
     default:
       return state;
