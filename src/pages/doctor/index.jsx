@@ -489,7 +489,7 @@ const DoctorOverview = () => {
         <div
           style={{
             position: "fixed",
-            zIndex: 1000,
+            zIndex: 10,
             top: 0,
             width: "77.6vw",
             background: " #F1F1F1",

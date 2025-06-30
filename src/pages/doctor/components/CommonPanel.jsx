@@ -7,12 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllDepartments,
-  getBillingRecords,
-  getDoctors,
-  getStaffs,
-} from "../../../components/State/Admin/Action.js";
 import {getInpatients, getPatients, getRooms, getSurgeries} from "../../../components/State/Doctor/Action.js";
 
 
