@@ -39,6 +39,13 @@ import {getAppointments, getMostCommonDiagnosis, getUpcomingEvents} from "../../
 //   { day: 3, month: "Oct" },
 //   { day: 4, month: "Oct" },
 // ];
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const generateNextDates = (count = 11) => {
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -400,12 +407,26 @@ const DoctorOverview = () => {
     const [startHour, startSuffix] = event.startTime.split(" ");
     const [endHour, endSuffix] = event.endTime.split(" ");
 
+      const date = dayjs(event.date); // e.g. 2025-06-30
+
+      // Combine date + time and parse using dayjs
+      const start = dayjs(`${date.format("YYYY-MM-DD")} ${event.startTime}`, "YYYY-MM-DD hh:mm A");
+      const end = dayjs(`${date.format("YYYY-MM-DD")} ${event.endTime}`, "YYYY-MM-DD hh:mm A");
+      const now = dayjs(); // or use dayjs().tz("Asia/Kolkata") if needed
+
+      let status = "queued";
+      if (now.isAfter(end)) {
+          status = "cancelled"; // past
+      } else if (now.isBetween(start, end)) {
+          status = "active"; // now
+      }
+
     return {
       time: startHour, // e.g. "10:00"
       type: event.eventType.toLowerCase(), // e.g. "meeting"
       title: event.title,
       duration: `${event.startTime} – ${event.endTime}`,
-      status: "active", // You can make this dynamic if status is added
+      status
     };
   });
 
@@ -434,6 +455,33 @@ const DoctorOverview = () => {
   //   { name: "Osteoarthritis", value: 2200, color: "#A3A3A3",inColor: "#ffffff" },
   //   { name: "GERD", value: 840, color: "#F1F1F1" ,inColor: "#25307F"},
   // ];
+
+    const handleDateSelected = (day,monthName) => {
+        setSelected(day);
+
+        // console.log("Day:", day);
+        // console.log("Month:", monthName);
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthIndex = monthNames.indexOf(monthName);
+
+        if (monthIndex === -1) {
+            console.error("Invalid month name:", monthName);
+            return;
+        }
+
+      const year = new Date().getFullYear();
+      const selectedDate = new Date(year, monthIndex, day);
+
+      if (isNaN(selectedDate.getTime())) {
+        console.error("Constructed invalid date:", selectedDate);
+        return;
+      }
+
+        // console.log("Formatted: ",selectedDate)
+        // console.log("Default: ",new Date())
+        dispatch(getUpcomingEvents(selectedDate))
+    }
 
   return (
     <>
@@ -1089,7 +1137,7 @@ const DoctorOverview = () => {
                     className={
                       d.day === selected ? styles.dateActive : styles.dateBtn
                     }
-                    onClick={() => setSelected(d.day)}
+                    onClick={() => handleDateSelected(d.day,d.month)}
                   >
                     <span className={styles.dateDay}>{d.day}</span>
                     <span className={styles.dateMon}>{d.month}</span>
@@ -1099,87 +1147,93 @@ const DoctorOverview = () => {
 
               {/* Event list */}
               <div className={styles.eventList}>
-                {EVENTS.map((e, i) => (
-                  <div
-                    key={i}
-                    className={styles.eventRow}
-                    onClick={() => setSelectedEvent(e)}
-                  >
-                    <div className={styles.eventTime}>{e.time}</div>
-                    <div
-                      className={`${styles.commonEventCard} ${
-                        e.status === "active"
-                          ? styles.eventCardActive
-                          : e.status === "queued"
-                          ? styles.eventCardQueued
-                          : styles.eventCardCancelled
-                      }`}
-                    >
-                      {e.type === "call" ? (
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M16.95 18C14.8667 18 12.8083 17.546 10.775 16.638C8.74167 15.73 6.89167 14.4423 5.225 12.775C3.55833 11.1077 2.271 9.25767 1.363 7.225C0.455 5.19233 0.000666667 3.134 0 1.05C0 0.75 0.0999999 0.5 0.3 0.3C0.5 0.0999999 0.75 0 1.05 0H5.1C5.33333 0 5.54167 0.0793332 5.725 0.238C5.90833 0.396667 6.01667 0.584 6.05 0.8L6.7 4.3C6.73333 4.56667 6.725 4.79167 6.675 4.975C6.625 5.15833 6.53333 5.31667 6.4 5.45L3.975 7.9C4.30833 8.51667 4.704 9.11233 5.162 9.687C5.62 10.2617 6.12433 10.816 6.675 11.35C7.19167 11.8667 7.73333 12.346 8.3 12.788C8.86667 13.23 9.46667 13.634 10.1 14L12.45 11.65C12.6 11.5 12.796 11.3877 13.038 11.313C13.28 11.2383 13.5173 11.2173 13.75 11.25L17.2 11.95C17.4333 12.0167 17.625 12.1377 17.775 12.313C17.925 12.4883 18 12.684 18 12.9V16.95C18 17.25 17.9 17.5 17.7 17.7C17.5 17.9 17.25 18 16.95 18Z"
-                            fill="#616AA5"
-                          />
-                        </svg>
-                      ) : e.type === "meeting" ? (
-                        <svg
-                          width="19"
-                          height="18"
-                          viewBox="0 0 19 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            opacity="0.7"
-                            d="M9.03886 3.02125C9.039 2.62449 8.96094 2.23159 8.80917 1.86501C8.6574 1.49842 8.43488 1.16534 8.15433 0.884787C7.87377 0.604236 7.54069 0.381715 7.17411 0.229942C6.80752 0.0781693 6.41462 0.00011862 6.01786 0.00025002H3.05986C2.6599 -0.00489579 2.2629 0.0694369 1.8919 0.218935C1.52089 0.368433 1.18327 0.590121 0.898616 0.871134C0.613964 1.15215 0.387951 1.48689 0.233693 1.85594C0.0794339 2.22499 0 2.62101 0 3.021C0 3.42099 0.0794339 3.81701 0.233693 4.18606C0.387951 4.55511 0.613964 4.88985 0.898616 5.17087C1.18327 5.45188 1.52089 5.67357 1.8919 5.82306C2.2629 5.97256 2.6599 6.0469 3.05986 6.04175H3.63886V7.50025C3.63886 7.50025 9.03886 6.77125 9.03886 3.02125ZM6.28886 11.0002C6.28886 12.1052 5.39386 13.0002 4.28886 13.0002C3.18386 13.0002 2.28886 12.1052 2.28886 11.0002C2.28886 9.89525 3.18386 9.00025 4.28886 9.00025C5.39386 9.00025 6.28886 9.89525 6.28886 11.0002ZM4.28886 14.0002C2.87036 14.0002 0.0388644 14.7152 0.0388644 16.1337V18.0002H8.53886V16.1337C8.53886 14.7147 5.70736 14.0002 4.28886 14.0002ZM13.7889 13.0002C14.8939 13.0002 15.7889 12.1052 15.7889 11.0002C15.7889 9.89525 14.8939 9.00025 13.7889 9.00025C12.6839 9.00025 11.7889 9.89525 11.7889 11.0002C11.7889 12.1052 12.6839 13.0002 13.7889 13.0002ZM13.7889 14.0002C12.3704 14.0002 9.53886 14.7152 9.53886 16.1337V18.0002H18.0389V16.1337C18.0389 14.7147 15.2074 14.0002 13.7889 14.0002ZM13.0599 0.50025C12.6631 0.500119 12.2702 0.578169 11.9036 0.729942C11.537 0.881715 11.204 1.10424 10.9234 1.38479C10.6428 1.66534 10.4203 1.99842 10.2686 2.36501C10.1168 2.73159 10.0387 3.12449 10.0389 3.52125C10.0389 7.27125 14.8389 8.00025 14.8389 8.00025V6.54175H15.0179C15.4178 6.5469 15.8148 6.47256 16.1858 6.32306C16.5568 6.17357 16.8945 5.95188 17.1791 5.67087C17.4638 5.38985 17.6898 5.05511 17.844 4.68606C17.9983 4.31701 18.0777 3.92099 18.0777 3.521C18.0777 3.12101 17.9983 2.72499 17.844 2.35594C17.6898 1.98689 17.4638 1.65215 17.1791 1.37113C16.8945 1.09012 16.5568 0.868433 16.1858 0.718935C15.8148 0.569437 15.4178 0.495104 15.0179 0.50025H13.0599Z"
-                            fill="#25307F"
-                          />
-                        </svg>
-                      ) : null}
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            width: "100%",
-                            marginRight: "1rem",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <div className={styles.eventTitle}>{e.title}</div>
-                          <div className={styles.eventDuration}>
-                            {e.duration}
-                          </div>
-                        </div>
-                        <svg
-                          width="11"
-                          height="18"
-                          viewBox="0 0 11 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            opacity="0.6"
-                            d="M0.380428 17.2593C0.870428 17.7085 1.66043 17.7085 2.15043 17.2593L10.4604 9.64182C10.8504 9.28432 10.8504 8.70682 10.4604 8.34932L2.15043 0.731815C1.66043 0.282648 0.870428 0.282648 0.380428 0.731815C-0.109572 1.18098 -0.109572 1.90515 0.380428 2.35432L7.62043 9.00015L0.37043 15.646C-0.109571 16.086 -0.109572 16.8193 0.380428 17.2593Z"
-                            fill="#333333"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                {
+                  EVENTS.length === 0 ? (
+                      <div className={styles.noEvents}>No events found</div>
+                  ): (
+                      EVENTS.map((e, i) => (
+                            <div
+                                key={i}
+                                className={styles.eventRow}
+                                onClick={() => setSelectedEvent(e)}
+                            >
+                              <div className={styles.eventTime}>{e.time}</div>
+                              <div
+                                  className={`${styles.commonEventCard} ${
+                                      e.status === "active"
+                                          ? styles.eventCardActive
+                                          : e.status === "queued"
+                                              ? styles.eventCardQueued
+                                              : styles.eventCardCancelled
+                                  }`}
+                              >
+                                {e.type === "call" ? (
+                                    <svg
+                                        width="18"
+                                        height="18"
+                                        viewBox="0 0 18 18"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                          d="M16.95 18C14.8667 18 12.8083 17.546 10.775 16.638C8.74167 15.73 6.89167 14.4423 5.225 12.775C3.55833 11.1077 2.271 9.25767 1.363 7.225C0.455 5.19233 0.000666667 3.134 0 1.05C0 0.75 0.0999999 0.5 0.3 0.3C0.5 0.0999999 0.75 0 1.05 0H5.1C5.33333 0 5.54167 0.0793332 5.725 0.238C5.90833 0.396667 6.01667 0.584 6.05 0.8L6.7 4.3C6.73333 4.56667 6.725 4.79167 6.675 4.975C6.625 5.15833 6.53333 5.31667 6.4 5.45L3.975 7.9C4.30833 8.51667 4.704 9.11233 5.162 9.687C5.62 10.2617 6.12433 10.816 6.675 11.35C7.19167 11.8667 7.73333 12.346 8.3 12.788C8.86667 13.23 9.46667 13.634 10.1 14L12.45 11.65C12.6 11.5 12.796 11.3877 13.038 11.313C13.28 11.2383 13.5173 11.2173 13.75 11.25L17.2 11.95C17.4333 12.0167 17.625 12.1377 17.775 12.313C17.925 12.4883 18 12.684 18 12.9V16.95C18 17.25 17.9 17.5 17.7 17.7C17.5 17.9 17.25 18 16.95 18Z"
+                                          fill="#616AA5"
+                                      />
+                                    </svg>
+                                ) : e.type === "meeting" ? (
+                                    <svg
+                                        width="19"
+                                        height="18"
+                                        viewBox="0 0 19 18"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                          opacity="0.7"
+                                          d="M9.03886 3.02125C9.039 2.62449 8.96094 2.23159 8.80917 1.86501C8.6574 1.49842 8.43488 1.16534 8.15433 0.884787C7.87377 0.604236 7.54069 0.381715 7.17411 0.229942C6.80752 0.0781693 6.41462 0.00011862 6.01786 0.00025002H3.05986C2.6599 -0.00489579 2.2629 0.0694369 1.8919 0.218935C1.52089 0.368433 1.18327 0.590121 0.898616 0.871134C0.613964 1.15215 0.387951 1.48689 0.233693 1.85594C0.0794339 2.22499 0 2.62101 0 3.021C0 3.42099 0.0794339 3.81701 0.233693 4.18606C0.387951 4.55511 0.613964 4.88985 0.898616 5.17087C1.18327 5.45188 1.52089 5.67357 1.8919 5.82306C2.2629 5.97256 2.6599 6.0469 3.05986 6.04175H3.63886V7.50025C3.63886 7.50025 9.03886 6.77125 9.03886 3.02125ZM6.28886 11.0002C6.28886 12.1052 5.39386 13.0002 4.28886 13.0002C3.18386 13.0002 2.28886 12.1052 2.28886 11.0002C2.28886 9.89525 3.18386 9.00025 4.28886 9.00025C5.39386 9.00025 6.28886 9.89525 6.28886 11.0002ZM4.28886 14.0002C2.87036 14.0002 0.0388644 14.7152 0.0388644 16.1337V18.0002H8.53886V16.1337C8.53886 14.7147 5.70736 14.0002 4.28886 14.0002ZM13.7889 13.0002C14.8939 13.0002 15.7889 12.1052 15.7889 11.0002C15.7889 9.89525 14.8939 9.00025 13.7889 9.00025C12.6839 9.00025 11.7889 9.89525 11.7889 11.0002C11.7889 12.1052 12.6839 13.0002 13.7889 13.0002ZM13.7889 14.0002C12.3704 14.0002 9.53886 14.7152 9.53886 16.1337V18.0002H18.0389V16.1337C18.0389 14.7147 15.2074 14.0002 13.7889 14.0002ZM13.0599 0.50025C12.6631 0.500119 12.2702 0.578169 11.9036 0.729942C11.537 0.881715 11.204 1.10424 10.9234 1.38479C10.6428 1.66534 10.4203 1.99842 10.2686 2.36501C10.1168 2.73159 10.0387 3.12449 10.0389 3.52125C10.0389 7.27125 14.8389 8.00025 14.8389 8.00025V6.54175H15.0179C15.4178 6.5469 15.8148 6.47256 16.1858 6.32306C16.5568 6.17357 16.8945 5.95188 17.1791 5.67087C17.4638 5.38985 17.6898 5.05511 17.844 4.68606C17.9983 4.31701 18.0777 3.92099 18.0777 3.521C18.0777 3.12101 17.9983 2.72499 17.844 2.35594C17.6898 1.98689 17.4638 1.65215 17.1791 1.37113C16.8945 1.09012 16.5568 0.868433 16.1858 0.718935C15.8148 0.569437 15.4178 0.495104 15.0179 0.50025H13.0599Z"
+                                          fill="#25307F"
+                                      />
+                                    </svg>
+                                ) : null}
+                                <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      width: "100%",
+                                    }}
+                                >
+                                  <div
+                                      style={{
+                                        display: "flex",
+                                        width: "100%",
+                                        marginRight: "1rem",
+                                        justifyContent: "space-between",
+                                      }}
+                                  >
+                                    <div className={styles.eventTitle}>{e.title}</div>
+                                    <div className={styles.eventDuration}>
+                                      {e.duration}
+                                    </div>
+                                  </div>
+                                  <svg
+                                      width="11"
+                                      height="18"
+                                      viewBox="0 0 11 18"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                        opacity="0.6"
+                                        d="M0.380428 17.2593C0.870428 17.7085 1.66043 17.7085 2.15043 17.2593L10.4604 9.64182C10.8504 9.28432 10.8504 8.70682 10.4604 8.34932L2.15043 0.731815C1.66043 0.282648 0.870428 0.282648 0.380428 0.731815C-0.109572 1.18098 -0.109572 1.90515 0.380428 2.35432L7.62043 9.00015L0.37043 15.646C-0.109571 16.086 -0.109572 16.8193 0.380428 17.2593Z"
+                                        fill="#333333"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                        ))
+                  )
+                }
               </div>
 
               {/* Event Details Modal */}

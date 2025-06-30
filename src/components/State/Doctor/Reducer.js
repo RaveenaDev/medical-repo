@@ -1,4 +1,3 @@
-import { getHospitalStatistics } from "./Action.js";
 import {
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS, GET_DOCTOR_REQUESTS,

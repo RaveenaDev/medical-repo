@@ -235,6 +235,13 @@ body {
 
       /* Hide scrollbar for Firefox */
       scrollbar-width: none;
+
+      .noEvents {
+        text-align: center;
+        color: #888;
+        padding: 1rem;
+        font-style: italic;
+      }
     }
 
     /* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
