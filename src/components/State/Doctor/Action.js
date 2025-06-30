@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
+  CREATE_DOCTOR_REQUESTS,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
@@ -16,6 +17,7 @@ import {
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
 } from "./ActionType.js";
+import {toast} from "react-toastify";
 
 export const getPatients = () => async (dispatch) => {
   try {
@@ -157,13 +159,41 @@ export const getDoctorRequests = (status) => async (dispatch) => {
 
     // console.log("REQ : ", data);
 
+    localStorage.setItem("doctorRequestsCount", data.data?.length);
+
     dispatch({ type: GET_DOCTOR_REQUESTS, payload: data });
   } catch (error) {
     console.log(error);
   }
 };
 
-// Department Actions
+export const createDoctorRequests = (requestData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/requests`,requestData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Sent Successfully : ", data);
+
+    dispatch({ type: CREATE_DOCTOR_REQUESTS, payload: data.data });
+
+    toast.success("Request Created Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+
+  } catch (error) {
+    console.log(error);
+    toast.error("Request Creation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
 
 export const getHospitalStatistics = () => async (dispatch) => {
   try {

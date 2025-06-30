@@ -98,7 +98,7 @@ const InPatients = () => {
             paddingLeft: "1px",
           }}
       >
-        20
+          {localStorage.getItem('doctorRequestsCount')}
       </Box>
   );
 
@@ -305,7 +305,7 @@ const InPatients = () => {
                                     <div className={styles.patientEmail}>{patient.email}</div>
                                 </div>
                             </td>
-                            <td className={styles.bedNumber}>{patient.bed}</td>
+                            <td className={styles.bedNumber}>{patient.bedType}</td>
                             <td className={styles.condition}>{patient.condition}</td>
                             <td className={styles.doctor}>{patient.doctorName}</td>
                             <td className={styles.status}>

@@ -21,8 +21,6 @@ const CommonPanel = ({
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
 
-  const [department, setDepartment] = useState("");
-
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
 

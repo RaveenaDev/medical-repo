@@ -208,7 +208,7 @@ const Patients = () => {
             paddingLeft: "1px",
           }}
       >
-        20
+          {localStorage.getItem('doctorRequestsCount')}
       </Box>
   );
 

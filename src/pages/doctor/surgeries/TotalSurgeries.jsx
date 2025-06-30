@@ -91,7 +91,7 @@ const TotalSurgeries = () => {
             paddingLeft: "1px",
           }}
       >
-        20
+          {localStorage.getItem('doctorRequestsCount')}
       </Box>
   );
 

@@ -199,10 +199,6 @@ const DoctorRequest = () => {
     dispatch(getDoctorRequests('inactive'))
   }
 
-
-
-
-
   return (
     <div>
       <CommonPanelMini />

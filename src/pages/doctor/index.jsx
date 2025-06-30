@@ -25,7 +25,12 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getAppointments, getMostCommonDiagnosis, getUpcomingEvents} from "../../components/State/Doctor/Action.js";
+import {
+  getAppointments,
+  getDoctorRequests,
+  getMostCommonDiagnosis,
+  getUpcomingEvents
+} from "../../components/State/Doctor/Action.js";
 // const DATES = [
 //   { day: 24, month: "Sep" },
 //   { day: 25, month: "Sep" },
@@ -312,7 +317,7 @@ const DoctorOverview = () => {
         paddingLeft: "1px",
       }}
     >
-      20
+      {localStorage.getItem('doctorRequestsCount')}
     </Box>
   );
 
@@ -392,6 +397,7 @@ const DoctorOverview = () => {
     dispatch(getAppointments("Ongoing", startDate, endDate));
     dispatch(getMostCommonDiagnosis());
     dispatch(getUpcomingEvents(new Date()))
+    dispatch(getDoctorRequests())
   }, [dispatch,selectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
@@ -441,7 +447,7 @@ const DoctorOverview = () => {
     }
   });
 
-  console.log("Events: ",events)
+  // console.log("Events: ",events)
 
   const colorPalette = [
     { color: "#D8E4FD", inColor: "#25307F" },

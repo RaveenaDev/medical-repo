@@ -1,4 +1,5 @@
 import {
+  CREATE_DOCTOR_REQUESTS,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
@@ -141,6 +142,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         doctorRequests: action.payload.data,
       };
+
+    case CREATE_DOCTOR_REQUESTS:
+      return{
+        ...state,
+        doctorRequests: [action.payload, ...state.doctorRequests]
+      }
 
     case GET_UPCOMING_EVENTS:
       return {
