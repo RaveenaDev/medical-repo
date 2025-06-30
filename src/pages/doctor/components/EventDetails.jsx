@@ -33,6 +33,8 @@ const EventDetails = ({ event, onClose }) => {
     name: "Ramesh Kulkarni",
   };
 
+  console.log("Event: ",event)
+
   const panelRef = useRef(null);
 
   useEffect(() => {
@@ -63,15 +65,14 @@ const EventDetails = ({ event, onClose }) => {
         <div className="event-details-header">
           <p className="event-details-title">Event Details</p>
         </div>
-        <p className="event-title">Meeting Title: {dummyEvent.title}</p>
+        <p className="event-title">Meeting Title: {event.title}</p>
         <div className="event-date-time">
           <span className="event-date">
             <Calendar size={13} />
-            <p>{dummyEvent.date},</p>
+            <p>{event.date},</p>
           </span>
           <span className="event-time">
-            {dummyEvent.startTime.format("hh:mm A")} -{" "}
-            {dummyEvent.endTime.format("hh:mm A")}
+            {event.duration}
           </span>
         </div>
         <div className="event-buttons">
@@ -114,7 +115,7 @@ const EventDetails = ({ event, onClose }) => {
           </div>
         </div>
         <p className="description-header">Description</p>
-        <p className="event-description">{dummyEvent.description}</p>
+        <p className="event-description">{event.note}</p>
         <p className="meeting-link-header">Meeting Link</p>
         <a
           href={dummyEvent.link}

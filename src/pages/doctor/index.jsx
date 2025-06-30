@@ -422,12 +422,23 @@ const DoctorOverview = () => {
       }
 
     return {
-      time: startHour, // e.g. "10:00"
-      type: event.eventType.toLowerCase(), // e.g. "meeting"
+        allDay: event.allDay,
+      eventType: event.eventType,
+      hospital: event.hospital,
+      labelTag: event.labelTag,
+      note: event.note,
+      participantsName: event.participantsName,
       title: event.title,
+      time: startHour,
+      type: event.eventType.toLowerCase(), // e.g. "meeting"
       duration: `${event.startTime} – ${event.endTime}`,
+      date: new Date(event.date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
       status
-    };
+    }
   });
 
   console.log("Events: ",events)
