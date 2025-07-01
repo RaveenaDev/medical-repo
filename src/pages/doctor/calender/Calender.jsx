@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import Select from "react-select";
 import EventDetails from "../components/EventDetails.jsx";
 import { useNavigate } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getMonthlyEvents} from "../../../components/State/Doctor/Action.js";
 
 const Calender = () => {
   const dummyEvents = [
@@ -152,6 +154,61 @@ const Calender = () => {
     return dayjs().hour(hour).minute(minute).format("h:mm A");
   });
 
+  const dispatch = useDispatch()
+  const month = currentDate.month() + 1; // 0 = January, 11 = December
+  const year = currentDate.year();   // e.g., 2025
+
+  useEffect(() => {
+    // console.log("Current month and year: ",month,year)
+    dispatch(getMonthlyEvents(month,year))
+  }, [dispatch,currentDate]);
+
+  const events = useSelector((store) => store.doctor.monthlyEvents)
+
+  function convertEventData(events) {
+    return events.map((event, index) => {
+      const baseDate = dayjs(event.date);
+
+      const parseTime = (timeStr) => {
+        if (typeof timeStr !== "string") return null;
+        const match = timeStr.match(/(\d+):(\d+)\s(AM|PM)/);
+        if (!match) return null;
+
+        let [_, hour, minute, period] = match;
+        hour = parseInt(hour, 10);
+        minute = parseInt(minute, 10);
+        if (period === "PM" && hour !== 12) hour += 12;
+        if (period === "AM" && hour === 12) hour = 0;
+
+        return { hour, minute };
+      };
+
+      const defaultStart = { hour: 9, minute: 0 };
+      const defaultEnd = { hour: 9, minute: 30 };
+
+      const startParsed = parseTime(event.startTime) || defaultStart;
+      const endParsed = parseTime(event.endTime) || defaultEnd;
+
+      const startTime = baseDate.hour(startParsed.hour).minute(startParsed.minute);
+      const endTime = baseDate.hour(endParsed.hour).minute(endParsed.minute);
+
+      return {
+        ...event,
+        id: index + 1,
+        startTime, // always valid dayjs object
+        endTime,
+        startTimeText: startTime.format("hh:mm A"),
+        endTimeText: endTime.format("hh:mm A"),
+        profileUrl: `https://i.pravatar.cc/30?img=${(index % 70) + 1}`,
+        name: event.participants?.[0]?.name || "Unknown",
+      };
+    });
+  }
+
+  const monthlyEvents = convertEventData(events);
+
+  console.log("Month: ",monthlyEvents)
+
   useEffect(() => {
     const updateCurrentTime = () => {
       const now = dayjs();
@@ -206,10 +263,12 @@ const Calender = () => {
     ];
     return map[id % map.length];
   };
-  const activeEvent = dummyEvents.find((event) => {
+  const activeEvent = monthlyEvents.find((event) => {
     const now = dayjs();
     return now.isAfter(event.startTime) && now.isBefore(event.endTime);
   });
+
+
 
   return (
     <>
@@ -332,7 +391,7 @@ const Calender = () => {
               <div className="calendar-columns">
                 {week.map((day) => (
                   <div className="calendar-column" key={day.format()}>
-                    {dummyEvents
+                    {monthlyEvents
                       .filter(
                         (ev) =>
                           ev.startTime.format("DD-MM-YYYY") ===

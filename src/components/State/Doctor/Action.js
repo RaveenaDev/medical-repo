@@ -6,7 +6,7 @@ import {
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
   GET_INPATIENTS,
-  GET_MEDICAL_PROCEDURE_STATS,
+  GET_MEDICAL_PROCEDURE_STATS, GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
@@ -249,6 +249,27 @@ export const getUpcomingEvents = (date) => async (dispatch) => {
 
     console.log("Upcoming Events: ",data)
     dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMonthlyEvents = (month,year) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/events/monthly`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+      params: {
+        month,
+        year
+      },
+    });
+
+    console.log("Monthly Events: ",data)
+    dispatch({ type: GET_MONTHLY_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
   }

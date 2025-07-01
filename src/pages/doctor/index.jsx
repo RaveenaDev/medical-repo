@@ -1191,7 +1191,7 @@ const DoctorOverview = () => {
                                 {e.allDay? 'All Day' : e.time}</div>
                               <div
                                   className={`${styles.commonEventCard} ${
-                                      e.status === "active"
+                                      e.status === "active" || e.allDay
                                           ? styles.eventCardActive
                                           : e.status === "queued"
                                               ? styles.eventCardQueued
