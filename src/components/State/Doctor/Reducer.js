@@ -1,5 +1,5 @@
 import {
-  CREATE_DOCTOR_REQUESTS,
+  CREATE_DOCTOR_REQUESTS, CREATE_NEW_EVENT,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
@@ -40,6 +40,7 @@ const initialState = {
   patientOverview: [],
   doctorRequests: [],
   events: [],
+  monthlyEvents: [],
   totalCases: null,
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
@@ -153,6 +154,13 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         events: action.payload.events,
+      };
+
+    case CREATE_NEW_EVENT:
+      return {
+        ...state,
+        events: action.payload,
+        monthlyEvents: action.payload
       };
 
     default:

@@ -72,7 +72,7 @@ const EventDetails = ({ event, onClose }) => {
             <p>{event.date},</p>
           </span>
           <span className="event-time">
-            {event.duration}
+            {event.allDay? 'All Day' : event.duration}
           </span>
         </div>
         <div className="event-buttons">

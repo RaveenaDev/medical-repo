@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
-  CREATE_DOCTOR_REQUESTS,
+  CREATE_DOCTOR_REQUESTS, CREATE_NEW_EVENT,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
@@ -95,7 +95,7 @@ export const getMostCommonDiagnosis = () => async (dispatch) => {
       },
     });
 
-    // console.log("Diag: ",data)
+    console.log("Diag: ",data)
 
     dispatch({ type: GET_MOST_COMMON_DIAGNOSIS, payload: data });
   } catch (error) {
@@ -247,9 +247,35 @@ export const getUpcomingEvents = (date) => async (dispatch) => {
       },
     });
 
-    // console.log("Upcoming Events: ",data)
+    console.log("Upcoming Events: ",data)
     dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const createNewEvent = (eventData,onClose) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/events`,eventData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Created New Event: ",data)
+    dispatch({ type: CREATE_NEW_EVENT, payload: data.event });
+    onClose();
+    toast.success("Request Created Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error(error);
+    toast.error("Event Creation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };

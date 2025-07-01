@@ -410,22 +410,35 @@ const DoctorOverview = () => {
   const events = doctor.events;
 
   const EVENTS = events.map((event) => {
-    const [startHour, startSuffix] = event.startTime.split(" ");
-    const [endHour, endSuffix] = event.endTime.split(" ");
+    const hasTime = event.startTime && event.endTime;
 
-      const date = dayjs(event.date); // e.g. 2025-06-30
+    let status = "queued";
+    let startHour = "";
+    let duration = "";
+    let time = "";
+    let start, end;
 
-      // Combine date + time and parse using dayjs
-      const start = dayjs(`${date.format("YYYY-MM-DD")} ${event.startTime}`, "YYYY-MM-DD hh:mm A");
-      const end = dayjs(`${date.format("YYYY-MM-DD")} ${event.endTime}`, "YYYY-MM-DD hh:mm A");
-      const now = dayjs(); // or use dayjs().tz("Asia/Kolkata") if needed
+    if (hasTime) {
+      // Example: "10:00 AM"
+      const [parsedStartHour] = event.startTime.split(" ");
+      startHour = parsedStartHour;
 
-      let status = "queued";
+      const date = dayjs(event.date);
+
+      start = dayjs(`${date.format("YYYY-MM-DD")} ${event.startTime}`, "YYYY-MM-DD hh:mm A");
+      end = dayjs(`${date.format("YYYY-MM-DD")} ${event.endTime}`, "YYYY-MM-DD hh:mm A");
+
+      const now = dayjs();
+
       if (now.isAfter(end)) {
-          status = "cancelled"; // past
+        status = "cancelled";
       } else if (now.isBetween(start, end)) {
-          status = "active"; // now
+        status = "active";
       }
+
+      duration = `${event.startTime} – ${event.endTime}`;
+      time = startHour;
+    }
 
     return {
         allDay: event.allDay,
@@ -435,9 +448,9 @@ const DoctorOverview = () => {
       note: event.note,
       participantsName: event.participantsName,
       title: event.title,
-      time: startHour,
+      time,
       type: event.eventType.toLowerCase(), // e.g. "meeting"
-      duration: `${event.startTime} – ${event.endTime}`,
+      duration,
       date: new Date(event.date).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -1174,7 +1187,8 @@ const DoctorOverview = () => {
                                 className={styles.eventRow}
                                 onClick={() => setSelectedEvent(e)}
                             >
-                              <div className={styles.eventTime}>{e.time}</div>
+                              <div className={`${styles.eventTime} ${e.allDay ? styles.smallText : ""}`}>
+                                {e.allDay? 'All Day' : e.time}</div>
                               <div
                                   className={`${styles.commonEventCard} ${
                                       e.status === "active"

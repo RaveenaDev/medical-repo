@@ -9,6 +9,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import Select from "react-select";
+import {useDispatch} from "react-redux";
+import {createNewEvent} from "../../../components/State/Doctor/Action.js";
 const AddEventPanel = ({ onClose }) => {
   const eventOptions = [
     { value: "Appointment", label: "Appointment" },
@@ -67,23 +69,37 @@ const AddEventPanel = ({ onClose }) => {
       fontWeight: "350",
     }),
   };
+
+  const [formData, setFormData] = useState({
+    title: "",
+    date: dayjs().format("YYYY-MM-DD"),
+    allDay: false,
+    startTime: "",
+    endTime: "",
+    participantsName: "",
+    eventType: "",
+    labelTag: "",
+    note: "",
+  });
+
   const [value, setValue] = useState();
   const [value2, setValue2] = useState();
 
   const panelRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedTag, setSelectedTag] = useState("");
 
   const handleSelect = (tag) => {
-    setSelectedTag(tag);
+    setFormData({ ...formData, labelTag: tag });
   };
 
-  const [selectedDate, setSelectedDate] = useState(
-    dayjs().format("YYYY-MM-DD")
-  );
-  const handleChange = (e) => {
-    setSelectedDate(e.target.value);
-  };
+  const dispatch = useDispatch()
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form : ",formData)
+    dispatch(createNewEvent(formData,onClose))
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (panelRef.current && !panelRef.current.contains(event.target)) {
@@ -112,22 +128,27 @@ const AddEventPanel = ({ onClose }) => {
       <hr />
 
       {/* Form */}
-      <form>
+      <form  onSubmit={handleSubmit}>
         <div className="panel-form">
           <div className="event-title">
             <label>Event Title</label>
-            <input type="text" placeholder="Enter Event" />
+            <input
+                type="text"
+                placeholder="Enter Event"
+                value={formData.title}
+                onChange={(e) => setFormData({...formData, title: e.target.value})}
+            />
           </div>
           <div className="date-selection">
             <div className="today-row">
               <div className="text">
                 <span className="label">
-                  {selectedDate === dayjs().format("YYYY-MM-DD")
-                    ? "Today"
-                    : "Selected Date"}
+                  {formData.date === dayjs().format("YYYY-MM-DD")
+                      ? "Today"
+                      : "Selected Date"}
                 </span>
                 <span className="date">
-                  {dayjs(selectedDate).format("DD-MM-YYYY")}
+                  {dayjs(formData.date).format("DD-MM-YYYY")}
                 </span>
               </div>
 
@@ -136,17 +157,26 @@ const AddEventPanel = ({ onClose }) => {
                   <CalendarToday className="calendar-icon" />
                 </label>
                 <input
-                  type="date"
-                  id="datePicker"
-                  value={selectedDate}
-                  onChange={handleChange}
+                    type="date"
+                    id="datePicker"
+                    value={formData.date}
+                    onChange={(e) =>
+                        setFormData({...formData, date: e.target.value})
+                    }
                 />
               </div>
             </div>
 
             <div className="allday-row">
               <label className="toggle-switch">
-                <input type="checkbox" id="allday" />
+                <input
+                    type="checkbox"
+                    id="allday"
+                    checked={formData.allDay}
+                    onChange={(e) =>
+                        setFormData({...formData, allDay: e.target.checked})
+                    }
+                />
                 <span className="slider"></span>
               </label>
               <label htmlFor="allday">All day event</label>
@@ -166,7 +196,13 @@ const AddEventPanel = ({ onClose }) => {
                     className="time-picker-1"
                     label=""
                     value={value}
-                    onChange={(newValue) => setValue(newValue)}
+                    onChange={(newValue) => {
+                      setValue(newValue);
+                      setFormData({
+                        ...formData,
+                        startTime: newValue?.format("HH:mm") || "",
+                      });
+                    }}
                     slots={{
                       openPickerIcon: () => null, // removes the clock icon
                     }}
@@ -195,7 +231,13 @@ const AddEventPanel = ({ onClose }) => {
                     className="time-picker-2"
                     label=""
                     value={value2}
-                    onChange={(newValue) => setValue2(newValue)}
+                    onChange={(newValue) => {
+                      setValue2(newValue);
+                      setFormData({
+                        ...formData,
+                        endTime: newValue?.format("HH:mm") || "",
+                      });
+                    }}
                     slots={{
                       openPickerIcon: () => null, // removes the clock icon
                     }}
@@ -224,19 +266,29 @@ const AddEventPanel = ({ onClose }) => {
           </div>
           <div className="patient-name">
             <label>Participants Name</label>
-            <input type="text" placeholder="Enter Name" />
+            <input
+                type="text"
+                placeholder="Enter Name"
+                value={formData.participantsName}
+                onChange={(e) =>
+                    setFormData({...formData, participantsName: e.target.value})
+                }
+            />
           </div>
           <div className="dropdown-wrapper">
             <div className={`select-container ${isFocused ? "focused" : ""}`}>
               <Select
-                className="react-select-container"
-                classNamePrefix="react-select"
+                  className="react-select-container"
+                  classNamePrefix="react-select"
                 placeholder="Type of event"
                 options={eventOptions}
                 styles={customStyles}
                 isSearchable={false}
                 onMenuOpen={() => setIsFocused(true)}
                 onMenuClose={() => setIsFocused(false)}
+                  onChange={(option) =>
+                      setFormData({ ...formData, eventType: option.value })
+                  }
               />
             </div>
           </div>
@@ -246,6 +298,10 @@ const AddEventPanel = ({ onClose }) => {
               id="note"
               placeholder="Enter additional Note"
               rows="6"
+              value={formData.note}
+              onChange={(e) =>
+                  setFormData({ ...formData, note: e.target.value })
+              }
             ></textarea>
           </div>
 
@@ -259,8 +315,8 @@ const AddEventPanel = ({ onClose }) => {
                 <button
                   key={tag}
                   type="button"
-                  className={`tag-btn ${tag.toLowerCase().replace("-", "")} ${
-                    selectedTag === tag ? "active" : ""
+                  className={`tag-btn ${tag.toLowerCase()} ${
+                      formData.labelTag === tag ? "active" : ""
                   }`}
                   onClick={() => handleSelect(tag)}
                 >
@@ -276,7 +332,7 @@ const AddEventPanel = ({ onClose }) => {
           <button className="btn-cancel" onClick={onClose}>
             Cancel
           </button>
-          <button className="btn-save">Save Event</button>
+          <button type="submit" className="btn-save">Save Event</button>
         </div>
       </form>
     </div>
