@@ -42,6 +42,9 @@
 .imgWrapper {
   display: flex;
   align-items: center;
+  img {
+    width: 4vw;
+  }
 }
 .patientCardInfo {
   width: 100%;
@@ -135,7 +138,7 @@
     margin-left: 3vw;
     margin-top: -2vh;
     font-size: 2.4vh;
-    margin-bottom: 2vh;
+    margin-bottom: 0vh;
   }
 }
 

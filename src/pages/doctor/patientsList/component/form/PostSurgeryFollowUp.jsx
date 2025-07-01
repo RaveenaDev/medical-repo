@@ -126,16 +126,16 @@ const PostSurgeryFollowUp = ({ onClose }) => {
         <div className={styles.section2}>
           <div className={`${styles.sec2Left} `}>
             <p className={styles.label}>Post Surgery Notes</p>
-            <p className={styles.content}>{dummyData.postSurgeryNotes}</p>
+            <textarea rows={5} className={styles.content}></textarea>
           </div>
 
           <div className={styles.sec2Left}>
             <p className={styles.label}>Observed Symptoms</p>
-            <p className={styles.content}>{dummyData.observedSymptoms}</p>
+            <textarea rows={5} className={styles.content}></textarea>
           </div>
         </div>
         <div className={styles.submitContainer}>
-          <button>Save</button>
+          <button>Submit</button>
         </div>
       </div>
     </div>
