@@ -4,6 +4,7 @@ import {
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
   GET_INPATIENTS,
+  GET_MEDICAL_PROCEDURE_STATS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
@@ -43,6 +44,7 @@ const initialState = {
   totalCases: null,
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
+  medicalProcedureStats: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -103,6 +105,13 @@ export const doctorReducer = (state = initialState, action) => {
         isLoading: false,
       };
 
+    case GET_MEDICAL_PROCEDURE_STATS:
+      return {
+        ...state,
+        medicalProcedureStats: action.payload,
+        isLoading: false,
+      };
+
     case GET_APPOINTMENTS:
       return {
         ...state,
@@ -144,10 +153,10 @@ export const doctorReducer = (state = initialState, action) => {
       };
 
     case CREATE_DOCTOR_REQUESTS:
-      return{
+      return {
         ...state,
-        doctorRequests: [action.payload, ...state.doctorRequests]
-      }
+        doctorRequests: [action.payload, ...state.doctorRequests],
+      };
 
     case GET_UPCOMING_EVENTS:
       return {
