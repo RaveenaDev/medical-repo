@@ -33,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getHospitalStatistics,
+  getMedicalProcedureStats,
   getPatientOverview,
 } from "../../../components/State/Doctor/Action.js";
 import {
@@ -126,13 +127,6 @@ const staffMembers = [
     role: "Pharmacist",
     avatar: "https://randomuser.me/api/portraits/women/67.jpg",
   },
-];
-
-const medicalData = [
-  { name: "Angioplasty", value: 30, color: "#F14400" },
-  { name: "Surgeries", value: 20, color: "#66A7B4" },
-  { name: "Stenting", value: 15, color: "#EAA000" },
-  { name: "Pacemaker", value: 28, color: "#2E823B" },
 ];
 
 const inventoryData = [
@@ -301,7 +295,6 @@ const Department = () => {
   const [filter, setFilter] = useState("month");
   const [filter2, setFilter2] = useState("month");
   const [dateRange, setDateRange] = useState(getDateRange("month"));
-  const [dateRange2, setDateRange2] = useState(getDateRange("month"));
 
   const handleFilterChange = (e) => {
     const selected = e.target.value;
@@ -312,14 +305,13 @@ const Department = () => {
   const handleFilterChange2 = (e) => {
     const selected = e.target.value;
     setFilter2(selected);
-    const range = getDateRange(selected);
-    setDateRange2(range);
   };
   useEffect(() => {
     // Dispatch an action to get hospital statistics
     dispatch(getHospitalStatistics());
     dispatch(getPatientOverview(dateRange.fromDate, dateRange.toDate));
-  }, [dispatch, dateRange]);
+    dispatch(getMedicalProcedureStats(filter2));
+  }, [dispatch, dateRange, filter2]);
 
   const hospitalStatistics = useSelector(
     (state) => state.doctor.hospitalStatistics
@@ -338,6 +330,32 @@ const Department = () => {
   const totalInpatientsCountPercent =
     totalCases > 0 ? (totalInpatientsCount / totalCases) * 100 : 0;
 
+  const procedureStats = useSelector(
+    (state) => state.doctor.medicalProcedureStats
+  );
+
+  // Fallback color palette for the chart bars
+  const COLORS_Graph = [
+    "#F14400",
+    "#66A7B4",
+    "#EAA000",
+    "#2E823B",
+    "#7D3C98",
+    "#00A1AB",
+  ];
+
+  const medicalData =
+    procedureStats?.chartData?.map((item, index) => ({
+      name: item.procedureType || "Unassigned",
+      value: item.cases || 0,
+      color: COLORS_Graph[index % COLORS_Graph.length],
+    })) || [];
+
+  const totalCases_graph = procedureStats?.totalCases || 0;
+  const percentageChange = procedureStats?.percentageChange || null;
+  const breakdown = procedureStats?.breakdown || {};
+
+  // console.log("Chart Data: ", procedureStats);
   // console.log("Hospital Statistics: ", hospitalStatistics);
   // console.log("Patient Overview: ", patientOverview);
 
@@ -494,7 +512,7 @@ const Department = () => {
               <div className={style.cardContent}>
                 <div className={style.headline}>
                   <h1>
-                    93
+                    {totalCases_graph}
                     <p
                       style={{
                         fontSize: "15px",
@@ -504,7 +522,11 @@ const Department = () => {
                     >
                       cases
                     </p>
-                    <span className={style.percentage}>(+10% last month)</span>
+                    {percentageChange && (
+                      <span className={style.percentage}>
+                        ({percentageChange} last month)
+                      </span>
+                    )}
                   </h1>
                 </div>
 

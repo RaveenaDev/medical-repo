@@ -6,6 +6,7 @@ import {
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
   GET_INPATIENTS,
+  GET_MEDICAL_PROCEDURE_STATS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
@@ -17,7 +18,7 @@ import {
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
 } from "./ActionType.js";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 export const getPatients = () => async (dispatch) => {
   try {
@@ -171,7 +172,7 @@ export const createDoctorRequests = (requestData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/requests`,requestData, {
+    const { data } = await axios.post(`${API_URL}/requests`, requestData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -185,7 +186,6 @@ export const createDoctorRequests = (requestData) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
-
   } catch (error) {
     console.log(error);
     toast.error("Request Creation Error!", {
@@ -253,6 +253,31 @@ export const getUpcomingEvents = (date) => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const getMedicalProcedureStats =
+  (filterType = "month", month = null, year = null) =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const departmentId = localStorage.getItem("departmentId");
+
+      const { data } = await axios.get(`${API_URL}/medical-procedures`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          departmentId,
+          filterType,
+          month,
+          year,
+        },
+      });
+
+      dispatch({ type: GET_MEDICAL_PROCEDURE_STATS, payload: data.data });
+    } catch (error) {
+      console.error("MedicalProcedureStats error:", error);
+    }
+  };
 
 export const createNewEvent = (eventData,onClose) => async (dispatch) => {
   try {
