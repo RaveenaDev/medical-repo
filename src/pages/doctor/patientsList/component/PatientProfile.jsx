@@ -29,7 +29,6 @@ const PatientProfile = () => {
             <div className={styles.imgWrapper}>
               <img
                 src="https://randomuser.me/api/portraits/women/17.jpg"
-                width={65}
                 alt=""
               />
             </div>

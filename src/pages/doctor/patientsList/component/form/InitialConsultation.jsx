@@ -80,14 +80,14 @@ const InitialConsultation = ({ onClose }) => {
               </p>
             </div>
           </div>
-          <div>
+          {/* <div>
             <div className={styles.presBtn}>
               <button>
                 <Plus size={20} strokeWidth={1.5} />
                 Add Prescription
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.nextStep}>

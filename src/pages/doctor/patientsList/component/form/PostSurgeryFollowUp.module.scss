@@ -85,7 +85,7 @@
   // justify-content: space-between;
   //width: 100%;
   gap: 1vw;
-  margin-top: 6vh;
+  margin-top: 4vh;
   div {
     width: 48%;
   }
@@ -101,7 +101,8 @@
   width: 80%;
   color: #484848;
   padding: 1vh 0.5vw;
-  height: 12vh;
+  outline: none;
+  resize: none;
   overflow-y: auto;
 }
 .submitContainer {
