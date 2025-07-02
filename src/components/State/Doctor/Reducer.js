@@ -1,16 +1,22 @@
+import { StarOff } from "lucide-react";
 import {
-  CREATE_DOCTOR_REQUESTS, CREATE_NEW_EVENT,
+  CREATE_DOCTOR_REQUESTS,
+  CREATE_NEW_EVENT,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
+  GET_DOCTORS,
   GET_INPATIENTS,
-  GET_MEDICAL_PROCEDURE_STATS, GET_MONTHLY_EVENTS,
+  GET_INVENTORY_DATA,
+  GET_MEDICAL_PROCEDURE_STATS,
+  GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
+  GET_STAFF,
   GET_STATS,
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
@@ -46,6 +52,10 @@ const initialState = {
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
+  doctors: [],
+  staff: [],
+  inventoryData: [],
+  totalInventory: null,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -55,6 +65,26 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalPatients: action.payload.totalCount,
         patients: action.payload.patients,
+        isLoading: false,
+      };
+    case GET_DOCTORS:
+      return {
+        ...state,
+        doctors: action.payload.doctors,
+        isLoading: false,
+      };
+    case GET_STAFF:
+      return {
+        ...state,
+        staff: action.payload.staff,
+        isLoading: false,
+      };
+
+    case GET_INVENTORY_DATA:
+      return {
+        ...state,
+        totalInventory: action.payload.total,
+        inventoryData: action.payload.breakdown,
         isLoading: false,
       };
 
@@ -168,14 +198,14 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_MONTHLY_EVENTS:
       return {
         ...state,
-        monthlyEvents: action.payload.events
+        monthlyEvents: action.payload.events,
       };
 
     case CREATE_NEW_EVENT:
       return {
         ...state,
         events: action.payload,
-        monthlyEvents: action.payload
+        monthlyEvents: action.payload,
       };
 
     default:

@@ -32,9 +32,12 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getDoctorsByDepartment,
   getHospitalStatistics,
+  getInventoryData,
   getMedicalProcedureStats,
   getPatientOverview,
+  getStaff,
 } from "../../../components/State/Doctor/Action.js";
 import {
   startOfMonth,
@@ -229,7 +232,7 @@ const Department = () => {
           dominantBaseline="middle"
           style={{ fontSize: 9, fontWeight: "bold", fill: "#ffffff" }}
         >
-          {Math.round(percent * 100)}%
+          {Math.round(percent)}%
         </text>
       </g>
     );
@@ -311,6 +314,9 @@ const Department = () => {
     dispatch(getHospitalStatistics());
     dispatch(getPatientOverview(dateRange.fromDate, dateRange.toDate));
     dispatch(getMedicalProcedureStats(filter2));
+    dispatch(getDoctorsByDepartment());
+    dispatch(getStaff());
+    dispatch(getInventoryData());
   }, [dispatch, dateRange, filter2]);
 
   const hospitalStatistics = useSelector(
@@ -355,6 +361,21 @@ const Department = () => {
   const percentageChange = procedureStats?.percentageChange || null;
   const breakdown = procedureStats?.breakdown || {};
 
+  const doctors = useSelector((state) => state.doctor.doctors) || [];
+  const staff = useSelector((state) => state.doctor.staff) || [];
+
+  const inventoryData =
+    useSelector((state) => state.doctor.inventoryData) || [];
+
+  const totalInventory =
+    useSelector((state) => state.doctor.totalInventory) || 0;
+
+  console.log("Inventory Data: ", inventoryData);
+
+  // Uncomment these console logs to debug the data
+
+  // console.log("Staff List: ", staff);
+  // console.log("Doctors List: ", doctors);
   // console.log("Chart Data: ", procedureStats);
   // console.log("Hospital Statistics: ", hospitalStatistics);
   // console.log("Patient Overview: ", patientOverview);
@@ -409,21 +430,29 @@ const Department = () => {
               <h3 className={style.sectionTitle}>Doctors</h3>
               <div className={style.scrollableList}>
                 {doctors.map((doc) => {
-                  const isSelected = selectedDoctors.has(doc.id);
+                  const isSelected = selectedDoctors.has(doc._id);
                   return (
                     <div
-                      key={doc.id}
+                      key={doc._id}
                       className={style.listItem}
-                      onClick={() => toggleDoctorSelection(doc.id)}
+                      onClick={() => toggleDoctorSelection(doc._id)}
                     >
                       <img
-                        src={doc.avatar}
+                        src={
+                          doc.avatar ||
+                          "https://randomuser.me/api/portraits/women/12.jpg"
+                        }
                         alt={doc.name}
                         className={style.avatar}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://randomuser.me/api/portraits/women/12.jpg";
+                        }}
                       />
                       <div className={style.info}>
                         <span className={style.name}>{doc.name}</span>
-                        <span className={style.role}>{doc.role}</span>
+                        <span className={style.role}>{doc.specialization}</span>
                       </div>
                       {isSelected && (
                         <input
@@ -451,22 +480,30 @@ const Department = () => {
             <div className={style.section}>
               <h3 className={style.sectionTitle}>Staff Members</h3>
               <div className={style.scrollableList}>
-                {staffMembers.map((staff) => {
-                  const isSelected = selectedStaff.has(staff.id);
+                {staff.map((staff) => {
+                  const isSelected = selectedStaff.has(staff._id);
                   return (
                     <div
-                      key={staff.id}
+                      key={staff._id}
                       className={style.listItem}
-                      onClick={() => toggleStaffSelection(staff.id)}
+                      onClick={() => toggleStaffSelection(staff._id)}
                     >
                       <img
-                        src={staff.avatar}
+                        src={
+                          staff.avatar ||
+                          "https://randomuser.me/api/portraits/women/12.jpg"
+                        }
                         alt={staff.name}
                         className={style.avatar}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://randomuser.me/api/portraits/women/12.jpg";
+                        }}
                       />
                       <div className={style.info}>
                         <span className={style.name}>{staff.name}</span>
-                        <span className={style.role}>{staff.role}</span>
+                        <span className={style.role}>{staff.designation}</span>
                       </div>
                       {isSelected && (
                         <input
@@ -615,8 +652,8 @@ const Department = () => {
                   <PieChart>
                     <Pie
                       data={inventoryData}
-                      dataKey="value"
-                      nameKey="name"
+                      dataKey="quantity"
+                      nameKey="category"
                       cx="50%"
                       cy="50%"
                       innerRadius={70}
@@ -650,7 +687,7 @@ const Department = () => {
                   }}
                 >
                   {inventoryData.map((entry, index) => {
-                    const displayValue = formatValue(entry.value);
+                    const displayValue = formatValue(entry.quantity);
                     const color = COLORS[index % COLORS.length];
 
                     return (
@@ -688,7 +725,7 @@ const Department = () => {
                               fontSize: "13px",
                             }}
                           >
-                            {entry.name}
+                            {entry.category}
                           </div>
                           <div
                             style={{
@@ -697,7 +734,7 @@ const Department = () => {
                               fontSize: "13px",
                             }}
                           >
-                            {displayValue} ({entry.percentage})%
+                            {displayValue} ({entry.percent})%
                           </div>
                         </div>
                       </div>
@@ -707,7 +744,7 @@ const Department = () => {
 
                 <div className={style.totalLabel}>
                   <span>Total</span>
-                  <h2>33K</h2>
+                  <h2>{totalInventory}</h2>
                 </div>
               </div>
             </div>
