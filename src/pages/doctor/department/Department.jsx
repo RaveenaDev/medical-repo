@@ -36,6 +36,7 @@ import {
   getHospitalStatistics,
   getMedicalProcedureStats,
   getPatientOverview,
+  getStaff,
 } from "../../../components/State/Doctor/Action.js";
 import {
   startOfMonth,
@@ -313,6 +314,7 @@ const Department = () => {
     dispatch(getPatientOverview(dateRange.fromDate, dateRange.toDate));
     dispatch(getMedicalProcedureStats(filter2));
     dispatch(getDoctorsByDepartment());
+    dispatch(getStaff());
   }, [dispatch, dateRange, filter2]);
 
   const hospitalStatistics = useSelector(
@@ -358,8 +360,12 @@ const Department = () => {
   const breakdown = procedureStats?.breakdown || {};
 
   const doctors = useSelector((state) => state.doctor.doctors) || [];
+  const staff = useSelector((state) => state.doctor.staff) || [];
 
-  console.log("Doctors List: ", doctors);
+  // Uncomment these console logs to debug the data
+
+  // console.log("Staff List: ", staff);
+  // console.log("Doctors List: ", doctors);
   // console.log("Chart Data: ", procedureStats);
   // console.log("Hospital Statistics: ", hospitalStatistics);
   // console.log("Patient Overview: ", patientOverview);
@@ -464,22 +470,30 @@ const Department = () => {
             <div className={style.section}>
               <h3 className={style.sectionTitle}>Staff Members</h3>
               <div className={style.scrollableList}>
-                {staffMembers.map((staff) => {
-                  const isSelected = selectedStaff.has(staff.id);
+                {staff.map((staff) => {
+                  const isSelected = selectedStaff.has(staff._id);
                   return (
                     <div
-                      key={staff.id}
+                      key={staff._id}
                       className={style.listItem}
-                      onClick={() => toggleStaffSelection(staff.id)}
+                      onClick={() => toggleStaffSelection(staff._id)}
                     >
                       <img
-                        src={staff.avatar}
+                        src={
+                          staff.avatar ||
+                          "https://randomuser.me/api/portraits/women/12.jpg"
+                        }
                         alt={staff.name}
                         className={style.avatar}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://randomuser.me/api/portraits/women/12.jpg";
+                        }}
                       />
                       <div className={style.info}>
                         <span className={style.name}>{staff.name}</span>
-                        <span className={style.role}>{staff.role}</span>
+                        <span className={style.role}>{staff.designation}</span>
                       </div>
                       {isSelected && (
                         <input

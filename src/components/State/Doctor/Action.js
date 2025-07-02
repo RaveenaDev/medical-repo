@@ -16,6 +16,7 @@ import {
   GET_PATIENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
+  GET_STAFF,
   GET_STATS,
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
@@ -344,6 +345,21 @@ export const getDoctorsByDepartment = () => async (dispatch) => {
     );
 
     dispatch({ type: GET_DOCTORS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getStaff = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getStaff`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: GET_STAFF, payload: data });
   } catch (error) {
     console.log(error);
   }

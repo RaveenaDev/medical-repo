@@ -1,3 +1,4 @@
+import { StarOff } from "lucide-react";
 import {
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT,
@@ -14,6 +15,7 @@ import {
   GET_PATIENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
+  GET_STAFF,
   GET_STATS,
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
@@ -50,6 +52,7 @@ const initialState = {
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
   doctors: [],
+  staff: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -65,6 +68,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         doctors: action.payload.doctors,
+        isLoading: false,
+      };
+    case GET_STAFF:
+      return {
+        ...state,
+        staff: action.payload.staff,
         isLoading: false,
       };
 
