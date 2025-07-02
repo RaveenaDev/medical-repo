@@ -359,7 +359,7 @@ const Department = () => {
 
   const doctors = useSelector((state) => state.doctor.doctors) || [];
 
-  // console.log("Doctors List: ", doctorsList);
+  console.log("Doctors List: ", doctors);
   // console.log("Chart Data: ", procedureStats);
   // console.log("Hospital Statistics: ", hospitalStatistics);
   // console.log("Patient Overview: ", patientOverview);
@@ -414,12 +414,12 @@ const Department = () => {
               <h3 className={style.sectionTitle}>Doctors</h3>
               <div className={style.scrollableList}>
                 {doctors.map((doc) => {
-                  const isSelected = selectedDoctors.has(doc.id);
+                  const isSelected = selectedDoctors.has(doc._id);
                   return (
                     <div
-                      key={doc.id}
+                      key={doc._id}
                       className={style.listItem}
-                      onClick={() => toggleDoctorSelection(doc.id)}
+                      onClick={() => toggleDoctorSelection(doc._id)}
                     >
                       <img
                         src={
