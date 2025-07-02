@@ -5,24 +5,16 @@
     justify-content: space-between;
     background-color: #ffffff;
     margin-bottom: 0.7rem;
-    padding: 7px;
+    padding: 7px 20px;
     border-radius: 4px;
     .headingSection {
       .heading {
-        display: flex;
-        gap: 0.8rem;
-        svg {
-          margin-top: 1.2rem;
-        }
-        h4 {
-          color: #25307f;
-          font-size: 1.2rem;
-          font-weight: 500;
-        }
+        color: #25307f;
+        font-size: 1.2rem;
+        font-weight: 500;
       }
 
       p {
-        padding-left: 2.5rem;
         font-size: 13px;
         color: #a4a4a4;
       }
@@ -182,7 +174,7 @@
           h3 {
             margin: 0;
             font-size: 1rem;
-            color: #25307f;
+            color: #ffffff;
             font-weight: 600;
           }
 

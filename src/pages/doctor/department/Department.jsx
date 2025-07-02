@@ -132,7 +132,7 @@ const staffMembers = [
   },
 ];
 
-const inventoryData = [
+const inventoryDatas = [
   { name: "Medicines", value: 200, percentage: "15" },
   { name: "Surgical tools", value: 150, percentage: "29" },
   { name: "Devices", value: 100, percentage: "19" },
@@ -397,28 +397,7 @@ const Department = () => {
       <div className={style.parent}>
         <div className={style.head}>
           <div className={style.headingSection}>
-            <div className={style.heading}>
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 26 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clipPath="url(#clip0_3883_12162)">
-                  <path
-                    d="M18.0054 3.23919C17.4746 2.70836 16.6188 2.70836 16.0879 3.23919L7.08543 12.2417C6.66293 12.6642 6.66293 13.3467 7.08543 13.7692L16.0879 22.7717C16.6188 23.3025 17.4746 23.3025 18.0054 22.7717C18.5363 22.2409 18.5363 21.385 18.0054 20.8542L10.1621 13L18.0163 5.14586C18.5363 4.62586 18.5363 3.75919 18.0054 3.23919Z"
-                    fill="black"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_3883_12162">
-                    <rect width="26" height="26" rx="13" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              <h4>Cardiology Department</h4>
-            </div>
+            <div className={style.heading}>Cardiology Department</div>
             <p>Head: Dr. Amit Patil</p>
           </div>
         </div>
@@ -619,7 +598,7 @@ const Department = () => {
                 }}
                 onClick={() => navigate("/doctor/department/inventory")}
               >
-                <h3>Cardiology Inventory</h3>
+                <h3 style={{ color: "#25307F" }}>Cardiology Inventory</h3>
                 <svg
                   width="20"
                   height="20"
