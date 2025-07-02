@@ -47,6 +47,7 @@ import {
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import AddEventPanel from "./components/AddEventPanel.jsx";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -375,6 +376,8 @@ const DoctorOverview = () => {
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
   const handleFooterBtn = () => {
     navigate("/doctor/calendar");
   };
@@ -446,7 +449,7 @@ const DoctorOverview = () => {
       hospital: event.hospital,
       labelTag: event.labelTag,
       note: event.note,
-      participantsName: event.participantsName,
+      participants: event.participants,
       title: event.title,
       time,
       type: event.eventType.toLowerCase(), // e.g. "meeting"
@@ -512,6 +515,17 @@ const DoctorOverview = () => {
         // console.log("Default: ",new Date())
         dispatch(getUpcomingEvents(selectedDate))
     }
+
+  const handleOpenPanel = () => setIsPanelOpen(true);
+  const handleClosePanel = () => setIsPanelOpen(false);
+
+  useEffect(() => {
+    document.body.style.overflow =
+        isPanelOpen || selectedEvent ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isPanelOpen, selectedEvent]);
 
   return (
     <>
@@ -1142,7 +1156,7 @@ const DoctorOverview = () => {
                   <h3>Upcoming Events</h3>
                   <small>6 events left today</small>
                 </div>
-                <button className={styles.createBtn}>
+                <button className={styles.createBtn} onClick={handleOpenPanel}>
                   <svg
                     width="13"
                     height="13"
@@ -1158,6 +1172,9 @@ const DoctorOverview = () => {
                   <span>Create Visit</span>
                 </button>
               </div>
+
+              {isPanelOpen && <div className="backdrop-overlay" />}
+              {isPanelOpen && <AddEventPanel onClose={handleClosePanel} />}
 
               {/* Date pills */}
               <div className={styles.datePicker}>

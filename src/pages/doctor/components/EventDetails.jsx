@@ -92,7 +92,7 @@ const EventDetails = ({ event, onClose }) => {
           </p>
         </div>
         <div className="participants-name">
-          {dummyEvent.participants.map((participant, index) => (
+          {event.participants.map((participant, index) => (
             <p key={index} className="participant-item">
               <span>
                 <Dot className="participant-dot" size={14} />

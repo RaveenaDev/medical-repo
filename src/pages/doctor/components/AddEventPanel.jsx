@@ -76,7 +76,7 @@ const AddEventPanel = ({ onClose }) => {
     allDay: false,
     startTime: "",
     endTime: "",
-    participantsName: "",
+    participants: [],
     eventType: "",
     labelTag: "",
     note: "",
@@ -268,11 +268,15 @@ const AddEventPanel = ({ onClose }) => {
             <label>Participants Name</label>
             <input
                 type="text"
-                placeholder="Enter Name"
-                value={formData.participantsName}
-                onChange={(e) =>
-                    setFormData({...formData, participantsName: e.target.value})
-                }
+                placeholder="Enter name"
+                value={formData.participants[0] || ""}  // show first name only
+                onChange={(e) => {
+                  const singleName = e.target.value.trim();
+                  setFormData({
+                    ...formData,
+                    participants: singleName ? [singleName] : [] // store as array
+                  });
+                }}
             />
           </div>
           <div className="dropdown-wrapper">
@@ -280,11 +284,11 @@ const AddEventPanel = ({ onClose }) => {
               <Select
                   className="react-select-container"
                   classNamePrefix="react-select"
-                placeholder="Type of event"
-                options={eventOptions}
-                styles={customStyles}
-                isSearchable={false}
-                onMenuOpen={() => setIsFocused(true)}
+                  placeholder="Type of event"
+                  options={eventOptions}
+                  styles={customStyles}
+                  isSearchable={false}
+                  onMenuOpen={() => setIsFocused(true)}
                 onMenuClose={() => setIsFocused(false)}
                   onChange={(option) =>
                       setFormData({ ...formData, eventType: option.value })
