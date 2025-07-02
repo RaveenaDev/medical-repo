@@ -45,6 +45,8 @@
         background-color: #ffffff;
         padding: 12px;
         border-radius: 4px;
+        position: relative;
+        padding-bottom: 50px;
       }
 
       .sectionTitle {
@@ -145,6 +147,15 @@
 
       .assignButton:hover {
         background-color: #323e7d;
+      }
+      .assignButton,
+      .notAssigned {
+        position: absolute;
+        bottom: 10px;
+        left: 12px;
+        right: 12px;
+        margin-top: 0;
+        width: auto;
       }
     }
 
