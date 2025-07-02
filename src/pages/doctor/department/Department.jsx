@@ -32,6 +32,7 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getDoctorsByDepartment,
   getHospitalStatistics,
   getMedicalProcedureStats,
   getPatientOverview,
@@ -311,6 +312,7 @@ const Department = () => {
     dispatch(getHospitalStatistics());
     dispatch(getPatientOverview(dateRange.fromDate, dateRange.toDate));
     dispatch(getMedicalProcedureStats(filter2));
+    dispatch(getDoctorsByDepartment());
   }, [dispatch, dateRange, filter2]);
 
   const hospitalStatistics = useSelector(
@@ -355,6 +357,9 @@ const Department = () => {
   const percentageChange = procedureStats?.percentageChange || null;
   const breakdown = procedureStats?.breakdown || {};
 
+  const doctors = useSelector((state) => state.doctor.doctors) || [];
+
+  // console.log("Doctors List: ", doctorsList);
   // console.log("Chart Data: ", procedureStats);
   // console.log("Hospital Statistics: ", hospitalStatistics);
   // console.log("Patient Overview: ", patientOverview);
@@ -417,13 +422,21 @@ const Department = () => {
                       onClick={() => toggleDoctorSelection(doc.id)}
                     >
                       <img
-                        src={doc.avatar}
+                        src={
+                          doc.avatar ||
+                          "https://randomuser.me/api/portraits/women/12.jpg"
+                        }
                         alt={doc.name}
                         className={style.avatar}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://randomuser.me/api/portraits/women/12.jpg";
+                        }}
                       />
                       <div className={style.info}>
                         <span className={style.name}>{doc.name}</span>
-                        <span className={style.role}>{doc.role}</span>
+                        <span className={style.role}>{doc.specialization}</span>
                       </div>
                       {isSelected && (
                         <input

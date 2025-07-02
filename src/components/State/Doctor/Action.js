@@ -1,12 +1,15 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
-  CREATE_DOCTOR_REQUESTS, CREATE_NEW_EVENT,
+  CREATE_DOCTOR_REQUESTS,
+  CREATE_NEW_EVENT,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
+  GET_DOCTORS,
   GET_INPATIENTS,
-  GET_MEDICAL_PROCEDURE_STATS, GET_MONTHLY_EVENTS,
+  GET_MEDICAL_PROCEDURE_STATS,
+  GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
@@ -96,7 +99,7 @@ export const getMostCommonDiagnosis = () => async (dispatch) => {
       },
     });
 
-    console.log("Diag: ",data)
+    console.log("Diag: ", data);
 
     dispatch({ type: GET_MOST_COMMON_DIAGNOSIS, payload: data });
   } catch (error) {
@@ -247,14 +250,14 @@ export const getUpcomingEvents = (date) => async (dispatch) => {
       },
     });
 
-    console.log("Upcoming Events: ",data)
+    console.log("Upcoming Events: ", data);
     dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getMonthlyEvents = (month,year) => async (dispatch) => {
+export const getMonthlyEvents = (month, year) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
@@ -264,11 +267,11 @@ export const getMonthlyEvents = (month,year) => async (dispatch) => {
       },
       params: {
         month,
-        year
+        year,
       },
     });
 
-    console.log("Monthly Events: ",data)
+    console.log("Monthly Events: ", data);
     dispatch({ type: GET_MONTHLY_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
@@ -300,17 +303,17 @@ export const getMedicalProcedureStats =
     }
   };
 
-export const createNewEvent = (eventData,onClose) => async (dispatch) => {
+export const createNewEvent = (eventData, onClose) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/events`,eventData, {
+    const { data } = await axios.post(`${API_URL}/events`, eventData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
 
-    console.log("Created New Event: ",data)
+    console.log("Created New Event: ", data);
     dispatch({ type: CREATE_NEW_EVENT, payload: data.event });
     onClose();
     toast.success("Request Created Successfully!", {
@@ -323,5 +326,25 @@ export const createNewEvent = (eventData,onClose) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  }
+};
+
+export const getDoctorsByDepartment = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
+
+    const { data } = await axios.get(
+      `${API_URL}/getDoctorsByDepartment/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
+
+    dispatch({ type: GET_DOCTORS, payload: data });
+  } catch (error) {
+    console.log(error);
   }
 };
