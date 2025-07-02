@@ -47,6 +47,7 @@ import {
   startOfYear,
   endOfYear,
 } from "date-fns";
+import AssignOverlay from "./components/AssignOverlay.jsx";
 
 const getDateRange = (filterType) => {
   const now = new Date();
@@ -370,7 +371,32 @@ const Department = () => {
   const totalInventory =
     useSelector((state) => state.doctor.totalInventory) || 0;
 
-  console.log("Inventory Data: ", inventoryData);
+  const selectedDoctorObjects = doctors.filter((doc) =>
+    selectedDoctors.has(doc._id)
+  );
+
+  // Add state for overlay
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showAssignModalStaff, setShowAssignModalStaff] = useState(false);
+  const [assignedDoctors, setAssignedDoctors] = useState([]); // to hold selected doctor objects
+  const [assignedStaff, setAssignedStaff] = useState([]); // to hold selected doctor objects
+
+  const handleAssignClick = () => {
+    const selectedDoctorObjects = doctors.filter((doc) =>
+      selectedDoctors.has(doc._id)
+    );
+    setAssignedDoctors(selectedDoctorObjects);
+    setShowAssignModal(true);
+  };
+
+  const handleAssignClickStaff = () => {
+    const selectedStaffObjects = staff.filter((staff) =>
+      selectedStaff.has(staff._id)
+    );
+    setAssignedStaff(selectedStaffObjects);
+    setShowAssignModalStaff(true);
+  };
+  // console.log("Inventory Data: ", inventoryData);
 
   // Uncomment these console logs to debug the data
 
@@ -450,11 +476,17 @@ const Department = () => {
                   anyDoctorSelected ? style.assignButton : style.notAssigned
                 }`}
                 disabled={!anyDoctorSelected}
+                onClick={handleAssignClick}
               >
                 Assign
               </button>
             </div>
-
+            {showAssignModal && (
+              <AssignOverlay
+                selectedDoctors={assignedDoctors} // full doctor objects with name + _id
+                onClose={() => setShowAssignModal(false)}
+              />
+            )}
             {/* ───────────── Staff Members Section ───────────── */}
             <div className={style.section}>
               <h3 className={style.sectionTitle}>Staff Members</h3>
@@ -501,12 +533,18 @@ const Department = () => {
                   anyStaffSelected ? style.assignButton : style.notAssigned
                 }`}
                 disabled={!anyStaffSelected}
+                onClick={handleAssignClickStaff}
               >
                 Assign
               </button>
             </div>
           </div>
-
+          {showAssignModalStaff && (
+            <AssignOverlay
+              selectedDoctors={assignedStaff} // full doctor objects with name + _id
+              onClose={() => setShowAssignModalStaff(false)}
+            />
+          )}
           <div className={style.center}>
             {/*** Card 1: Number of medical procedures ***/}
             <div className={style.card} style={{ backgroundColor: "#25307F" }}>
