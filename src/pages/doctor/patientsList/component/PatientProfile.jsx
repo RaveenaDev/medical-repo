@@ -79,6 +79,8 @@ const PatientProfile = () => {
               <p className={styles.patientKey2}>Condition:</p>
               <p className={styles.patientValue2}>Under Observation</p>
             </div>
+          </div>
+          <div className={styles.emergencyContact}>
             <div className={styles.detailRow}>
               <p className={styles.patientKey2}>Emergency Contact:</p>
               <p className={styles.patientValue2}>Amanjeet Singh</p>

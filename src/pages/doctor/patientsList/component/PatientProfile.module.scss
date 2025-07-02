@@ -95,13 +95,25 @@
   }
 }
 
-.patientDetail {
+.patientDetail,
+.emergencyContact {
   display: flex;
   flex-direction: column;
-  gap: 1.2vh;
+  gap: 0.5vh;
   margin-left: 1vw;
   margin-top: 2vh;
   padding-bottom: 1vh;
+}
+
+.emergencyContact {
+  background: #fbf8fb;
+  border: 1px solid #f14400;
+  padding-left: 0;
+  margin-left: 0;
+  padding-left: 1vw;
+  padding-top: 1vh;
+  margin-top: 1vh;
+  border-radius: 14px;
 }
 
 .detailRow {
