@@ -1,13 +1,14 @@
 .container {
   background: white;
   margin-top: 1vh;
-  padding: 1.4vh 2vw;
+  padding: 1.4vh 1.4vw;
 }
 
 .row1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   p {
     color: #25307f;
     font-weight: 600;
@@ -26,139 +27,139 @@
     display: flex;
     align-items: center;
     gap: 0.6vh;
-    font-size: 2vh;
-    padding: 0.6vh 1vh;
+    font-size: 1.9vh;
+    font-weight: 400;
+    padding: 0.6vh 1.2vw;
     border-radius: 4px;
     border: none;
+    margin-right: 1vw;
 
     &:hover {
       background: #f2f5ff;
       color: #25307f;
     }
   }
+}
 
-  .editBtn {
-    border: none;
-    background: #f2f5ff;
-    padding: 0.6vh 1vh;
-    border-radius: 4px;
+.tableContainer {
+  margin-top: 1.8vh;
+  width: 100%;
+  height: 30vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  font-family: "Inter", sans-serif;
+}
+
+.table,
+.tbody {
+  min-width: 1120px;
+  width: max-content;
+}
+
+.th {
+  height: 9vh;
+}
+
+.th,
+.td {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2vw;
+
+  font-weight: 500;
+  font-size: 2vh;
+}
+
+.td {
+}
+
+.thead {
+  display: flex;
+
+  .th {
+    width: 12.5%;
+  }
+}
+
+.tbody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vh;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  transition: background 0.3s ease;
+
+  // This is the key wrapper
+  .rowContent {
+    height: 9vh;
     display: flex;
     align-items: center;
+    width: calc(100% - 12.5%);
+  }
+
+  .actionWrapper {
+    width: 12.5%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .td {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2vw;
+    height: 7vh;
+    font-weight: 500;
+    font-size: 2vh;
+    width: 14.285%; // 100% / 7 cells
   }
 }
 
-.card1 {
-  background: #5461be;
-  width: 12vw;
-  display: flex;
-  color: #f2f5ff;
-  flex-direction: column;
-  align-items: center;
-  gap: 1vh;
-  padding: 3vh 0vh;
-  border-radius: 4px;
-  margin-right: 2vh;
-
-  @media (max-width: 1200px) {
-    width: 24vw;
-  }
+.icon {
+  color: #25307f;
+  width: 1.2vw;
 }
 
-.line {
-  width: 50%;
-  border: none;
-  border-top: 1px solid gray;
-  opacity: 0.5;
-}
-
-.card2 {
+.actionTap {
+  padding: 1vh 1vw;
+  border: 1px solid #25307f;
   background: #f2f5ff;
-  width: 12vw;
-  display: flex;
-  color: black;
-  flex-direction: column;
-  align-items: center;
-  gap: 1vh;
-  padding: 3vh 0vh;
+}
+
+// Apply background to rowContent only
+.row.past .rowContent {
+  background-color: #f7f7f7;
+  color: #999;
+}
+
+.row.future .rowContent {
+  background-color: white;
+}
+
+.row.next .rowContent {
+  background-color: #f2f5ff;
+  border: 1px solid #25307f;
+  animation: blinking 1.6s ease-in-out infinite;
   border-radius: 4px;
-  margin-right: 2vh;
+  transition: border-color 0.3s ease;
+}
 
-  @media (max-width: 1200px) {
-    width: 24vw;
+@keyframes blinking {
+  0% {
+    border-color: #25307f;
   }
-}
 
-.time {
-  color: #52a3bb;
-  font-weight: 600;
-}
+  50% {
+    border-color: transparent;
+  }
 
-.line2 {
-  width: 50%;
-  border: none;
-  border-top: 1px solid #e1e3eb;
-  opacity: 0.7;
-}
-
-.medication,
-.dose,
-.route,
-.givenBy,
-.notes {
-  color: #222;
-  font-weight: 500;
-}
-
-.status {
-  font-size: 15px;
-  font-weight: 600;
-  margin-top: 6px;
-}
-
-.given {
-  color: #2e823b;
-}
-
-.scheduled {
-  color: #eaa000;
-}
-
-.section3 {
-  margin-top: 2vh;
-  display: flex;
-  overflow-x: auto;
-  padding-bottom: 2vh;
-  //white-space: nowrap;
-}
-
-.card1,
-.card2 {
-  flex-shrink: 0;
-}
-
-.backdropOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(44, 44, 62, 0.15);
-  z-index: 2;
-}
-
-.followUpModal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  // height: 80vh;
-  width: 40vw;
-  background: #fff;
-  border-radius: 0px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 0vh 0vw 3vh 1vw;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  100% {
+    border-color: #25307f;
+  }
 }
