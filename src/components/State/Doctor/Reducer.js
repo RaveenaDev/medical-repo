@@ -7,6 +7,7 @@ import {
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
+  GET_INVENTORY_DATA,
   GET_MEDICAL_PROCEDURE_STATS,
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
@@ -53,6 +54,8 @@ const initialState = {
   medicalProcedureStats: [],
   doctors: [],
   staff: [],
+  inventoryData: [],
+  totalInventory: null,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -74,6 +77,14 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         staff: action.payload.staff,
+        isLoading: false,
+      };
+
+    case GET_INVENTORY_DATA:
+      return {
+        ...state,
+        totalInventory: action.payload.total,
+        inventoryData: action.payload.breakdown,
         isLoading: false,
       };
 

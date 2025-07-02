@@ -34,6 +34,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getDoctorsByDepartment,
   getHospitalStatistics,
+  getInventoryData,
   getMedicalProcedureStats,
   getPatientOverview,
   getStaff,
@@ -231,7 +232,7 @@ const Department = () => {
           dominantBaseline="middle"
           style={{ fontSize: 9, fontWeight: "bold", fill: "#ffffff" }}
         >
-          {Math.round(percent * 100)}%
+          {Math.round(percent)}%
         </text>
       </g>
     );
@@ -315,6 +316,7 @@ const Department = () => {
     dispatch(getMedicalProcedureStats(filter2));
     dispatch(getDoctorsByDepartment());
     dispatch(getStaff());
+    dispatch(getInventoryData());
   }, [dispatch, dateRange, filter2]);
 
   const hospitalStatistics = useSelector(
@@ -361,6 +363,14 @@ const Department = () => {
 
   const doctors = useSelector((state) => state.doctor.doctors) || [];
   const staff = useSelector((state) => state.doctor.staff) || [];
+
+  const inventoryData =
+    useSelector((state) => state.doctor.inventoryData) || [];
+
+  const totalInventory =
+    useSelector((state) => state.doctor.totalInventory) || 0;
+
+  console.log("Inventory Data: ", inventoryData);
 
   // Uncomment these console logs to debug the data
 
@@ -642,8 +652,8 @@ const Department = () => {
                   <PieChart>
                     <Pie
                       data={inventoryData}
-                      dataKey="value"
-                      nameKey="name"
+                      dataKey="quantity"
+                      nameKey="category"
                       cx="50%"
                       cy="50%"
                       innerRadius={70}
@@ -677,7 +687,7 @@ const Department = () => {
                   }}
                 >
                   {inventoryData.map((entry, index) => {
-                    const displayValue = formatValue(entry.value);
+                    const displayValue = formatValue(entry.quantity);
                     const color = COLORS[index % COLORS.length];
 
                     return (
@@ -715,7 +725,7 @@ const Department = () => {
                               fontSize: "13px",
                             }}
                           >
-                            {entry.name}
+                            {entry.category}
                           </div>
                           <div
                             style={{
@@ -724,7 +734,7 @@ const Department = () => {
                               fontSize: "13px",
                             }}
                           >
-                            {displayValue} ({entry.percentage})%
+                            {displayValue} ({entry.percent})%
                           </div>
                         </div>
                       </div>
@@ -734,7 +744,7 @@ const Department = () => {
 
                 <div className={style.totalLabel}>
                   <span>Total</span>
-                  <h2>33K</h2>
+                  <h2>{totalInventory}</h2>
                 </div>
               </div>
             </div>

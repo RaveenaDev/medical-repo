@@ -8,6 +8,7 @@ import {
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
+  GET_INVENTORY_DATA,
   GET_MEDICAL_PROCEDURE_STATS,
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
@@ -360,6 +361,29 @@ export const getStaff = () => async (dispatch) => {
     });
 
     dispatch({ type: GET_STAFF, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInventoryData = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
+
+    const { data } = await axios.get(
+      `${API_URL}/inventory/summary/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+        params: {
+          departmentId,
+        },
+      }
+    );
+
+    dispatch({ type: GET_INVENTORY_DATA, payload: data });
   } catch (error) {
     console.log(error);
   }
