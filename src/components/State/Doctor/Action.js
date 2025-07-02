@@ -353,12 +353,19 @@ export const getDoctorsByDepartment = () => async (dispatch) => {
 export const getStaff = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
 
-    const { data } = await axios.get(`${API_URL}/getStaff`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.get(
+      `${API_URL}/getStaffByDepartment/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+        params: {
+          departmentId,
+        },
+      }
+    );
 
     dispatch({ type: GET_STAFF, payload: data });
   } catch (error) {

@@ -396,10 +396,10 @@ const Department = () => {
     setAssignedStaff(selectedStaffObjects);
     setShowAssignModalStaff(true);
   };
-  // console.log("Inventory Data: ", inventoryData);
 
   // Uncomment these console logs to debug the data
 
+  // console.log("Inventory Data: ", inventoryData);
   // console.log("Staff List: ", staff);
   // console.log("Doctors List: ", doctors);
   // console.log("Chart Data: ", procedureStats);
