@@ -1,4 +1,3 @@
-import { StarOff } from "lucide-react";
 import {
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT,
@@ -204,8 +203,8 @@ export const doctorReducer = (state = initialState, action) => {
     case CREATE_NEW_EVENT:
       return {
         ...state,
-        events: action.payload,
-        monthlyEvents: action.payload,
+        events: [...state.events,action.payload],
+        monthlyEvents: [...state.monthlyEvents,action.payload]
       };
 
     default:

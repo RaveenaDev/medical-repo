@@ -70,6 +70,7 @@ const AddEventPanel = ({ onClose }) => {
     }),
   };
 
+  const [inputName, setInputName] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     date: dayjs().format("YYYY-MM-DD"),
@@ -96,8 +97,22 @@ const AddEventPanel = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form : ",formData)
-    dispatch(createNewEvent(formData,onClose))
+    if (!formData.startTime || !formData.endTime) {
+      alert("Please select both start and end times");
+      return;
+    }
+
+    const finalParticipants = inputName.trim()
+        ? [...formData.participants, { name: inputName.trim() }]
+        : formData.participants;
+
+    const finalForm = {
+      ...formData,
+      participants: finalParticipants,
+    };
+
+    // console.log("Form : ",finalForm)
+    dispatch(createNewEvent(finalForm,onClose))
   }
 
   useEffect(() => {
@@ -200,7 +215,7 @@ const AddEventPanel = ({ onClose }) => {
                       setValue(newValue);
                       setFormData({
                         ...formData,
-                        startTime: newValue?.format("HH:mm") || "",
+                        startTime: newValue?.format("hh:mm A") || "",
                       });
                     }}
                     slots={{
@@ -235,7 +250,7 @@ const AddEventPanel = ({ onClose }) => {
                       setValue2(newValue);
                       setFormData({
                         ...formData,
-                        endTime: newValue?.format("HH:mm") || "",
+                        endTime: newValue?.format("hh:mm A") || "",
                       });
                     }}
                     slots={{
@@ -269,13 +284,16 @@ const AddEventPanel = ({ onClose }) => {
             <input
                 type="text"
                 placeholder="Enter name"
-                value={formData.participants[0] || ""}  // show first name only
-                onChange={(e) => {
-                  const singleName = e.target.value.trim();
-                  setFormData({
-                    ...formData,
-                    participants: singleName ? [singleName] : [] // store as array
-                  });
+                value={inputName}
+                onChange={(e) => setInputName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && inputName.trim()) {
+                    setFormData((prev) => ({
+                      ...prev,
+                      participants: [...prev.participants, {name: inputName.trim()}],
+                    }));
+                    setInputName(""); // Clear the input field
+                  }
                 }}
             />
           </div>

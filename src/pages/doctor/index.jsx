@@ -412,6 +412,8 @@ const DoctorOverview = () => {
 
   const events = doctor.events;
 
+  // console.log("Eveee: ",events)
+
   const EVENTS = events.map((event) => {
     const hasTime = event.startTime && event.endTime;
 
@@ -426,12 +428,22 @@ const DoctorOverview = () => {
       const [parsedStartHour] = event.startTime.split(" ");
       startHour = parsedStartHour;
 
-      const date = dayjs(event.date);
+      const date = dayjs.utc(event.date).local();
 
-      start = dayjs(`${date.format("YYYY-MM-DD")} ${event.startTime}`, "YYYY-MM-DD hh:mm A");
-      end = dayjs(`${date.format("YYYY-MM-DD")} ${event.endTime}`, "YYYY-MM-DD hh:mm A");
+      const safeStartTime = event.startTime;
+      let safeEndTime = event.endTime;
+      if (safeEndTime === "12:00 AM" || safeEndTime === "00:00") {
+        safeEndTime = "11:59 PM"; // 👈 TEMP FIX for your backend's time format
+      }
+
+      start = dayjs(`${date.format("YYYY-MM-DD")} ${safeStartTime}`, "YYYY-MM-DD hh:mm A");
+      end = dayjs(`${date.format("YYYY-MM-DD")} ${safeEndTime}`, "YYYY-MM-DD hh:mm A");
 
       const now = dayjs();
+
+      // console.log("NOW:", dayjs().format("YYYY-MM-DD hh:mm A"));
+      // console.log("START:", start.format("YYYY-MM-DD hh:mm A"));
+      // console.log("END:", end.format("YYYY-MM-DD hh:mm A"));
 
       if (now.isAfter(end)) {
         status = "cancelled";
@@ -439,7 +451,7 @@ const DoctorOverview = () => {
         status = "active";
       }
 
-      duration = `${event.startTime} – ${event.endTime}`;
+      duration = `${event.startTime} – ${safeEndTime}`;
       time = startHour;
     }
 

@@ -98,7 +98,7 @@ const EventDetails = ({ event, onClose }) => {
                 <Dot className="participant-dot" size={14} />
               </span>
               <p>
-                {participant.name} ({participant.role})
+                {participant.name} ({participant.role || 'No role found'})
               </p>
             </p>
           ))}
