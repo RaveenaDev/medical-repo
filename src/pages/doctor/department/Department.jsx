@@ -423,8 +423,10 @@ const Department = () => {
       <div className={style.parent}>
         <div className={style.head}>
           <div className={style.headingSection}>
-            <div className={style.heading}>Cardiology Department</div>
-            <p>Head: Dr. Amit Patil</p>
+            <div className={style.heading}>
+              {department?.name || "Department Name"}
+            </div>
+            <p>Head: {department?.head || "N/A"}</p>
           </div>
         </div>
 
@@ -483,6 +485,7 @@ const Department = () => {
             </div>
             {showAssignModal && (
               <AssignOverlay
+                assignmentType={"doctor"}
                 selectedDoctors={assignedDoctors} // full doctor objects with name + _id
                 onClose={() => setShowAssignModal(false)}
               />
@@ -543,6 +546,7 @@ const Department = () => {
             <AssignOverlay
               selectedDoctors={assignedStaff} // full doctor objects with name + _id
               onClose={() => setShowAssignModalStaff(false)}
+              assignmentType={"staff"}
             />
           )}
           <div className={style.center}>

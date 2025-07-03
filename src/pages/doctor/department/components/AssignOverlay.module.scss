@@ -163,6 +163,11 @@ td {
   font-size: 12px;
   color: #747474;
 }
+
+.selectedRow {
+  background-color: #eef2ff;
+  border-left: 4px solid #25307f;
+}
 .right {
   display: flex;
   flex-direction: column;
@@ -212,4 +217,9 @@ td {
 .assignBtn:hover {
   background-color: #dae4ff;
   color: #333333;
+}
+
+.assignBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

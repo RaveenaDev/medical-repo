@@ -3,7 +3,8 @@ import { API_URL } from "../../Config/api.js";
 import {
   APPROVE_APPOINTMENT,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT, GET_APPOINTMENT_REQUESTS,
+  CREATE_NEW_EVENT,
+  GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
@@ -22,7 +23,8 @@ import {
   GET_STATS,
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
-  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT,
+  GET_WAITING_APPOINTMENTS,
+  REJECT_APPOINTMENT,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
 
@@ -196,11 +198,15 @@ export const approveAppointment = (appointmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/approveAppointment/${appointmentId}`, appointmentId, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/approveAppointment/${appointmentId}`,
+      appointmentId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
     // console.log("Approved Successfully : ", data);
 
@@ -223,11 +229,15 @@ export const rejectAppointment = (appointmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/rejectAppointment/${appointmentId}`, appointmentId, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/rejectAppointment/${appointmentId}`,
+      appointmentId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
     // console.log("Rejected Successfully : ", data);
 
@@ -466,5 +476,37 @@ export const getInventoryData = () => async (dispatch) => {
     dispatch({ type: GET_INVENTORY_DATA, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const assignPatient = (assignmentData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+      `${API_URL}/assignments`,
+      assignmentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Created New Assignment:", data);
+
+    // Optional Redux dispatch
+    // dispatch({ type: CREATE_NEW_ASSIGNMENT, payload: data });
+
+    toast.success("Assigned successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Assignment Error:", error);
+    toast.error("Assignment failed!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
   }
 };

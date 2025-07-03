@@ -8,152 +8,36 @@ import {
   ListItemText,
   Box,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { assignPatient } from "../../../../components/State/Doctor/Action";
 
-const options = [
+const doctorRoles = [
   "Primary Doctor",
   "Consultant",
   "Observation Only",
   "On-call Support",
 ];
-const dummyPatients = [
-  {
-    id: "P1001",
-    name: "Khushi Saini",
-    room: "312",
-    diagnosis: "Cardiology",
-    status: "Waiting",
-  },
-  {
-    id: "P1002",
-    name: "Rohan Mehta",
-    room: "205",
-    diagnosis: "Neurology",
-    status: "Admitted",
-  },
-  {
-    id: "P1003",
-    name: "Sneha Kapoor",
-    room: "108",
-    diagnosis: "Orthopedics",
-    status: "Under Observation",
-  },
-  {
-    id: "P1004",
-    name: "Aman Gupta",
-    room: "407",
-    diagnosis: "Pulmonology",
-    status: "Discharged",
-  },
-  {
-    id: "P1005",
-    name: "Pooja Singh",
-    room: "309",
-    diagnosis: "Gastroenterology",
-    status: "Waiting",
-  },
-  {
-    id: "P1006",
-    name: "Dev Arora",
-    room: "215",
-    diagnosis: "Nephrology",
-    status: "Admitted",
-  },
-  {
-    id: "P1007",
-    name: "Ritika Sharma",
-    room: "112",
-    diagnosis: "Dermatology",
-    status: "Under Observation",
-  },
-  {
-    id: "P1008",
-    name: "Vivek Nair",
-    room: "318",
-    diagnosis: "Oncology",
-    status: "Waiting",
-  },
-  {
-    id: "P1009",
-    name: "Simran Kaur",
-    room: "110",
-    diagnosis: "Pediatrics",
-    status: "Discharged",
-  },
-  {
-    id: "P1010",
-    name: "Arjun Reddy",
-    room: "412",
-    diagnosis: "ENT",
-    status: "Admitted",
-  },
-  {
-    id: "P1009",
-    name: "Simran Kaur",
-    room: "110",
-    diagnosis: "Pediatrics",
-    status: "Discharged",
-  },
-  {
-    id: "P1010",
-    name: "Arjun Reddy",
-    room: "412",
-    diagnosis: "ENT",
-    status: "Admitted",
-  },
-  {
-    id: "P1011",
-    name: "Simran Kaur",
-    room: "110",
-    diagnosis: "Pediatrics",
-    status: "Discharged",
-  },
-  {
-    id: "P1012",
-    name: "Arjun Reddy",
-    room: "412",
-    diagnosis: "ENT",
-    status: "Admitted",
-  },
-  {
-    id: "P1013",
-    name: "Simran Kaur",
-    room: "110",
-    diagnosis: "Pediatrics",
-    status: "Discharged",
-  },
-  {
-    id: "P1014",
-    name: "Arjun Reddy",
-    room: "412",
-    diagnosis: "ENT",
-    status: "Admitted",
-  },
-  {
-    id: "P1015",
-    name: "Simran Kaur",
-    room: "110",
-    diagnosis: "Pediatrics",
-    status: "Discharged",
-  },
-  {
-    id: "P1016",
-    name: "Arjun Reddy",
-    room: "412",
-    diagnosis: "ENT",
-    status: "Admitted",
-  },
+
+const staffRoles = [
+  "Primary Nurse",
+  "Ward In-charge",
+  "Assistant Nurse",
+  "Support Staff",
 ];
 
-const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
+const AssignOverlay = ({
+  selectedDoctors: initialDoctors,
+  onClose,
+  assignmentType,
+}) => {
   const [localDoctors, setLocalDoctors] = useState(initialDoctors);
   const [search, setSearch] = useState("");
   const [selectedShift, setSelectedShift] = useState("Morning");
   const [assignmentDuration, setAssignmentDuration] =
     useState("One Time Visit");
 
-  const filteredPatients = dummyPatients.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const dispatch = useDispatch();
   const [selectedValue, setSelectedValue] = useState("");
   const removeDoctor = (id) => {
     setLocalDoctors((prev) => prev.filter((doc) => doc._id !== id));
@@ -163,6 +47,17 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
       onClose();
     }
   }, [localDoctors, onClose]);
+
+  const patients = useSelector((state) => state.doctor.patients);
+
+  console.log(patients);
+  const filteredPatients = patients.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const roleOptions = assignmentType === "staff" ? staffRoles : doctorRoles;
+
+  const [selectedPatients, setSelectedPatients] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <div className={styles.overlay}>
       <div className={styles.container}>
@@ -234,7 +129,7 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>Patient Id</th>
+                    <th>Case Id</th>
                     <th>Name</th>
                     <th>Room</th>
                     <th>Diagnosis</th>
@@ -242,15 +137,31 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPatients.map((p, i) => (
-                    <tr key={i}>
-                      <td style={{ color: " #25307f" }}>{p.id}</td>
-                      <td style={{ color: " #25307f" }}>{p.name}</td>
-                      <td>{p.room}</td>
-                      <td>{p.diagnosis}</td>
-                      <td>{p.status}</td>
-                    </tr>
-                  ))}
+                  {filteredPatients.map((p, i) => {
+                    const isSelected = selectedPatients.includes(p.caseId);
+                    return (
+                      <tr
+                        key={i}
+                        onClick={() => {
+                          setSelectedPatients((prev) =>
+                            isSelected
+                              ? prev.filter((id) => id !== p.caseId)
+                              : [...prev, p.caseId]
+                          );
+                        }}
+                        className={isSelected ? styles.selectedRow : ""}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <td style={{ color: "#25307f" }}>
+                          {p.caseId || "N/A"}
+                        </td>
+                        <td style={{ color: "#25307f" }}>{p.name || "N/A"}</td>
+                        <td>{p.room || "N/A"}</td>
+                        <td>{p.diagnosis || "N/A"}</td>
+                        <td>{p.realStatus || "N/A"}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -259,7 +170,7 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
           {/* RIGHT – Assignment Fields */}
           <div className={styles.right}>
             <FormControl fullWidth>
-              <label className={styles.label}> Doctor's Role </label>
+              <label className={styles.label}> Roles & Responsibility </label>
               <Select
                 value={selectedValue}
                 onChange={(e) => setSelectedValue(e.target.value)}
@@ -292,7 +203,7 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
                   },
                 }}
               >
-                {options.map((opt) => (
+                {roleOptions.map((opt) => (
                   <MenuItem key={opt} value={opt}>
                     <Box
                       sx={{
@@ -321,7 +232,7 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
             <div className={styles.formGroup}>
               <label className={styles.label}>Shift/Timing</label>
               <div className={styles.buttonRow}>
-                {["Morning", "Evening", "Night", "Assign"].map((s) => (
+                {["Morning", "Evening", "Night"].map((s) => (
                   <button
                     key={s}
                     className={`${styles.toggleBtn} ${
@@ -338,7 +249,7 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
             <div className={styles.formGroup}>
               <label className={styles.label}>Duration of Assignment</label>
               <div className={styles.buttonRow}>
-                {["One Time Visit", "Till Discharge", "Assign"].map((d) => (
+                {["One Time Visit", "Till Discharge"].map((d) => (
                   <button
                     key={d}
                     className={`${styles.toggleBtn} ${
@@ -352,7 +263,52 @@ const AssignOverlay = ({ selectedDoctors: initialDoctors, onClose }) => {
               </div>
             </div>
 
-            <button className={styles.assignBtn}>Assign</button>
+            <button
+              className={styles.assignBtn}
+              onClick={async () => {
+                if (
+                  localDoctors.length === 0 ||
+                  selectedPatients.length === 0 ||
+                  !selectedValue ||
+                  !selectedShift ||
+                  !assignmentDuration
+                ) {
+                  toast.error(
+                    "Please fill all required fields before assigning.",
+                    {
+                      position: "bottom-right",
+                      autoClose: 2000,
+                    }
+                  );
+                  return;
+                }
+
+                const payload = {
+                  assignmentType,
+                  patientIds: selectedPatients,
+                  role: selectedValue,
+                  shift: selectedShift,
+                  duration: assignmentDuration,
+                };
+
+                if (assignmentType === "doctor") {
+                  payload.doctorIds = localDoctors.map((doc) => doc._id);
+                } else if (assignmentType === "staff") {
+                  payload.staffIds = localDoctors.map((doc) => doc._id);
+                }
+
+                try {
+                  setIsLoading(true);
+                  await dispatch(assignPatient(payload));
+                  onClose();
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+              disabled={isLoading}
+            >
+              {isLoading ? "Assigning..." : "Assign"}
+            </button>
           </div>
         </div>
       </div>
