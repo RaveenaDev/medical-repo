@@ -297,9 +297,11 @@ const PatientsList = () => {
         </div>
 
         <div className="admittedList">
-          {currentPatients.map((patient, index) => (
-            <PatientCard key={index} patient={patient} />
-          ))}
+          {currentPatients.length > 0 ? currentPatients.map((patient, index) => (
+              <PatientCard key={index} patient={patient} />
+          )) : (
+              <div style={{paddingLeft:'1rem',paddingTop:'1rem',color:'#3A3A3A',fontStyle:'italic'}}>No patients found</div>
+          )}
         </div>
         <div className="pagination">
           {Array.from({ length: totalPages }, (_, i) => (
