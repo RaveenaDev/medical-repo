@@ -26,6 +26,7 @@ import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {
+  getAppointmentRequests,
   getAppointments,
   getDoctorRequests,
   getMostCommonDiagnosis,
@@ -241,50 +242,50 @@ const DoctorOverview = () => {
     },
   ];
 
-  const appointmentRequests = [
-    {
-      _id: "req001",
-      patient: {
-        name: "John Doe",
-      },
-      note: "Needs consultation for back pain.",
-    },
-    {
-      _id: "req002",
-      patient: {
-        name: "Jane Smith",
-      },
-      note: "Follow-up appointment for diabetes check-up.",
-    },
-    {
-      _id: "req003",
-      patient: {
-        name: "Alice Johnson",
-      },
-      note: "Wants to discuss lab report results.",
-    },
-    {
-      _id: "req004",
-      patient: {
-        name: "Bob Brown",
-      },
-      note: "First-time appointment for general check-up.",
-    },
-    {
-      _id: "req005",
-      patient: {
-        name: "Charlie Wilson",
-      },
-      note: "Consultation regarding skin allergy.",
-    },
-    {
-      _id: "req006",
-      patient: {
-        name: "Emily Davis",
-      },
-      note: "Needs a prescription refill for blood pressure medication.",
-    },
-  ];
+  // const appointmentRequests = [
+  //   {
+  //     _id: "req001",
+  //     patient: {
+  //       name: "John Doe",
+  //     },
+  //     note: "Needs consultation for back pain.",
+  //   },
+  //   {
+  //     _id: "req002",
+  //     patient: {
+  //       name: "Jane Smith",
+  //     },
+  //     note: "Follow-up appointment for diabetes check-up.",
+  //   },
+  //   {
+  //     _id: "req003",
+  //     patient: {
+  //       name: "Alice Johnson",
+  //     },
+  //     note: "Wants to discuss lab report results.",
+  //   },
+  //   {
+  //     _id: "req004",
+  //     patient: {
+  //       name: "Bob Brown",
+  //     },
+  //     note: "First-time appointment for general check-up.",
+  //   },
+  //   {
+  //     _id: "req005",
+  //     patient: {
+  //       name: "Charlie Wilson",
+  //     },
+  //     note: "Consultation regarding skin allergy.",
+  //   },
+  //   {
+  //     _id: "req006",
+  //     patient: {
+  //       name: "Emily Davis",
+  //     },
+  //     note: "Needs a prescription refill for blood pressure medication.",
+  //   },
+  // ];
 
   const phases = [
     { name: "Early stage", count: 26, color: "#25307F" },
@@ -401,6 +402,7 @@ const DoctorOverview = () => {
     dispatch(getMostCommonDiagnosis());
     dispatch(getUpcomingEvents(new Date()))
     dispatch(getDoctorRequests())
+    dispatch(getAppointmentRequests())
   }, [dispatch,selectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
@@ -409,6 +411,8 @@ const DoctorOverview = () => {
   const diagnosis = doctor.diagnosis
 
   const totalAppointments = doctor.totalAppointments;
+
+  const appointmentRequests = doctor.appointmentRequests;
 
   const events = doctor.events;
 

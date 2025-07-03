@@ -4,10 +4,7 @@ import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import arrowBack from "../../../../assets/arrow_back.svg";
 import { useDispatch } from "react-redux";
-import {
-    acceptAppointmentRequests,
-    rejectAppointmentRequests,
-} from "../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
+import {approveAppointment, rejectAppointment} from "../../../../components/State/Doctor/Action.js";
 
 const AppointmentRequestModal = ({
                                      isOpen,
@@ -36,12 +33,12 @@ const AppointmentRequestModal = ({
 
     const handleAcceptClick = (id) => {
         // console.log("Accept")
-        dispatch(acceptAppointmentRequests(id));
+        dispatch(approveAppointment(id));
     };
 
     const handleRejectClick = (id) => {
         // console.log("Reject")
-        dispatch(rejectAppointmentRequests(id));
+        dispatch(rejectAppointment(id));
     };
 
     return (

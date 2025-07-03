@@ -1,8 +1,9 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
+  APPROVE_APPOINTMENT,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT,
+  CREATE_NEW_EVENT, GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
@@ -21,7 +22,7 @@ import {
   GET_STATS,
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
-  GET_WAITING_APPOINTMENTS,
+  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
 
@@ -170,6 +171,78 @@ export const getDoctorRequests = (status) => async (dispatch) => {
     dispatch({ type: GET_DOCTOR_REQUESTS, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getAppointmentRequests = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getRequestedAppointments`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Appointment Requests : ", data);
+
+    dispatch({ type: GET_APPOINTMENT_REQUESTS, payload: data.appointments });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const approveAppointment = (appointmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/approveAppointment/${appointmentId}`, appointmentId, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Approved Successfully : ", data);
+
+    dispatch({ type: APPROVE_APPOINTMENT, payload: appointmentId });
+
+    toast.success("Appointment Approved Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error("Appointment Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const rejectAppointment = (appointmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/rejectAppointment/${appointmentId}`, appointmentId, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Rejected Successfully : ", data);
+
+    dispatch({ type: REJECT_APPOINTMENT, payload: appointmentId });
+
+    toast.success("Appointment Rejected Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error("Appointment Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 

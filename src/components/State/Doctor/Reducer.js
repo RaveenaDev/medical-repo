@@ -1,6 +1,7 @@
 import {
+  APPROVE_APPOINTMENT,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT,
+  CREATE_NEW_EVENT, GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DOCTOR_REQUESTS,
@@ -19,7 +20,7 @@ import {
   GET_STATS,
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
-  GET_WAITING_APPOINTMENTS,
+  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT,
 } from "./ActionType.js";
 
 const initialState = {
@@ -45,6 +46,7 @@ const initialState = {
   hospitalStatistics: [],
   patientOverview: [],
   doctorRequests: [],
+  appointmentRequests: [],
   events: [],
   monthlyEvents: [],
   totalCases: null,
@@ -186,6 +188,28 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         doctorRequests: [action.payload, ...state.doctorRequests],
+      };
+
+    case GET_APPOINTMENT_REQUESTS:
+      return {
+        ...state,
+        appointmentRequests: action.payload,
+      };
+
+    case APPROVE_APPOINTMENT:
+      return {
+        ...state,
+        appointmentRequests: state.appointmentRequests.filter(
+            (request) => request._id !== action.payload
+        ),
+      };
+
+    case REJECT_APPOINTMENT:
+      return {
+        ...state,
+        appointmentRequests: state.appointmentRequests.filter(
+            (request) => request._id !== action.payload
+        ),
       };
 
     case GET_UPCOMING_EVENTS:
