@@ -50,7 +50,7 @@ const AssignOverlay = ({
 
   const patients = useSelector((state) => state.doctor.patients);
 
-  console.log(patients);
+  // console.log(patients);
   const filteredPatients = patients.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );

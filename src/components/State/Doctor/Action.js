@@ -493,7 +493,7 @@ export const assignPatient = (assignmentData) => async (dispatch) => {
       }
     );
 
-    console.log("Created New Assignment:", data);
+    // console.log("Created New Assignment:", data);
 
     // Optional Redux dispatch
     // dispatch({ type: CREATE_NEW_ASSIGNMENT, payload: data });
