@@ -1,0 +1,33 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 1vw 2vh 0vw;
+  font-family: "Karla", sans-serif;
+  overflow-y: auto;
+  height: 80vh;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 3vh;
+  }
+}

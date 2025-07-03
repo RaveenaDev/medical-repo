@@ -12,8 +12,40 @@ const PostSurgeryFollowUp = ({ onClose }) => {
     medicationAdjustments: ["Reduced beta blockers", "Stopped Aspirin"],
     uploadedFiles: [],
     postSurgeryNotes:
-      "Surgery uneventful. Patient is stable. Will monitor for 24 hrs and start oral intake gradually.",
+      "Surgery uneventful. Patient is stable. Will monitor for 24 hrs and start oral intake gradually. wwwwwwwww wwwwwwww wwwwwwwwww wwwwwwww",
     observedSymptoms: "Shortness of breath, Fatigue",
+  };
+  const surgeryData = {
+    surgeryName: "Heart Valve Replacement",
+    surgeryDate: "06/26/2024",
+    assignedDoctor: "Dr. Arunita",
+    roomNumber: "G-129",
+    healingStatus: "ongoing",
+    uploadedFiles: [
+      {
+        name: "blood_test_report.pdf",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      },
+      {
+        name: "Intra_operative_notes_docs.pdf",
+        url: "https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf",
+      },
+      {
+        name: "consent_forms_report.pdf",
+        url: "https://www.orimi.com/pdf-test.pdf",
+      },
+    ],
+    intraoperativeNotes: [
+      "No complications during anesthesia",
+      "Valve replacement successful",
+      "Vital signs stable throughout",
+      "Estimated blood loss: minimal",
+    ],
+    actionTaken: [
+      "Patient in post-op ICU",
+      "Heart rhythm and BP stable",
+      "Scheduled follow-up in 24 hours",
+    ],
   };
 
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -82,42 +114,23 @@ const PostSurgeryFollowUp = ({ onClose }) => {
                 ))}
               </ul>
             </div>
-            <div className={styles.uploadWrapper}>
-              <div className={`${styles.formGroup} ${styles.attachmentWidth} `}>
-                <p className={styles.label}>Uploaded Files</p>
-                <div className={styles.attachmentBox}>
-                  <label className={styles.customFileUpload}>
-                    <input
-                      type="file"
-                      multiple
-                      onChange={handleFileChange}
-                      className={styles.inputFile}
-                    />
-                    Choose File
-                  </label>
+            <div className={styles.uploadedFiles}>
+              <h6 className={styles.label}>Uploaded Files</h6>
 
-                  <div className={styles.fileList}>
-                    {selectedFiles.map((item, index) => (
-                      <div key={index} className={styles.filePreviewBox}>
-                        {item.file.type.startsWith("image/") ? (
-                          <img
-                            src={item.preview}
-                            alt={item.name}
-                            className={styles.previewImg}
-                          />
-                        ) : (
-                          <span className={styles.fileName}>{item.name}</span>
-                        )}
-                        <X
-                          className={styles.removeIcon}
-                          size={16}
-                          onClick={() => handleRemoveFile(index)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <ul className={styles.uploadedFilesWrapper}>
+                {surgeryData.uploadedFiles.map((item, idx) => (
+                  <li key={idx} className={styles.fileRow}>
+                    <img
+                      src="/assets/fileIcon.svg"
+                      alt="file icon"
+                      width={12.5}
+                    />
+                    <a href={item.url} target="_blank" rel="noreferrer">
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -126,12 +139,19 @@ const PostSurgeryFollowUp = ({ onClose }) => {
         <div className={styles.section2}>
           <div className={`${styles.sec2Left} `}>
             <p className={styles.label}>Post Surgery Notes</p>
-            <textarea rows={5} className={styles.content}></textarea>
+            <p className={styles.content}>{dummyData.postSurgeryNotes}</p>
           </div>
 
           <div className={styles.sec2Left}>
             <p className={styles.label}>Observed Symptoms</p>
-            <textarea rows={5} className={styles.content}></textarea>
+            <p className={styles.content}>{dummyData.observedSymptoms} </p>
+          </div>
+        </div>
+
+        {/* section 3 */}
+        <div className={styles.section3}>
+          <div className={styles.addInfo}>
+            <button>Add Additional Info</button>
           </div>
         </div>
         <div className={styles.submitContainer}>
@@ -143,3 +163,42 @@ const PostSurgeryFollowUp = ({ onClose }) => {
 };
 
 export default PostSurgeryFollowUp;
+
+// Upload file code
+// <div className={styles.uploadWrapper}>
+//     <div className={`${styles.formGroup} ${styles.attachmentWidth} `}>
+//       <p className={styles.label}>Uploaded Files</p>
+//       <div className={styles.attachmentBox}>
+//         <label className={styles.customFileUpload}>
+//           <input
+//             type="file"
+//             multiple
+//             onChange={handleFileChange}
+//             className={styles.inputFile}
+//           />
+//           Choose File
+//         </label>
+
+//         <div className={styles.fileList}>
+//           {selectedFiles.map((item, index) => (
+//             <div key={index} className={styles.filePreviewBox}>
+//               {item.file.type.startsWith("image/") ? (
+//                 <img
+//                   src={item.preview}
+//                   alt={item.name}
+//                   className={styles.previewImg}
+//                 />
+//               ) : (
+//                 <span className={styles.fileName}>{item.name}</span>
+//               )}
+//               <X
+//                 className={styles.removeIcon}
+//                 size={16}
+//                 onClick={() => handleRemoveFile(index)}
+//               />
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   </div>

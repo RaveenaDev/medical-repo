@@ -8,7 +8,7 @@ const UpdateMAR = ({ onClose }) => {
         <X size={20} onClick={onClose} />
       </div>
       <div className={styles.container}>
-        <h1>Update Medication Administration Record</h1>
+        <h1>Medicine Update</h1>
         <div className={styles.section1}>
           <div>
             <p>Time of Administration</p>

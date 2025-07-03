@@ -52,7 +52,7 @@
 
 .table,
 .tbody {
-  min-width: 1120px;
+  min-width: 154vh;
   width: max-content;
 }
 
@@ -127,9 +127,10 @@
 }
 
 .actionTap {
-  padding: 1vh 1vw;
-  border: 1px solid #25307f;
+  padding: 2vh 3vw;
+
   background: #f2f5ff;
+  cursor: pointer;
 }
 
 // Apply background to rowContent only
@@ -162,4 +163,52 @@
   100% {
     border-color: #25307f;
   }
+}
+.nextStatus {
+  color: #2e823b;
+}
+.scheduledStatus {
+  color: #eaa000;
+}
+
+.updateModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 48vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.backdropOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+
+.actionModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 40vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
