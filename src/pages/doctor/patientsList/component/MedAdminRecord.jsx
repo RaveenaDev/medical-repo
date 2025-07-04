@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./MedAdminRecord.module.scss";
 import { Plus, Clock, Pill, NotepadText, Calendar } from "lucide-react";
 import UpdateMAR from "./form/UpdateMAR";
+import ManageMedication from "./form/ManageMedication";
 
 const MedAdminRecord = () => {
   const medicationData = [
@@ -12,7 +13,6 @@ const MedAdminRecord = () => {
       route: "IV",
       givenBy: "Nurse Name",
       notes: "No side effects",
-      status: "Given",
     },
     {
       time: "12:00 PM",
@@ -21,7 +21,6 @@ const MedAdminRecord = () => {
       route: "IV",
       givenBy: "Nurse Name",
       notes: "Improvement",
-      status: "Next",
     },
     {
       time: "7:00 PM",
@@ -30,7 +29,6 @@ const MedAdminRecord = () => {
       route: "Oral",
       givenBy: "Nurse Name",
       notes: "Improvement",
-      status: "Scheduled",
     },
     {
       time: "8:00 PM",
@@ -39,7 +37,6 @@ const MedAdminRecord = () => {
       route: "Oral",
       givenBy: "Nurse Name",
       notes: "Improvement",
-      status: "Scheduled",
     },
     {
       time: "9:00 PM",
@@ -48,7 +45,6 @@ const MedAdminRecord = () => {
       route: "Oral",
       givenBy: "Nurse Name",
       notes: "Improvement",
-      status: "Scheduled",
     },
   ];
 
@@ -110,6 +106,8 @@ const MedAdminRecord = () => {
   }, [activeModal]);
 
   const openUpdate = () => setActiveModal("Update");
+  const openAction = () => setActiveModal("Action");
+
   const closeModal = () => setActiveModal(null);
 
   return (
@@ -126,8 +124,16 @@ const MedAdminRecord = () => {
       {activeModal === "Update" && (
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
-          <div className={styles.followUpModal}>
+          <div className={styles.updateModal}>
             <UpdateMAR onClose={closeModal} />
+          </div>
+        </>
+      )}
+      {activeModal === "Action" && (
+        <>
+          <div className={styles.backdropOverlay} onClick={closeModal} />
+          <div className={styles.actionModal}>
+            <ManageMedication onClose={closeModal} />
           </div>
         </>
       )}
@@ -209,13 +215,28 @@ const MedAdminRecord = () => {
                     <div className={styles.td}>
                       <span>{item.notes}</span>
                     </div>
-                    <div className={styles.td}>
-                      <span>{item.status}</span>
+                    <div
+                      className={`${styles.td} ${
+                        rowClass === "past"
+                          ? styles.givenStatus
+                          : rowClass === "next"
+                          ? styles.nextStatus
+                          : styles.scheduledStatus
+                      }`}
+                    >
+                      <span>
+                        {rowClass === "past"
+                          ? "Given"
+                          : rowClass === "next"
+                          ? "Next"
+                          : "Scheduled"}
+                      </span>
                     </div>
                   </div>
                   {/* Action column */}
                   <div className={`${styles.actionWrapper} ${styles.t}`}>
                     <img
+                      onClick={openAction}
                       className={styles.actionTap}
                       src="/assets/tapAction.svg"
                       alt=""
