@@ -28,3 +28,5 @@ export const GET_DOCTORS = "GET_DOCTORS";
 export const GET_STAFF = "GET_STAFF";
 
 export const GET_INVENTORY_DATA = "GET_INVENTORY_DATA";
+export const GET_DOCTOR_NOTES = "GET_DOCTOR_NOTES";
+export const CREATE_DOCTOR_NOTE = "CREATE_DOCTOR_NOTE";
