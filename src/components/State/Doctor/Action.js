@@ -1,12 +1,12 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
-  APPROVE_APPOINTMENT,
+  APPROVE_APPOINTMENT, CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS, GET_CRITICAL_PATIENTS,
+  GET_COMPLETED_APPOINTMENTS, GET_CRITICAL_PATIENTS, GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
@@ -525,5 +525,39 @@ export const assignPatient = (assignmentData) => async (dispatch) => {
       position: "bottom-right",
       autoClose: 2000,
     });
+  }
+};
+
+export const getDoctorNotes = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/doctor-notes`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      }
+    });
+
+    // console.log("Doctor Notes: ", data);
+    dispatch({ type: GET_DOCTOR_NOTES, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const createDoctorNote = (note) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/doctor-notes`,note, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      }
+    });
+
+    console.log("Doctor Notes: ", data);
+    dispatch({ type: CREATE_DOCTOR_NOTE, payload: data });
+  } catch (error) {
+    console.log(error);
   }
 };

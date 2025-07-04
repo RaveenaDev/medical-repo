@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {createDoctorNote, getDoctorNotes} from "../State/Doctor/Action.js";
 
 const DoctorNotesPopup = ({
   anchorRef,
@@ -19,6 +21,8 @@ const DoctorNotesPopup = ({
     top: position.top,
     left: position.left + 330,
   });
+
+  const [showSaveButton, setShowSaveButton] = useState(false);
 
   const colors = [
     "#FF5722", // red
@@ -154,6 +158,21 @@ const DoctorNotesPopup = ({
     boxShadow: "0px 0px 15px -5px #25307F66",
   };
 
+  const dispatch = useDispatch()
+  const handleSavedNotes = () => {
+    dispatch(getDoctorNotes())
+      setShowStickyPanel(true);
+      setShowOptions(false);
+  }
+
+  const doctorNotes = useSelector((store) => store.doctor.doctorNotes)
+
+  console.log("Doc: ",doctorNotes)
+
+  const truncateText = (text, maxLength) => {
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
   return ReactDOM.createPortal(
       <>
         <div
@@ -185,7 +204,7 @@ const DoctorNotesPopup = ({
           >
             ＋
           </span>
-              <span
+              <div
                   style={{
                     fontSize: "20px",
                     cursor: "pointer",
@@ -217,6 +236,51 @@ const DoctorNotesPopup = ({
                   fill="white"
               />
             </svg>
+
+                {showSaveButton && (
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                      position:'absolute',
+                      right: '3rem',
+                      color:"#ffffff"
+                    }}>
+                      <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // prevent opening color palette
+
+                            const content = editorRef.current.innerHTML.trim();
+                            if (!content) return;
+
+                            // 🔥 Dispatch the save action here (with note + color)
+                            const notePayload = {
+                              note: content,
+                              color: headerColor, // Include the selected color
+                            };
+
+                            console.log("Saving note:", notePayload);
+                            // dispatch(createDoctorNote(notePayload));
+
+                            setShowSaveButton(false);
+                            setIsEmpty(true);
+                            editorRef.current.innerHTML = "";
+                          }}
+
+                          style={{
+                            backgroundColor: "#25307F",
+                            color: "white",
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            border: "1px solid #ccc",
+                            cursor: "pointer",
+                            fontSize: "14px"
+                          }}
+                      >
+                        Save
+                      </button>
+                    </div>
+                )}
+
 
                 {/* Popup menu */}
                 {showOptions && (
@@ -267,10 +331,7 @@ const DoctorNotesPopup = ({
                                 fill="black"/>
                           </svg>
                           <div
-                              onClick={() => {
-                                setShowStickyPanel(true);
-                                setShowOptions(false);
-                              }}
+                              onClick={handleSavedNotes}
                               style={{cursor: "pointer", fontSize: '0.9rem', color: '#070707'}}>Saved Notes
                           </div>
                         </div>
@@ -300,17 +361,18 @@ const DoctorNotesPopup = ({
                     </div>
                 )}
 
-          </span>
+          </div>
             </div>
-            <span style={{fontSize: "24px", cursor: "pointer"}} onClick={onClose}>
+            <div style={{fontSize: "24px", cursor: "pointer"}} onClick={onClose}>
           ×
-        </span>
+        </div>
           </div>
 
           {/* Editor */}
           <div
               ref={editorRef}
               contentEditable
+              data-placeholder="Write doctor's notes here..."
               onInput={() => {
                 const content = editorRef.current.innerHTML.trim();
                 const isReallyEmpty =
@@ -319,7 +381,9 @@ const DoctorNotesPopup = ({
                     content === "<div><br></div>";
 
                 setIsEmpty(isReallyEmpty);
+                setShowSaveButton(!isReallyEmpty);  // Show save button if not empty
               }}
+
               onBlur={() => {
                 if (editorRef.current.innerText.trim() === "") {
                   editorRef.current.innerHTML = "";
@@ -335,17 +399,6 @@ const DoctorNotesPopup = ({
               }}
               suppressContentEditableWarning={true}
           >
-            {isEmpty && (
-                <span
-                    style={{
-                      position: "absolute",
-                      color: "#999",
-                      pointerEvents: "none",
-                    }}
-                >
-            Write doctor's notes here...
-          </span>
-            )}
           </div>
 
           {/* Toolbar - Bottom */}
@@ -521,41 +574,55 @@ const DoctorNotesPopup = ({
                 </div>
 
 
-                {[...Array(3)].map((_, i) => (
-                    <div
-                        key={i}
-                        style={{
-                          padding: "8px 1.4rem",
-                          backgroundColor: "#E8F0FE",
-                          borderRadius: "8px",
-                          marginBottom: "10px",
-                          fontSize: "14px",
-                          boxShadow: "0px 2px 4px rgba(0,0,0,0.05)",
-                          position: "relative",
-                          width: '78%'
-                        }}
-                    >
-                      <p style={{color: '#757575', fontSize: '13px'}}>
-                        Add a Note...
-                      </p>
-                      <div style={{position:'absolute',top:15,right:0,backgroundColor:'#ffffff',display:'inline-block'}}>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M20 0H0V20L20 0Z" fill="black" fill-opacity="0.2"/>
-                        </svg>
-                      </div>
-                      {/*<div*/}
-                      {/*    style={{*/}
-                      {/*      position: "absolute",*/}
-                      {/*      bottom: "-5px",*/}
-                      {/*      right: "-5px",*/}
-                      {/*      width: "0",*/}
-                      {/*      height: "0",*/}
-                      {/*      borderLeft: "15px solid transparent",*/}
-                      {/*      borderTop: "15px solid #cfd8dc",*/}
-                      {/*    }}*/}
-                      {/*></div>*/}
-                    </div>
-                ))}
+                {doctorNotes.length > 0 ? (
+                    doctorNotes.map((note, index) => (
+                        <div
+                            key={index}
+                            onClick={() => {
+                              if (editorRef.current) {
+                                editorRef.current.innerHTML = note?.note || "";
+                                setHeaderColor(note?.color || "#25307F");
+                                setIsEmpty(false);
+
+                                // Delay closing sticky panel to avoid React DOM sync issue
+                                setTimeout(() => {
+                                  setShowStickyPanel(false);
+                                }, 50);
+                              }
+                            }}
+                            style={{
+                              cursor: "pointer",
+                              padding: "8px 1.4rem",
+                              backgroundColor: "#E8F0FE",
+                              borderRadius: "8px",
+                              marginBottom: "10px",
+                              fontSize: "14px",
+                              boxShadow: "0px 2px 4px rgba(0,0,0,0.05)",
+                              position: "relative",
+                              width: '78%',
+                            }}
+                        >
+                          <p style={{ color: '#424242', fontSize: '13px', marginBottom: 0 }}>
+                            {truncateText(note?.note,28) || 'No content'}
+                          </p>
+                          <div style={{
+                            position: 'absolute',
+                            top: 15,
+                            right: 0,
+                            backgroundColor: '#ffffff',
+                            display: 'inline-block'
+                          }}>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20 0H0V20L20 0Z" fill="black" fillOpacity="0.2"/>
+                            </svg>
+                          </div>
+                        </div>
+                    ))
+                ) : (
+                    <p style={{ color: '#999', paddingLeft: '1.5rem' }}>No notes found.</p>
+                )}
+
               </div>
             </div>
         )}
