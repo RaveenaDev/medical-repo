@@ -15,7 +15,7 @@ import InPatient from "./patient/InPatient.jsx";
 import TotalSurgeries from "./surgeries/TotalSurgeries.jsx";
 import PatientsList from "./patientsList/PatientsList.jsx";
 import SinglePatientDetail from "./patientsList/SinglePatientDetail.jsx";
-import Inventory from "./department/Inventory.jsx";
+import Inventory from "./inventory/Inventory.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -40,7 +40,7 @@ const DoctorRoutes = (props) => {
       <Route path="/inpatients" element={<InPatient />} />
       <Route path="/surgeries" element={<TotalSurgeries />} />
       <Route path="/department" element={<Department />} />
-      <Route path="/department/inventory" element={<Inventory/>} />
+      <Route path="/department/inventory" element={<Inventory />} />
       <Route path="/rooms" element={<Rooms />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/settings/privacyPolicy" element={<PrivacyPolicy />} />
