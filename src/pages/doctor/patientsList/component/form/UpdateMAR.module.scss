@@ -14,7 +14,7 @@
   padding: 0vh 1vw 2vh 0vw;
   font-family: "Karla", sans-serif;
   overflow-y: auto;
-  height: 80vh;
+  height: 60vh;
   /* Hide scrollbar for Chrome, Safari, Opera */
   &::-webkit-scrollbar {
     width: 0;
@@ -38,9 +38,9 @@
   column-gap: 2.4vw;
   row-gap: 2vh;
 
-  @media (max-width: 1100px) {
-    grid-template-columns: 1fr;
-  }
+  // @media (max-width: 700px) {
+  //   grid-template-columns: 1fr;
+  // }
   p {
     font-size: 1.9vh;
   }
@@ -59,89 +59,12 @@
   }
 }
 
-.statusGroup {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  gap: 3vw;
-
-  label {
-    display: flex;
-    cursor: pointer;
-    font-weight: 500;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 1vh;
-    font-size: 1.8vh;
-
-    input {
-      position: absolute;
-      left: -9999px;
-
-      &:checked + span {
-        background-color: #f0f2ff;
-
-        &:before {
-          box-shadow: inset 0 0 0 0.4375em #25307f;
-        }
-      }
-    }
-
-    span {
-      display: flex;
-      align-items: center;
-      padding: 0.5em 1em 0.5em 0.5em;
-      border-radius: 99em;
-      transition: 0.25s ease;
-      background-color: #fff;
-
-      &:hover {
-        background-color: #f0f2ff;
-      }
-
-      &:before {
-        content: "";
-        display: flex;
-        flex-shrink: 0;
-        background-color: #fff;
-        width: 1.5em;
-        height: 1.5em;
-        border-radius: 50%;
-        margin-right: 0.5em;
-        transition: 0.25s ease;
-        box-shadow: inset 0 0 0 0.125em #00005c;
-      }
-    }
-  }
-}
-
-.section2 {
-  margin-top: 2vh;
-  h6 {
-    font-size: 1.9vh;
-    margin-bottom: 0.5vh;
-  }
-}
-
-.description {
-  margin-top: 2vh;
-
-  textarea {
-    line-height: 2.6vh;
-    border: 1px solid #cfcfcf;
-    resize: none;
-    border-radius: 4px;
-    padding: 1vh 0.5vw;
-    font-family: "Karla", sans-serif;
-    outline: none;
-    width: 97%;
-  }
-}
-
 .btnContainer {
   display: flex;
   justify-content: center;
-  margin-top: 2vh;
+
+  align-items: end;
+  margin-top: 12vh;
   button {
     background: #fff;
     color: #25307f;
@@ -158,4 +81,97 @@
   width: 93.5%;
   border-radius: 4px;
   border: 1px solid #cfcfcf;
+}
+
+.dropdown {
+  position: relative;
+  width: 98.5%; // Use a percentage of viewport width for the dropdown
+  // min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  border: 1px solid #cfcfcf;
+
+  border-radius: 4px;
+
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 5vh;
+  &:hover {
+    border: 1px solid #cfcfcf;
+  }
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
+  border-radius: 4px;
+  border: 1px solid #cfcfcf;
+  width: 100%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.7vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}
+
+.addMedicine {
+  display: flex;
+  align-items: end;
+  button {
+    padding: 1vh 1vw;
+    height: 5.8vh;
+    background: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    border-radius: 4px;
+    color: #777;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    &:hover {
+      border: none;
+      background: #f2f5ff;
+    }
+  }
+}
+
+.icon {
+  color: #25307f;
+  height: 2.8vh;
 }

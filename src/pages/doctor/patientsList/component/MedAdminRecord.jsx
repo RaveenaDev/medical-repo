@@ -237,7 +237,9 @@ const MedAdminRecord = () => {
                   <div className={`${styles.actionWrapper} ${styles.t}`}>
                     <img
                       onClick={openAction}
-                      className={styles.actionTap}
+                      className={`${styles.actionTap} ${
+                        rowClass === "past" ? styles.givenAction : ""
+                      }`}
                       src="/assets/tapAction.svg"
                       alt=""
                     />

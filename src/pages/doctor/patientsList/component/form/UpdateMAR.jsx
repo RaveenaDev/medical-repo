@@ -1,6 +1,14 @@
+import { useState } from "react";
 import styles from "./UpdateMAR.module.scss";
-import { X } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, X } from "lucide-react";
 const UpdateMAR = ({ onClose }) => {
+  const medFreqOptions = ["Regular", "Alternative", "Custom"];
+  const [openMedFreq, setOpenMedFreq] = useState(false);
+  const [selectedMedFreq, setSelectedMedFreq] = useState("");
+
+  const givenByOptions = ["Nurse 1", "Nurse 2", "Nurse 3"];
+  const [openGivenBy, setOpenGivenBy] = useState(false);
+  const [selectedGivenBy, setSelectedGivenBy] = useState("");
   return (
     <div>
       {" "}
@@ -11,17 +19,7 @@ const UpdateMAR = ({ onClose }) => {
         <h1>Medicine Update</h1>
         <div className={styles.section1}>
           <div>
-            <p>Time of Administration</p>
-            <input type="text" className={styles.inputText} />
-          </div>
-          <div>
-            {" "}
-            <p>Date of Administration</p>
-            <input type="date" className={styles.inputDate} />
-          </div>
-          <div>
-            {" "}
-            <p>Medication Name</p>
+            <p> Medicine Name</p>
             <input type="text" className={styles.inputText} />
           </div>
           <div>
@@ -31,64 +29,98 @@ const UpdateMAR = ({ onClose }) => {
           </div>
           <div>
             {" "}
-            <p>Route of Administration</p>
+            <p>Time</p>
+            <input type="time" className={styles.inputDate} />
+          </div>
+          <div>
+            {" "}
+            <p>Medicine Frequency</p>
+            {/* Med Freq Dropdown */}
+            <div className={styles.dropdown}>
+              <button
+                className={styles.trigger}
+                onClick={() => setOpenMedFreq((prev) => !prev)}
+              >
+                <p>{selectedMedFreq || "Select"}</p>
+                <span className={styles.arrow}>
+                  {openMedFreq ? <ChevronUp /> : <ChevronDown />}
+                </span>
+              </button>
+              {openMedFreq && (
+                <ul className={styles.menu}>
+                  {medFreqOptions.map((option) => (
+                    <li
+                      key={option}
+                      className={`${styles.item} ${
+                        selectedMedFreq === option ? styles.active : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedMedFreq(option);
+                        setOpenMedFreq(false);
+                      }}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+          <div>
+            {" "}
+            <p>Route</p>
             <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
-            <p>Assigned By</p>
+            <p>Notes</p>
             <input type="text" className={styles.inputText} />
           </div>
           <div>
             {" "}
-            <p>Room No.</p>
-            <input type="text" className={styles.inputText} />
+            <p>Given by</p>
+            {/* Given By Dropdown */}
+            <div className={styles.dropdown}>
+              <button
+                className={styles.trigger}
+                onClick={() => setOpenGivenBy((prev) => !prev)}
+              >
+                <p>{selectedGivenBy || "Select"}</p>
+                <span className={styles.arrow}>
+                  {openGivenBy ? <ChevronUp /> : <ChevronDown />}
+                </span>
+              </button>
+              {openGivenBy && (
+                <ul className={styles.menu}>
+                  {givenByOptions.map((option) => (
+                    <li
+                      key={option}
+                      className={`${styles.item} ${
+                        selectedGivenBy === option ? styles.active : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedGivenBy(option);
+                        setOpenGivenBy(false);
+                      }}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-          <div>
-            {" "}
-            <p>Bed No.</p>
-            <input type="text" className={styles.inputText} />
+          <div className={styles.addMedicine}>
+            <button>
+              <Plus className={styles.icon} />
+              <span>Add Medicine</span>
+            </button>
           </div>
         </div>
         {/* Section 2 */}
-        <div className={styles.section2}>
-          <div>
-            <p>Status</p>
-          </div>
-          <div className={styles.statusGroup}>
-            <label>
-              <input type="radio" id="given" name="status" defaultChecked />
-              <span>Given</span>
-            </label>
-
-            <label>
-              <input type="radio" id="scheduled" name="status" />
-              <span>Scheduled</span>
-            </label>
-
-            <label>
-              <input type="radio" id="delayed" name="status" />
-              <span>Delayed</span>
-            </label>
-
-            <label>
-              <input type="radio" id="cancelled" name="status" />
-              <span>Cancelled</span>
-            </label>
-          </div>
-        </div>
-
-        <div className={styles.description}>
-          <p>Description</p>
-          <textarea
-            name="description"
-            placeholder={`shortness of breath, fatigue,swelling...`}
-            rows={4}
-          />
-        </div>
 
         <div className={styles.btnContainer}>
-          <button>Save Update</button>
+          <button>Schedule</button>
         </div>
       </div>
     </div>
