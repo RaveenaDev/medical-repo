@@ -3,7 +3,7 @@ import {
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT, GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS,
+  GET_COMPLETED_APPOINTMENTS, GET_CRITICAL_PATIENTS,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
@@ -32,6 +32,7 @@ const initialState = {
   surgeries: [],
   totalRooms: null,
   rooms: [],
+  criticalPatients: [],
   totalDiagnosis: null,
   diagnosis: [],
   totalAppointments: [],
@@ -128,6 +129,12 @@ export const doctorReducer = (state = initialState, action) => {
         totalOutpatientsCount: action.payload.totalOutpatients,
         isLoading: false,
       };
+
+    case GET_CRITICAL_PATIENTS:
+      return{
+        ...state,
+        criticalPatients: action.payload.data
+      }
 
     case GET_MOST_COMMON_DIAGNOSIS:
       return {

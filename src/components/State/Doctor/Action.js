@@ -6,7 +6,7 @@ import {
   CREATE_NEW_EVENT,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS,
+  GET_COMPLETED_APPOINTMENTS, GET_CRITICAL_PATIENTS,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
@@ -358,6 +358,23 @@ export const getMonthlyEvents = (month, year) => async (dispatch) => {
 
     console.log("Monthly Events: ", data);
     dispatch({ type: GET_MONTHLY_EVENTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCriticalPatients = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/critical-patients`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      }
+    });
+
+    console.log("Critical Patients: ", data);
+    dispatch({ type: GET_CRITICAL_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
   }

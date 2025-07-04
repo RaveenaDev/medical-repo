@@ -27,7 +27,7 @@ import AppointmentRequestModal from "./components/appointmentRequests/Appointmen
 import {useDispatch, useSelector} from "react-redux";
 import {
   getAppointmentRequests,
-  getAppointments,
+  getAppointments, getCriticalPatients,
   getDoctorRequests,
   getMostCommonDiagnosis,
   getUpcomingEvents
@@ -180,28 +180,28 @@ const DoctorOverview = () => {
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
   const navigate = useNavigate();
 
-  const criticalPatients = [
-    {
-      name: "John Doe",
-      disease: "Respiratory Failure",
-      status: "Critical",
-    },
-    {
-      name: "Jane Smith",
-      disease: "Hypertension",
-      status: "Ongoing",
-    },
-    {
-      name: "Alice Johnson",
-      disease: "Diabetes",
-      status: "Moderate",
-    },
-    {
-      name: "Bob Lee",
-      disease: "Heart Disease",
-      status: "High",
-    },
-  ];
+  // const criticalPatients = [
+  //   {
+  //     name: "John Doe",
+  //     disease: "Respiratory Failure",
+  //     status: "Critical",
+  //   },
+  //   {
+  //     name: "Jane Smith",
+  //     disease: "Hypertension",
+  //     status: "Ongoing",
+  //   },
+  //   {
+  //     name: "Alice Johnson",
+  //     disease: "Diabetes",
+  //     status: "Moderate",
+  //   },
+  //   {
+  //     name: "Bob Lee",
+  //     disease: "Heart Disease",
+  //     status: "High",
+  //   },
+  // ];
 
   const dummyTotalAppointments = [
     {
@@ -403,6 +403,7 @@ const DoctorOverview = () => {
     dispatch(getUpcomingEvents(new Date()))
     dispatch(getDoctorRequests())
     dispatch(getAppointmentRequests())
+    dispatch(getCriticalPatients())
   }, [dispatch,selectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
@@ -416,7 +417,9 @@ const DoctorOverview = () => {
 
   const events = doctor.events;
 
-  // console.log("Eveee: ",events)
+  const criticalPatients = doctor.criticalPatients
+
+  console.log("Crit: ",criticalPatients)
 
   const EVENTS = events.map((event) => {
     const hasTime = event.startTime && event.endTime;
@@ -835,7 +838,7 @@ const DoctorOverview = () => {
                               color: "#2d3179",
                             }}
                           >
-                            {patient.name}
+                            {patient.patientName}
                           </div>
                           <div
                             style={{
@@ -843,11 +846,11 @@ const DoctorOverview = () => {
                               color: "#878787",
                             }}
                           >
-                            {patient.disease}
+                            {patient.condition}
                           </div>
                         </div>
-                        <div style={getStatusStyle(patient.status)}>
-                          {patient.status}
+                        <div style={getStatusStyle(patient.severity)}>
+                          {patient.severity}
                         </div>
                       </div>
                     ))}
