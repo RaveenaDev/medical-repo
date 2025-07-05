@@ -8,60 +8,73 @@ import {
   MoveRight,
   Thermometer,
   HeartPulse,
+  Calendar,
 } from "lucide-react";
 import UpdateNursing from "./form/UpdateNursing";
 
 const Nursing = () => {
   const vitalsData = [
     {
-      name: "Heart Rate",
-      value: "110",
-      unit: "bpm",
-      time: "2:15 pm",
+      heartRate: "85",
+      temperature: "98.4",
+      bloodPressure: "122/80",
+      spO2: "96",
+      lastUpdated: new Date().toISOString(), // Today
     },
     {
-      name: "Temperature",
-      value: "98.4",
-      unit: "°F",
-      time: "3:00 pm",
+      heartRate: "85",
+      temperature: "98.4",
+      bloodPressure: "122/80",
+      spO2: "96",
+      lastUpdated: new Date(Date.now() - 86400000).toISOString(), // Yesterday
     },
     {
-      name: "Blood Pressure",
-      value: "122/80",
-      unit: "mmHg",
-      time: "4:00 pm",
+      heartRate: "85",
+      temperature: "98.4",
+      bloodPressure: "122/80",
+      spO2: "96",
+      lastUpdated: "2026-05-23T08:00:00.000Z",
     },
     {
-      name: "SpO2",
-      value: "88",
-      unit: "%",
-      time: "11:00 am",
+      heartRate: "85",
+      temperature: "98.4",
+      bloodPressure: "122/80",
+      spO2: "96",
+      lastUpdated: "2026-05-23T08:00:00.000Z",
     },
     {
-      name: "Heart Rate",
-      value: "110",
-      unit: "bpm",
-      time: "2:15 pm",
-    },
-    {
-      name: "Temperature",
-      value: "98.4",
-      unit: "°F",
-      time: "3:00 pm",
-    },
-    {
-      name: "Blood Pressure",
-      value: "70/80",
-      unit: "mmHg",
-      time: "4:00 pm",
-    },
-    {
-      name: "SpO2",
-      value: "98",
-      unit: "%",
-      time: "11:00 am",
+      heartRate: "85",
+      temperature: "98.4",
+      bloodPressure: "122/80",
+      spO2: "96",
+      lastUpdated: "2026-05-23T08:00:00.000Z",
     },
   ];
+
+  const formatDate = (isoString) => {
+    const inputDate = new Date(isoString);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+
+    const inputDateOnly = new Date(inputDate);
+    inputDateOnly.setHours(0, 0, 0, 0);
+
+    if (inputDateOnly.getTime() === today.getTime()) {
+      return "Today";
+    } else if (inputDateOnly.getTime() === yesterday.getTime()) {
+      return "Yesterday";
+    } else {
+      const day = String(inputDate.getDate()).padStart(2, "0");
+      const month = String(inputDate.getMonth() + 1).padStart(2, "0");
+      const year = inputDate.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+  };
 
   const [activeModal, setActiveModal] = useState(null);
 
@@ -80,12 +93,9 @@ const Nursing = () => {
       <header>
         <p>Vitals Tracker</p>
         <div className={styles.buttons}>
-          <button className={styles.editBtn}>
-            <img src="/assets/Pen.svg" alt="pen icon" width={14} />
-          </button>
           <button className={styles.updateBtn} onClick={openUpdate}>
             <Plus size={18} />
-            Update
+            Record New Vitals
           </button>
         </div>
       </header>
@@ -98,6 +108,79 @@ const Nursing = () => {
           </div>
         </>
       )}
+
+      <div className={styles.tableContainer}>
+        <div className={styles.table}>
+          <div className={styles.head}>
+            <div className={styles.th}>
+              <Heart fill="#f14400" color="#f14400" className={styles.icon} />
+              <span>Heart Rate</span>
+            </div>
+            <div className={styles.th}>
+              <Thermometer
+                color="#ffa629"
+                fill="#ffa629"
+                className={styles.icon}
+              />
+              <span>Temperature</span>
+            </div>
+            <div className={styles.th}>
+              <HeartPulse
+                fill="#25307f"
+                color="white"
+                className={styles.heartPluse}
+              />
+              <span>Blood Plessure</span>
+            </div>
+            <div className={styles.th}>
+              <img
+                src="/assets/mdi_oxygen-tank.svg"
+                alt=""
+                className={styles.icon}
+              />
+              <span>Sp02</span>
+            </div>
+            <div className={styles.th}>
+              <Calendar color="#25307f" className={styles.icon} />
+              <span>Last Updated</span>
+            </div>
+          </div>
+          <div className={styles.body}>
+            {vitalsData.map((item, idx) => {
+              const formattedDate = formatDate(item.lastUpdated);
+              const isToday = formattedDate === "Today";
+              return (
+                <div
+                  className={`${styles.tr} ${isToday ? styles.todayRow : ""}`}
+                  key={idx}
+                >
+                  <div className={styles.td}>
+                    <span className={styles.value}>{item.heartRate}</span>
+                    <span className={styles.unit}>bpm</span>
+                  </div>
+
+                  <div className={styles.td}>
+                    <span className={styles.value}>{item.temperature}</span>
+                    <span className={styles.unit}>°F</span>
+                  </div>
+                  <div className={styles.td}>
+                    <span className={styles.value}>{item.bloodPressure}</span>
+                    <span className={styles.unit}>mmHg</span>
+                  </div>
+                  <div className={styles.td}>
+                    <span className={styles.value}>{item.spO2}</span>
+                    <span className={styles.unit}>%</span>
+                  </div>
+
+                  <div className={styles.td}>
+                    <span className={styles.value}>{formattedDate}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
