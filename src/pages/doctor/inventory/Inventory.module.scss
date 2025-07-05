@@ -1,9 +1,8 @@
 .wrapper {
-  padding: 24px 36px;
-  background-color: #f9f9fb;
+  height: 97vh;
 }
-
 .categorySection {
+  margin-top: 20px;
   margin-bottom: 24px;
 }
 
@@ -13,30 +12,23 @@
   align-items: center;
   margin-bottom: 12px;
 
-  h2 {
-    font-size: 20px;
-    font-weight: 600;
+  .heading {
+    display: flex;
+    gap: 5px;
+    h2 {
+      font-family: "Hanken Grotesk";
+      font-weight: 500;
+      font-style: Medium;
+      font-size: 24px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      color: #25307f;
+    }
   }
-}
-.selectedCard {
-  outline: 2px solid #25307f;
-  box-shadow: 0 0 0 2px #25307f44;
-}
-
-.addCategory {
-  background-color: #25307f;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
 }
 
 .slickSlider {
-  margin: 20px 0;
-
+  margin: 30px 0;
   .slick-slide {
     padding: 0 8px;
   }
@@ -61,25 +53,99 @@
   }
 }
 
+.slideWrapper {
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+}
+
 .card {
-  padding: 14px;
-  border-radius: 10px;
-  height: 160px;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.06);
-  h4 {
-    font-size: 16px;
+  width: 90%;
+  background: #fff;
+  height: 10rem;
+  border-radius: 5px;
+  border: 0.2px solid #000000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.selectedCard {
+  border-bottom: 3px solid #25307f;
+  width: 90%;
+  height: 10rem;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: 7px 9px;
+  border-radius: 5px 5px 0 0;
+  gap: 10px;
+  .cardHeading {
+    color: #25307f;
+    font-family: "Hanken Grotesk";
     font-weight: 600;
-    margin-bottom: 6px;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    flex: 1;
   }
-  p {
-    font-size: 13px;
-    margin: 3px 0;
+}
+
+.cardBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 12px 6px;
+
+  .cardSummary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #25307f;
+    font-family: "Hanken Grotesk";
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: 0%;
   }
+
+  .cardDetails {
+    font-family: "Karla";
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #333333;
+
+    .low {
+      color: #f14400;
+    }
+    .moderate {
+      color: #eaa000;
+    }
+    .sufficient {
+      color: #2e823b;
+    }
+  }
+}
+
+.cardFooter {
+  display: flex;
+  text-align: right;
+  padding-right: 10px;
   .updated {
-    margin-top: 8px;
-    font-size: 11px;
-    color: #777;
-    display: block;
+    flex: 1;
+    font-family: "Karla";
+    font-weight: 400;
+    font-style: Italic;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #878787c2;
   }
 }
 
@@ -112,14 +178,23 @@
 }
 
 .addBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   background-color: #25307f;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  color: #dae4ff;
+  padding: 10px 20px;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
+  box-shadow: 0px 4px 4px 0px #c2c2c240;
+  font-family: "Karla";
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  vertical-align: middle;
 }
 
 .tableContainer {

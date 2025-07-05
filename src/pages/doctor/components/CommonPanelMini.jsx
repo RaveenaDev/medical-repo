@@ -4,7 +4,6 @@ import Searchbar from "../../../components/Searchbar/index.jsx";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
 
 const CommonPanelMini = () => {
-
   return (
     <>
       <div className={ayu.patients}>
@@ -13,7 +12,7 @@ const CommonPanelMini = () => {
           <Notifications />
         </div>
 
-        <div className={ayu.cardhandling}>
+        <div className={ayu.cardhandling} style={{ marginTop: "-4rem" }}>
           <h4 className={ayu.heading}>Good Morning, Dr. Amit Patil</h4>
           <p>
             I hope you are in good mood because there are 45 patients waiting
