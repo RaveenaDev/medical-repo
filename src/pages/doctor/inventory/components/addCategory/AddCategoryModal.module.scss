@@ -16,7 +16,7 @@
   border-radius: 6px;
   padding: 24px;
   width: 40vw;
-  height: 45vh;
+  height: 48vh;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
   position: relative;
 }
@@ -71,7 +71,7 @@
       padding: 13px 12px;
       border-radius: 5px;
       border: 1px solid #cfcfcf;
-      color: #878787c2;
+      // color: #878787c2;
       font-family: "Inter";
       font-weight: 400;
       font-size: 16px;
@@ -129,4 +129,15 @@
     border-radius: 6px;
     cursor: pointer;
   }
+}
+.errorText {
+  color: #e04343;
+  font-size: 13px;
+  margin: 8px 0 0 0;
+  padding-left: 4px;
+}
+
+.errorInput {
+  border: 1px solid #e04343;
+  background-color: #fff6f6;
 }

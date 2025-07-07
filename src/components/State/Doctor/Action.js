@@ -1,12 +1,16 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
-  APPROVE_APPOINTMENT, CREATE_DOCTOR_NOTE,
+  APPROVE_APPOINTMENT,
+  CREATE_CATEGORY,
+  CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS, GET_CRITICAL_PATIENTS, GET_DOCTOR_NOTES,
+  GET_COMPLETED_APPOINTMENTS,
+  GET_CRITICAL_PATIENTS,
+  GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
@@ -370,7 +374,7 @@ export const getCriticalPatients = () => async (dispatch) => {
     const { data } = await axios.get(`${API_URL}/critical-patients`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      }
+      },
     });
 
     console.log("Critical Patients: ", data);
@@ -535,7 +539,7 @@ export const getDoctorNotes = () => async (dispatch) => {
     const { data } = await axios.get(`${API_URL}/doctor-notes`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      }
+      },
     });
 
     // console.log("Doctor Notes: ", data);
@@ -549,15 +553,54 @@ export const createDoctorNote = (note) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/doctor-notes`,note, {
+    const { data } = await axios.post(`${API_URL}/doctor-notes`, note, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      }
+      },
     });
 
     console.log("Doctor Notes: ", data);
+
     dispatch({ type: CREATE_DOCTOR_NOTE, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const createCategory = (categoryData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
+
+    const payload = {
+      ...categoryData,
+      departmentId,
+    };
+
+    const { data } = await axios.post(
+      `${API_URL}/inventory/categories`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    toast.success("Category created successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    // console.log(data);
+    dispatch({
+      type: CREATE_CATEGORY,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Category creation failed:", error);
+    toast.error("Category creation error!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
   }
 };
