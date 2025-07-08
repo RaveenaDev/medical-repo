@@ -77,7 +77,7 @@ const PastReportsAndDischarge = () => {
     <div className={styles.container}>
       <header>
         <p>Vitals Tracker</p>
-        <div className={styles.buttons}>
+        {/* <div className={styles.buttons}>
           <button className={styles.editBtn}>
             <img src="/assets/Pen.svg" alt="pen icon" width={14} />
           </button>
@@ -85,7 +85,7 @@ const PastReportsAndDischarge = () => {
             <Plus size={18} />
             Update
           </button>
-        </div>
+        </div> */}
       </header>
 
       {activeModal === "Update" && (

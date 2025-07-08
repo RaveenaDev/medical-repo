@@ -9,6 +9,7 @@ import {
   CREATE_NEW_EVENT,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
+  GET_APPOINTMENTS_BY_DATE,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
@@ -606,6 +607,30 @@ export const createCategory = (categoryData) => async (dispatch) => {
     });
   }
 };
+
+export const getAppointmentByDate =
+  (startDate, endDate) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const departmentId = localStorage.getItem("departmentId");
+
+      const { data } = await axios.get(`${API_URL}/getAppointments`, {
+        params: {
+          start: startDate,
+          end: endDate,
+          departmentId: departmentId,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      console.log("All Appointments : ", data);
+      dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const addInventoryItem = (itemData) => async (dispatch) => {
   try {

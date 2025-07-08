@@ -64,7 +64,7 @@ const initialState = {
   inventoryData: [],
   totalInventory: null,
   doctorNotes: [],
-  inventory: [],
+  inventory: [],,
 };
 
 export const doctorReducer = (state = initialState, action) => {

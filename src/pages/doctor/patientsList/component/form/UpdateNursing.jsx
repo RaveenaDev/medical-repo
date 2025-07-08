@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import styles from "./UpdateNursing.module.scss";
 const UpdateNursing = ({ onClose }) => {
   return (
@@ -43,8 +43,16 @@ const UpdateNursing = ({ onClose }) => {
           </div>
         </div>
         <div className={styles.section2}>
-          <p>Recorded By</p>
-          <input type="text" />
+          <div>
+            <p>Recorded By</p>
+            <input type="text" />
+          </div>
+          <div className={styles.addVitalWrapper}>
+            <button>
+              <Plus className={styles.icon} />
+              <span>Add Vital</span>
+            </button>
+          </div>
         </div>
 
         <div className={styles.submitContainer}>

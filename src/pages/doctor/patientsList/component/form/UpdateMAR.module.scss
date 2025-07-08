@@ -105,7 +105,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 5vh;
+  height: 5.2vh;
   &:hover {
     border: 1px solid #cfcfcf;
   }
@@ -123,7 +123,7 @@
   box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
   border-radius: 4px;
   border: 1px solid #cfcfcf;
-  width: 100%;
+  width: 99.5%;
   z-index: 10;
   margin-top: 0.2vh;
   padding: 0;
@@ -133,12 +133,13 @@
 }
 
 .item {
-  padding: 1.7vh 1vw;
+  padding: 1.2vh 1vw;
   cursor: pointer;
   font-size: 1.9vh;
   color: #222;
   background: #fff;
   transition: background 0.15s;
+
   &:hover {
     background: #f5f8fd;
   }

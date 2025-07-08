@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./PostSurgeryFollowUp.module.scss";
-import { X, ChevronDown, ChevronUp } from "lucide-react";
+import { X, ChevronDown, ChevronUp, Trash2, SquarePen } from "lucide-react";
 
 const PostSurgeryFollowUp = ({ onClose }) => {
   const dummyData = {
@@ -13,7 +13,8 @@ const PostSurgeryFollowUp = ({ onClose }) => {
     uploadedFiles: [],
     postSurgeryNotes:
       "Surgery uneventful. Patient is stable. Will monitor for 24 hrs and start oral intake gradually. wwwwwwwww wwwwwwww wwwwwwwwww wwwwwwww",
-    observedSymptoms: "Shortness of breath, Fatigue",
+    observedSymptoms:
+      "Shortness of breath, Fatigue www w ww www www wwww www w ww w w w",
   };
   const surgeryData = {
     surgeryName: "Heart Valve Replacement",
@@ -48,6 +49,17 @@ const PostSurgeryFollowUp = ({ onClose }) => {
     ],
   };
 
+  const [postSurgeryNotes, setPostSurgeryNotes] = useState(
+    dummyData.postSurgeryNotes
+  );
+  const [observedSymptoms, setObservedSymptoms] = useState(
+    dummyData.observedSymptoms
+  );
+  const [editMode, setEditMode] = useState({
+    notes: false,
+    symptoms: false,
+  });
+
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const handleFileChange = (e) => {
@@ -74,36 +86,166 @@ const PostSurgeryFollowUp = ({ onClose }) => {
       <div className={styles.container}>
         <h1 className={styles.title}>Post Surgery Follow Up</h1>
 
-        {/* Section 1 */}
-        <div className={styles.section1}>
-          <div className={styles.sec1Left}>
-            <div className={styles.sec1RowLeft}>
-              <p className={styles.labelRow}>Surgery Name:</p>
-              <p className={styles.ansRow}>Heart Valve Replacement</p>
+        <div className={styles.mainContent}>
+          {/* Left 1 */}
+          <div className={styles.left}>
+            <div className={styles.sec1Left}>
+              <div className={styles.sec1RowLeft}>
+                <p className={styles.labelRow}>Surgery Name:</p>
+                <p className={styles.ansRow}>Heart Valve Replacement</p>
+              </div>
+              <div className={styles.sec1RowLeft}>
+                {" "}
+                <p className={styles.labelRow}>Surgery Date:</p>
+                <p>06/26/2025</p>
+              </div>
+              <div className={styles.sec1RowLeft}>
+                {" "}
+                <p className={styles.labelRow}>Assigned Doctor:</p>
+                <p>Dr.Arunita</p>
+              </div>
+              <div className={styles.sec1RowLeft}>
+                {" "}
+                <p className={styles.labelRow}>Room No:</p>
+                <p>G-129</p>
+              </div>
+              <div className={styles.sec1RowLeft}>
+                {" "}
+                <p className={styles.labelRow}>Healing status:</p>
+                <p>ongoing</p>
+              </div>
             </div>
-            <div className={styles.sec1RowLeft}>
-              {" "}
-              <p className={styles.labelRow}>Surgery Date:</p>
-              <p>06/26/2025</p>
+            {/* Post Surgery Notes */}
+            <div className={styles.sec2Left}>
+              <p className={styles.label}>Post Surgery Notes</p>
+              {editMode.notes ? (
+                <textarea
+                  className={styles.content}
+                  value={postSurgeryNotes}
+                  onChange={(e) => setPostSurgeryNotes(e.target.value)}
+                  autoFocus
+                />
+              ) : (
+                <p className={styles.contentSave}>{postSurgeryNotes}</p>
+              )}
+
+              <SquarePen
+                className={`${styles.editBtn} ${
+                  editMode.notes ? styles.editBtnActive : ""
+                }`}
+                onClick={() =>
+                  setEditMode((prev) => ({ ...prev, notes: !prev.notes }))
+                }
+              />
             </div>
-            <div className={styles.sec1RowLeft}>
-              {" "}
-              <p className={styles.labelRow}>Assigned Doctor:</p>
-              <p>Dr.Arunita</p>
-            </div>
-            <div className={styles.sec1RowLeft}>
-              {" "}
-              <p className={styles.labelRow}>Room No:</p>
-              <p>G-129</p>
-            </div>
-            <div className={styles.sec1RowLeft}>
-              {" "}
-              <p className={styles.labelRow}>Healing status:</p>
-              <p>ongoing</p>
+
+            {/* Observed Symptoms */}
+            <div className={styles.sec2Left}>
+              <p className={styles.label}>Observed Symptoms</p>
+              {editMode.symptoms ? (
+                <textarea
+                  className={styles.content}
+                  value={observedSymptoms}
+                  onChange={(e) => setObservedSymptoms(e.target.value)}
+                  autoFocus
+                />
+              ) : (
+                <p className={styles.contentSave}>{observedSymptoms}</p>
+              )}
+
+              <SquarePen
+                className={`${styles.editBtn} ${
+                  editMode.symptoms ? styles.editBtnActive : ""
+                }`}
+                onClick={() =>
+                  setEditMode((prev) => ({ ...prev, symptoms: !prev.symptoms }))
+                }
+              />
             </div>
           </div>
 
-          <div className={styles.sec1Right}>
+          {/* Right */}
+          <div className={styles.right}>
+            <div className={styles.uploadedFiles}>
+              <div className={styles.uploadFilesContainer}>
+                <h6 className={styles.label}>Upload Files</h6>
+
+                <div className={styles.uploadBox}>
+                  <p className={styles.uploadPrompt}>
+                    Choose a file or drag & drop it here
+                  </p>
+                  <span className={styles.uploadHint}>
+                    JPEG, PNG, PDG upto 50 MB
+                  </span>
+
+                  <label className={styles.browseBtn}>
+                    Browse File
+                    <input
+                      type="file"
+                      multiple
+                      className={styles.hiddenFileInput}
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                </div>
+
+                <ul className={styles.uploadedFilesWrapper}>
+                  {/* Render existing files (from dummy data) */}
+                  {surgeryData.uploadedFiles.map((item, idx) => (
+                    <li key={`static-${idx}`} className={styles.fileRow}>
+                      <img
+                        src="/assets/fileIcon.svg"
+                        alt="PDF icon"
+                        className={styles.fileIcon}
+                      />
+                      <div className={styles.fileDetails}>
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.fileName}
+                        >
+                          {item.name}
+                        </a>
+                        <span className={styles.uploadedText}>Uploaded</span>
+                      </div>
+                      <span className={styles.trashWrapper}>
+                        <Trash2 className={styles.trashIcon} />
+                      </span>
+                    </li>
+                  ))}
+
+                  {/* Render newly uploaded files (selectedFiles state) */}
+                  {selectedFiles.map((item, idx) => (
+                    <li key={`new-${idx}`} className={styles.fileRow}>
+                      <img
+                        src="/assets/fileIcon.svg"
+                        alt="PDF icon"
+                        className={styles.fileIcon}
+                      />
+                      <div className={styles.fileDetails}>
+                        <a
+                          href={item.preview}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.fileName}
+                        >
+                          {item.name}
+                        </a>
+                        <span className={styles.uploadedText}>Selected</span>
+                      </div>
+                      <span
+                        className={styles.trashWrapper}
+                        onClick={() => handleRemoveFile(idx)}
+                      >
+                        <Trash2 className={styles.trashIcon} />
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
             <div className={styles.medWrapper}>
               <h6 className={styles.label}>Medication Adjustments</h6>
               <ul>
@@ -114,40 +256,8 @@ const PostSurgeryFollowUp = ({ onClose }) => {
                 ))}
               </ul>
             </div>
-            <div className={styles.uploadedFiles}>
-              <h6 className={styles.label}>Uploaded Files</h6>
-
-              <ul className={styles.uploadedFilesWrapper}>
-                {surgeryData.uploadedFiles.map((item, idx) => (
-                  <li key={idx} className={styles.fileRow}>
-                    <img
-                      src="/assets/fileIcon.svg"
-                      alt="file icon"
-                      width={12.5}
-                    />
-                    <a href={item.url} target="_blank" rel="noreferrer">
-                      {item.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </div>
-
-        {/* Section 2 */}
-        <div className={styles.section2}>
-          <div className={`${styles.sec2Left} `}>
-            <p className={styles.label}>Post Surgery Notes</p>
-            <p className={styles.content}>{dummyData.postSurgeryNotes}</p>
-          </div>
-
-          <div className={styles.sec2Left}>
-            <p className={styles.label}>Observed Symptoms</p>
-            <p className={styles.content}>{dummyData.observedSymptoms} </p>
-          </div>
-        </div>
-
         {/* section 3 */}
         <div className={styles.section3}>
           <div className={styles.addInfo}>
@@ -155,7 +265,8 @@ const PostSurgeryFollowUp = ({ onClose }) => {
           </div>
         </div>
         <div className={styles.submitContainer}>
-          <button>Submit</button>
+          <button className={styles.saveBtn}>Save</button>
+          <button className={styles.cancelBtn}>Cancel</button>
         </div>
       </div>
     </div>
@@ -163,42 +274,3 @@ const PostSurgeryFollowUp = ({ onClose }) => {
 };
 
 export default PostSurgeryFollowUp;
-
-// Upload file code
-// <div className={styles.uploadWrapper}>
-//     <div className={`${styles.formGroup} ${styles.attachmentWidth} `}>
-//       <p className={styles.label}>Uploaded Files</p>
-//       <div className={styles.attachmentBox}>
-//         <label className={styles.customFileUpload}>
-//           <input
-//             type="file"
-//             multiple
-//             onChange={handleFileChange}
-//             className={styles.inputFile}
-//           />
-//           Choose File
-//         </label>
-
-//         <div className={styles.fileList}>
-//           {selectedFiles.map((item, index) => (
-//             <div key={index} className={styles.filePreviewBox}>
-//               {item.file.type.startsWith("image/") ? (
-//                 <img
-//                   src={item.preview}
-//                   alt={item.name}
-//                   className={styles.previewImg}
-//                 />
-//               ) : (
-//                 <span className={styles.fileName}>{item.name}</span>
-//               )}
-//               <X
-//                 className={styles.removeIcon}
-//                 size={16}
-//                 onClick={() => handleRemoveFile(index)}
-//               />
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   </div>

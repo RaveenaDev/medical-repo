@@ -8,6 +8,8 @@ import Library from "./components/Library";
 import ConsultBody from "./components/ConsultBody";
 import AppointmentHistory from "./components/AppointmentHistory";
 import PatientNewForm from "./components/PatientNewForm";
+import {useDispatch} from "react-redux";
+import {getAppointmentByDate} from "../../../components/State/Doctor/Action.js";
 
 export const Consultation = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -31,6 +33,15 @@ export const Consultation = () => {
   };
 
   const [activeView, setActiveView] = useState("consult");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const startDate = dayjs(selectedDate).startOf("day").toISOString();
+    const endDate = dayjs(selectedDate).endOf("day").toISOString();
+
+    dispatch(getAppointmentByDate(startDate, endDate))
+  }, [dispatch,selectedDate]);
 
   return (
     <div>
@@ -80,7 +91,7 @@ export const Consultation = () => {
           <div className={styles["header-right"]}>
             <button className={styles["from-library"]} onClick={openLibrary}>
               <LibraryBig />
-              <p>From Library</p>
+              <p>Form Library</p>
             </button>
             <button
               className={styles["appointment-container"]}
