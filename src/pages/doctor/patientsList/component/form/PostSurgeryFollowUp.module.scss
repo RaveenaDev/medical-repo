@@ -35,10 +35,6 @@
   margin-bottom: 3vh;
 }
 
-.attachmentWidth {
-  width: 100%;
-}
-
 .label {
   color: #4a4a4a;
   font-size: 1.9vh;
@@ -75,6 +71,23 @@
   resize: none;
   overflow-y: auto;
   height: 10.8vh;
+  padding-right: 2vw;
+  font-family: "Karla", sans-serif;
+}
+
+.contentSave {
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font-size: 1.8vh;
+  width: 80%;
+  color: #484848;
+  padding: 1vh 0.5vw;
+  outline: none;
+  resize: none;
+  overflow-y: auto;
+  word-break: break-all;
+  height: 10.8vh;
+  overflow-y: auto;
   padding-right: 2vw;
   font-family: "Karla", sans-serif;
 }
@@ -116,84 +129,6 @@
     font-size: 2vh;
     font-weight: 400;
     border: 1px solid #25307f;
-  }
-}
-
-.attachment {
-  display: flex;
-  align-items: center;
-}
-
-.fileList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1vh;
-}
-
-.filePreviewBox {
-  position: relative;
-  display: inline-block;
-  margin-right: 1vw;
-
-  img {
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-
-  .fileName {
-    display: block;
-    font-size: 1.5vh;
-    color: #333;
-    padding: 0.5vh;
-    background: #f0f0f0;
-    border-radius: 4px;
-    max-width: 100px;
-    word-wrap: break-word;
-  }
-}
-
-.removeIcon {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  padding: 1px;
-  color: #ed4301;
-  cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    background: #ed4301;
-    color: white;
-  }
-}
-
-.customFileUpload {
-  display: inline-block;
-  padding: 0.8vh 1.6vw;
-  font-size: 1.8vh;
-  font-weight: 500;
-  color: #25307f;
-  background-color: #f5f8ff;
-  border: 1px solid #c3d2f3;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: "Karla", sans-serif;
-  text-align: center;
-  transition: background 0.2s ease;
-  width: 71%;
-  margin-bottom: 2vh;
-  &:hover {
-    background-color: #e5edff;
-  }
-
-  .inputFile {
-    display: none;
   }
 }
 
@@ -269,12 +204,16 @@
       margin-left: 0vw;
       width: 80%;
       word-break: break-all;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8vh;
       .fileName {
         font-size: 1.7vh;
         font-weight: 500;
         color: #4a4a4a;
         margin: 0;
         line-height: 1.7vh;
+        cursor: pointer;
       }
 
       .uploadedText {

@@ -51,8 +51,9 @@
 }
 
 .section1 {
-  background: #f2f5ff;
+  background: #f9fbff;
   display: flex;
+  justify-content: space-between;
   gap: 1vw;
   padding: 1.6vh 1vw;
 }
@@ -74,13 +75,12 @@
 }
 
 .uploadedFilesWrapper {
-  border: 1px solid #cfcfcf;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
   gap: 1.4vh;
-  padding: 1.8vh 0.6vw;
-  margin-top: 1vh;
+  padding: 0.8vh 0.6vw;
+
   li {
     list-style-type: none;
     background-color: #e5ecff;
@@ -114,11 +114,41 @@
 }
 .section2 {
   display: flex;
+  justify-content: space-between;
   gap: 5%;
-  margin-top: 3vh;
+  margin-top: 2vh;
 }
 
 .sec2Left,
 .sec2Right {
   width: 45%;
+}
+
+.section3 {
+  width: 100%;
+  margin-top: 2vh;
+}
+
+.fileDetails {
+  margin-left: 0vw;
+  width: 80%;
+  word-break: break-all;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+  padding: 0.2vh 1vw 0.4vh 1vw;
+  .fileName {
+    font-size: 1.7vh;
+    font-weight: 500;
+    color: #4a4a4a;
+    margin: 0;
+    line-height: 1.7vh;
+    cursor: pointer;
+  }
+}
+.uploadedText {
+  font-size: 1.55vh;
+  color: #25307f;
+  font-weight: 600;
+  line-height: 1.55vh;
 }
