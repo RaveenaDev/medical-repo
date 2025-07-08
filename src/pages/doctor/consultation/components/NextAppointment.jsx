@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./NextAppointment.module.scss";
 import { X } from "lucide-react";
 
-const NextAppointment = ({ onClose }) => {
+const NextAppointment = ({ onClose,nextAppointment }) => {
   return (
     <div className={styles.container1}>
       <div className={styles.crossContainer}>
@@ -26,9 +26,9 @@ const NextAppointment = ({ onClose }) => {
             <img src="https://i.pravatar.cc/40?img=43" alt="" />
           </div>
           <div className={styles.patientInfo}>
-            <p className={styles.name}>Amit Tripathi</p>
+            <p className={styles.name}>{nextAppointment?.patient.name}</p>
             <p>Age: 39&nbsp; |&nbsp; Male</p>
-            <p>Patient ID: XXXXXXXX</p>
+            <p>Patient ID: {nextAppointment.patient._id}</p>
           </div>
         </div>
 
@@ -40,18 +40,18 @@ const NextAppointment = ({ onClose }) => {
               <span>May 13th, 2025</span>
             </p>
             <p className={styles.rightRow}>
-              Time <br />
-              <span>3:00 PM</span>
+              Token No. <br />
+              <span>{nextAppointment.tokenNumber}</span>
             </p>
           </div>
           <div className={styles.row1}>
             <p className={styles.leftRow}>
               Consultation Doctor <br />
-              <span>Dr. Arundhati</span>
+              <span>{nextAppointment?.doctor.name}</span>
             </p>
             <p className={styles.rightRow}>
               Department <br />
-              <span>Cardiology</span>
+              <span>{nextAppointment?.department.name}</span>
             </p>
           </div>
         </div>

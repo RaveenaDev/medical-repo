@@ -2,7 +2,7 @@ import {
   APPROVE_APPOINTMENT,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT, GET_APPOINTMENT_REQUESTS,
-  GET_APPOINTMENTS,
+  GET_APPOINTMENTS, GET_APPOINTMENTS_BY_DATE,
   GET_COMPLETED_APPOINTMENTS, GET_CRITICAL_PATIENTS, GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
@@ -59,6 +59,7 @@ const initialState = {
   inventoryData: [],
   totalInventory: null,
   doctorNotes: [],
+  appointmentsByDate: []
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -243,6 +244,12 @@ export const doctorReducer = (state = initialState, action) => {
       return{
         ...state,
         doctorNotes: action.payload,
+      }
+
+    case GET_APPOINTMENTS_BY_DATE:
+      return{
+        ...state,
+        appointmentsByDate: action.payload.appointments
       }
 
     default:

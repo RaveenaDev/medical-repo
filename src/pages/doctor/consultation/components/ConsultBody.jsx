@@ -12,7 +12,7 @@ import Refer from "./Refer";
 import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 
-const ConsultBody = () => {
+const ConsultBody = ({appointments}) => {
   const dummyPatient = [
     {
       id: 1,
@@ -106,18 +106,39 @@ const ConsultBody = () => {
     (patient) => patient.consultStatus === "Ongoing"
   );
 
+  // console.log("Appointments: ",appointments)
+
+  // Step 1: Find the ongoing appointment
+  const ongoingAppointment = appointments.find(app => app.status === "Ongoing");
+
+// Step 2: Find the next appointment with a token number greater than ongoing
+  let nextAppointment = null;
+  if (ongoingAppointment) {
+    const ongoingToken = ongoingAppointment.tokenNumber;
+
+    // Filter those with higher token number and same day (optional: if token is per day)
+    const futureAppointments = appointments
+        .filter(app => app.tokenNumber > ongoingToken)
+        .sort((a, b) => a.tokenNumber - b.tokenNumber); // ascending
+
+    nextAppointment = futureAppointments[0] || null;
+  }
+
+  console.log("Ongoing: ",ongoingAppointment)
+  console.log("Next: ",nextAppointment)
+
   return (
     <div>
       {/* Header 2 */}
       <div className={styles["header-2"]}>
         <div className={styles["h2-left"]}>
-          <p className={styles["pat-num-l"]}>XXXXXXX</p>
-          <p className={styles["pat-name-l"]}>Jaismine Kaur</p>
-          <p className={styles["pat-status-l"]}>Ongoing</p>
+          <p className={styles["pat-num-l"]}>{ongoingAppointment.caseId}</p>
+          <p className={styles["pat-name-l"]}>{ongoingAppointment.patient?.name}</p>
+          <p className={styles["pat-status-l"]}>{ongoingAppointment.status}</p>
         </div>
         <div className={styles["h2-right"]} onClick={openNextAppointment}>
-          <p className={styles["pat-num-r"]}>XXXXXXX</p>
-          <p className={styles["pat-name-r"]}>Amit Tripati</p>
+          <p className={styles["pat-num-r"]}>{nextAppointment.caseId}</p>
+          <p className={styles["pat-name-r"]}>{nextAppointment.patient?.name}</p>
           <p className={styles["pat-status-r"]}>Next</p>
         </div>
       </div>
@@ -225,7 +246,7 @@ const ConsultBody = () => {
           <>
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["nextAppointment-modal"]}>
-              <NextAppointment onClose={closeModal} />
+              <NextAppointment onClose={closeModal} nextAppointment={nextAppointment}/>
             </div>
           </>
         )}
