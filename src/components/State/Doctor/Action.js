@@ -642,14 +642,17 @@ export const addInventoryItem = (itemData) => async (dispatch) => {
         "Content-Type": "application/json",
       },
     });
-
-    console.log(data);
-    dispatch({
-      type: ADD_INVENTORY_ITEM,
-      payload: data,
+    toast.success("Item Added successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
     });
   } catch (error) {
     console.error("Error adding inventory item:", error);
+
+    toast.error("Item creation error!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
   }
 };
 

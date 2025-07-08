@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createCategory } from "../../../../../components/State/Doctor/Action";
 
-const AddCategoryModal = ({ onClose }) => {
+const AddCategoryModal = ({ onClose, onItemAdded }) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -12,7 +12,7 @@ const AddCategoryModal = ({ onClose }) => {
   const [minimumStockThreshold, setMinimumStockThreshold] = useState("");
   const [formError, setFormError] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) {
       setFormError("Category name is required.");
       return;
@@ -35,8 +35,13 @@ const AddCategoryModal = ({ onClose }) => {
       minimumStockThreshold: Number(minimumStockThreshold),
     };
 
-    dispatch(createCategory(categoryData));
-    onClose(); // Optionally close modal
+    try {
+      const res = await dispatch(createCategory(categoryData));
+
+      onItemAdded();
+    } catch (err) {
+      setFormError("Something went wrong.");
+    }
   };
 
   return (
