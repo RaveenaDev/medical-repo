@@ -8,7 +8,7 @@ import Library from "./components/Library";
 import ConsultBody from "./components/ConsultBody";
 import AppointmentHistory from "./components/AppointmentHistory";
 import PatientNewForm from "./components/PatientNewForm";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getAppointmentByDate} from "../../../components/State/Doctor/Action.js";
 
 export const Consultation = () => {
@@ -42,6 +42,8 @@ export const Consultation = () => {
 
     dispatch(getAppointmentByDate(startDate, endDate))
   }, [dispatch,selectedDate]);
+
+  const appointments = useSelector((store) => store.doctor.appointmentsByDate)
 
   return (
     <div>
@@ -116,7 +118,7 @@ export const Consultation = () => {
         {activeView === "patientNewForm" && (
           <PatientNewForm onBack={() => setActiveView("consult")} />
         )}
-        {activeView === "consult" && <ConsultBody />}
+        {activeView === "consult" && <ConsultBody appointments={appointments}/>}
       </div>
     </div>
   );

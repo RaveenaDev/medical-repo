@@ -625,7 +625,7 @@ export const getAppointmentByDate =
         },
       });
 
-      console.log("All Appointments : ", data);
+      // console.log("All Appointments : ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);

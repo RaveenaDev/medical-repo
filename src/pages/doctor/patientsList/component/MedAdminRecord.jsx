@@ -116,7 +116,7 @@ const MedAdminRecord = () => {
         <p>Medical Record</p>
         <div className={styles.buttons}>
           <button className={styles.updateBtn} onClick={openUpdate}>
-            <Plus size={16} />
+            <Plus className={styles.plusIcon} />
             Add
           </button>
         </div>
