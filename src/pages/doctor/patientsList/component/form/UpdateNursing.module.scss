@@ -13,7 +13,7 @@
 .container {
   padding: 0vh 1vw 2vh 1vw;
   font-family: "Karla", sans-serif;
-  height: 62vh;
+  height: 72vh;
   overflow-y: auto;
   /* Hide scrollbar for Chrome, Safari, Opera */
   &::-webkit-scrollbar {
@@ -93,5 +93,28 @@
     border-radius: 4px;
     font-size: 2vh;
     font-weight: 400;
+  }
+}
+
+.addVitalWrapper {
+  button {
+    margin-top: 4vh;
+    width: 99.3%;
+    background: white;
+    border: 1px solid #25307f;
+    border-radius: 4px;
+    padding: 1.4vh 0vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vh;
+    color: #25307f;
+
+    &:hover {
+      border: 1px solid #25307f;
+    }
+    .icon {
+      height: 2.2vh;
+    }
   }
 }
