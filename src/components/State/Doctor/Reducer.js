@@ -64,7 +64,7 @@ const initialState = {
   inventoryData: [],
   totalInventory: null,
   doctorNotes: [],
-  appointmentsByDate: []
+  appointmentsByDate: [],
   inventory: [],
 };
 

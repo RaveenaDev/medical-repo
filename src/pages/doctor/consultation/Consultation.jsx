@@ -45,6 +45,7 @@ export const Consultation = () => {
 
   const appointments = useSelector((store) => store.doctor.appointmentsByDate)
 
+
   return (
     <div>
       <div>
