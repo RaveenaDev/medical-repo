@@ -83,9 +83,12 @@ const Surgery = ({ onClose }) => {
                     alt="file icon"
                     width={12.5}
                   />
-                  <a href={item.url} target="_blank" rel="noreferrer">
-                    {item.name}
-                  </a>
+                  <div className={styles.fileDetails}>
+                    <a href={item.url} target="_blank" rel="noreferrer">
+                      {item.name}
+                    </a>
+                    <span className={styles.uploadedText}>Uploaded</span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -113,6 +116,18 @@ const Surgery = ({ onClose }) => {
                 ))}
               </ul>
             </div>
+          </div>
+        </div>
+
+        {/* Section 3 */}
+        <div className={styles.section3}>
+          <h6 className={styles.label}>Action Taken</h6>
+          <div className={styles.content}>
+            <ul>
+              {surgeryData.actionTaken.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

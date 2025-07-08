@@ -1,19 +1,22 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
+  ADD_INVENTORY_ITEM,
   APPROVE_APPOINTMENT,
   CREATE_CATEGORY,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT,
   GET_APPOINTMENT_REQUESTS,
-  GET_APPOINTMENTS, GET_APPOINTMENTS_BY_DATE,
+  GET_APPOINTMENTS,
+  GET_APPOINTMENTS_BY_DATE,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
+  GET_INVENTORY,
   GET_INVENTORY_DATA,
   GET_MEDICAL_PROCEDURE_STATS,
   GET_MONTHLY_EVENTS,
@@ -605,25 +608,67 @@ export const createCategory = (categoryData) => async (dispatch) => {
   }
 };
 
-export const getAppointmentByDate = (startDate,endDate) => async (dispatch) => {
+export const getAppointmentByDate =
+  (startDate, endDate) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const departmentId = localStorage.getItem("departmentId");
+
+      const { data } = await axios.get(`${API_URL}/getAppointments`, {
+        params: {
+          start: startDate,
+          end: endDate,
+          departmentId: departmentId,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      // console.log("All Appointments : ", data);
+      dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const addInventoryItem = (itemData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    const departmentId = localStorage.getItem("departmentId")
 
-    const { data } = await axios.get(`${API_URL}/getAppointments`, {
-      params: {
-        start: startDate,
-        end: endDate,
-        departmentId: departmentId
-      }, // Sending status as a query parameter
+    const { data } = await axios.post(`${API_URL}/inventory/items`, itemData, {
       headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
-    // console.log("All Appointments : ", data);
-    dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
+    console.log(data);
+    dispatch({
+      type: ADD_INVENTORY_ITEM,
+      payload: data,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Error adding inventory item:", error);
+  }
+};
+
+export const getInventoryByDepartment = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
+
+    const { data } = await axios.get(`${API_URL}/inventory/${departmentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    dispatch({
+      type: GET_INVENTORY,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Failed to fetch inventory:", error);
   }
 };

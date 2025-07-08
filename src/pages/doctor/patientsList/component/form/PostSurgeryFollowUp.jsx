@@ -126,7 +126,7 @@ const PostSurgeryFollowUp = ({ onClose }) => {
                   autoFocus
                 />
               ) : (
-                <p className={styles.content}>{postSurgeryNotes}</p>
+                <p className={styles.contentSave}>{postSurgeryNotes}</p>
               )}
 
               <SquarePen
@@ -150,7 +150,7 @@ const PostSurgeryFollowUp = ({ onClose }) => {
                   autoFocus
                 />
               ) : (
-                <p className={styles.content}>{observedSymptoms}</p>
+                <p className={styles.contentSave}>{observedSymptoms}</p>
               )}
 
               <SquarePen
@@ -199,7 +199,14 @@ const PostSurgeryFollowUp = ({ onClose }) => {
                         className={styles.fileIcon}
                       />
                       <div className={styles.fileDetails}>
-                        <p className={styles.fileName}>{item.name}</p>
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.fileName}
+                        >
+                          {item.name}
+                        </a>
                         <span className={styles.uploadedText}>Uploaded</span>
                       </div>
                       <span className={styles.trashWrapper}>
@@ -217,7 +224,14 @@ const PostSurgeryFollowUp = ({ onClose }) => {
                         className={styles.fileIcon}
                       />
                       <div className={styles.fileDetails}>
-                        <p className={styles.fileName}>{item.name}</p>
+                        <a
+                          href={item.preview}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.fileName}
+                        >
+                          {item.name}
+                        </a>
                         <span className={styles.uploadedText}>Selected</span>
                       </div>
                       <span

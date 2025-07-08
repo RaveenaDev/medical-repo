@@ -94,9 +94,12 @@ const LabTests = ({ onClose }) => {
                     alt="file icon"
                     width={12.5}
                   />
-                  <a href={item.url} target="_blank" rel="noreferrer">
-                    {item.name}
-                  </a>
+                  <div className={styles.fileDetails}>
+                    <a href={item.url} target="_blank" rel="noreferrer">
+                      {item.name}
+                    </a>{" "}
+                    <span className={styles.uploadedText}>Uploaded</span>
+                  </div>
                 </li>
               ))}
             </ul>

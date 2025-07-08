@@ -94,7 +94,7 @@ const Nursing = () => {
         <p>Vitals Tracker</p>
         <div className={styles.buttons}>
           <button className={styles.updateBtn} onClick={openUpdate}>
-            <Plus size={18} />
+            <Plus style={{ height: "2.2vh" }} />
             Record New Vitals
           </button>
         </div>

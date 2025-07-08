@@ -98,7 +98,7 @@ const PatientProfile = () => {
         <div className={styles.progressTracker}>
           <div className={styles.row1PT}>
             <button onClick={openUpdateProgress}>
-              <Plus size={18} />
+              <Plus className={styles.plusIcon} />
               Update
             </button>
           </div>
@@ -127,7 +127,7 @@ const PatientProfile = () => {
                 : styles.inactiveTab
             }
           >
-            <p>Medical Administration Record</p>
+            <p className={styles.headerText}>Medical Administration Record</p>
           </div>
           <div
             onClick={() => setActiveTab("nursing")}
@@ -135,7 +135,7 @@ const PatientProfile = () => {
               activeTab === "nursing" ? styles.activeTab : styles.inactiveTab
             }
           >
-            <p>Nursing Section</p>
+            <p className={styles.headerText}>Nursing Section</p>
           </div>
           <div
             onClick={() => setActiveTab("past reports")}
@@ -145,7 +145,7 @@ const PatientProfile = () => {
                 : styles.inactiveTab
             }
           >
-            <p>Past Reports & Discharges</p>
+            <p className={styles.headerText}>Past Reports & Discharges</p>
           </div>
         </div>
         <div className={styles.content}>
