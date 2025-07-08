@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import inventoryStyles from "./Inventory.module.scss";
 import CommonPanelMini from "../components/CommonPanelMini.jsx";
 import AddItemModal from "./components/addItem/AddItemModal.jsx";
@@ -9,277 +9,8 @@ import "slick-carousel/slick/slick-theme.css";
 import AddCategoryModal from "./components/addCategory/AddCategoryModal.jsx";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-
-const categoryData = {
-  "PPE Kits": [
-    {
-      name: "Coverall",
-      quantity: 200,
-      usage: "25%",
-      status: "Low Stock",
-      date: "20.06.2025",
-    },
-    {
-      name: "Face Shield",
-      quantity: 50000,
-      usage: "63%",
-      status: "Sufficient",
-      date: "24.06.2025",
-    },
-    {
-      name: "Shoe Covers",
-      quantity: 100,
-      usage: "83%",
-      status: "Moderate",
-      date: "12.06.2025",
-    },
-    {
-      name: "Head Cover",
-      quantity: 8000,
-      usage: "35%",
-      status: "Sufficient",
-      date: "02.06.2025",
-    },
-    {
-      name: "Gloves",
-      quantity: 10000,
-      usage: "42%",
-      status: "Sufficient",
-      date: "10.05.2025",
-    },
-    {
-      name: "Alcohol Wipes",
-      quantity: 4,
-      usage: "60%",
-      status: "Moderate",
-      date: "30.05.2025",
-    },
-  ],
-
-  Medicines: [
-    {
-      name: "Paracetamol",
-      quantity: 500,
-      usage: "50%",
-      status: "Sufficient",
-      date: "18.06.2025",
-    },
-    {
-      name: "Ibuprofen",
-      quantity: 100,
-      usage: "80%",
-      status: "Moderate",
-      date: "14.06.2025",
-    },
-    {
-      name: "Antibiotics",
-      quantity: 80,
-      usage: "90%",
-      status: "Low Stock",
-      date: "12.06.2025",
-    },
-    {
-      name: "Vitamin D",
-      quantity: 200,
-      usage: "45%",
-      status: "Sufficient",
-      date: "15.06.2025",
-    },
-    {
-      name: "Aspirin",
-      quantity: 150,
-      usage: "55%",
-      status: "Moderate",
-      date: "11.06.2025",
-    },
-  ],
-
-  "Diagnostic Tools": [
-    {
-      name: "ECG Machine",
-      quantity: 10,
-      usage: "70%",
-      status: "Low Stock",
-      date: "15.06.2025",
-    },
-    {
-      name: "Stethoscope",
-      quantity: 100,
-      usage: "65%",
-      status: "Moderate",
-      date: "10.06.2025",
-    },
-    {
-      name: "BP Monitor",
-      quantity: 30,
-      usage: "40%",
-      status: "Sufficient",
-      date: "14.06.2025",
-    },
-    {
-      name: "Thermometer",
-      quantity: 200,
-      usage: "30%",
-      status: "Sufficient",
-      date: "08.06.2025",
-    },
-  ],
-
-  "Surgical Consumables": [
-    {
-      name: "Sutures",
-      quantity: 300,
-      usage: "60%",
-      status: "Sufficient",
-      date: "22.06.2025",
-    },
-    {
-      name: "Blades",
-      quantity: 150,
-      usage: "85%",
-      status: "Low Stock",
-      date: "16.06.2025",
-    },
-    {
-      name: "Surgical Tape",
-      quantity: 400,
-      usage: "50%",
-      status: "Sufficient",
-      date: "13.06.2025",
-    },
-    {
-      name: "Surgical Gauze",
-      quantity: 600,
-      usage: "70%",
-      status: "Moderate",
-      date: "09.06.2025",
-    },
-  ],
-
-  Emergency: [
-    {
-      name: "Oxygen Cylinders",
-      quantity: 40,
-      usage: "90%",
-      status: "Moderate",
-      date: "20.06.2025",
-    },
-    {
-      name: "Defibrillators",
-      quantity: 5,
-      usage: "50%",
-      status: "Sufficient",
-      date: "18.06.2025",
-    },
-    {
-      name: "Ambu Bags",
-      quantity: 15,
-      usage: "75%",
-      status: "Moderate",
-      date: "15.06.2025",
-    },
-    {
-      name: "CPR Board",
-      quantity: 7,
-      usage: "60%",
-      status: "Sufficient",
-      date: "11.06.2025",
-    },
-  ],
-
-  "Emergency Supplies": [
-    {
-      name: "Flashlights",
-      quantity: 50,
-      usage: "30%",
-      status: "Sufficient",
-      date: "05.06.2025",
-    },
-    {
-      name: "Batteries",
-      quantity: 100,
-      usage: "90%",
-      status: "Low Stock",
-      date: "03.06.2025",
-    },
-    {
-      name: "Blankets",
-      quantity: 70,
-      usage: "40%",
-      status: "Sufficient",
-      date: "06.06.2025",
-    },
-    {
-      name: "First Aid Kits",
-      quantity: 25,
-      usage: "80%",
-      status: "Moderate",
-      date: "04.06.2025",
-    },
-  ],
-
-  Devices: [
-    {
-      name: "Ventilator",
-      quantity: 8,
-      usage: "60%",
-      status: "Moderate",
-      date: "10.06.2025",
-    },
-    {
-      name: "Infusion Pump",
-      quantity: 15,
-      usage: "50%",
-      status: "Sufficient",
-      date: "14.06.2025",
-    },
-    {
-      name: "X-ray Machine",
-      quantity: 3,
-      usage: "70%",
-      status: "Low Stock",
-      date: "07.06.2025",
-    },
-    {
-      name: "Ultrasound",
-      quantity: 5,
-      usage: "55%",
-      status: "Moderate",
-      date: "12.06.2025",
-    },
-  ],
-
-  "Surgical Tools": [
-    {
-      name: "Scissors",
-      quantity: 60,
-      usage: "65%",
-      status: "Moderate",
-      date: "05.06.2025",
-    },
-    {
-      name: "Clamps",
-      quantity: 80,
-      usage: "50%",
-      status: "Sufficient",
-      date: "06.06.2025",
-    },
-    {
-      name: "Forceps",
-      quantity: 100,
-      usage: "35%",
-      status: "Sufficient",
-      date: "07.06.2025",
-    },
-    {
-      name: "Retractors",
-      quantity: 20,
-      usage: "85%",
-      status: "Low Stock",
-      date: "08.06.2025",
-    },
-  ],
-};
+import { useDispatch, useSelector } from "react-redux";
+import { getInventoryByDepartment } from "../../../components/State/Doctor/Action.js";
 
 const icons = {
   icon1: `<svg width="38" height="37" viewBox="0 0 38 37" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -314,15 +45,16 @@ const icons = {
 const Inventory = () => {
   const [showModal, setShowModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const scrollRef = useRef();
 
-  const scrollLeft = () => {
-    scrollRef.current.scrollBy({ left: -200, behavior: "smooth" });
-  };
+  const dispatch = useDispatch();
 
-  const scrollRight = () => {
-    scrollRef.current.scrollBy({ left: 200, behavior: "smooth" });
-  };
+  useEffect(() => {
+    dispatch(getInventoryByDepartment());
+  }, []);
+
+  const inventoryData = useSelector(
+    (state) => state.doctor.inventory.data || []
+  );
   const [selectedCategory, setSelectedCategory] = useState("PPE Kits");
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -406,19 +138,27 @@ const Inventory = () => {
             },
           ]}
         >
-          {Object.entries(categoryData).map(([name, items], idx) => {
+          {inventoryData.map(({ category, items }, idx) => {
+            const name = category.name;
+
             const totalQuantity = items.reduce(
-              (sum, item) => sum + item.quantity,
+              (sum, item) => sum + (item.quantity || 0),
               0
             );
             const avgUsage =
-              items.reduce((sum, item) => sum + parseFloat(item.usage), 0) /
-              items.length;
+              items.length > 0
+                ? items.reduce(
+                    (sum, item) => sum + (parseFloat(item.usage) || 0),
+                    0
+                  ) / items.length
+                : 0;
 
             const statusCounts = items.reduce((acc, item) => {
-              acc[item.status] = (acc[item.status] || 0) + 1;
+              const status = item.status || "Sufficient";
+              acc[status] = (acc[status] || 0) + 1;
               return acc;
             }, {});
+
             const finalStatus = statusCounts["Low Stock"]
               ? "low"
               : statusCounts["Moderate"]
@@ -427,8 +167,8 @@ const Inventory = () => {
 
             const iconKey = iconKeys[idx % iconKeys.length];
             const iconHTML = icons[iconKey];
+            const headerBg = bgColors[idx % bgColors.length];
 
-            const headerBg = bgColors[idx % bgColors.length]; // 🔥 assign background
             const formatIndianNumber = (num) => {
               if (num >= 1e7)
                 return (num / 1e7).toFixed(1).replace(/\.0$/, "") + "Cr";
@@ -438,10 +178,16 @@ const Inventory = () => {
                 return (num / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
               return num.toString();
             };
+
+            const lastUpdated =
+              items[0]?.lastRestockedDate?.split("T")[0] ||
+              items[0]?.date || // fallback if you temporarily use mock data
+              "-";
+
             return (
               <div
                 className={inventoryStyles.slideWrapper}
-                key={idx}
+                key={category._id}
                 onClick={() => setSelectedCategory(name)}
               >
                 <div
@@ -480,7 +226,7 @@ const Inventory = () => {
                   </div>
                   <div className={inventoryStyles.cardFooter}>
                     <p className={inventoryStyles.updated}>
-                      Last restocked: {items[0].date}
+                      Last restocked: {lastUpdated}
                     </p>
                   </div>
                 </div>
@@ -535,31 +281,35 @@ const Inventory = () => {
         </div>
 
         <div className={inventoryStyles.tableBody}>
-          {categoryData[selectedCategory]
+          {(
+            inventoryData.find((cat) => cat.category.name === selectedCategory)
+              ?.items || []
+          )
             .filter((item) => {
               const lower = searchTerm.toLowerCase();
               return (
                 item.name.toLowerCase().includes(lower) ||
-                item.status.toLowerCase().includes(lower) ||
-                item.date.toLowerCase().includes(lower)
+                (item.status || "").toLowerCase().includes(lower) ||
+                (item.lastRestockedDate || "").toLowerCase().includes(lower)
               );
             })
             .map((item, i) => (
               <div key={i} className={inventoryStyles.tableRow}>
                 <span>{item.name}</span>
                 <span>{item.quantity}</span>
-                <span>{item.usage}</span>
+                <span>{item.usagePercent || "-"}</span>
                 <span
                   className={
                     inventoryStyles[
-                      item.status.replace(/\s/g, "").toLowerCase()
+                      (item.status || "sufficient")
+                        .replace(/\s/g, "")
+                        .toLowerCase()
                     ]
                   }
                 >
-                  {item.status}
+                  {item.status || "Sufficient"}
                 </span>
-
-                <span>{item.date}</span>
+                <span>{item.lastRestockedDate?.split("T")[0] || "-"}</span>
               </div>
             ))}
         </div>

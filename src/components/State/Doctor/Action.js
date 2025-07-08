@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
+  ADD_INVENTORY_ITEM,
   APPROVE_APPOINTMENT,
   CREATE_CATEGORY,
   CREATE_DOCTOR_NOTE,
@@ -14,6 +15,7 @@ import {
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
+  GET_INVENTORY,
   GET_INVENTORY_DATA,
   GET_MEDICAL_PROCEDURE_STATS,
   GET_MONTHLY_EVENTS,
@@ -602,5 +604,46 @@ export const createCategory = (categoryData) => async (dispatch) => {
       position: "bottom-right",
       autoClose: 2000,
     });
+  }
+};
+
+export const addInventoryItem = (itemData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/inventory/items`, itemData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(data);
+    dispatch({
+      type: ADD_INVENTORY_ITEM,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Error adding inventory item:", error);
+  }
+};
+
+export const getInventoryByDepartment = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const departmentId = localStorage.getItem("departmentId");
+
+    const { data } = await axios.get(`${API_URL}/inventory/${departmentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    dispatch({
+      type: GET_INVENTORY,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Failed to fetch inventory:", error);
   }
 };

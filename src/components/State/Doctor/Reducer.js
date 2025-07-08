@@ -1,12 +1,16 @@
 import {
   APPROVE_APPOINTMENT,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT, GET_APPOINTMENT_REQUESTS,
+  CREATE_NEW_EVENT,
+  GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_COMPLETED_APPOINTMENTS, GET_CRITICAL_PATIENTS, GET_DOCTOR_NOTES,
+  GET_COMPLETED_APPOINTMENTS,
+  GET_CRITICAL_PATIENTS,
+  GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_INPATIENTS,
+  GET_INVENTORY,
   GET_INVENTORY_DATA,
   GET_MEDICAL_PROCEDURE_STATS,
   GET_MONTHLY_EVENTS,
@@ -20,7 +24,8 @@ import {
   GET_STATS,
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
-  GET_WAITING_APPOINTMENTS, REJECT_APPOINTMENT,
+  GET_WAITING_APPOINTMENTS,
+  REJECT_APPOINTMENT,
 } from "./ActionType.js";
 
 const initialState = {
@@ -58,7 +63,8 @@ const initialState = {
   staff: [],
   inventoryData: [],
   totalInventory: null,
-  doctorNotes: []
+  doctorNotes: [],
+  inventory: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -89,6 +95,12 @@ export const doctorReducer = (state = initialState, action) => {
         totalInventory: action.payload.total,
         inventoryData: action.payload.breakdown,
         isLoading: false,
+      };
+    case GET_INVENTORY:
+      return {
+        ...state,
+
+        inventory: action.payload,
       };
 
     case GET_INPATIENTS:
@@ -132,10 +144,10 @@ export const doctorReducer = (state = initialState, action) => {
       };
 
     case GET_CRITICAL_PATIENTS:
-      return{
+      return {
         ...state,
-        criticalPatients: action.payload.data
-      }
+        criticalPatients: action.payload.data,
+      };
 
     case GET_MOST_COMMON_DIAGNOSIS:
       return {
@@ -208,7 +220,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentRequests: state.appointmentRequests.filter(
-            (request) => request._id !== action.payload
+          (request) => request._id !== action.payload
         ),
       };
 
@@ -216,7 +228,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentRequests: state.appointmentRequests.filter(
-            (request) => request._id !== action.payload
+          (request) => request._id !== action.payload
         ),
       };
 
@@ -235,15 +247,15 @@ export const doctorReducer = (state = initialState, action) => {
     case CREATE_NEW_EVENT:
       return {
         ...state,
-        events: [...state.events,action.payload],
-        monthlyEvents: [...state.monthlyEvents,action.payload]
+        events: [...state.events, action.payload],
+        monthlyEvents: [...state.monthlyEvents, action.payload],
       };
 
     case GET_DOCTOR_NOTES:
-      return{
+      return {
         ...state,
         doctorNotes: action.payload,
-      }
+      };
 
     default:
       return state;
