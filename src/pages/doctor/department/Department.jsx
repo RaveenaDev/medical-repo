@@ -245,16 +245,11 @@ const Department = () => {
   const anyStaffSelected = selectedStaff.size > 0;
 
   // Helper to format large numbers (e.g. 40000 → “40k”)
-  const formatValue = (val) => {
-    if (val >= 1000) {
-      // If exactly divisible by 1000, show “40k”, otherwise show one decimal “40.5k”
-      const remainder = val % 1000;
-      const thousands = val / 1000;
-      return remainder === 0
-        ? `${thousands.toFixed(0)}k`
-        : `${thousands.toFixed(1)}k`;
-    }
-    return val.toString();
+  const formatValue = (num) => {
+    if (num >= 1e7) return (num / 1e7).toFixed(1) + " Cr";
+    if (num >= 1e5) return (num / 1e5).toFixed(1) + " L";
+    if (num >= 1e3) return (num / 1e3).toFixed(1) + " K";
+    return num.toString();
   };
 
   const navigate = useNavigate();
@@ -396,7 +391,39 @@ const Department = () => {
     setAssignedStaff(selectedStaffObjects);
     setShowAssignModalStaff(true);
   };
+  const rawInventory = useSelector((state) => state.doctor.inventoryData) || [];
 
+  const sorted = [...rawInventory].sort((a, b) => b.quantity - a.quantity);
+
+  const top3 = sorted.slice(0, 3);
+  const others = sorted.slice(3);
+
+  const othersTotal = others.reduce(
+    (sum, item) => sum + (item.quantity || 0),
+    0
+  );
+  const total = [...top3, ...others].reduce(
+    (sum, item) => sum + (item.quantity || 0),
+    0
+  );
+
+  const graphData = [
+    ...top3.map((item) => ({
+      category: item.category,
+      quantity: item.quantity,
+    })),
+  ];
+
+  if (others.length > 0) {
+    graphData.push({
+      category: "Others",
+      quantity: othersTotal,
+    });
+  }
+  const finalGraphData = graphData.map((entry) => ({
+    ...entry,
+    percent: ((entry.quantity / total) * 100).toFixed(1),
+  }));
   // Uncomment these console logs to debug the data
 
   // console.log("Inventory Data: ", inventoryData);
@@ -672,7 +699,7 @@ const Department = () => {
                 <ResponsiveContainer width="100%" height={270}>
                   <PieChart>
                     <Pie
-                      data={inventoryData}
+                      data={finalGraphData}
                       dataKey="quantity"
                       nameKey="category"
                       cx="50%"
@@ -686,7 +713,7 @@ const Department = () => {
                       onMouseEnter={onPieEnter}
                       onMouseLeave={onPieLeave}
                     >
-                      {inventoryData.map((entry, index) => (
+                      {finalGraphData.map((entry, index) => (
                         <Cell
                           key={`slice-${index}`}
                           fill={COLORS[index % COLORS.length]}
@@ -707,7 +734,7 @@ const Department = () => {
                     padding: "1rem",
                   }}
                 >
-                  {inventoryData.map((entry, index) => {
+                  {finalGraphData.map((entry, index) => {
                     const displayValue = formatValue(entry.quantity);
                     const color = COLORS[index % COLORS.length];
 
