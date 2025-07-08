@@ -339,7 +339,7 @@ const Inventory = () => {
           onClose={() => setShowCategoryModal(false)}
           onItemAdded={async () => {
             await dispatch(getInventoryByDepartment());
-            setShowModal(false);
+            setShowCategoryModal(false);
           }}
         />
       )}
