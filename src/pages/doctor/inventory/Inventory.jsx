@@ -45,6 +45,7 @@ const icons = {
 const Inventory = () => {
   const [showModal, setShowModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -55,8 +56,13 @@ const Inventory = () => {
   const inventoryData = useSelector(
     (state) => state.doctor.inventory.data || []
   );
-  const [selectedCategory, setSelectedCategory] = useState("PPE Kits");
-
+  const [selectedCategory, setSelectedCategory] = useState("");
+  useEffect(() => {
+    if (inventoryData.length > 0) {
+      setSelectedCategory(inventoryData[0].category.name);
+      setSelectedCategoryId(inventoryData[0].category._id);
+    }
+  }, [inventoryData]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const bgColors = [
@@ -188,7 +194,10 @@ const Inventory = () => {
               <div
                 className={inventoryStyles.slideWrapper}
                 key={category._id}
-                onClick={() => setSelectedCategory(name)}
+                onClick={() => {
+                  setSelectedCategory(name);
+                  setSelectedCategoryId(category._id);
+                }}
               >
                 <div
                   className={` ${
@@ -238,7 +247,7 @@ const Inventory = () => {
 
       <div className={inventoryStyles.headerRow}>
         <div className={inventoryStyles.title}>
-          Category: <span>PPE Kits</span>
+          Category: <span>{selectedCategory}</span>
         </div>
         <div className={inventoryStyles.actions}>
           <div className={inventoryStyles.searchWrapper}>
@@ -314,10 +323,25 @@ const Inventory = () => {
             ))}
         </div>
       </div>
-
-      {showModal && <AddItemModal onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <AddItemModal
+          onClose={() => setShowModal(false)}
+          categoryId={selectedCategoryId}
+          categoryName={selectedCategory}
+          onItemAdded={async () => {
+            await dispatch(getInventoryByDepartment()); //  wait for fresh data
+            setShowModal(false);
+          }}
+        />
+      )}
       {showCategoryModal && (
-        <AddCategoryModal onClose={() => setShowCategoryModal(false)} />
+        <AddCategoryModal
+          onClose={() => setShowCategoryModal(false)}
+          onItemAdded={async () => {
+            await dispatch(getInventoryByDepartment());
+            setShowModal(false);
+          }}
+        />
       )}
     </div>
   );
