@@ -106,6 +106,14 @@ const ConsultBody = ({appointments}) => {
     (patient) => patient.consultStatus === "Ongoing"
   );
 
+  if (!appointments || appointments.length === 0) {
+    return (
+        <div className={styles["no-appointments"]}>
+          <p>No appointments found</p>
+        </div>
+    );
+  }
+
   // console.log("Appointments: ",appointments)
 
   // Step 1: Find the ongoing appointment
