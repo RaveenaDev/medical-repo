@@ -32,23 +32,12 @@ import {
   getMostCommonDiagnosis,
   getUpcomingEvents
 } from "../../components/State/Doctor/Action.js";
-// const DATES = [
-//   { day: 24, month: "Sep" },
-//   { day: 25, month: "Sep" },
-//   { day: 26, month: "Sep" },
-//   { day: 27, month: "Sep" },
-//   { day: 28, month: "Sep" },
-//   { day: 29, month: "Sep" },
-//   { day: 30, month: "Sep" },
-//   { day: 1, month: "Oct" },
-//   { day: 2, month: "Oct" },
-//   { day: 3, month: "Oct" },
-//   { day: 4, month: "Oct" },
-// ];
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import AddEventPanel from "./components/AddEventPanel.jsx";
+import {CalendarToday} from "@mui/icons-material";
+import Library from "./consultation/components/Library.jsx";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -73,135 +62,13 @@ const generateNextDates = (count = 11) => {
 
 const DATES = generateNextDates();
 
-// const EVENTS = [
-//   {
-//     time: "10:00",
-//     type: "call",
-//     title: "Call Dr. Jyoti Bharwe",
-//     duration: "1:30–2:30 pm",
-//     status: "cancelled",
-//   },
-//   {
-//     time: "11:00",
-//     type: "meeting",
-//     title: "Meeting",
-//     duration: "11:00–12:30 pm",
-//     status: "active",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   {
-//     time: "12:30",
-//     type: "call",
-//     title: "Call Dr. Yash Sharma",
-//     duration: "12:30–1:00 pm",
-//     status: "queued",
-//   },
-//   /* …etc */
-// ];
 const DoctorOverview = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
-  const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
+  const [internalSelectedDate, setInternalSelectedDate] = useState(
+      dayjs().format("YYYY-MM-DD")
+  );
   const navigate = useNavigate();
-
-  // const criticalPatients = [
-  //   {
-  //     name: "John Doe",
-  //     disease: "Respiratory Failure",
-  //     status: "Critical",
-  //   },
-  //   {
-  //     name: "Jane Smith",
-  //     disease: "Hypertension",
-  //     status: "Ongoing",
-  //   },
-  //   {
-  //     name: "Alice Johnson",
-  //     disease: "Diabetes",
-  //     status: "Moderate",
-  //   },
-  //   {
-  //     name: "Bob Lee",
-  //     disease: "Heart Disease",
-  //     status: "High",
-  //   },
-  // ];
 
   const dummyTotalAppointments = [
     {
@@ -242,51 +109,6 @@ const DoctorOverview = () => {
     },
   ];
 
-  // const appointmentRequests = [
-  //   {
-  //     _id: "req001",
-  //     patient: {
-  //       name: "John Doe",
-  //     },
-  //     note: "Needs consultation for back pain.",
-  //   },
-  //   {
-  //     _id: "req002",
-  //     patient: {
-  //       name: "Jane Smith",
-  //     },
-  //     note: "Follow-up appointment for diabetes check-up.",
-  //   },
-  //   {
-  //     _id: "req003",
-  //     patient: {
-  //       name: "Alice Johnson",
-  //     },
-  //     note: "Wants to discuss lab report results.",
-  //   },
-  //   {
-  //     _id: "req004",
-  //     patient: {
-  //       name: "Bob Brown",
-  //     },
-  //     note: "First-time appointment for general check-up.",
-  //   },
-  //   {
-  //     _id: "req005",
-  //     patient: {
-  //       name: "Charlie Wilson",
-  //     },
-  //     note: "Consultation regarding skin allergy.",
-  //   },
-  //   {
-  //     _id: "req006",
-  //     patient: {
-  //       name: "Emily Davis",
-  //     },
-  //     note: "Needs a prescription refill for blood pressure medication.",
-  //   },
-  // ];
-
   const phases = [
     { name: "Early stage", count: 26, color: "#25307F" },
     { name: "Ongoing", count: 13, color: "#5752CB" },
@@ -298,8 +120,8 @@ const DoctorOverview = () => {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
-  const handleDateChange = (newValue) => {
-    setInternalSelectedDate(newValue);
+  const handleDateChange = (e) => {
+    setInternalSelectedDate(e.target.value);
   };
 
   const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
@@ -395,20 +217,19 @@ const DoctorOverview = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const startDate = selectedDate.startOf("day").toISOString();
-    const endDate = selectedDate.endOf("day").toISOString();
+    const startDate = dayjs(internalSelectedDate).startOf("day").toISOString();
+    const endDate = dayjs(internalSelectedDate).endOf("day").toISOString();
 
-    dispatch(getAppointments("Ongoing", startDate, endDate));
+    dispatch(getAppointments(startDate, endDate));
     dispatch(getMostCommonDiagnosis());
     dispatch(getUpcomingEvents(new Date()))
     dispatch(getDoctorRequests())
     dispatch(getAppointmentRequests())
     dispatch(getCriticalPatients())
-  }, [dispatch,selectedDate]);
+  }, [dispatch,selectedDate,internalSelectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
 
-  const totalDiagnosis = doctor.totalDiagnosis
   const diagnosis = doctor.diagnosis
 
   const totalAppointments = doctor.totalAppointments;
@@ -500,19 +321,8 @@ const DoctorOverview = () => {
     inColor: colorPalette[index % colorPalette.length].inColor,
   }));
 
-  // const dummyDiagnosisData = [
-  //   { name: "Respiratory Infections", value: 1800, color: "#D8E4FD",inColor: "#25307F" },
-  //   { name: "Hypertension", value: 2400, color: "#5E73D4",inColor: "#ffffff" },
-  //   { name: "Hyperlipidemia", value: 3800, color: "#2D3179",inColor: "#ffffff" },
-  //   { name: "Osteoarthritis", value: 2200, color: "#A3A3A3",inColor: "#ffffff" },
-  //   { name: "GERD", value: 840, color: "#F1F1F1" ,inColor: "#25307F"},
-  // ];
-
     const handleDateSelected = (day,monthName) => {
         setSelected(day);
-
-        // console.log("Day:", day);
-        // console.log("Month:", monthName);
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const monthIndex = monthNames.indexOf(monthName);
@@ -529,9 +339,6 @@ const DoctorOverview = () => {
         console.error("Constructed invalid date:", selectedDate);
         return;
       }
-
-        // console.log("Formatted: ",selectedDate)
-        // console.log("Default: ",new Date())
         dispatch(getUpcomingEvents(selectedDate))
     }
 
@@ -568,101 +375,73 @@ const DoctorOverview = () => {
             container
             // sx={{ margin: "0 0 20px 0" }}
           >
-            <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Box
-                  sx={{
-                    backgroundColor: "#FFFFFF",
+            <Grid size={4} sx={{display: "flex", alignItems: "center"}}>
+              <div className={styles.headerLeft}>
+                <div className={styles.dateSelections}>
+                  <div className={styles.text}>
+                <span className={styles.label}>
+                  {internalSelectedDate === dayjs().format("YYYY-MM-DD")
+                      ? "Today"
+                      : "Date"}
+                </span>
+                    <span className={styles.date}>
+                  {dayjs(internalSelectedDate).format("DD-MM-YYYY")}
+                </span>
+                  </div>
 
-                    borderRadius: 1,
-                    width: 180, // Adjust width here
-                    textAlign: "center",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    // padding: "4px", // Reduce padding to make the container smaller
-                  }}
-                >
-                  <DatePicker
-                    value={internalSelectedDate}
-                    onChange={handleDateChange}
-                    format="DD/MM/YYYY" // Set the date format
-                    slotProps={{
-                      textField: {
-                        sx: {
-                          "& .MuiOutlinedInput-root": {
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                            },
-                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                            },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                              boxShadow: "none !important",
-                            },
-                          },
-                          "& .MuiInputBase-input": {
-                            fontSize: "14px",
-                            padding: "10px",
-                            "&:focus": {
-                              outline: "none !important",
-                            },
-                          },
-                          "& .MuiIconButton-root": {
-                            color: "#666", // Adjust icon color if needed
-                            "&:hover": {
-                              backgroundColor: "transparent !important",
-                            },
-                            "&:focus": {
-                              outline: "none !important",
-                              boxShadow: "none !important",
-                            },
-                          },
-                        },
-                      },
-                    }}
-                  />
-                </Box>
-              </LocalizationProvider>
+                  <div className={styles["calendar-wrapper"]}>
+                    <label htmlFor="datePicker">
+                      <CalendarToday className={styles["calendar-icon"]}/>
+                    </label>
+                    <input
+                        type="date"
+                        id="datePicker"
+                        value={internalSelectedDate}
+                        onChange={handleDateChange}
+                    />
+                  </div>
+                </div>
+              </div>
             </Grid>
             <Grid
-              size={8}
-              sx={{ display: "flex", justifyContent: "flex-end", gap: "1vw" }}
+                size={8}
+                sx={{display: "flex", justifyContent: "flex-end", gap: "1vw"}}
             >
               <Button
-                variant="contained"
-                onClick={handleDoctorRequest}
-                sx={{
-                  fontSize: "14px",
-                  color: "#000",
-                  fontFamily: "Inter",
-                  fontWeight: "400",
-                  textTransform: "capitalize",
-                  padding: "2px 6px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0px 4px 4px 0px #C2C2C240",
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                }}
+                  variant="contained"
+                  onClick={handleDoctorRequest}
+                  sx={{
+                    fontSize: "14px",
+                    color: "#000",
+                    fontFamily: "Inter",
+                    fontWeight: "400",
+                    textTransform: "capitalize",
+                    padding: "2px 6px",
+                    backgroundColor: "#fff",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
+                  }}
               >
                 <div
-                  style={{
-                    height: "8px",
-                    width: "8px",
-                    borderRadius: "50%",
-                    backgroundColor: "#F14400",
-                    position: "absolute",
-                    left: "31px",
-                    top: "6px",
-                  }}
+                    style={{
+                      height: "8px",
+                      width: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: "#F14400",
+                      position: "absolute",
+                      left: "31px",
+                      top: "6px",
+                    }}
                 ></div>
                 {circle}
                 <span
-                  style={{
-                    marginLeft: "16px",
-                    marginRight: "8px",
-                    marginTop: "2px",
+                    style={{
+                      marginLeft: "16px",
+                      marginRight: "8px",
+                      marginTop: "2px",
                   }}
                 >
                   Requests

@@ -2,6 +2,66 @@ body {
   color: black;
 }
 
+.headerLeft {
+  display: flex;
+}
+
+.dateSelections {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 9px 13px;
+  border-radius: 4px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  //max-width: 250px;
+  width: 10vw;
+  font-family: inherit;
+  margin-top: 0px;
+  height: 3.2vh;
+  align-content: center;
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    font-size: 10px;
+    margin-left: 5px;
+    padding-top: 4px;
+    .label {
+      font-weight: 600;
+      font-size: 12px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      align-content: center;
+    }
+
+    .date {
+      font-size: 12px;
+      color: #999;
+    }
+  }
+
+  .calendar-wrapper {
+    position: relative;
+    cursor: pointer;
+
+    .calendar-icon {
+      color: #1a2a85;
+      font-size: 20px;
+    }
+
+    input[type="date"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+}
+
 .parent1 {
   display: grid;
   grid-template-columns: 64% 36%;

@@ -120,21 +120,19 @@ export const getMostCommonDiagnosis = () => async (dispatch) => {
 };
 
 export const getAppointments =
-  (activeLabel, startDate, endDate, selectedBranch, page, rowsPerPage) =>
+  (startDate, endDate) =>
   async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
 
-      if (selectedBranch === "All Branches") selectedBranch = null;
+      const departmentId = localStorage.getItem("departmentId");
 
       const { data } = await axios.get(`${API_URL}/getAppointments`, {
         params: {
-          status: activeLabel,
+          status: 'Ongoing',
           start: startDate,
           end: endDate,
-          departmentId: selectedBranch,
-          page: page + 1,
-          limit: rowsPerPage,
+          departmentId: departmentId,
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -625,7 +623,7 @@ export const getAppointmentByDate =
         },
       });
 
-      // console.log("All Appointments : ", data);
+      // console.log("All Appointments below: ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);
