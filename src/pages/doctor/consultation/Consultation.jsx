@@ -59,7 +59,7 @@ export const Consultation = () => {
                 <span className={styles.label}>
                   {selectedDate === dayjs().format("YYYY-MM-DD")
                     ? "Today"
-                    : "Selected Date"}
+                    : "Date"}
                 </span>
                 <span className={styles.date}>
                   {dayjs(selectedDate).format("DD-MM-YYYY")}

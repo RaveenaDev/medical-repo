@@ -114,7 +114,7 @@ const ConsultBody = ({appointments}) => {
     );
   }
 
-  // console.log("Appointments: ",appointments)
+  console.log("Appointments: ",appointments)
 
   // Step 1: Find the ongoing appointment
   const ongoingAppointment = appointments.find(app => app.status === "Ongoing");
@@ -167,8 +167,8 @@ const ConsultBody = ({appointments}) => {
               className={styles["lp-1-avatar"]}
             />
             <div className={styles["lp-1-info"]}>
-              <p className={styles["lp-1-name"]}>Jaismine kaur</p>
-              <p className={styles["lp-1-role"]}>Follow up Patient</p>
+              <p className={styles["lp-1-name"]}>{ongoingAppointment.patient.name}</p>
+              <p className={styles["lp-1-role"]}>{ongoingAppointment.patient.typeVisit} Patient</p>
             </div>
           </div>
 
@@ -274,7 +274,8 @@ const ConsultBody = ({appointments}) => {
           <div className={styles["rp-content"]}>
             {selectedComponent === "PatientInfo" && (
               <PatientInfo
-                patient={ongoingPatients[0]}
+                ongoingAppointment={ongoingAppointment}
+                patient1={ongoingPatients[0]}
                 onConfirm={() => setSelectedComponent("MedicalHistory")}
               />
             )}
