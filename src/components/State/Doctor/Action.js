@@ -129,7 +129,7 @@ export const getAppointments =
 
       const { data } = await axios.get(`${API_URL}/getAppointments`, {
         params: {
-          status: 'Ongoing',
+          // status: 'Ongoing',
           start: startDate,
           end: endDate,
           departmentId: departmentId,

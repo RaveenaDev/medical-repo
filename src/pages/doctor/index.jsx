@@ -234,6 +234,12 @@ const DoctorOverview = () => {
 
   const totalAppointments = doctor.totalAppointments;
 
+  console.log("Total : ",totalAppointments)
+
+  const index = totalAppointments.findIndex(item => item.status === "Ongoing");
+
+  const appointmentsFromOngoing = index !== -1 ? totalAppointments.slice(index) : [];
+
   const appointmentRequests = doctor.appointmentRequests;
 
   const events = doctor.events;
@@ -751,8 +757,8 @@ const DoctorOverview = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {totalAppointments.length > 0 ? (
-                          totalAppointments.slice(0, 5).map((row, index) => (
+                        {appointmentsFromOngoing.length > 0 ? (
+                          appointmentsFromOngoing.slice(0, 4).map((row, index) => (
                             <TableRow
                               key={index}
                               sx={{
@@ -776,6 +782,10 @@ const DoctorOverview = () => {
                                   pl: 2,
                                   fontSize: "12px",
                                   fontWeight: 600,
+                                  backgroundColor:
+                                      row.status === "Ongoing"
+                                          ? "#EEF8F1"
+                                          : "#ffffff",
                                 }}
                               >
                                 {truncateText(row.caseId, 8)}
@@ -789,6 +799,10 @@ const DoctorOverview = () => {
                                   fontWeight: 600,
                                   border: "none",
                                   px: 0.6,
+                                  backgroundColor:
+                                      row.status === "Ongoing"
+                                          ? "#EEF8F1"
+                                          : "#ffffff",
                                 }}
                               >
                                 {truncateText(row.patient?.name, 13)}
