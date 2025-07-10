@@ -5,6 +5,14 @@ import { useEffect, useRef, useState } from "react";
 const CurrentMedication = ({ onConfirm }) => {
   const [frequency1, setFrequency1] = useState("");
   const [frequency2, setFrequency2] = useState("");
+  const [formData, setFormData] = useState({
+    currentMedication: "",
+    currentDosage: "",
+    newMedication: "",
+    newDosage: "",
+    nextAppointment: "",
+  });
+  const [dynamicAnswers, setDynamicAnswers] = useState([]);
 
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
@@ -17,6 +25,8 @@ const CurrentMedication = ({ onConfirm }) => {
   const [openQuestion, setOpenQuestion] = useState(false);
   const [dynamicQuestions, setDynamicQuestions] = useState([]);
   const [questionText, setQuestionText] = useState("");
+
+
   useEffect(() => {
     if (!openQuestion) return;
 
@@ -32,6 +42,17 @@ const CurrentMedication = ({ onConfirm }) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [openQuestion]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDynamicAnswerChange = (value, index) => {
+    const updatedAnswers = [...dynamicAnswers];
+    updatedAnswers[index] = value;
+    setDynamicAnswers(updatedAnswers);
+  };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -67,10 +88,23 @@ const CurrentMedication = ({ onConfirm }) => {
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onConfirm();
-      }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          const finalData = {
+            ...formData,
+            frequency1,
+            frequency2,
+            images: images.map((img) => img.file.name),
+            videos: videos.map((vid) => vid.file.name),
+            dynamicQuestions: dynamicQuestions.map((q, i) => ({
+              question: q,
+              answer: dynamicAnswers[i] || "",
+            })),
+          };
+
+          // console.log("Current Medications: ",finalData)
+          onConfirm(finalData);
+        }}
     >
       <div className={styles.container1}>
         {/* row1 */}
@@ -240,9 +274,15 @@ const CurrentMedication = ({ onConfirm }) => {
                 )}
               </div>
               <input
-                type="text"
-                className={styles.input}
-                placeholder="Please specify"
+                  type="text"
+                  className={styles.input}
+                  placeholder="Please specify"
+                  value={dynamicAnswers[index] || ""}
+                  onChange={(e) => {
+                    const updated = [...dynamicAnswers];
+                    updated[index] = e.target.value;
+                    setDynamicAnswers(updated);
+                  }}
               />
             </div>
           ))}
@@ -254,9 +294,12 @@ const CurrentMedication = ({ onConfirm }) => {
             Are you currently taking any heart-related medications?
           </p>
           <input
-            type="text"
-            className={styles.input}
-            placeholder="If yes, Please specify"
+              type="text"
+              name="currentMedication"
+              className={styles.input}
+              value={formData.currentMedication}
+              onChange={handleInputChange}
+              placeholder="If yes, Please specify"
           />
         </div>
 
@@ -265,9 +308,12 @@ const CurrentMedication = ({ onConfirm }) => {
           <div>
             <p className={styles.question}>Dosage:</p>
             <input
-              type="text"
-              className={styles.inputSmall}
-              placeholder="ex. 25.00"
+                type="text"
+                name="currentDosage"
+                className={styles.inputSmall}
+                value={formData.currentDosage}
+                onChange={handleInputChange}
+                placeholder="ex. 25.00"
             />
           </div>
           <div>
@@ -275,9 +321,9 @@ const CurrentMedication = ({ onConfirm }) => {
             <div className={styles.customRadios}>
               <label>
                 <input
-                  type="radio"
-                  name="smoke"
-                  value="weekly"
+                    type="radio"
+                    name="smoke"
+                    value="weekly"
                   checked={frequency1 === "weekly"}
                   onChange={() => setFrequency1("weekly")}
                 />
@@ -328,7 +374,14 @@ const CurrentMedication = ({ onConfirm }) => {
         {/* row4 */}
         <div className={styles.row4}>
           <p className={styles.question}>New Medication Prescribed:</p>
-          <input type="text" className={styles.input} placeholder="" />
+          <input
+              type="text"
+              name="newMedication"
+              className={styles.input}
+              value={formData.newMedication}
+              onChange={handleInputChange}
+              placeholder=""
+          />
         </div>
 
         {/* row5 */}
@@ -336,9 +389,12 @@ const CurrentMedication = ({ onConfirm }) => {
           <div>
             <p className={styles.question}>Dosage:</p>
             <input
-              type="text"
-              className={styles.inputSmall}
-              placeholder="ex. 25.00"
+                type="text"
+                name="newDosage"
+                className={styles.inputSmall}
+                value={formData.newDosage}
+                onChange={handleInputChange}
+                placeholder="ex. 25.00"
             />
           </div>
           <div>
@@ -346,8 +402,8 @@ const CurrentMedication = ({ onConfirm }) => {
             <div className={styles.customRadios}>
               <label>
                 <input
-                  type="radio"
-                  name="frequency"
+                    type="radio"
+                    name="frequency"
                   value="weekly"
                   checked={frequency2 === "weekly"}
                   onChange={() => setFrequency2("weekly")}
@@ -400,9 +456,12 @@ const CurrentMedication = ({ onConfirm }) => {
         <div className={styles.row6}>
           <p className={styles.questionBlue}>Next Appointment Scheduled?</p>
           <input
-            type="text"
-            className={styles.input}
-            placeholder="If yes, Please specify"
+              type="text"
+              name="nextAppointment"
+              className={styles.input}
+              value={formData.nextAppointment}
+              onChange={handleInputChange}
+              placeholder="If yes, Please specify"
           />
         </div>
 

@@ -14,11 +14,25 @@ const CONDITIONS = [
 ];
 
 export const MedicalHistory = ({ patient, onConfirm }) => {
-  const [smoke, setSmoke] = useState("");
-  const [alcohol, setAlcohol] = useState("");
-
   const [selected, setSelected] = useState([]);
-  const [other, setOther] = useState("");
+
+  const [formData, setFormData] = useState({
+    smoke: "",
+    alcohol: "",
+    heartSurgery: "",
+    diagnosticTests: "",
+    otherCondition: "",
+    visitReason: "",
+    allergies: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const questionRef = useRef(null);
   const [openEdit, setOpenEdit] = useState(false);
@@ -92,7 +106,27 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
       className={styles.medicalHistory}
       onSubmit={(e) => {
         e.preventDefault();
-        onConfirm();
+
+        // Combine selected conditions and otherCondition if filled
+        const selectedConditions = [
+          ...selected,
+          ...(formData.otherCondition.trim() ? [formData.otherCondition.trim()] : []),
+        ];
+
+        // Remove `otherCondition` from formData before submission
+        const { otherCondition, ...restFormData } = formData;
+
+        const finalData = {
+          ...restFormData,
+          selectedConditions,
+          dynamicQuestions: dynamicQuestions,
+          images: images.map((img) => img.file.name),
+          videos: videos.map((vid) => vid.file.name),
+        };
+
+        // console.log("Submitted Medical History Form:", finalData);
+
+        onConfirm(finalData);
       }}
     >
       <div className={styles.container1}>
@@ -103,181 +137,194 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
           </div>
           <div className={styles.attachments}>
             <div
-              className={styles.tooltipWrapper}
-              onClick={() => fileInputRef.current.click()}
+                className={styles.tooltipWrapper}
+                onClick={() => fileInputRef.current.click()}
             >
-              <img src="/assets/gallery-icon.svg" alt="" />
+              <img src="/assets/gallery-icon.svg" alt=""/>
               <span className={styles.tooltipText}>Image</span>
               <input
-                type="file"
-                accept="image/*"
-                multiple
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleImageUpload}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  ref={fileInputRef}
+                  style={{display: "none"}}
+                  onChange={handleImageUpload}
               />
             </div>
 
             <div className={styles.tooltipWrapper}>
               <img
-                src="/assets/formkit-icon.svg"
-                alt=""
-                onClick={(e) => {
-                  e.stopPropagation(); // Stop click from bubbling to document
-                  setOpenQuestion((prev) => !prev); // Toggle state
-                }}
+                  src="/assets/formkit-icon.svg"
+                  alt=""
+                  onClick={(e) => {
+                    e.stopPropagation(); // Stop click from bubbling to document
+                    setOpenQuestion((prev) => !prev); // Toggle state
+                  }}
               />
               <span className={styles.tooltipText}>Text</span>
             </div>
 
             <div className={styles.tooltipWrapper}>
               <img
-                src="/assets/Plus.svg"
-                alt=""
-                onClick={() =>
-                  openEdit ? setOpenEdit(false) : setOpenEdit(true)
-                }
+                  src="/assets/Plus.svg"
+                  alt=""
+                  onClick={() =>
+                      openEdit ? setOpenEdit(false) : setOpenEdit(true)
+                  }
               />
               <span className={styles.tooltipText}>Edit</span>
             </div>
 
             <div
-              className={styles.tooltipWrapper}
-              onClick={() => videoInputRef.current.click()}
+                className={styles.tooltipWrapper}
+                onClick={() => videoInputRef.current.click()}
             >
-              <img src="/assets/video-icon.svg" alt="" />
+              <img src="/assets/video-icon.svg" alt=""/>
               <span className={styles.tooltipText}>Video</span>
               <input
-                type="file"
-                accept="video/*"
-                multiple
-                ref={videoInputRef}
-                style={{ display: "none" }}
-                onChange={handleVideoUpload}
+                  type="file"
+                  accept="video/*"
+                  multiple
+                  ref={videoInputRef}
+                  style={{display: "none"}}
+                  onChange={handleVideoUpload}
               />
             </div>
           </div>
         </div>
 
         {images.length > 0 && (
-          <>
-            <h4>Images</h4>
-            <div className={styles.imagePreviewRow}>
-              {images.map((img) => (
-                <div key={img.id} className={styles.imageWrapper}>
-                  <img
-                    src={img.id}
-                    alt="uploaded"
-                    className={styles.uploadedImage}
-                  />
-                  <button
-                    type="button"
-                    className={styles.removeBtn}
-                    onClick={() => handleRemoveImage(img.id)}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
+            <>
+              <h4>Images</h4>
+              <div className={styles.imagePreviewRow}>
+                {images.map((img) => (
+                    <div key={img.id} className={styles.imageWrapper}>
+                      <img
+                          src={img.id}
+                          alt="uploaded"
+                          className={styles.uploadedImage}
+                      />
+                      <button
+                          type="button"
+                          className={styles.removeBtn}
+                          onClick={() => handleRemoveImage(img.id)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                ))}
+              </div>
+            </>
         )}
 
         {videos.length > 0 && (
-          <>
-            <h4>Videos</h4>
-            <div className={styles.videoPreviewRow}>
-              {videos.map((vid) => (
-                <div key={vid.id} className={styles.videoWrapper}>
-                  <video
-                    src={vid.id}
-                    className={styles.uploadedVideo}
-                    controls
-                  />
-                  <button
-                    type="button"
-                    className={styles.removeBtn}
-                    onClick={() => handleRemoveVideo(vid.id)}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
+            <>
+              <h4>Videos</h4>
+              <div className={styles.videoPreviewRow}>
+                {videos.map((vid) => (
+                    <div key={vid.id} className={styles.videoWrapper}>
+                      <video
+                          src={vid.id}
+                          className={styles.uploadedVideo}
+                          controls
+                      />
+                      <button
+                          type="button"
+                          className={styles.removeBtn}
+                          onClick={() => handleRemoveVideo(vid.id)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                ))}
+              </div>
+            </>
         )}
 
         {/* Open Question */}
 
         {openQuestion && (
-          <>
-            {" "}
-            <div ref={questionRef} className={styles.customQuestion}>
-              <input
-                placeholder="Add your Question"
-                onChange={(e) => setQuestionText(e.target.value)}
-              />
-              <div className={styles.customQuestionBtns}>
-                <button
-                  className={styles.cancelBtn}
-                  type="button"
-                  onClick={() => setOpenQuestion(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className={styles.saveBtn}
-                  type="button"
-                  onClick={() => {
-                    setDynamicQuestions((prev) => [
-                      ...prev,
-                      questionText.trim(),
-                    ]);
-                  }}
-                >
-                  Save
-                </button>
+            <>
+              {" "}
+              <div ref={questionRef} className={styles.customQuestion}>
+                <input
+                    placeholder="Add your Question"
+                    onChange={(e) => setQuestionText(e.target.value)}
+                />
+                <div className={styles.customQuestionBtns}>
+                  <button
+                      className={styles.cancelBtn}
+                      type="button"
+                      onClick={() => setOpenQuestion(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                      className={styles.saveBtn}
+                      type="button"
+                      onClick={() => {
+                        const trimmed = questionText.trim();
+                        if (trimmed) {
+                          setDynamicQuestions((prev) => [
+                            ...prev,
+                            {question: trimmed, answer: ""},
+                          ]);
+                          setQuestionText(""); // optional: reset input
+                          setOpenQuestion(false); // close the box
+                        }
+                      }}
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
-            </div>
-          </>
+            </>
         )}
 
         {/* Dynamic Questions*/}
         <div className={styles.dynamicQuestionContainer}>
-          {dynamicQuestions.map((question, index) => (
-            <div key={index} className={styles.dynamicQuestion}>
-              <div className={styles.questionHeader}>
-                <p className={styles.question}>{` ${question}`}</p>
+          {dynamicQuestions.map((item, index) => (
+              <div key={index} className={styles.dynamicQuestion}>
+                <div className={styles.questionHeader}>
+                  <p className={styles.question}>{item.question}</p>
 
-                {openEdit && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setDynamicQuestions((prev) =>
-                        prev.filter((_, i) => i !== index)
-                      )
-                    }
-                    className={styles.removeButton}
-                  >
-                    <X />
-                  </button>
-                )}
+                  {openEdit && (
+                      <button
+                          type="button"
+                          onClick={() =>
+                              setDynamicQuestions((prev) => prev.filter((_, i) => i !== index))
+                          }
+                          className={styles.removeButton}
+                      >
+                        <X/>
+                      </button>
+                  )}
+                </div>
+
+                <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="Please specify"
+                    value={item.answer}
+                    onChange={(e) => {
+                      const newQuestions = [...dynamicQuestions];
+                      newQuestions[index].answer = e.target.value;
+                      setDynamicQuestions(newQuestions);
+                    }}
+                />
               </div>
-              <input
-                type="text"
-                className={styles.input}
-                placeholder="Please specify"
-              />
-            </div>
           ))}
         </div>
 
         {/* row2 */}
         <div className={styles.row2}>
           <input
-            className={styles.input}
-            type="text"
-            placeholder="Please describe the reason for your visit"
+              className={styles.input}
+              type="text"
+              name="visitReason" // ✅ Match with the state key
+              placeholder="Please describe the reason for your visit"
+              value={formData.visitReason}
+              onChange={handleChange} // ✅ Reuse the same handler
           />
         </div>
 
@@ -288,9 +335,12 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
             surgery)
           </p>
           <input
-            type="text"
-            className={styles.input}
-            placeholder="If yes, Please specify"
+              type="text"
+              name="heartSurgery"
+              className={styles.input}
+              placeholder="If yes, Please specify"
+              value={formData.heartSurgery}
+              onChange={handleChange}
           />
         </div>
 
@@ -300,9 +350,12 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
             Have you had any diagnostic tests related to your current condition?
           </p>
           <input
-            type="text"
-            className={styles.input}
-            placeholder="If yes, Please specify"
+              type="text"
+              name="diagnosticTests"
+              className={styles.input}
+              placeholder="If yes, Please specify"
+              value={formData.diagnosticTests}
+              onChange={handleChange}
           />
         </div>
 
@@ -310,7 +363,13 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
         <div className={styles.row5}>
           <div>
             <p className={styles.question}>Do you have any allergies?</p>
-            <input type="text" placeholder="If yes, Please specify" />
+            <input
+                type="text"
+                name="allergies" // ✅ Add name
+                placeholder="If yes, Please specify"
+                value={formData.allergies} // ✅ Controlled value
+                onChange={handleChange} // ✅ Universal change handler
+            />
           </div>
 
           <div>
@@ -318,48 +377,48 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
             <div className={styles.customRadios}>
               <label>
                 <input
-                  type="radio"
-                  name="smoke"
-                  value="yes"
-                  checked={smoke === "yes"}
-                  onChange={() => setSmoke("yes")}
+                    type="radio"
+                    name="smoke"
+                    value="yes"
+                    checked={formData.smoke === "yes"}
+                    onChange={handleChange}
                 />
                 <span
-                  className={`${styles.circle} ${
-                    smoke === "yes" ? styles.checked : ""
-                  }`}
+                    className={`${styles.circle} ${
+                        formData.smoke === "yes" ? styles.checked : ""
+                    }`}
                 >
-                  {smoke === "yes" && (
-                    <img
-                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                      alt="Checked Icon"
-                      width={24}
-                      height={24}
-                    />
+                  {formData.smoke === "yes" && (
+                      <img
+                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                          alt="Checked Icon"
+                          width={24}
+                          height={24}
+                      />
                   )}
                 </span>
                 Yes
               </label>
               <label>
                 <input
-                  type="radio"
-                  name="smoke"
-                  value="no"
-                  checked={smoke === "no"}
-                  onChange={() => setSmoke("no")}
+                    type="radio"
+                    name="smoke"
+                    value="no"
+                    checked={formData.smoke === "no"}
+                    onChange={handleChange}
                 />
                 <span
-                  className={`${styles.circle} ${
-                    smoke === "no" ? styles.checked : ""
-                  }`}
+                    className={`${styles.circle} ${
+                        formData.smoke === "no" ? styles.checked : ""
+                    }`}
                 >
-                  {smoke === "no" && (
-                    <img
-                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                      alt="Checked Icon"
-                      width={24}
-                      height={24}
-                    />
+                  {formData.smoke === "no" && (
+                      <img
+                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                          alt="Checked Icon"
+                          width={24}
+                          height={24}
+                      />
                   )}
                 </span>
                 No
@@ -372,48 +431,48 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
             <div className={styles.customRadios}>
               <label>
                 <input
-                  type="radio"
-                  name="alcohol"
-                  value="yes"
-                  checked={alcohol === "yes"}
-                  onChange={() => setAlcohol("yes")}
+                    type="radio"
+                    name="alcohol"
+                    value="yes"
+                    checked={formData.alcohol === "yes"}
+                    onChange={handleChange}
                 />
                 <span
-                  className={`${styles.circle} ${
-                    alcohol === "yes" ? styles.checked : ""
-                  }`}
+                    className={`${styles.circle} ${
+                        formData.alcohol === "yes" ? styles.checked : ""
+                    }`}
                 >
-                  {alcohol === "yes" && (
-                    <img
-                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                      alt="Checked Icon"
-                      width={24}
-                      height={24}
-                    />
+                  {formData.alcohol === "yes" && (
+                      <img
+                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                          alt="Checked Icon"
+                          width={24}
+                          height={24}
+                      />
                   )}
                 </span>
                 Yes
               </label>
               <label>
                 <input
-                  type="radio"
-                  name="alcohol"
-                  value="no"
-                  checked={alcohol === "no"}
-                  onChange={() => setAlcohol("no")}
+                    type="radio"
+                    name="alcohol"
+                    value="no"
+                    checked={formData.alcohol === "no"}
+                    onChange={handleChange}
                 />
                 <span
-                  className={`${styles.circle} ${
-                    alcohol === "no" ? styles.checked : ""
-                  }`}
+                    className={`${styles.circle} ${
+                        formData.alcohol === "no" ? styles.checked : ""
+                    }`}
                 >
-                  {alcohol === "no" && (
-                    <img
-                      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                      alt="Checked Icon"
-                      width={24}
-                      height={24}
-                    />
+                  {formData.alcohol === "no" && (
+                      <img
+                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                          alt="Checked Icon"
+                          width={24}
+                          height={24}
+                      />
                   )}
                 </span>
                 No
@@ -430,22 +489,23 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
           </p>
           <div className={styles.options}>
             {CONDITIONS.map((condition) => (
-              <button
-                type="button"
-                key={condition}
-                className={`${styles.optionBtn} ${
-                  selected.includes(condition) ? styles.selected : ""
-                }`}
-                onClick={() => handleToggle(condition)}
-              >
-                {condition}
-              </button>
+                <button
+                    type="button"
+                    key={condition}
+                    className={`${styles.optionBtn} ${
+                        selected.includes(condition) ? styles.selected : ""
+                    }`}
+                    onClick={() => handleToggle(condition)}
+                >
+                  {condition}
+                </button>
             ))}
             <input
-              className={styles.otherInput}
-              placeholder="Other (Please specify):"
-              value={other}
-              onChange={(e) => setOther(e.target.value)}
+                className={styles.otherInput}
+                name="otherCondition"
+                placeholder="Other (Please specify):"
+                value={formData.otherCondition}
+                onChange={handleChange}
             />
           </div>
         </div>

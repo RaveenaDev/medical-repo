@@ -282,13 +282,19 @@ const ConsultBody = ({appointments}) => {
             {selectedComponent === "MedicalHistory" && (
               <MedicalHistory
                 patient={ongoingPatients[0]}
-                onConfirm={() => setSelectedComponent("CurrentMedication")}
+                onConfirm={(medicalData) => {
+                  console.log("Data coming from medical History: ",medicalData)
+                  setSelectedComponent("CurrentMedication")
+                }}
               />
             )}
             {selectedComponent === "CurrentMedication" && (
               <CurrentMedication
                 patient={ongoingPatients[0]}
-                onConfirm={() => setSelectedComponent("DiagnosisAndVital")}
+                onConfirm={(currentMedicationData) => {
+                  console.log("Data coming from current Medications: ",currentMedicationData)
+                  setSelectedComponent("DiagnosisAndVital")
+                }}
               />
             )}
             {selectedComponent === "DiagnosisAndVital" && (
