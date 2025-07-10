@@ -1,8 +1,22 @@
 import styles from "./PatientNewForm.module.scss";
-import { ChevronLeft, SquarePen } from "lucide-react";
+import { ChevronLeft, Plus, SquarePen, Trash2, X } from "lucide-react";
 import { useState } from "react";
 
 const PatientNewForm = ({ onBack }) => {
+  const [formFields, setFormFields] = useState([]);
+
+  const handleAddDropdown = () => {
+    setFormFields([
+      ...formFields,
+      {
+        id: Date.now(),
+        type: "dropdown",
+        question: "",
+        options: ["Option 1", "Option 2"],
+      },
+    ]);
+  };
+
   return (
     <div>
       {" "}
@@ -67,30 +81,123 @@ const PatientNewForm = ({ onBack }) => {
             {/* row1 */}
             <div className={styles.mRow1}>
               <p>Form Title</p>
-              <input type="text" className={styles.input1} />
-            </div>
-
-            {/* row2 */}
-            <div className={styles.mRow2}>
-              <p className={styles.question}>Sample question</p>
               <input
                 type="text"
-                placeholder="Answer Text Holder"
+                placeholder="Enter Title"
                 className={styles.input1}
               />
             </div>
+
+            <div className={styles.mRow2}>
+              {formFields.map((field) =>
+                field.type === "dropdown" ? (
+                  <div key={field.id} className={styles.dropdownField}>
+                    {/* Question input + Trash icon */}
+                    <div className={styles.questionRow}>
+                      <input
+                        type="text"
+                        className={styles.input2}
+                        placeholder="Question"
+                        value={field.question}
+                        onChange={(e) => {
+                          const updated = formFields.map((f) =>
+                            f.id === field.id
+                              ? { ...f, question: e.target.value }
+                              : f
+                          );
+                          setFormFields(updated);
+                        }}
+                      />
+                    </div>
+                    {/* Options */}
+                    {field.options.map((option, idx) => (
+                      <div key={idx} className={styles.optionWrapper}>
+                        <span className={styles.optionNumber}>{idx + 1}.</span>
+                        <input
+                          type="text"
+                          className={styles.input3}
+                          value={option}
+                          onChange={(e) => {
+                            const updated = formFields.map((f) =>
+                              f.id === field.id
+                                ? {
+                                    ...f,
+                                    options: f.options.map((opt, i) =>
+                                      i === idx ? e.target.value : opt
+                                    ),
+                                  }
+                                : f
+                            );
+                            setFormFields(updated);
+                          }}
+                          placeholder={`Option ${idx + 1}`}
+                        />
+                        <X
+                          className={styles.xIcon}
+                          size={18}
+                          onClick={() => {
+                            const updated = formFields.map((f) =>
+                              f.id === field.id
+                                ? {
+                                    ...f,
+                                    options: f.options.filter(
+                                      (_, i) => i !== idx
+                                    ),
+                                  }
+                                : f
+                            );
+                            setFormFields(updated);
+                          }}
+                        />
+                      </div>
+                    ))}
+                    <div className={styles.questionBottomRow}>
+                      {/* Add option (on a new line) */}
+                      <div
+                        className={styles.addOption}
+                        onClick={() => {
+                          const updated = formFields.map((f) =>
+                            f.id === field.id
+                              ? {
+                                  ...f,
+                                  options: [
+                                    ...f.options,
+                                    `Option ${f.options.length + 1}`,
+                                  ],
+                                }
+                              : f
+                          );
+                          setFormFields(updated);
+                        }}
+                      >
+                        <Plus className={styles.plusIcons} />
+                        <span>Add option</span>
+                      </div>{" "}
+                      <Trash2
+                        className={styles.trashIcon}
+                        size={18}
+                        onClick={() => {
+                          setFormFields(
+                            formFields.filter((f) => f.id !== field.id)
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+                ) : null
+              )}
+            </div>
           </div>
 
-          {/* Section 2*/}
-          <div className={styles.section2}>
-            {/* guide text */}
+          {/* section 2 */}
+          {formFields.length === 0 && (
             <div className={styles.guideText}>
               <p>
                 Drag fields here or
                 <br /> click to add new
               </p>
             </div>
-          </div>
+          )}
 
           {/* Section 3*/}
           <div className={styles.section3}>
@@ -110,10 +217,11 @@ const PatientNewForm = ({ onBack }) => {
           {/* Right Panel Buttons*/}
           <div className={styles.rightPanelButtons}>
             {/* row 2 */}
-            <button className={styles.rRow2}>
+            <button className={styles.rRow2} onClick={handleAddDropdown}>
               <img src="/assets/dropDownIcon.svg" alt="" />
               <p>Dropdown Menu</p>
             </button>
+
             {/* row 3 */}
             <button className={styles.rRow2}>
               <img src="/assets/checklistIcon.svg" alt="" />

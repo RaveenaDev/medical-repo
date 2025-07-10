@@ -62,8 +62,7 @@
 
 .table,
 .tbody {
-  min-width: 154vh;
-  width: max-content;
+  width: 74vw;
 }
 
 .th {
@@ -76,9 +75,9 @@
   align-items: center;
   justify-content: center;
   gap: 0.2vw;
-
+  text-align: center;
   font-weight: 500;
-  font-size: 2vh;
+  font-size: 1vw;
 }
 
 .td {
@@ -123,22 +122,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     gap: 0.2vw;
     height: 7vh;
     font-weight: 500;
-    font-size: 2vh;
+    font-size: 1vw;
     width: 14.285%; // 100% / 7 cells
   }
 }
 
 .icon {
   color: #25307f;
-  width: 1.2vw;
+  height: 1.2vw;
 }
 
 .actionTap {
   padding: 2vh 3vw;
-
+  height: 1.4vw;
   background: #f2f5ff;
   cursor: pointer;
 }

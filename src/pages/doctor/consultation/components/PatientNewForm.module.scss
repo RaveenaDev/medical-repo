@@ -116,10 +116,11 @@
 }
 
 .input1 {
-  font-family: "Inter", sans-serif;
+  font-family: "Karla", sans-serif;
   border: 1px solid #cfcfcf;
   outline: none;
   //width: 40vw;
+
   width: 95%;
   padding: 1.9vh 0.5vw;
   border-radius: 5px;
@@ -220,4 +221,87 @@
       width: 1.2vw;
     }
   }
+}
+
+.dropdownField {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-left: 4px solid #25307f;
+  border-radius: 4px;
+  width: 91%;
+  input {
+    margin-bottom: 1vh;
+    display: block;
+  }
+
+  button {
+    background: none;
+    color: #007bff;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.input2 {
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #80868b;
+  background: #f8f9fa;
+  height: 6vh;
+  padding: 0vh 0.5vw;
+  width: 96%;
+  font-family: "Karla", sans-serif;
+  font-size: 2vh;
+}
+
+.optionNumber {
+  font-size: 1.9vh;
+}
+
+.xIcon {
+  height: 2.6vh;
+  color: #5f6368;
+}
+
+.input3 {
+  width: 80%;
+  outline: none;
+  height: 5vh;
+  padding: 0vh 0.5vw;
+  border: none;
+  font-size: 1.9vh;
+  font-family: "Karla", sans-serif;
+}
+
+.questionBottomRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 2vh;
+  margin-top: 1vh;
+}
+.addOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2vw;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.trashIcon {
+  height: 2.6vh;
+  color: #dc3545;
+}
+
+.plusIcons {
+  height: 2vh;
+  width: 1vw;
+}
+.optionWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.9vh;
 }

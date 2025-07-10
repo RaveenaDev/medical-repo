@@ -146,8 +146,8 @@ const MedAdminRecord = () => {
               <span>Time</span>
             </div>
             <div className={styles.th}>
-              <Pill strokeWidth={2} className={styles.icon} />
-              Medications
+              <img src="/assets/medicineIcon.svg" className={styles.icon} />
+              <span>Medications</span>
             </div>
             <div className={styles.th}>
               <img src="/assets/pills.svg" className={styles.icon} />
