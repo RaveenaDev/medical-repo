@@ -32,7 +32,7 @@
 
 .leftPanel {
   background-color: white;
-  width: 29%;
+  width: 28%;
   padding: 2vh 1.4vw 8vh 1.4vw;
 
   height: 92vh;
@@ -89,6 +89,7 @@
   padding: 1vh 0.8vw;
   height: 7vh;
   margin-top: 1.3vh;
+  cursor: pointer;
 }
 
 .row5 {
@@ -107,12 +108,23 @@
 
 .middlePanel {
   background-color: white;
-  width: 35%;
+  width: 36%;
   padding: 2vh 2vw 8vh 2vw;
   height: 92vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 .input1 {
@@ -218,9 +230,13 @@
     gap: 1vw;
 
     img {
-      width: 1.2vw;
+      width: 2.4vh;
     }
   }
+}
+
+.rightIcon {
+  width: 2.4vh;
 }
 
 .dropdownField {
@@ -242,6 +258,23 @@
     border: none;
     cursor: pointer;
   }
+
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none; // prevent interaction before animation
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  &.fadeOut {
+    opacity: 0;
+    transform: translateY(10px) scale(0.01);
+    pointer-events: none;
+  }
 }
 
 .input2 {
@@ -255,7 +288,10 @@
   font-family: "Karla", sans-serif;
   font-size: 2vh;
 }
-
+.questionBottomRow2 {
+  display: flex;
+  justify-content: flex-end;
+}
 .optionNumber {
   font-size: 1.9vh;
 }
@@ -263,6 +299,12 @@
 .xIcon {
   height: 2.6vh;
   color: #5f6368;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0.5vh;
+  &:hover {
+    background: #f1f1f1;
+  }
 }
 
 .input3 {
@@ -273,6 +315,14 @@
   border: none;
   font-size: 1.9vh;
   font-family: "Karla", sans-serif;
+  border-bottom: 2px solid transparent; // Set initial bottom border
+  &:hover {
+    border-bottom: 2px solid #cfcfcf;
+  }
+  transition: border-bottom-color 0.3s ease;
+  &:focus {
+    border-bottom: 2px solid #007bff; // blue border on focus
+  }
 }
 
 .questionBottomRow {
@@ -288,11 +338,22 @@
   gap: 0.2vw;
   color: #007bff;
   cursor: pointer;
+  padding: 0vh 0.5vw;
+  &:hover {
+    background-color: rgba(0, 123, 255, 0.1); // light blue tint
+    border-radius: 5px;
+  }
 }
 
 .trashIcon {
   height: 2.6vh;
   color: #dc3545;
+  padding: 0.5vw;
+  cursor: pointer;
+  border-radius: 50%;
+  &:hover {
+    background: rgba(220, 53, 69, 0.1); // light tint of red
+  }
 }
 
 .plusIcons {
@@ -304,4 +365,36 @@
   justify-content: space-between;
   align-items: center;
   font-size: 1.9vh;
+
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &.fadeOut {
+    opacity: 0;
+    transform: translateX(-10px);
+    pointer-events: none;
+  }
+
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &.fadeIn {
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeInAnim 0.5s ease-out forwards;
+  }
+}
+@keyframes fadeInAnim {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.inputTitle {
+  font-size: 2.1vh;
+  color: #25307f;
+  font-weight: 450;
 }
