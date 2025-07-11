@@ -48,7 +48,7 @@ const AssignOverlay = ({
     }
   }, [localDoctors, onClose]);
 
-  const patients = useSelector((state) => state.doctor.patients);
+  const patients = useSelector((state) => state.doctor.inPatients);
 
   // console.log(patients);
   const filteredPatients = patients.filter((p) =>

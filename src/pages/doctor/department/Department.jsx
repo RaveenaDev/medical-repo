@@ -360,6 +360,10 @@ const Department = () => {
   const doctors = useSelector((state) => state.doctor.doctors) || [];
   const staff = useSelector((state) => state.doctor.staff) || [];
 
+  const doctorName = useSelector((state) => state.authentication.userName);
+  const departmentName = useSelector(
+    (state) => state.authentication.departmentName
+  );
   const inventoryData =
     useSelector((state) => state.doctor.inventoryData) || [];
 
@@ -451,9 +455,9 @@ const Department = () => {
         <div className={style.head}>
           <div className={style.headingSection}>
             <div className={style.heading}>
-              {department?.name || "Department Name"}
+              {departmentName || "Department Name"}
             </div>
-            <p>Head: {department?.head || "N/A"}</p>
+            <p>Head: {doctorName || "N/A"}</p>
           </div>
         </div>
 
@@ -667,7 +671,7 @@ const Department = () => {
                 }}
                 onClick={() => navigate("/doctor/department/inventory")}
               >
-                <h3 style={{ color: "#25307F" }}>Cardiology Inventory</h3>
+                <h3 style={{ color: "#25307F" }}>{departmentName} Inventory</h3>
                 <svg
                   width="20"
                   height="20"

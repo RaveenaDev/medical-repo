@@ -72,7 +72,9 @@ const Inventory = () => {
     "#69BD854A",
     "#66A7B487",
   ];
-
+  const departmentName = useSelector(
+    (state) => state.authentication.departmentName
+  );
   const iconKeys = Object.keys(icons);
   return (
     <div className={inventoryStyles.wrapper}>
@@ -102,7 +104,7 @@ const Inventory = () => {
                 </clipPath>
               </defs>
             </svg>
-            <h2>Cardiology Inventory</h2>
+            <h2>{departmentName} Inventory</h2>
           </div>
           <button
             className={inventoryStyles.addBtn}

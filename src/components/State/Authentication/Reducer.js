@@ -2,11 +2,13 @@ import { LOGIN, LOGOUT } from "./ActionType.js";
 
 const initialState = {
   user: null,
+  userName: null,
   users: [],
   jwt: null,
   role: null,
   hospitalName: null,
   departmentId: [],
+  departmentName: [],
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -15,10 +17,12 @@ export const authReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload.userId,
+        userName: action.payload.username,
         jwt: action.payload.token,
         role: action.payload.role,
         hospitalName: action.payload.hospitalName,
         departmentId: action.payload.departmentIds,
+        departmentName: action.payload.departmentNames,
       };
 
     case LOGOUT:
