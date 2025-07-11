@@ -230,10 +230,28 @@
   width: 30vw;
   height: 91vh;
   padding-top: 1vh;
-  display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
+
+  .btn {
+    background-color: #ecf1ff;
+    display: flex;
+    color: #25307F;
+    align-items: center;
+    font-family: "Karla", sans-serif;
+    font-size: 1.9vh;
+    gap: 0.5vw;
+    height: 4.5vh;
+    min-width: 13.4vw;
+    justify-content: center;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+
+    img{
+      color: #25307F;
+    }
+  }
 }
 
 .lp-1 {
@@ -418,7 +436,6 @@
     height: 4.5vh;
     width: 13.4vw;
     color: #25307f;
-    display: flex;
     border-radius: 5px;
     background-color: #ecf1ff;
     gap: 8px;

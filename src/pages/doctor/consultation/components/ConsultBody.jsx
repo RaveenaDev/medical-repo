@@ -13,6 +13,14 @@ import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 
 const ConsultBody = ({appointments}) => {
+
+  const [completeData, setCompleteData] = useState({
+    medicalHistory: null,
+    currentMedications: null,
+    diagnosisAndVitals: null,
+    perceptionsAndMedicines: null,
+    treatmentAndTests: null
+  });
   const dummyPatient = [
     {
       id: 1,
@@ -114,7 +122,7 @@ const ConsultBody = ({appointments}) => {
     );
   }
 
-  console.log("Appointments: ",appointments)
+  // console.log("Appointments: ",appointments)
 
   // Step 1: Find the ongoing appointment
   const ongoingAppointment = appointments.find(app => app.status === "Ongoing");
@@ -132,8 +140,24 @@ const ConsultBody = ({appointments}) => {
     nextAppointment = futureAppointments[0] || null;
   }
 
-  console.log("Ongoing: ",ongoingAppointment)
-  console.log("Next: ",nextAppointment)
+  // console.log("Ongoing: ",ongoingAppointment)
+  // console.log("Next: ",nextAppointment)
+
+  const handleComplete = () => {
+    console.log("DATA: ",completeData)
+  }
+
+  const handleRefer = () => {
+    console.log("DATA: ",completeData)
+  }
+
+  const handleSchedule = () => {
+    console.log("DATA: ",completeData)
+  }
+
+  if(selectedComponent === 'PerceptionAndMedicines' && (completeData.medicalHistory !== null || completeData.currentMedications !== null || completeData.diagnosisAndVitals !== null)){
+    console.log("Data for AI: ", completeData)
+  }
 
   return (
     <div>
@@ -156,15 +180,15 @@ const ConsultBody = ({appointments}) => {
         {/* Left Panel */}
         <div className={styles["left-panel"]}>
           <div
-            className={`${styles["lp-1"]} ${
-              selectedComponent === "PatientInfo" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("PatientInfo")}
+              className={`${styles["lp-1"]} ${
+                  selectedComponent === "PatientInfo" ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent("PatientInfo")}
           >
             <img
-              src={ongoingPatients[0].profileURL}
-              alt=""
-              className={styles["lp-1-avatar"]}
+                src={ongoingPatients[0].profileURL}
+                alt=""
+                className={styles["lp-1-avatar"]}
             />
             <div className={styles["lp-1-info"]}>
               <p className={styles["lp-1-name"]}>{ongoingAppointment.patient.name}</p>
@@ -173,69 +197,73 @@ const ConsultBody = ({appointments}) => {
           </div>
 
           <div
-            className={`${styles["lp-2"]} ${
-              selectedComponent === "MedicalHistory" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("MedicalHistory")}
+              className={`${styles["lp-2"]} ${
+                  selectedComponent === "MedicalHistory" ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent("MedicalHistory")}
           >
             <p>Medical History</p>
           </div>
           <div
-            className={`${styles["lp-3"]} ${
-              selectedComponent === "CurrentMedication" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("CurrentMedication")}
+              className={`${styles["lp-3"]} ${
+                  selectedComponent === "CurrentMedication" ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent("CurrentMedication")}
           >
             <p>Current Medication</p>
           </div>
           <div
-            className={`${styles["lp-4"]} ${
-              selectedComponent === "DiagnosisAndVital" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("DiagnosisAndVital")}
+              className={`${styles["lp-4"]} ${
+                  selectedComponent === "DiagnosisAndVital" ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent("DiagnosisAndVital")}
           >
             <p>Diagnosis & Vital</p>
           </div>
           <div
-            className={`${styles["lp-5"]} ${
-              selectedComponent === "PerceptionAndMedicines"
-                ? styles.active
-                : ""
-            }`}
-            onClick={() => setSelectedComponent("PerceptionAndMedicines")}
+              className={`${styles["lp-5"]} ${
+                  selectedComponent === "PerceptionAndMedicines"
+                      ? styles.active
+                      : ""
+              }`}
+              onClick={() => setSelectedComponent("PerceptionAndMedicines")}
           >
             <p>Perception & Medicines</p>
           </div>
           <div
-            onClick={() => setSelectedComponent("TreatmentAndTest")}
-            className={`${styles["lp-6"]} ${
-              selectedComponent === "TreatmentAndTest" ? styles.active : ""
-            }`}
+              onClick={() => setSelectedComponent("TreatmentAndTest")}
+              className={`${styles["lp-6"]} ${
+                  selectedComponent === "TreatmentAndTest" ? styles.active : ""
+              }`}
           >
             <p>Treatment and Tests</p>
           </div>
 
           <div className={styles["lp-7"]} onClick={openAddQuestion}>
-            <Plus className={styles["lp-7-icon"]} size={38} />
+            <Plus className={styles["lp-7-icon"]} size={38}/>
             <p>Add Question</p>
           </div>
 
           <div className={styles["lp-8"]}>
-            <button onClick={openComplete}>
-              <CircleCheck size={15} />
+            <button onClick={handleComplete}>
+              <CircleCheck size={15}/>
               <p>Complete</p>
             </button>
             <button className={styles["lp-8-refBtn"]} onClick={openRefer}>
-              <img src="/assets/healthicons_referral.svg" sizes={""} alt="" />
+              <img src="/assets/healthicons_referral.svg" sizes={""} alt=""/>
               <p>Refer</p>
             </button>
           </div>
+          <button type="button" className={styles["btn"]} onClick={handleSchedule}>
+            <img src="/assets/mingcute_schedule-line.svg" alt="" width={20}/>
+            <p>Schedule Treatment</p>
+          </button>
         </div>
 
         {activeModal === "complete" && (
-          <>
-            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
-            <div className={styles["complete-modal"]}>
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
+              <div className={styles["complete-modal"]}>
               <Complete onClose={closeModal} onComplete={openNextAppointment} />
             </div>
           </>
@@ -245,7 +273,7 @@ const ConsultBody = ({appointments}) => {
           <>
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["refer-modal"]}>
-              <Refer onClose={closeModal} />
+              <Refer onClose={closeModal} handleRefer={handleRefer}/>
             </div>
           </>
         )}
@@ -284,6 +312,10 @@ const ConsultBody = ({appointments}) => {
                 patient={ongoingPatients[0]}
                 onConfirm={(medicalData) => {
                   console.log("Data coming from medical History: ",medicalData)
+                  setCompleteData({
+                    ...completeData,
+                    medicalHistory: medicalData
+                  })
                   setSelectedComponent("CurrentMedication")
                 }}
               />
@@ -293,6 +325,10 @@ const ConsultBody = ({appointments}) => {
                 patient={ongoingPatients[0]}
                 onConfirm={(currentMedicationData) => {
                   console.log("Data coming from current Medications: ",currentMedicationData)
+                  setCompleteData({
+                    ...completeData,
+                    currentMedications: currentMedicationData
+                  })
                   setSelectedComponent("DiagnosisAndVital")
                 }}
               />
@@ -300,17 +336,40 @@ const ConsultBody = ({appointments}) => {
             {selectedComponent === "DiagnosisAndVital" && (
               <DiagnosisAndVital
                 patient={ongoingPatients[0]}
-                onConfirm={() => setSelectedComponent("PerceptionAndMedicines")}
+                onConfirm={(diagnosisAndVital) => {
+                  console.log("Data coming from diagnosis and vital : ",diagnosisAndVital)
+                  setCompleteData({
+                    ...completeData,
+                    diagnosisAndVitals: diagnosisAndVital
+                  })
+                  setSelectedComponent("PerceptionAndMedicines")
+                }}
               />
             )}
             {selectedComponent === "PerceptionAndMedicines" && (
               <PerceptionAndMedicines
                 patient={ongoingPatients[0]}
-                onConfirm={() => setSelectedComponent("TreatmentAndTest")}
+                onConfirm={(perceptionData) => {
+                  console.log("Data coming from perceptions and medicines: ",perceptionData)
+                  setCompleteData({
+                    ...completeData,
+                    perceptionsAndMedicines: perceptionData
+                  })
+                  setSelectedComponent("TreatmentAndTest")
+                }}
               />
             )}
             {selectedComponent === "TreatmentAndTest" && (
-              <TreatmentAndTest patient={ongoingPatients[0]} />
+              <TreatmentAndTest patient={ongoingPatients[0]}
+                                onConfirm={(treatmentAndTestsData) => {
+                                  console.log("Data coming from treatment and tests: ",treatmentAndTestsData)
+                                  setCompleteData({
+                                    ...completeData,
+                                    treatmentAndTests: treatmentAndTestsData
+                                  })
+                                  setSelectedComponent("TreatmentAndTest")
+                                }}
+              />
             )}
           </div>
         </div>

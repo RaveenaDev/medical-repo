@@ -4,7 +4,7 @@ import styles from "./Refer.module.scss";
 import { Box, TextField } from "@mui/material";
 import { fontSize, styled } from "@mui/system";
 
-const Refer = ({ onClose }) => {
+const Refer = ({ onClose,handleRefer }) => {
   const [selectedTab, setSelectedTab] = useState("internal referral");
 
   const departmentOptions = ["dep option 1", "dep option 2", " dep option 3"];
@@ -78,6 +78,12 @@ const Refer = ({ onClose }) => {
       opacity: 0.5,
     },
   });
+
+  const handleSubmit = () => {
+    console.log("Submitted...");
+    handleRefer();
+  }
+
   return (
     <div>
       <div className={styles.crossContainer}>
@@ -353,7 +359,7 @@ const Refer = ({ onClose }) => {
                   </div>
 
                   {/* Submit */}
-                  <div className={styles.submitBtn}>
+                  <div className={styles.submitBtn} onClick={handleSubmit}>
                     <button>Submit</button>
                   </div>
                 </div>

@@ -163,7 +163,7 @@
 
 .row9 {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 4vh;
   button {
     background-color: #25307f;
@@ -173,6 +173,8 @@
     font-family: "Karla", sans-serif;
     font-size: 1.9vh;
     gap: 0.5vw;
+    width: 8vw;
+    justify-content: center;
     border-radius: 5px;
   }
 }
