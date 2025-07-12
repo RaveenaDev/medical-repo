@@ -16,7 +16,7 @@ import {generatePrescriptionsWithAI} from "../../../../components/State/Doctor/A
 
 const ConsultBody = ({appointments}) => {
 
-  const ongoingAppointment = appointments.find(app => app.status === "Ongoing");
+
 
   const [completeData, setCompleteData] = useState({
     patientId: null,
@@ -98,12 +98,21 @@ const ConsultBody = ({appointments}) => {
 
   const [activeModal, setActiveModal] = useState(null);
 
+
+  const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
+
+  const dispatch = useDispatch()
+
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, [activeModal]);
+
+  const generatedPrescriptionsWithAI = useSelector((store) => store.doctor.generatedPrescriptionsByAI)
+
+  const ongoingAppointment = appointments.find(app => app.status === "Ongoing");
 
   useEffect(() => {
     setCompleteData({
@@ -112,6 +121,34 @@ const ConsultBody = ({appointments}) => {
     })
   }, [ongoingAppointment]);
 
+  useEffect(() => {
+    if (
+        selectedComponent === "PerceptionAndMedicines" &&
+        (completeData.medicalHistory !== null ||
+            completeData.currentMedications !== null ||
+            completeData.diagnosisVitals !== null)
+    ) {
+      console.log("Data for AI: ", completeData);
+      dispatch(generatePrescriptionsWithAI(completeData));
+    }
+  }, [
+    selectedComponent,
+    completeData.medicalHistory,
+    completeData.currentMedications,
+    completeData.diagnosisVitals,
+    dispatch,
+  ]);
+
+
+
+  if (!ongoingAppointment || ongoingAppointment.length === 0) {
+    return (
+        <div className={styles["no-appointments"]}>
+          <p>No appointments found</p>
+        </div>
+    );
+  }
+
   const openComplete = () => setActiveModal("complete");
   const openRefer = () => setActiveModal("refer");
   const openNextAppointment = () => setActiveModal("nextAppointment");
@@ -119,22 +156,9 @@ const ConsultBody = ({appointments}) => {
 
   const closeModal = () => setActiveModal(null);
 
-  const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
-  const [activePanel, setActivePanel] = useState("lp1");
-
-  const dispatch = useDispatch()
-
   const ongoingPatients = dummyPatient.filter(
     (patient) => patient.consultStatus === "Ongoing"
   );
-
-  if (!appointments || appointments.length === 0) {
-    return (
-        <div className={styles["no-appointments"]}>
-          <p>No appointments found</p>
-        </div>
-    );
-  }
 
 // Step 2: Find the next appointment with a token number greater than ongoing
   let nextAppointment = null;
@@ -164,27 +188,13 @@ const ConsultBody = ({appointments}) => {
     console.log("DATA: ",completeData)
   }
 
-  const generatedPrescriptionsWithAI = useSelector((store) => store.doctor.generatedPrescriptionsByAI)
-
-  useEffect(() => {
-    if (
-        selectedComponent === "PerceptionAndMedicines" &&
-        (completeData.medicalHistory !== null ||
-            completeData.currentMedications !== null ||
-            completeData.diagnosisVitals !== null)
-    ) {
-      console.log("Data for AI: ", completeData);
-      dispatch(generatePrescriptionsWithAI(completeData));
-    }
-  }, [
-    selectedComponent,
-    completeData.medicalHistory,
-    completeData.currentMedications,
-    completeData.diagnosisVitals,
-    dispatch,
-  ]);
-
-
+  if (!appointments || appointments.length === 0) {
+    return (
+        <div className={styles["no-appointments"]}>
+          <p>No appointments found</p>
+        </div>
+    );
+  }
 
   return (
     <div>
