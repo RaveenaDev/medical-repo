@@ -11,13 +11,18 @@ import Complete from "./Complete";
 import Refer from "./Refer";
 import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
+import {useDispatch, useSelector} from "react-redux";
+import {generatePrescriptionsWithAI} from "../../../../components/State/Doctor/Action.js";
 
 const ConsultBody = ({appointments}) => {
 
+  const ongoingAppointment = appointments.find(app => app.status === "Ongoing");
+
   const [completeData, setCompleteData] = useState({
+    patientId: null,
     medicalHistory: null,
     currentMedications: null,
-    diagnosisAndVitals: null,
+    diagnosisVitals: null,
     perceptionsAndMedicines: null,
     treatmentAndTests: null
   });
@@ -100,6 +105,13 @@ const ConsultBody = ({appointments}) => {
     };
   }, [activeModal]);
 
+  useEffect(() => {
+    setCompleteData({
+      ...completeData,
+      patientId: ongoingAppointment?.patient._id
+    })
+  }, [ongoingAppointment]);
+
   const openComplete = () => setActiveModal("complete");
   const openRefer = () => setActiveModal("refer");
   const openNextAppointment = () => setActiveModal("nextAppointment");
@@ -109,6 +121,8 @@ const ConsultBody = ({appointments}) => {
 
   const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
   const [activePanel, setActivePanel] = useState("lp1");
+
+  const dispatch = useDispatch()
 
   const ongoingPatients = dummyPatient.filter(
     (patient) => patient.consultStatus === "Ongoing"
@@ -121,11 +135,6 @@ const ConsultBody = ({appointments}) => {
         </div>
     );
   }
-
-  // console.log("Appointments: ",appointments)
-
-  // Step 1: Find the ongoing appointment
-  const ongoingAppointment = appointments.find(app => app.status === "Ongoing");
 
 // Step 2: Find the next appointment with a token number greater than ongoing
   let nextAppointment = null;
@@ -155,9 +164,27 @@ const ConsultBody = ({appointments}) => {
     console.log("DATA: ",completeData)
   }
 
-  if(selectedComponent === 'PerceptionAndMedicines' && (completeData.medicalHistory !== null || completeData.currentMedications !== null || completeData.diagnosisAndVitals !== null)){
-    console.log("Data for AI: ", completeData)
-  }
+  const generatedPrescriptionsWithAI = useSelector((store) => store.doctor.generatedPrescriptionsByAI)
+
+  useEffect(() => {
+    if (
+        selectedComponent === "PerceptionAndMedicines" &&
+        (completeData.medicalHistory !== null ||
+            completeData.currentMedications !== null ||
+            completeData.diagnosisVitals !== null)
+    ) {
+      console.log("Data for AI: ", completeData);
+      dispatch(generatePrescriptionsWithAI(completeData));
+    }
+  }, [
+    selectedComponent,
+    completeData.medicalHistory,
+    completeData.currentMedications,
+    completeData.diagnosisVitals,
+    dispatch,
+  ]);
+
+
 
   return (
     <div>
@@ -340,7 +367,7 @@ const ConsultBody = ({appointments}) => {
                   console.log("Data coming from diagnosis and vital : ",diagnosisAndVital)
                   setCompleteData({
                     ...completeData,
-                    diagnosisAndVitals: diagnosisAndVital
+                    diagnosisVitals: diagnosisAndVital
                   })
                   setSelectedComponent("PerceptionAndMedicines")
                 }}
@@ -349,6 +376,7 @@ const ConsultBody = ({appointments}) => {
             {selectedComponent === "PerceptionAndMedicines" && (
               <PerceptionAndMedicines
                 patient={ongoingPatients[0]}
+                generatedPrescriptions = {generatedPrescriptionsWithAI}
                 onConfirm={(perceptionData) => {
                   console.log("Data coming from perceptions and medicines: ",perceptionData)
                   setCompleteData({

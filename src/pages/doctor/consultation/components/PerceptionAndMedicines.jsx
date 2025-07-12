@@ -2,17 +2,14 @@ import { useEffect, useState } from "react";
 import styles from "./PerceptionAndMedicines.module.scss";
 import PNMLoader from "./PNMLoader";
 import { Check } from "lucide-react";
-const PerceptionAndMedicines = ({ patient }) => {
+const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate network/data fetch
-    const timer = setTimeout(() => {
+    if (generatedPrescriptions && Object.keys(generatedPrescriptions).length > 0) {
       setLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
+    }
+  }, [generatedPrescriptions]);
 
   if (loading) {
     return <PNMLoader patient={patient} />;

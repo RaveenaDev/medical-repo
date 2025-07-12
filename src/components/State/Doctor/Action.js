@@ -6,7 +6,7 @@ import {
   CREATE_CATEGORY,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT,
+  CREATE_NEW_EVENT, GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -671,5 +671,23 @@ export const getInventoryByDepartment = () => async (dispatch) => {
     });
   } catch (error) {
     console.error("Failed to fetch inventory:", error);
+  }
+};
+
+export const generatePrescriptionsWithAI = (patientData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/generate-prescription`,patientData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Generated With AI : ", data.data);
+
+    dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data });
+  } catch (error) {
+    console.log(error);
   }
 };
