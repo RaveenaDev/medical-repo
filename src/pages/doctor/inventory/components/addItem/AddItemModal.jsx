@@ -11,6 +11,7 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
   const [restockDate, setRestockDate] = useState("");
   const [quantity, setQuantity] = useState("");
   const [formError, setFormError] = useState("");
+  const [minimumStockThreshold, setMinimumStockThreshold] = useState("");
 
   const handleSubmit = async () => {
     if (!itemName.trim()) {
@@ -27,6 +28,14 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
       setFormError("Quantity must be a positive number.");
       return;
     }
+    if (
+      minimumStockThreshold === "" ||
+      isNaN(minimumStockThreshold) ||
+      Number(minimumStockThreshold) <= 0
+    ) {
+      setFormError("Minimum stock threshold must be a positive number.");
+      return;
+    }
 
     setFormError("");
 
@@ -35,6 +44,7 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
       lastRestockedDate: restockDate,
       quantity: Number(quantity),
       categoryId: categoryId,
+      minimumStockThreshold: Number(minimumStockThreshold),
     };
 
     try {
@@ -94,6 +104,18 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
               className={
                 formError.includes("Quantity") ? styles.errorInput : ""
               }
+            />
+          </div>
+          <div className={styles.field}>
+            <label>Minimum stock Threshold</label>
+            <input
+              type="number"
+              className={
+                formError.includes("Minimum stock") ? styles.errorInput : ""
+              }
+              placeholder="e.g. 10"
+              value={minimumStockThreshold}
+              onChange={(e) => setMinimumStockThreshold(e.target.value)}
             />
           </div>
         </div>

@@ -188,9 +188,14 @@ const Department = () => {
 
   const [activeIndex, setActiveIndex] = useState(null);
 
-  const onPieEnter = (_, idx) => setActiveIndex(idx);
-  const onPieLeave = () => setActiveIndex(null);
-
+  const onPieEnter = (_, index) => {
+    setActiveIndex(index);
+    setHoveredCategory(finalGraphData[index].category);
+  };
+  const onPieLeave = () => {
+    setActiveIndex(null);
+    setHoveredCategory(null);
+  };
   const renderActiveShape = (props) => {
     const {
       cx,
@@ -360,6 +365,10 @@ const Department = () => {
   const doctors = useSelector((state) => state.doctor.doctors) || [];
   const staff = useSelector((state) => state.doctor.staff) || [];
 
+  const doctorName = useSelector((state) => state.authentication.userName);
+  const departmentName = useSelector(
+    (state) => state.authentication.departmentName
+  );
   const inventoryData =
     useSelector((state) => state.doctor.inventoryData) || [];
 
@@ -391,6 +400,8 @@ const Department = () => {
     setAssignedStaff(selectedStaffObjects);
     setShowAssignModalStaff(true);
   };
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+
   const rawInventory = useSelector((state) => state.doctor.inventoryData) || [];
 
   const sorted = [...rawInventory].sort((a, b) => b.quantity - a.quantity);
@@ -451,9 +462,9 @@ const Department = () => {
         <div className={style.head}>
           <div className={style.headingSection}>
             <div className={style.heading}>
-              {department?.name || "Department Name"}
+              {departmentName || "Department Name"}
             </div>
-            <p>Head: {department?.head || "N/A"}</p>
+            <p>Head: {doctorName || "N/A"}</p>
           </div>
         </div>
 
@@ -667,7 +678,7 @@ const Department = () => {
                 }}
                 onClick={() => navigate("/doctor/department/inventory")}
               >
-                <h3 style={{ color: "#25307F" }}>Cardiology Inventory</h3>
+                <h3 style={{ color: "#25307F" }}>{departmentName} Inventory</h3>
                 <svg
                   width="20"
                   height="20"
@@ -693,7 +704,39 @@ const Department = () => {
                   </defs>
                 </svg>
               </div>
-
+              {hoveredCategory === "Others" && (
+                <div
+                  style={{
+                    background: "#f9f9f9",
+                    padding: "1rem",
+                    borderRadius: 8,
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                    marginTop: 12,
+                  }}
+                >
+                  <h4 style={{ marginBottom: 8 }}>Breakdown of Others</h4>
+                  {others.map((item, idx) => {
+                    const percent = ((item.quantity / total) * 100).toFixed(1);
+                    return (
+                      <div
+                        key={idx}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          marginBottom: 4,
+                          fontSize: 13,
+                          color: "#333",
+                        }}
+                      >
+                        <span>{item.category}</span>
+                        <span>
+                          {item.quantity} ({percent}%)
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <div className={style.cardContent}>
                 {/* Responsive donut/pie chart */}
                 <ResponsiveContainer width="100%" height={270}>
