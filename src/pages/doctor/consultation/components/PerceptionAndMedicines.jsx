@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./PerceptionAndMedicines.module.scss";
 import PNMLoader from "./PNMLoader";
 import { Check } from "lucide-react";
+import {useSelector} from "react-redux";
 const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
   const [loading, setLoading] = useState(true);
 
@@ -10,6 +11,8 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
       setLoading(false);
     }
   }, [generatedPrescriptions]);
+
+  // console.log("Pat: ",patient)
 
   if (loading) {
     return <PNMLoader patient={patient} />;
@@ -24,7 +27,7 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
 
         {/* row2 */}
         <p className={styles.row2}>
-          {patient.name} | Age: 28 | Diagnosis Mellitus | BP: 140/90
+          {patient.name} | Age: {patient.age} | {patient.symptoms[0]} | BP: 140/90
         </p>
 
         <img
@@ -44,38 +47,35 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
           {/* row4 */}
           <div className={styles.row4}>
             <p className={styles.value}>
-              <span className={styles.key}>Problem Statement:</span> Poor
-              glycemic control in known T2DM patient presenting with fatigue.
+              <span className={styles.key}>Problem Statement:</span> {generatedPrescriptions?.aiGeneratedText?.problemStatement}
             </p>
           </div>
 
           {/* row5 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>ICD:</span> E11.9
+              <span className={styles.key}>ICD:</span> {generatedPrescriptions?.aiGeneratedText.icdCode}
             </p>
           </div>
 
           {/* row6 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Therapy Plan:</span> Start Metformin,
-              advise diet control
+              <span className={styles.key}>Therapy Plan:</span> {generatedPrescriptions?.aiGeneratedText.therapyPlan}
             </p>
           </div>
 
           {/* row7 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Precautions:</span> Monitor blood
-              sugar daily
+              <span className={styles.key}>Precautions:</span> {generatedPrescriptions?.aiGeneratedText.precautions}
             </p>
           </div>
 
           {/* row8 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Follow-Up:</span> Review after 7 days
+              <span className={styles.key}>Follow-Up:</span> {generatedPrescriptions?.aiGeneratedText.followUp}
             </p>
           </div>
 

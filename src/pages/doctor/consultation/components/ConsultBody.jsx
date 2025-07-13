@@ -13,6 +13,7 @@ import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 import {useDispatch, useSelector} from "react-redux";
 import {generatePrescriptionsWithAI} from "../../../../components/State/Doctor/Action.js";
+import CustomComponent from "./CustomComponent.jsx";
 
 const ConsultBody = ({appointments}) => {
 
@@ -98,6 +99,7 @@ const ConsultBody = ({appointments}) => {
 
   const [activeModal, setActiveModal] = useState(null);
 
+  const [customSections, setCustomSections] = useState([]);
 
   const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
 
@@ -188,6 +190,12 @@ const ConsultBody = ({appointments}) => {
     console.log("DATA: ",completeData)
   }
 
+  const handleAddSection = (sectionName) => {
+    setCustomSections([...customSections, sectionName]);
+    setSelectedComponent(sectionName);
+  };
+
+
   if (!appointments || appointments.length === 0) {
     return (
         <div className={styles["no-appointments"]}>
@@ -276,6 +284,18 @@ const ConsultBody = ({appointments}) => {
             <p>Treatment and Tests</p>
           </div>
 
+          {customSections.map((section, index) => (
+              <div
+                  key={index}
+                  className={`${styles["lp-6"]} ${
+                      selectedComponent === section ? styles.active : ""
+                  }`}
+                  onClick={() => setSelectedComponent(section)}
+              >
+                <p>{section}</p>
+              </div>
+          ))}
+
           <div className={styles["lp-7"]} onClick={openAddQuestion}>
             <Plus className={styles["lp-7-icon"]} size={38}/>
             <p>Add Question</p>
@@ -325,13 +345,14 @@ const ConsultBody = ({appointments}) => {
         )}
 
         {activeModal === "addQuestion" && (
-          <>
-            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
-            <div className={styles["addQuestion-modal"]}>
-              <AddQuestion onClose={closeModal} />
-            </div>
-          </>
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+              <div className={styles["addQuestion-modal"]}>
+                <AddQuestion onClose={closeModal} onAddSection={handleAddSection} />
+              </div>
+            </>
         )}
+
 
         {/* Right Panel */}
 
@@ -385,7 +406,7 @@ const ConsultBody = ({appointments}) => {
             )}
             {selectedComponent === "PerceptionAndMedicines" && (
               <PerceptionAndMedicines
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment.patient}
                 generatedPrescriptions = {generatedPrescriptionsWithAI}
                 onConfirm={(perceptionData) => {
                   console.log("Data coming from perceptions and medicines: ",perceptionData)
@@ -408,6 +429,19 @@ const ConsultBody = ({appointments}) => {
                                   setSelectedComponent("TreatmentAndTest")
                                 }}
               />
+            )}
+
+            {customSections.includes(selectedComponent) && (
+                <CustomComponent selectedComponent={selectedComponent}
+                                 onConfirm={(data) => {
+                                   setCompleteData((prev) => ({
+                                     ...prev,
+                                     [selectedComponent]: data
+                                   }));
+
+                                   // console.log("Complete Data:", completeData);
+                                 }}
+                />
             )}
           </div>
         </div>

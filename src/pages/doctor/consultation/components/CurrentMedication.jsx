@@ -1,5 +1,4 @@
 import styles from "./CurrentMedication.module.scss";
-import { Image, Type, Plus, SquarePlay } from "lucide-react";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 const CurrentMedication = ({ onConfirm }) => {

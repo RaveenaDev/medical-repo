@@ -686,7 +686,7 @@ export const generatePrescriptionsWithAI = (patientData) => async (dispatch) => 
 
     console.log("Generated With AI : ", data.data);
 
-    dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data });
+    dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data.data });
   } catch (error) {
     console.log(error);
   }
