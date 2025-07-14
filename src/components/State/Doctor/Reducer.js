@@ -1,5 +1,5 @@
 import {
-  APPROVE_APPOINTMENT,
+  APPROVE_APPOINTMENT, CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT, GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_APPOINTMENT_REQUESTS,
@@ -258,6 +258,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         doctorNotes: action.payload,
+      };
+
+    case CREATE_DOCTOR_NOTE:
+      return {
+        ...state,
+        doctorNotes: [...state.doctorNotes, action.payload],
       };
 
     case GET_APPOINTMENTS_BY_DATE:

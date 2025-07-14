@@ -6,7 +6,7 @@ import {
   CREATE_CATEGORY,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT, GENERATE_PRESCRIPTIONS_WITH_AI,
+  CREATE_NEW_EVENT, DELETE_DOCTOR_NOTE, EDIT_DOCTOR_NOTE, GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -563,6 +563,42 @@ export const createDoctorNote = (note) => async (dispatch) => {
     console.log("Doctor Notes: ", data);
 
     dispatch({ type: CREATE_DOCTOR_NOTE, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const editDoctorNote = (updatedNote,noteId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.patch(`${API_URL}/doctor-notes/${noteId}`, updatedNote, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Edited Doctor Note: ", data);
+
+    dispatch({ type: EDIT_DOCTOR_NOTE, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteDoctorNote = (noteId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.delete(`${API_URL}/doctor-notes/${noteId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Deleted Doctor Note: ", data);
+
+    dispatch({ type: DELETE_DOCTOR_NOTE, payload: data });
   } catch (error) {
     console.log(error);
   }
