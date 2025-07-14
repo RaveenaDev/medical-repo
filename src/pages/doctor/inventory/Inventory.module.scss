@@ -243,7 +243,7 @@
 /* Sticky header */
 .tableHeader {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.5fr 1fr 0.25fr;
   padding: 15px 20px;
   font-size: 15px;
   font-family: "Karla";
@@ -279,7 +279,7 @@
 /* Row styling */
 .tableRow {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.5fr 1fr 0.25fr;
   align-items: center;
   justify-items: center;
   padding: 18px 20px;

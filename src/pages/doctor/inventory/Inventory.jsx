@@ -11,7 +11,15 @@ import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { getInventoryByDepartment } from "../../../components/State/Doctor/Action.js";
-
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import { MoreVertical } from "lucide-react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 const Inventory = () => {
   const [showModal, setShowModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -45,7 +53,40 @@ const Inventory = () => {
   const departmentName = useSelector(
     (state) => state.authentication.departmentName
   );
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
+  const handleMenuOpen = (event, item) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedItem(item); // Includes item.id
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedItem(null);
+  };
+
+  const handleEdit = () => {
+    console.log("Editing item ID:", selectedItem?._id);
+    // your edit logic
+    handleMenuClose();
+  };
+
+  const handleDelete = () => {
+    console.log("Deleting item ID:", selectedItem?._id);
+    setOpenDeleteDialog(true);
+    // your delete logic
+    handleMenuClose();
+  };
+  const handleConfirmDelete = () => {
+    console.log("Delete confirmed for:", selectedItem?.id);
+    // Call your delete function here
+    setOpenDeleteDialog(false);
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false);
+  };
   return (
     <div className={inventoryStyles.wrapper}>
       <CommonPanelMini />
@@ -191,6 +232,7 @@ const Inventory = () => {
                     <div className={inventoryStyles.cardDetails}>
                       <p>Quantity: {totalQuantity} units</p>
                       <p>Usage: {Math.round(avgUsage)}%</p>
+
                       <p>
                         Status:{" "}
                         <span className={inventoryStyles[`${finalStatus}`]}>
@@ -252,6 +294,7 @@ const Inventory = () => {
           <span>Quantity</span>
           <span>Usage</span>
           <span>Status</span>
+          <span>Minimum Stock Threshold</span>
           <span>Last Updated</span>
         </div>
 
@@ -272,7 +315,7 @@ const Inventory = () => {
               <div key={i} className={inventoryStyles.tableRow}>
                 <span>{item.name}</span>
                 <span>{item.quantity}</span>
-                <span>{item.usagePercent || "-"}</span>
+                <span>{item.usagePercent || "0"}%</span>
                 <span
                   className={
                     inventoryStyles[
@@ -284,10 +327,45 @@ const Inventory = () => {
                 >
                   {item.status || "Sufficient"}
                 </span>
+                <span>{item.minimumStockThreshold}</span>
                 <span>{item.lastRestockedDate?.split("T")[0] || "-"}</span>
+                <IconButton
+                  onClick={(e) => handleMenuOpen(e, item)}
+                  size="small"
+                  style={{ marginLeft: "auto" }}
+                >
+                  <MoreVertical size={18} />
+                </IconButton>
               </div>
             ))}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+          </Menu>
         </div>
+        <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete{" "}
+            <strong>{selectedItem?.name}</strong>?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelDelete}>Cancel</Button>
+            <Button
+              onClick={handleConfirmDelete}
+              color="error"
+              variant="contained"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
       {showModal && (
         <AddItemModal
