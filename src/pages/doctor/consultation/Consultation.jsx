@@ -8,9 +8,10 @@ import Library from "./components/Library";
 import ConsultBody from "./components/ConsultBody";
 import AppointmentHistory from "./components/AppointmentHistory";
 import PatientNewForm from "./components/PatientNewForm";
-import {useDispatch, useSelector} from "react-redux";
-import {getAppointmentByDate} from "../../../components/State/Doctor/Action.js";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getAppointmentByDate } from "../../../components/State/Doctor/Action.js";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 export const Consultation = () => {
   const [activeModal, setActiveModal] = useState(null);
 
@@ -40,11 +41,10 @@ export const Consultation = () => {
     const startDate = dayjs(selectedDate).startOf("day").toISOString();
     const endDate = dayjs(selectedDate).endOf("day").toISOString();
 
-    dispatch(getAppointmentByDate(startDate, endDate))
-  }, [dispatch,selectedDate]);
+    dispatch(getAppointmentByDate(startDate, endDate));
+  }, [dispatch, selectedDate]);
 
-  const appointments = useSelector((store) => store.doctor.appointmentsByDate)
-
+  const appointments = useSelector((store) => store.doctor.appointmentsByDate);
 
   return (
     <div>
@@ -117,9 +117,13 @@ export const Consultation = () => {
           <AppointmentHistory onBack={() => setActiveView("consult")} />
         )}
         {activeView === "patientNewForm" && (
-          <PatientNewForm onBack={() => setActiveView("consult")} />
+          <DndProvider backend={HTML5Backend}>
+            <PatientNewForm onBack={() => setActiveView("consult")} />
+          </DndProvider>
         )}
-        {activeView === "consult" && <ConsultBody appointments={appointments}/>}
+        {activeView === "consult" && (
+          <ConsultBody appointments={appointments} />
+        )}
       </div>
     </div>
   );

@@ -156,7 +156,9 @@
 
 .mRow2 {
   margin-top: 2.5vh;
+  min-height: 70vh;
 
+  position: relative;
   input {
     margin-top: 1vh;
 
@@ -167,6 +169,10 @@
 }
 
 .guideText {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;

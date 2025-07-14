@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
 
 const PatientNewForm = ({ onBack }) => {
   const [formFields, setFormFields] = useState([]);
@@ -122,8 +123,73 @@ const PatientNewForm = ({ onBack }) => {
     console.log(formTemplate);
   };
 
+  const FIELD = "FIELD";
+
+  const DraggableButton = ({ type, icon, label, onClick }) => {
+    const [{ isDragging }, drag] = useDrag(() => ({
+      type: FIELD,
+      item: { fieldType: type },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }));
+
+    return (
+      <button
+        ref={drag}
+        className={styles.rRow2}
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+        onClick={onClick}
+      >
+        {icon}
+        <p>{label}</p>
+      </button>
+    );
+  };
+
+  const [, drop] = useDrop(() => ({
+    accept: FIELD,
+    drop: (item) => {
+      const id = Date.now(); // generate a unique ID
+      switch (item.fieldType) {
+        case "text":
+          setFormFields((prev) => [
+            ...prev,
+            { id, type: "text", question: "", placeholder: "" },
+          ]);
+          break;
+        case "multiline":
+          setFormFields((prev) => [
+            ...prev,
+            { id, type: "multiline", question: "", placeholder: "" },
+          ]);
+          break;
+        case "radio":
+          setFormFields((prev) => [
+            ...prev,
+            { id, type: "radio", question: "", options: ["", ""] },
+          ]);
+          break;
+        case "dropdown":
+          setFormFields((prev) => [
+            ...prev,
+            { id, type: "dropdown", question: "", options: ["", ""] },
+          ]);
+          break;
+        case "checklist":
+          setFormFields((prev) => [
+            ...prev,
+            { id, type: "checklist", question: "", options: ["", ""] },
+          ]);
+          break;
+        default:
+          break;
+      }
+    },
+  }));
+
   return (
-    <div>
+    <>
       {" "}
       {/* row 1 */}
       <div className={styles.row1}>
@@ -201,12 +267,11 @@ const PatientNewForm = ({ onBack }) => {
               />
             </div>
 
-            <div className={styles.mRow2}>
+            <div className={styles.mRow2} ref={drop}>
               {formFields.map((field) => (
-                <>
+                <div key={field.id}>
                   {field.type === "text" && (
                     <div
-                      key={field.id}
                       className={`${styles.dropdownField} ${
                         deletingId === field.id ? styles.fadeOut : ""
                       } ${
@@ -264,7 +329,6 @@ const PatientNewForm = ({ onBack }) => {
                   )}
                   {field.type === "multiline" && (
                     <div
-                      key={field.id}
                       className={`${styles.dropdownField} ${
                         deletingId === field.id ? styles.fadeOut : ""
                       } ${
@@ -322,7 +386,6 @@ const PatientNewForm = ({ onBack }) => {
                   )}
                   {field.type === "radio" && (
                     <div
-                      key={field.id}
                       className={`${styles.dropdownField} ${
                         deletingId === field.id ? styles.fadeOut : ""
                       } ${
@@ -438,7 +501,6 @@ const PatientNewForm = ({ onBack }) => {
 
                   {field.type === "dropdown" ? (
                     <div
-                      key={field.id}
                       className={`${styles.dropdownField} ${
                         deletingId === field.id ? styles.fadeOut : ""
                       } ${
@@ -561,7 +623,6 @@ const PatientNewForm = ({ onBack }) => {
                   ) : null}
                   {field.type === "checklist" && (
                     <div
-                      key={field.id}
                       className={`${styles.dropdownField} ${
                         deletingId === field.id ? styles.fadeOut : ""
                       } ${
@@ -678,20 +739,20 @@ const PatientNewForm = ({ onBack }) => {
                       </div>
                     </div>
                   )}
-                </>
+                </div>
               ))}
+
+              {/* section 2 */}
+              {formFields.length === 0 && (
+                <div className={styles.guideText}>
+                  <p>
+                    Drag fields here or
+                    <br /> click to add new
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-
-          {/* section 2 */}
-          {formFields.length === 0 && (
-            <div className={styles.guideText}>
-              <p>
-                Drag fields here or
-                <br /> click to add new
-              </p>
-            </div>
-          )}
 
           {/* Section 3*/}
           <div className={styles.section3}>
@@ -721,37 +782,47 @@ const PatientNewForm = ({ onBack }) => {
           {/* Right Panel Buttons*/}
           <div className={styles.rightPanelButtons}>
             {/* row 2 */}
-            <button
-              className={styles.rRow2}
+            <DraggableButton
+              type="text"
               onClick={() => handleAddTextField("")}
-            >
-              <TextCursorInput className={styles.rightIcon} />
-              <p>Text Field</p>
-            </button>
+              icon={<TextCursorInput className={styles.rightIcon} />}
+              label="Text Field"
+            />
             {/* row 3 */}
-            <button className={styles.rRow2} onClick={handleAddMultilineField}>
-              <img src="/assets/multilineIcon.svg" alt="" />
-              <p>Multi-line Text Field</p>
-            </button>{" "}
+            <DraggableButton
+              type="multiline"
+              onClick={handleAddMultilineField}
+              icon={<img src="/assets/multilineIcon.svg" alt="" />}
+              label="Multi-line Text Field"
+            />
+
             {/* row 4 */}
-            <button className={styles.rRow2} onClick={handleAddRadio}>
-              <CircleDot className={styles.rightIcon} />
-              <p>Radio</p>
-            </button>
+            <DraggableButton
+              type="radio"
+              onClick={handleAddRadio}
+              icon={<CircleDot className={styles.rightIcon} />}
+              label="Radio"
+            />
+
             {/* row 5 */}
-            <button className={styles.rRow2} onClick={handleAddDropdown}>
-              <img src="/assets/dropDownIcon.svg" alt="" />
-              <p>Dropdown Menu</p>
-            </button>
+            <DraggableButton
+              type="dropdown"
+              onClick={handleAddDropdown}
+              icon={<img src="/assets/dropDownIcon.svg" alt="" />}
+              label="Dropdown Menu"
+            />
+
             {/* row 6 */}
-            <button className={styles.rRow2} onClick={handleAddChecklist}>
-              <img src="/assets/checklistIcon.svg" alt="" />
-              <p>Checklist</p>
-            </button>
+            <DraggableButton
+              type="checklist"
+              onClick={handleAddChecklist}
+              icon={<img src="/assets/checklistIcon.svg" alt="" />}
+              label="Checklist"
+            />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
