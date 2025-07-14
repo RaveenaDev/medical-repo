@@ -10,7 +10,10 @@ import AddCategoryModal from "./components/addCategory/AddCategoryModal.jsx";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getInventoryByDepartment } from "../../../components/State/Doctor/Action.js";
+import {
+  deleteInventoryItem,
+  getInventoryByDepartment,
+} from "../../../components/State/Doctor/Action.js";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MoreVertical } from "lucide-react";
 import {
@@ -40,7 +43,7 @@ const Inventory = () => {
       setSelectedCategory(inventoryData[0].category.name);
       setSelectedCategoryId(inventoryData[0].category._id);
     }
-  }, [inventoryData]);
+  }, []);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const bgColors = [
@@ -73,17 +76,21 @@ const Inventory = () => {
   };
 
   const handleDelete = () => {
-    console.log("Deleting item ID:", selectedItem?._id);
     setOpenDeleteDialog(true);
-    // your delete logic
-    handleMenuClose();
   };
-  const handleConfirmDelete = () => {
-    console.log("Delete confirmed for:", selectedItem?.id);
-    // Call your delete function here
-    setOpenDeleteDialog(false);
-  };
+  const handleConfirmDelete = async () => {
+    if (!selectedItem?._id) return;
 
+    try {
+      await dispatch(deleteInventoryItem(selectedItem._id)); // assuming it returns a promise
+      await dispatch(getInventoryByDepartment()); // refresh data after deletion
+    } catch (err) {
+      console.error("Error deleting item:", err);
+    } finally {
+      setOpenDeleteDialog(false);
+      setSelectedItem(null);
+    }
+  };
   const handleCancelDelete = () => {
     setOpenDeleteDialog(false);
   };
@@ -346,14 +353,16 @@ const Inventory = () => {
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+            <MenuItem style={{ color: "red" }} onClick={handleDelete}>
+              Delete
+            </MenuItem>
           </Menu>
         </div>
         <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
             Are you sure you want to delete{" "}
-            <strong>{selectedItem?.name}</strong>?
+            <strong>{selectedItem?.name || "this item"}</strong>?
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCancelDelete}>Cancel</Button>

@@ -734,3 +734,30 @@ export const generatePrescriptionsWithAI =
       console.log(error);
     }
   };
+
+export const deleteInventoryItem = (itemId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.delete(
+      `${API_URL}/inventory/items/${itemId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    toast.success("Item Deleted successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error Deleting inventory item:", error);
+
+    toast.error("Error Deleting inventory item!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  }
+};
