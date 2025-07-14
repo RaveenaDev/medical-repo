@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {createDoctorNote, getDoctorNotes} from "../State/Doctor/Action.js";
+import {createDoctorNote, deleteDoctorNote, editDoctorNote, getDoctorNotes} from "../State/Doctor/Action.js";
+import './doctorNotes.scss'
 
 const DoctorNotesPopup = ({
   anchorRef,
@@ -11,6 +12,8 @@ const DoctorNotesPopup = ({
   popupRef,
   customStyle = {},
 }) => {
+
+  const [selectedNote, setSelectedNote] = useState(null);
   const [position, setPosition] = useState({ top: 100, left: 0 });
   const editorRef = useRef(null);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -237,47 +240,84 @@ const DoctorNotesPopup = ({
               />
             </svg>
 
-                {showSaveButton && (
+                {(selectedNote || showSaveButton) && (
                     <div
                         onClick={(e) => e.stopPropagation()}
                         style={{
-                      position:'absolute',
-                      right: '3rem',
-                      color:"#ffffff"
-                    }}>
-                      <button
-                          onClick={(e) => {
-                            e.stopPropagation(); // prevent opening color palette
+                          position: 'absolute',
+                          right: '2.5rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          color: '#ffffff',
+                        }}
+                    >
+                      {/* Save or Edit Button */}
+                      {showSaveButton && (
+                          <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const content = editorRef.current.innerHTML.trim();
+                                if (!content) return;
 
-                            const content = editorRef.current.innerHTML.trim();
-                            if (!content) return;
+                                const notePayload = {
+                                  note: content,
+                                  color: headerColor,
+                                };
 
-                            // 🔥 Dispatch the save action here (with note + color)
-                            const notePayload = {
-                              note: content,
-                              color: headerColor, // Include the selected color
-                            };
+                                if (selectedNote) {
+                                  // Update note
+                                  // console.log("Editing Note: ",selectedNote)
+                                  // console.log("Edited Note: ",notePayload)
 
-                            console.log("Saving note:", notePayload);
-                            // dispatch(createDoctorNote(notePayload));
+                                  dispatch(editDoctorNote(notePayload,selectedNote._id))
+                                } else {
+                                  // Create note
+                                  dispatch(createDoctorNote(notePayload));
+                                }
 
-                            setShowSaveButton(false);
-                            setIsEmpty(true);
-                            editorRef.current.innerHTML = "";
-                          }}
+                                // Reset UI
+                                setShowSaveButton(false);
+                                setIsEmpty(true);
+                                editorRef.current.innerHTML = "";
+                                setSelectedNote(null);
+                              }}
+                              style={{
+                                backgroundColor: 'transparent',
+                                color: '#ffffff',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                border: 'none'
+                              }}
+                          >
+                            {selectedNote ? "Edit" : "Save"}
+                          </button>
+                      )}
 
-                          style={{
-                            backgroundColor: "#25307F",
-                            color: "white",
-                            padding: "6px 12px",
-                            borderRadius: "6px",
-                            border: "1px solid #ccc",
-                            cursor: "pointer",
-                            fontSize: "14px"
-                          }}
-                      >
-                        Save
-                      </button>
+                      {/* Always show Delete button when a note is selected */}
+                      {selectedNote && (
+                          <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                console.log("Deleting Note: ",selectedNote)
+                                dispatch(deleteDoctorNote(selectedNote._id));
+                                setSelectedNote(null);
+                                setShowSaveButton(false);
+                                setIsEmpty(true);
+                                editorRef.current.innerHTML = "";
+                              }}
+                              style={{
+                                backgroundColor: 'transparent',
+                                color: '#ffffff',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                border: 'none'
+                              }}
+                          >
+                            Delete
+                          </button>
+                      )}
                     </div>
                 )}
 
@@ -335,28 +375,28 @@ const DoctorNotesPopup = ({
                               style={{cursor: "pointer", fontSize: '0.9rem', color: '#070707'}}>Saved Notes
                           </div>
                         </div>
-                        <div style={{display: 'flex', gap: '5px', marginBottom: '9px'}}>
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                               xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7.616 20C7.168 20 6.78667 19.8426 6.472 19.528C6.15733 19.2133 6 18.8323 6 18.385V5.99998H5V4.99998H9V4.22998H15V4.99998H19V5.99998H18V18.385C18 18.845 17.846 19.2293 17.538 19.538C17.23 19.8466 16.8453 20.0006 16.384 20H7.616ZM17 5.99998H7V18.385C7 18.5643 7.05767 18.7116 7.173 18.827C7.28833 18.9423 7.436 19 7.616 19H16.385C16.5383 19 16.6793 18.936 16.808 18.808C16.9367 18.68 17.0007 18.5386 17 18.384V5.99998ZM9.808 17H10.808V7.99998H9.808V17ZM13.192 17H14.192V7.99998H13.192V17Z"
-                                fill="black"/>
-                          </svg>
-                          <div onClick={() => setShowOptions(false)}
-                               style={{cursor: "pointer", fontSize: '0.9rem', color: '#070707'}}>Delete Note
-                          </div>
-                        </div>
-                        <div style={{display: 'flex', gap: '5px', marginBottom: '9px'}}>
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                               xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M5 19H6.098L16.796 8.302L15.698 7.204L5 17.902V19ZM4.808 20C4.57934 20 4.38734 19.9227 4.232 19.768C4.07667 19.6133 3.99934 19.4213 4 19.192V18.152C4 17.9307 4.04334 17.72 4.13 17.52C4.21667 17.32 4.333 17.1473 4.479 17.002L17.18 4.287C17.282 4.19567 17.395 4.125 17.519 4.075C17.643 4.025 17.7723 4 17.907 4C18.0417 4 18.1717 4.02133 18.297 4.064C18.4223 4.10667 18.539 4.18267 18.647 4.292L19.714 5.366C19.824 5.472 19.8993 5.58867 19.94 5.716C19.98 5.84267 20 5.96933 20 6.096C20 6.232 19.9773 6.362 19.932 6.486C19.886 6.60933 19.8133 6.72233 19.714 6.825L6.998 19.521C6.85334 19.6663 6.68067 19.7823 6.48 19.869C6.27934 19.9557 6.06867 19.9993 5.848 20H4.808ZM16.238 7.762L15.698 7.204L16.796 8.302L16.238 7.762Z"
-                                fill="black"/>
-                          </svg>
-                          <div onClick={() => setShowOptions(false)}
-                               style={{cursor: "pointer", fontSize: '0.9rem', color: '#070707'}}>Edit Note
-                          </div>
-                        </div>
+                        {/*<div style={{display: 'flex', gap: '5px', marginBottom: '9px'}}>*/}
+                        {/*  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"*/}
+                        {/*       xmlns="http://www.w3.org/2000/svg">*/}
+                        {/*    <path*/}
+                        {/*        d="M7.616 20C7.168 20 6.78667 19.8426 6.472 19.528C6.15733 19.2133 6 18.8323 6 18.385V5.99998H5V4.99998H9V4.22998H15V4.99998H19V5.99998H18V18.385C18 18.845 17.846 19.2293 17.538 19.538C17.23 19.8466 16.8453 20.0006 16.384 20H7.616ZM17 5.99998H7V18.385C7 18.5643 7.05767 18.7116 7.173 18.827C7.28833 18.9423 7.436 19 7.616 19H16.385C16.5383 19 16.6793 18.936 16.808 18.808C16.9367 18.68 17.0007 18.5386 17 18.384V5.99998ZM9.808 17H10.808V7.99998H9.808V17ZM13.192 17H14.192V7.99998H13.192V17Z"*/}
+                        {/*        fill="black"/>*/}
+                        {/*  </svg>*/}
+                        {/*  <div onClick={() => setShowOptions(false)}*/}
+                        {/*       style={{cursor: "pointer", fontSize: '0.9rem', color: '#070707'}}>Delete Note*/}
+                        {/*  </div>*/}
+                        {/*</div>*/}
+                        {/*<div style={{display: 'flex', gap: '5px', marginBottom: '9px'}}>*/}
+                        {/*  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"*/}
+                        {/*       xmlns="http://www.w3.org/2000/svg">*/}
+                        {/*    <path*/}
+                        {/*        d="M5 19H6.098L16.796 8.302L15.698 7.204L5 17.902V19ZM4.808 20C4.57934 20 4.38734 19.9227 4.232 19.768C4.07667 19.6133 3.99934 19.4213 4 19.192V18.152C4 17.9307 4.04334 17.72 4.13 17.52C4.21667 17.32 4.333 17.1473 4.479 17.002L17.18 4.287C17.282 4.19567 17.395 4.125 17.519 4.075C17.643 4.025 17.7723 4 17.907 4C18.0417 4 18.1717 4.02133 18.297 4.064C18.4223 4.10667 18.539 4.18267 18.647 4.292L19.714 5.366C19.824 5.472 19.8993 5.58867 19.94 5.716C19.98 5.84267 20 5.96933 20 6.096C20 6.232 19.9773 6.362 19.932 6.486C19.886 6.60933 19.8133 6.72233 19.714 6.825L6.998 19.521C6.85334 19.6663 6.68067 19.7823 6.48 19.869C6.27934 19.9557 6.06867 19.9993 5.848 20H4.808ZM16.238 7.762L15.698 7.204L16.796 8.302L16.238 7.762Z"*/}
+                        {/*        fill="black"/>*/}
+                        {/*  </svg>*/}
+                        {/*  <div onClick={() => setShowOptions(false)}*/}
+                        {/*       style={{cursor: "pointer", fontSize: '0.9rem', color: '#070707'}}>Edit Note*/}
+                        {/*  </div>*/}
+                        {/*</div>*/}
                       </div>
                     </div>
                 )}
@@ -573,55 +613,59 @@ const DoctorNotesPopup = ({
                   />
                 </div>
 
+                <div
+                    className="sticky-notes-scroll-container"
+                >
+                  {doctorNotes.length > 0 ? (
+                      doctorNotes.map((note, index) => (
+                          <div
+                              key={index}
+                              onClick={() => {
+                                if (editorRef.current) {
+                                  editorRef.current.innerHTML = note?.note || "";
+                                  setHeaderColor(note?.color || "#25307F");
+                                  setIsEmpty(false);
+                                  setSelectedNote(note); // <-- Track selected note
 
-                {doctorNotes.length > 0 ? (
-                    doctorNotes.map((note, index) => (
-                        <div
-                            key={index}
-                            onClick={() => {
-                              if (editorRef.current) {
-                                editorRef.current.innerHTML = note?.note || "";
-                                setHeaderColor(note?.color || "#25307F");
-                                setIsEmpty(false);
-
-                                // Delay closing sticky panel to avoid React DOM sync issue
-                                setTimeout(() => {
-                                  setShowStickyPanel(false);
-                                }, 50);
-                              }
-                            }}
-                            style={{
-                              cursor: "pointer",
-                              padding: "8px 1.4rem",
-                              backgroundColor: "#E8F0FE",
-                              borderRadius: "8px",
-                              marginBottom: "10px",
-                              fontSize: "14px",
-                              boxShadow: "0px 2px 4px rgba(0,0,0,0.05)",
-                              position: "relative",
-                              width: '78%',
-                            }}
-                        >
-                          <p style={{ color: '#424242', fontSize: '13px', marginBottom: 0 }}>
-                            {truncateText(note?.note,28) || 'No content'}
-                          </p>
-                          <div style={{
-                            position: 'absolute',
-                            top: 15,
-                            right: 0,
-                            backgroundColor: '#ffffff',
-                            display: 'inline-block'
-                          }}>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                              <path d="M20 0H0V20L20 0Z" fill="black" fillOpacity="0.2"/>
-                            </svg>
+                                  // Delay closing sticky panel to avoid React DOM sync issue
+                                  setTimeout(() => {
+                                    setShowStickyPanel(false);
+                                  }, 50);
+                                }
+                              }}
+                              style={{
+                                cursor: "pointer",
+                                padding: "8px 1.4rem",
+                                backgroundColor: "#E8F0FE",
+                                borderRadius: "8px",
+                                marginBottom: "10px",
+                                fontSize: "14px",
+                                boxShadow: "0px 2px 4px rgba(0,0,0,0.05)",
+                                position: "relative",
+                                width: '78%',
+                              }}
+                          >
+                            <p style={{ color: '#424242', fontSize: '13px', marginBottom: 0 }}>
+                              {truncateText(note?.note,25) || 'No content'}
+                            </p>
+                            <div style={{
+                              position: 'absolute',
+                              top: 15,
+                              right: 0,
+                              backgroundColor: '#ffffff',
+                              display: 'inline-block'
+                            }}>
+                              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                   xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 0H0V20L20 0Z" fill="black" fillOpacity="0.2"/>
+                              </svg>
+                            </div>
                           </div>
-                        </div>
-                    ))
-                ) : (
-                    <p style={{ color: '#999', paddingLeft: '1.5rem' }}>No notes found.</p>
-                )}
+                      ))
+                  ) : (
+                      <p style={{ color: '#999', paddingLeft: '1.5rem' }}>No notes found.</p>
+                  )}
+                </div>
 
               </div>
             </div>
