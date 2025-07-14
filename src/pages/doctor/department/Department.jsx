@@ -435,6 +435,56 @@ const Department = () => {
     ...entry,
     percent: ((entry.quantity / total) * 100).toFixed(1),
   }));
+  const CustomPieTooltip = ({ active, payload }) => {
+    if (
+      active &&
+      payload &&
+      payload.length > 0 &&
+      payload[0].payload.category === "Others"
+    ) {
+      return (
+        <div
+          style={{
+            background: "#fff",
+            border: "1px solid #ddd",
+            borderRadius: 6,
+            padding: "10px 12px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            fontSize: "13px",
+            color: "#333",
+            maxWidth: 250,
+            maxHeight: 200, // limit height
+            overflowY: "auto", // scroll on overflow
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>
+            Breakdown of Others
+          </div>
+          {others.map((item, i) => {
+            const percent = ((item.quantity / total) * 100).toFixed(1);
+            return (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 3,
+                }}
+              >
+                <div>{item.category}</div>
+                <div style={{ paddingLeft: "8px" }}>
+                  {item.quantity} ({percent}%)
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   // Uncomment these console logs to debug the data
 
   // console.log("Inventory Data: ", inventoryData);
@@ -704,43 +754,13 @@ const Department = () => {
                   </defs>
                 </svg>
               </div>
-              {hoveredCategory === "Others" && (
-                <div
-                  style={{
-                    background: "#f9f9f9",
-                    padding: "1rem",
-                    borderRadius: 8,
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-                    marginTop: 12,
-                  }}
-                >
-                  <h4 style={{ marginBottom: 8 }}>Breakdown of Others</h4>
-                  {others.map((item, idx) => {
-                    const percent = ((item.quantity / total) * 100).toFixed(1);
-                    return (
-                      <div
-                        key={idx}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          marginBottom: 4,
-                          fontSize: 13,
-                          color: "#333",
-                        }}
-                      >
-                        <span>{item.category}</span>
-                        <span>
-                          {item.quantity} ({percent}%)
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+
               <div className={style.cardContent}>
                 {/* Responsive donut/pie chart */}
                 <ResponsiveContainer width="100%" height={270}>
                   <PieChart>
+                    <Tooltip content={<CustomPieTooltip />} />
+
                     <Pie
                       data={finalGraphData}
                       dataKey="quantity"
