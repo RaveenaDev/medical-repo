@@ -69,7 +69,6 @@ const Inventory = () => {
   };
 
   const handleEdit = () => {
-    console.log("Editing item ID:", selectedItem?._id);
     setShowModal(true);
     setAnchorEl(null);
   };
