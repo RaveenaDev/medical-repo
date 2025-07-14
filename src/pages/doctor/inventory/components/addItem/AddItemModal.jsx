@@ -1,18 +1,38 @@
 import styles from "./AddItemModal.module.scss";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addInventoryItem } from "../../../../../components/State/Doctor/Action";
+import {
+  addInventoryItem,
+  updateInventoryItem,
+} from "../../../../../components/State/Doctor/Action";
 
-const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
+const AddItemModal = ({
+  onClose,
+  categoryId,
+  categoryName,
+  item,
+  onItemAdded,
+}) => {
   const dispatch = useDispatch();
 
-  const [itemName, setItemName] = useState("");
-  const [restockDate, setRestockDate] = useState("");
-  const [quantity, setQuantity] = useState("");
+  const [itemName, setItemName] = useState(item?.name || "");
+  const [restockDate, setRestockDate] = useState(
+    item?.lastRestockedDate?.split("T")[0] || ""
+  );
+  const [quantity, setQuantity] = useState(item?.quantity || "");
+  const [minimumStockThreshold, setMinimumStockThreshold] = useState(
+    item?.minimumStockThreshold || ""
+  );
+  useEffect(() => {
+    if (item) {
+      setItemName(item.name || "");
+      setRestockDate(item.lastRestockedDate?.split("T")[0] || "");
+      setQuantity(item.quantity?.toString() || "");
+      setMinimumStockThreshold(item.minimumStockThreshold?.toString() || "");
+    }
+  }, [item]);
   const [formError, setFormError] = useState("");
-  const [minimumStockThreshold, setMinimumStockThreshold] = useState("");
-
   const handleSubmit = async () => {
     if (!itemName.trim()) {
       setFormError("Item name is required.");
@@ -28,6 +48,7 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
       setFormError("Quantity must be a positive number.");
       return;
     }
+
     if (
       minimumStockThreshold === "" ||
       isNaN(minimumStockThreshold) ||
@@ -48,9 +69,13 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
     };
 
     try {
-      const res = await dispatch(addInventoryItem(itemData));
+      if (item?._id) {
+        await dispatch(updateInventoryItem(item._id, itemData));
+      } else {
+        await dispatch(addInventoryItem(itemData));
+      }
 
-      onItemAdded();
+      onItemAdded(); // refresh + close
     } catch (err) {
       setFormError("Something went wrong.");
     }
@@ -60,7 +85,7 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <div className={styles.header}>
-          <h3>Add New Inventory Item</h3>
+          <h3> {item ? "Update" : "Add"} Inventory Item</h3>
           <X size={20} onClick={onClose} className={styles.close} />
         </div>
 
@@ -124,7 +149,7 @@ const AddItemModal = ({ onClose, categoryId, categoryName, onItemAdded }) => {
 
         <div className={styles.footer}>
           <button className={styles.primary} onClick={handleSubmit}>
-            Add Item
+            {item ? "Update Item" : "Add Item"}
           </button>
           <button className={styles.cancel} onClick={onClose}>
             Cancel

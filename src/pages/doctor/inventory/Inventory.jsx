@@ -66,13 +66,12 @@ const Inventory = () => {
   };
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedItem(null);
   };
 
   const handleEdit = () => {
     console.log("Editing item ID:", selectedItem?._id);
-    // your edit logic
-    handleMenuClose();
+    setShowModal(true);
+    setAnchorEl(null);
   };
 
   const handleDelete = () => {
@@ -378,12 +377,17 @@ const Inventory = () => {
       </div>
       {showModal && (
         <AddItemModal
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedItem(null);
+          }}
           categoryId={selectedCategoryId}
           categoryName={selectedCategory}
+          item={selectedItem}
           onItemAdded={async () => {
-            await dispatch(getInventoryByDepartment()); //  wait for fresh data
+            await dispatch(getInventoryByDepartment());
             setShowModal(false);
+            setSelectedItem(null);
           }}
         />
       )}

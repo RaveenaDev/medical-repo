@@ -761,3 +761,31 @@ export const deleteInventoryItem = (itemId) => async (dispatch) => {
     });
   }
 };
+
+export const updateInventoryItem = (itemId, itemData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.patch(
+      `${API_URL}/inventory/items/${itemId}`,
+      itemData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    toast.success("Item Updated successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error Updating inventory item:", error);
+
+    toast.error("Error Updating inventory item!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  }
+};
