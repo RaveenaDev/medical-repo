@@ -237,7 +237,7 @@
   .btn {
     background-color: #ecf1ff;
     display: flex;
-    color: #25307F;
+    color: #25307f;
     align-items: center;
     font-family: "Karla", sans-serif;
     font-size: 1.9vh;
@@ -247,9 +247,9 @@
     justify-content: center;
     border-radius: 5px;
     margin-bottom: 0.5rem;
-
-    img{
-      color: #25307F;
+    border: none;
+    img {
+      color: #25307f;
     }
   }
 }
@@ -444,7 +444,10 @@
     box-shadow: 0 2px 8px #c5dafb42;
   }
 }
-
+.calendar-icon2 {
+  //  color: #25307f;
+  height: 2.2vh;
+}
 .active {
   border: 1.5px solid #1ab242; // strong green border
   background: #e7ffe7; // light green background
@@ -544,4 +547,20 @@
   padding: 50px 0;
   font-size: 1.2rem;
   color: #777;
+}
+.scheduleTreatment-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  // height: 80vh;
+  width: 35%;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  // padding: 0vh 0vw 3vh 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
