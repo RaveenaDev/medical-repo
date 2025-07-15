@@ -4,10 +4,14 @@ import styles from "./SinglePatientDetail.module.scss";
 import { Plus, ChevronLeft } from "lucide-react";
 import PatientProfile from "./component/PatientProfile";
 import PatientPreviousRecord from "./component/records/PatientPreviousRecord.jsx";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const patientId = location.state;
+  console.log("ID: ",patientId)
   const handleBackBtn = () => {
     navigate("/doctor/patientList");
   };

@@ -3,11 +3,11 @@ import "./PatientCard.scss"; // Assuming you have a CSS file for styling
 import { useNavigate } from "react-router-dom";
 
 const PatientCard = ({ patient }) => {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   return (
     <div
       className="patientCard"
-      onClick={() => naviagte(`/doctor/patientList/patient-details`)}
+      onClick={() => navigate(`/doctor/patientList/patient-details`,{state: patient._id})}
     >
       <div className="patientInfo">
         <div className="patientHeader">
