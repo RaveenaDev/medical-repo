@@ -55,20 +55,62 @@
 }
 
 .headerRight {
-  button {
-    background: #2e823b;
-    color: white;
-    display: flex;
-    align-items: center;
-    font-size: 2.2vh;
-    gap: 1vh;
-    padding: 0.8vh 1vh;
-    border-radius: 4px;
-    margin-right: 1vw;
-    border: none;
-  }
+  display: flex;
+  align-items: center;
+  margin-right: 1vw;
+  gap: 0.8vw;
+}
+.dischargeBtn {
+  background: white;
+  color: #25307f;
+  font-size: 1vw;
+  border: 1px solid #25307f;
+  padding: 1.1vh 1vw;
+  border-radius: 4px;
+}
+.billingBtn {
+  background: white;
+  padding: 1vh 1vw;
+  border-radius: 4px;
+  font-size: 1vw;
+  border: none;
+  color: #878787;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4vw;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.printBtn {
+  background: white;
+  padding: 1.2vh 1vw;
+  border-radius: 4px;
+  font-size: 1vw;
+  border: none;
+  color: #878787;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4vw;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.icon {
+  width: 1.2vw;
 }
 
+.diagnosisBtn {
+  background: #2e823b;
+
+  padding: 1.2vh 1vw;
+  border-radius: 4px;
+  font-size: 1vw;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4vw;
+}
 .backBtnWrapper {
   display: flex;
   align-items: center;
@@ -83,5 +125,36 @@
 }
 
 .plusIcon {
-  height: 2.6vh;
+  width: 1.2vw;
+  height: 1.2vw;
+}
+
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+.billing-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 36vw;
+  background: #fff;
+  z-index: 10;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out;
+
+  // Initially hidden (off-screen)
+  transform: translateX(100%);
+}
+
+.billing-modalOpen {
+  transform: translateX(0);
 }

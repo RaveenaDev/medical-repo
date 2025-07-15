@@ -77,7 +77,7 @@
   gap: 0.2vw;
   text-align: center;
   font-weight: 500;
-  font-size: 1vw;
+  font-size: max(1vw, 9px);
 }
 
 .td {
@@ -126,7 +126,7 @@
     gap: 0.2vw;
     height: 7vh;
     font-weight: 500;
-    font-size: 1vw;
+    font-size: max(1vw, 9px);
     width: 14.285%; // 100% / 7 cells
   }
 }
