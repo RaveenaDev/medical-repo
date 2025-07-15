@@ -49,6 +49,50 @@ const BillingDetails = ({ onClose }) => {
           </div>
         </div>
       </div>
+
+      {/* Section 2 */}
+      <div className={styles.section2}>
+        {" "}
+        <div className={styles.s2row1}>
+          <div className={styles.s2row1Child}>
+            <p className={styles.label}>Total Amount</p>
+            <p className={styles.value}>₹40000</p>
+          </div>
+          <div className={styles.s2row1Child}>
+            {" "}
+            <p className={`${styles.label2} `}>Paid</p>
+            <p className={`${styles.value2} `}>₹40000</p>
+          </div>
+          <div className={styles.s2row1Child}>
+            {" "}
+            <p className={`${styles.label2} `}>Outstanding</p>
+            <p className={styles.value2}>₹0</p>
+          </div>{" "}
+          <div className={styles.s2row1Child}>
+            {" "}
+            <p className={`${styles.label2} `}>Status</p>
+            <p className={styles.status}>Paid</p>
+          </div>
+        </div>
+        <div className={styles.s2row2}>
+          <div className={styles.s2row2Child}>
+            <p className={styles.label}>Payment History</p>
+          </div>
+          <div className={styles.s2row2Child}>
+            <p className={styles.value}>Amount Paid: ₹40000</p>
+            <p className={styles.value}>Mode: Cash</p>
+            <p className={styles.value}>Date: 08-07-2025</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Submit Container */}
+      <div className={styles.submitContainer}>
+        <button>
+          <img src="/assets/printWhite.svg" alt="" />
+          Print Bill
+        </button>
+      </div>
     </div>
   );
 };
