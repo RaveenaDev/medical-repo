@@ -24,7 +24,7 @@
     overflow-y: auto;
     z-index: 1001;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.5rem;
     .cancel-btn {
       cursor: pointer;
       position: absolute;
@@ -105,6 +105,56 @@
           line-height: 100%;
           letter-spacing: 0%;
           margin-bottom: 0.75rem;
+        }
+        .form-approval {
+          padding: 16px;
+          border-radius: 8px;
+          border: 0.5px solid #bebebe;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          p {
+            font-family: "Inter";
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #4a4a4a;
+          }
+        }
+
+        .circle-checkbox {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          font-size: 16px;
+          gap: 8px;
+          user-select: none;
+
+          input {
+            display: none;
+          }
+
+          .custom-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            display: inline-block;
+            position: relative;
+          }
+
+          input:checked + .custom-circle::after {
+            content: "";
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #000;
+          }
         }
       }
 

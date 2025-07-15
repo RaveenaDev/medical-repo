@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./AddPatientForm.scss";
 
 const AddPatientForm = ({ onClose }) => {
@@ -7,7 +7,15 @@ const AddPatientForm = ({ onClose }) => {
     // TODO: Handle form submission logic
     onClose();
   };
+  const [selectedRoles, setSelectedRoles] = useState([]);
 
+  const handleCheckboxChange = (role) => {
+    if (selectedRoles.includes(role)) {
+      setSelectedRoles(selectedRoles.filter((r) => r !== role));
+    } else {
+      setSelectedRoles([...selectedRoles, role]);
+    }
+  };
   return (
     <div className="add-patient-modal">
       <div className="modal-overlay" onClick={onClose}></div>
@@ -92,6 +100,14 @@ const AddPatientForm = ({ onClose }) => {
                   <input type="text" required />
                 </div>
                 <div className="form-field">
+                  <label>Room No.</label>
+                  <input type="text" required />
+                </div>
+                <div className="form-field">
+                  <label>Bed No.</label>
+                  <input type="text" required />
+                </div>
+                <div className="form-field">
                   <label>Deposit Given Rs.</label>
                   <input type="text" required />
                 </div>
@@ -104,6 +120,28 @@ const AddPatientForm = ({ onClose }) => {
                 and accept the potential risks involved and will not hold the
                 hospital responsible for any outcomes arising during or after
                 these procedures.
+              </div>
+
+              <div className="form-approval">
+                <p>Send For Approval</p>
+
+                <label className="circle-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedRoles.includes("Doctor")}
+                    onChange={() => handleCheckboxChange("Doctor")}
+                  />
+                  <span className="custom-circle" /> Doctor
+                </label>
+
+                <label className="circle-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedRoles.includes("Admin")}
+                    onChange={() => handleCheckboxChange("Admin")}
+                  />
+                  <span className="custom-circle" /> Admin
+                </label>
               </div>
 
               <div className="form-group">
@@ -125,7 +163,7 @@ const AddPatientForm = ({ onClose }) => {
 
           <div className="modal-actions">
             <button type="submit" className="submit-btn">
-              Admit
+              Send
             </button>
           </div>
         </form>
