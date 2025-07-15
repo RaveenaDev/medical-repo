@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommonPanelMini from "../components/CommonPanelMini";
 import styles from "./SinglePatientDetail.module.scss";
 import { Plus, ChevronLeft } from "lucide-react";
 import PatientProfile from "./component/PatientProfile";
 import PatientPreviousRecord from "./component/records/PatientPreviousRecord.jsx";
 import { useNavigate } from "react-router-dom";
+import BillingDetails from "./component/BillingDetails.jsx";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const navigate = useNavigate();
@@ -14,6 +15,18 @@ const SinglePatientDetail = () => {
   const handleUpdateDiagnosis = () => {
     navigate("/doctor/consultation");
   };
+
+  const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
+
+  const openBilling = () => setActiveModal("billing");
+  const closeModal = () => setActiveModal(null);
   return (
     <main>
       <CommonPanelMini />
@@ -49,12 +62,42 @@ const SinglePatientDetail = () => {
             </div>
           </div>
           <div className={styles.headerRight}>
-            <button onClick={handleUpdateDiagnosis}>
+            <button className={styles.dischargeBtn}>Discharge</button>
+            <button
+              onClick={handleUpdateDiagnosis}
+              className={styles.diagnosisBtn}
+            >
               <Plus className={styles.plusIcon} />
               Update Diagnosis
             </button>
+            <button className={styles.billingBtn} onClick={openBilling}>
+              <img src="/assets/payment.svg" alt="" className={styles.icon} />
+              Billing Details
+            </button>
+            <button className={styles.printBtn}>
+              <img
+                src="/assets/Print-icon.svg"
+                alt=""
+                className={styles.icon}
+              />
+            </button>
           </div>
         </header>
+        <>
+          <div
+            className={styles["backdrop-overlay"]}
+            style={{ display: activeModal === "billing" ? "block" : "none" }}
+            onClick={closeModal}
+          />
+
+          <div
+            className={`${styles["billing-modal"]} ${
+              activeModal === "billing" ? styles["billing-modalOpen"] : ""
+            }`}
+          >
+            <BillingDetails onClose={closeModal} />
+          </div>
+        </>
 
         <section>
           {activeTab === "profile" ? (
