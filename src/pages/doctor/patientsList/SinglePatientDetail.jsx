@@ -105,7 +105,7 @@ const SinglePatientDetail = () => {
 
         <section>
           {activeTab === "profile" ? (
-            <PatientProfile />
+            <PatientProfile patientId={patientId}/>
           ) : (
             <PatientPreviousRecord />
           )}

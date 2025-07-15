@@ -6,10 +6,14 @@ import MedAdminRecord from "./MedAdminRecord";
 import Nursing from "./Nursing";
 import PastReportsAndDischarge from "./PastReportsAndDischarge";
 import UpdateProgress from "./form/UpdateProgress";
-const PatientProfile = () => {
+import {useDispatch} from "react-redux";
+import {getProgressTrackerDetails} from "../../../../components/State/Doctor/Action.js";
+const PatientProfile = ({patientId}) => {
   const [activeTab, setActiveTab] = useState("medical admin");
 
   const [activeModal, setActiveModal] = useState(null);
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
@@ -17,6 +21,10 @@ const PatientProfile = () => {
       document.body.style.overflow = "auto";
     };
   }, [activeModal]);
+
+  useEffect(() => {
+    dispatch(getProgressTrackerDetails(patientId))
+  }, [dispatch]);
 
   const openUpdateProgress = () => setActiveModal("update progress");
   const closeModal = () => setActiveModal(null);

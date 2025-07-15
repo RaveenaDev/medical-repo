@@ -26,7 +26,7 @@ import {
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
-  GET_PATIENTS,
+  GET_PATIENTS, GET_PROGRESS_TRACKER,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STAFF,
@@ -831,5 +831,27 @@ export const getAdmittedPatients = () => async (dispatch) => {
     dispatch({ type: GET_ADMITTED_PATIENTS, payload: data.patients });
   } catch (error) {
     console.error("Error getting admitted patients:", error);
+  }
+};
+
+export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getProgressTracker/${patientId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+    );
+
+    console.log("Progress Tracker: ",data)
+
+    dispatch({ type: GET_PROGRESS_TRACKER, payload: data.patients });
+  } catch (error) {
+    console.error("Error getting progress details:", error);
   }
 };
