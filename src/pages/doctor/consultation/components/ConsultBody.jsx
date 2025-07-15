@@ -132,7 +132,7 @@ const ConsultBody = ({ appointments }) => {
         completeData.currentMedications !== null ||
         completeData.diagnosisVitals !== null)
     ) {
-      console.log("Data for AI: ", completeData);
+      // console.log("Data for AI: ", completeData);
       dispatch(generatePrescriptionsWithAI(completeData));
     }
   }, [
@@ -438,6 +438,7 @@ const ConsultBody = ({ appointments }) => {
             {selectedComponent === "PerceptionAndMedicines" && (
               <PerceptionAndMedicines
                 patient={ongoingAppointment.patient}
+                completeData={completeData}
                 generatedPrescriptions={generatedPrescriptionsWithAI}
                 onConfirm={(perceptionData) => {
                   console.log(

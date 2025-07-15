@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./PerceptionAndMedicines.module.scss";
 import PNMLoader from "./PNMLoader";
-import { Check } from "lucide-react";
-import {useSelector} from "react-redux";
-const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
+import {useDispatch, useSelector} from "react-redux";
+import {generatePrescriptionsWithAI} from "../../../../components/State/Doctor/Action.js";
+const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions }) => {
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (generatedPrescriptions && Object.keys(generatedPrescriptions).length > 0) {
@@ -16,6 +17,11 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
 
   if (loading) {
     return <PNMLoader patient={patient} />;
+  }
+
+  const handleRegenerate = () => {
+    dispatch(generatePrescriptionsWithAI(completeData));
+    setLoading(true);
   }
   return (
     <div>
@@ -75,14 +81,14 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
           {/* row8 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Follow-Up:</span> {generatedPrescriptions?.aiGeneratedText.followUp}
+              <span className={styles.key}>Follow-Up:</span> {generatedPrescriptions?.aiGeneratedText.followUp.notes}
             </p>
           </div>
 
           {/* row9 */}
           <div className={styles.row9}>
             <button className={styles.row9Button}>Edit</button>
-            <button className={styles.row9Button}>Regenerate</button>
+            <button className={styles.row9Button} onClick={handleRegenerate}>Regenerate</button>
           </div>
 
           {/* Instruct */}
@@ -95,20 +101,22 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
+                {
+                  generatedPrescriptions?.aiGeneratedText.medications.map((medic, index) => (
+                      <div key={index} style={{display: 'flex', alignItems: 'flex-start', marginBottom: '4px'}}>
+                        <span style={{marginRight: '10px'}}>&#8226;</span>
+                        <p style={{margin: 0}}>{medic}</p>
+                      </div>
+                  ))
+                }
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                    src="/assets/Group.svg"
-                    alt=""
-                    className={styles.leftArrow}
-                    width={18}
+                      src="/assets/Group.svg"
+                      alt=""
+                      className={styles.leftArrow}
+                      width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -137,20 +145,22 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
+                {
+                  generatedPrescriptions?.aiGeneratedText.injectionsTherapies.map((inject, index) => (
+                      <div key={index} style={{display: 'flex', alignItems: 'flex-start', marginBottom: '4px'}}>
+                        <span style={{marginRight: '10px'}}>&#8226;</span>
+                        <p style={{margin: 0}}>{inject}</p>
+                      </div>
+                  ))
+                }
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                    src="/assets/Group.svg"
-                    alt=""
-                    className={styles.leftArrow}
-                    width={18}
+                      src="/assets/Group.svg"
+                      alt=""
+                      className={styles.leftArrow}
+                      width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -179,20 +189,20 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
+                {generatedPrescriptions?.aiGeneratedText.nonDrugRecommendations.map((nonDrug, index) => (
+                    <div key={index} style={{display: 'flex'}}>
+                      <span style={{marginRight: '10px'}}>&#8226;</span>
+                      <p style={{margin: 0}}>{nonDrug}</p>
+                    </div>
+                ))}
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                    src="/assets/Group.svg"
-                    alt=""
-                    className={styles.leftArrow}
-                    width={18}
+                      src="/assets/Group.svg"
+                      alt=""
+                      className={styles.leftArrow}
+                      width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -220,20 +230,22 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
-                <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
-                </p>
+                {
+                  generatedPrescriptions?.aiGeneratedText.lifestyle.map((life, index) => (
+                      <div key={index} style={{display: 'flex', alignItems: 'flex-start', marginBottom: '4px'}}>
+                        <span style={{marginRight: '10px'}}>&#8226;</span>
+                        <p style={{margin: 0}}>{life}</p>
+                      </div>
+                  ))
+                }
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                    src="/assets/Group.svg"
-                    alt=""
-                    className={styles.leftArrow}
-                    width={18}
+                      src="/assets/Group.svg"
+                      alt=""
+                      className={styles.leftArrow}
+                      width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -263,10 +275,10 @@ const PerceptionAndMedicines = ({ patient,generatedPrescriptions }) => {
             <div className={styles.row11}>
               <div>
                 <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                  <span>&#8226; </span>&nbsp; Review Date: {generatedPrescriptions?.aiGeneratedText.followUp.reviewDate}
                 </p>
                 <p>
-                  <span>&#8226; </span>&nbsp; Metformin 500mg – 1-0-1 – 30 days
+                  <span>&#8226; </span>&nbsp; Notes: {generatedPrescriptions?.aiGeneratedText.followUp.notes}
                 </p>
               </div>
               <div className={styles.iconBtn}>
