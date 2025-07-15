@@ -13,7 +13,7 @@ const PatientCard = ({ patient }) => {
         <div className="patientHeader">
           <div className="patientDetailsContainer">
             <img
-              src={patient.avatar}
+              src='https://randomuser.me/api/portraits/women/12.jpg'
               alt={`${patient.name} Avatar`}
               className="patientAvatar"
             />
@@ -24,22 +24,22 @@ const PatientCard = ({ patient }) => {
               </p>
             </div>
           </div>
-          <div className={`statusDot ${patient.status}`}>
-            {patient.status === "Critical" && <div className="innerCircle" />}
+          <div className={`statusDot ${patient.admissionStatus}`}>
+            {patient.admissionStatus === "Critical" && <div className="innerCircle" />}
           </div>
         </div>
         <div className="patientCardDetails">
           <div>
             <div> Upcoming Appointments: </div>
-            <div className="value">{patient["Upcoming Appointments"]}</div>
+            <div className="value">19 Feb 2025</div>
           </div>
           <div>
             <div> Last Data Received: </div>
-            <div className="value">{patient["Last Data Received"]}</div>
+            <div className="value">24 Jan 2025</div>
           </div>
           <div>
             <div> Major Issue: </div>
-            <div className="value">{patient["Major Issue"]}</div>
+            <div className="value">Follow-up-Required</div>
           </div>
         </div>
         <div className="actionButtons">

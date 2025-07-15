@@ -9,7 +9,7 @@ import {
   CREATE_NEW_EVENT,
   DELETE_DOCTOR_NOTE,
   EDIT_DOCTOR_NOTE,
-  GENERATE_PRESCRIPTIONS_WITH_AI, GET_APPOINTMENT_HISTORY,
+  GENERATE_PRESCRIPTIONS_WITH_AI, GET_ADMITTED_PATIENTS, GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -809,5 +809,27 @@ export const getAppointmentHistory = () => async (dispatch) => {
     dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data });
   } catch (error) {
     console.error("Error Updating inventory item:", error);
+  }
+};
+
+export const getAdmittedPatients = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/admittedPatients`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+    );
+
+    console.log("Admitted Patients: ",data)
+
+    dispatch({ type: GET_ADMITTED_PATIENTS, payload: data.patients });
+  } catch (error) {
+    console.error("Error getting admitted patients:", error);
   }
 };

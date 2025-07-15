@@ -5,8 +5,10 @@ import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import PatientCard from "./component/modals/PatientCard.jsx";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import AddPatientForm from "./component/form/AddPatientForm.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {getAdmittedPatients} from "../../../components/State/Doctor/Action.js";
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -58,84 +60,92 @@ const PatientsList = () => {
     },
   ];
 
-  const patientsAdmitted = [
-    {
-      name: "Alice",
-      age: "28",
-      gender: "Female",
-      "Upcoming Appointments": "19 Feb 2025",
-      "Last Data Received": "24 Jan 2025",
-      "Major Issue": "Follow-up-Required",
-      status: "Critical",
-      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-    {
-      name: "John",
-      age: "45",
-      gender: "Male",
-      "Upcoming Appointments": "22 Feb 2025",
-      "Last Data Received": "20 Jan 2025",
-      "Major Issue": "Severe Chest Pain",
-      status: "Admitted",
-      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-    {
-      name: "Sophie",
-      age: "33",
-      gender: "Female",
-      "Upcoming Appointments": "25 Feb 2025",
-      "Last Data Received": "21 Jan 2025",
-      "Major Issue": "Regular Checkup",
-      status: "Follow-up",
-      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-    {
-      name: "Raj",
-      age: "39",
-      gender: "Male",
-      "Upcoming Appointments": "27 Feb 2025",
-      "Last Data Received": "19 Jan 2025",
-      "Major Issue": "Surgery Recovery",
-      status: "Critical",
-      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-    {
-      name: "Emily",
-      age: "29",
-      gender: "Female",
-      "Upcoming Appointments": "20 Feb 2025",
-      "Last Data Received": "18 Jan 2025",
-      "Major Issue": "Post-natal Check",
-      status: "Admitted",
-      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-    {
-      name: "Karan",
-      age: "50",
-      gender: "Male",
-      "Upcoming Appointments": "28 Feb 2025",
-      "Last Data Received": "22 Jan 2025",
-      "Major Issue": "Diabetes Management",
-      status: "Follow-up",
-      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-    {
-      name: "Tina",
-      age: "31",
-      gender: "Female",
-      "Upcoming Appointments": "21 Feb 2025",
-      "Last Data Received": "17 Jan 2025",
-      "Major Issue": "Blood Pressure",
-      status: "Admitted",
-      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-  ];
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getAdmittedPatients())
+  }, [dispatch]);
+
+  const patientsAdmitted = useSelector((store) => store.doctor.admittedPatients)
+
+  // const patientsAdmitted = [
+  //   {
+  //     name: "Alice",
+  //     age: "28",
+  //     gender: "Female",
+  //     "Upcoming Appointments": "19 Feb 2025",
+  //     "Last Data Received": "24 Jan 2025",
+  //     "Major Issue": "Follow-up-Required",
+  //     status: "Critical",
+  //     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+  //   },
+  //   {
+  //     name: "John",
+  //     age: "45",
+  //     gender: "Male",
+  //     "Upcoming Appointments": "22 Feb 2025",
+  //     "Last Data Received": "20 Jan 2025",
+  //     "Major Issue": "Severe Chest Pain",
+  //     status: "Admitted",
+  //     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+  //   },
+  //   {
+  //     name: "Sophie",
+  //     age: "33",
+  //     gender: "Female",
+  //     "Upcoming Appointments": "25 Feb 2025",
+  //     "Last Data Received": "21 Jan 2025",
+  //     "Major Issue": "Regular Checkup",
+  //     status: "Follow-up",
+  //     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+  //   },
+  //   {
+  //     name: "Raj",
+  //     age: "39",
+  //     gender: "Male",
+  //     "Upcoming Appointments": "27 Feb 2025",
+  //     "Last Data Received": "19 Jan 2025",
+  //     "Major Issue": "Surgery Recovery",
+  //     status: "Critical",
+  //     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+  //   },
+  //   {
+  //     name: "Emily",
+  //     age: "29",
+  //     gender: "Female",
+  //     "Upcoming Appointments": "20 Feb 2025",
+  //     "Last Data Received": "18 Jan 2025",
+  //     "Major Issue": "Post-natal Check",
+  //     status: "Admitted",
+  //     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+  //   },
+  //   {
+  //     name: "Karan",
+  //     age: "50",
+  //     gender: "Male",
+  //     "Upcoming Appointments": "28 Feb 2025",
+  //     "Last Data Received": "22 Jan 2025",
+  //     "Major Issue": "Diabetes Management",
+  //     status: "Follow-up",
+  //     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+  //   },
+  //   {
+  //     name: "Tina",
+  //     age: "31",
+  //     gender: "Female",
+  //     "Upcoming Appointments": "21 Feb 2025",
+  //     "Last Data Received": "17 Jan 2025",
+  //     "Major Issue": "Blood Pressure",
+  //     status: "Admitted",
+  //     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+  //   },
+  // ];
 
   const [filter, setFilter] = useState("Total");
 
   const filteredPatients = patientsAdmitted.filter((patient) => {
     if (filter === "Total") return true;
-    return patient.status === filter;
+    return patient.admissionStatus === filter;
   });
 
   const [currentPage, setCurrentPage] = useState(1);

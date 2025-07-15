@@ -87,7 +87,7 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions })
 
           {/* row9 */}
           <div className={styles.row9}>
-            <button className={styles.row9Button}>Edit</button>
+            {/*<button className={styles.row9Button}>Edit</button>*/}
             <button className={styles.row9Button} onClick={handleRegenerate}>Regenerate</button>
           </div>
 
