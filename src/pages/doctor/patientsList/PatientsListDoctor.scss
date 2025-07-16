@@ -111,10 +111,22 @@
       }
     }
 
-    .toAdmitList {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.5rem;
+    .toAdmitSliderWrapper {
+      margin: 20px 0;
+
+      .slick-slide-card {
+        padding: 0 10px;
+      }
+
+      .slick-slide > div {
+        display: flex;
+        justify-content: center;
+      }
+
+      .slick-prev,
+      .slick-next {
+        z-index: 1;
+      }
 
       .patientCard {
         background: #f2f5ffb2;
