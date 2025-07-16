@@ -1,7 +1,7 @@
 import {
   APPROVE_APPOINTMENT, CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT, GENERATE_PRESCRIPTIONS_WITH_AI, GET_ADMITTED_PATIENTS,
+  CREATE_NEW_EVENT, GENERATE_PRESCRIPTIONS_WITH_AI, GET_ADMITTED_PATIENTS, GET_ALL_DOCTORS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -26,7 +26,7 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT,
+  REJECT_APPOINTMENT, SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 
 const initialState = {
@@ -68,7 +68,8 @@ const initialState = {
   appointmentsByDate: [],
   inventory: [],
   generatedPrescriptionsByAI: null,
-  admittedPatients: []
+  admittedPatients: [],
+  allDoctors: []
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -283,6 +284,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         admittedPatients: action.payload
+      };
+
+    case GET_ALL_DOCTORS:
+      return {
+        ...state,
+        allDoctors: action.payload
       };
 
     default:

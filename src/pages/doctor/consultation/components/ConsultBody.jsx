@@ -34,6 +34,8 @@ const ConsultBody = ({ appointments }) => {
     consultationData: null
   })
 
+  const [modalData, setModalData] = useState(null);
+
   const dummyPatient = [
     {
       id: 1,
@@ -205,6 +207,8 @@ const ConsultBody = ({ appointments }) => {
     console.log("Final: ",updatedFinal)
 
     dispatch(submitConsultation(updatedFinal))
+
+    refreshPage();
   };
 
   const handleRefer = () => {
@@ -212,8 +216,15 @@ const ConsultBody = ({ appointments }) => {
   };
 
   const handleSchedule = () => {
-    console.log("DATA: ", completeData);
+
+    const updatedFinal = {
+      ...final,
+      action: 'schedule',
+      consultationData: completeData
+    }
+    console.log("Final: ", updatedFinal);
     setActiveModal("scheduleTreatment");
+    setModalData(updatedFinal)
   };
 
   const handleAddSection = (sectionName) => {
@@ -230,6 +241,11 @@ const ConsultBody = ({ appointments }) => {
     );
   }
 
+  const refreshPage = () => {
+    // Reload data, or use `window.location.reload()` if needed
+    window.location.reload(); // not preferred, but simple
+  };
+
   return (
     <div>
       {/* Header 2 */}
@@ -241,13 +257,24 @@ const ConsultBody = ({ appointments }) => {
           </p>
           <p className={styles["pat-status-l"]}>{ongoingAppointment.status}</p>
         </div>
-        <div className={styles["h2-right"]} onClick={openNextAppointment}>
-          <p className={styles["pat-num-r"]}>{nextAppointment.caseId}</p>
-          <p className={styles["pat-name-r"]}>
-            {nextAppointment.patient?.name}
-          </p>
-          <p className={styles["pat-status-r"]}>Next</p>
-        </div>
+        {
+          nextAppointment ? (
+              <div className={styles["h2-right"]} onClick={openNextAppointment}>
+                <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
+                <p className={styles["pat-name-r"]}>
+                  {nextAppointment.patient?.name}
+                </p>
+                <p className={styles["pat-status-r"]}>Next</p>
+              </div>
+          ) :
+              (
+                  <div style={{display:'flex',justifyContent:'center'}} className={styles["h2-right"]}>
+                    <p className={styles["pat-name-r"]}>
+                      No next appointments
+                    </p>
+                  </div>
+              )
+        }
       </div>
 
       {/* Main Panel */}
@@ -255,10 +282,10 @@ const ConsultBody = ({ appointments }) => {
         {/* Left Panel */}
         <div className={styles["left-panel"]}>
           <div
-            className={`${styles["lp-1"]} ${
-              selectedComponent === "PatientInfo" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("PatientInfo")}
+              className={`${styles["lp-1"]} ${
+                  selectedComponent === "PatientInfo" ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent("PatientInfo")}
           >
             <img
               src={ongoingPatients[0].profileURL}
@@ -399,6 +426,8 @@ const ConsultBody = ({ appointments }) => {
               <ScheduleTreatment
                 onClose={closeModal}
                 onAddSection={handleAddSection}
+                modalData={modalData}
+                onSuccess={refreshPage}
               />
             </div>
           </>

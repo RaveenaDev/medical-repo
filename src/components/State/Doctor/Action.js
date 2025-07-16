@@ -9,7 +9,7 @@ import {
   CREATE_NEW_EVENT,
   DELETE_DOCTOR_NOTE,
   EDIT_DOCTOR_NOTE,
-  GENERATE_PRESCRIPTIONS_WITH_AI, GET_ADMITTED_PATIENTS, GET_APPOINTMENT_HISTORY,
+  GENERATE_PRESCRIPTIONS_WITH_AI, GET_ADMITTED_PATIENTS, GET_ALL_DOCTORS, GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -660,7 +660,7 @@ export const getAppointmentByDate =
         },
       });
 
-      // console.log("All Appointments below: ", data);
+      console.log("All Appointments below: ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);
@@ -856,7 +856,7 @@ export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
   }
 };
 
-export const submitConsultation = (consultationData) => async (dispatch) => {
+export const submitConsultation = (consultationData,onSuccess,onClose) => async (dispatch) => {
       try {
         const token = localStorage.getItem("jwt");
 
@@ -873,7 +873,31 @@ export const submitConsultation = (consultationData) => async (dispatch) => {
         console.log("Consultation from Backend : ", data);
 
         dispatch({ type: SUBMIT_CONSULTATION, payload: data });
+        onSuccess();
+        onClose();
       } catch (error) {
         console.log(error);
       }
     };
+
+export const getAllDoctors = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getDoctorsByHospital`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+    );
+
+    console.log("Doctors: ",data.doctors)
+
+    dispatch({ type: GET_ALL_DOCTORS, payload: data.doctors });
+  } catch (error) {
+    console.error("Error getting admitted patients:", error);
+  }
+};

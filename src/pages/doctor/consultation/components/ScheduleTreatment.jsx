@@ -1,8 +1,10 @@
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import styles from "./ScheduleTreatment.module.scss";
-import { useState } from "react";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {getAllDoctors, submitConsultation} from "../../../../components/State/Doctor/Action.js";
 
-const ScheduleTreatment = ({ onClose }) => {
+const ScheduleTreatment = ({ onClose,modalData,onSuccess }) => {
   // Dropdown 1: Date Range
   const treatmentOptions = [
     "Consultation",
@@ -10,23 +12,62 @@ const ScheduleTreatment = ({ onClose }) => {
     "Surgical Procedure",
   ];
 
+  const [openDoctorDropdown, setOpenDoctorDropdown] = useState(false);
+
   const [treatment, setTreatment] = useState({
     patientName: "",
     age: "",
-    doctorAssigned: "",
-    admitPatient: "no",
+    assignedDoctor: "",
+    admissionRecommendation: "false",
     treatmentType: "",
-    date: "",
-    time: "",
-    doctorNotes: ""
+    treatmentDate: "",
+    availableSlot: "",
+    note: ""
   });
 
   const [openTreatment, setOpenTreatment] = useState(false);
   const [selectedTreatment, setSelectedTreatment] = useState("");
+  console.log("Modal Data: ",modalData)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getAllDoctors())
+  }, [dispatch]);
+
+  const doctors = useSelector((store) => store.doctor.allDoctors)
 
   const handleSubmit = () => {
-    console.log("Final Treatment Data: ", treatment);
-    // axios.post('/api/schedule', treatment) or fetch(...)
+    const finalData = {
+      ...modalData,
+      treatment: treatment
+    }
+    // console.log("Final Schedule Treatment Data: ", finalData);
+    dispatch(submitConsultation(finalData,onSuccess,onClose))
+  };
+
+  const formatTo12Hour = (time24) => {
+    if (!time24) return "";
+    const [hour, minute] = time24.split(":");
+    const hourNum = parseInt(hour, 10);
+    const ampm = hourNum >= 12 ? "PM" : "AM";
+    const hour12 = hourNum % 12 || 12;
+    return `${hour12}:${minute} ${ampm}`;
+  };
+
+  const convert12To24 = (time12) => {
+    if (!time12) return "";
+    const [time, modifier] = time12.split(" ");     // e.g. ["11:30", "AM"]
+    let [hours, minutes] = time.split(":");         // e.g. ["11", "30"]
+
+    if (modifier === "PM" && hours !== "12") {
+      hours = String(parseInt(hours, 10) + 12);
+    }
+    if (modifier === "AM" && hours === "12") {
+      hours = "00";
+    }
+
+    return `${hours.padStart(2, "0")}:${minutes}`;  // e.g. "11:30"
   };
 
   return (
@@ -72,20 +113,46 @@ const ScheduleTreatment = ({ onClose }) => {
               <p>Admit Patient</p>
             </div>
             <div className={styles.piValue}>
-              <input
-                  type="text"
-                  className={styles.input}
-                  value={treatment.doctorAssigned}
-                  onChange={(e) => setTreatment({...treatment, doctorAssigned: e.target.value})}
-                  />
+              <div className={styles.dropdown}>
+                <button
+                    className={styles.trigger}
+                    onClick={() => setOpenDoctorDropdown((prev) => !prev)}
+                >
+                  <p>
+                    {treatment.assignedDoctor
+                        ? doctors.find((d) => d._id === treatment.assignedDoctor)?.name
+                        : "Select Doctor"}
+                  </p>
+                  <span className={styles.arrow}>
+      {openDoctorDropdown ? <ChevronUp/> : <ChevronDown/>}
+    </span>
+                </button>
+
+                {openDoctorDropdown && (
+                    <ul className={styles.menu}>
+                      {doctors.map((doc) => (
+                          <li
+                              key={doc._id}
+                              className={styles.item}
+                              onClick={() => {
+                                setTreatment({...treatment, assignedDoctor: doc._id});
+                                setOpenDoctorDropdown(false);
+                              }}
+                          >
+                            {doc.name}
+                          </li>
+                      ))}
+                    </ul>
+                )}
+              </div>
               <div className={styles.radioGroup}>
                 <label>
                   <input
                       type="radio"
                       name="admit"
-                      value="yes"
-                      checked={treatment.admitPatient === "yes"}
-                      onChange={(e) => setTreatment({...treatment, admitPatient: e.target.value})}
+                      value="true"
+                      checked={treatment.admissionRecommendation === "true"}
+                      onChange={(e) => setTreatment({...treatment, admissionRecommendation: e.target.value})}
                   />
                   Yes
                 </label>
@@ -93,9 +160,9 @@ const ScheduleTreatment = ({ onClose }) => {
                   <input
                       type="radio"
                       name="admit"
-                      value="no"
-                      checked={treatment.admitPatient === "no"}
-                      onChange={(e) => setTreatment({...treatment, admitPatient: e.target.value})}
+                      value="false"
+                      checked={treatment.admissionRecommendation === "false"}
+                      onChange={(e) => setTreatment({...treatment, admissionRecommendation: e.target.value})}
                   />
                   No
                 </label>
@@ -110,11 +177,7 @@ const ScheduleTreatment = ({ onClose }) => {
             <div className={styles.dropdown}>
               <button
                 className={styles.trigger}
-                onClick={() => {
-                  setTreatment({ ...treatment, treatmentType: option });
-                  setSelectedTreatment(option); // optional for display
-                  setOpenTreatment(false);
-                }}
+                onClick={() => setOpenTreatment((prev) => !prev)}
               >
                 <p
                   className={
@@ -136,7 +199,8 @@ const ScheduleTreatment = ({ onClose }) => {
                         selectedTreatment === option ? styles.active : ""
                       }`}
                       onClick={() => {
-                        setSelectedTreatment(option);
+                        setTreatment({ ...treatment, treatmentType: option });
+                        setSelectedTreatment(option); // optional for display
                         setOpenTreatment(false);
                       }}
                     >
@@ -153,8 +217,8 @@ const ScheduleTreatment = ({ onClose }) => {
               <input
                   className={styles.input2}
                   type="date"
-                  value={treatment.date}
-                  onChange={(e) => setTreatment({...treatment, date: e.target.value})}
+                  value={treatment.treatmentDate}
+                  onChange={(e) => setTreatment({...treatment, treatmentDate: e.target.value})}
               />
             </div>
             <div className={styles.time}>
@@ -162,23 +226,30 @@ const ScheduleTreatment = ({ onClose }) => {
               <input
                   type="time"
                   className={styles.input2}
-                  value={treatment.time}
-                  onChange={(e) => setTreatment({...treatment, time: e.target.value})}
+                  value={
+                    treatment.availableSlot
+                        ? convert12To24(treatment.availableSlot)
+                        : ""
+                  }
+                  onChange={(e) => {
+                    const formattedTime = formatTo12Hour(e.target.value); // e.g., "11:30 AM"
+                    setTreatment({...treatment, availableSlot: formattedTime});
+                  }}
               />
             </div>
           </div>
 
           <div className={styles.doctorNotes}>
             <label htmlFor="notes" className={styles.label}>
-            Doctor Notes
+              Doctor Notes
             </label>
             <textarea
-              name="notes"
-              id="notes"
-              placeholder="Additional Instruction or Notes"
-              rows={4}
-              value={treatment.doctorNotes}
-              onChange={(e) => setTreatment({ ...treatment, doctorNotes: e.target.value })}
+                name="notes"
+                id="notes"
+                placeholder="Additional Instruction or Notes"
+                rows={4}
+                value={treatment.note}
+                onChange={(e) => setTreatment({...treatment, note: e.target.value})}
             />
           </div>
         </div>
