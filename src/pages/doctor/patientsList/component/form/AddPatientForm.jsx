@@ -1,10 +1,59 @@
 import React, { useState } from "react";
 import "./AddPatientForm.scss";
+import { createAdmissionRequest } from "../../../../../components/State/Doctor/Action";
+import { useDispatch } from "react-redux";
 
 const AddPatientForm = ({ onClose }) => {
+  const dispatch = useDispatch();
+  const [form, setForm] = useState({
+    patientName: "",
+    patientId: "",
+    contactNo: "",
+    address: "",
+    age: "",
+    gender: "",
+    emergencyContact: "",
+    emergencyContactName: "",
+    doctorSignature: "",
+    witness: "",
+    patientSignature: "",
+    date: "",
+    roomNo: "",
+    bedNo: "",
+    deposit: "",
+  });
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Handle form submission logic
+    if (selectedRoles.length === 0) {
+      alert("Please select at least one approval role (Doctor or Admin).");
+      return;
+    }
+    const sendToValue =
+      selectedRoles.includes("Doctor") && selectedRoles.includes("Admin")
+        ? "Both"
+        : selectedRoles[0] || "";
+
+    const payload = {
+      patientPatId: form.patientId,
+      sendTo: sendToValue,
+      admissionDetails: {
+        name: form.patientName,
+        contact: form.contactNo,
+        address: form.address,
+        age: parseInt(form.age),
+        gender: form.gender,
+        emergencyContact: form.emergencyContact,
+        emergencyName: form.emergencyContactName,
+        admissionDate: form.date,
+        room: form.roomNo,
+        bed: form.bedNo,
+        deposit: parseFloat(form.deposit),
+      },
+    };
+
+    dispatch(createAdmissionRequest(payload));
+
     onClose();
   };
   const [selectedRoles, setSelectedRoles] = useState([]);
@@ -46,41 +95,95 @@ const AddPatientForm = ({ onClose }) => {
               <div className="form-group">
                 <div className="form-field">
                   <label>Patient Name</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.patientName}
+                    onChange={(e) =>
+                      setForm({ ...form, patientName: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-field">
                   <label>Patient ID</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.patientId}
+                    onChange={(e) =>
+                      setForm({ ...form, patientId: e.target.value })
+                    }
+                    required
+                  />
                 </div>
               </div>
               <div className="form-group">
                 <div className="form-field">
                   <label>Contact No.</label>
-                  <input type="text" required />
+                  <input
+                    type="Number"
+                    value={form.contactNo}
+                    onChange={(e) =>
+                      setForm({ ...form, contactNo: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-field">
                   <label>Address</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    required
+                    value={form.address}
+                    onChange={(e) =>
+                      setForm({ ...form, address: e.target.value })
+                    }
+                  />
                 </div>
               </div>
               <div className="form-group">
                 <div className="form-field">
                   <label>Age</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    required
+                    value={form.age}
+                    onChange={(e) => setForm({ ...form, age: e.target.value })}
+                  />
                 </div>
                 <div className="form-field">
                   <label>Gender</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.gender}
+                    onChange={(e) =>
+                      setForm({ ...form, gender: e.target.value })
+                    }
+                    required
+                  />
                 </div>
               </div>
               <div className="form-group">
                 <div className="form-field">
                   <label>Emergency Contact</label>
-                  <input type="text" required />
+                  <input
+                    type="number"
+                    value={form.emergencyContact}
+                    onChange={(e) =>
+                      setForm({ ...form, emergencyContact: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-field">
                   <label>Emergency Contact Name</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.emergencyContactName}
+                    onChange={(e) =>
+                      setForm({ ...form, emergencyContactName: e.target.value })
+                    }
+                    required
+                  />
                 </div>
               </div>
             </div>
@@ -97,19 +200,44 @@ const AddPatientForm = ({ onClose }) => {
               <div className="form-group">
                 <div className="form-field">
                   <label>Date</label>
-                  <input type="text" required />
+                  <input
+                    type="date"
+                    value={form.date}
+                    onChange={(e) => setForm({ ...form, date: e.target.value })}
+                    required
+                  />
                 </div>
                 <div className="form-field">
                   <label>Room No.</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.roomNo}
+                    onChange={(e) =>
+                      setForm({ ...form, roomNo: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-field">
                   <label>Bed No.</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.bedNo}
+                    onChange={(e) =>
+                      setForm({ ...form, bedNo: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-field">
                   <label>Deposit Given Rs.</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.deposit}
+                    onChange={(e) =>
+                      setForm({ ...form, deposit: e.target.value })
+                    }
+                  />
                 </div>
               </div>
 
@@ -147,15 +275,33 @@ const AddPatientForm = ({ onClose }) => {
               <div className="form-group">
                 <div className="form-field">
                   <label>Doctor Signature</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.doctorSignature}
+                    onChange={(e) =>
+                      setForm({ ...form, doctorSignature: e.target.value })
+                    }
+                  />
                 </div>
                 <div className="form-field">
                   <label>Witness</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.witness}
+                    onChange={(e) =>
+                      setForm({ ...form, witness: e.target.value })
+                    }
+                  />
                 </div>
                 <div className="form-field">
                   <label>Patient Signature</label>
-                  <input type="text" required />
+                  <input
+                    type="text"
+                    value={form.patientSignature}
+                    onChange={(e) =>
+                      setForm({ ...form, patientSignature: e.target.value })
+                    }
+                  />
                 </div>
               </div>
             </div>
