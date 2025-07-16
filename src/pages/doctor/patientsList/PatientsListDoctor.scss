@@ -1,3 +1,4 @@
+@use "sass:color";
 .patientsListContainer {
   margin-top: 0.25rem;
   margin-bottom: 2rem;
@@ -85,14 +86,14 @@
         cursor: pointer;
 
         &:hover {
-          background-color: darken(#25307f, 5%);
+          background-color: color.adjust(#25307f, $lightness: -5%);
         }
       }
     }
   }
 
   .toAdmit {
-    background: #f2f5ff;
+    background: #ffffff;
     margin-top: 0.5rem;
     padding: 0.75rem;
 
@@ -116,71 +117,85 @@
       margin-top: 0.5rem;
 
       .patientCard {
-        background: #faf5f9;
+        background: #f2f5ffb2;
         border-radius: 10px;
         padding: 1rem;
         display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .card_upper {
+          display: flex;
+          .patientInfo {
+            .patientDetailsContainer {
+              display: flex;
+              align-items: center;
 
-        .patientInfo {
-          .patientDetailsContainer {
-            display: flex;
-            align-items: center;
-
-            .patientAvatar {
-              width: 45px;
-              height: 45px;
-              border-radius: 50%;
-              background-color: #e0e0e0; // Placeholder for avatar
-              margin-right: 10px;
+              .patientAvatar {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                background-color: #e0e0e0; // Placeholder for avatar
+                margin-right: 10px;
+              }
+              .patientName {
+                font-family: "Karla", "sans-serif";
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                vertical-align: middle;
+                color: #000000;
+                margin-bottom: 5px;
+              }
+              .patientAge {
+                font-family: "Karla", "sans-serif";
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                vertical-align: middle;
+                color: #333333;
+              }
             }
-            .patientName {
+            .patientDetails {
+              margin-top: 0.75rem;
+              margin-left: 6px;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
               font-family: "Karla", "sans-serif";
-              font-weight: 600;
-              font-size: 16px;
-              line-height: 100%;
-              letter-spacing: 0%;
-              vertical-align: middle;
-              color: #000000;
-              margin-bottom: 5px;
-            }
-            .patientAge {
-              font-family: "Karla", "sans-serif";
-              font-weight: 400;
+              font-weight: 500;
               font-size: 14px;
               line-height: 100%;
               letter-spacing: 0%;
               vertical-align: middle;
-              color: #333333;
+
+              .value {
+                font-family: "Karla", "sans-serif";
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                vertical-align: middle;
+              }
             }
           }
-          .patientDetails {
-            margin-top: 0.75rem;
-            margin-left: 6px;
+          .actionButtons {
             display: flex;
-            flex-direction: column;
             gap: 10px;
-            font-family: "Karla", "sans-serif";
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 100%;
-            letter-spacing: 0%;
-            vertical-align: middle;
-
-            .value {
-              font-family: "Karla", "sans-serif";
-              font-weight: 400;
-              font-size: 13px;
-              line-height: 100%;
-              letter-spacing: 0%;
-              vertical-align: middle;
-            }
+            cursor: pointer;
           }
         }
-
-        .actionButtons {
+        .admit_btn_container {
           display: flex;
-          gap: 10px;
-          cursor: pointer;
+          align-items: center;
+          justify-content: center;
+        }
+        .admit_btn {
+          padding: 5px 10px;
+          font-size: 14px;
+          background: #dae4ff;
+          color: #333333;
         }
       }
     }
