@@ -4,7 +4,9 @@ import styles from "./Refer.module.scss";
 import { Box, TextField } from "@mui/material";
 import { fontSize, styled } from "@mui/system";
 
-const Refer = ({ onClose,handleRefer }) => {
+const Refer = ({ onClose,modalData,onSuccess }) => {
+
+  console.log("Modal Data: ",modalData)
   const [selectedTab, setSelectedTab] = useState("internal referral");
 
   const departmentOptions = ["dep option 1", "dep option 2", " dep option 3"];
@@ -81,7 +83,8 @@ const Refer = ({ onClose,handleRefer }) => {
 
   const handleSubmit = () => {
     console.log("Submitted...");
-    handleRefer();
+    onClose();
+    onSuccess();
   }
 
   return (

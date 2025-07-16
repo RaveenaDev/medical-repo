@@ -34,6 +34,7 @@ export const Consultation = () => {
   };
 
   const [activeView, setActiveView] = useState("consult");
+  const [shouldRefetch, setShouldRefetch] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -41,8 +42,12 @@ export const Consultation = () => {
     const startDate = dayjs(selectedDate).startOf("day").toISOString();
     const endDate = dayjs(selectedDate).endOf("day").toISOString();
 
-    dispatch(getAppointmentByDate(startDate, endDate));
-  }, [dispatch, selectedDate]);
+    if (shouldRefetch || selectedDate) {
+      dispatch(getAppointmentByDate(startDate, endDate));
+      if (shouldRefetch) setShouldRefetch(false); // reset after triggering
+    }
+
+  }, [dispatch, selectedDate, shouldRefetch]);
 
   const appointments = useSelector((store) => store.doctor.appointmentsByDate);
 
@@ -122,7 +127,7 @@ export const Consultation = () => {
           </DndProvider>
         )}
         {activeView === "consult" && (
-          <ConsultBody appointments={appointments} />
+          <ConsultBody appointments={appointments} onSuccess={() => setShouldRefetch(true)}/>
         )}
       </div>
     </div>

@@ -16,7 +16,7 @@ import {generatePrescriptionsWithAI, submitConsultation} from "../../../../compo
 import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 
-const ConsultBody = ({ appointments }) => {
+const ConsultBody = ({ appointments,onSuccess}) => {
   const [completeData, setCompleteData] = useState({
     medicalHistory: null,
     currentMedications: null,
@@ -170,6 +170,8 @@ const ConsultBody = ({ appointments }) => {
     );
   }
 
+  console.log("App: ",appointments)
+
   const openComplete = () => setActiveModal("complete");
   const openRefer = () => setActiveModal("refer");
   const openNextAppointment = () => setActiveModal("nextAppointment");
@@ -208,11 +210,19 @@ const ConsultBody = ({ appointments }) => {
 
     dispatch(submitConsultation(updatedFinal))
 
-    refreshPage();
+    onSuccess();
   };
 
   const handleRefer = () => {
-    console.log("DATA: ", completeData);
+
+    const updatedFinal = {
+      ...final,
+      action: 'refer',
+      consultationData: completeData
+    }
+    // console.log("Final: ", updatedFinal);
+    setActiveModal("refer")
+    setModalData(updatedFinal)
   };
 
   const handleSchedule = () => {
@@ -240,11 +250,6 @@ const ConsultBody = ({ appointments }) => {
       </div>
     );
   }
-
-  const refreshPage = () => {
-    // Reload data, or use `window.location.reload()` if needed
-    window.location.reload(); // not preferred, but simple
-  };
 
   return (
     <div>
@@ -367,7 +372,7 @@ const ConsultBody = ({ appointments }) => {
               <CircleCheck size={15} />
               <p>Complete</p>
             </button>
-            <button className={styles["lp-8-refBtn"]} onClick={openRefer}>
+            <button className={styles["lp-8-refBtn"]} onClick={handleRefer}>
               <img src="/assets/healthicons_referral.svg" sizes={""} alt="" />
               <p>Refer</p>
             </button>
@@ -393,7 +398,7 @@ const ConsultBody = ({ appointments }) => {
           <>
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["refer-modal"]}>
-              <Refer onClose={closeModal} handleRefer={handleRefer} />
+              <Refer onClose={closeModal} modalData={modalData} onSuccess={onSuccess}/>
             </div>
           </>
         )}
@@ -427,7 +432,7 @@ const ConsultBody = ({ appointments }) => {
                 onClose={closeModal}
                 onAddSection={handleAddSection}
                 modalData={modalData}
-                onSuccess={refreshPage}
+                onSuccess={onSuccess}
               />
             </div>
           </>
