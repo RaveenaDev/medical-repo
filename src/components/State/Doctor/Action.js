@@ -3,13 +3,17 @@ import { API_URL } from "../../Config/api.js";
 import {
   ADD_INVENTORY_ITEM,
   APPROVE_APPOINTMENT,
+  CREATE_ADMISSION_REQUEST,
   CREATE_CATEGORY,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_EVENT,
   DELETE_DOCTOR_NOTE,
   EDIT_DOCTOR_NOTE,
-  GENERATE_PRESCRIPTIONS_WITH_AI, GET_ADMITTED_PATIENTS, GET_ALL_DOCTORS, GET_APPOINTMENT_HISTORY,
+  GENERATE_PRESCRIPTIONS_WITH_AI,
+  GET_ADMITTED_PATIENTS,
+  GET_ALL_DOCTORS,
+  GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -26,7 +30,8 @@ import {
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
-  GET_PATIENTS, GET_PROGRESS_TRACKER,
+  GET_PATIENTS,
+  GET_PROGRESS_TRACKER,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STAFF,
@@ -34,7 +39,8 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT, SUBMIT_CONSULTATION,
+  REJECT_APPOINTMENT,
+  SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
 
@@ -794,17 +800,14 @@ export const getAppointmentHistory = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-        `${API_URL}/getAppointmentHistory`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-    );
+    const { data } = await axios.get(`${API_URL}/getAppointmentHistory`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-    console.log("Appointment History: ",data)
+    console.log("Appointment History: ", data);
 
     dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data });
   } catch (error) {
@@ -816,17 +819,14 @@ export const getAdmittedPatients = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-        `${API_URL}/admittedPatients`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-    );
+    const { data } = await axios.get(`${API_URL}/admittedPatients`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-    console.log("Admitted Patients: ",data)
+    console.log("Admitted Patients: ", data);
 
     dispatch({ type: GET_ADMITTED_PATIENTS, payload: data.patients });
   } catch (error) {
@@ -839,16 +839,16 @@ export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(
-        `${API_URL}/getProgressTracker/${patientId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      `${API_URL}/getProgressTracker/${patientId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
 
-    console.log("Progress Tracker: ",data)
+    console.log("Progress Tracker: ", data);
 
     dispatch({ type: GET_PROGRESS_TRACKER, payload: data.patients });
   } catch (error) {
@@ -856,48 +856,82 @@ export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
   }
 };
 
-export const submitConsultation = (consultationData,onSuccess,onClose) => async (dispatch) => {
-      try {
-        const token = localStorage.getItem("jwt");
+export const submitConsultation =
+  (consultationData, onSuccess, onClose) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-        const { data } = await axios.post(
-            `${API_URL}/submitConsultation`,
-            consultationData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-              },
-            }
-        );
+      const { data } = await axios.post(
+        `${API_URL}/submitConsultation`,
+        consultationData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+      );
 
-        console.log("Consultation from Backend : ", data);
+      console.log("Consultation from Backend : ", data);
 
-        dispatch({ type: SUBMIT_CONSULTATION, payload: data });
-        onSuccess();
-        onClose();
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      dispatch({ type: SUBMIT_CONSULTATION, payload: data });
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getAllDoctors = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-        `${API_URL}/getDoctorsByHospital`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-    );
+    const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-    console.log("Doctors: ",data.doctors)
+    console.log("Doctors: ", data.doctors);
 
     dispatch({ type: GET_ALL_DOCTORS, payload: data.doctors });
   } catch (error) {
     console.error("Error getting admitted patients:", error);
+  }
+};
+
+export const createAdmissionRequest = (requestData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const doctor = localStorage.getItem("userId");
+
+    const requestDataWithDoctor = {
+      ...requestData,
+      doctor, // add doctor into body
+    };
+    const { data } = await axios.post(
+      `${API_URL}/createAdmissionRequest`,
+      requestDataWithDoctor,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
+    // return data.request;
+    toast.success("Admission Request Created successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error(
+      "Error creating admission request:",
+      error.response?.data || error.message
+    );
+
+    throw error;
   }
 };

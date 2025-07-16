@@ -65,29 +65,115 @@
   }
 }
 
+.addSectionContainer {
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(66, 114, 203, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2vh;
+  input {
+    margin-top: 2vh;
+    width: 85%;
+    outline: none;
+    border: 2px solid #007bff;
+    font-family: "Inter", sans-serif;
+    padding: 1vh 0.5vw;
+    border-radius: 20px;
+  }
+}
+.sectionTitleRow1 {
+  display: flex;
+
+  justify-content: space-between;
+}
+
+.sectionTitleRow2 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5vh;
+  button {
+    padding: 0.5vh 0.1vw 0vh 0.1vw;
+    border-radius: 4px;
+    font-size: 1.6vh;
+    color: #dc3545;
+    background: transparent;
+    border: none;
+  }
+}
+.sectionDeleteIcon {
+  height: 3vh;
+  cursor: pointer;
+  color: #dc3545;
+}
+.sectionBtn {
+  display: flex;
+  gap: 1vw;
+  margin-bottom: 1.4vh;
+  button {
+    padding: 0.3vh 0vw;
+    font-size: 1.7vh;
+    width: 4vw;
+  }
+}
+
+.cancelSectionBtn {
+  background: white;
+  color: #25307f;
+  border: 1px solid #25307f;
+  border-radius: 4px;
+}
+
+.saveSectionBtn {
+  background: #25307f;
+  border-radius: 4px;
+  color: white;
+  font-weight: 400;
+}
 .row3 {
   margin-top: 3.5vh;
   margin-bottom: 2vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   p {
     font-family: "Karla", sans-serif;
     font-weight: 500;
     color: #333333;
-    font-size: 2.4vh;
+    font-size: 1.1vw;
+  }
+
+  button {
+    background: #25307f;
+    color: white;
+    font-size: 0.8vw;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    padding: 0.6vh 0.5vw;
   }
 }
-
-.row4 {
+.editIcon {
+  height: 3vh;
+}
+.sectionTitleRow1Right {
   display: flex;
+  gap: 0.5vw;
+}
+.row4 {
   justify-content: space-between;
   align-items: center;
   border: 1px solid #cccccc;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-radius: 4px;
+
   color: #25307f;
   font-weight: 500;
-  font-size: 2.4vh;
+  font-size: 2.1vh;
   padding: 1vh 0.8vw;
-  height: 7vh;
+
   margin-top: 1.3vh;
   cursor: pointer;
 }
