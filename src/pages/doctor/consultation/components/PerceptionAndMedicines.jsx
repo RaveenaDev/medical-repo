@@ -3,12 +3,13 @@ import styles from "./PerceptionAndMedicines.module.scss";
 import PNMLoader from "./PNMLoader";
 import {useDispatch, useSelector} from "react-redux";
 import {generatePrescriptionsWithAI} from "../../../../components/State/Doctor/Action.js";
-const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions }) => {
+const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,onConfirm }) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (generatedPrescriptions && Object.keys(generatedPrescriptions).length > 0) {
+
       setLoading(false);
     }
   }, [generatedPrescriptions]);
@@ -81,7 +82,7 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions })
           {/* row8 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Follow-Up:</span> {generatedPrescriptions?.aiGeneratedText.followUp.notes}
+              <span className={styles.key}>Follow-Up:</span> {generatedPrescriptions?.aiGeneratedText.followUp}
             </p>
           </div>
 
@@ -275,10 +276,10 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions })
             <div className={styles.row11}>
               <div>
                 <p>
-                  <span>&#8226; </span>&nbsp; Review Date: {generatedPrescriptions?.aiGeneratedText.followUp.reviewDate}
+                  <span>&#8226; </span>&nbsp; Review Date: {generatedPrescriptions?.aiGeneratedText.followUpInstructions.reviewDate}
                 </p>
                 <p>
-                  <span>&#8226; </span>&nbsp; Notes: {generatedPrescriptions?.aiGeneratedText.followUp.notes}
+                  <span>&#8226; </span>&nbsp; Notes: {generatedPrescriptions?.aiGeneratedText.followUpInstructions.notes}
                 </p>
               </div>
               <div className={styles.iconBtn}>
@@ -321,7 +322,7 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions })
             <img src="/assets/Print-icon.svg" alt="" />
             <p>Print</p>
           </button>
-          <button className={styles.approve}>
+          <button className={styles.approve} onClick={() => onConfirm(generatedPrescriptions.aiGeneratedText)}>
             <img src="/assets/Tick.svg" alt="" height={12} />
             <p>Approve</p>
           </button>

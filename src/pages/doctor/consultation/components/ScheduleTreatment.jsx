@@ -9,8 +9,26 @@ const ScheduleTreatment = ({ onClose }) => {
     "Diagnostic Test",
     "Surgical Procedure",
   ];
+
+  const [treatment, setTreatment] = useState({
+    patientName: "",
+    age: "",
+    doctorAssigned: "",
+    admitPatient: "no",
+    treatmentType: "",
+    date: "",
+    time: "",
+    doctorNotes: ""
+  });
+
   const [openTreatment, setOpenTreatment] = useState(false);
   const [selectedTreatment, setSelectedTreatment] = useState("");
+
+  const handleSubmit = () => {
+    console.log("Final Treatment Data: ", treatment);
+    // axios.post('/api/schedule', treatment) or fetch(...)
+  };
+
   return (
     <div>
       {" "}
@@ -35,8 +53,16 @@ const ScheduleTreatment = ({ onClose }) => {
               <p>Age</p>
             </div>
             <div className={styles.piValue}>
-              <input type="text" />
-              <input type="number" />
+              <input
+                  type="text"
+                  value={treatment.patientName}
+                  onChange={(e) => setTreatment({...treatment, patientName: e.target.value})}
+              />
+              <input
+                  type="number"
+                  value={treatment.age}
+                  onChange={(e) => setTreatment({...treatment, age: e.target.value})}
+              />
             </div>
           </div>
           <div className={styles.piSection2}>
@@ -46,14 +72,31 @@ const ScheduleTreatment = ({ onClose }) => {
               <p>Admit Patient</p>
             </div>
             <div className={styles.piValue}>
-              <input type="text" className={styles.input} />
+              <input
+                  type="text"
+                  className={styles.input}
+                  value={treatment.doctorAssigned}
+                  onChange={(e) => setTreatment({...treatment, doctorAssigned: e.target.value})}
+                  />
               <div className={styles.radioGroup}>
                 <label>
-                  <input type="radio" name="admit" value="yes" />
+                  <input
+                      type="radio"
+                      name="admit"
+                      value="yes"
+                      checked={treatment.admitPatient === "yes"}
+                      onChange={(e) => setTreatment({...treatment, admitPatient: e.target.value})}
+                  />
                   Yes
                 </label>
                 <label>
-                  <input type="radio" name="admit" value="no" defaultChecked />
+                  <input
+                      type="radio"
+                      name="admit"
+                      value="no"
+                      checked={treatment.admitPatient === "no"}
+                      onChange={(e) => setTreatment({...treatment, admitPatient: e.target.value})}
+                  />
                   No
                 </label>
               </div>
@@ -63,11 +106,15 @@ const ScheduleTreatment = ({ onClose }) => {
         {/* Section 1 */}
         <div className={styles.section1}>
           <div className={styles.treatmentType}>
-            <p className={styles.label}>Treatment Type</p>{" "}
+          <p className={styles.label}>Treatment Type</p>{" "}
             <div className={styles.dropdown}>
               <button
                 className={styles.trigger}
-                onClick={() => setOpenTreatment((prev) => !prev)}
+                onClick={() => {
+                  setTreatment({ ...treatment, treatmentType: option });
+                  setSelectedTreatment(option); // optional for display
+                  setOpenTreatment(false);
+                }}
               >
                 <p
                   className={
@@ -103,30 +150,42 @@ const ScheduleTreatment = ({ onClose }) => {
           <div className={styles.dateAndTime}>
             <div className={styles.date}>
               <p className={styles.label}>Date</p>
-              <input className={styles.input2} type="date" />
+              <input
+                  className={styles.input2}
+                  type="date"
+                  value={treatment.date}
+                  onChange={(e) => setTreatment({...treatment, date: e.target.value})}
+              />
             </div>
             <div className={styles.time}>
               <p className={styles.label}>Time</p>
-              <input type="time" className={styles.input2} />
+              <input
+                  type="time"
+                  className={styles.input2}
+                  value={treatment.time}
+                  onChange={(e) => setTreatment({...treatment, time: e.target.value})}
+              />
             </div>
           </div>
 
           <div className={styles.doctorNotes}>
             <label htmlFor="notes" className={styles.label}>
-              Doctor Notes
+            Doctor Notes
             </label>
             <textarea
               name="notes"
               id="notes"
               placeholder="Additional Instruction or Notes"
               rows={4}
-            ></textarea>
+              value={treatment.doctorNotes}
+              onChange={(e) => setTreatment({ ...treatment, doctorNotes: e.target.value })}
+            />
           </div>
         </div>
 
         {/* Submit Container */}
         <div className={styles.submitContainer}>
-          <button>Confirm</button>
+          <button onClick={handleSubmit}>Confirm</button>
         </div>
       </div>
     </div>

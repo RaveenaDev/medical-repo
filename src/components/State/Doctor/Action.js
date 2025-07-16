@@ -34,7 +34,7 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT,
+  REJECT_APPOINTMENT, SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
 
@@ -855,3 +855,25 @@ export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
     console.error("Error getting progress details:", error);
   }
 };
+
+export const submitConsultation = (consultationData) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+
+        const { data } = await axios.post(
+            `${API_URL}/submitConsultation`,
+            consultationData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+              },
+            }
+        );
+
+        console.log("Consultation from Backend : ", data);
+
+        dispatch({ type: SUBMIT_CONSULTATION, payload: data });
+      } catch (error) {
+        console.log(error);
+      }
+    };

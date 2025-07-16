@@ -12,19 +12,28 @@ import Refer from "./Refer";
 import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
-import { generatePrescriptionsWithAI } from "../../../../components/State/Doctor/Action.js";
+import {generatePrescriptionsWithAI, submitConsultation} from "../../../../components/State/Doctor/Action.js";
 import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 
 const ConsultBody = ({ appointments }) => {
   const [completeData, setCompleteData] = useState({
-    patientId: null,
     medicalHistory: null,
     currentMedications: null,
     diagnosisVitals: null,
     perceptionsAndMedicines: null,
     treatmentAndTests: null,
   });
+
+  const [final, setFinal] = useState({
+    doctor: null,
+    patient: null,
+    appointment: null,
+    department: null,
+    action: null,
+    consultationData: null
+  })
+
   const dummyPatient = [
     {
       id: 1,
@@ -119,9 +128,12 @@ const ConsultBody = ({ appointments }) => {
   );
 
   useEffect(() => {
-    setCompleteData({
-      ...completeData,
-      patientId: ongoingAppointment?.patient._id,
+    setFinal({
+      ...final,
+      patient: ongoingAppointment?.patient._id,
+      department: ongoingAppointment?.department._id,
+      doctor: ongoingAppointment?.doctor._id,
+      appointment: ongoingAppointment?._id
     });
   }, [ongoingAppointment]);
 
@@ -132,8 +144,13 @@ const ConsultBody = ({ appointments }) => {
         completeData.currentMedications !== null ||
         completeData.diagnosisVitals !== null)
     ) {
-      // console.log("Data for AI: ", completeData);
-      dispatch(generatePrescriptionsWithAI(completeData));
+
+      const aiData = {
+        ...completeData,
+        patientId: ongoingAppointment?.patient._id,
+      }
+      console.log("Data for AI: ", aiData);
+      dispatch(generatePrescriptionsWithAI(aiData));
     }
   }, [
     selectedComponent,
@@ -146,7 +163,7 @@ const ConsultBody = ({ appointments }) => {
   if (!ongoingAppointment || ongoingAppointment.length === 0) {
     return (
       <div className={styles["no-appointments"]}>
-        <p>No appointments found</p>
+        <p>No ongoing appointments found</p>
       </div>
     );
   }
@@ -179,7 +196,15 @@ const ConsultBody = ({ appointments }) => {
   // console.log("Next: ",nextAppointment)
 
   const handleComplete = () => {
-    console.log("DATA: ", completeData);
+    const updatedFinal = {
+      ...final,
+      action: 'complete',
+      consultationData: completeData
+    }
+
+    console.log("Final: ",updatedFinal)
+
+    dispatch(submitConsultation(updatedFinal))
   };
 
   const handleRefer = () => {
@@ -195,6 +220,7 @@ const ConsultBody = ({ appointments }) => {
     setCustomSections([...customSections, sectionName]);
     setSelectedComponent(sectionName);
   };
+
 
   if (!appointments || appointments.length === 0) {
     return (
