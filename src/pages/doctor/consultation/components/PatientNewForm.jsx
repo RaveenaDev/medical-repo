@@ -8,88 +8,259 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { v4 as uuidv4 } from "uuid";
 
 const PatientNewForm = ({ onBack }) => {
-  const [formFields, setFormFields] = useState([]);
   const [formTitle, setFormTitle] = useState("");
   const [visibleDropdowns, setVisibleDropdowns] = useState([]);
   const [deletingId, setDeletingId] = useState(null);
   const [deletingOption, setDeletingOption] = useState(null);
   const [newlyAddedOptionKey, setNewlyAddedOptionKey] = useState(null);
-  const handleAddTextField = (question = "") => {
-    setFormFields([
-      ...formFields,
-      {
-        id: Date.now(),
-        type: "text",
-        question,
-        placeholder: "",
-      },
-    ]);
-  };
+  const [showAddSection, setShowAddSection] = useState(false);
+  const addSectionRef = useRef(null);
+  const [newSectionName, setNewSectionName] = useState("");
+  const [selectedSectionId, setSelectedSectionId] = useState("static-1"); // default to first static section
+  const [sections, setSections] = useState([
+    {
+      id: "static-1",
+      name: "Medical History",
+      isStatic: true,
+      fields: [
+        {
+          id: "mh-1",
+          type: "text",
+          question: "Please describe the reason for your visit",
+          placeholder: "",
+          isReadOnly: true,
+        },
+        {
+          id: "mh-2",
+          type: "text",
+          question:
+            "Have you had heart surgery or procedures? (e.g., stents, bypass surgery)",
+          placeholder: "If yes, (Please specify):",
+          isReadOnly: true,
+        },
+        {
+          id: "mh-3",
+          type: "text",
+          question:
+            "Have you had any diagnostic tests related to your current condition?",
+          placeholder: "If yes, (Please specify):",
+          isReadOnly: true,
+        },
+        {
+          id: "mh-4",
+          type: "text",
+          question: "Do you have any allergies?",
+          placeholder: "If yes, (Please specify):",
+          isReadOnly: true,
+        },
+        {
+          id: "mh-5",
+          type: "radio",
+          question: "Do you smoke?",
+          options: ["Yes", "No"],
+          isReadOnly: true,
+        },
+        {
+          id: "mh-6",
+          type: "radio",
+          question: "Do you drink alcohol?",
+          options: ["Yes", "No"],
+          isReadOnly: true,
+        },
+        {
+          id: "mh-7",
+          type: "checklist",
+          question:
+            "Do you have a history of any of the following conditions? (Check all that apply)",
+          options: [
+            "Hypertension",
+            "Heart failure",
+            "Irregular heartbeat",
+            "Asthma",
+            "Diabetes",
+            "Peripheral Artery Disease",
+            "Heart attack",
+            "Other (Please specify):",
+          ],
+          isReadOnly: true,
+        },
+      ],
+    },
+    {
+      id: "static-2",
+      name: "Prescription & Medicines",
+      isStatic: true,
+      fields: [],
+    },
+  ]);
 
-  const handleAddMultilineField = () => {
-    setFormFields([
-      ...formFields,
-      {
-        id: Date.now(),
-        type: "multiline",
-        question: "",
-        placeholder: "",
-      },
-    ]);
-  };
-
-  const handleAddDropdown = () => {
-    setFormFields([
-      ...formFields,
-      {
-        id: Date.now(),
-        type: "dropdown",
-        question: "",
-        options: ["", ""],
-      },
-    ]);
+  const handleAddCustomSection = (name) => {
+    const newSection = {
+      id: uuidv4(),
+      name,
+      isStatic: false,
+      fields: [],
+    };
+    setSections((prev) => [...prev, newSection]);
   };
 
   useEffect(() => {
-    const newDropdowns = formFields.map((f) => f.id);
-    setTimeout(() => setVisibleDropdowns(newDropdowns), 50);
-  }, [formFields]);
+    const handleClickOutside = (event) => {
+      if (
+        addSectionRef.current &&
+        !addSectionRef.current.contains(event.target)
+      ) {
+        setShowAddSection(false);
+      }
+    };
 
-  const handleDeleteDropdown = (id) => {
-    setDeletingId(id); // Mark for animation
-    setTimeout(() => {
-      setFormFields(formFields.filter((f) => f.id !== id));
-      setDeletingId(null);
-    }, 300); // Match with CSS transition duration
+    if (showAddSection) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showAddSection]);
+
+  const handleAddTextField = () => {
+    if (!selectedSectionId) return;
+
+    const updatedSections = sections.map((section) => {
+      if (section.id === selectedSectionId) {
+        return {
+          ...section,
+          fields: [
+            ...section.fields,
+            { id: uuidv4(), type: "text", question: "", placeholder: "" },
+          ],
+        };
+      }
+      return section;
+    });
+
+    setSections(updatedSections);
   };
+
+  const handleAddMultilineField = () => {
+    const updatedSections = sections.map((section) =>
+      section.id === selectedSectionId
+        ? {
+            ...section,
+            fields: [
+              ...section.fields,
+              {
+                id: uuidv4(),
+                type: "multiline",
+                question: "",
+                placeholder: "",
+              },
+            ],
+          }
+        : section
+    );
+    setSections(updatedSections);
+  };
+
+  const handleAddDropdown = () => {
+    const updatedSections = sections.map((section) =>
+      section.id === selectedSectionId
+        ? {
+            ...section,
+            fields: [
+              ...section.fields,
+              {
+                id: uuidv4(),
+                type: "dropdown",
+                question: "",
+                options: ["", ""],
+              },
+            ],
+          }
+        : section
+    );
+    setSections(updatedSections);
+  };
+
   const handleAddRadio = () => {
-    setFormFields([
-      ...formFields,
-      {
-        id: Date.now(),
-        type: "radio",
-        question: "",
-        options: ["", ""],
-      },
-    ]);
+    const updatedSections = sections.map((section) =>
+      section.id === selectedSectionId
+        ? {
+            ...section,
+            fields: [
+              ...section.fields,
+              {
+                id: uuidv4(),
+                type: "radio",
+                question: "",
+                options: ["", ""],
+              },
+            ],
+          }
+        : section
+    );
+    setSections(updatedSections);
   };
 
   const handleAddChecklist = () => {
-    setFormFields([
-      ...formFields,
-      {
-        id: Date.now(),
-        type: "checklist",
-        question: "",
-        options: ["", ""],
-      },
-    ]);
+    const updatedSections = sections.map((section) =>
+      section.id === selectedSectionId
+        ? {
+            ...section,
+            fields: [
+              ...section.fields,
+              {
+                id: uuidv4(),
+                type: "checklist",
+                question: "",
+                options: ["", ""],
+              },
+            ],
+          }
+        : section
+    );
+    setSections(updatedSections);
   };
+
+  const handleDeleteSection = (id) => {
+    setSections((prev) => prev.filter((section) => section.id !== id));
+
+    // Optional: Reset selected section if the deleted one was selected
+    if (selectedSectionId === id) {
+      setSelectedSectionId("static-1"); // fallback to default static section
+    }
+  };
+
+  const handleDeleteDropdown = (id) => {
+    setDeletingId(id); // Mark for animation
+
+    setTimeout(() => {
+      const updatedSections = sections.map((section) =>
+        section.id === selectedSectionId
+          ? {
+              ...section,
+              fields: section.fields.filter((f) => f.id !== id),
+            }
+          : section
+      );
+      setSections(updatedSections);
+      setDeletingId(null);
+    }, 300);
+  };
+
+  useEffect(() => {
+    const currentSection = sections.find(
+      (section) => section.id === selectedSectionId
+    );
+    const newDropdowns = currentSection?.fields.map((f) => f.id) || [];
+    setTimeout(() => setVisibleDropdowns(newDropdowns), 50);
+  }, [sections, selectedSectionId]);
 
   const handleSaveForm = async () => {
     if (!formTitle.trim()) {
@@ -97,31 +268,42 @@ const PatientNewForm = ({ onBack }) => {
       return;
     }
 
-    for (let i = 0; i < formFields.length; i++) {
-      const field = formFields[i];
-
-      if (!field.question.trim()) {
-        toast.error(`Question cannot be empty.`);
-        return;
-      }
-
-      // Check options if field has them
-      if (["radio", "dropdown", "checklist"].includes(field.type)) {
-        const emptyOptionIndex = field.options.findIndex((opt) => !opt.trim());
-        if (emptyOptionIndex !== -1) {
-          toast.error(`Options cannot contain empty values.`);
+    for (const section of sections) {
+      for (const field of section.fields) {
+        if (!field.question?.trim()) {
+          toast.error(`Question cannot be empty in section "${section.name}".`);
           return;
+        }
+
+        if (["radio", "dropdown", "checklist"].includes(field.type)) {
+          const hasEmptyOption = field.options?.some((opt) => !opt.trim());
+          if (hasEmptyOption) {
+            toast.error(
+              `Options cannot be empty in "${field.question}" under "${section.name}".`
+            );
+            return;
+          }
         }
       }
     }
 
     const formTemplate = {
       title: formTitle,
-      fields: formFields,
+      sections: sections.map((section) => ({
+        id: section.id,
+        name: section.name,
+        isStatic: section.isStatic,
+        fields: section.fields,
+      })),
     };
 
     console.log(formTemplate);
+    toast.success("Form saved successfully!");
   };
+
+  const currentSection = sections.find(
+    (section) => section.id === selectedSectionId
+  );
 
   const FIELD = "FIELD";
 
@@ -147,46 +329,139 @@ const PatientNewForm = ({ onBack }) => {
     );
   };
 
+  const updateFieldInCurrentSection = (fieldId, updatedField) => {
+    setSections((prev) =>
+      prev.map((section) =>
+        section.id === selectedSectionId
+          ? {
+              ...section,
+              fields: section.fields.map((f) =>
+                f.id === fieldId ? { ...f, ...updatedField } : f
+              ),
+            }
+          : section
+      )
+    );
+  };
+
+  const handleDeleteField = (fieldId) => {
+    setDeletingId(fieldId);
+    setTimeout(() => {
+      setSections((prev) =>
+        prev.map((section) =>
+          section.id === selectedSectionId
+            ? {
+                ...section,
+                fields: section.fields.filter((f) => f.id !== fieldId),
+              }
+            : section
+        )
+      );
+      setDeletingId(null);
+    }, 300);
+  };
+  const selectedSectionIdRef = useRef(selectedSectionId);
+  useEffect(() => {
+    selectedSectionIdRef.current = selectedSectionId;
+  }, [selectedSectionId]);
+
   const [, drop] = useDrop(() => ({
     accept: FIELD,
     drop: (item) => {
-      const id = Date.now(); // generate a unique ID
-      switch (item.fieldType) {
-        case "text":
-          setFormFields((prev) => [
-            ...prev,
-            { id, type: "text", question: "", placeholder: "" },
-          ]);
-          break;
-        case "multiline":
-          setFormFields((prev) => [
-            ...prev,
-            { id, type: "multiline", question: "", placeholder: "" },
-          ]);
-          break;
-        case "radio":
-          setFormFields((prev) => [
-            ...prev,
-            { id, type: "radio", question: "", options: ["", ""] },
-          ]);
-          break;
-        case "dropdown":
-          setFormFields((prev) => [
-            ...prev,
-            { id, type: "dropdown", question: "", options: ["", ""] },
-          ]);
-          break;
-        case "checklist":
-          setFormFields((prev) => [
-            ...prev,
-            { id, type: "checklist", question: "", options: ["", ""] },
-          ]);
-          break;
-        default:
-          break;
-      }
+      const newField = {
+        id: uuidv4(),
+        type: item.fieldType,
+        question: "",
+        ...(item.fieldType === "text" || item.fieldType === "multiline"
+          ? { placeholder: "" }
+          : { options: ["", ""] }),
+      };
+
+      setSections((prev) =>
+        prev.map((section) =>
+          section.id === selectedSectionIdRef.current
+            ? { ...section, fields: [...section.fields, newField] }
+            : section
+        )
+      );
     },
   }));
+
+  const moveSection = (fromIndex, toIndex) => {
+    const updatedSections = [...sections];
+    const [moved] = updatedSections.splice(fromIndex, 1);
+    updatedSections.splice(toIndex, 0, moved);
+    setSections(updatedSections);
+  };
+
+  const SECTION = "SECTION";
+
+  const DraggableSection = ({
+    section,
+    index,
+    selectedSectionId,
+    setSelectedSectionId,
+    handleDeleteSection,
+    moveSection,
+  }) => {
+    const ref = useRef(null);
+
+    const [, drop] = useDrop({
+      accept: SECTION,
+      hover: (item) => {
+        if (!ref.current || item.index === index) return;
+        moveSection(item.index, index);
+        item.index = index;
+      },
+    });
+
+    const [{ isDragging }, drag] = useDrag({
+      type: SECTION,
+      item: { index },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    });
+
+    drag(drop(ref));
+
+    return (
+      <div
+        ref={ref}
+        key={section.id}
+        className={`${styles.row4} `}
+        onClick={() => setSelectedSectionId(section.id)}
+        style={{
+          backgroundColor:
+            selectedSectionId === section.id ? "#eef8f1" : "transparent",
+          border:
+            selectedSectionId === section.id
+              ? "1px solid #2e823b"
+              : "1px solid #cfcfcf",
+
+          // cursor: "move",
+          opacity: isDragging ? 0.5 : 1,
+        }}
+      >
+        <div className={styles.sectionTitleRow1}>
+          <p>{section.name}</p>
+
+          <div className={styles.sectionTitleRow1Right}>
+            <SquarePen className={styles.editIcon} />
+            {!section.isStatic && (
+              <Trash2
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteSection(section.id);
+                }}
+                className={styles.sectionDeleteIcon}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -220,34 +495,58 @@ const PatientNewForm = ({ onBack }) => {
           {/* row 3 */}
           <div className={styles.row3}>
             <p>Pre Definable Fields</p>
+            <button onClick={() => setShowAddSection(true)}>
+              <Plus className={styles.plusIcons} /> Add
+            </button>
           </div>
 
-          {/* row 4 */}
-          <div
-            className={styles.row4}
-            onClick={() => handleAddTextField("Symptoms")}
-          >
-            <p>Symptoms</p>
-            <SquarePen size={21} />
-          </div>
+          {showAddSection && (
+            <div className={styles.addSectionContainer} ref={addSectionRef}>
+              <input
+                type="text"
+                placeholder="Enter Section Name"
+                value={newSectionName}
+                onChange={(e) => setNewSectionName(e.target.value)}
+              />
+              <div className={styles.sectionBtn}>
+                <button
+                  onClick={() => setShowAddSection(false)}
+                  className={styles.cancelSectionBtn}
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    if (newSectionName.trim()) {
+                      handleAddCustomSection(newSectionName.trim());
+                      setNewSectionName("");
+                      setShowAddSection(false);
+                    } else {
+                      toast.error("Section name cannot be empty.");
+                    }
+                  }}
+                  className={styles.saveSectionBtn}
+                  type="button"
+                >
+                  Create
+                </button>
+              </div>
+            </div>
+          )}
 
-          {/* row 5 */}
-          <div className={styles.row5}>
-            <p>Cold, Fever, Headache</p>
-          </div>
-
-          {/* row 6 */}
-          <div
-            className={styles.row4}
-            onClick={() => handleAddTextField("Diagnosis")}
-          >
-            <p>Diagnosis</p>
-            <SquarePen size={21} />
-          </div>
-
-          {/* row 7 */}
-          <div className={styles.row5}>
-            <p>Common Cold</p>
+          <div className={styles.SectionTitle}>
+            {sections.map((section, index) => (
+              <DraggableSection
+                key={section.id}
+                section={section}
+                index={index}
+                selectedSectionId={selectedSectionId}
+                setSelectedSectionId={setSelectedSectionId}
+                handleDeleteSection={handleDeleteSection}
+                moveSection={moveSection}
+              />
+            ))}
           </div>
         </div>
 
@@ -268,7 +567,7 @@ const PatientNewForm = ({ onBack }) => {
             </div>
 
             <div className={styles.mRow2} ref={drop}>
-              {formFields.map((field) => (
+              {currentSection?.fields.map((field) => (
                 <div key={field.id}>
                   {field.type === "text" && (
                     <div
@@ -289,13 +588,11 @@ const PatientNewForm = ({ onBack }) => {
                           className={styles.input2}
                           placeholder="Question"
                           value={field.question}
+                          disabled={field.isReadOnly}
                           onChange={(e) => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, question: e.target.value }
-                                : f
-                            );
-                            setFormFields(updated);
+                            updateFieldInCurrentSection(field.id, {
+                              question: e.target.value,
+                            });
                           }}
                         />
                       </div>
@@ -305,26 +602,25 @@ const PatientNewForm = ({ onBack }) => {
                         <input
                           type="text"
                           className={styles.input3}
+                          disabled={field.isReadOnly}
                           placeholder="Placeholder (optional)"
                           value={field.placeholder}
                           onChange={(e) => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, placeholder: e.target.value }
-                                : f
-                            );
-                            setFormFields(updated);
+                            updateFieldInCurrentSection(field.id, {
+                              placeholder: e.target.value,
+                            });
                           }}
                         />
                       </div>
-
-                      <div className={styles.questionBottomRow2}>
-                        <Trash2
-                          className={styles.trashIcon}
-                          size={18}
-                          onClick={() => handleDeleteDropdown(field.id)}
-                        />
-                      </div>
+                      {!field.isReadOnly && (
+                        <div className={styles.questionBottomRow2}>
+                          <Trash2
+                            className={styles.trashIcon}
+                            size={18}
+                            onClick={() => handleDeleteField(field.id)}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                   {field.type === "multiline" && (
@@ -339,39 +635,33 @@ const PatientNewForm = ({ onBack }) => {
                         <p>Multiline Text Field</p>
                       </div>
 
-                      {/* Question input */}
                       <div className={styles.questionRow}>
                         <input
                           type="text"
                           className={styles.input2}
                           placeholder="Question"
                           value={field.question}
-                          onChange={(e) => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, question: e.target.value }
-                                : f
-                            );
-                            setFormFields(updated);
-                          }}
+                          disabled={field.isReadOnly}
+                          onChange={(e) =>
+                            updateFieldInCurrentSection(field.id, {
+                              question: e.target.value,
+                            })
+                          }
                         />
                       </div>
 
-                      {/* Placeholder input */}
                       <div className={styles.questionRow}>
                         <input
                           type="text"
                           className={styles.input3}
                           placeholder="Placeholder (optional)"
                           value={field.placeholder}
-                          onChange={(e) => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, placeholder: e.target.value }
-                                : f
-                            );
-                            setFormFields(updated);
-                          }}
+                          disabled={field.isReadOnly}
+                          onChange={(e) =>
+                            updateFieldInCurrentSection(field.id, {
+                              placeholder: e.target.value,
+                            })
+                          }
                         />
                       </div>
 
@@ -379,11 +669,12 @@ const PatientNewForm = ({ onBack }) => {
                         <Trash2
                           className={styles.trashIcon}
                           size={18}
-                          onClick={() => handleDeleteDropdown(field.id)}
+                          onClick={() => handleDeleteField(field.id)}
                         />
                       </div>
                     </div>
                   )}
+
                   {field.type === "radio" && (
                     <div
                       className={`${styles.dropdownField} ${
@@ -403,14 +694,12 @@ const PatientNewForm = ({ onBack }) => {
                           className={styles.input2}
                           placeholder="Question"
                           value={field.question}
-                          onChange={(e) => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, question: e.target.value }
-                                : f
-                            );
-                            setFormFields(updated);
-                          }}
+                          disabled={field.isReadOnly}
+                          onChange={(e) =>
+                            updateFieldInCurrentSection(field.id, {
+                              question: e.target.value,
+                            })
+                          }
                         />
                       </div>
 
@@ -429,77 +718,72 @@ const PatientNewForm = ({ onBack }) => {
                               type="text"
                               className={styles.input3}
                               value={option}
+                              disabled={field.isReadOnly}
                               placeholder={`Option ${idx + 1}`}
                               onChange={(e) => {
-                                const updated = formFields.map((f) =>
-                                  f.id === field.id
-                                    ? {
-                                        ...f,
-                                        options: f.options.map((opt, i) =>
-                                          i === idx ? e.target.value : opt
-                                        ),
-                                      }
-                                    : f
-                                );
-                                setFormFields(updated);
+                                const updatedOptions = [...field.options];
+                                updatedOptions[idx] = e.target.value;
+                                updateFieldInCurrentSection(field.id, {
+                                  options: updatedOptions,
+                                });
                               }}
                             />
-                            <X
-                              className={styles.xIcon}
-                              size={18}
-                              onClick={() => {
-                                setDeletingOption(key);
-                                setTimeout(() => {
-                                  const updated = formFields.map((f) =>
-                                    f.id === field.id
-                                      ? {
-                                          ...f,
-                                          options: f.options.filter(
-                                            (_, i) => i !== idx
-                                          ),
-                                        }
-                                      : f
-                                  );
-                                  setFormFields(updated);
-                                  setDeletingOption(null);
-                                }, 300);
-                              }}
-                            />
+                            {!field.isReadOnly && (
+                              <X
+                                className={styles.xIcon}
+                                size={18}
+                                onClick={() => {
+                                  setDeletingOption(key);
+                                  setTimeout(() => {
+                                    const updatedOptions = field.options.filter(
+                                      (_, i) => i !== idx
+                                    );
+                                    updateFieldInCurrentSection(field.id, {
+                                      options: updatedOptions,
+                                    });
+                                    setDeletingOption(null);
+                                  }, 300);
+                                }}
+                              />
+                            )}
                           </div>
                         );
                       })}
 
-                      {/* Add option + delete radio group */}
-                      <div className={styles.questionBottomRow}>
-                        <div
-                          className={styles.addOption}
-                          onClick={() => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, options: [...f.options, ""] }
-                                : f
-                            );
-                            setFormFields(updated);
+                      {/* Add option + delete field */}
+                      {!field.isReadOnly && (
+                        <div className={styles.questionBottomRow}>
+                          <div
+                            className={styles.addOption}
+                            onClick={() => {
+                              const newOptions = [...field.options, ""];
+                              updateFieldInCurrentSection(field.id, {
+                                options: newOptions,
+                              });
 
-                            const newKey = `${field.id}-${field.options.length}`;
-                            setNewlyAddedOptionKey(newKey);
-                            setTimeout(() => setNewlyAddedOptionKey(null), 500);
-                          }}
-                        >
-                          <Plus className={styles.plusIcons} />
-                          <span>Add option</span>
+                              const newKey = `${field.id}-${field.options.length}`;
+                              setNewlyAddedOptionKey(newKey);
+                              setTimeout(
+                                () => setNewlyAddedOptionKey(null),
+                                500
+                              );
+                            }}
+                          >
+                            <Plus className={styles.plusIcons} />
+                            <span>Add option</span>
+                          </div>
+
+                          <Trash2
+                            className={styles.trashIcon}
+                            size={18}
+                            onClick={() => handleDeleteField(field.id)}
+                          />
                         </div>
-
-                        <Trash2
-                          className={styles.trashIcon}
-                          size={18}
-                          onClick={() => handleDeleteDropdown(field.id)}
-                        />
-                      </div>
+                      )}
                     </div>
                   )}
 
-                  {field.type === "dropdown" ? (
+                  {field.type === "dropdown" && (
                     <div
                       className={`${styles.dropdownField} ${
                         deletingId === field.id ? styles.fadeOut : ""
@@ -510,117 +794,105 @@ const PatientNewForm = ({ onBack }) => {
                       <div className={styles.inputTitle}>
                         <p>Dropdown Menu</p>
                       </div>
-                      {/* Question input + Trash icon */}
+
+                      {/* Question input */}
                       <div className={styles.questionRow}>
                         <input
                           type="text"
                           className={styles.input2}
                           placeholder="Question"
                           value={field.question}
-                          onChange={(e) => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, question: e.target.value }
-                                : f
-                            );
-                            setFormFields(updated);
-                          }}
+                          disabled={field.isReadOnly}
+                          onChange={(e) =>
+                            updateFieldInCurrentSection(field.id, {
+                              question: e.target.value,
+                            })
+                          }
                         />
                       </div>
+
                       {/* Options */}
-                      {field.options.map((option, idx) => (
-                        <div
-                          key={idx}
-                          className={`${styles.optionWrapper} ${
-                            newlyAddedOptionKey === `${field.id}-${idx}`
-                              ? styles.fadeIn
-                              : ""
-                          } ${
-                            deletingOption === `${field.id}-${idx}`
-                              ? styles.fadeOut
-                              : ""
-                          }`}
-                        >
-                          <span className={styles.optionNumber}>
-                            {idx + 1}.
-                          </span>
-                          <input
-                            type="text"
-                            className={styles.input3}
-                            value={option}
-                            onChange={(e) => {
-                              const updated = formFields.map((f) =>
-                                f.id === field.id
-                                  ? {
-                                      ...f,
-                                      options: f.options.map((opt, i) =>
-                                        i === idx ? e.target.value : opt
-                                      ),
-                                    }
-                                  : f
-                              );
-                              setFormFields(updated);
-                            }}
-                            placeholder={`Option ${idx + 1}`}
-                          />
-                          <X
-                            className={styles.xIcon}
-                            size={18}
+                      {field.options.map((option, idx) => {
+                        const key = `${field.id}-${idx}`;
+                        return (
+                          <div
+                            key={key}
+                            className={`${styles.optionWrapper} ${
+                              newlyAddedOptionKey === key ? styles.fadeIn : ""
+                            } ${deletingOption === key ? styles.fadeOut : ""}`}
+                          >
+                            <span className={styles.optionNumber}>
+                              {idx + 1}.
+                            </span>
+                            <input
+                              type="text"
+                              className={styles.input3}
+                              value={option}
+                              placeholder={`Option ${idx + 1}`}
+                              disabled={field.isReadOnly}
+                              onChange={(e) => {
+                                const updatedOptions = [...field.options];
+                                updatedOptions[idx] = e.target.value;
+                                updateFieldInCurrentSection(field.id, {
+                                  options: updatedOptions,
+                                });
+                              }}
+                            />
+                            {!field.isReadOnly && (
+                              <X
+                                className={styles.xIcon}
+                                size={18}
+                                onClick={() => {
+                                  setDeletingOption(key);
+                                  setTimeout(() => {
+                                    const updatedOptions = field.options.filter(
+                                      (_, i) => i !== idx
+                                    );
+                                    updateFieldInCurrentSection(field.id, {
+                                      options: updatedOptions,
+                                    });
+                                    setDeletingOption(null);
+                                  }, 300);
+                                }}
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
+
+                      {/* Add option + Delete entire dropdown */}
+                      {!field.isReadOnly && (
+                        <div className={styles.questionBottomRow}>
+                          <div
+                            className={styles.addOption}
                             onClick={() => {
-                              const key = `${field.id}-${idx}`;
-                              setDeletingOption(key);
-                              setTimeout(() => {
-                                const updated = formFields.map((f) =>
-                                  f.id === field.id
-                                    ? {
-                                        ...f,
-                                        options: f.options.filter(
-                                          (_, i) => i !== idx
-                                        ),
-                                      }
-                                    : f
-                                );
-                                setFormFields(updated);
-                                setDeletingOption(null);
-                              }, 300); // must match CSS transition
+                              const newOptions = [...field.options, ""];
+                              updateFieldInCurrentSection(field.id, {
+                                options: newOptions,
+                              });
+
+                              const newKey = `${field.id}-${field.options.length}`;
+                              setNewlyAddedOptionKey(newKey);
+                              setTimeout(
+                                () => setNewlyAddedOptionKey(null),
+                                500
+                              );
                             }}
+                          >
+                            <Plus className={styles.plusIcons} />
+                            <span>Add option</span>
+                          </div>
+
+                          <Trash2
+                            className={styles.trashIcon}
+                            size={18}
+                            onClick={() => handleDeleteField(field.id)}
                           />
                         </div>
-                      ))}
-                      <div className={styles.questionBottomRow}>
-                        {/* Add option (on a new line) */}
-                        <div
-                          className={styles.addOption}
-                          onClick={() => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? {
-                                    ...f,
-                                    options: [...f.options, ""],
-                                  }
-                                : f
-                            );
-                            setFormFields(updated);
-
-                            const newKey = `${field.id}-${field.options.length}`;
-                            setNewlyAddedOptionKey(newKey);
-
-                            setTimeout(() => {
-                              setNewlyAddedOptionKey(null);
-                            }, 500); // match SCSS animation
-                          }}
-                        >
-                          <Plus className={styles.plusIcons} />
-                          <span>Add option</span>
-                        </div>{" "}
-                        <Trash2
-                          className={styles.trashIcon}
-                          size={18}
-                          onClick={() => handleDeleteDropdown(field.id)}
-                        />
-                      </div>
+                      )}
                     </div>
-                  ) : null}
+                  )}
+
                   {field.type === "checklist" && (
                     <div
                       className={`${styles.dropdownField} ${
@@ -639,15 +911,13 @@ const PatientNewForm = ({ onBack }) => {
                           type="text"
                           className={styles.input2}
                           placeholder="Question"
+                          disabled={field.isReadOnly}
                           value={field.question}
-                          onChange={(e) => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? { ...f, question: e.target.value }
-                                : f
-                            );
-                            setFormFields(updated);
-                          }}
+                          onChange={(e) =>
+                            updateFieldInCurrentSection(field.id, {
+                              question: e.target.value,
+                            })
+                          }
                         />
                       </div>
 
@@ -667,88 +937,111 @@ const PatientNewForm = ({ onBack }) => {
                               className={styles.input3}
                               value={item}
                               placeholder={`Item ${idx + 1}`}
+                              disabled={field.isReadOnly}
                               onChange={(e) => {
-                                const updated = formFields.map((f) =>
-                                  f.id === field.id
-                                    ? {
-                                        ...f,
-                                        options: f.options.map((opt, i) =>
-                                          i === idx ? e.target.value : opt
-                                        ),
-                                      }
-                                    : f
-                                );
-                                setFormFields(updated);
+                                const updatedOptions = [...field.options];
+                                updatedOptions[idx] = e.target.value;
+                                updateFieldInCurrentSection(field.id, {
+                                  options: updatedOptions,
+                                });
                               }}
                             />
-                            <X
-                              className={styles.xIcon}
-                              size={18}
-                              onClick={() => {
-                                setDeletingOption(key);
-                                setTimeout(() => {
-                                  const updated = formFields.map((f) =>
-                                    f.id === field.id
-                                      ? {
-                                          ...f,
-                                          options: f.options.filter(
-                                            (_, i) => i !== idx
-                                          ),
-                                        }
-                                      : f
-                                  );
-                                  setFormFields(updated);
-                                  setDeletingOption(null);
-                                }, 300); // match CSS duration
-                              }}
-                            />
+                            {!field.isReadOnly && (
+                              <X
+                                className={styles.xIcon}
+                                size={18}
+                                onClick={() => {
+                                  setDeletingOption(key);
+                                  setTimeout(() => {
+                                    const updatedOptions = field.options.filter(
+                                      (_, i) => i !== idx
+                                    );
+                                    updateFieldInCurrentSection(field.id, {
+                                      options: updatedOptions,
+                                    });
+                                    setDeletingOption(null);
+                                  }, 300);
+                                }}
+                              />
+                            )}
                           </div>
                         );
                       })}
 
-                      {/* Add item + delete checklist */}
-                      <div className={styles.questionBottomRow}>
-                        <div
-                          className={styles.addOption}
-                          onClick={() => {
-                            const updated = formFields.map((f) =>
-                              f.id === field.id
-                                ? {
-                                    ...f,
-                                    options: [...f.options, ""], // Empty new item
-                                  }
-                                : f
-                            );
-                            setFormFields(updated);
+                      {/* Add item + delete checklist field */}
+                      {!field.isReadOnly && (
+                        <div className={styles.questionBottomRow}>
+                          <div
+                            className={styles.addOption}
+                            onClick={() => {
+                              updateFieldInCurrentSection(field.id, {
+                                options: [...field.options, ""],
+                              });
 
-                            const newKey = `${field.id}-${field.options.length}`;
-                            setNewlyAddedOptionKey(newKey);
+                              const newKey = `${field.id}-${field.options.length}`;
+                              setNewlyAddedOptionKey(newKey);
+                              setTimeout(
+                                () => setNewlyAddedOptionKey(null),
+                                500
+                              );
+                            }}
+                          >
+                            <Plus className={styles.plusIcons} />
+                            <span>Add item</span>
+                          </div>
 
-                            setTimeout(() => setNewlyAddedOptionKey(null), 500); // match animation
-                          }}
-                        >
-                          <Plus className={styles.plusIcons} />
-                          <span>Add item</span>
+                          {!field.options.some((opt) =>
+                            opt.trim().toLowerCase().startsWith("other")
+                          ) && (
+                            <div
+                              className={styles.addOption}
+                              onClick={() => {
+                                updateFieldInCurrentSection(field.id, {
+                                  options: [
+                                    ...field.options,
+                                    "Other (Please specify):",
+                                  ],
+                                });
+
+                                const newKey = `${field.id}-${field.options.length}`;
+                                setNewlyAddedOptionKey(newKey);
+                                setTimeout(
+                                  () => setNewlyAddedOptionKey(null),
+                                  500
+                                );
+                              }}
+                            >
+                              <Plus className={styles.plusIcons} />
+                              <span>Add Other</span>
+                            </div>
+                          )}
+
+                          <Trash2
+                            className={styles.trashIcon}
+                            size={18}
+                            onClick={() => handleDeleteField(field.id)}
+                          />
                         </div>
-
-                        <Trash2
-                          className={styles.trashIcon}
-                          size={18}
-                          onClick={() => handleDeleteDropdown(field.id)}
-                        />
-                      </div>
+                      )}
                     </div>
                   )}
                 </div>
               ))}
 
               {/* section 2 */}
-              {formFields.length === 0 && (
+              {currentSection?.fields.length === 0 && (
                 <div className={styles.guideText}>
-                  <p>
-                    Drag fields here or
-                    <br /> click to add new
-                  </p>
+                  {currentSection?.id === "static-2" ? (
+                    <p>
+                      This section will be auto-filled based on AI
+                      recommendations.
+                    </p>
+                  ) : (
+                    <p>
+                      Drag fields here or
+                      <br /> click to add new
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -761,8 +1054,14 @@ const PatientNewForm = ({ onBack }) => {
               <button
                 className={styles.cancelBtn}
                 onClick={() => {
-                  setFormFields([]);
-                  setFormTitle("");
+                  setSections((prev) =>
+                    prev.map((section) =>
+                      section.id === selectedSectionId
+                        ? { ...section, fields: [] }
+                        : section
+                    )
+                  );
+                  setFormTitle(""); // Optional: reset form title too
                 }}
               >
                 Cancel
