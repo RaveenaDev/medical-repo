@@ -8,7 +8,11 @@ import PatientCard from "./component/modals/PatientCard.jsx";
 import { useEffect, useState } from "react";
 import AddPatientForm from "./component/form/AddPatientForm.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { getAdmittedPatients } from "../../../components/State/Doctor/Action.js";
+import {
+  getAdmissionRequests,
+  getAdmittedPatients,
+  getApprovedAdmissions,
+} from "../../../components/State/Doctor/Action.js";
 // const patientsAdmitted = [
 //   {
 //     name: "Alice",
@@ -136,10 +140,21 @@ const PatientsList = () => {
 
   useEffect(() => {
     dispatch(getAdmittedPatients());
+    dispatch(getApprovedAdmissions());
+    dispatch(getAdmissionRequests());
   }, [dispatch]);
 
   const patientsAdmitted = useSelector(
     (store) => store.doctor.admittedPatients
+  );
+  const approvedAdmissions = useSelector(
+    (store) => store.doctor.approvedAdmissions
+  );
+  const admissionRequests = useSelector(
+    (store) => store.doctor.admissionRequests
+  );
+  const admissionRequestsCount = useSelector(
+    (store) => store.doctor.admissionRequestsCount
   );
 
   const [filter, setFilter] = useState("Total");
@@ -169,8 +184,11 @@ const PatientsList = () => {
   const handleAddPatientClick = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
 
+  // console.log("Approved Admission Requests", approvedAdmissions);
+  console.log("Admission Requests", admissionRequests);
+
   return (
-    <div className="patientsListContainer">
+    <div className="patientsListDoctorContainer">
       <div className="listHeader">
         <Searchbar />
         <Notifications />
@@ -214,27 +232,30 @@ const PatientsList = () => {
 
       <section className="toAdmit">
         <div className="description">
-          To be admitted: <span className="count">{patients.length}</span>
+          To be admitted:{" "}
+          <span className="count">{admissionRequestsCount}</span>
         </div>
         <div className="toAdmitList">
-          {patients.slice(0, 4).map((patient, index) => (
-            <div
-              className="patientCard"
-              key={index}
-              onClick={handleAddPatientClick}
-            >
+          {admissionRequests.slice(0, 4).map((patient, index) => (
+            <div className="patientCard" key={index}>
               <div className="card_upper">
                 <div className="patientInfo">
                   <div className="patientDetailsContainer">
                     <img
-                      src={patient.avatar}
+                      src={
+                        patient.avatar ||
+                        "https://randomuser.me/api/portraits/women/17.jpg"
+                      }
                       alt={`${patient.name} Avatar`}
                       className="patientAvatar"
                     />
                     <div>
-                      <h5 className="patientName">{patient.name}</h5>
+                      <h5 className="patientName">
+                        {patient.admissionDetails.name}
+                      </h5>
                       <p className="patientAge">
-                        {patient.gender} {patient.age} Y
+                        {patient.admissionDetails.gender || "N/A"}{" "}
+                        {patient.admissionDetails.age} Y
                       </p>
                     </div>
                   </div>
@@ -242,10 +263,19 @@ const PatientsList = () => {
                   <div className="patientDetails">
                     <div>
                       Admission date:{" "}
-                      <span className="value">{patient.admissionDate}</span>
+                      <span className="value">
+                        {
+                          new Date(patient.admissionDetails.date)
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                      </span>
                     </div>
                     <div>
-                      Reason: <span className="value">{patient.reason}</span>
+                      Reason:{" "}
+                      <span className="value">
+                        {patient.admissionDetails.medicalNote}
+                      </span>
                     </div>
                     <div>
                       Status: <span className="value">{patient.status}</span>
@@ -286,7 +316,43 @@ const PatientsList = () => {
                 </div>
               </div>
               <div className="admit_btn_container">
-                <button className="admit_btn">Admit</button>
+                {patient.approval?.doctor?.approved &&
+                patient.approval?.admin?.approved ? (
+                  <button className="admit_btn" onClick={handleAddPatientClick}>
+                    Admit
+                  </button>
+                ) : (
+                  <div className="approval-status">
+                    <div>
+                      Doctor:{" "}
+                      <span
+                        className={
+                          patient.approval?.doctor?.approved
+                            ? "approved-text"
+                            : "pending-text"
+                        }
+                      >
+                        {patient.approval?.doctor?.approved
+                          ? "Approved"
+                          : "Pending"}
+                      </span>
+                    </div>
+                    <div>
+                      Admin:{" "}
+                      <span
+                        className={
+                          patient.approval?.admin?.approved
+                            ? "approved-text"
+                            : "pending-text"
+                        }
+                      >
+                        {patient.approval?.admin?.approved
+                          ? "Approved"
+                          : "Pending"}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}

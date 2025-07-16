@@ -1,10 +1,17 @@
+import { getApprovedAdmissions } from "./Action.js";
 import {
-  APPROVE_APPOINTMENT, CREATE_DOCTOR_NOTE,
+  APPROVE_APPOINTMENT,
+  CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
-  CREATE_NEW_EVENT, GENERATE_PRESCRIPTIONS_WITH_AI, GET_ADMITTED_PATIENTS, GET_ALL_DOCTORS,
+  CREATE_NEW_EVENT,
+  GENERATE_PRESCRIPTIONS_WITH_AI,
+  GET_ADMISSION_REQUESTS,
+  GET_ADMITTED_PATIENTS,
+  GET_ALL_DOCTORS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
+  GET_APPROVED_ADMISSIONS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
@@ -26,7 +33,8 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT, SUBMIT_CONSULTATION,
+  REJECT_APPOINTMENT,
+  SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 
 const initialState = {
@@ -69,7 +77,10 @@ const initialState = {
   inventory: [],
   generatedPrescriptionsByAI: null,
   admittedPatients: [],
-  allDoctors: []
+  allDoctors: [],
+  approvedAdmissions: [],
+  admissionRequests: [],
+  admissionRequestsCount: null,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -130,7 +141,19 @@ export const doctorReducer = (state = initialState, action) => {
         rooms: action.payload.rooms,
         isLoading: false,
       };
-
+    case GET_APPROVED_ADMISSIONS:
+      return {
+        ...state,
+        approvedAdmissions: action.payload.requests,
+        isLoading: false,
+      };
+    case GET_ADMISSION_REQUESTS:
+      return {
+        ...state,
+        admissionRequests: action.payload.requests,
+        admissionRequestsCount: action.payload.count,
+        isLoading: false,
+      };
     case GET_STATS:
       return {
         ...state,
@@ -277,19 +300,19 @@ export const doctorReducer = (state = initialState, action) => {
     case GENERATE_PRESCRIPTIONS_WITH_AI:
       return {
         ...state,
-        generatedPrescriptionsByAI: action.payload
+        generatedPrescriptionsByAI: action.payload,
       };
 
     case GET_ADMITTED_PATIENTS:
       return {
         ...state,
-        admittedPatients: action.payload
+        admittedPatients: action.payload,
       };
 
     case GET_ALL_DOCTORS:
       return {
         ...state,
-        allDoctors: action.payload
+        allDoctors: action.payload,
       };
 
     default:

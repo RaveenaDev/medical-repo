@@ -11,12 +11,14 @@ import {
   DELETE_DOCTOR_NOTE,
   EDIT_DOCTOR_NOTE,
   GENERATE_PRESCRIPTIONS_WITH_AI,
+  GET_ADMISSION_REQUESTS,
   GET_ADMITTED_PATIENTS,
   GET_ALL_DOCTORS,
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
+  GET_APPROVED_ADMISSIONS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
@@ -935,3 +937,43 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
     throw error;
   }
 };
+
+export const getApprovedAdmissions = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/approvedAdmissions`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    // console.log("Approved Admissions:", data);
+
+    dispatch({ type: GET_APPROVED_ADMISSIONS, payload: data });
+  } catch (error) {
+    console.error("Error fetching approved admissions:", error);
+  }
+};
+export const getAdmissionRequests =
+  (status = "") =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/admissionRequests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params: status ? { status } : {}, // Only send if provided
+      });
+
+      console.log("Admission Requests:", data);
+
+      dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
+    } catch (error) {
+      console.error("Error fetching admission requests:", error);
+    }
+  };

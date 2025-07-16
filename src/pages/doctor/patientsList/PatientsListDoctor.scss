@@ -1,5 +1,5 @@
 @use "sass:color";
-.patientsListContainer {
+.patientsListDoctorContainer {
   margin-top: 0.25rem;
   margin-bottom: 2rem;
 
@@ -93,7 +93,7 @@
   }
 
   .toAdmit {
-    background: #ffffff;
+    background-color: #ffffff;
     margin-top: 0.5rem;
     padding: 0.75rem;
 
@@ -122,9 +122,11 @@
         padding: 1rem;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 1rem;
+        justify-content: space-between;
         .card_upper {
           display: flex;
+          justify-content: space-between;
           .patientInfo {
             .patientDetailsContainer {
               display: flex;
@@ -190,12 +192,34 @@
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-        .admit_btn {
-          padding: 5px 10px;
+          font-family: "Karla", "sans-serif";
+          font-weight: 500;
           font-size: 14px;
-          background: #dae4ff;
-          color: #333333;
+          line-height: 100%;
+          letter-spacing: 0%;
+          vertical-align: middle;
+
+          .admit_btn {
+            padding: 5px 10px;
+            background: #dae4ff;
+            color: #333333;
+          }
+
+          .approval-status {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            .approved-text {
+              color: #2e823b;
+              font-weight: 600;
+            }
+
+            .pending-text {
+              color: #eaa000;
+              font-weight: 600;
+            }
+          }
         }
       }
     }

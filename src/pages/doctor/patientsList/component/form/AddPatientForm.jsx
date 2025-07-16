@@ -21,6 +21,7 @@ const AddPatientForm = ({ onClose }) => {
     roomNo: "",
     bedNo: "",
     deposit: "",
+    medicalNote: "",
   });
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,6 +50,7 @@ const AddPatientForm = ({ onClose }) => {
         room: form.roomNo,
         bed: form.bedNo,
         deposit: parseFloat(form.deposit),
+        medicalNote: form.medicalNote,
       },
     };
 
@@ -191,11 +193,18 @@ const AddPatientForm = ({ onClose }) => {
           <section>
             <h4>Medical notes</h4>
             <div className="form-section">
-              <div className="form-note">
-                Patient presents with classic symptoms of angina. ECG changes
-                suggestive of ischemia. Recommend immediate cardiac enzyme panel
-                and ECG monitoring. Consider starting aspirin and beta-blockers
-                pending further evaluation.
+              <div className="form-group">
+                <div className="form-field">
+                  <label>Reason</label>
+                  <input
+                    type="text"
+                    value={form.medicalNote}
+                    onChange={(e) =>
+                      setForm({ ...form, medicalNote: e.target.value })
+                    }
+                    required
+                  />
+                </div>
               </div>
               <div className="form-group">
                 <div className="form-field">
