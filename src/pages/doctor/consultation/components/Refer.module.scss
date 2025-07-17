@@ -503,6 +503,7 @@ input[type="checkbox"]:checked + .fakeRadio::after {
   gap: 0.6vh;
   height: 11vh;
   margin-top: 1vh;
+  cursor: pointer;
   img {
     width: 1.7vw;
   }

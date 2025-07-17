@@ -309,121 +309,140 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
             </div>
           </div>
 
-          <div
-            className={`${styles["lp-2"]} ${
-              selectedComponent === "MedicalHistory" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("MedicalHistory")}
-          >
-            <p>Medical History</p>
-          </div>
-          <div
-            className={`${styles["lp-3"]} ${
-              selectedComponent === "CurrentMedication" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("CurrentMedication")}
-          >
-            <p>Current Medication</p>
-          </div>
-          <div
-            className={`${styles["lp-4"]} ${
-              selectedComponent === "DiagnosisAndVital" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("DiagnosisAndVital")}
-          >
-            <p>Diagnosis & Vital</p>
-          </div>
-          <div
-            className={`${styles["lp-5"]} ${
-              selectedComponent === "PerceptionAndMedicines"
-                ? styles.active
-                : ""
-            }`}
-            onClick={() => setSelectedComponent("PerceptionAndMedicines")}
-          >
-            <p>Perception & Medicines</p>
-          </div>
-          <div
-            onClick={() => setSelectedComponent("TreatmentAndTest")}
-            className={`${styles["lp-6"]} ${
-              selectedComponent === "TreatmentAndTest" ? styles.active : ""
-            }`}
-          >
-            <p>Treatment and Tests</p>
-          </div>
+          {
+            !selectedForm ? (
+                  <>
+                    <div
+                        className={`${styles["lp-2"]} ${
+                            selectedComponent === "MedicalHistory" ? styles.active : ""
+                        }`}
+                        onClick={() => setSelectedComponent("MedicalHistory")}
+                    >
+                      <p>Medical History</p>
+                    </div>
+                    <div
+                        className={`${styles["lp-3"]} ${
+                            selectedComponent === "CurrentMedication" ? styles.active : ""
+                        }`}
+                        onClick={() => setSelectedComponent("CurrentMedication")}
+                    >
+                      <p>Current Medication</p>
+                    </div>
+                    <div
+                        className={`${styles["lp-4"]} ${
+                            selectedComponent === "DiagnosisAndVital" ? styles.active : ""
+                        }`}
+                        onClick={() => setSelectedComponent("DiagnosisAndVital")}
+                    >
+                      <p>Diagnosis & Vital</p>
+                    </div>
+                    <div
+                        className={`${styles["lp-5"]} ${
+                            selectedComponent === "PerceptionAndMedicines"
+                                ? styles.active
+                                : ""
+                        }`}
+                        onClick={() => setSelectedComponent("PerceptionAndMedicines")}
+                    >
+                      <p>Perception & Medicines</p>
+                    </div>
+                    <div
+                        onClick={() => setSelectedComponent("TreatmentAndTest")}
+                        className={`${styles["lp-6"]} ${
+                            selectedComponent === "TreatmentAndTest" ? styles.active : ""
+                        }`}
+                    >
+                      <p>Treatment and Tests</p>
+                    </div>
+
+                  </>
+              ) : (
+                  <>
+                    {selectedForm?.sections?.map((section, index) => (
+                        <div
+                            key={section.id}
+                            className={`${styles["lp-6"]} ${selectedComponent === section.id ? styles.active : ""}`}
+                            onClick={() => setSelectedComponent(section.id)}
+                        >
+                          <p>{section.name}</p>
+                        </div>
+                    ))}
+                  </>
+            )
+          }
 
           {customSections.map((section, index) => (
-            <div
-              key={index}
-              className={`${styles["lp-6"]} ${
-                selectedComponent === section ? styles.active : ""
-              }`}
-              onClick={() => setSelectedComponent(section)}
-            >
-              <p>{section}</p>
-            </div>
+              <div
+                  key={index}
+                  className={`${styles["lp-6"]} ${
+                      selectedComponent === section ? styles.active : ""
+                  }`}
+                  onClick={() => setSelectedComponent(section)}
+              >
+                <p>{section}</p>
+              </div>
           ))}
 
           <div className={styles["lp-7"]} onClick={openAddQuestion}>
-            <Plus className={styles["lp-7-icon"]} size={38} />
+            <Plus className={styles["lp-7-icon"]} size={38}/>
             <p>Add Question</p>
           </div>
 
           <div className={styles["lp-8"]}>
             <button onClick={handleComplete}>
-              <CircleCheck size={15} />
+              <CircleCheck size={15}/>
               <p>Complete</p>
             </button>
             <button className={styles["lp-8-refBtn"]} onClick={handleRefer}>
-              <img src="/assets/healthicons_referral.svg" sizes={""} alt="" />
+              <img src="/assets/healthicons_referral.svg" sizes={""} alt=""/>
               <p>Refer</p>
             </button>
           </div>
           <button
-            type="button"
-            className={styles["btn"]}
-            onClick={handleSchedule}
+              type="button"
+              className={styles["btn"]}
+              onClick={handleSchedule}
           >
-            <CalendarCheck className={styles["calendar-icon2"]} />
+            <CalendarCheck className={styles["calendar-icon2"]}/>
             <p>Schedule Treatment</p>
           </button>
         </div>
         {activeModal === "complete" && (
-          <>
-            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
-            <div className={styles["complete-modal"]}>
-              <Complete onClose={closeModal} onComplete={openNextAppointment} />
-            </div>
-          </>
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
+              <div className={styles["complete-modal"]}>
+                <Complete onClose={closeModal} onComplete={openNextAppointment}/>
+              </div>
+            </>
         )}
         {activeModal === "refer" && (
-          <>
-            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
-            <div className={styles["refer-modal"]}>
-              <Refer onClose={closeModal} modalData={modalData} onSuccess={onSuccess}/>
-            </div>
-          </>
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
+              <div className={styles["refer-modal"]}>
+                <Refer onClose={closeModal} modalData={modalData} onSuccess={onSuccess}/>
+              </div>
+            </>
         )}
         {activeModal === "nextAppointment" && (
-          <>
-            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
-            <div className={styles["nextAppointment-modal"]}>
-              <NextAppointment
-                onClose={closeModal}
-                nextAppointment={nextAppointment}
-              />
-            </div>
-          </>
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
+              <div className={styles["nextAppointment-modal"]}>
+                <NextAppointment
+                    onClose={closeModal}
+                    nextAppointment={nextAppointment}
+                />
+              </div>
+            </>
         )}
         {activeModal === "addQuestion" && (
-          <>
-            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
-            <div className={styles["addQuestion-modal"]}>
-              <AddQuestion
-                onClose={closeModal}
-                onAddSection={handleAddSection}
-              />
-            </div>
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
+              <div className={styles["addQuestion-modal"]}>
+                <AddQuestion
+                    onClose={closeModal}
+                    onAddSection={handleAddSection}
+                />
+              </div>
           </>
         )}{" "}
         {activeModal === "scheduleTreatment" && (

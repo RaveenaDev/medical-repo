@@ -3,10 +3,16 @@ import { X, ChevronUp, ChevronDown, PencilLine } from "lucide-react";
 import styles from "./Refer.module.scss";
 import { Box, TextField } from "@mui/material";
 import { fontSize, styled } from "@mui/system";
+import {submitConsultation} from "../../../../components/State/Doctor/Action.js";
 
 const Refer = ({ onClose,modalData,onSuccess }) => {
 
   console.log("Modal Data: ",modalData)
+  const [referralId, setReferralId] = useState("");
+  const [newFacility, setNewFacility] = useState("");
+  const [referredSpecialist, setReferredSpecialist] = useState("");
+  const [supportingDocument, setSupportingDocument] = useState(null);
+
   const [selectedTab, setSelectedTab] = useState("internal referral");
 
   const departmentOptions = ["dep option 1", "dep option 2", " dep option 3"];
@@ -82,10 +88,32 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
   });
 
   const handleSubmit = () => {
-    console.log("Submitted...");
-    onClose();
-    onSuccess();
-  }
+    const formData = {
+      tab: selectedTab,
+      referralUrgency: document.querySelector('input[name="urgency"]:checked')?.value || "",
+      referredToDepartment: selectedDepartment,
+      referredToDoctor: selectedDoctor,
+      referralReason: reasonForReferral,
+      referralTracking: {
+        referralId,
+        status: selectedStatus,
+        followUpDate: document.querySelectorAll('input[type="date"]')[1]?.value || "",
+      },
+      referredSpecialist,
+      newFacilityName: newFacility,
+      preferredDate: document.querySelector('input[type="date"]')?.value || "",
+      preferredTime: document.querySelector('input[type="time"]')?.value || "",
+      externalFacility: selectedExFacility,
+      referralType,
+      specialtyArea: selectedSpArea,
+      supportingDocument,
+    };
+
+    console.log("Final Form Data: ", formData);
+    // dispatch(submitConsultation(finalData,onSuccess,onClose))
+    // onSuccess();
+  };
+
 
   return (
     <div>
@@ -302,7 +330,12 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                     <div className={styles.referralTrackingIn}>
                       <div className={styles.refId}>
                         <p>Referral ID</p>
-                        <input type="text" className={styles.refIDInput} />
+                        <input
+                            type="text"
+                            className={styles.refIDInput}
+                            value={referralId}
+                            onChange={(e) => setReferralId(e.target.value)}
+                        />
                       </div>
                       <div className={styles.status}>
                         <p>Status</p>
@@ -416,14 +449,24 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                     </div>
                     <div className={styles.rightRow}>
                       <p className={styles.label}>Or Add New Facility</p>
-                      <input type="text" placeholder="Enter Facility Name" />
+                      <input
+                          type="text"
+                          placeholder="Enter Facility Name"
+                          value={newFacility}
+                          onChange={(e) => setNewFacility(e.target.value)}
+                      />
                     </div>
                   </div>
                   {/* row2  of EX-Ref*/}
                   <div className={styles.row1}>
                     <div className={styles.rightRow}>
                       <p className={styles.label}>Referred Specialist</p>
-                      <input type="text" placeholder="Search Specialist Name" />
+                      <input
+                          type="text"
+                          placeholder="Search Specialist Name"
+                          value={referredSpecialist}
+                          onChange={(e) => setReferredSpecialist(e.target.value)}
+                      />
                     </div>
                     <div className={styles.r1Dropdown}>
                       <p className={styles.label}>Specialty Area</p>
@@ -550,13 +593,21 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                   {/* row 4 of Ex-Ref */}
                   <div className={styles.supportingDocument}>
                     <h4>Supporting Document</h4>
-                    <div className={styles.DragAndDropContainer}>
-                      <img src="/assets/uploadCloudIcon.svg" alt="" />
-                      <span>Drag and drop files here or click to browse</span>
+                    <div>
+                      <input
+                          type="file"
+                          style={{display: "none"}}
+                          onChange={(e) => setSupportingDocument(e.target.files[0])}
+                          id="upload-doc"
+                      />
+                      <label htmlFor="upload-doc" className={styles.DragAndDropContainer}>
+                        <img src="/assets/uploadCloudIcon.svg" alt=""/>
+                        <span>Drag and drop files here or click to browse</span>
+                      </label>
                     </div>
                   </div>
                   {/* Submit */}
-                  <div className={styles.submitBtn2}>
+                  <div className={styles.submitBtn2} onClick={handleSubmit}>
                     <button>Submit</button>
                   </div>
                 </div>
