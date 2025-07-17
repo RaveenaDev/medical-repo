@@ -1035,8 +1035,7 @@ export const getPatientDetailsByID = (patientId) => async (dispatch) => {
 
     const { data } = await axios.get(`${API_URL}/${patientId}/details`, {
       headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
 
@@ -1045,5 +1044,31 @@ export const getPatientDetailsByID = (patientId) => async (dispatch) => {
     dispatch({ type: GET_PATIENTS_DEATILS, payload: data.data });
   } catch (error) {
     console.error("Error fetching forms:", error);
+  }
+};
+
+export const admitPatient = (requestId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+      `${API_URL}/admitPatient/${requestId}`,
+      {}, // empty body
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("Patient Admitted Successfully", data);
+    toast.success("Patient Admitted Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error Admitting patient:", error);
+    toast.error(error?.response?.data?.message || "Admission failed");
   }
 };
