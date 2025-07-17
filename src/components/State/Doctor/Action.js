@@ -853,9 +853,9 @@ export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
       }
     );
 
-    console.log("Progress Tracker: ", data);
+    // console.log("Progress Tracker: ", data);
 
-    dispatch({ type: GET_PROGRESS_TRACKER, payload: data.patients });
+    dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
   } catch (error) {
     console.error("Error getting progress details:", error);
   }

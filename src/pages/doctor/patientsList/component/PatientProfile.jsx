@@ -39,8 +39,10 @@ const PatientProfile = ({ patientId }) => {
   };
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
+  const progressTracker = useSelector((store) => store.doctor.progressTracker);
 
-  console.log("patieny details: ", patientDetails);
+  // console.log("patieny details: ", patientDetails);
+  // console.log("progressTracker details: ", progressTracker);
 
   return (
     <div>
