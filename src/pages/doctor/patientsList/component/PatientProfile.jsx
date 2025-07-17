@@ -6,8 +6,11 @@ import MedAdminRecord from "./MedAdminRecord";
 import Nursing from "./Nursing";
 import PastReportsAndDischarge from "./PastReportsAndDischarge";
 import UpdateProgress from "./form/UpdateProgress";
-import { useDispatch } from "react-redux";
-import { getProgressTrackerDetails } from "../../../../components/State/Doctor/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getPatientDetailsByID,
+  getProgressTrackerDetails,
+} from "../../../../components/State/Doctor/Action.js";
 import BedInfo from "./modals/BedInfo.jsx";
 const PatientProfile = ({ patientId }) => {
   const [activeTab, setActiveTab] = useState("medical admin");
@@ -25,6 +28,7 @@ const PatientProfile = ({ patientId }) => {
 
   useEffect(() => {
     dispatch(getProgressTrackerDetails(patientId));
+    dispatch(getPatientDetailsByID(patientId));
   }, [dispatch]);
 
   const openUpdateProgress = () => setActiveModal("update progress");
@@ -33,6 +37,13 @@ const PatientProfile = ({ patientId }) => {
   const handleActivePatientInfo = () => {
     setActivePatientInfo((prev) => !prev);
   };
+
+  const patientDetails = useSelector((store) => store.doctor.patientDetails);
+  const progressTracker = useSelector((store) => store.doctor.progressTracker);
+
+  // console.log("patieny details: ", patientDetails);
+  // console.log("progressTracker details: ", progressTracker);
+
   return (
     <div>
       <div className={styles.section1}>
@@ -48,22 +59,33 @@ const PatientProfile = ({ patientId }) => {
             <div className={styles.patientCardInfo}>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey}>Patient Name:</p>
-                <p className={styles.patientValue}>Jasmine Kaur</p>
+                <p className={styles.patientValue}>
+                  {patientDetails.name || "n/a"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 {" "}
                 <p className={styles.patientKey}>Patient ID:</p>
-                <p className={styles.patientValue}>XXXXXXX</p>
+                <p className={styles.patientValue}>
+                  {" "}
+                  {patientDetails.patId || "n/a"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 {" "}
                 <p className={styles.patientKey}>Contact Info:</p>
-                <p className={styles.patientValue}>(+91)1234567890</p>
+                <p className={styles.patientValue}>
+                  {" "}
+                  {patientDetails.phone || "n/a"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 {" "}
                 <p className={styles.patientKey}>Age:</p>
-                <p className={styles.patientValue}>27</p>
+                <p className={styles.patientValue}>
+                  {" "}
+                  {patientDetails.age || "n/a"}
+                </p>
               </div>
             </div>
           </div>
@@ -90,8 +112,7 @@ const PatientProfile = ({ patientId }) => {
                   <span>Address line:</span>
                 </p>
                 <p className={styles.patientValue2}>
-                  1234, Sector 15, Near City Mall, MG Road, WWWWWWWW WWWWW
-                  WWWWWW WWWWW
+                  {patientDetails.address || "n/a"}
                 </p>
               </div>
             </div>

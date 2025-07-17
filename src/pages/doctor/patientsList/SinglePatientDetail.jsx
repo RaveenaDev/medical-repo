@@ -4,7 +4,7 @@ import styles from "./SinglePatientDetail.module.scss";
 import { Plus, ChevronLeft } from "lucide-react";
 import PatientProfile from "./component/PatientProfile";
 import PatientPreviousRecord from "./component/records/PatientPreviousRecord.jsx";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BillingDetails from "./component/BillingDetails.jsx";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -12,7 +12,7 @@ const SinglePatientDetail = () => {
 
   const location = useLocation();
   const patientId = location.state;
-  console.log("ID: ",patientId)
+  // console.log("ID: ",patientId)
   const handleBackBtn = () => {
     navigate("/doctor/patientList");
   };
@@ -105,7 +105,7 @@ const SinglePatientDetail = () => {
 
         <section>
           {activeTab === "profile" ? (
-            <PatientProfile patientId={patientId}/>
+            <PatientProfile patientId={patientId} />
           ) : (
             <PatientPreviousRecord />
           )}

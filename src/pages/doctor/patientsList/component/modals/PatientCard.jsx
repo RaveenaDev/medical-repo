@@ -4,16 +4,19 @@ import { useNavigate } from "react-router-dom";
 
 const PatientCard = ({ patient }) => {
   const navigate = useNavigate();
+  // console.log("Patient in adimitted:", patient);
   return (
     <div
       className="patientCard"
-      onClick={() => navigate(`/doctor/patientList/patient-details`,{state: patient._id})}
+      onClick={() =>
+        navigate(`/doctor/patientList/patient-details`, { state: patient._id })
+      }
     >
       <div className="patientInfo">
         <div className="patientHeader">
           <div className="patientDetailsContainer">
             <img
-              src='https://randomuser.me/api/portraits/women/12.jpg'
+              src="https://randomuser.me/api/portraits/women/12.jpg"
               alt={`${patient.name} Avatar`}
               className="patientAvatar"
             />
@@ -25,7 +28,9 @@ const PatientCard = ({ patient }) => {
             </div>
           </div>
           <div className={`statusDot ${patient.admissionStatus}`}>
-            {patient.admissionStatus === "Critical" && <div className="innerCircle" />}
+            {patient.admissionStatus === "Critical" && (
+              <div className="innerCircle" />
+            )}
           </div>
         </div>
         <div className="patientCardDetails">
