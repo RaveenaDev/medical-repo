@@ -27,7 +27,6 @@ const PatientProfile = ({ patientId }) => {
   }, [activeModal]);
 
   useEffect(() => {
-    dispatch(getProgressTrackerDetails(patientId));
     dispatch(getPatientDetailsByID(patientId));
   }, [dispatch]);
 
@@ -39,10 +38,8 @@ const PatientProfile = ({ patientId }) => {
   };
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  const progressTracker = useSelector((store) => store.doctor.progressTracker);
 
   // console.log("patieny details: ", patientDetails);
-  // console.log("progressTracker details: ", progressTracker);
 
   return (
     <div>
@@ -173,7 +170,7 @@ const PatientProfile = ({ patientId }) => {
           </div>
           <h4>Progress Tracker</h4>
           <div>
-            <ProgressTracker2 />
+            <ProgressTracker2 patientId={patientId} />
           </div>
         </div>
         {activeModal === "bedInfo" && (

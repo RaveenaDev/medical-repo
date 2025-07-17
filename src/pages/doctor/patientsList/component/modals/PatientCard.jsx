@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 const PatientCard = ({ patient }) => {
   const navigate = useNavigate();
+  const formatStatus = (status) => {
+    if (!status) return "";
+    return status.replace(/\+/g, "-").toLowerCase(); // e.g., "Admitted+FollowUp" → "admitted-followup"
+  };
   // console.log("Patient in adimitted:", patient);
   return (
     <div
@@ -27,10 +31,8 @@ const PatientCard = ({ patient }) => {
               </p>
             </div>
           </div>
-          <div className={`statusDot ${patient.admissionStatus}`}>
-            {patient.admissionStatus === "Critical" && (
-              <div className="innerCircle" />
-            )}
+          <div className={`statusDot ${formatStatus(patient.type)}`}>
+            {patient.type === "critical" && <div className="innerCircle" />}
           </div>
         </div>
         <div className="patientCardDetails">

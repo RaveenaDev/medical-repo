@@ -46,7 +46,13 @@ const PatientsList = () => {
 
   const filteredPatients = patientsAdmitted.filter((patient) => {
     if (filter === "Total") return true;
-    return patient.admissionStatus === filter;
+    if (filter === "Follow-Up") {
+      return patient.type?.toLowerCase() === "admitted+followup";
+    }
+    if (filter === "Admitted") {
+      return patient.type?.toLowerCase() === "admitted";
+    }
+    return patient.type === filter;
   });
 
   const [currentPage, setCurrentPage] = useState(1);

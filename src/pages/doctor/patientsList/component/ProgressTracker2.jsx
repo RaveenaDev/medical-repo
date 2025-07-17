@@ -5,11 +5,17 @@ import LabTests from "./form/LabTests";
 import InitialConsultation from "./form/InitialConsultation";
 import Surgery from "./form/Surgery";
 import styles from "./ProgressTracker2.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { getProgressTrackerDetails } from "../../../../components/State/Doctor/Action";
 
-const ProgressTracker2 = ({ patient }) => {
-  const navigate = useNavigate();
+const ProgressTracker2 = ({ patientId }) => {
+  const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState(null);
-
+  useEffect(() => {
+    dispatch(getProgressTrackerDetails(patientId));
+  }, [dispatch]);
+  const progressTracker = useSelector((store) => store.doctor.progressTracker);
+  console.log("progressTracker details: ", progressTracker);
   const steps = [
     {
       phase: "Post-Surgery Follow-up",
@@ -40,10 +46,6 @@ const ProgressTracker2 = ({ patient }) => {
       status: "Completed",
     },
   ];
-
-  const handleClick = () => {
-    navigate("/admin/reception/patients/Tracking", { state: { patient } });
-  };
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
@@ -96,7 +98,7 @@ const ProgressTracker2 = ({ patient }) => {
         </div>
 
         {/* Data rows */}
-        {steps.map((step, index) => (
+        {[...progressTracker].reverse().map((step, index) => (
           <div
             key={index}
             className={`${styles.tableRow} ${
@@ -118,9 +120,9 @@ const ProgressTracker2 = ({ patient }) => {
               {step.phase}
             </div>
             <div className={`${styles.tableCell} ${styles.dateCell}`}>
-              {step.date}
+              {new Date(step.date).toISOString().split("T")[0]}
             </div>
-            <div className={styles.tableCell}>{step.responsible}</div>
+            <div className={styles.tableCell}>{step.doctor.name}</div>
             <div className={styles.tableCell}>{step.progress}</div>
             <div
               className={`${styles.tableCell} ${
