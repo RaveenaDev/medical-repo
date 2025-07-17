@@ -35,6 +35,7 @@ export const Consultation = () => {
 
   const [activeView, setActiveView] = useState("consult");
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const [selectedForm, setSelectedForm] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -50,6 +51,15 @@ export const Consultation = () => {
   }, [dispatch, selectedDate, shouldRefetch]);
 
   const appointments = useSelector((store) => store.doctor.appointmentsByDate);
+
+  const ongoingAppointment = appointments.find(
+      (app) => app.status === "Ongoing"
+  );
+
+  const handleApplyForm = (form) => {
+    // console.log("Selected Form:", form);
+    setSelectedForm(form);
+  };
 
   return (
     <div>
@@ -91,19 +101,23 @@ export const Consultation = () => {
                   onClick={closeModal}
                 />
                 <div className={styles["library-modal"]}>
-                  <Library onClose={closeModal} />
+                  <Library onClose={closeModal} onApply={handleApplyForm}/>
                 </div>
               </>
             )}
           </div>
           <div className={styles["header-right"]}>
-            <button className={styles["from-library"]} onClick={openLibrary}>
-              <LibraryBig />
-              <p>Form Library</p>
-            </button>
+            {
+              (ongoingAppointment) && (
+                    <button className={styles["from-library"]} onClick={openLibrary}>
+                      <LibraryBig/>
+                      <p>Form Library</p>
+                    </button>
+                )
+            }
             <button
-              className={styles["appointment-container"]}
-              onClick={() => setActiveView("appointmentHistory")}
+                className={styles["appointment-container"]}
+                onClick={() => setActiveView("appointmentHistory")}
             >
               <ClockFading className={styles["clock-icon"]} size={16} />
               <p>Appointment History</p>
@@ -127,7 +141,7 @@ export const Consultation = () => {
           </DndProvider>
         )}
         {activeView === "consult" && (
-          <ConsultBody appointments={appointments} onSuccess={() => setShouldRefetch(true)}/>
+          <ConsultBody selectedForm={selectedForm} appointments={appointments} onSuccess={() => setShouldRefetch(true)}/>
         )}
       </div>
     </div>

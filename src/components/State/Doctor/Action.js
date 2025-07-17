@@ -6,14 +6,14 @@ import {
   CREATE_ADMISSION_REQUEST,
   CREATE_CATEGORY,
   CREATE_DOCTOR_NOTE,
-  CREATE_DOCTOR_REQUESTS,
+  CREATE_DOCTOR_REQUESTS, CREATE_NEW_CONSULTATION_FORM,
   CREATE_NEW_EVENT,
   DELETE_DOCTOR_NOTE,
   EDIT_DOCTOR_NOTE,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
   GET_ADMITTED_PATIENTS,
-  GET_ALL_DOCTORS,
+  GET_ALL_DOCTORS, GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -977,3 +977,52 @@ export const getAdmissionRequests =
       console.error("Error fetching admission requests:", error);
     }
   };
+
+export const getAllUserConsultationForms = () =>
+        async (dispatch) => {
+          try {
+            const token = localStorage.getItem("jwt");
+
+            const { data } = await axios.get(`${API_URL}/consultationForms`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              // params: {
+              //   patientId,
+              //   doctorId
+              // },
+            });
+
+            // console.log("Consultation Forms Received Successfully :", data);
+
+            dispatch({ type: GET_ALL_USER_CONSULTATION_FORMS, payload: data.forms });
+          } catch (error) {
+            console.error("Error fetching forms:", error);
+          }
+        };
+
+export const createNewConsultationForm =
+    (consultationFormData, onSuccess, onClose) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+
+        const { data } = await axios.post(
+            `${API_URL}/submitConsultation`,
+            consultationFormData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+              },
+            }
+        );
+
+        console.log("Consultation Creation from Backend : ", data);
+
+        dispatch({ type: CREATE_NEW_CONSULTATION_FORM, payload: data });
+        onSuccess();
+        onClose();
+      } catch (error) {
+        console.log(error);
+      }
+    };

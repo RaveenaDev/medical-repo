@@ -7,7 +7,7 @@ import {
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
   GET_ADMITTED_PATIENTS,
-  GET_ALL_DOCTORS,
+  GET_ALL_DOCTORS, GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -81,6 +81,7 @@ const initialState = {
   approvedAdmissions: [],
   admissionRequests: [],
   admissionRequestsCount: null,
+  userConsultationForms: []
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -314,6 +315,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         allDoctors: action.payload,
       };
+
+    case GET_ALL_USER_CONSULTATION_FORMS:
+      return {
+        ...state,
+        userConsultationForms: action.payload
+      }
 
     default:
       return state;

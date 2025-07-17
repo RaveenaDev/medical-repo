@@ -16,7 +16,7 @@ import {generatePrescriptionsWithAI, submitConsultation} from "../../../../compo
 import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 
-const ConsultBody = ({ appointments,onSuccess}) => {
+const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
   const [completeData, setCompleteData] = useState({
     medicalHistory: null,
     currentMedications: null,
@@ -33,6 +33,8 @@ const ConsultBody = ({ appointments,onSuccess}) => {
     action: null,
     consultationData: null
   })
+
+  console.log("Selected Form : ",selectedForm)
 
   const [modalData, setModalData] = useState(null);
 
