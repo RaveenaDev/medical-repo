@@ -126,11 +126,10 @@ const PatientProfile = ({ patientId }) => {
 
           {/* Patient Info Control */}
           <div className={styles.patientInfoControl}>
-            <div>
-              <button onClick={openBedInfo}>
-                <Bed className={styles.bedIcon} /> Bed no.
-              </button>
-            </div>
+            <button onClick={openBedInfo}>
+              <Bed className={styles.bedIcon} /> Bed no.
+            </button>
+
             <div
               className={styles.patientInfoControlRight}
               onClick={() => handleActivePatientInfo()}

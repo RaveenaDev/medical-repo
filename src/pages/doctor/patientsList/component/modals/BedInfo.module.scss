@@ -13,7 +13,7 @@
 .container {
   padding: 0 1vw 2vh 1vw;
   font-family: "Karla", sans-serif;
-  height: 48vh;
+  height: 75vh;
   overflow-y: auto;
   h1 {
     font-size: 2.5vh;
@@ -37,6 +37,7 @@
   display: flex;
   justify-content: center;
   gap: 0.8vw;
+  margin-top: 14vh;
   button {
     border-radius: 4px;
     padding: 1.2vh 0.8vw;
@@ -97,7 +98,7 @@
 
 .labelRB {
   color: #25307f;
-  font-size: 2.1vh;
+  font-size: 2.05vh;
   font-weight: 510;
 }
 
@@ -135,8 +136,13 @@
   flex-direction: column;
   gap: 0.8vh;
 }
-
-.pageContainer {
+.contentWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.contentContainer {
   display: flex;
   flex-direction: column;
   gap: 2vh;
@@ -146,11 +152,23 @@
   display: flex;
   flex-direction: column;
   gap: 1vh;
+}
+.amenitiesBtnWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.amenitiesBtn {
+  background: white;
+  border: 1.6px solid #5461be;
+  border-radius: 4px;
+  padding: 0.8vh 0.5vw;
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-size: 2vh;
+  font-weight: 475;
 
-  button {
-    background: white;
-    border: 1.8px solid #5461be;
-    border-radius: 4px;
-    padding: 0.8vh 0.5vw;
+  img {
+    height: 2.2vh;
   }
 }
