@@ -103,6 +103,13 @@
   margin-left: 1vw;
   margin-top: 2vh;
   padding-bottom: 1vh;
+  height: 24.5vh;
+}
+.emergencyContact {
+  gap: 0.9vh;
+}
+.patientDetail {
+  gap: 0.9vh;
 }
 
 .emergencyContact {
@@ -122,6 +129,45 @@
   gap: 1vw;
 }
 
+.patientInfoControl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.6vh;
+  button {
+    background: white;
+    border: none;
+    border: 1px solid #b5b8d3;
+    border-radius: 4px;
+    font-size: 1.9vh;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.3vw;
+    padding: 0.8vh 0.7vw;
+    box-shadow: 0px 0px 4px rgba(181, 184, 211, 0.5);
+    &:hover {
+      border: 1px solid #b5b8d3;
+    }
+  }
+}
+
+.bedIcon {
+  color: #25307f;
+  height: 2.4vh;
+}
+.patientInfoControlRight {
+  display: flex;
+  align-items: center;
+  color: #25307f;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.rightIcon {
+  color: #58595b;
+  height: 2.3vh;
+}
 .patientValue2 {
   width: 60%;
   color: #25307f;
@@ -246,7 +292,22 @@
   flex-direction: column;
   align-items: stretch;
 }
-
+.bedInfo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: 42vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 0vh 0vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
 .plusIcon {
   height: 2.4vh;
 }

@@ -1051,21 +1051,23 @@ const PatientNewForm = ({ onBack }) => {
           <div className={styles.section3}>
             {/* last row */}
             <div className={styles.mLastRow}>
-              <button
-                className={styles.cancelBtn}
-                onClick={() => {
-                  setSections((prev) =>
-                    prev.map((section) =>
-                      section.id === selectedSectionId
-                        ? { ...section, fields: [] }
-                        : section
-                    )
-                  );
-                  setFormTitle(""); // Optional: reset form title too
-                }}
-              >
-                Cancel
-              </button>
+              {!currentSection?.isStatic && (
+                <button
+                  className={styles.cancelBtn}
+                  onClick={() => {
+                    setSections((prev) =>
+                      prev.map((section) =>
+                        section.id === selectedSectionId
+                          ? { ...section, fields: [] }
+                          : section
+                      )
+                    );
+                    setFormTitle(""); // Optional: reset form title too
+                  }}
+                >
+                  Cancel
+                </button>
+              )}
               <button className={styles.saveBtn} onClick={handleSaveForm}>
                 Save Form
               </button>
@@ -1079,46 +1081,48 @@ const PatientNewForm = ({ onBack }) => {
           </div>
 
           {/* Right Panel Buttons*/}
-          <div className={styles.rightPanelButtons}>
-            {/* row 2 */}
-            <DraggableButton
-              type="text"
-              onClick={() => handleAddTextField("")}
-              icon={<TextCursorInput className={styles.rightIcon} />}
-              label="Text Field"
-            />
-            {/* row 3 */}
-            <DraggableButton
-              type="multiline"
-              onClick={handleAddMultilineField}
-              icon={<img src="/assets/multilineIcon.svg" alt="" />}
-              label="Multi-line Text Field"
-            />
+          {!currentSection?.isStatic && (
+            <div className={styles.rightPanelButtons}>
+              {/* row 2 */}
+              <DraggableButton
+                type="text"
+                onClick={() => handleAddTextField("")}
+                icon={<TextCursorInput className={styles.rightIcon} />}
+                label="Text Field"
+              />
+              {/* row 3 */}
+              <DraggableButton
+                type="multiline"
+                onClick={handleAddMultilineField}
+                icon={<img src="/assets/multilineIcon.svg" alt="" />}
+                label="Multi-line Text Field"
+              />
 
-            {/* row 4 */}
-            <DraggableButton
-              type="radio"
-              onClick={handleAddRadio}
-              icon={<CircleDot className={styles.rightIcon} />}
-              label="Radio"
-            />
+              {/* row 4 */}
+              <DraggableButton
+                type="radio"
+                onClick={handleAddRadio}
+                icon={<CircleDot className={styles.rightIcon} />}
+                label="Radio"
+              />
 
-            {/* row 5 */}
-            <DraggableButton
-              type="dropdown"
-              onClick={handleAddDropdown}
-              icon={<img src="/assets/dropDownIcon.svg" alt="" />}
-              label="Dropdown Menu"
-            />
+              {/* row 5 */}
+              <DraggableButton
+                type="dropdown"
+                onClick={handleAddDropdown}
+                icon={<img src="/assets/dropDownIcon.svg" alt="" />}
+                label="Dropdown Menu"
+              />
 
-            {/* row 6 */}
-            <DraggableButton
-              type="checklist"
-              onClick={handleAddChecklist}
-              icon={<img src="/assets/checklistIcon.svg" alt="" />}
-              label="Checklist"
-            />
-          </div>
+              {/* row 6 */}
+              <DraggableButton
+                type="checklist"
+                onClick={handleAddChecklist}
+                icon={<img src="/assets/checklistIcon.svg" alt="" />}
+                label="Checklist"
+              />
+            </div>
+          )}
         </div>
       </div>
     </>
