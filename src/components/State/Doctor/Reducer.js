@@ -7,7 +7,8 @@ import {
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
   GET_ADMITTED_PATIENTS,
-  GET_ALL_DOCTORS, GET_ALL_USER_CONSULTATION_FORMS,
+  GET_ALL_DOCTORS,
+  GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -26,6 +27,7 @@ import {
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
+  GET_PATIENTS_DEATILS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STAFF,
@@ -81,7 +83,8 @@ const initialState = {
   approvedAdmissions: [],
   admissionRequests: [],
   admissionRequestsCount: null,
-  userConsultationForms: []
+  userConsultationForms: [],
+  patientDetails: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -140,6 +143,13 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalRooms: action.payload.rooms.length,
         rooms: action.payload.rooms,
+        isLoading: false,
+      };
+
+    case GET_PATIENTS_DEATILS:
+      return {
+        ...state,
+        patientDetails: action.payload,
         isLoading: false,
       };
     case GET_APPROVED_ADMISSIONS:
@@ -319,8 +329,8 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_ALL_USER_CONSULTATION_FORMS:
       return {
         ...state,
-        userConsultationForms: action.payload
-      }
+        userConsultationForms: action.payload,
+      };
 
     default:
       return state;

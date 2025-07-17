@@ -188,8 +188,8 @@ const PatientsList = () => {
   const handleAddPatientClick = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
 
-  // console.log("Approved Admission Requests", approvedAdmissions);
-  console.log("Admission Requests", admissionRequests);
+  // console.log("Addmitted Patiemts", patientsAdmitted);
+  // console.log("Admission Requests", admissionRequests);
   const sliderSettings = {
     dots: false,
     infinite: false,

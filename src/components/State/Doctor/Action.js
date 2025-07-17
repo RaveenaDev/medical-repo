@@ -6,14 +6,16 @@ import {
   CREATE_ADMISSION_REQUEST,
   CREATE_CATEGORY,
   CREATE_DOCTOR_NOTE,
-  CREATE_DOCTOR_REQUESTS, CREATE_NEW_CONSULTATION_FORM,
+  CREATE_DOCTOR_REQUESTS,
+  CREATE_NEW_CONSULTATION_FORM,
   CREATE_NEW_EVENT,
   DELETE_DOCTOR_NOTE,
   EDIT_DOCTOR_NOTE,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
   GET_ADMITTED_PATIENTS,
-  GET_ALL_DOCTORS, GET_ALL_USER_CONSULTATION_FORMS,
+  GET_ALL_DOCTORS,
+  GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -33,6 +35,7 @@ import {
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
+  GET_PATIENTS_DEATILS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
@@ -970,7 +973,7 @@ export const getAdmissionRequests =
         params: status ? { status } : {}, // Only send if provided
       });
 
-      console.log("Admission Requests:", data);
+      // console.log("Admission Requests:", data);
 
       dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
     } catch (error) {
@@ -978,51 +981,69 @@ export const getAdmissionRequests =
     }
   };
 
-export const getAllUserConsultationForms = () =>
-        async (dispatch) => {
-          try {
-            const token = localStorage.getItem("jwt");
+export const getAllUserConsultationForms = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
-            const { data } = await axios.get(`${API_URL}/consultationForms`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              // params: {
-              //   patientId,
-              //   doctorId
-              // },
-            });
+    const { data } = await axios.get(`${API_URL}/consultationForms`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      // params: {
+      //   patientId,
+      //   doctorId
+      // },
+    });
 
-            // console.log("Consultation Forms Received Successfully :", data);
+    // console.log("Consultation Forms Received Successfully :", data);
 
-            dispatch({ type: GET_ALL_USER_CONSULTATION_FORMS, payload: data.forms });
-          } catch (error) {
-            console.error("Error fetching forms:", error);
-          }
-        };
+    dispatch({ type: GET_ALL_USER_CONSULTATION_FORMS, payload: data.forms });
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+  }
+};
 
 export const createNewConsultationForm =
-    (consultationFormData, onSuccess, onClose) => async (dispatch) => {
-      try {
-        const token = localStorage.getItem("jwt");
+  (consultationFormData, onSuccess, onClose) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-        const { data } = await axios.post(
-            `${API_URL}/submitConsultation`,
-            consultationFormData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-              },
-            }
-        );
+      const { data } = await axios.post(
+        `${API_URL}/submitConsultation`,
+        consultationFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+      );
 
-        console.log("Consultation Creation from Backend : ", data);
+      console.log("Consultation Creation from Backend : ", data);
 
-        dispatch({ type: CREATE_NEW_CONSULTATION_FORM, payload: data });
-        onSuccess();
-        onClose();
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      dispatch({ type: CREATE_NEW_CONSULTATION_FORM, payload: data });
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const getPatientDetailsByID = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/${patientId}/details`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    // console.log("Patient Details Received Successfully :", data);
+
+    dispatch({ type: GET_PATIENTS_DEATILS, payload: data.data });
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+  }
+};
