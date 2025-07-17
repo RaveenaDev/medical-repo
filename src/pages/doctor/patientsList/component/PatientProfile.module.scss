@@ -133,13 +133,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1.6vh;
+  margin-top: 1vh;
   button {
     background: white;
     border: none;
     border: 1px solid #b5b8d3;
     border-radius: 4px;
-    font-size: 1.9vh;
+    font-size: max(0.9vw, 9px);
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -162,6 +162,7 @@
   color: #25307f;
   font-weight: 500;
   cursor: pointer;
+  font-size: max(1vw, 10px);
 }
 
 .rightIcon {
@@ -299,7 +300,7 @@
   transform: translate(-50%, -50%);
   z-index: 3;
   // height: 80vh;
-  width: 42vw;
+  width: max(38vw, 550px);
   background: #fff;
   border-radius: 0px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);

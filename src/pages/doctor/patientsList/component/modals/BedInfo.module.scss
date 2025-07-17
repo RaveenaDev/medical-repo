@@ -13,7 +13,7 @@
 .container {
   padding: 0 1vw 2vh 1vw;
   font-family: "Karla", sans-serif;
-  height: 48vh;
+  height: 75vh;
   overflow-y: auto;
   h1 {
     font-size: 2.5vh;
@@ -33,10 +33,22 @@
   -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-.submitBtnContainer {
+.submitBtnContainer1 {
   display: flex;
   justify-content: center;
   gap: 0.8vw;
+  margin-top: 14vh;
+  button {
+    border-radius: 4px;
+    padding: 1.2vh 0.8vw;
+    font-size: 1.9vh;
+  }
+}
+.submitBtnContainer2 {
+  display: flex;
+  justify-content: center;
+  gap: 0.8vw;
+  margin-top: 4vh;
   button {
     border-radius: 4px;
     padding: 1.2vh 0.8vw;
@@ -44,6 +56,17 @@
   }
 }
 
+.submitBtnContainer3 {
+  display: flex;
+  justify-content: center;
+  gap: 0.8vw;
+  margin-top: 3vh;
+  button {
+    border-radius: 4px;
+    padding: 1.2vh 0.8vw;
+    font-size: 1.9vh;
+  }
+}
 .blueBtn {
   border: none;
   background: #25307f;
@@ -97,7 +120,7 @@
 
 .labelRB {
   color: #25307f;
-  font-size: 2.1vh;
+  font-size: 2.05vh;
   font-weight: 510;
 }
 
@@ -135,8 +158,13 @@
   flex-direction: column;
   gap: 0.8vh;
 }
-
-.pageContainer {
+.contentWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.contentContainer {
   display: flex;
   flex-direction: column;
   gap: 2vh;
@@ -146,11 +174,78 @@
   display: flex;
   flex-direction: column;
   gap: 1vh;
+}
+.amenitiesBtnWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.amenitiesBtn {
+  background: white;
+  border: 1.6px solid #5461be;
+  border-radius: 4px;
+  padding: 0.8vh 0.5vw;
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-size: 2vh;
+  font-weight: 475;
 
-  button {
-    background: white;
-    border: 1.8px solid #5461be;
+  img {
+    height: 2.2vh;
+  }
+}
+.activeAmenity {
+  background: #5461be;
+  color: white;
+
+  img {
+    filter: brightness(0) invert(1); // makes the icon white
+  }
+}
+
+.changeBed {
+  input {
+    border: 1px solid #cfcfcf;
     border-radius: 4px;
-    padding: 0.8vh 0.5vw;
+    width: 97%;
+    outline: none;
+    font-family: "Karla", sans-serif;
+    padding: 1vh 0.5vw;
+    font-size: 1.9vh;
+  }
+}
+
+.changeReason {
+  textarea {
+    resize: none;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid #cfcfcf;
+    padding: 1vh 0.5vw;
+    width: 97%;
+  }
+}
+
+.sectionHeadingS {
+  font-size: 1.9vh;
+  font-weight: 510;
+  color: #4a4a4a;
+}
+
+.dataRA {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+.selectBedHeading {
+  color: #25307f;
+  font-size: 2.3vh;
+  font-weight: 550;
+  display: flex;
+  align-items: center;
+  gap: 0.4vw;
+  img {
+    height: 1.7vh;
   }
 }

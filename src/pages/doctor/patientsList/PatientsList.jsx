@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import AddPatientForm from "./component/form/AddPatientForm.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  admitPatient,
   getAdmissionRequests,
   getAdmittedPatients,
   getApprovedAdmissions,
@@ -16,126 +17,6 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-// const patientsAdmitted = [
-//   {
-//     name: "Alice",
-//     age: "28",
-//     gender: "Female",
-//     "Upcoming Appointments": "19 Feb 2025",
-//     "Last Data Received": "24 Jan 2025",
-//     "Major Issue": "Follow-up-Required",
-//     status: "Critical",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "John",
-//     age: "45",
-//     gender: "Male",
-//     "Upcoming Appointments": "22 Feb 2025",
-//     "Last Data Received": "20 Jan 2025",
-//     "Major Issue": "Severe Chest Pain",
-//     status: "Admitted",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "Sophie",
-//     age: "33",
-//     gender: "Female",
-//     "Upcoming Appointments": "25 Feb 2025",
-//     "Last Data Received": "21 Jan 2025",
-//     "Major Issue": "Regular Checkup",
-//     status: "Follow-up",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "Raj",
-//     age: "39",
-//     gender: "Male",
-//     "Upcoming Appointments": "27 Feb 2025",
-//     "Last Data Received": "19 Jan 2025",
-//     "Major Issue": "Surgery Recovery",
-//     status: "Critical",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "Emily",
-//     age: "29",
-//     gender: "Female",
-//     "Upcoming Appointments": "20 Feb 2025",
-//     "Last Data Received": "18 Jan 2025",
-//     "Major Issue": "Post-natal Check",
-//     status: "Admitted",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "Karan",
-//     age: "50",
-//     gender: "Male",
-//     "Upcoming Appointments": "28 Feb 2025",
-//     "Last Data Received": "22 Jan 2025",
-//     "Major Issue": "Diabetes Management",
-//     status: "Follow-up",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "Tina",
-//     age: "31",
-//     gender: "Female",
-//     "Upcoming Appointments": "21 Feb 2025",
-//     "Last Data Received": "17 Jan 2025",
-//     "Major Issue": "Blood Pressure",
-//     status: "Admitted",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-// ];
-// const patients = [
-//   {
-//     name: "Jasmine Kaur",
-//     age: "49",
-//     gender: "Female",
-//     admissionDate: "26 Jan 2025",
-//     reason: "Surgery Schedule",
-//     status: "Pending Admission",
-//     avatar: "https://randomuser.me/api/portraits/women/17.jpg",
-//   },
-//   {
-//     name: "Rahul Mehta",
-//     age: "58",
-//     gender: "Male",
-//     admissionDate: "19 Feb 2025",
-//     reason: "Heart Checkup",
-//     status: "Pending Admission",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "Anjali Sharma",
-//     age: "32",
-//     gender: "Female",
-//     admissionDate: "02 Mar 2025",
-//     reason: "MRI Scan",
-//     status: "Pending Admission",
-//     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-//   },
-//   {
-//     name: "Suresh Rathi",
-//     age: "67",
-//     gender: "Male",
-//     admissionDate: "15 Mar 2025",
-//     reason: "Diabetes Monitoring",
-//     status: "Pending Admission",
-//     avatar: "https://randomuser.me/api/portraits/women/10.jpg",
-//   },
-//   {
-//     name: "Neha Verma",
-//     age: "41",
-//     gender: "Female",
-//     admissionDate: "23 Mar 2025",
-//     reason: "General Surgery",
-//     status: "Pending Admission",
-//     avatar: "https://randomuser.me/api/portraits/women/46.jpg",
-//   },
-// ];
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -165,7 +46,13 @@ const PatientsList = () => {
 
   const filteredPatients = patientsAdmitted.filter((patient) => {
     if (filter === "Total") return true;
-    return patient.admissionStatus === filter;
+    if (filter === "Follow-Up") {
+      return patient.type?.toLowerCase() === "admitted+followup";
+    }
+    if (filter === "Admitted") {
+      return patient.type?.toLowerCase() === "admitted";
+    }
+    return patient.type === filter;
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -183,19 +70,25 @@ const PatientsList = () => {
   const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
 
   // FORM
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowFormx] = useState(false);
 
   const handleAddPatientClick = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
 
-  // console.log("Approved Admission Requests", approvedAdmissions);
-  console.log("Admission Requests", admissionRequests);
+  const handleAdmitPatientClick = (patientId) => {
+    // console.log(patientId);
+    dispatch(admitPatient(patientId));
+  };
+
+  // console.log("Addmitted Patiemts", patientsAdmitted);
+  // console.log("Admission Requests", admissionRequests);
   const sliderSettings = {
     dots: false,
     infinite: false,
+    swipeToSlide: true,
     speed: 500,
-    slidesToShow: 4, // or 3 depending on your card width
-    slidesToScroll: 1,
+    slidesToShow: 4,
+
     arrows: true,
     responsive: [
       {
@@ -343,7 +236,9 @@ const PatientsList = () => {
                     patient.approval?.admin?.approved ? (
                       <button
                         className="admit_btn"
-                        onClick={handleAddPatientClick}
+                        onClick={() => {
+                          handleAdmitPatientClick(patient._id);
+                        }}
                       >
                         Admit
                       </button>
