@@ -13,7 +13,7 @@ const CONDITIONS = [
   "Heart attack",
 ];
 
-export const MedicalHistory = ({ patient, onConfirm }) => {
+export const MedicalHistory = ({ patient, onConfirm,selectedComponent,existingData }) => {
   const [selected, setSelected] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -39,6 +39,47 @@ export const MedicalHistory = ({ patient, onConfirm }) => {
   const [openQuestion, setOpenQuestion] = useState(false);
   const [dynamicQuestions, setDynamicQuestions] = useState([]);
   const [questionText, setQuestionText] = useState("");
+
+  useEffect(() => {
+    const existing = existingData?.[selectedComponent];
+
+    if (existing) {
+      setFormData({
+        smoke: existing.smoke || "",
+        alcohol: existing.alcohol || "",
+        heartSurgery: existing.heartSurgery || "",
+        diagnosticTests: existing.diagnosticTests || "",
+        otherCondition: "", // handled separately below
+        visitReason: existing.visitReason || "",
+        allergies: existing.allergies || "",
+      });
+
+      const fromExisting = existing.selectedConditions || [];
+
+      // Split out `otherCondition` if it's not in predefined list
+      const preset = CONDITIONS;
+      const validSelections = fromExisting.filter((c) => preset.includes(c));
+      const customCondition = fromExisting.find((c) => !preset.includes(c));
+
+      setSelected(validSelections);
+      setFormData((prev) => ({ ...prev, otherCondition: customCondition || "" }));
+
+      setDynamicQuestions(existing.dynamicQuestions || []);
+
+      const imagePreviews = (existing.images || []).map((fileName) => ({
+        id: fileName,
+        file: { name: fileName },
+      }));
+      const videoPreviews = (existing.videos || []).map((fileName) => ({
+        id: fileName,
+        file: { name: fileName },
+      }));
+
+      setImages(imagePreviews);
+      setVideos(videoPreviews);
+    }
+  }, [patient]);
+
   useEffect(() => {
     if (!openQuestion) return;
 

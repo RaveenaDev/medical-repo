@@ -1,9 +1,45 @@
 import styles from "./DiagnosisAndVital.module.scss";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-const DiagnosisAndVital = ({ onConfirm }) => {
+const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
   const [weight, setWeight] = useState("");
   const [unit, setUnit] = useState("kg");
+
+  useEffect(() => {
+    const existing = existingData?.[selectedComponent];
+    if (existing) {
+      setFormData({
+        temperature: existing.temperature || "",
+        diastolic: existing.diastolic || "",
+        systolic: existing.systolic || "",
+        heartRate: existing.heartRate || "",
+        oxygenLevel: existing.oxygenLevel || "",
+        respirationRate: existing.respirationRate || "",
+        weight: existing.weight?.value || "",
+        unit: existing.weight?.unit || "kg",
+        dynamicAnswers: existing.dynamicQuestions?.map((q) => q.answer) || [],
+      });
+
+      setDynamicQuestions(
+          existing.dynamicQuestions?.map((q) => q.question) || []
+      );
+
+      // Prefill file previews (optional)
+      const imagePreviews =
+          existing.images?.map((fileName) => ({
+            id: fileName,
+            file: { name: fileName },
+          })) || [];
+      const videoPreviews =
+          existing.videos?.map((fileName) => ({
+            id: fileName,
+            file: { name: fileName },
+          })) || [];
+
+      setImages(imagePreviews);
+      setVideos(videoPreviews);
+    }
+  }, [existingData, selectedComponent]);
 
   const [formData, setFormData] = useState({
     temperature: "",

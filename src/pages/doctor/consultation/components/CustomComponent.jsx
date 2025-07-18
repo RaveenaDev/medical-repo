@@ -1,7 +1,7 @@
 import styles from "./CustomComponent.module.scss";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-const CustomComponent = ({ onConfirm, selectedComponent }) => {
+const CustomComponent = ({ onConfirm, selectedComponent, existingData }) => {
 
     const [dynamicAnswers, setDynamicAnswers] = useState([]);
 
@@ -16,6 +16,41 @@ const CustomComponent = ({ onConfirm, selectedComponent }) => {
     const [openQuestion, setOpenQuestion] = useState(false);
     const [dynamicQuestions, setDynamicQuestions] = useState([]);
     const [questionText, setQuestionText] = useState("");
+
+    useEffect(() => {
+        if (!existingData || !selectedComponent) return;
+
+        console.log("Ex: ",existingData)
+        console.log("Sel: ",selectedComponent)
+
+        const sectionData = existingData[selectedComponent];
+
+        if (sectionData) {
+            // Prefill dynamic questions and answers
+            if (Array.isArray(sectionData.dynamicQuestions)) {
+                const questions = sectionData.dynamicQuestions.map(q => q.question || "");
+                const answers = sectionData.dynamicQuestions.map(q => q.answer || "");
+                setDynamicQuestions(questions);
+                setDynamicAnswers(answers);
+            }
+
+            // Prefill image file names (mocked as URLs since File objects can't be reconstructed)
+            if (Array.isArray(sectionData.images)) {
+                setImages(sectionData.images.map((name, idx) => ({
+                    id: `prefilled-image-${idx}`,
+                    file: { name }, // dummy file object
+                })));
+            }
+
+            // Prefill video file names
+            if (Array.isArray(sectionData.videos)) {
+                setVideos(sectionData.videos.map((name, idx) => ({
+                    id: `prefilled-video-${idx}`,
+                    file: { name }, // dummy file object
+                })));
+            }
+        }
+    }, [existingData, selectedComponent]);
 
 
     useEffect(() => {

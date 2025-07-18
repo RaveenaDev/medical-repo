@@ -3,9 +3,18 @@ import styles from "./PerceptionAndMedicines.module.scss";
 import PNMLoader from "./PNMLoader";
 import {useDispatch, useSelector} from "react-redux";
 import {generatePrescriptionsWithAI} from "../../../../components/State/Doctor/Action.js";
-const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,onConfirm }) => {
+const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,onConfirm,selectedComponent,existingData }) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    // If existingData is available, skip loading
+    if (existingData && selectedComponent && existingData[selectedComponent]) {
+      setLoading(false);
+    } else if (generatedPrescriptions && Object.keys(generatedPrescriptions).length > 0) {
+      setLoading(false);
+    }
+  }, [existingData, selectedComponent, generatedPrescriptions]);
 
   useEffect(() => {
     if (generatedPrescriptions && Object.keys(generatedPrescriptions).length > 0) {

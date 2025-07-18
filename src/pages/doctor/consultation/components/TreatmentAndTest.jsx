@@ -1,7 +1,7 @@
 import styles from "./TreatmentAndTest.module.scss";
 import { Plus } from "lucide-react";
-import {useState} from "react";
-const TreatmentAndTest = ({onConfirm}) => {
+import {useEffect, useState} from "react";
+const TreatmentAndTest = ({onConfirm,existingData,selectedComponent}) => {
   const [treatment, setTreatment] = useState({
     name: "",
     dosage: "",
@@ -16,6 +16,18 @@ const TreatmentAndTest = ({onConfirm}) => {
     priority: "",
   });
   const [tests, setTests] = useState([]);
+
+  // ✅ Prefill from existing data
+  useEffect(() => {
+
+    console.log("Ex: ",existingData)
+    console.log("Sel: ",selectedComponent)
+    if (existingData && selectedComponent && existingData[selectedComponent]) {
+      const sectionData = existingData[selectedComponent];
+      if (sectionData.treatments) setTreatments(sectionData.treatments);
+      if (sectionData.tests) setTests(sectionData.tests);
+    }
+  }, [existingData, selectedComponent]);
 
   const handleAddTreatment = () => {
     if (treatment.name && treatment.dosage && treatment.frequency && treatment.duration) {

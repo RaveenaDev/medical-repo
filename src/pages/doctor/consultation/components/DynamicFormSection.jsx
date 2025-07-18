@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import styles from "./DynamicFormSection.module.scss";
 
-const DynamicFormSection = ({ section, onConfirm, existingData = {} }) => {
+const DynamicFormSection = ({ section, onConfirm, existingData }) => {
     const [formData, setFormData] = useState({});
     const [dynamicQuestions, setDynamicQuestions] = useState([]);
     const [questionText, setQuestionText] = useState("");
@@ -17,6 +17,39 @@ const DynamicFormSection = ({ section, onConfirm, existingData = {} }) => {
     //         setDynamicQuestions(existingData.dynamicQuestions || []);
     //     }
     // }, [existingData]);
+
+    useEffect(() => {
+        if (!existingData || !section?.fields) return;
+
+        const sectionSpecificData = existingData[section.name];
+
+        // console.log("Section Data: ", section);
+        // console.log("Matched Existing Data: ", sectionSpecificData);
+
+        if (sectionSpecificData) {
+            const mappedFormData = {};
+
+            section.fields.forEach((field) => {
+                const answer = sectionSpecificData[field.question];
+                if (answer !== undefined) {
+                    mappedFormData[field.id] = answer;
+                }
+            });
+
+            setFormData(mappedFormData);
+            setDynamicQuestions(sectionSpecificData.dynamicQuestions || []);
+
+            setImages((sectionSpecificData.images || []).map((fileName) => ({
+                id: fileName,
+                file: { name: fileName }
+            })));
+
+            setVideos((sectionSpecificData.videos || []).map((fileName) => ({
+                id: fileName,
+                file: { name: fileName }
+            })));
+        }
+    }, [existingData, section]);
 
     useEffect(() => {
         if (!openQuestion) return;
@@ -86,15 +119,30 @@ const DynamicFormSection = ({ section, onConfirm, existingData = {} }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Convert formData keys (ids) to readable field questions
+        const readableData = {};
+        section.fields.forEach((field) => {
+            const answer = formData[field.id];
+            if (answer !== undefined) {
+                readableData[field.question] = answer;
+            }
+        });
+
         const finalData = {
-            ...formData,
+            ...readableData,
             dynamicQuestions,
+            images: images.map((img) => img.file.name),   // extract File objects
+            videos: videos.map((vid) => vid.file.name),   // extract File objects
         };
+
+        console.log("Submitted Form Data:", finalData);
         onConfirm(finalData);
     };
 
+
     return (
-        <form onSubmit={handleSubmit} className={styles.sectionForm}>
+        <form onSubmit={handleSubmit}>
             <div className={styles.container1}>
                 {/* row1 */}
                 <div className={styles.row1}>

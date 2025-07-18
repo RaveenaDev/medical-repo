@@ -1,7 +1,7 @@
 import styles from "./CurrentMedication.module.scss";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-const CurrentMedication = ({ onConfirm }) => {
+const CurrentMedication = ({ onConfirm,selectedComponent,existingData }) => {
   const [frequency1, setFrequency1] = useState("");
   const [frequency2, setFrequency2] = useState("");
   const [formData, setFormData] = useState({
@@ -24,6 +24,44 @@ const CurrentMedication = ({ onConfirm }) => {
   const [openQuestion, setOpenQuestion] = useState(false);
   const [dynamicQuestions, setDynamicQuestions] = useState([]);
   const [questionText, setQuestionText] = useState("");
+
+  useEffect(() => {
+    const existing = existingData?.[selectedComponent];
+    if (existing) {
+      setFormData({
+        currentMedication: existing.currentMedication || "",
+        currentDosage: existing.currentDosage || "",
+        newMedication: existing.newMedication || "",
+        newDosage: existing.newDosage || "",
+        nextAppointment: existing.nextAppointment || "",
+      });
+
+      setFrequency1(existing.frequency1 || "");
+      setFrequency2(existing.frequency2 || "");
+
+      setDynamicQuestions(
+          existing.dynamicQuestions?.map((q) => q.question) || []
+      );
+      setDynamicAnswers(
+          existing.dynamicQuestions?.map((q) => q.answer) || []
+      );
+
+      const imagePreviews =
+          existing.images?.map((fileName) => ({
+            id: fileName,
+            file: { name: fileName },
+          })) || [];
+      const videoPreviews =
+          existing.videos?.map((fileName) => ({
+            id: fileName,
+            file: { name: fileName },
+          })) || [];
+
+      setImages(imagePreviews);
+      setVideos(videoPreviews);
+    }
+  }, [existingData, selectedComponent]);
+
 
 
   useEffect(() => {
