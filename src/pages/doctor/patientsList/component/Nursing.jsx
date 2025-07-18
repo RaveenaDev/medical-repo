@@ -77,7 +77,11 @@ const Nursing = ({ patientId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.updateModal}>
-            <UpdateNursing onClose={closeModal} />
+            <UpdateNursing
+              onClose={closeModal}
+              patientId={patientId}
+              caseId={patientVitals[0].caseId}
+            />
           </div>
         </>
       )}
@@ -122,7 +126,7 @@ const Nursing = ({ patientId }) => {
             {patientVitals.length === 0 ? (
               <div className={styles.noData}>No vitals recorded.</div>
             ) : (
-              [...patientVitals].reverse().map((item, idx) => {
+              [...patientVitals].map((item, idx) => {
                 const formattedDate = formatDate(item.recordedAt);
                 const isToday = formattedDate === "Today";
                 return (

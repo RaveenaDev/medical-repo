@@ -1,6 +1,43 @@
 import { Plus, X } from "lucide-react";
 import styles from "./UpdateNursing.module.scss";
-const UpdateNursing = ({ onClose }) => {
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { recordPatientVitals } from "../../../../../components/State/Doctor/Action";
+const UpdateNursing = ({ onClose, patientId, caseId }) => {
+  const dispatch = useDispatch();
+  const [form, setForm] = useState({
+    heartRate: "",
+    temperature: "",
+    bloodPressure: "",
+    spo2: "",
+    time: "",
+    date: "",
+    recordedBy: "",
+  });
+
+  const handleChange = (field) => (e) => {
+    setForm({ ...form, [field]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    const vitalsPayload = {
+      heartRate: form.heartRate,
+      temperature: form.temperature,
+      bloodPressure: form.bloodPressure,
+      spo2: form.spo2,
+    };
+
+    const fullPayload = {
+      patient: patientId,
+      recordedBy: form.recordedBy,
+      caseId: caseId,
+      vitals: vitalsPayload,
+      recordedAt: new Date(`${form.date}T${form.time}:00`),
+    };
+
+    dispatch(recordPatientVitals(fullPayload));
+    onClose(); // close modal after submit
+  };
   return (
     <div>
       {" "}
@@ -14,38 +51,68 @@ const UpdateNursing = ({ onClose }) => {
         <div className={styles.section1}>
           <div>
             <p>Heart Rate</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={form.heartRate}
+              onChange={handleChange("heartRate")}
+            />
           </div>
           <div>
             {" "}
             <p>Temperature</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={form.temperature}
+              onChange={handleChange("temperature")}
+            />
           </div>
           <div>
             {" "}
             <p>Blood Pressure</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={form.bloodPressure}
+              onChange={handleChange("bloodPressure")}
+            />
           </div>
           <div>
             {" "}
             <p>SpO2</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={form.spo2}
+              onChange={handleChange("spo2")}
+            />
           </div>
           <div>
             {" "}
             <p>Time</p>
-            <input type="time" className={styles.inputTime} />
+            <input
+              type="time"
+              value={form.time}
+              onChange={handleChange("time")}
+              className={styles.inputTime}
+            />
           </div>
           <div>
             {" "}
             <p>Recorded Date</p>
-            <input type="date" className={styles.inputDate} />
+            <input
+              type="date"
+              value={form.date}
+              onChange={handleChange("date")}
+              className={styles.inputDate}
+            />
           </div>
         </div>
         <div className={styles.section2}>
           <div>
             <p>Recorded By</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={form.recordedBy}
+              onChange={handleChange("recordedBy")}
+            />
           </div>
           <div className={styles.addVitalWrapper}>
             <button>
@@ -56,7 +123,7 @@ const UpdateNursing = ({ onClose }) => {
         </div>
 
         <div className={styles.submitContainer}>
-          <button>Save Vital Record</button>
+          <button onClick={handleSubmit}>Save Vital Record</button>
         </div>
       </div>
     </div>

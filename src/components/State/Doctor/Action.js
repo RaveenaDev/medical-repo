@@ -1094,3 +1094,26 @@ export const getPatientVitals = (patientId) => async (dispatch) => {
     console.error("Error getting Vitals:", error);
   }
 };
+// Action to POST vitals
+export const recordPatientVitals = (vitalsPayload) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { patient } = vitalsPayload;
+    const { data } = await axios.post(
+      `${API_URL}/recordVitals`,
+      vitalsPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("vitals recorded", data);
+    dispatch(getPatientVitals(patient));
+  } catch (error) {
+    console.error("Vitals POST error:", error);
+
+    throw error;
+  }
+};
