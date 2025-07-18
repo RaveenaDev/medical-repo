@@ -25,6 +25,7 @@ import {
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_HISTORY,
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
   GET_PATIENTS_DEATILS,
@@ -89,6 +90,7 @@ const initialState = {
   patientDetails: [],
   progressTracker: [],
   patientVitals: [],
+  patientHistory: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -346,6 +348,13 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         userConsultationForms: action.payload,
+      };
+    case GET_PATIENT_HISTORY:
+      return {
+        ...state,
+
+        patientHistory: action.payload,
+        isLoading: false,
       };
 
     default:
