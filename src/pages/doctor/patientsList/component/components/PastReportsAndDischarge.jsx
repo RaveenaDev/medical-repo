@@ -1,122 +1,210 @@
 import { useEffect, useState } from "react";
 import styles from "./PastReportsAndDischarge.module.scss";
-import { Plus } from "lucide-react";
-import UpdatePRD from "../form/UpdatePRD";
-const PastReportsAndDischarge = ({ patientId }) => {
-  const patientHistoryCards = [
-    {
-      id: 1,
-      title: "Past Discharge Summary",
-      subtitle: "Outcome & follow-up",
-      icon: "/assets/exitIcon-green.svg",
-      items: [
-        "Outcome & follow-up",
-        "Treatment outcome",
-        "Follow-up instructions",
-      ],
-    },
-    {
-      id: 2,
-      title: "Past Hospitals Reports",
-      subtitle: "Reports and Tests",
-      icon: "/assets/labIcon.svg",
-      items: [
-        "Previous admissions",
-        "Previous investigations",
-        "Past prescriptions",
-      ],
-    },
-    {
-      id: 3,
-      title: "Past Hospitals Reports",
-      subtitle: "Reports and Tests",
-      icon: "/assets/labIcon.svg",
-      items: [
-        "Previous admissions",
-        "Previous investigations",
-        "Past prescriptions",
-      ],
-    },
-    {
-      id: 4,
-      title: "Past Discharge Summary",
-      subtitle: "Outcome & follow-up",
-      icon: "/assets/exitIcon-green.svg",
-      items: [
-        "Outcome & follow-up",
-        "Treatment outcome",
-        "Follow-up instructions",
-      ],
-    },
-    {
-      id: 8,
-      title: "Past Discharge Summary",
-      subtitle: "Outcome & follow-up",
-      icon: "/assets/exitIcon-green.svg",
-      items: [
-        "Outcome & follow-up",
-        "Treatment outcome",
-        "Follow-up instructions",
-      ],
-    },
-  ];
+import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
+import { getPatientHistory } from "../../../../../components/State/Doctor/Action";
+import { Modal, Box } from "@mui/material";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+const formatValue = (value) => {
+  if (!value) return "N/A";
+  if (typeof value === "string") return value;
+  if (typeof value === "number") return value;
+  if (dayjs(value).isValid() && typeof value === "string") {
+    return dayjs(value).format("DD MMM YYYY");
+  }
+  if (typeof value === "object") {
+    return (
+      <ul style={{ paddingLeft: "1rem", margin: 0 }}>
+        {Object.entries(value).map(([k, v]) => (
+          <li key={k}>
+            <strong>{k}:</strong> {formatValue(v)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return JSON.stringify(value);
+};
 
+const PastReportsAndDischarge = ({ patientId }) => {
+  const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState(null);
 
   useEffect(() => {
-    document.body.style.overflow = activeModal ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [activeModal]);
+    dispatch(getPatientHistory(patientId));
+  }, [dispatch, patientId]);
 
-  const openUpdate = () => setActiveModal("Update");
   const closeModal = () => setActiveModal(null);
+  const patientHistory = useSelector((store) => store.doctor.patientHistory);
 
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
   return (
     <div className={styles.container}>
       <header>
         <p>Past Reports And Discharges</p>
-        {/* <div className={styles.buttons}>
-          <button className={styles.editBtn}>
-            <img src="/assets/Pen.svg" alt="pen icon" width={14} />
-          </button>
-          <button className={styles.updateBtn} onClick={openUpdate}>
-            <Plus size={18} />
-            Update
-          </button>
-        </div> */}
       </header>
+      <Modal open={!!activeModal} onClose={closeModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            maxWidth: 600,
+            width: "90%",
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          {activeModal && (
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              <h2 style={{ marginBottom: "8px", fontSize: "22px" }}>
+                Consultation Details
+              </h2>
 
-      {activeModal === "Update" && (
-        <>
-          <div className={styles.backdropOverlay} onClick={closeModal} />
-          <div className={styles.updateModal}>
-            <UpdatePRD onClose={closeModal} />
-          </div>
-        </>
-      )}
+              {/* Top-level fields (excluding _id & consultationData) */}
+              {Object.entries(activeModal).map(([key, value]) => {
+                if (key === "_id" || key === "consultationData") return null;
 
+                const displayValue =
+                  value === null || value === undefined ? (
+                    <span style={{ color: "#888" }}>—</span>
+                  ) : key === "date" ? (
+                    dayjs(value).format("DD MMM YYYY, hh:mm A")
+                  ) : (
+                    value
+                  );
+
+                return (
+                  <div key={key} style={{ fontSize: "15px" }}>
+                    <strong>{capitalize(key)}:</strong> {displayValue}
+                  </div>
+                );
+              })}
+
+              {/* Expandable Consultation Data Section */}
+              {activeModal.consultationData && (
+                <Accordion defaultExpanded>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography sx={{ fontWeight: 600 }}>
+                      Consultation Data
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px",
+                      }}
+                    >
+                      {Object.entries(activeModal.consultationData).map(
+                        ([key, value]) => {
+                          if (typeof value === "object" && value !== null) {
+                            return (
+                              <div key={key}>
+                                <div
+                                  style={{
+                                    fontWeight: 600,
+                                    marginBottom: "4px",
+                                    color: "#666",
+                                  }}
+                                >
+                                  {capitalize(key)}:
+                                </div>
+                                {Object.entries(value).map(
+                                  ([subKey, subValue]) => (
+                                    <div
+                                      key={`${key}-${subKey}`}
+                                      style={{
+                                        marginLeft: "10px",
+                                        fontSize: "15px",
+                                      }}
+                                    >
+                                      <strong>{capitalize(subKey)}:</strong>{" "}
+                                      {subValue === null ||
+                                      subValue === undefined ? (
+                                        <span style={{ color: "#888" }}>—</span>
+                                      ) : (
+                                        subValue
+                                      )}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div key={key} style={{ fontSize: "15px" }}>
+                                <strong>{capitalize(key)}:</strong>{" "}
+                                {value === null || value === undefined ? (
+                                  <span style={{ color: "#888" }}>—</span>
+                                ) : (
+                                  value
+                                )}
+                              </div>
+                            );
+                          }
+                        }
+                      )}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+            </div>
+          )}
+        </Box>
+      </Modal>
+      {/* Card List */}
       <div className={styles.cardWrapper}>
-        {patientHistoryCards.map((card) => (
-          <div key={card.id} className={styles.card}>
-            <div className={styles.header}>
-              <img src={card.icon} alt="icon" className={styles.icon} />
-              <div className={styles.headerTitle}>
-                <h3 className={styles.title}>{card.title}</h3>
-                <p className={styles.subtitle}>{card.subtitle}</p>
+        {patientHistory?.length > 0 ? (
+          patientHistory.map((entry, index) => (
+            <div
+              key={index}
+              className={styles.card}
+              onClick={() => setActiveModal(entry)}
+              style={{ cursor: "pointer" }}
+            >
+              <div className={styles.top}>
+                <div className={styles.left}>
+                  <img src="/assets/labIcon.svg" alt="icon" />
+                  <div className={styles.meta}>
+                    <h3>Consultation with {entry.doctor}</h3>
+                    <p>{dayjs(entry.date).format("DD MMM YYYY, hh:mm A")}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.details}>
+                <p>
+                  <strong>Department:</strong> {entry.department}
+                </p>
+                <p>
+                  <strong>Diagnosis:</strong>{" "}
+                  {entry.consultationData?.diagnosis}
+                </p>
+                <p>
+                  <strong>Complaints:</strong>{" "}
+                  {entry.consultationData?.complaints}
+                </p>
               </div>
             </div>
-
-            <ul className={styles.list}>
-              {card.items.map((item, idx) => (
-                <li key={idx}>
-                  <strong>{item}</strong>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No consultation history found.</p>
+        )}
       </div>
     </div>
   );

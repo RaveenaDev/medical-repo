@@ -1,5 +1,5 @@
 .container {
-  background: white;
+  background: #fff;
   margin-top: 1vh;
   padding: 1.4vh 2vw;
 
@@ -7,40 +7,50 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    p {
-      color: #25307f;
-      font-weight: 600;
-      font-size: 2.4vh;
-      margin-left: 1vw;
-    }
-    .updateBtn {
-      background: #25307f;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 0.6vh;
-      font-size: 2vh;
-      padding: 0.6vh 1vh;
-      border-radius: 4px;
 
-      border: none;
-      &:hover {
-        background: #f2f5ff;
-        color: #25307f;
-      }
+    p {
+      margin-left: 1vw;
+      font-size: 2.4vh;
+      font-weight: 600;
+      color: #25307f;
     }
 
     .buttons {
       display: flex;
-      gap: 0.5vw;
+      gap: 0.8vw;
 
       .editBtn {
-        background: #f2f5ff;
-        padding: 0.6vh 1vh;
-        border-radius: 4px;
         display: flex;
         align-items: center;
+        padding: 0.6vh 1.2vh;
+        background: #f2f5ff;
         border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: #e1e8ff;
+        }
+      }
+    }
+
+    .updateBtn {
+      display: flex;
+      align-items: center;
+      gap: 0.6vh;
+      padding: 0.6vh 1.2vh;
+      font-size: 2vh;
+      background: #25307f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f2f5ff;
+        color: #25307f;
       }
     }
   }
@@ -49,72 +59,85 @@
 .cardWrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2vw;
-  height: 30vh;
-  overflow-y: auto;
+  gap: 2vh 1vw;
   margin-top: 2vh;
-  column-gap: 1vw;
+  overflow-y: auto;
+  min-height: 20vh;
+  max-height: 60vh;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
   @media (max-width: 1050px) {
     grid-template-columns: repeat(2, 1fr);
-    .card {
-      max-width: 90%;
-    }
   }
-  /* Hide scrollbar for Chrome, Safari, Opera */
+
+  @media (max-width: 650px) {
+    grid-template-columns: 1fr;
+  }
+
   &::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
+    display: none;
   }
 
-  /* Hide scrollbar for Firefox */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  p {
+    width: 100%;
+    font-size: 20px;
+  }
 }
-
 .card {
   background: #f6f8ff;
   display: flex;
   flex-direction: column;
-  gap: 1vh;
-  padding: 2vh 0vw 4vh 1vw;
-
+  gap: 1.2vh;
+  padding: 2vh 1.2vw;
   border-radius: 8px;
-  width: 90%;
+  box-sizing: border-box;
+  width: 95%;
 
   .icon {
     width: 3.4vh;
-
-    margin-bottom: 0vh;
+    margin-bottom: 0.5vh;
   }
 
-  h3 {
-    font-size: 2.2vh;
-    font-weight: 600;
-    color: #1d1e2c;
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    h3 {
+      margin: 0;
+      font-size: 2.2vh;
+      font-weight: 600;
+      color: #1d1e2c;
+    }
+    p {
+      color: #999;
+      font-size: 1.95vh;
+    }
+    img {
+      height: 3vh;
+    }
   }
 
   .subtitle {
+    margin: 0;
     font-size: 1.9vh;
     color: #999;
-    margin-bottom: 0vh;
   }
 
   ul {
-    margin-top: 0;
-    padding: 0vh;
-    padding-left: 1.2em;
-    // enough padding for larger dot
+    margin: 0;
+    padding-left: 1.4em;
     list-style: disc;
 
     li {
       font-size: 1.7vh;
       color: #2e2e2e;
-      margin-bottom: 0;
-      padding: 0;
       line-height: 2.4vh;
+
       &::marker {
-        font-size: 1.3em; // increase to make the dot bigger
-        color: #000; // optional: change dot color
+        font-size: 1.3em;
+        color: #000;
       }
     }
   }
@@ -122,16 +145,13 @@
 
 .header {
   display: flex;
-  gap: 0.6vw;
   align-items: center;
+  gap: 0.6vw;
 }
 
 .backdropOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background: rgba(44, 44, 62, 0.15);
   z-index: 2;
 }
@@ -142,13 +162,28 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
-  // height: 80vh;
   width: 50vw;
   background: #fff;
-  border-radius: 0px;
+  border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  //padding: 0vh 0vw 3vh 1vw;
+  padding: 2vh 2vw;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  @media (max-width: 768px) {
+    width: 90vw;
+  }
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.details {
+  p {
+    font-size: 2vh;
+  }
 }

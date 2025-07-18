@@ -33,6 +33,7 @@ import {
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_HISTORY,
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
   GET_PATIENTS_DEATILS,
@@ -1141,6 +1142,28 @@ export const recordPatientVitals = (vitalsPayload) => async (dispatch) => {
     dispatch(getPatientVitals(patient));
   } catch (error) {
     console.error("Vitals POST error:", error);
+
+    throw error;
+  }
+};
+
+export const getPatientHistory = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/getPatientConsultationHistory/${patientId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("History:", data);
+    dispatch({ type: GET_PATIENT_HISTORY, payload: data.history });
+  } catch (error) {
+    console.error("patient History not available:", error);
 
     throw error;
   }

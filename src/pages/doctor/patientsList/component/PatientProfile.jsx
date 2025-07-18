@@ -238,7 +238,9 @@ const PatientProfile = ({ patientId }) => {
         <div className={styles.content}>
           {activeTab === "medical admin" && <MedAdminRecord />}
           {activeTab === "nursing" && <Nursing patientId={patientId} />}
-          {activeTab === "past reports" && <PastReportsAndDischarge />}
+          {activeTab === "past reports" && (
+            <PastReportsAndDischarge patientId={patientId} />
+          )}
         </div>
       </div>
     </div>

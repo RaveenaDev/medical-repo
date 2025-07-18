@@ -64,17 +64,17 @@ const ProgressTracker2 = ({ patientId }) => {
     <div className={styles.container}>
       <div className={styles.timelineContainer}>
         <div className={styles.timeline}>
-          {steps.map((step, index) => (
+          {[...progressTracker].reverse().map((step, index) => (
             <div key={index} className={styles.timelineItem}>
               <div className={styles.timelineSeparator}>
                 <div
                   className={`${styles.timelineDot} ${
-                    step.status === "Ongoing"
+                    step.status === "ongoing"
                       ? styles.ongoing
                       : styles.completed
                   }`}
                 ></div>
-                {index < steps.length - 1 && (
+                {index < steps.length - 0 && (
                   <div className={styles.timelineConnector}></div>
                 )}
               </div>
