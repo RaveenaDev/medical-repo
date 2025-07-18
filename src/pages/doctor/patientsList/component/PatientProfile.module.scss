@@ -7,9 +7,10 @@
 .patientInfo {
   background-color: white;
   width: 30%;
-  padding: 1vh 1.2vw;
+  padding: 0vh 1.2vw;
   //height: fit-content;
   h4 {
+    margin-top: 0vh;
     font-size: 2.4vh;
     color: #25307f;
     font-weight: 640;
@@ -134,6 +135,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 1vh;
+  margin-bottom: 1vh;
   button {
     background: white;
     border: none;
@@ -347,4 +349,123 @@
 
 .headerText {
   text-align: center;
+}
+
+.dropdown {
+  position: relative;
+  width: 9vw; // Use a percentage of viewport width for the dropdown
+  // min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Karla", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+
+  border-radius: 4px;
+
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.2vh;
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
+  border-radius: 4px;
+  border: 1px solid #cfcfcf;
+  width: 99.5%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 0.8vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 7vh;
+}
+
+.critical {
+  p {
+    color: white;
+    background: #f14400;
+    padding: 0.3vh 0.6vw;
+    border-radius: 15px;
+  }
+
+  strong {
+    color: white;
+    background: #f14400;
+    padding: 0.3vh 0.3vw;
+    border-radius: 15px;
+  }
+}
+
+.high {
+  strong {
+    color: #f14400;
+  }
+}
+
+.moderate {
+  strong {
+    color: #f39c12;
+  }
+}
+
+.stable {
+  strong {
+    color: #2e823b;
+  }
+}
+.dot {
+  display: inline-block;
+  width: 0.6vw;
+  height: 0.6vw;
+  border-radius: 50%;
+  margin-right: 0.6vw;
+}
+
+.critical .dot {
+  background-color: #d32f2f;
+}
+
+.high .dot {
+  background-color: #f57c00;
+}
+
+.moderate .dot {
+  background-color: #fbc02d;
+}
+
+.stable .dot {
+  background-color: #388e3c;
 }

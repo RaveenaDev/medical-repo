@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import styles from "./PatientProfile.module.scss";
 import ProgressTracker2 from "./components/ProgressTracker2";
-import { Bed, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import {
+  Bed,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Plus,
+} from "lucide-react";
 import MedAdminRecord from "./components/MedAdminRecord";
 import Nursing from "./components/Nursing";
 import PastReportsAndDischarge from "./components/PastReportsAndDischarge.jsx";
@@ -18,7 +25,9 @@ const PatientProfile = ({ patientId }) => {
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
-
+  const statusOptions = ["Critical", "High", "Moderate", "Stable"];
+  const [openStatus, setOpenStatus] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,7 +57,47 @@ const PatientProfile = ({ patientId }) => {
     <div>
       <div className={styles.section1}>
         <div className={styles.patientInfo}>
-          <h4>Patient Info</h4>
+          <div className={styles.title}>
+            <h4>Patient Info</h4>
+            <div className={styles.dropdown}>
+              <button
+                className={styles.trigger}
+                onClick={() => setOpenStatus((prev) => !prev)}
+              >
+                <p
+                  className={
+                    selectedStatus ? styles[selectedStatus.toLowerCase()] : ""
+                  }
+                >
+                  {" "}
+                  <span className={styles.dot}></span>
+                  <strong>{selectedStatus || "Select"}</strong>
+                </p>
+                <span className={styles.arrow}>
+                  {openStatus ? <ChevronUp /> : <ChevronDown />}
+                </span>
+              </button>
+              {openStatus && (
+                <ul className={styles.menu}>
+                  {statusOptions.map((option) => (
+                    <li
+                      key={option}
+                      className={`${styles.item} ${
+                        styles[option.toLowerCase()]
+                      } `}
+                      onClick={() => {
+                        setSelectedStatus(option);
+                        setOpenStatus(false);
+                      }}
+                    >
+                      <span className={styles.dot}></span>
+                      <strong>{option}</strong>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
           <div className={styles.patientCard}>
             <div className={styles.imgWrapper}>
               <img
