@@ -13,13 +13,13 @@
 .container {
   padding: 0 1vw 2vh 1vw;
   font-family: "Karla", sans-serif;
-  height: 75vh;
+  height: 78vh;
   overflow-y: auto;
   h1 {
     font-size: 2.5vh;
     font-weight: 550;
     color: #25307f;
-    margin-bottom: 3vh;
+    margin-bottom: 0vh;
   }
 
   /* Hide scrollbar for Chrome, Safari, Opera */
@@ -60,7 +60,7 @@
   display: flex;
   justify-content: center;
   gap: 0.8vw;
-  margin-top: 3vh;
+  margin-top: 12vh;
   button {
     border-radius: 4px;
     padding: 1.2vh 0.8vw;
@@ -204,15 +204,16 @@
 }
 
 .changeBed {
-  input {
-    border: 1px solid #cfcfcf;
-    border-radius: 4px;
-    width: 97%;
-    outline: none;
-    font-family: "Karla", sans-serif;
-    padding: 1vh 0.5vw;
-    font-size: 1.9vh;
-  }
+}
+
+.inputText {
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  width: 97%;
+  outline: none;
+  font-family: "Karla", sans-serif;
+  padding: 1.4vh 0.5vw;
+  font-size: 1.9vh;
 }
 
 .changeReason {
@@ -240,7 +241,7 @@
 
 .selectBedHeading {
   color: #25307f;
-  font-size: 2.3vh;
+  font-size: 2.1vh;
   font-weight: 550;
   display: flex;
   align-items: center;
@@ -248,4 +249,95 @@
   img {
     height: 1.7vh;
   }
+}
+
+.dropdown {
+  position: relative;
+  width: 100%; // Use a percentage of viewport width for the dropdown
+  // min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  border: 1px solid #cfcfcf;
+
+  border-radius: 4px;
+
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 5.2vh;
+  &:hover {
+    border: 1px solid #cfcfcf;
+  }
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
+  border-radius: 4px;
+  border: 1px solid #cfcfcf;
+  width: 99.5%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.2vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}
+
+.newRoomPrefContain {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+}
+
+.newRoomPrefContain {
+  margin-top: 1.5vh;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2vh;
+  gap: 0.5vw;
+}
+
+.backBtn {
+  color: #58595b;
+  height: 3.4vh;
+  cursor: pointer;
 }

@@ -66,7 +66,6 @@ const SinglePatientDetail = () => {
             </div>
           </div>
           <div className={styles.headerRight}>
-            <button className={styles.dischargeBtn}>Discharge</button>
             <button
               onClick={handleUpdateDiagnosis}
               className={styles.diagnosisBtn}

@@ -11,45 +11,18 @@ import {
   Calendar,
 } from "lucide-react";
 import UpdateNursing from "./form/UpdateNursing";
+import { useDispatch, useSelector } from "react-redux";
+import { getPatientVitals } from "../../../../components/State/Doctor/Action";
 
-const Nursing = () => {
-  const vitalsData = [
-    {
-      heartRate: "85",
-      temperature: "98.4",
-      bloodPressure: "122/80",
-      spO2: "96",
-      lastUpdated: new Date().toISOString(), // Today
-    },
-    {
-      heartRate: "85",
-      temperature: "98.4",
-      bloodPressure: "122/80",
-      spO2: "96",
-      lastUpdated: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-    },
-    {
-      heartRate: "85",
-      temperature: "98.4",
-      bloodPressure: "122/80",
-      spO2: "96",
-      lastUpdated: "2026-05-23T08:00:00.000Z",
-    },
-    {
-      heartRate: "85",
-      temperature: "98.4",
-      bloodPressure: "122/80",
-      spO2: "96",
-      lastUpdated: "2026-05-23T08:00:00.000Z",
-    },
-    {
-      heartRate: "85",
-      temperature: "98.4",
-      bloodPressure: "122/80",
-      spO2: "96",
-      lastUpdated: "2026-05-23T08:00:00.000Z",
-    },
-  ];
+const Nursing = ({ patientId }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPatientVitals(patientId));
+  }, [dispatch]);
+  const patientVitals = useSelector((store) => store.doctor.patientVitals);
+
+  // console.log("patient Vitals: ", patientVitals);
 
   const formatDate = (isoString) => {
     const inputDate = new Date(isoString);
@@ -104,7 +77,11 @@ const Nursing = () => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.updateModal}>
-            <UpdateNursing onClose={closeModal} />
+            <UpdateNursing
+              onClose={closeModal}
+              patientId={patientId}
+              caseId={patientVitals[0].caseId}
+            />
           </div>
         </>
       )}
@@ -146,38 +123,48 @@ const Nursing = () => {
             </div>
           </div>
           <div className={styles.body}>
-            {vitalsData.map((item, idx) => {
-              const formattedDate = formatDate(item.lastUpdated);
-              const isToday = formattedDate === "Today";
-              return (
-                <div
-                  className={`${styles.tr} ${isToday ? styles.todayRow : ""}`}
-                  key={idx}
-                >
-                  <div className={styles.td}>
-                    <span className={styles.value}>{item.heartRate}</span>
-                    <span className={styles.unit}>bpm</span>
-                  </div>
+            {patientVitals.length === 0 ? (
+              <div className={styles.noData}>No vitals recorded.</div>
+            ) : (
+              [...patientVitals].map((item, idx) => {
+                const formattedDate = formatDate(item.recordedAt);
+                const isToday = formattedDate === "Today";
+                return (
+                  <div
+                    className={`${styles.tr} ${isToday ? styles.todayRow : ""}`}
+                    key={item._id || idx}
+                  >
+                    <div className={styles.td}>
+                      <span className={styles.value}>
+                        {item.vitals.heartRate}
+                      </span>
+                      <span className={styles.unit}>bpm</span>
+                    </div>
 
-                  <div className={styles.td}>
-                    <span className={styles.value}>{item.temperature}</span>
-                    <span className={styles.unit}>°F</span>
-                  </div>
-                  <div className={styles.td}>
-                    <span className={styles.value}>{item.bloodPressure}</span>
-                    <span className={styles.unit}>mmHg</span>
-                  </div>
-                  <div className={styles.td}>
-                    <span className={styles.value}>{item.spO2}</span>
-                    <span className={styles.unit}>%</span>
-                  </div>
+                    <div className={styles.td}>
+                      <span className={styles.value}>
+                        {item.vitals.temperature}
+                      </span>
+                      <span className={styles.unit}>°F</span>
+                    </div>
 
-                  <div className={styles.td}>
-                    <span className={styles.value}>{formattedDate}</span>
+                    <div className={styles.td}>
+                      <span className={styles.value}>{item.vitals.bp}</span>
+                      <span className={styles.unit}>mmHg</span>
+                    </div>
+
+                    <div className={styles.td}>
+                      <span className={styles.value}>{item.vitals.spo2}</span>
+                      <span className={styles.unit}>%</span>
+                    </div>
+
+                    <div className={styles.td}>
+                      <span className={styles.value}>{formattedDate}</span>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
       </div>

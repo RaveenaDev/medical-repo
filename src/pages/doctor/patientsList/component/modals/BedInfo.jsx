@@ -1,11 +1,24 @@
-import { BedDouble, SquarePen, X } from "lucide-react";
+import {
+  BedDouble,
+  ChevronDown,
+  ChevronLeft,
+  ChevronUp,
+  SquarePen,
+  X,
+} from "lucide-react";
 import styles from "./BedInfo.module.scss";
 import { useState } from "react";
 
 const BedInfo = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("bedInfo");
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const selectedBed1 = ["option 1", "option 2", "optioon 3"];
+  const [openSelectedBed1, setOpenSelectedBed1] = useState(false);
+  const [selectedSelectedBed1, setSelectedSelectedBed1] = useState("");
 
+  const selectedBed2 = ["option 1", "option 2", "optioon 3"];
+  const [openSelectedBed2, setOpenSelectedBed2] = useState(false);
+  const [selectedSelectedBed2, setSelectedSelectedBed2] = useState("");
   const toggleAmenity = (amenity) => {
     setSelectedAmenities((prev) =>
       prev.includes(amenity)
@@ -140,7 +153,13 @@ const BedInfo = ({ onClose }) => {
         ) : activeTab === "transfer" ? (
           <div>
             {/* Room Transfer */}
-            <h1>Room Transfer</h1>
+            <div className={styles.heading}>
+              <ChevronLeft
+                className={styles.backBtn}
+                onClick={() => setActiveTab("bedInfo")}
+              />
+              <h1>Room Transfer</h1>
+            </div>
             <div className={styles.contentWrapper}>
               <div className={styles.contentContainer}>
                 <div className={styles.roomAndBed}>
@@ -193,13 +212,59 @@ const BedInfo = ({ onClose }) => {
                     </div>
                   </div>
                 </div>
-                <div className={styles.changeBed}>
-                  <p className={styles.sectionHeadingS}>Change Bed No. To</p>
-                  <input type="text" />
-                </div>
-                <div className={styles.changeReason}>
-                  <p className={styles.sectionHeadingS}>Reason For Change</p>
-                  <textarea name="" rows={4} id=""></textarea>
+                <div className={styles.newRoomPref}>
+                  <p className={styles.sectionHeading}>New Room Preference</p>
+                  <div className={styles.newRoomPrefContain}>
+                    <div className={styles.selectBed}>
+                      <p className={styles.selectBedHeading}>
+                        Select New Bed{" "}
+                        <img src="/assets/inpatient/bed2.svg" alt="" />
+                      </p>
+                      <div className={styles.dropdown}>
+                        <button
+                          className={styles.trigger}
+                          onClick={() => setOpenSelectedBed1((prev) => !prev)}
+                        >
+                          <p>{selectedSelectedBed1 || "Select"}</p>
+                          <span className={styles.arrow}>
+                            {openSelectedBed1 ? <ChevronUp /> : <ChevronDown />}
+                          </span>
+                        </button>
+                        {openSelectedBed1 && (
+                          <ul className={styles.menu}>
+                            {selectedBed1.map((option) => (
+                              <li
+                                key={option}
+                                className={`${styles.item} ${
+                                  selectedSelectedBed1 === option
+                                    ? styles.active
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  setSelectedSelectedBed1(option);
+                                  setOpenSelectedBed1(false);
+                                }}
+                              >
+                                {option}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.changeBed}>
+                      <p className={styles.sectionHeadingS}>
+                        Change Bed No. To
+                      </p>
+                      <input type="text" className={styles.inputText} />
+                    </div>
+                    <div className={styles.changeReason}>
+                      <p className={styles.sectionHeadingS}>
+                        Reason For Change
+                      </p>
+                      <textarea name="" rows={3} id=""></textarea>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -216,7 +281,13 @@ const BedInfo = ({ onClose }) => {
           </div>
         ) : (
           <div>
-            <h1>Request Attendent Bed</h1>{" "}
+            <div className={styles.heading}>
+              <ChevronLeft
+                className={styles.backBtn}
+                onClick={() => setActiveTab("bedInfo")}
+              />
+              <h1>Request Attendent Bed</h1>{" "}
+            </div>
             <div className={styles.contentWrapper}>
               <div className={styles.contentContainer}>
                 <div className={styles.dataRA}>
@@ -241,11 +312,62 @@ const BedInfo = ({ onClose }) => {
                     Select New Bed{" "}
                     <img src="/assets/inpatient/bed2.svg" alt="" />
                   </p>
+                  <div className={styles.dropdown}>
+                    <button
+                      className={styles.trigger}
+                      onClick={() => setOpenSelectedBed2((prev) => !prev)}
+                    >
+                      <p>{selectedSelectedBed2 || "Select"}</p>
+                      <span className={styles.arrow}>
+                        {openSelectedBed2 ? <ChevronUp /> : <ChevronDown />}
+                      </span>
+                    </button>
+                    {openSelectedBed2 && (
+                      <ul className={styles.menu}>
+                        {selectedBed2.map((option) => (
+                          <li
+                            key={option}
+                            className={`${styles.item} ${
+                              selectedSelectedBed2 === option
+                                ? styles.active
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setSelectedSelectedBed2(option);
+                              setOpenSelectedBed2(false);
+                            }}
+                          >
+                            {option}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
 
                 <div>
                   <p className={styles.sectionHeadingS}>Purpose of Request</p>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    className={styles.inputText}
+                    placeholder="Eg. Family Member, Overnight Stay, Patient Assistance"
+                  />
+                </div>
+                <div>
+                  <p className={styles.sectionHeadingS}>Expected Duration</p>
+                  <input
+                    type="text"
+                    className={styles.inputText}
+                    placeholder="Eg. 2 weeks"
+                  />
+                </div>
+                <div>
+                  <p className={styles.sectionHeadingS}>Additional Notes</p>
+                  <input
+                    type="text"
+                    className={styles.inputText}
+                    placeholder=""
+                  />
                 </div>
               </div>
               <div className={styles.submitBtnContainer3}>

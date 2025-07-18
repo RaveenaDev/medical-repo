@@ -70,7 +70,7 @@ const PatientsList = () => {
   const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
 
   // FORM
-  const [showForm, setShowFormx] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   const handleAddPatientClick = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
