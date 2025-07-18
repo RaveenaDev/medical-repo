@@ -416,7 +416,7 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
             <>
               <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
               <div className={styles["refer-modal"]}>
-                <Refer onClose={closeModal} modalData={modalData} onSuccess={onSuccess}/>
+                <Refer onClose={closeModal} modalData={modalData} patient={ongoingAppointment.patient} onSuccess={onSuccess}/>
               </div>
             </>
         )}

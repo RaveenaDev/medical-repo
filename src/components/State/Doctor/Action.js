@@ -13,7 +13,7 @@ import {
   EDIT_DOCTOR_NOTE,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
-  GET_ADMITTED_PATIENTS,
+  GET_ADMITTED_PATIENTS, GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
   GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_HISTORY,
@@ -883,8 +883,17 @@ export const submitConsultation =
       dispatch({ type: SUBMIT_CONSULTATION, payload: data });
       onSuccess();
       onClose();
+
+      toast.success("Submitted Successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     } catch (error) {
       console.log(error);
+      toast.error("Please Confirm all the fields!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     }
   };
 
@@ -899,9 +908,28 @@ export const getAllDoctors = () => async (dispatch) => {
       },
     });
 
-    console.log("Doctors: ", data.doctors);
+    // console.log("Doctors: ", data.doctors);
 
     dispatch({ type: GET_ALL_DOCTORS, payload: data.doctors });
+  } catch (error) {
+    console.error("Error getting admitted patients:", error);
+  }
+};
+
+export const getAllDepartments = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getAllDepartments`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    // console.log("Departments: ", data);
+
+    dispatch({ type: GET_ALL_DEPARTMENTS, payload: data });
   } catch (error) {
     console.error("Error getting admitted patients:", error);
   }

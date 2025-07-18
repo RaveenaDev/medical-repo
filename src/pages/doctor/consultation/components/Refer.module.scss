@@ -30,6 +30,37 @@
     gap: 2vw;
     font-size: 1.9vh;
     font-weight: 450;
+
+    .primaryDiagnosisInput {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 1.9vh;
+        color: #000000;
+      }
+
+      input {
+        background-color: #f5f8ff;
+        border: 1px solid #d4d4d4;
+        border-radius: 4px;
+        padding: 2px 3px;
+        //font-size: 2vh;
+        height: 3.4vh;
+        outline: none;
+        transition: border 0.2s;
+
+        &:focus {
+          border-color: #007bff;
+        }
+
+        &::placeholder {
+          color: #999;
+          opacity: 0.5;
+        }
+      }
+    }
+
   }
 }
 .referralUrgency {
@@ -41,7 +72,6 @@
   display: flex;
   flex-direction: column;
   gap: 1vh;
-  margin-top: 1vh;
 }
 
 .referralUrgencyIn {
@@ -160,6 +190,8 @@
 }
 
 .menu {
+  max-height: 150px; // ✅ Fix dropdown height
+  overflow-y: auto;
   position: absolute;
   top: 100%;
   left: 0;
@@ -173,6 +205,13 @@
   list-style: none;
   font-size: 2vh;
   font-family: "Karla", sans-serif;
+
+&::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+  scrollbar-width: none; // Firefox
 }
 
 .item {
