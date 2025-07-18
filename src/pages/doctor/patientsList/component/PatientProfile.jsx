@@ -13,6 +13,7 @@ import {
   getProgressTrackerDetails,
 } from "../../../../components/State/Doctor/Action.js";
 import BedInfo from "./modals/BedInfo.jsx";
+import Discharge from "./modals/Discharge.jsx";
 const PatientProfile = ({ patientId }) => {
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
@@ -31,6 +32,7 @@ const PatientProfile = ({ patientId }) => {
     dispatch(getPatientDetailsByID(patientId));
   }, [dispatch]);
 
+  const openDischarge = () => setActiveModal("discharge");
   const openUpdateProgress = () => setActiveModal("update progress");
   const openBedInfo = () => setActiveModal("bedInfo");
   const closeModal = () => setActiveModal(null);
@@ -164,7 +166,10 @@ const PatientProfile = ({ patientId }) => {
         </div>
         <div className={styles.progressTracker}>
           <div className={styles.row1PT}>
-            <button onClick={openUpdateProgress}>
+            <button className={styles.dischargeBtn} onClick={openDischarge}>
+              <img src="/assets/inpatient/discharge.svg" alt="" /> Discharge
+            </button>
+            <button onClick={openUpdateProgress} className={styles.updateBtn}>
               <Plus className={styles.plusIcon} />
               Update
             </button>
@@ -179,6 +184,14 @@ const PatientProfile = ({ patientId }) => {
             <div className={styles.backdropOverlay} onClick={closeModal} />
             <div className={styles.bedInfo}>
               <BedInfo onClose={closeModal} />
+            </div>
+          </>
+        )}
+        {activeModal === "discharge" && (
+          <>
+            <div className={styles.backdropOverlay} onClick={closeModal} />
+            <div className={styles.dischargeModal}>
+              <Discharge onClose={closeModal} />
             </div>
           </>
         )}

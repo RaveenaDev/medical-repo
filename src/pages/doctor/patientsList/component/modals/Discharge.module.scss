@@ -1,0 +1,124 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0 1vw 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  height: 78vh;
+  overflow-y: auto;
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 0vh;
+  }
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+}
+
+.label {
+  color: #4a4a4a;
+  font-size: 1.9vh;
+}
+
+.questionWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.sectionHeading {
+  font-size: 2vh;
+  font-weight: 520;
+}
+.qna {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 1vw;
+}
+
+.qna2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1vw;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+.sectionWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5vh;
+}
+.input {
+  border: 1px solid #cfcfcf;
+  outline: none;
+  padding: 1.4vh 0.5vw;
+  font-family: "Karla", sans-serif;
+  border-radius: 4px;
+  font-size: 2vh;
+}
+.inputTime {
+  border: 1px solid #cfcfcf;
+  outline: none;
+  padding: 1vh 0.5vw;
+  border-radius: 4px;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+.inputDate {
+  border: 1px solid #cfcfcf;
+  outline: none;
+  padding: 1.25vh 0.5vw;
+  border-radius: 4px;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+.qna3 {
+}
+.textarea {
+  outline: none;
+  resize: none;
+  padding: 1.4vh 0.5vw;
+  border-radius: 4px;
+  background: #f2f5ff;
+  width: 97.5%;
+}
+
+.saveContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3vh;
+  button {
+    background: #25307f;
+    color: white;
+    font-weight: 350;
+    font-size: 2vh;
+    border-radius: 4px;
+    padding: 0.9vh 1vw;
+  }
+}
