@@ -1,10 +1,12 @@
 import styles from "./DiagnosisAndVital.module.scss";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
+const DiagnosisAndVital = ({ onConfirm, selectedComponent, existingData }) => {
   const [weight, setWeight] = useState("");
   const [unit, setUnit] = useState("kg");
 
+  const [height, setHeight] = useState("");
+  const [unit2, setUnit2] = useState("cm");
   useEffect(() => {
     const existing = existingData?.[selectedComponent];
     if (existing) {
@@ -17,24 +19,26 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
         respirationRate: existing.respirationRate || "",
         weight: existing.weight?.value || "",
         unit: existing.weight?.unit || "kg",
+        height: existing.height?.value || "",
+        unit2: existing.height?.unit || "cm",
         dynamicAnswers: existing.dynamicQuestions?.map((q) => q.answer) || [],
       });
 
       setDynamicQuestions(
-          existing.dynamicQuestions?.map((q) => q.question) || []
+        existing.dynamicQuestions?.map((q) => q.question) || []
       );
 
       // Prefill file previews (optional)
       const imagePreviews =
-          existing.images?.map((fileName) => ({
-            id: fileName,
-            file: { name: fileName },
-          })) || [];
+        existing.images?.map((fileName) => ({
+          id: fileName,
+          file: { name: fileName },
+        })) || [];
       const videoPreviews =
-          existing.videos?.map((fileName) => ({
-            id: fileName,
-            file: { name: fileName },
-          })) || [];
+        existing.videos?.map((fileName) => ({
+          id: fileName,
+          file: { name: fileName },
+        })) || [];
 
       setImages(imagePreviews);
       setVideos(videoPreviews);
@@ -50,6 +54,8 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
     respirationRate: "",
     weight: "",
     unit: "kg",
+    height: "",
+    unit2: "cm",
     dynamicAnswers: [],
   });
 
@@ -80,6 +86,13 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [openQuestion]);
+
+  const handleHeightUnitToggle = () => {
+    setFormData((prev) => ({
+      ...prev,
+      unit2: prev.unit2 === "cm" ? "ft" : "cm",
+    }));
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -135,13 +148,17 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { dynamicAnswers, unit, weight, ...rest } = formData;
+    const { dynamicAnswers, unit, weight, height, unit2, ...rest } = formData;
 
     const finalData = {
       ...rest,
       weight: {
         value: weight,
         unit: unit,
+      },
+      height: {
+        value: height,
+        unit: unit2,
       },
       dynamicQuestions: dynamicQuestions.map((q, i) => ({
         question: q,
@@ -291,7 +308,10 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
                   className={styles.saveBtn}
                   type="button"
                   onClick={() => {
-                    setDynamicQuestions((prev) => [...prev, questionText.trim()]);
+                    setDynamicQuestions((prev) => [
+                      ...prev,
+                      questionText.trim(),
+                    ]);
                     setFormData((prev) => ({
                       ...prev,
                       dynamicAnswers: [...prev.dynamicAnswers, ""],
@@ -318,7 +338,7 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
                     className={styles.removeButton}
                     onClick={() => {
                       setDynamicQuestions((prev) =>
-                          prev.filter((_, i) => i !== index)
+                        prev.filter((_, i) => i !== index)
                       );
                       setFormData((prev) => {
                         const updated = [...prev.dynamicAnswers];
@@ -332,11 +352,13 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
                 )}
               </div>
               <input
-                  type="text"
-                  className={styles.input}
-                  placeholder="Please specify"
-                  value={formData.dynamicAnswers[index] || ""}
-                  onChange={(e) => handleDynamicAnswerChange(index, e.target.value)}
+                type="text"
+                className={styles.input}
+                placeholder="Please specify"
+                value={formData.dynamicAnswers[index] || ""}
+                onChange={(e) =>
+                  handleDynamicAnswerChange(index, e.target.value)
+                }
               />
             </div>
           ))}
@@ -348,11 +370,11 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
             What is your current body temperature?
           </p>
           <input
-              type="text"
-              name="temperature"
-              className={styles.input}
-              value={formData.temperature}
-              onChange={handleInputChange}
+            type="text"
+            name="temperature"
+            className={styles.input}
+            value={formData.temperature}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -365,18 +387,18 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
             <div className={styles.row3Right}>
               <p className={styles.row3p}>Diastolic</p>
               <input
-                  name="diastolic"
-                  value={formData.diastolic}
-                  onChange={handleInputChange}
+                name="diastolic"
+                value={formData.diastolic}
+                onChange={handleInputChange}
               />
               <p>mmHg</p>
             </div>
             <div className={styles.row3Right}>
               <p className={styles.row3p}>Systolic</p>
               <input
-                  name="systolic"
-                  value={formData.systolic}
-                  onChange={handleInputChange}
+                name="systolic"
+                value={formData.systolic}
+                onChange={handleInputChange}
               />
               <p>mmHg</p>
             </div>
@@ -390,11 +412,11 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
           </div>
           <div className={styles.row4RightContainer}>
             <input
-                type="text"
-                name="heartRate"
-                className={styles.input2}
-                value={formData.heartRate}
-                onChange={handleInputChange}
+              type="text"
+              name="heartRate"
+              className={styles.input2}
+              value={formData.heartRate}
+              onChange={handleInputChange}
             />
             <p className={styles.row4Unit}>BPM</p>
           </div>
@@ -407,11 +429,11 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
           </div>
           <div className={styles.row4RightContainer}>
             <input
-                type="text"
-                name="oxygenLevel"
-                className={styles.input2}
-                value={formData.oxygenLevel}
-                onChange={handleInputChange}
+              type="text"
+              name="oxygenLevel"
+              className={styles.input2}
+              value={formData.oxygenLevel}
+              onChange={handleInputChange}
             />
             <p className={styles.row4Unit}>%</p>
           </div>
@@ -419,14 +441,14 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
         {/* row6 */}
         <div className={styles.row6}>
           <p className={styles.question}>
-          How many breaths do you take per minute?
+            How many breaths do you take per minute?
           </p>
           <input
-              type="text"
-              name="respirationRate"
-              className={styles.input}
-              value={formData.respirationRate}
-              onChange={handleInputChange}
+            type="text"
+            name="respirationRate"
+            className={styles.input}
+            value={formData.respirationRate}
+            onChange={handleInputChange}
           />
         </div>
         {/* row7 */}
@@ -436,34 +458,73 @@ const DiagnosisAndVital = ({ onConfirm,selectedComponent,existingData }) => {
           </div>
           <div>
             <input
-                type="number"
-                name="weight"
-                className={styles.weightInput}
-                value={formData.weight}
-                onChange={handleInputChange}
+              type="number"
+              name="weight"
+              className={styles.weightInput}
+              value={formData.weight}
+              onChange={handleInputChange}
             />
           </div>
 
           <div className={styles.unitToggleRow}>
             <span
-                className={`${styles.unitLabel}`}
-                onClick={() => setUnit("lbs")}
+              className={`${styles.unitLabel}`}
+              onClick={() => setUnit("lbs")}
             >
               lbs
             </span>
             <label className={styles.toggleSwitch}>
               <input
-                  type="checkbox"
-                  checked={formData.unit === "kg"}
-                  onChange={handleWeightUnitToggle}
+                type="checkbox"
+                checked={formData.unit === "kg"}
+                onChange={handleWeightUnitToggle}
               />
               <span className={styles.slider}></span>
             </label>
             <span
-                className={`${styles.unitLabel} `}
-                onClick={() => setUnit("kg")}
+              className={`${styles.unitLabel} `}
+              onClick={() => setUnit("kg")}
             >
               KG
+            </span>
+          </div>
+        </div>
+
+        {/* row 7.5 */}
+        <div className={styles.weightRow}>
+          <div className={styles.weightRowLeftContainer}>
+            <p className={styles.question}>Enter your height</p>
+          </div>
+          <div>
+            <input
+              type="number"
+              name="height"
+              className={styles.weightInput}
+              value={formData.height}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className={styles.unitToggleRow}>
+            <span
+              className={`${styles.unitLabel}`}
+              onClick={() => setUnit2("ft")}
+            >
+              ft
+            </span>
+            <label className={styles.toggleSwitch}>
+              <input
+                type="checkbox"
+                checked={formData.unit2 === "cm"}
+                onChange={handleHeightUnitToggle}
+              />
+              <span className={styles.slider}></span>
+            </label>
+            <span
+              className={`${styles.unitLabel} `}
+              onClick={() => setUnit2("cm")}
+            >
+              cm
             </span>
           </div>
         </div>

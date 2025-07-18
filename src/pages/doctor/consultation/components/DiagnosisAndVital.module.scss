@@ -2,10 +2,21 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 90%;
-  height: 100%;
+  width: 94%;
+  height: 90vh;
+  overflow-y: auto;
   margin-left: 1.2vw;
   margin-top: 2vh;
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 .row1 {
