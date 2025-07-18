@@ -990,31 +990,31 @@ const PatientNewForm = ({ onBack }) => {
                             <span>Add item</span>
                           </div>
 
-                          {!field.options.some((opt) =>
-                            opt.trim().toLowerCase().startsWith("other")
-                          ) && (
-                            <div
-                              className={styles.addOption}
-                              onClick={() => {
-                                updateFieldInCurrentSection(field.id, {
-                                  options: [
-                                    ...field.options,
-                                    "Other (Please specify):",
-                                  ],
-                                });
+                          {/*{!field.options.some((opt) =>*/}
+                          {/*  opt.trim().toLowerCase().startsWith("other")*/}
+                          {/*) && (*/}
+                          {/*  <div*/}
+                          {/*    className={styles.addOption}*/}
+                          {/*    onClick={() => {*/}
+                          {/*      updateFieldInCurrentSection(field.id, {*/}
+                          {/*        options: [*/}
+                          {/*          ...field.options,*/}
+                          {/*          "Other (Please specify):",*/}
+                          {/*        ],*/}
+                          {/*      });*/}
 
-                                const newKey = `${field.id}-${field.options.length}`;
-                                setNewlyAddedOptionKey(newKey);
-                                setTimeout(
-                                  () => setNewlyAddedOptionKey(null),
-                                  500
-                                );
-                              }}
-                            >
-                              <Plus className={styles.plusIcons} />
-                              <span>Add Other</span>
-                            </div>
-                          )}
+                          {/*      const newKey = `${field.id}-${field.options.length}`;*/}
+                          {/*      setNewlyAddedOptionKey(newKey);*/}
+                          {/*      setTimeout(*/}
+                          {/*        () => setNewlyAddedOptionKey(null),*/}
+                          {/*        500*/}
+                          {/*      );*/}
+                          {/*    }}*/}
+                          {/*  >*/}
+                          {/*    <Plus className={styles.plusIcons} />*/}
+                          {/*    <span>Add Other</span>*/}
+                          {/*  </div>*/}
+                          {/*)}*/}
 
                           <Trash2
                             className={styles.trashIcon}

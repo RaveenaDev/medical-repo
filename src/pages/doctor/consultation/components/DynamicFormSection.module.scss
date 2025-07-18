@@ -1,0 +1,453 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+
+.container1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 94%;
+  margin-left: 1.2vw;
+  margin-top: 2vh;
+  height: 90vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  p {
+    font-size: 2.4vh;
+    font-weight: 500;
+    color: #25307f;
+  }
+
+  .attachments {
+    background-color: #eaebf3;
+    display: flex;
+    border-radius: 5px;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+    opacity: 100%;
+    height: 3.6vh;
+  }
+
+  .tooltipWrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      padding: 0.6vh;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    &:hover img {
+      //  background-color: #d4d8e6;
+    }
+
+    &:hover .tooltipText {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  .tooltipText {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dae4ff;
+    color: black;
+    padding: 0.4vh 0.5vw;
+    border-radius: 4px;
+    font-size: 1.4vh;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    z-index: 10;
+  }
+}
+
+h4 {
+  margin-top: 1rem;
+  color: #25307f;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.imagePreviewRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 5px 0;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+}
+
+.uploadedImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.removeBtn {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  background: none;
+  height: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: black;
+    transform: scale(1.15);
+  }
+}
+
+.videoPreviewRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 20px 0;
+}
+
+.videoWrapper {
+  position: relative;
+  width: 150px;
+  height: 100px;
+}
+
+.uploadedVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.removeBtn {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  background: none;
+  height: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: black;
+    transform: scale(1.15);
+  }
+}
+
+
+.sectionForm {
+  padding: 1rem;
+  font-family: "Inter", sans-serif;
+}
+
+.row2 {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3vh;
+}
+
+.question {
+  font-size: 1.9vh;
+  color: #4a4a4a;
+  margin-bottom: 0.5vh;
+  word-break: break-word;
+}
+
+.input {
+  font-family: "Inter", sans-serif;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  width: 40vw;
+  padding: 1.9vh 0.5vw;
+  border-radius: 5px;
+  font-size: 1.8vh;
+  background-color: #fff;
+
+  &:read-only {
+    background-color: #f4f4f4;
+    color: #999;
+    border: 1px dashed #ccc;
+  }
+}
+
+.dropdownWrapper {
+  position: relative;
+  width: 100%;
+  background: transparent; // ✅ Remove background styling if undesired
+  padding: 0;              // ✅ Remove padding
+  border-radius: 0;        // ✅ No border radius
+  margin-top: 1vh;
+  box-shadow: none;        // ✅ Remove any box-shadow
+  border: none;            // ✅ Ensure no border
+}
+
+.dropdown {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 7px;
+  background: #fff;
+  border: none;
+  color: #2246a0;
+  font-weight: 500;
+  font-size: 1.8vh;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* ✅ Remove default black focus border */
+  outline: none;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+/* ✅ Option Styling */
+.dropdown option {
+  color: #2246a0;
+  font-size: 1.7vh;
+  background-color: #fff;
+}
+
+/* ✅ Change background of the "Select an option" */
+.dropdown option[value=""] {
+  background-color: #f0f4ff; // or any light blue/gray background
+  color: #999;               // lighter text to indicate it’s a placeholder
+}
+
+/* ✅ Highlight selected option */
+.dropdown option:checked {
+  background-color: #e6edfe;
+  font-weight: bold;
+}
+
+
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #f7faff;
+  padding: 18px 12px 12px 12px;
+  border-radius: 5px;
+  margin-top: 1vh;
+}
+
+.optionBtn {
+  padding: 8px 16px;
+  border-radius: 7px;
+  background: #fff;
+  border: none;
+  color: #2246a0;
+  font-weight: 500;
+  font-size: 1.8vh;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+
+  &.selected {
+    background: #e6edfe;
+    color: #2341c2;
+    box-shadow: 0 2px 8px #c5dafb42;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.row7 {
+  display: flex;
+  justify-content: center;
+  margin-top: 4vh;
+
+  .submitButton {
+    background-color: #25307f;
+    color: white;
+    font-size: 1.7vh;
+    font-weight: 500;
+    font-family: "Inter", sans-serif;
+    padding: 10px 60px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background-color: #1d2a6c;
+    }
+  }
+}
+
+// Colors
+$color-1: #2ecc71;
+$color-2: #3498db;
+$color-3: #f1c40f;
+$color-4: #e74c3c;
+.customRadios {
+  display: flex;
+  gap: 20px;
+  margin-top: 1.5vh;
+
+  label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 6px;
+    font-size: 1.6vh;
+
+    input[type="radio"] {
+      display: none;
+    }
+
+    .circle1 {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 2vh;
+      height: 2vh;
+      border-radius: 50%;
+      border: 2px solid #25307f;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    .checked1 {
+      background: #25307f;
+      border-color: #25307f;
+    }
+    .checked img {
+      opacity: 1;
+      filter: brightness(0) invert(1);
+    }
+    .circle img {
+      opacity: 0.8;
+      width: 2vh;
+      height: 2vh;
+    }
+  }
+}
+
+.customQuestion {
+  margin-top: 4vh;
+  margin-left: 0.5vw;
+  padding: 2vh 1vw;
+  width: 39vw;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(66, 114, 203, 1);
+  z-index: 20;
+  input {
+    width: 97%;
+    outline: none;
+    border: 2px solid $color-2;
+    font-family: "Inter", sans-serif;
+    padding: 1.9vh 0.5vw;
+    border-radius: 20px;
+  }
+
+  .customQuestionBtns {
+    display: flex;
+    margin-top: 1vh;
+    gap: 1vw;
+    justify-content: flex-end;
+
+    button {
+      padding: 0.5vh 1vw;
+      font-size: 1.9vh;
+    }
+
+    .cancelBtn {
+      background-color: white;
+      color: #25307f;
+      border: 1px solid #25307f;
+      border-radius: 4px;
+    }
+
+    .saveBtn {
+      background: #25307f;
+      color: white;
+      border-radius: 4px;
+      font-weight: 350;
+    }
+  }
+}
+
+.dynamicQuestion {
+  margin-top: 4vh;
+
+  p {
+    font-size: 1.9vh;
+    color: #4a4a4a;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1vh;
+}
+
+.removeButton {
+  background: transparent;
+  border: none;
+  color: #ff4d4f;
+  font-size: 2vh;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.backdropOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 19;
+}
+

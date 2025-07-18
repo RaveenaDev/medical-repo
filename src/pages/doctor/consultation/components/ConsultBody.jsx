@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {generatePrescriptionsWithAI, submitConsultation} from "../../../../components/State/Doctor/Action.js";
 import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
+import DynamicFormSection from "./DynamicFormSection.jsx";
 
 const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
   const [completeData, setCompleteData] = useState({
@@ -461,6 +462,30 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
         {/* Right Panel */}
         <div className={styles["right-panel"]}>
           <div className={styles["rp-content"]}>
+
+            {selectedForm && selectedForm.sections?.some(sec => sec.id === selectedComponent) && (
+                <DynamicFormSection
+                    key={selectedComponent} // ensures remounting on step change
+                    section={selectedForm.sections.find((sec) => sec.id === selectedComponent)}
+                    onConfirm={(data) => {
+                      setCompleteData((prev) => ({
+                        ...prev,
+                        [selectedComponent]: data,
+                      }));
+                      // move to next section (if exists)
+                      const currentIndex = selectedForm.sections.findIndex(sec => sec.id === selectedComponent);
+                      const nextSection = selectedForm.sections[currentIndex + 1];
+                      if (nextSection) {
+                        setSelectedComponent(nextSection.id);
+                      } else {
+                        console.log("All dynamic sections completed");
+                        // you can move to summary or finish step
+                      }
+                    }}
+                    existingData={completeData[selectedComponent]}
+                />
+            )}
+
             {selectedComponent === "PatientInfo" && (
               <PatientInfo
                 ongoingAppointment={ongoingAppointment}
