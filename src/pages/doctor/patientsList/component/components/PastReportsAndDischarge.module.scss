@@ -81,7 +81,6 @@
   }
 
   p {
-    text-align: center;
     width: 100%;
     font-size: 20px;
   }
@@ -94,7 +93,7 @@
   padding: 2vh 1.2vw;
   border-radius: 8px;
   box-sizing: border-box;
-  width: 100%;
+  width: 95%;
 
   .icon {
     width: 3.4vh;
@@ -103,15 +102,20 @@
 
   .left {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
     h3 {
       margin: 0;
-      font-size: 2.5vh;
+      font-size: 2.2vh;
       font-weight: 600;
       color: #1d1e2c;
     }
     p {
       color: #999;
+      font-size: 1.95vh;
+    }
+    img {
+      height: 3vh;
     }
   }
 
@@ -169,5 +173,17 @@
 
   @media (max-width: 768px) {
     width: 90vw;
+  }
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.details {
+  p {
+    font-size: 2vh;
   }
 }
