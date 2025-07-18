@@ -118,3 +118,15 @@
     }
   }
 }
+.customVitalRow {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+
+  input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+}

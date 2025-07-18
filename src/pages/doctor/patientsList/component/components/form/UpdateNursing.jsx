@@ -14,9 +14,18 @@ const UpdateNursing = ({ onClose, patientId }) => {
     date: "",
     recordedBy: "",
   });
-
+  const [customVitals, setCustomVitals] = useState([]);
   const handleChange = (field) => (e) => {
     setForm({ ...form, [field]: e.target.value });
+  };
+  const handleCustomVitalChange = (index, key, value) => {
+    const updatedVitals = [...customVitals];
+    updatedVitals[index][key] = value;
+    setCustomVitals(updatedVitals);
+  };
+
+  const addCustomVital = () => {
+    setCustomVitals([...customVitals, { label: "", value: "" }]);
   };
 
   const handleSubmit = () => {
@@ -26,7 +35,12 @@ const UpdateNursing = ({ onClose, patientId }) => {
       bloodPressure: form.bloodPressure,
       spo2: form.spo2,
     };
-
+    // Append custom vitals
+    customVitals.forEach((vital) => {
+      if (vital.label && vital.value) {
+        vitalsPayload[vital.label] = vital.value;
+      }
+    });
     const fullPayload = {
       patient: patientId,
       recordedBy: form.recordedBy,
@@ -114,8 +128,28 @@ const UpdateNursing = ({ onClose, patientId }) => {
               onChange={handleChange("recordedBy")}
             />
           </div>
+          {customVitals.map((vital, index) => (
+            <div key={index} className={styles.customVitalRow}>
+              <input
+                type="text"
+                placeholder="Label (e.g. Respiratory Rate)"
+                value={vital.label}
+                onChange={(e) =>
+                  handleCustomVitalChange(index, "label", e.target.value)
+                }
+              />
+              <input
+                type="text"
+                placeholder="Value"
+                value={vital.value}
+                onChange={(e) =>
+                  handleCustomVitalChange(index, "value", e.target.value)
+                }
+              />
+            </div>
+          ))}
           <div className={styles.addVitalWrapper}>
-            <button>
+            <button type="button" onClick={addCustomVital}>
               <Plus className={styles.icon} />
               <span>Add Vital</span>
             </button>
