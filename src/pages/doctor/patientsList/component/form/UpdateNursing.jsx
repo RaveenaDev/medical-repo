@@ -3,7 +3,7 @@ import styles from "./UpdateNursing.module.scss";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { recordPatientVitals } from "../../../../../components/State/Doctor/Action";
-const UpdateNursing = ({ onClose, patientId, caseId }) => {
+const UpdateNursing = ({ onClose, patientId }) => {
   const dispatch = useDispatch();
   const [form, setForm] = useState({
     heartRate: "",
@@ -30,7 +30,7 @@ const UpdateNursing = ({ onClose, patientId, caseId }) => {
     const fullPayload = {
       patient: patientId,
       recordedBy: form.recordedBy,
-      caseId: caseId,
+
       vitals: vitalsPayload,
       recordedAt: new Date(`${form.date}T${form.time}:00`),
     };

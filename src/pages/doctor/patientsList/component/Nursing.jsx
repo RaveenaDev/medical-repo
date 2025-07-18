@@ -77,11 +77,7 @@ const Nursing = ({ patientId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.updateModal}>
-            <UpdateNursing
-              onClose={closeModal}
-              patientId={patientId}
-              caseId={patientVitals[0].caseId}
-            />
+            <UpdateNursing onClose={closeModal} patientId={patientId} />
           </div>
         </>
       )}

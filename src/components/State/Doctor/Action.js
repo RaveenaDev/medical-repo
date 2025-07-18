@@ -832,7 +832,7 @@ export const getAdmittedPatients = () => async (dispatch) => {
       },
     });
 
-    console.log("Admitted Patients: ", data);
+    // console.log("Admitted Patients: ", data);
 
     dispatch({ type: GET_ADMITTED_PATIENTS, payload: data.patients });
   } catch (error) {

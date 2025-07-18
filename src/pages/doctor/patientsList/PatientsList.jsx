@@ -79,9 +79,16 @@ const PatientsList = () => {
     // console.log(patientId);
     dispatch(admitPatient(patientId));
   };
+  const filteredAdmissions = admissionRequests
+    .filter((req) => req.status !== "Admitted") // remove "Admitted"
+    .sort((a, b) => {
+      if (a.status === "Approved" && b.status !== "Approved") return -1;
+      if (a.status !== "Approved" && b.status === "Approved") return 1;
+      return 0; // maintain original order for others
+    });
 
   // console.log("Addmitted Patiemts", patientsAdmitted);
-  // console.log("Admission Requests", admissionRequests);
+  // console.log("Admission Requests", filteredAdmissions);
   const sliderSettings = {
     dots: false,
     infinite: false,
@@ -150,7 +157,7 @@ const PatientsList = () => {
         </div>
         <div className=" toAdmitSliderWrapper">
           <Slider {...sliderSettings}>
-            {admissionRequests.map((patient, index) => (
+            {filteredAdmissions.map((patient, index) => (
               <div key={index} className="slick-slide-card">
                 <div className="patientCard">
                   <div className="card_upper">
@@ -232,8 +239,7 @@ const PatientsList = () => {
                     </div>
                   </div>
                   <div className="admit_btn_container">
-                    {patient.approval?.doctor?.approved &&
-                    patient.approval?.admin?.approved ? (
+                    {patient.status == "Approved" ? (
                       <button
                         className="admit_btn"
                         onClick={() => {
