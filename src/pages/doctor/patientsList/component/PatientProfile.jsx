@@ -9,6 +9,7 @@ import UpdateProgress from "./form/UpdateProgress";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPatientDetailsByID,
+  getPatientVitals,
   getProgressTrackerDetails,
 } from "../../../../components/State/Doctor/Action.js";
 import BedInfo from "./modals/BedInfo.jsx";
@@ -223,7 +224,7 @@ const PatientProfile = ({ patientId }) => {
         </div>
         <div className={styles.content}>
           {activeTab === "medical admin" && <MedAdminRecord />}
-          {activeTab === "nursing" && <Nursing />}
+          {activeTab === "nursing" && <Nursing patientId={patientId} />}
           {activeTab === "past reports" && <PastReportsAndDischarge />}
         </div>
       </div>

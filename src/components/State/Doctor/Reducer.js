@@ -28,6 +28,7 @@ import {
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
   GET_PATIENTS_DEATILS,
+  GET_PATIENTS_VITALS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
@@ -87,6 +88,7 @@ const initialState = {
   userConsultationForms: [],
   patientDetails: [],
   progressTracker: [],
+  patientVitals: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -152,6 +154,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientDetails: action.payload,
+        isLoading: false,
+      };
+    case GET_PATIENTS_VITALS:
+      return {
+        ...state,
+        patientVitals: action.payload,
         isLoading: false,
       };
     case GET_APPROVED_ADMISSIONS:

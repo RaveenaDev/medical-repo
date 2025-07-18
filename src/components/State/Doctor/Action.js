@@ -36,6 +36,7 @@ import {
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
   GET_PATIENTS_DEATILS,
+  GET_PATIENTS_VITALS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
@@ -1070,5 +1071,26 @@ export const admitPatient = (requestId) => async (dispatch) => {
   } catch (error) {
     console.error("Error Admitting patient:", error);
     toast.error(error?.response?.data?.message || "Admission failed");
+  }
+};
+
+export const getPatientVitals = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+      `${API_URL}/getVitalsByPatient/${patientId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Patient Vitals:", data);
+
+    dispatch({ type: GET_PATIENTS_VITALS, payload: data.vitals });
+  } catch (error) {
+    console.error("Error getting Vitals:", error);
   }
 };
