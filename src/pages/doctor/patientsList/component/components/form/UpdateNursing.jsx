@@ -2,7 +2,7 @@ import { Plus, X } from "lucide-react";
 import styles from "./UpdateNursing.module.scss";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { recordPatientVitals } from "../../../../../components/State/Doctor/Action";
+import { recordPatientVitals } from "../../../../../../components/State/Doctor/Action";
 const UpdateNursing = ({ onClose, patientId }) => {
   const dispatch = useDispatch();
   const [form, setForm] = useState({

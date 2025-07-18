@@ -5,7 +5,7 @@ import { Plus, ChevronLeft } from "lucide-react";
 import PatientProfile from "./component/PatientProfile";
 import PatientPreviousRecord from "./component/records/PatientPreviousRecord.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
-import BillingDetails from "./component/BillingDetails.jsx";
+import BillingDetails from "./component/components/BillingDetails.jsx";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const navigate = useNavigate();

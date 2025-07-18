@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import UpdateNursing from "./form/UpdateNursing";
 import { useDispatch, useSelector } from "react-redux";
-import { getPatientVitals } from "../../../../components/State/Doctor/Action";
+import { getPatientVitals } from "../../../../../components/State/Doctor/Action";
 
 const Nursing = ({ patientId }) => {
   const dispatch = useDispatch();

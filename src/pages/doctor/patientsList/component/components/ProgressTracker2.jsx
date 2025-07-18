@@ -6,7 +6,7 @@ import InitialConsultation from "./form/InitialConsultation";
 import Surgery from "./form/Surgery";
 import styles from "./ProgressTracker2.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { getProgressTrackerDetails } from "../../../../components/State/Doctor/Action";
+import { getProgressTrackerDetails } from "../../../../../components/State/Doctor/Action";
 
 const ProgressTracker2 = ({ patientId }) => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const ProgressTracker2 = ({ patientId }) => {
     dispatch(getProgressTrackerDetails(patientId));
   }, [dispatch]);
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
-  console.log("progressTracker details: ", progressTracker);
+  // console.log("progressTracker details: ", progressTracker);
   const steps = [
     {
       phase: "Post-Surgery Follow-up",

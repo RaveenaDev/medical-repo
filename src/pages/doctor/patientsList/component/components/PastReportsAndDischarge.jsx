@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "./PastReportsAndDischarge.module.scss";
 import { Plus } from "lucide-react";
-import UpdatePRD from "./form/UpdatePRD";
-const PastReportsAndDischarge = () => {
+import UpdatePRD from "../form/UpdatePRD";
+const PastReportsAndDischarge = ({ patientId }) => {
   const patientHistoryCards = [
     {
       id: 1,
@@ -38,7 +38,7 @@ const PastReportsAndDischarge = () => {
       ],
     },
     {
-      id: 1,
+      id: 4,
       title: "Past Discharge Summary",
       subtitle: "Outcome & follow-up",
       icon: "/assets/exitIcon-green.svg",
@@ -49,7 +49,7 @@ const PastReportsAndDischarge = () => {
       ],
     },
     {
-      id: 1,
+      id: 8,
       title: "Past Discharge Summary",
       subtitle: "Outcome & follow-up",
       icon: "/assets/exitIcon-green.svg",
@@ -76,7 +76,7 @@ const PastReportsAndDischarge = () => {
   return (
     <div className={styles.container}>
       <header>
-        <p>Vitals Tracker</p>
+        <p>Past Reports And Discharges</p>
         {/* <div className={styles.buttons}>
           <button className={styles.editBtn}>
             <img src="/assets/Pen.svg" alt="pen icon" width={14} />

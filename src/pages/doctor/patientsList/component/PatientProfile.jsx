@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import styles from "./PatientProfile.module.scss";
-import ProgressTracker2 from "./ProgressTracker2";
+import ProgressTracker2 from "./components/ProgressTracker2";
 import { Bed, ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import MedAdminRecord from "./MedAdminRecord";
-import Nursing from "./Nursing";
-import PastReportsAndDischarge from "./PastReportsAndDischarge";
+import MedAdminRecord from "./components/MedAdminRecord";
+import Nursing from "./components/Nursing";
+import PastReportsAndDischarge from "./components/PastReportsAndDischarge.jsx";
 import UpdateProgress from "./form/UpdateProgress";
 import { useDispatch, useSelector } from "react-redux";
 import {
