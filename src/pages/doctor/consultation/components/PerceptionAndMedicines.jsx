@@ -30,7 +30,12 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
   }
 
   const handleRegenerate = () => {
-    dispatch(generatePrescriptionsWithAI(completeData));
+    const aidData = {
+      ...completeData,
+      patientId: patient._id
+    }
+    dispatch(generatePrescriptionsWithAI(aidData));
+    console.log("Regenerate: ",aidData)
     setLoading(true);
   }
   return (

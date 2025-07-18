@@ -6,7 +6,7 @@ import {
   CREATE_NEW_EVENT,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
-  GET_ADMITTED_PATIENTS,
+  GET_ADMITTED_PATIENTS, GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
   GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_REQUESTS,
@@ -89,6 +89,7 @@ const initialState = {
   patientDetails: [],
   progressTracker: [],
   patientVitals: [],
+  allDepartments: []
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -346,6 +347,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         userConsultationForms: action.payload,
+      };
+
+    case GET_ALL_DEPARTMENTS:
+      return {
+        ...state,
+        allDepartments: action.payload
       };
 
     default:

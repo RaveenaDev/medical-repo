@@ -1,19 +1,23 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { X, ChevronUp, ChevronDown, PencilLine } from "lucide-react";
 import styles from "./Refer.module.scss";
 import { Box, TextField } from "@mui/material";
 import { fontSize, styled } from "@mui/system";
-import {submitConsultation} from "../../../../components/State/Doctor/Action.js";
+import {getAllDepartments, getAllDoctors, submitConsultation} from "../../../../components/State/Doctor/Action.js";
+import {useDispatch, useSelector} from "react-redux";
 
-const Refer = ({ onClose,modalData,onSuccess }) => {
+const Refer = ({ onClose,modalData,patient,onSuccess }) => {
 
   console.log("Modal Data: ",modalData)
+
+  const dispatch = useDispatch()
+  const [primaryDiagnosis, setPrimaryDiagnosis] = useState("");
   const [referralId, setReferralId] = useState("");
   const [newFacility, setNewFacility] = useState("");
   const [referredSpecialist, setReferredSpecialist] = useState("");
   const [supportingDocument, setSupportingDocument] = useState(null);
 
-  const [selectedTab, setSelectedTab] = useState("internal referral");
+  const [selectedTab, setSelectedTab] = useState("internal");
 
   const departmentOptions = ["dep option 1", "dep option 2", " dep option 3"];
   const [openDepartment, setOpenDepartment] = useState(false);
@@ -39,12 +43,14 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
 
   const [referralType, setReferralType] = useState("");
 
-  const referralTypeOptions = [
-    { label: "Consultation", value: "consultation" },
-    { label: "Surgery", value: "surgery" },
-    { label: "Therapy", value: "therapy" },
-    { label: "Diagnostic Tests", value: "diagnostic" },
-  ];
+  useEffect(() => {
+    dispatch(getAllDoctors())
+    dispatch(getAllDepartments())
+  }, [dispatch]);
+
+  const doctors = useSelector((store) => store.doctor.allDoctors)
+  const departments = useSelector((store) => store.doctor.allDepartments)
+
   const handleChange = (value) => {
     setReferralType((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
@@ -91,8 +97,8 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
     const formData = {
       tab: selectedTab,
       referralUrgency: document.querySelector('input[name="urgency"]:checked')?.value || "",
-      referredToDepartment: selectedDepartment,
-      referredToDoctor: selectedDoctor,
+      referredToDepartment: selectedDepartment?.departmentId,
+      referredToDoctor: selectedDoctor?._id,
       referralReason: reasonForReferral,
       referralTracking: {
         referralId,
@@ -107,11 +113,18 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
       referralType,
       specialtyArea: selectedSpArea,
       supportingDocument,
+      primaryDiagnosis
     };
 
-    console.log("Final Form Data: ", formData);
-    // dispatch(submitConsultation(finalData,onSuccess,onClose))
-    // onSuccess();
+    console.log("Form Data: ", formData);
+
+    const finalData = {
+      ...modalData,
+      ...formData // this spreads all fields of formData directly
+    }
+
+    console.log("Final: ",finalData)
+    dispatch(submitConsultation(finalData,onSuccess,onClose))
   };
 
 
@@ -133,9 +146,18 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
           </div>
 
           <div className={styles.patientInfo}>
-            <p>Patient: Jasmine Kaur</p>
+            <p>Patient: {patient.name}</p>
             <p>ID: #P-2025-0156</p>
-            <p>Primary Diagnosis: Chest Pain</p>
+            <div className={styles.primaryDiagnosisInput}>
+              <label htmlFor="primaryDiagnosis">Primary Diagnosis:</label>
+              <input
+                  type="text"
+                  id="primaryDiagnosis"
+                  placeholder="Enter diagnosis"
+                  value={primaryDiagnosis}
+                  onChange={(e) => setPrimaryDiagnosis(e.target.value)}
+              />
+            </div>
           </div>
 
           {/* Referral Urgency */}
@@ -143,7 +165,7 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
             <h4>Referral Urgency</h4>
             <div className={styles.referralUrgencyIn}>
               <label className={styles.radioLabel}>
-                <input type="radio" name="urgency" value="routine" />
+                <input type="radio" name="urgency" value="routine"/>
                 <span className={styles.customRadio}></span>
                 <span className={styles.routineText}>Routine</span>
               </label>
@@ -167,29 +189,27 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
             <div className={styles.selection}>
               <div
                 className={
-                  selectedTab === "internal referral" ? styles.activeTab : ""
+                  selectedTab === "internal" ? styles.activeTab : ""
                 }
               >
-                <p onClick={() => setSelectedTab("internal referral")}>
+                <p onClick={() => setSelectedTab("internal")}>
                   Internal Referral
                 </p>
               </div>
               <div
                 className={
-                  selectedTab === "external referral" ? styles.activeTab : ""
+                  selectedTab === "external" ? styles.activeTab : ""
                 }
               >
-                <p onClick={() => setSelectedTab("external referral")}>
+                <p onClick={() => setSelectedTab("external")}>
                   External Referral
                 </p>
               </div>
-
-              {console.log(selectedTab)}
             </div>
 
             <div className={styles.selectionContent}>
               {/* Internal Referral */}
-              {selectedTab === "internal referral" && (
+              {selectedTab === "internal" && (
                 <div className={styles.internalReferral}>
                   {/* row1 */}
                   <div className={styles.row1}>
@@ -203,10 +223,10 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                           <p>
                             {!selectedDepartment ? (
                               <p className={styles.placeholderDropdown}>
-                                Cardiology
+                                Department
                               </p>
                             ) : (
-                              selectedDepartment
+                              selectedDepartment.departmentName
                             )}
                           </p>
                           <span className={styles.arrow}>
@@ -215,9 +235,9 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                         </button>
                         {openDepartment && (
                           <ul className={styles.menu}>
-                            {departmentOptions.map((option) => (
+                            {departments.map((option) => (
                               <li
-                                key={option}
+                                key={option.departmentId}
                                 className={`${styles.item} ${
                                   selectedDepartment === option
                                     ? styles.active
@@ -228,7 +248,7 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                                   setOpenDepartment(false);
                                 }}
                               >
-                                {option}
+                                {option.departmentName}
                               </li>
                             ))}
                           </ul>
@@ -245,10 +265,10 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                           <p>
                             {!selectedDoctor ? (
                               <p className={styles.placeholderDropdown}>
-                                Cardiology
+                                Doctor
                               </p>
                             ) : (
-                              selectedDoctor
+                              selectedDoctor.name
                             )}
                           </p>
                           <span className={styles.arrow}>
@@ -257,9 +277,9 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                         </button>
                         {openDoctor && (
                           <ul className={styles.menu}>
-                            {doctorOptions.map((option) => (
+                            {doctors.map((option) => (
                               <li
-                                key={option}
+                                key={option._id}
                                 className={`${styles.item} ${
                                   selectedDoctor === option ? styles.active : ""
                                 }`}
@@ -268,7 +288,7 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                                   setOpenDoctor(false);
                                 }}
                               >
-                                {option}
+                                {option.name}
                               </li>
                             ))}
                           </ul>
@@ -400,7 +420,7 @@ const Refer = ({ onClose,modalData,onSuccess }) => {
                   </div>
                 </div>
               )}
-              {selectedTab === "external referral" && (
+              {selectedTab === "external" && (
                 <div className={styles.externalReferral}>
                   {" "}
                   {/* row1  of EX-R*/}
