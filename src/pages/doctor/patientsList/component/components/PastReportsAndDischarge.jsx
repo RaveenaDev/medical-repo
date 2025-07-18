@@ -167,7 +167,7 @@ const PastReportsAndDischarge = ({ patientId }) => {
           )}
         </Box>
       </Modal>
-      ;{/* Card List */}
+      {/* Card List */}
       <div className={styles.cardWrapper}>
         {patientHistory?.length > 0 ? (
           patientHistory.map((entry, index) => (
