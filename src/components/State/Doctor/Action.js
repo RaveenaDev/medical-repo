@@ -997,7 +997,7 @@ export const getAdmissionRequests =
     try {
       const token = localStorage.getItem("jwt");
 
-      const { data } = await axios.get(`${API_URL}/admissionRequests`, {
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
