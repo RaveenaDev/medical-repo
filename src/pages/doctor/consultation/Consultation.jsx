@@ -33,6 +33,9 @@ export const Consultation = () => {
     setSelectedDate(e.target.value);
   };
 
+  const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
+  const [completeData, setCompleteData] = useState({});
+
   const [activeView, setActiveView] = useState("consult");
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [selectedForm, setSelectedForm] = useState(null);
@@ -101,7 +104,9 @@ export const Consultation = () => {
                   onClick={closeModal}
                 />
                 <div className={styles["library-modal"]}>
-                  <Library onClose={closeModal} onApply={handleApplyForm}/>
+                  <Library onClose={closeModal} onApply={handleApplyForm}
+                           setCompleteData={setCompleteData}
+                           setSelectedComponent={setSelectedComponent}/>
                 </div>
               </>
             )}
@@ -141,7 +146,12 @@ export const Consultation = () => {
           </DndProvider>
         )}
         {activeView === "consult" && (
-          <ConsultBody selectedForm={selectedForm} appointments={appointments} onSuccess={() => setShouldRefetch(true)}/>
+          <ConsultBody selectedForm={selectedForm}
+                       selectedComponent={selectedComponent}
+                       setSelectedComponent={setSelectedComponent}
+                       completeData={completeData}
+                       setCompleteData={setCompleteData}
+                       appointments={appointments} onSuccess={() => setShouldRefetch(true)}/>
         )}
       </div>
     </div>

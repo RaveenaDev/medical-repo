@@ -2,26 +2,14 @@ import { useEffect, useState } from "react";
 import styles from "./Library.module.scss";
 import { X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUserConsultationForms } from "../../../../components/State/Doctor/Action.js";
+import {getAllUserConsultationForms, removePrescriptionsWithAI} from "../../../../components/State/Doctor/Action.js";
 
-export default function Library({ onClose,onApply }) {
+export default function Library({ onClose,onApply,setSelectedComponent,setCompleteData }) {
   const prebuilt = [
     {
-      title: "General Physician Consultation",
-      description: "Sections: Patient info, Symptoms, Medical History",
-    },
-    {
-      title: "Dental Check-up",
-      description: "Sections: Dental history, X-ray, Observations",
-    },
-    {
-      title: "Cardiology Evaluation",
-      description: "Sections: ECG, Blood Pressure, Family History",
-    },
-    {
-      title: "Eye Examination",
-      description: "Sections: Vision Test, Eye Pressure, Symptoms",
-    },
+      title: "Step Care Default Template",
+      description: "Sections: Medical History,Current Medications,Diagnosis & Vitals,Prescriptions & Medicines,Treatment & Tests",
+    }
   ];
 
   const [activeTab, setActiveTab] = useState("prebuilt");
@@ -85,7 +73,15 @@ export default function Library({ onClose,onApply }) {
                         <img src="/assets/filterIcon.svg" alt="" width={20} />
                         Preview
                       </button>
-                      <button className={styles.applyBtn}>
+                      <button className={styles.applyBtn}
+                              onClick={() => {
+                                onApply(null);   // send data to parent
+                                setSelectedComponent("PatientInfo")
+                                  setCompleteData({})
+                                  dispatch(removePrescriptionsWithAI())
+                                onClose();       // close modal
+                              }}
+                      >
                         <img src="/assets/clipboardIcon.svg" alt="" width={20} />
                         Apply
                       </button>
@@ -106,6 +102,9 @@ export default function Library({ onClose,onApply }) {
                               className={styles.applyBtn}
                               onClick={() => {
                                 onApply(form);   // send data to parent
+                                  setSelectedComponent("PatientInfo")
+                                  setCompleteData({})
+                                  dispatch(removePrescriptionsWithAI())
                                 onClose();       // close modal
                               }}
                           >

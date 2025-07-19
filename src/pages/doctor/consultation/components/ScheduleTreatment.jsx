@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllDoctors, submitConsultation} from "../../../../components/State/Doctor/Action.js";
 
-const ScheduleTreatment = ({ onClose,modalData,onSuccess }) => {
+const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
   // Dropdown 1: Date Range
   const treatmentOptions = [
     "Consultation",
@@ -44,6 +44,7 @@ const ScheduleTreatment = ({ onClose,modalData,onSuccess }) => {
     }
     // console.log("Final Schedule Treatment Data: ", finalData);
     dispatch(submitConsultation(finalData,onSuccess,onClose))
+    setCompleteData({});
   };
 
   const formatTo12Hour = (time24) => {

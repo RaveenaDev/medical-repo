@@ -48,7 +48,7 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT,
+  REJECT_APPOINTMENT, REMOVE_PRESCRIPTIONS_WITH_AI,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -747,8 +747,18 @@ export const generatePrescriptionsWithAI =
       dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data.data });
     } catch (error) {
       console.log(error);
+      toast.error("Please fill and confirm Medical History!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     }
   };
+
+export const removePrescriptionsWithAI =
+    () => async (dispatch) => {
+
+  dispatch({type: REMOVE_PRESCRIPTIONS_WITH_AI})
+    };
 
 export const deleteInventoryItem = (itemId) => async (dispatch) => {
   try {
@@ -883,8 +893,10 @@ export const submitConsultation =
       console.log("Consultation from Backend : ", data);
 
       dispatch({ type: SUBMIT_CONSULTATION, payload: data });
-      onSuccess();
-      onClose();
+
+      // ✅ Safe function calls
+      if (typeof onSuccess === "function") onSuccess();
+      if (typeof onClose === "function") onClose();
 
       toast.success("Submitted Successfully!", {
         position: "bottom-right",

@@ -38,6 +38,8 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
     console.log("Regenerate: ",aidData)
     setLoading(true);
   }
+
+  console.log("Pat: ",patient)
   return (
     <div>
       <div className={styles.container1}>
@@ -48,7 +50,7 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
 
         {/* row2 */}
         <p className={styles.row2}>
-          {patient.name} | Age: {patient.age} | {patient.symptoms[0]} | BP: 140/90
+          {patient?.name} | Age: {patient?.age ?? "N/A"} | {patient?.symptoms?.[0] ?? "N/A"} | BP: 140/90
         </p>
 
         <img
