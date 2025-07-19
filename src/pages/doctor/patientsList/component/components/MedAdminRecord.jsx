@@ -165,7 +165,7 @@ const MedAdminRecord = ({ patientId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.updateModal}>
-            <UpdateMAR onClose={closeModal} />
+            <UpdateMAR onClose={closeModal} patientId={patientId} />
           </div>
         </>
       )}

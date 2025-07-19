@@ -1,126 +1,252 @@
 import { useState } from "react";
 import styles from "./UpdateMAR.module.scss";
-import { ChevronDown, ChevronUp, Plus, X } from "lucide-react";
-const UpdateMAR = ({ onClose }) => {
-  const medFreqOptions = ["Regular", "Alternative", "Custom"];
-  const [openMedFreq, setOpenMedFreq] = useState(false);
-  const [selectedMedFreq, setSelectedMedFreq] = useState("");
+import { ChevronDown, ChevronUp, Plus, X, Trash2 } from "lucide-react";
 
+const UpdateMAR = ({ onClose, patientId }) => {
+  const [medications, setMedications] = useState([
+    {
+      medication: "",
+      dose: "",
+      time: "",
+      date: "",
+      medFreq: "",
+      route: "",
+      notes: "",
+      givenBy: "",
+    },
+  ]);
+
+  const medFreqOptions = ["Regular", "Alternative", "Custom"];
   const givenByOptions = ["Nurse 1", "Nurse 2", "Nurse 3"];
-  const [openGivenBy, setOpenGivenBy] = useState(false);
-  const [selectedGivenBy, setSelectedGivenBy] = useState("");
+
+  const [openMedFreq, setOpenMedFreq] = useState(null);
+  const [openGivenBy, setOpenGivenBy] = useState(null);
+
+  const handleChange = (index, field, value) => {
+    const updated = [...medications];
+    updated[index][field] = value;
+    setMedications(updated);
+  };
+
+  const addMedicine = () => {
+    setMedications([
+      ...medications,
+      {
+        medication: "",
+        dose: "",
+        time: "",
+        date: "",
+        medFreq: "",
+        route: "",
+        notes: "",
+        givenBy: "",
+      },
+    ]);
+  };
+
+  const deleteMedicine = (index) => {
+    const updated = medications.filter((_, i) => i !== index);
+    setMedications(updated);
+  };
+  const handleSubmit = async () => {
+    try {
+      const payload = {
+        patient: patientId,
+        medications: medications.map((med) => ({
+          medication: med.medication,
+          dose: med.dose,
+          time: med.time,
+          date: med.date,
+          medFreq: med.medFreq,
+          route: med.route,
+          notes: med.notes,
+          givenBy: med.givenBy,
+          status: "Scheduled",
+        })),
+      };
+
+      alert("Medication schedule submitted!");
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    }
+  };
+
   return (
     <div>
-      {" "}
       <div className={styles.crossContainer}>
         <X size={20} onClick={onClose} />
       </div>
+
       <div className={styles.container}>
         <h1>Medicine Update</h1>
-        <div className={styles.section1}>
-          <div>
-            <p> Medicine Name</p>
-            <input type="text" className={styles.inputText} />
-          </div>
-          <div>
-            {" "}
-            <p>Dose</p>
-            <input type="text" className={styles.inputText} />
-          </div>
-          <div>
-            {" "}
-            <p>Time</p>
-            <input type="time" className={styles.inputDate} />
-          </div>
-          <div>
-            {" "}
-            <p>Medicine Frequency</p>
-            {/* Med Freq Dropdown */}
-            <div className={styles.dropdown}>
-              <button
-                className={styles.trigger}
-                onClick={() => setOpenMedFreq((prev) => !prev)}
-              >
-                <p>{selectedMedFreq || "Select"}</p>
-                <span className={styles.arrow}>
-                  {openMedFreq ? <ChevronUp /> : <ChevronDown />}
-                </span>
-              </button>
-              {openMedFreq && (
-                <ul className={styles.menu}>
-                  {medFreqOptions.map((option) => (
-                    <li
-                      key={option}
-                      className={`${styles.item} ${
-                        selectedMedFreq === option ? styles.active : ""
-                      }`}
-                      onClick={() => {
-                        setSelectedMedFreq(option);
-                        setOpenMedFreq(false);
-                      }}
-                    >
-                      {option}
-                    </li>
-                  ))}
-                </ul>
-              )}
+
+        {medications.map((med, index) => (
+          <div className={styles.section1} key={index}>
+            <div>
+              <p>Medicine Name</p>
+              <input
+                type="text"
+                className={styles.inputText}
+                value={med.medication}
+                onChange={(e) =>
+                  handleChange(index, "medication", e.target.value)
+                }
+              />
             </div>
-          </div>
-          <div>
-            {" "}
-            <p>Route</p>
-            <input type="text" className={styles.inputText} />
-          </div>
-          <div>
-            {" "}
-            <p>Notes</p>
-            <input type="text" className={styles.inputText} />
-          </div>
-          <div>
-            {" "}
-            <p>Given by</p>
-            {/* Given By Dropdown */}
-            <div className={styles.dropdown}>
-              <button
-                className={styles.trigger}
-                onClick={() => setOpenGivenBy((prev) => !prev)}
-              >
-                <p>{selectedGivenBy || "Select"}</p>
-                <span className={styles.arrow}>
-                  {openGivenBy ? <ChevronUp /> : <ChevronDown />}
-                </span>
-              </button>
-              {openGivenBy && (
-                <ul className={styles.menu}>
-                  {givenByOptions.map((option) => (
-                    <li
-                      key={option}
-                      className={`${styles.item} ${
-                        selectedGivenBy === option ? styles.active : ""
-                      }`}
-                      onClick={() => {
-                        setSelectedGivenBy(option);
-                        setOpenGivenBy(false);
-                      }}
-                    >
-                      {option}
-                    </li>
-                  ))}
-                </ul>
-              )}
+
+            <div>
+              <p>Dose</p>
+              <input
+                type="text"
+                className={styles.inputText}
+                value={med.dose}
+                onChange={(e) => handleChange(index, "dose", e.target.value)}
+              />
             </div>
+
+            <div>
+              <p>Time</p>
+              <input
+                type="time"
+                className={styles.inputDate}
+                value={med.time}
+                onChange={(e) => handleChange(index, "time", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <p>Date</p>
+              <input
+                type="date"
+                className={styles.inputDate}
+                value={med.date}
+                onChange={(e) => handleChange(index, "date", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <p>Medicine Frequency</p>
+              <div className={styles.dropdown}>
+                <button
+                  className={styles.trigger}
+                  onClick={() =>
+                    setOpenMedFreq((prev) => (prev === index ? null : index))
+                  }
+                >
+                  <p>{med.medFreq || "Select"}</p>
+                  <span className={styles.arrow}>
+                    {openMedFreq === index ? <ChevronUp /> : <ChevronDown />}
+                  </span>
+                </button>
+                {openMedFreq === index && (
+                  <ul className={styles.menu}>
+                    {medFreqOptions.map((option) => (
+                      <li
+                        key={option}
+                        className={`${styles.item} ${
+                          med.medFreq === option ? styles.active : ""
+                        }`}
+                        onClick={() => {
+                          handleChange(index, "medFreq", option);
+                          setOpenMedFreq(null);
+                        }}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <p>Route</p>
+              <input
+                type="text"
+                className={styles.inputText}
+                value={med.route}
+                onChange={(e) => handleChange(index, "route", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <p>Notes</p>
+              <input
+                type="text"
+                className={styles.inputText}
+                value={med.notes}
+                onChange={(e) => handleChange(index, "notes", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <p>Given By</p>
+              <div className={styles.dropdown}>
+                <button
+                  className={styles.trigger}
+                  onClick={() =>
+                    setOpenGivenBy((prev) => (prev === index ? null : index))
+                  }
+                >
+                  <p>{med.givenBy || "Select"}</p>
+                  <span className={styles.arrow}>
+                    {openGivenBy === index ? <ChevronUp /> : <ChevronDown />}
+                  </span>
+                </button>
+                {openGivenBy === index && (
+                  <ul className={styles.menu}>
+                    {givenByOptions.map((option) => (
+                      <li
+                        key={option}
+                        className={`${styles.item} ${
+                          med.givenBy === option ? styles.active : ""
+                        }`}
+                        onClick={() => {
+                          handleChange(index, "givenBy", option);
+                          setOpenGivenBy(null);
+                        }}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+            {medications.length > 1 && (
+              <div
+                style={{
+                  gridColumn: "1 / -1", // span full width (2 columns)
+                  display: "flex",
+                  alignItems: "center", // vertical center
+                  justifyContent: "center", // horizontal center
+                  paddingTop: "1vh", // optional: spacing from above
+                }}
+              >
+                <Trash2
+                  onClick={() => deleteMedicine(index)}
+                  style={{
+                    cursor: "pointer",
+                    color: "#ed4301",
+                    fontSize: "1.2rem",
+                  }}
+                />
+              </div>
+            )}
           </div>
-          <div className={styles.addMedicine}>
-            <button>
-              <Plus className={styles.icon} />
-              <span>Add Medicine</span>
-            </button>
-          </div>
+        ))}
+
+        <div className={styles.addMedicine}>
+          <button onClick={addMedicine}>
+            <Plus className={styles.icon} />
+            <span>Add Medicine</span>
+          </button>
         </div>
-        {/* Section 2 */}
 
         <div className={styles.btnContainer}>
-          <button>Schedule</button>
+          <button onClick={handleSubmit}>Schedule</button>
         </div>
       </div>
     </div>

@@ -62,9 +62,8 @@
 .btnContainer {
   display: flex;
   justify-content: center;
-
   align-items: end;
-  margin-top: 12vh;
+  margin-top: 20px;
   button {
     background: #fff;
     color: #25307f;
@@ -153,7 +152,8 @@
 
 .addMedicine {
   display: flex;
-  align-items: end;
+  align-items: center;
+  margin-top: 15px;
   button {
     padding: 1vh 1vw;
     height: 5.8vh;

@@ -1197,3 +1197,21 @@ export const getPatientMedicalRecords = (patientId) => async (dispatch) => {
     throw error;
   }
 };
+// Action to POST medicalrecords
+export const addMedicalAdministration = (payload) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.post(`${API_URL}/addMedicalRecord`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("medicinal administration recorded", data);
+    // dispatch(getPatientVitals(patient));
+  } catch (error) {
+    console.error("Medicinal administration POST error:", error);
+
+    throw error;
+  }
+};
