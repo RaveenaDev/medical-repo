@@ -15,7 +15,7 @@ const ProgressTracker2 = ({ patientId }) => {
     dispatch(getProgressTrackerDetails(patientId));
   }, [dispatch]);
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
-  // console.log("progressTracker details: ", progressTracker);
+  console.log("progressTracker details: ", progressTracker);
   const steps = [
     {
       phase: "Post-Surgery Follow-up",
@@ -102,7 +102,7 @@ const ProgressTracker2 = ({ patientId }) => {
           <div
             key={index}
             className={`${styles.tableRow} ${
-              step.status === "Ongoing" ? styles.activeRow : ""
+              step.status === "ongoing" ? styles.activeRow : ""
             }`}
             onClick={
               step.phase === "Post-Surgery Follow-up"
@@ -123,10 +123,10 @@ const ProgressTracker2 = ({ patientId }) => {
               {new Date(step.date).toISOString().split("T")[0]}
             </div>
             <div className={styles.tableCell}>{step.doctor.name}</div>
-            <div className={styles.tableCell}>{step.progress}</div>
+            <div className={styles.tableCell}>{step?.data.title}</div>
             <div
               className={`${styles.tableCell} ${
-                step.status === "Completed"
+                step.status === "completed"
                   ? styles.statusCompleted
                   : styles.statusOngoing
               }`}
