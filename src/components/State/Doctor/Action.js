@@ -1303,3 +1303,24 @@ export const addProgressTrackerPhase =
       throw error;
     }
   };
+export const dischargePatient = (payload) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/dischargePatient`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log(data);
+    toast.success("Patient dischagred Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Patient dischagre error:", error);
+    toast.error(err.message || "Something went wrong");
+    throw error;
+  }
+};

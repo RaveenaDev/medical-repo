@@ -266,7 +266,7 @@ const PatientProfile = ({ patientId }) => {
           <>
             <div className={styles.backdropOverlay} onClick={closeModal} />
             <div className={styles.dischargeModal}>
-              <Discharge onClose={closeModal} />
+              <Discharge onClose={closeModal} patientId={patientId} />
             </div>
           </>
         )}
