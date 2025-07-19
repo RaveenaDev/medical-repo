@@ -285,7 +285,9 @@ const PatientProfile = ({ patientId }) => {
           </div>
         </div>
         <div className={styles.content}>
-          {activeTab === "medical admin" && <MedAdminRecord />}
+          {activeTab === "medical admin" && (
+            <MedAdminRecord patientId={patientId} />
+          )}
           {activeTab === "nursing" && <Nursing patientId={patientId} />}
           {activeTab === "past reports" && (
             <PastReportsAndDischarge patientId={patientId} />
