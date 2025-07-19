@@ -47,10 +47,13 @@ const PatientsList = () => {
   const filteredPatients = patientsAdmitted.filter((patient) => {
     if (filter === "Total") return true;
     if (filter === "Follow-Up") {
-      return patient.type?.toLowerCase() === "admitted+followup";
+      return patient.type?.toLowerCase() === "followup";
     }
     if (filter === "Admitted") {
-      return patient.type?.toLowerCase() === "admitted";
+      return patient.type?.toLowerCase() === "admitted+followup";
+    }
+    if (filter === "Critical") {
+      return patient.type?.toLowerCase() === "admitted+followup+critical";
     }
     return patient.type === filter;
   });
@@ -80,14 +83,14 @@ const PatientsList = () => {
     dispatch(admitPatient(patientId));
   };
   const filteredAdmissions = admissionRequests
-    .filter((req) => req.status !== "Admitted") // remove "Admitted"
+    .filter((req) => req.status !== "Admitted" && req.status !== "discharged") // remove both
     .sort((a, b) => {
       if (a.status === "Approved" && b.status !== "Approved") return -1;
       if (a.status !== "Approved" && b.status === "Approved") return 1;
-      return 0; // maintain original order for others
+      return 0; // maintain order for others
     });
 
-  // console.log("Addmitted Patiemts", patientsAdmitted);
+  console.log("Addmitted Patiemts", patientsAdmitted);
   // console.log("Admission Requests", filteredAdmissions);
   const sliderSettings = {
     dots: false,

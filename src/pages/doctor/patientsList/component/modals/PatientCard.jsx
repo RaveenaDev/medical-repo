@@ -32,7 +32,9 @@ const PatientCard = ({ patient }) => {
             </div>
           </div>
           <div className={`statusDot ${formatStatus(patient.type)}`}>
-            {patient.type === "critical" && <div className="innerCircle" />}
+            {patient.type === "admitted+followup+critical" && (
+              <div className="innerCircle" />
+            )}
           </div>
         </div>
         <div className="patientCardDetails">

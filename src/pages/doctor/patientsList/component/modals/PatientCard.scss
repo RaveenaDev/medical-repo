@@ -79,7 +79,7 @@
   }
 
   /* Critical outer circle */
-  .critical {
+  .admitted-followup-critical {
     background-color: #e5b5b8;
   }
 
@@ -92,13 +92,13 @@
   }
 
   /* Other statuses */
-  .admitted {
+  .admitted-followup {
     background-color: #eaa000;
     width: 15px; /* base size */
     height: 15px;
   }
 
-  .admitted-followup {
+  .followup {
     background-color: #2e823b;
     width: 15px; /* base size */
     height: 15px;
