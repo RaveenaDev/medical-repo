@@ -48,7 +48,8 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT, REMOVE_PRESCRIPTIONS_WITH_AI,
+  REJECT_APPOINTMENT,
+  REMOVE_PRESCRIPTIONS_WITH_AI,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -754,11 +755,9 @@ export const generatePrescriptionsWithAI =
     }
   };
 
-export const removePrescriptionsWithAI =
-    () => async (dispatch) => {
-
-  dispatch({type: REMOVE_PRESCRIPTIONS_WITH_AI})
-    };
+export const removePrescriptionsWithAI = () => async (dispatch) => {
+  dispatch({ type: REMOVE_PRESCRIPTIONS_WITH_AI });
+};
 
 export const deleteInventoryItem = (itemId) => async (dispatch) => {
   try {
@@ -1213,14 +1212,15 @@ export const getPatientMedicalRecords = (patientId) => async (dispatch) => {
 export const addMedicalAdministration = (payload) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
+    const { patient } = payload;
     const { data } = await axios.post(`${API_URL}/addMedicalRecord`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
-    console.log("medicinal administration recorded", data);
-    // dispatch(getPatientVitals(patient));
+    // console.log("medicinal administration recorded", data);
+    dispatch(getPatientMedicalRecords(patient));
   } catch (error) {
     console.error("Medicinal administration POST error:", error);
 

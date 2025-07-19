@@ -1,8 +1,11 @@
 import { useState } from "react";
 import styles from "./UpdateMAR.module.scss";
 import { ChevronDown, ChevronUp, Plus, X, Trash2 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { addMedicalAdministration } from "../../../../../../components/State/Doctor/Action";
 
 const UpdateMAR = ({ onClose, patientId }) => {
+  const dispatch = useDispatch();
   const [medications, setMedications] = useState([
     {
       medication: "",
@@ -65,11 +68,10 @@ const UpdateMAR = ({ onClose, patientId }) => {
         })),
       };
 
-      alert("Medication schedule submitted!");
+      dispatch(addMedicalAdministration(payload));
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Something went wrong.");
     }
   };
 
