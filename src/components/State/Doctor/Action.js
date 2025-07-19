@@ -1227,3 +1227,29 @@ export const addMedicalAdministration = (payload) => async (dispatch) => {
     throw error;
   }
 };
+export const updateMedicationAdministration = (payload) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+      `${API_URL}/updateMedicationAction`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Update medicinal administration recorded", data);
+    // dispatch(getPatientMedicalRecords(patient));
+    toast.success("Updated Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Medicinal administration POST error:", error);
+
+    throw error;
+  }
+};

@@ -1,11 +1,58 @@
 import { useState } from "react";
 import styles from "./ManageMedication.module.scss";
 import { X } from "lucide-react";
-const ManageMedication = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState(true);
+import { toast } from "react-toastify";
+import { updateMedicationAdministration } from "../../../../../../components/State/Doctor/Action";
+import { useDispatch } from "react-redux";
+const ManageMedication = ({ onClose, recordId }) => {
+  const [activeTab, setActiveTab] = useState(false); // true = reschedule, false = mark given
+
+  const dispatch = useDispatch();
+  const [newDate, setNewDate] = useState("");
+  const [newTime, setNewTime] = useState("");
+  const [notes, setNotes] = useState("");
+  const [givenBy, setGivenBy] = useState("");
+
+  const handleAction = async (actionType) => {
+    try {
+      const body = {
+        recordId,
+        action: actionType,
+      };
+
+      if (actionType === "Given") {
+        if (!givenBy.trim()) {
+          toast.error("Please enter who gave the medication");
+          return;
+        }
+        body.givenBy = givenBy.trim();
+        if (notes.trim()) body.notes = notes.trim();
+      } else if (actionType === "Reschedule") {
+        if (!newDate || !newTime) {
+          toast.error("Please select both new date and time");
+          return;
+        }
+        body.newTime = combineDateAndTimeString(newDate, newTime);
+        if (notes.trim()) body.notes = notes.trim();
+      }
+
+      dispatch(updateMedicationAdministration(body));
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Something went wrong");
+    }
+  };
+
+  const combineDateAndTimeString = (dateStr, timeStr) => {
+    const date = new Date(dateStr);
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    date.setHours(hours, minutes, 0, 0);
+    return date.toISOString();
+  };
+
   return (
     <div>
-      {" "}
       <div className={styles.crossContainer}>
         <X size={20} onClick={onClose} />
       </div>
@@ -15,40 +62,71 @@ const ManageMedication = ({ onClose }) => {
         {activeTab ? (
           <div className={styles.section1}>
             <div>
-              <p className={styles.label}>New Date</p>
-              <input type="date" />
+              <label className={styles.label}>New Date</label>
+              <input
+                type="date"
+                value={newDate}
+                onChange={(e) => setNewDate(e.target.value)}
+              />
             </div>
             <div>
-              {" "}
-              <p className={styles.label}>New Time</p>
-              <input type="time" />
+              <label className={styles.label}>New Time</label>
+              <input
+                type="time"
+                value={newTime}
+                onChange={(e) => setNewTime(e.target.value)}
+              />
             </div>
             <div>
-              {" "}
-              <p className={styles.label}>Reason for Rescheduled</p>
-              <input type="text" placeholder="Optional" />
+              <label className={styles.label}>Reason for Reschedule</label>
+              <input
+                type="text"
+                placeholder="Optional"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
             </div>
+            <button
+              className={styles.givenBtn}
+              onClick={() => handleAction("Reschedule")}
+            >
+              Submit Reschedule
+            </button>
+            <div className={styles.part3}>OR</div>
           </div>
         ) : (
-          //  Section 3
           <div className={styles.section3}>
             <div className={styles.part1}>
               <div className={styles.part1Left}>
-                <p className={styles.label2}>Medication:</p>
-                <p className={styles.label2}>Dosage:</p>
-                <p className={styles.label2}>Route:</p>
-                <p className={styles.label2}>Scheduled:</p>
+                <label className={styles.label2}>Given By</label>
+                <label className={styles.label2}>Notes</label>
               </div>
               <div className={styles.part1Right}>
-                <p className={styles.ans}>Paracetamol</p>
-                <p className={styles.ans}>500mg</p>
-                <p className={styles.ans}>IV</p>
-                <p className={styles.ans}>12:00 PM, 12-06-2025</p>
+                <input
+                  type="text"
+                  placeholder="Enter nurse name"
+                  value={givenBy}
+                  onChange={(e) => setGivenBy(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Optional notes"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                />
               </div>
             </div>
+
             <div className={styles.part2}>
-              <button className={styles.givenBtn}>Given</button>
-              <button className={styles.cancelBtn}>Cancel</button>
+              <button
+                className={styles.givenBtn}
+                onClick={() => handleAction("Given")}
+              >
+                Mark as Given
+              </button>
+              <button className={styles.cancelBtn} onClick={onClose}>
+                Cancel
+              </button>
             </div>
             <div className={styles.part3}>OR</div>
           </div>
@@ -56,7 +134,7 @@ const ManageMedication = ({ onClose }) => {
 
         <div className={styles.section2}>
           <button onClick={() => setActiveTab((prev) => !prev)}>
-            Reschedule
+            {activeTab ? "Switch to Mark as Given" : "Switch to Reschedule"}
           </button>
         </div>
       </div>
