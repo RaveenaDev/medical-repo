@@ -24,7 +24,7 @@
   width: 3vw;
   display: flex;
   justify-content: center;
-  padding-top: 6.5vh;
+  padding-top: 9vh;
 }
 
 .timeline {
@@ -46,8 +46,8 @@
 }
 
 .timelineDot {
-  width: 0.7vw;
-  height: 0.7vw;
+  width: 1.6vh;
+  height: 1.6vh;
   border-radius: 50%;
   margin-bottom: 0.5vh;
   z-index: 1;
@@ -56,7 +56,7 @@
 
 .ongoing {
   background-color: #2e823b;
-  box-shadow: 0px 0px 1px 4px rgba(46, 130, 59, 0.3);
+  box-shadow: 0px 0px 1px 3px rgba(46, 130, 59, 0.3);
 }
 
 .completed {
