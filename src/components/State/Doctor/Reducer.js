@@ -11,6 +11,7 @@ import {
   GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
   GET_ALL_USER_CONSULTATION_FORMS,
+  GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_BY_DATE,
@@ -98,6 +99,7 @@ const initialState = {
   patientHistory: [],
   allDepartments: [],
   patientMedicalRecords: [],
+  appointmentHistory: [],
   patientBedInfo: [],
 };
 
@@ -389,6 +391,13 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         patientMedicalRecords: action.payload,
       };
+
+    case GET_APPOINTMENT_HISTORY:
+      return {
+        ...state,
+        appointmentHistory: action.payload,
+      };
+
     case GET_PATIENT_BED_INFO:
       return {
         ...state,
