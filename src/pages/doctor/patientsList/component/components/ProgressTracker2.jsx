@@ -16,36 +16,6 @@ const ProgressTracker2 = ({ patientId }) => {
   }, [dispatch]);
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
   console.log("progressTracker details: ", progressTracker);
-  const steps = [
-    {
-      phase: "Post-Surgery Follow-up",
-      date: "June 27th, 2024",
-      responsible: "Dr. Minhesh",
-      progress: "Healing progress",
-      status: "Ongoing",
-    },
-    {
-      phase: "Surgery",
-      date: "June 26th, 2024",
-      responsible: "Dr. Minhesh",
-      progress: "Heart Surgery",
-      status: "Completed",
-    },
-    {
-      phase: "Lab Tests",
-      date: "September 25th, 2024",
-      responsible: "Dr. Arunita",
-      progress: "Blood test",
-      status: "Completed",
-    },
-    {
-      phase: "Initial Consultation",
-      date: "June 24th, 2024",
-      responsible: "Dr. Arunita",
-      progress: "Blood test",
-      status: "Completed",
-    },
-  ];
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
@@ -74,7 +44,7 @@ const ProgressTracker2 = ({ patientId }) => {
                       : styles.completed
                   }`}
                 ></div>
-                {index < steps.length - 0 && (
+                {index < progressTracker.length - 1 && (
                   <div className={styles.timelineConnector}></div>
                 )}
               </div>
@@ -93,8 +63,7 @@ const ProgressTracker2 = ({ patientId }) => {
             Date
           </div>
           <div className={styles.headerCell}>Responsible</div>
-          <div className={styles.headerCell}>Progress</div>
-          <div className={styles.headerCell}>Status</div>
+          <div className={styles.headerCell}>Progress Status</div>
         </div>
 
         {/* Data rows */}
@@ -117,13 +86,13 @@ const ProgressTracker2 = ({ patientId }) => {
             }
           >
             <div className={`${styles.tableCell} ${styles.phaseCell}`}>
-              {step.phase}
+              {step?.data.title}
             </div>
             <div className={`${styles.tableCell} ${styles.dateCell}`}>
               {new Date(step.date).toISOString().split("T")[0]}
             </div>
             <div className={styles.tableCell}>{step.doctor.name}</div>
-            <div className={styles.tableCell}>{step?.data.title}</div>
+
             <div
               className={`${styles.tableCell} ${
                 step.status === "completed"
@@ -131,7 +100,7 @@ const ProgressTracker2 = ({ patientId }) => {
                   : styles.statusOngoing
               }`}
             >
-              {step.status}
+              {step.status.charAt(0).toUpperCase() + step.status.slice(1)}
             </div>
           </div>
         ))}
