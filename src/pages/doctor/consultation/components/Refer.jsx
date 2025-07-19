@@ -1,16 +1,19 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { X, ChevronUp, ChevronDown, PencilLine } from "lucide-react";
 import styles from "./Refer.module.scss";
 import { Box, TextField } from "@mui/material";
 import { fontSize, styled } from "@mui/system";
-import {getAllDepartments, getAllDoctors, submitConsultation} from "../../../../components/State/Doctor/Action.js";
-import {useDispatch, useSelector} from "react-redux";
+import {
+  getAllDepartments,
+  getAllDoctors,
+  submitConsultation,
+} from "../../../../components/State/Doctor/Action.js";
+import { useDispatch, useSelector } from "react-redux";
 
-const Refer = ({ onClose,modalData,patient,onSuccess }) => {
+const Refer = ({ onClose, modalData, patient, onSuccess }) => {
+  console.log("Modal Data: ", modalData);
 
-  console.log("Modal Data: ",modalData)
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [primaryDiagnosis, setPrimaryDiagnosis] = useState("");
   const [referralId, setReferralId] = useState("");
   const [newFacility, setNewFacility] = useState("");
@@ -44,12 +47,12 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
   const [referralType, setReferralType] = useState("");
 
   useEffect(() => {
-    dispatch(getAllDoctors())
-    dispatch(getAllDepartments())
+    dispatch(getAllDoctors());
+    dispatch(getAllDepartments());
   }, [dispatch]);
 
-  const doctors = useSelector((store) => store.doctor.allDoctors)
-  const departments = useSelector((store) => store.doctor.allDepartments)
+  const doctors = useSelector((store) => store.doctor.allDoctors);
+  const departments = useSelector((store) => store.doctor.allDepartments);
 
   const handleChange = (value) => {
     setReferralType((prev) =>
@@ -96,14 +99,16 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
   const handleSubmit = () => {
     const formData = {
       tab: selectedTab,
-      referralUrgency: document.querySelector('input[name="urgency"]:checked')?.value || "",
+      referralUrgency:
+        document.querySelector('input[name="urgency"]:checked')?.value || "",
       referredToDepartment: selectedDepartment?.departmentId,
       referredToDoctor: selectedDoctor?._id,
       referralReason: reasonForReferral,
       referralTracking: {
         referralId,
         status: selectedStatus,
-        followUpDate: document.querySelectorAll('input[type="date"]')[1]?.value || "",
+        followUpDate:
+          document.querySelectorAll('input[type="date"]')[1]?.value || "",
       },
       referredSpecialist,
       newFacilityName: newFacility,
@@ -113,20 +118,19 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
       referralType,
       specialtyArea: selectedSpArea,
       supportingDocument,
-      primaryDiagnosis
+      primaryDiagnosis,
     };
 
     console.log("Form Data: ", formData);
 
     const finalData = {
       ...modalData,
-      ...formData // this spreads all fields of formData directly
-    }
+      ...formData, // this spreads all fields of formData directly
+    };
 
-    console.log("Final: ",finalData)
-    dispatch(submitConsultation(finalData,onSuccess,onClose))
+    console.log("Final: ", finalData);
+    dispatch(submitConsultation(finalData, onSuccess, onClose));
   };
-
 
   return (
     <div>
@@ -151,11 +155,11 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
             <div className={styles.primaryDiagnosisInput}>
               <label htmlFor="primaryDiagnosis">Primary Diagnosis:</label>
               <input
-                  type="text"
-                  id="primaryDiagnosis"
-                  placeholder="Enter diagnosis"
-                  value={primaryDiagnosis}
-                  onChange={(e) => setPrimaryDiagnosis(e.target.value)}
+                type="text"
+                id="primaryDiagnosis"
+                placeholder="Enter diagnosis"
+                value={primaryDiagnosis}
+                onChange={(e) => setPrimaryDiagnosis(e.target.value)}
               />
             </div>
           </div>
@@ -165,7 +169,7 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
             <h4>Referral Urgency</h4>
             <div className={styles.referralUrgencyIn}>
               <label className={styles.radioLabel}>
-                <input type="radio" name="urgency" value="routine"/>
+                <input type="radio" name="urgency" value="routine" />
                 <span className={styles.customRadio}></span>
                 <span className={styles.routineText}>Routine</span>
               </label>
@@ -188,18 +192,14 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
           <div className={styles.selectionRef}>
             <div className={styles.selection}>
               <div
-                className={
-                  selectedTab === "internal" ? styles.activeTab : ""
-                }
+                className={selectedTab === "internal" ? styles.activeTab : ""}
               >
                 <p onClick={() => setSelectedTab("internal")}>
                   Internal Referral
                 </p>
               </div>
               <div
-                className={
-                  selectedTab === "external" ? styles.activeTab : ""
-                }
+                className={selectedTab === "external" ? styles.activeTab : ""}
               >
                 <p onClick={() => setSelectedTab("external")}>
                   External Referral
@@ -351,10 +351,10 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
                       <div className={styles.refId}>
                         <p>Referral ID</p>
                         <input
-                            type="text"
-                            className={styles.refIDInput}
-                            value={referralId}
-                            onChange={(e) => setReferralId(e.target.value)}
+                          type="text"
+                          className={styles.refIDInput}
+                          value={referralId}
+                          onChange={(e) => setReferralId(e.target.value)}
                         />
                       </div>
                       <div className={styles.status}>
@@ -470,10 +470,10 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
                     <div className={styles.rightRow}>
                       <p className={styles.label}>Or Add New Facility</p>
                       <input
-                          type="text"
-                          placeholder="Enter Facility Name"
-                          value={newFacility}
-                          onChange={(e) => setNewFacility(e.target.value)}
+                        type="text"
+                        placeholder="Enter Facility Name"
+                        value={newFacility}
+                        onChange={(e) => setNewFacility(e.target.value)}
                       />
                     </div>
                   </div>
@@ -482,10 +482,10 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
                     <div className={styles.rightRow}>
                       <p className={styles.label}>Referred Specialist</p>
                       <input
-                          type="text"
-                          placeholder="Search Specialist Name"
-                          value={referredSpecialist}
-                          onChange={(e) => setReferredSpecialist(e.target.value)}
+                        type="text"
+                        placeholder="Search Specialist Name"
+                        value={referredSpecialist}
+                        onChange={(e) => setReferredSpecialist(e.target.value)}
                       />
                     </div>
                     <div className={styles.r1Dropdown}>
@@ -615,13 +615,18 @@ const Refer = ({ onClose,modalData,patient,onSuccess }) => {
                     <h4>Supporting Document</h4>
                     <div>
                       <input
-                          type="file"
-                          style={{display: "none"}}
-                          onChange={(e) => setSupportingDocument(e.target.files[0])}
-                          id="upload-doc"
+                        type="file"
+                        style={{ display: "none" }}
+                        onChange={(e) =>
+                          setSupportingDocument(e.target.files[0])
+                        }
+                        id="upload-doc"
                       />
-                      <label htmlFor="upload-doc" className={styles.DragAndDropContainer}>
-                        <img src="/assets/uploadCloudIcon.svg" alt=""/>
+                      <label
+                        htmlFor="upload-doc"
+                        className={styles.DragAndDropContainer}
+                      >
+                        <img src="/assets/uploadCloudIcon.svg" alt="" />
                         <span>Drag and drop files here or click to browse</span>
                       </label>
                     </div>

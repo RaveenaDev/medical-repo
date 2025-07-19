@@ -3,51 +3,75 @@ import styles from "./MedAdminRecord.module.scss";
 import { Plus, Clock, Pill, NotepadText, Calendar } from "lucide-react";
 import UpdateMAR from "./form/UpdateMAR";
 import ManageMedication from "./form/ManageMedication";
+import { useDispatch, useSelector } from "react-redux";
+import { getPatientMedicalRecords } from "../../../../../components/State/Doctor/Action";
 
-const MedAdminRecord = () => {
-  const medicationData = [
-    {
-      time: "08:00 AM",
-      medication: "Paracetamol",
-      dose: "500 mg",
-      route: "IV",
-      givenBy: "Nurse Name",
-      notes: "No side effects",
-    },
-    {
-      time: "12:00 PM",
-      medication: "Paracetamol",
-      dose: "500 mg",
-      route: "IV",
-      givenBy: "Nurse Name",
-      notes: "Improvement",
-    },
-    {
-      time: "7:00 PM",
-      medication: "Paracetamol",
-      dose: "500 mg",
-      route: "Oral",
-      givenBy: "Nurse Name",
-      notes: "Improvement",
-    },
-    {
-      time: "8:00 PM",
-      medication: "Paracetamol",
-      dose: "500 mg",
-      route: "Oral",
-      givenBy: "Nurse Name",
-      notes: "Improvement",
-    },
-    {
-      time: "9:00 PM",
-      medication: "Paracetamol",
-      dose: "500 mg",
-      route: "Oral",
-      givenBy: "Nurse Name",
-      notes: "Improvement",
-    },
-  ];
+const MedAdminRecord = ({ patientId }) => {
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getPatientMedicalRecords(patientId));
+  }, []);
+
+  const medicalRecords = useSelector(
+    (store) => store.doctor.patientMedicalRecords
+  );
+
+  console.log("PATIENT MEDICAL RECODS", medicalRecords);
+
+  // Transform medicalRecords to unified format
+  const medicationData = (medicalRecords || []).map((record) => {
+    let timeStr = record.time || "";
+    let dateTime;
+
+    try {
+      // Handles formats like "09:00 PM, 18/07/2025"
+      if (timeStr.includes(",")) {
+        // Parse full datetime (with date and time)
+        const [timePart, datePart] = timeStr.split(",");
+        dateTime = new Date(`${datePart.trim()} ${timePart.trim()}`);
+      } else {
+        // Parse only time → assume today
+        const [time, modifier] = timeStr.trim().split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+
+        if (modifier === "PM" && hours < 12) hours += 12;
+        if (modifier === "AM" && hours === 12) hours = 0;
+
+        const today = new Date();
+        today.setHours(hours);
+        today.setMinutes(minutes);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
+        dateTime = today;
+      }
+    } catch (e) {
+      dateTime = null;
+    }
+
+    return {
+      _id: record._id,
+      time: timeStr,
+      dateTime: dateTime,
+      medication: record.medication || "-",
+      dose: record.dose || "-",
+      route: record.route || "-",
+      givenBy: record.givenBy || "—",
+      notes: record.notes || "—",
+      status: record.status || "Scheduled",
+    };
+  });
+
+  medicationData.sort((a, b) => {
+    if (!a.dateTime || !b.dateTime) return 0;
+    return a.dateTime - b.dateTime;
+  });
+
+  console.log("Sorted medication times:");
+  medicationData.forEach((m) =>
+    console.log(`${m.time} → ${m.dateTime?.toLocaleString()}`)
+  );
   const getTimeCategory = (timeStr) => {
     const now = new Date();
     const [time, modifier] = timeStr.split(" ");
@@ -69,21 +93,38 @@ const MedAdminRecord = () => {
     return "future";
   };
 
+  // const getNextUpcomingIndex = (data) => {
+  //   const now = new Date();
+  //   let closestDiff = Infinity;
+  //   let nextIndex = -1;
+
+  //   data.forEach((item, index) => {
+  //     const [time, modifier] = item.time.split(" ");
+  //     let [hours, minutes] = time.split(":").map(Number);
+  //     if (modifier === "PM" && hours < 12) hours += 12;
+  //     if (modifier === "AM" && hours === 12) hours = 0;
+
+  //     const medTime = new Date();
+  //     medTime.setHours(hours, minutes, 0, 0);
+
+  //     const diff = medTime - now;
+
+  //     if (diff > 0 && diff < closestDiff) {
+  //       closestDiff = diff;
+  //       nextIndex = index;
+  //     }
+  //   });
+
+  //   return nextIndex;
+  // };
   const getNextUpcomingIndex = (data) => {
     const now = new Date();
     let closestDiff = Infinity;
     let nextIndex = -1;
 
     data.forEach((item, index) => {
-      const [time, modifier] = item.time.split(" ");
-      let [hours, minutes] = time.split(":").map(Number);
-      if (modifier === "PM" && hours < 12) hours += 12;
-      if (modifier === "AM" && hours === 12) hours = 0;
-
-      const medTime = new Date();
-      medTime.setHours(hours, minutes, 0, 0);
-
-      const diff = medTime - now;
+      if (!item.dateTime) return;
+      const diff = item.dateTime - now;
 
       if (diff > 0 && diff < closestDiff) {
         closestDiff = diff;
@@ -93,7 +134,6 @@ const MedAdminRecord = () => {
 
     return nextIndex;
   };
-
   const nextUpcomingIndex = getNextUpcomingIndex(medicationData);
 
   const [activeModal, setActiveModal] = useState(null);
@@ -175,7 +215,7 @@ const MedAdminRecord = () => {
             </div>
           </div>
           <div className={styles.tbody}>
-            {medicationData.map((item, idx) => {
+            {/* {medicationData.map((item, idx) => {
               const [time, modifier] = item.time.split(" ");
               let [hours, minutes] = time.split(":").map(Number);
               if (modifier === "PM" && hours < 12) hours += 12;
@@ -191,8 +231,17 @@ const MedAdminRecord = () => {
                 ? "past"
                 : idx === nextUpcomingIndex
                 ? "next"
-                : "future";
+                : "future"; */}
+            {medicationData.map((item, idx) => {
+              const now = new Date();
+              const isPast = item.dateTime ? item.dateTime < now : false;
 
+              const rowClass =
+                item.status === "Given"
+                  ? "past"
+                  : idx === nextUpcomingIndex
+                  ? "next"
+                  : "future";
               return (
                 <div key={idx} className={`${styles.row} ${styles[rowClass]}`}>
                   {/* Wrap 7 cells in .rowContent */}

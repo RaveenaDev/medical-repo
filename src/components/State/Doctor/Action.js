@@ -13,7 +13,8 @@ import {
   EDIT_DOCTOR_NOTE,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
-  GET_ADMITTED_PATIENTS, GET_ALL_DEPARTMENTS,
+  GET_ADMITTED_PATIENTS,
+  GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
   GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_HISTORY,
@@ -34,6 +35,7 @@ import {
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_HISTORY,
+  GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
   GET_PATIENTS,
   GET_PATIENTS_DEATILS,
@@ -1055,9 +1057,7 @@ export const createNewConsultationForm =
         position: "bottom-right",
         autoClose: 2000,
       });
-    }
-
-    catch (error) {
+    } catch (error) {
       console.log(error);
       toast.error("Template Creation Error!", {
         position: "bottom-right",
@@ -1169,6 +1169,28 @@ export const getPatientHistory = (patientId) => async (dispatch) => {
     );
     // console.log("History:", data);
     dispatch({ type: GET_PATIENT_HISTORY, payload: data.history });
+  } catch (error) {
+    console.error("patient History not available:", error);
+
+    throw error;
+  }
+};
+
+export const getPatientMedicalRecords = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/getMedicalRecords/${patientId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("getMedicalRecords", data);
+    dispatch({ type: GET_PATIENT_MEDICAL_RECORDS, payload: data.records });
   } catch (error) {
     console.error("patient History not available:", error);
 
