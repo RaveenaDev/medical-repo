@@ -1271,8 +1271,35 @@ export const getPatientBedInfo = (patientId) => async (dispatch) => {
     // console.log("BED INFO", data);
     dispatch({ type: GET_PATIENT_BED_INFO, payload: data });
   } catch (error) {
-    console.error("patient History not available:", error);
+    console.error("patient BED  Info not available:", error);
 
     throw error;
   }
 };
+
+export const addProgressTrackerPhase =
+  (payload, patientId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.post(
+        `${API_URL}/addProgressPhase`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      dispatch(getProgressTrackerDetails(patientId));
+      toast.success("progress added Successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Add progress phase POST error:", error);
+
+      throw error;
+    }
+  };

@@ -51,7 +51,7 @@ const PatientProfile = ({ patientId }) => {
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
 
-  // console.log("patieny details: ", patientDetails);
+  console.log("patieny details: ", patientDetails);
 
   return (
     <div>
@@ -274,7 +274,11 @@ const PatientProfile = ({ patientId }) => {
           <>
             <div className={styles.backdropOverlay} onClick={closeModal} />
             <div className={styles.updateProgressModal}>
-              <UpdateProgress onClose={closeModal} />
+              <UpdateProgress
+                onClose={closeModal}
+                patientId={patientId}
+                caseId={patientDetails?.consultations[0].caseId}
+              />
             </div>
           </>
         )}

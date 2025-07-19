@@ -1,37 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./UpdateProgress.module.scss";
 import { X, ChevronDown, ChevronUp, Trash2, SquarePen } from "lucide-react";
 
 import { FaRegCalendarAlt } from "react-icons/fa";
+import {
+  addProgressTrackerPhase,
+  getDoctorsByDepartment,
+} from "../../../../../components/State/Doctor/Action";
+import { useDispatch, useSelector } from "react-redux";
 
-const UpdateProgress = ({ onClose }) => {
-  const phaseOptions = [
-    "Post-Surgery Follow-up",
-    "Surgery",
-    "Lab Tests",
-    "Initial Consultation",
-  ];
-
-  const surgeryData = {
-    uploadedFiles: [
-      {
-        name: "blood_test_report.pdf",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-      },
-      {
-        name: "Intra_operative_notes_docs.pdf",
-        url: "https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf",
-      },
-      {
-        name: "consent_forms_report.pdf",
-        url: "https://www.orimi.com/pdf-test.pdf",
-      },
-    ],
-    description: "This is description text",
-  };
-
+const UpdateProgress = ({ onClose, patientId, caseId }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getDoctorsByDepartment());
+  }, []);
   const progressOptions = ["Ongoing", "Completed", "Pending"];
-  const [openPhase, setOpenPhase] = useState(false);
+
   const [openProgress, setOpenProgress] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState("");
   const [selectedProgress, setSelectedProgress] = useState("");
@@ -42,7 +26,7 @@ const UpdateProgress = ({ onClose }) => {
     description: false,
   });
 
-  const [description, setDescription] = useState(surgeryData.description);
+  const [description, setDescription] = useState("");
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -60,6 +44,30 @@ const UpdateProgress = ({ onClose }) => {
       return prev.filter((_, i) => i !== index);
     });
   };
+  const handleSubmit = async () => {
+    if (!caseId || !patientId || !selectedPhase || !doctor) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("caseId", caseId);
+    formData.append("patient", patientId);
+    formData.append("title", selectedPhase);
+    formData.append("date", date);
+    formData.append("assignedDoctor", doctor);
+    formData.append("description", description);
+
+    selectedFiles.forEach((item, index) => {
+      formData.append("files", item.file); // key must match backend field
+    });
+
+    dispatch(addProgressTrackerPhase(formData, patientId));
+    onClose();
+  };
+
+  const doctors = useSelector((store) => store.doctor.doctors);
+
   return (
     <div>
       <div className={styles.crossContainer}>
@@ -71,36 +79,15 @@ const UpdateProgress = ({ onClose }) => {
         <div className={styles.row1}>
           {/* Select Phase */}
           <div>
-            <p className={styles.label}>Select Phase</p>
-            <div className={styles.dropdown}>
-              <button
-                className={styles.trigger}
-                onClick={() => setOpenPhase((prev) => !prev)}
-              >
-                <p>{selectedPhase || "Select Phase"}</p>
-                <span className={styles.arrow}>
-                  {openPhase ? <ChevronUp /> : <ChevronDown />}
-                </span>
-              </button>
-              {openPhase && (
-                <ul className={styles.menu}>
-                  {phaseOptions.map((option) => (
-                    <li
-                      key={option}
-                      className={`${styles.item} ${
-                        selectedPhase === option ? styles.active : ""
-                      }`}
-                      onClick={() => {
-                        setSelectedPhase(option);
-                        setOpenPhase(false);
-                      }}
-                    >
-                      {option}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <p className={styles.label}>Phase</p>
+            <input
+              type="text"
+              value={selectedPhase}
+              onChange={(e) => setSelectedPhase(e.target.value)}
+              className={styles.textInput}
+              style={{ border: "1px solid #cfcfcf" }}
+              placeholder="Enter Phase"
+            />
           </div>
 
           {/* Date of Activity */}
@@ -120,13 +107,23 @@ const UpdateProgress = ({ onClose }) => {
           {/* Assigned Doctor */}
           <div>
             <p className={styles.label}>Assigned Doctor</p>
-            <input
-              type="text"
+            <select
               value={doctor}
               onChange={(e) => setDoctor(e.target.value)}
               className={styles.textInput}
-              style={{ border: "1px solid #cfcfcf" }}
-            />
+              style={{
+                border: "1px solid #cfcfcf",
+                padding: "1vh",
+                borderRadius: "4px",
+              }}
+            >
+              <option value="">Select Doctor</option>
+              {doctors?.map((doc) => (
+                <option key={doc._id} value={doc._id}>
+                  {doc.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Progress Status */}
@@ -179,13 +176,9 @@ const UpdateProgress = ({ onClose }) => {
               />
             ) : (
               <p className={styles.descriptionText}>
-                {!description ? (
-                  <span className={styles.placeholder}>
-                    shortness of breath, fatigue, swelling...
-                  </span>
-                ) : (
-                  description
-                )}
+                <span className={styles.placeholder}>
+                  shortness of breath, fatigue, swelling...
+                </span>
               </p>
             )}
             <SquarePen
@@ -225,31 +218,6 @@ const UpdateProgress = ({ onClose }) => {
               </div>
 
               <ul className={styles.uploadedFilesWrapper}>
-                {/* Render existing files (from dummy data) */}
-                {surgeryData.uploadedFiles.map((item, idx) => (
-                  <li key={`static-${idx}`} className={styles.fileRow}>
-                    <img
-                      src="/assets/fileIcon.svg"
-                      alt="PDF icon"
-                      className={styles.fileIcon}
-                    />
-                    <div className={styles.fileDetails}>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.fileName}
-                      >
-                        {item.name}
-                      </a>
-                      <span className={styles.uploadedText}>Uploaded</span>
-                    </div>
-                    <span className={styles.trashWrapper}>
-                      <Trash2 className={styles.trashIcon} />
-                    </span>
-                  </li>
-                ))}
-
                 {/* Render newly uploaded files (selectedFiles state) */}
                 {selectedFiles.map((item, idx) => (
                   <li key={`new-${idx}`} className={styles.fileRow}>
@@ -294,6 +262,7 @@ const UpdateProgress = ({ onClose }) => {
               fontFamily: "Karla, sans-serif",
               cursor: "pointer",
             }}
+            onClick={handleSubmit}
           >
             Save Update
           </button>
