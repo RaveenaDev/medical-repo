@@ -26,7 +26,7 @@ export const combineDateAndTime = (dateStr, timeStr) => {
 };
 const MedAdminRecord = ({ patientId }) => {
   const dispatch = useDispatch();
-
+  const [selectedRecordId, setSelectedRecordId] = useState(null);
   useEffect(() => {
     dispatch(getPatientMedicalRecords(patientId));
   }, []);
@@ -90,7 +90,10 @@ const MedAdminRecord = ({ patientId }) => {
   }, [activeModal]);
 
   const openUpdate = () => setActiveModal("Update");
-  const openAction = () => setActiveModal("Action");
+  const openAction = (id) => {
+    setSelectedRecordId(id);
+    setActiveModal("Action");
+  };
 
   const closeModal = () => setActiveModal(null);
 
@@ -117,7 +120,10 @@ const MedAdminRecord = ({ patientId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.actionModal}>
-            <ManageMedication onClose={closeModal} />
+            <ManageMedication
+              onClose={closeModal}
+              recordId={selectedRecordId}
+            />
           </div>
         </>
       )}
@@ -159,23 +165,6 @@ const MedAdminRecord = ({ patientId }) => {
             </div>
           </div>
           <div className={styles.tbody}>
-            {/* {medicationData.map((item, idx) => {
-              const [time, modifier] = item.time.split(" ");
-              let [hours, minutes] = time.split(":").map(Number);
-              if (modifier === "PM" && hours < 12) hours += 12;
-              if (modifier === "AM" && hours === 12) hours = 0;
-
-              const medTime = new Date();
-              medTime.setHours(hours, minutes, 0, 0);
-
-              const now = new Date();
-              const isPast = medTime < now;
-
-              const rowClass = isPast
-                ? "past"
-                : idx === nextUpcomingIndex
-                ? "next"
-                : "future"; */}
             {medicationData.map((item, idx) => {
               const now = new Date();
               const isPast = item.dateTime ? item.dateTime < now : false;
@@ -229,7 +218,7 @@ const MedAdminRecord = ({ patientId }) => {
                   {/* Action column */}
                   <div className={`${styles.actionWrapper} ${styles.t}`}>
                     <img
-                      onClick={openAction}
+                      onClick={() => openAction(item._id)}
                       className={`${styles.actionTap} ${
                         rowClass === "past" ? styles.givenAction : ""
                       }`}
