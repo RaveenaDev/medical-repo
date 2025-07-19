@@ -27,6 +27,7 @@ import {
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_BED_INFO,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -41,7 +42,8 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT, REMOVE_PRESCRIPTIONS_WITH_AI,
+  REJECT_APPOINTMENT,
+  REMOVE_PRESCRIPTIONS_WITH_AI,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 
@@ -96,6 +98,7 @@ const initialState = {
   patientHistory: [],
   allDepartments: [],
   patientMedicalRecords: [],
+  patientBedInfo: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -338,10 +341,10 @@ export const doctorReducer = (state = initialState, action) => {
       };
 
     case REMOVE_PRESCRIPTIONS_WITH_AI:
-      return{
+      return {
         ...state,
-        generatedPrescriptionsByAI: null
-      }
+        generatedPrescriptionsByAI: null,
+      };
 
     case GET_ADMITTED_PATIENTS:
       return {
@@ -385,6 +388,11 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientMedicalRecords: action.payload,
+      };
+    case GET_PATIENT_BED_INFO:
+      return {
+        ...state,
+        patientBedInfo: action.payload,
       };
     default:
       return state;

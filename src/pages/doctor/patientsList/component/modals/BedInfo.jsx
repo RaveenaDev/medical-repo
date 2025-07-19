@@ -8,8 +8,20 @@ import {
 } from "lucide-react";
 import styles from "./BedInfo.module.scss";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getPatientBedInfo } from "../../../../../components/State/Doctor/Action";
 
-const BedInfo = ({ onClose }) => {
+const BedInfo = ({ onClose, patientId }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getPatientBedInfo(patientId));
+  }, []);
+
+  const bedInfo = useSelector((store) => store.doctor.patientBedInfo);
+  // console.log("BED INFO", bedInfo);
+  const { bedInfo: bed, roomInfo, patientInfo } = bedInfo || {};
+
   const [activeTab, setActiveTab] = useState("bedInfo");
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const selectedBed1 = ["option 1", "option 2", "optioon 3"];
@@ -46,38 +58,51 @@ const BedInfo = ({ onClose }) => {
                     <div className={styles.dataRB}>
                       <div className={styles.dataChildRB}>
                         <p className={styles.labelRB}>
-                          Room Type:
-                          <span className={styles.valueRB}> Private Suite</span>
+                          Room Type:{" "}
+                          <span className={styles.valueRB}>
+                            {roomInfo?.roomType || "N/A"}
+                          </span>
                         </p>
                         <p className={styles.labelRB}>
-                          Bed No.:
-                          <span className={styles.valueRB}> B2</span>
+                          Bed No.:{" "}
+                          <span className={styles.valueRB}>
+                            {bed?.bedNumber || "N/A"}
+                          </span>
                         </p>
+
                         <p className={styles.labelRB}>
                           Ward:
                           <span className={styles.valueRB}>
                             {" "}
-                            Observation Wing
+                            {roomInfo?.ward || "N/A"}
                           </span>
                         </p>
                         <p className={styles.labelRB}>
-                          Room No.:
-                          <span className={styles.valueRB}> 203B</span>
+                          Room No.:{" "}
+                          <span className={styles.valueRB}>
+                            {roomInfo?.roomID || "N/A"}
+                          </span>
                         </p>
                         <p className={styles.labelRB}>
-                          Floor:
-                          <span className={styles.valueRB}> {"2nd Floor"}</span>
+                          Floor:{" "}
+                          <span className={styles.valueRB}>
+                            {roomInfo?.floor
+                              ? `Floor ${roomInfo.floor}`
+                              : "N/A"}
+                          </span>
                         </p>
                       </div>
                       <div className={styles.dataChildRB}>
                         <p className={styles.labelRB}>
                           Assigned Nurse:{" "}
-                          <span className={styles.valueRB}>Priya Sharma</span>
+                          <span className={styles.valueRB}>
+                            {roomInfo?.assignedNurse || "N/A"}
+                          </span>
                         </p>
                         <p className={styles.labelRB}>
                           Shift:{" "}
                           <span className={styles.valueRB}>
-                            Morning (8AM-4PM)
+                            {roomInfo?.shift || "N/A"}
                           </span>
                         </p>
                       </div>
@@ -169,37 +194,48 @@ const BedInfo = ({ onClose }) => {
                       <div className={styles.dataChildRB}>
                         <p className={styles.labelRB}>
                           Room Type:
-                          <span className={styles.valueRB}> Private Suite</span>
+                          <span className={styles.valueRB}>
+                            {roomInfo?.roomType || "N/A"}
+                          </span>
                         </p>
                         <p className={styles.labelRB}>
                           Bed No.:
-                          <span className={styles.valueRB}> B2</span>
+                          <span className={styles.valueRB}>
+                            {bed?.bedNumber || "N/A"}
+                          </span>
                         </p>
                         <p className={styles.labelRB}>
                           Ward:
                           <span className={styles.valueRB}>
-                            {" "}
-                            Observation Wing
+                            {roomInfo?.ward || "N/A"}
                           </span>
                         </p>
                         <p className={styles.labelRB}>
                           Room No.:
-                          <span className={styles.valueRB}> 203B</span>
+                          <span className={styles.valueRB}>
+                            {roomInfo?.roomID || "N/A"}
+                          </span>
                         </p>
                         <p className={styles.labelRB}>
                           Floor:
-                          <span className={styles.valueRB}> {"2nd Floor"}</span>
+                          <span className={styles.valueRB}>
+                            {roomInfo?.floor
+                              ? `Floor ${roomInfo.floor}`
+                              : "N/A"}
+                          </span>
                         </p>
                       </div>
                       <div className={styles.dataChildRB}>
                         <p className={styles.labelRB}>
                           Assigned Nurse:{" "}
-                          <span className={styles.valueRB}>Priya Sharma</span>
+                          <span className={styles.valueRB}>
+                            {roomInfo?.assignedNurse || "N/A"}
+                          </span>
                         </p>
                         <p className={styles.labelRB}>
                           Shift:{" "}
                           <span className={styles.valueRB}>
-                            Morning (8AM-4PM)
+                            {roomInfo?.shift || "N/A"}
                           </span>
                         </p>
                       </div>
@@ -294,16 +330,23 @@ const BedInfo = ({ onClose }) => {
                   <p className={styles.labelRB}>
                     Current Bed:{" "}
                     <span className={styles.valueRB}>
-                      B2 (Room 203B, 2nd Floor)
+                      {bed?.bedNumber || "N/A"} (Room{" "}
+                      {roomInfo?.roomID || "N/A"},{" "}
+                      {roomInfo?.floor ? `Floor ${roomInfo.floor}` : "N/A"})
                     </span>
                   </p>
                   <p className={styles.labelRB}>
                     Ward:
-                    <span className={styles.valueRB}> Observation Wing</span>
+                    <span className={styles.valueRB}>
+                      {" "}
+                      {roomInfo?.ward || "N/A"}
+                    </span>
                   </p>
                   <p className={styles.labelRB}>
                     Room Type:
-                    <span className={styles.valueRB}> Private Suite</span>
+                    <span className={styles.valueRB}>
+                      {roomInfo?.roomType || "N/A"}
+                    </span>
                   </p>
                 </div>
 

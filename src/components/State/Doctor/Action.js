@@ -34,6 +34,7 @@ import {
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_BED_INFO,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -1249,6 +1250,28 @@ export const updateMedicationAdministration = (payload) => async (dispatch) => {
     });
   } catch (error) {
     console.error("Medicinal administration POST error:", error);
+
+    throw error;
+  }
+};
+
+export const getPatientBedInfo = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/patients/${patientId}/bed-info`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("BED INFO", data);
+    dispatch({ type: GET_PATIENT_BED_INFO, payload: data });
+  } catch (error) {
+    console.error("patient History not available:", error);
 
     throw error;
   }
