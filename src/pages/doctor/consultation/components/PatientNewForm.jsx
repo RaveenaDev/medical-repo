@@ -12,6 +12,8 @@ import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { v4 as uuidv4 } from "uuid";
+import {useDispatch} from "react-redux";
+import {createNewConsultationForm} from "../../../../components/State/Doctor/Action.js";
 
 const PatientNewForm = ({ onBack }) => {
   const [formTitle, setFormTitle] = useState("");
@@ -109,6 +111,8 @@ const PatientNewForm = ({ onBack }) => {
     };
     setSections((prev) => [...prev, newSection]);
   };
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -298,7 +302,10 @@ const PatientNewForm = ({ onBack }) => {
     };
 
     console.log(formTemplate);
-    toast.success("Form saved successfully!");
+
+    dispatch(createNewConsultationForm(formTemplate))
+    onBack();
+    // toast.success("Form saved successfully!");
   };
 
   const currentSection = sections.find(

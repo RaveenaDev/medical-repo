@@ -96,7 +96,7 @@ export default function Library({ onClose,onApply }) {
                   getAllUserForms.map((form, index) => (
                       <div className={styles.row2} key={index}>
                         <h4>{form.title}</h4>
-                        <p>Sections: {form.customFields?.map((field) => field.label).join(", ") || "No sections"}</p>
+                        <p>Sections: {form.sections?.map((field) => field.name).join(", ") || "No sections"}</p>
                         <div className={styles.btnContainer}>
                           <button className={styles.previewBtn}>
                             <img src="/assets/filterIcon.svg" alt="" width={20} />

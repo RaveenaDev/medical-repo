@@ -2,7 +2,7 @@ import { getApprovedAdmissions } from "./Action.js";
 import {
   APPROVE_APPOINTMENT,
   CREATE_DOCTOR_NOTE,
-  CREATE_DOCTOR_REQUESTS,
+  CREATE_DOCTOR_REQUESTS, CREATE_NEW_CONSULTATION_FORM,
   CREATE_NEW_EVENT,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
@@ -350,6 +350,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         userConsultationForms: action.payload,
       };
+
+    case CREATE_NEW_CONSULTATION_FORM:
+      return{
+        ...state,
+        userConsultationForms: [...state.userConsultationForms,action.payload]
+      }
 
     case GET_PATIENT_HISTORY:
       return {

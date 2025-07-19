@@ -1035,12 +1035,12 @@ export const getAllUserConsultationForms = () => async (dispatch) => {
 };
 
 export const createNewConsultationForm =
-  (consultationFormData, onSuccess, onClose) => async (dispatch) => {
+  (consultationFormData) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.post(
-        `${API_URL}/submitConsultation`,
+        `${API_URL}/consultationForms`,
         consultationFormData,
         {
           headers: {
@@ -1049,13 +1049,20 @@ export const createNewConsultationForm =
         }
       );
 
-      console.log("Consultation Creation from Backend : ", data);
+      console.log("Consultation Template Creation from Backend : ", data);
+      dispatch({ type: CREATE_NEW_CONSULTATION_FORM, payload: data.form });
+      toast.success("Form Template Created Successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    }
 
-      dispatch({ type: CREATE_NEW_CONSULTATION_FORM, payload: data });
-      onSuccess();
-      onClose();
-    } catch (error) {
+    catch (error) {
       console.log(error);
+      toast.error("Template Creation Error!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     }
   };
 

@@ -138,10 +138,7 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
 
   useEffect(() => {
     if (
-      selectedComponent === "PerceptionAndMedicines" &&
-      (completeData.medicalHistory !== null ||
-        completeData.currentMedications !== null ||
-        completeData.diagnosisVitals !== null)
+      selectedComponent === "PerceptionAndMedicines"
     ) {
 
       const aiData = {
@@ -153,9 +150,6 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
     }
   }, [
     selectedComponent,
-    completeData.medicalHistory,
-    completeData.currentMedications,
-    completeData.diagnosisVitals,
     dispatch,
   ]);
 
@@ -335,11 +329,13 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
                     </div>
                     <div
                         className={`${styles["lp-5"]} ${
-                            selectedComponent === "PerceptionAndMedicines"
-                                ? styles.active
-                                : ""
-                        }`}
-                        onClick={() => setSelectedComponent("PerceptionAndMedicines")}
+                            selectedComponent === "PerceptionAndMedicines" ? styles.active : ""
+                        } ${!completeData.medicalHistory ? styles.disabled : ""}`}
+                        onClick={() => {
+                          if (completeData.medicalHistory) {
+                            setSelectedComponent("PerceptionAndMedicines");
+                          }
+                        }}
                     >
                       <p>Perception & Medicines</p>
                     </div>
