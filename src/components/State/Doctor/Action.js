@@ -818,16 +818,16 @@ export const getAppointmentHistory = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getAppointmentHistory`, {
+    const { data } = await axios.get(`${API_URL}/getAppointmentsHistory`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
 
-    console.log("Appointment History: ", data);
+    console.log("Appointments History: ", data);
 
-    dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data });
+    dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data.appointments });
   } catch (error) {
     console.error("Error Updating inventory item:", error);
   }

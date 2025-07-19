@@ -1,6 +1,8 @@
 import styles from "./AppointmentHistory.module.scss";
 import { ChevronLeft, ChevronUp, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {getAppointmentHistory} from "../../../../components/State/Doctor/Action.js";
 
 const appointments = [
   {
@@ -45,6 +47,14 @@ const AppointmentHistory = ({ onBack }) => {
   const statusOptions = ["Ongoing", "Complete"];
   const [openStatus, setOpenStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getAppointmentHistory());
+  }, [dispatch]);
+
+  const appointmentHistory = useSelector((store) => store.doctor.appointmentHistory)
 
   return (
     <div>
@@ -135,11 +145,11 @@ const AppointmentHistory = ({ onBack }) => {
           <div>Status</div>
         </div>
         <div className={styles.dataContainer}>
-          {appointments.map((item, idx) => (
+          {appointmentHistory.map((item, idx) => (
             <div key={idx} className={styles.row}>
               <div className={styles.blueText}>{item.caseId}</div>
               <div className={styles.blueText}>{item.name}</div>
-              <div>{item.appointmentWith}</div>
+              <div>+91 {item.phone}</div>
               <div>{item.typeVisit}</div>
               <div>{item.token}</div>
               <div>{item.date}</div>
