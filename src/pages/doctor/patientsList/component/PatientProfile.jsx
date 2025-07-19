@@ -142,26 +142,37 @@ const PatientProfile = ({ patientId }) => {
             <div className={styles.patientDetail}>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Blood Group:</p>
-                <p className={styles.patientValue2}>A(+ve)</p>
+                <p className={styles.patientValue2}>
+                  {patientDetails.bloodGroup || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Admitted On:</p>
-                <p className={styles.patientValue2}>3 June 2025</p>
+                <p className={styles.patientValue2}>
+                  {" "}
+                  {patientDetails.admissionDateTime || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Visit Type:</p>
-                <p className={styles.patientValue2}>PD - First Admission</p>
+                <p className={styles.patientValue2}>
+                  {" "}
+                  {patientDetails.visitType || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Condition:</p>
-                <p className={styles.patientValue2}>Under Observation</p>
+                <p className={styles.patientValue2}>
+                  {" "}
+                  {patientDetails.condition || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={`${styles.patientKey2} ${styles.patientAddress}`}>
                   <span>Address line:</span>
                 </p>
                 <p className={styles.patientValue2}>
-                  {patientDetails.address || "n/a"}
+                  {patientDetails.address || "Not specified"}
                 </p>
               </div>
             </div>
@@ -169,27 +180,42 @@ const PatientProfile = ({ patientId }) => {
             <div className={styles.emergencyContact}>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Emergency Contact:</p>
-                <p className={styles.patientValue2}>Amanjeet Singh</p>
+                <p className={styles.patientValue2}>
+                  {patientDetails.emergencyContactName || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Relationship:</p>
-                <p className={styles.patientValue2}>Spouse</p>
+                <p className={styles.patientValue2}>
+                  {patientDetails.relationship || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Contact:</p>
-                <p className={styles.patientValue2}>(+91)9478492408</p>
+                <p className={styles.patientValue2}>
+                  {patientDetails.emergencyContact || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Admisssion Date & Time:</p>
-                <p className={styles.patientValue2}>03/11/2025, 5:00 PM</p>
+                <p className={styles.patientValue2}>
+                  {" "}
+                  {patientDetails.admissionDateTime || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>MRN:</p>
-                <p className={styles.patientValue2}>213546</p>
+                <p className={styles.patientValue2}>
+                  {" "}
+                  {patientDetails.MRN || "Not specified"}
+                </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Admitted By:</p>
-                <p className={styles.patientValue2}>Dr.Arunita</p>
+                <p className={styles.patientValue2}>
+                  {" "}
+                  {patientDetails.admittingBy || "Not specified"}
+                </p>
               </div>
             </div>
           )}

@@ -17,7 +17,7 @@ const MedAdminRecord = ({ patientId }) => {
     (store) => store.doctor.patientMedicalRecords
   );
 
-  console.log("PATIENT MEDICAL RECODS", medicalRecords);
+  // console.log("PATIENT MEDICAL RECODS", medicalRecords);
 
   // Transform medicalRecords to unified format
   const medicationData = (medicalRecords || []).map((record) => {
@@ -68,10 +68,10 @@ const MedAdminRecord = ({ patientId }) => {
     return a.dateTime - b.dateTime;
   });
 
-  console.log("Sorted medication times:");
-  medicationData.forEach((m) =>
-    console.log(`${m.time} → ${m.dateTime?.toLocaleString()}`)
-  );
+  // console.log("Sorted medication times:");
+  // medicationData.forEach((m) =>
+  //   console.log(`${m.time} → ${m.dateTime?.toLocaleString()}`)
+  // );
   const getTimeCategory = (timeStr) => {
     const now = new Date();
     const [time, modifier] = timeStr.split(" ");
