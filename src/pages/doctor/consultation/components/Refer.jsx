@@ -10,7 +10,7 @@ import {
 } from "../../../../components/State/Doctor/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
-const Refer = ({ onClose, modalData, patient, onSuccess }) => {
+const Refer = ({ setCompleteData,onClose, modalData, patient, onSuccess }) => {
   console.log("Modal Data: ", modalData);
 
   const dispatch = useDispatch();
@@ -130,6 +130,7 @@ const Refer = ({ onClose, modalData, patient, onSuccess }) => {
 
     console.log("Final: ", finalData);
     dispatch(submitConsultation(finalData, onSuccess, onClose));
+    setCompleteData({});
   };
 
   return (
@@ -151,7 +152,7 @@ const Refer = ({ onClose, modalData, patient, onSuccess }) => {
 
           <div className={styles.patientInfo}>
             <p>Patient: {patient.name}</p>
-            <p>ID: #P-2025-0156</p>
+            <p>ID: {patient?.patId}</p>
             <div className={styles.primaryDiagnosisInput}>
               <label htmlFor="primaryDiagnosis">Primary Diagnosis:</label>
               <input

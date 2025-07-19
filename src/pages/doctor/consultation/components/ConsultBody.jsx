@@ -17,8 +17,7 @@ import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
 
-const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
-  const [completeData, setCompleteData] = useState({});
+const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setCompleteData,selectedComponent,setSelectedComponent}) => {
 
   const [final, setFinal] = useState({
     doctor: null,
@@ -107,8 +106,6 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
 
   const [customSections, setCustomSections] = useState([]);
 
-  const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -126,6 +123,8 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
     (app) => app.status === "Ongoing"
   );
 
+  // console.log("On: ",ongoingAppointment)
+
   useEffect(() => {
     setFinal({
       ...final,
@@ -137,8 +136,10 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
   }, [ongoingAppointment]);
 
   useEffect(() => {
+    console.log("Selected Component: ",selectedComponent)
     if (
-      selectedComponent === "PerceptionAndMedicines"
+      selectedComponent === "PerceptionAndMedicines" ||
+        selectedComponent === "static-2"
     ) {
 
       const aiData = {
@@ -214,7 +215,6 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
     // console.log("Final: ", updatedFinal);
     setActiveModal("refer")
     setModalData(updatedFinal)
-    setCompleteData({})
   };
 
   const handleSchedule = () => {
@@ -227,7 +227,6 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
     console.log("Final: ", updatedFinal);
     setActiveModal("scheduleTreatment");
     setModalData(updatedFinal)
-    setCompleteData({})
   };
 
   const handleAddSection = (sectionName) => {
@@ -337,7 +336,7 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
                           }
                         }}
                     >
-                      <p>Perception & Medicines</p>
+                      <p>Prescription & Medicines</p>
                     </div>
                     <div
                         onClick={() => setSelectedComponent("TreatmentAndTest")}
@@ -350,17 +349,30 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
 
                   </>
               ) : (
-                  <>
-                    {selectedForm?.sections?.map((section, index) => (
+                <>
+                  {selectedForm?.sections?.map((section, index) => {
+                    console.log("Sections: ",section)
+                    const isDisabled =
+                        section.name === "Prescription & Medicines" && !completeData?.medicalHistory;
+
+                    return (
                         <div
                             key={section.id}
-                            className={`${styles["lp-6"]} ${selectedComponent === section.id ? styles.active : ""}`}
-                            onClick={() => setSelectedComponent(section.id)}
+                            className={`${styles["lp-6"]} ${
+                                selectedComponent === section.id ? styles.active : ""
+                            } ${isDisabled ? styles.disabled : ""}`}
+                            onClick={() => {
+                              if (!isDisabled) {
+                                setSelectedComponent(section.id);
+                              }
+                            }}
                         >
                           <p>{section.name}</p>
                         </div>
-                    ))}
-                  </>
+                    );
+                  })}
+                </>
+
             )
           }
 
@@ -412,7 +424,7 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
             <>
               <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
               <div className={styles["refer-modal"]}>
-                <Refer onClose={closeModal} modalData={modalData} patient={ongoingAppointment.patient} onSuccess={onSuccess}/>
+                <Refer setCompleteData={setCompleteData} onClose={closeModal} modalData={modalData} patient={ongoingAppointment.patient} onSuccess={onSuccess}/>
               </div>
             </>
         )}
@@ -443,6 +455,7 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["scheduleTreatment-modal"]}>
               <ScheduleTreatment
+                  setCompleteData={setCompleteData}
                 onClose={closeModal}
                 onAddSection={handleAddSection}
                 modalData={modalData}
@@ -536,7 +549,13 @@ const ConsultBody = ({selectedForm,appointments,onSuccess}) => {
               <PatientInfo
                 ongoingAppointment={ongoingAppointment}
                 patient1={ongoingPatients[0]}
-                onConfirm={() => setSelectedComponent("MedicalHistory")}
+                onConfirm={() => {
+                  if (!selectedForm) {
+                    setSelectedComponent("MedicalHistory");
+                  } else {
+                    setSelectedComponent("static-1");
+                  }
+                }}
               />
             )}
             {selectedComponent === "MedicalHistory" && (

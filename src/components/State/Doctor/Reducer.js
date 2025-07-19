@@ -41,7 +41,7 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
-  REJECT_APPOINTMENT,
+  REJECT_APPOINTMENT, REMOVE_PRESCRIPTIONS_WITH_AI,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 
@@ -336,6 +336,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         generatedPrescriptionsByAI: action.payload,
       };
+
+    case REMOVE_PRESCRIPTIONS_WITH_AI:
+      return{
+        ...state,
+        generatedPrescriptionsByAI: null
+      }
 
     case GET_ADMITTED_PATIENTS:
       return {
