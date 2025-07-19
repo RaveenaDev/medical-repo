@@ -5,7 +5,25 @@ import UpdateMAR from "./form/UpdateMAR";
 import ManageMedication from "./form/ManageMedication";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientMedicalRecords } from "../../../../../components/State/Doctor/Action";
+export const combineDateAndTime = (dateStr, timeStr) => {
+  try {
+    const datePart = new Date(dateStr);
+    const [time, modifier] = timeStr.includes(" ")
+      ? timeStr.trim().split(" ")
+      : [timeStr, null];
+    let [hours, minutes] = time.split(":").map(Number);
 
+    if (modifier === "PM" && hours < 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    const combined = new Date(datePart);
+    combined.setHours(hours, minutes || 0, 0, 0);
+    return combined;
+  } catch (error) {
+    console.error("Error combining date and time:", error);
+    return null;
+  }
+};
 const MedAdminRecord = ({ patientId }) => {
   const dispatch = useDispatch();
 
@@ -22,33 +40,7 @@ const MedAdminRecord = ({ patientId }) => {
   // Transform medicalRecords to unified format
   const medicationData = (medicalRecords || []).map((record) => {
     let timeStr = record.time || "";
-    let dateTime;
-
-    try {
-      // Handles formats like "09:00 PM, 18/07/2025"
-      if (timeStr.includes(",")) {
-        // Parse full datetime (with date and time)
-        const [timePart, datePart] = timeStr.split(",");
-        dateTime = new Date(`${datePart.trim()} ${timePart.trim()}`);
-      } else {
-        // Parse only time → assume today
-        const [time, modifier] = timeStr.trim().split(" ");
-        let [hours, minutes] = time.split(":").map(Number);
-
-        if (modifier === "PM" && hours < 12) hours += 12;
-        if (modifier === "AM" && hours === 12) hours = 0;
-
-        const today = new Date();
-        today.setHours(hours);
-        today.setMinutes(minutes);
-        today.setSeconds(0);
-        today.setMilliseconds(0);
-
-        dateTime = today;
-      }
-    } catch (e) {
-      dateTime = null;
-    }
+    const dateTime = combineDateAndTime(record.date, timeStr);
 
     return {
       _id: record._id,
@@ -68,55 +60,6 @@ const MedAdminRecord = ({ patientId }) => {
     return a.dateTime - b.dateTime;
   });
 
-  // console.log("Sorted medication times:");
-  // medicationData.forEach((m) =>
-  //   console.log(`${m.time} → ${m.dateTime?.toLocaleString()}`)
-  // );
-  const getTimeCategory = (timeStr) => {
-    const now = new Date();
-    const [time, modifier] = timeStr.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-
-    if (modifier === "PM" && hours < 12) hours += 12;
-    if (modifier === "AM" && hours === 12) hours = 0;
-
-    const rowTime = new Date();
-    rowTime.setHours(hours);
-    rowTime.setMinutes(minutes);
-    rowTime.setSeconds(0);
-    rowTime.setMilliseconds(0);
-
-    const diff = rowTime - now;
-
-    if (diff < -5 * 60 * 1000) return "past"; // more than 5 mins ago
-    if (diff >= -5 * 60 * 1000 && diff <= 5 * 60 * 1000) return "now"; // within 5 mins
-    return "future";
-  };
-
-  // const getNextUpcomingIndex = (data) => {
-  //   const now = new Date();
-  //   let closestDiff = Infinity;
-  //   let nextIndex = -1;
-
-  //   data.forEach((item, index) => {
-  //     const [time, modifier] = item.time.split(" ");
-  //     let [hours, minutes] = time.split(":").map(Number);
-  //     if (modifier === "PM" && hours < 12) hours += 12;
-  //     if (modifier === "AM" && hours === 12) hours = 0;
-
-  //     const medTime = new Date();
-  //     medTime.setHours(hours, minutes, 0, 0);
-
-  //     const diff = medTime - now;
-
-  //     if (diff > 0 && diff < closestDiff) {
-  //       closestDiff = diff;
-  //       nextIndex = index;
-  //     }
-  //   });
-
-  //   return nextIndex;
-  // };
   const getNextUpcomingIndex = (data) => {
     const now = new Date();
     let closestDiff = Infinity;
@@ -124,9 +67,10 @@ const MedAdminRecord = ({ patientId }) => {
 
     data.forEach((item, index) => {
       if (!item.dateTime) return;
-      const diff = item.dateTime - now;
+      const diff = item.dateTime.getTime() - now.getTime();
 
-      if (diff > 0 && diff < closestDiff) {
+      // Accept range within 1 minute before/after now
+      if (diff >= -60000 && diff < closestDiff) {
         closestDiff = diff;
         nextIndex = index;
       }
