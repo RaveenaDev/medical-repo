@@ -207,7 +207,7 @@ const Calender = () => {
 
   const monthlyEvents = convertEventData(events);
 
-  console.log("Month: ",monthlyEvents)
+  // console.log("Month: ",monthlyEvents)
 
   useEffect(() => {
     const updateCurrentTime = () => {

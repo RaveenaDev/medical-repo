@@ -33,7 +33,7 @@ const EventDetails = ({ event, onClose }) => {
     name: "Ramesh Kulkarni",
   };
 
-  console.log("Event: ",event)
+  // console.log("Event: ",event)
 
   const panelRef = useRef(null);
 

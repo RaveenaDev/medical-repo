@@ -11,104 +11,6 @@ import {getDoctorRequests} from "../../../components/State/Doctor/Action.js";
 const DoctorRequest = () => {
   const now = dayjs();
   const yesterday = now.subtract(1, "day");
-  // const requests = [
-  //   {
-  //     id: 1,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: now.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=22",
-  //     active: true,
-  //     background: "blue",
-  //     target: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: now.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=21",
-  //     active: true,
-  //     background: "blue",
-  //     target: true,
-  //   },
-  //   {
-  //     id: 3,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: yesterday.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=26",
-  //     active: true,
-  //     background: "gray",
-  //   },
-  //   {
-  //     id: 4,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: now.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
-  //     active: true,
-  //     background: "gray",
-  //   },
-  //   {
-  //     id: 5,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: now.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
-  //     active: false,
-  //     background: "gray",
-  //     target: true,
-  //   },
-  //   {
-  //     id: 6,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: now.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
-  //     active: false,
-  //     background: "gray",
-  //     target: true,
-  //   },
-  //   {
-  //     id: 6,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: yesterday.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
-  //     active: false,
-  //     background: "gray",
-  //   },
-  //   {
-  //     id: 6,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: yesterday.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
-  //     active: false,
-  //     background: "gray",
-  //   },
-  //   {
-  //     id: 6,
-  //     message: "Order has been shipped from Chennai on Saturday, 28 Sept.",
-  //     requester: "Dr. Shetty",
-  //     role: "Head of Cardiology",
-  //     requestedOn: now.toISOString(),
-  //     avatarUrl: "https://i.pravatar.cc/30?img=33",
-  //     active: false,
-  //     background: "gray",
-  //   },
-  // ];
-
-
   function groupRequestsByDay(requests) {
     const groups = {};
 
@@ -138,7 +40,7 @@ const DoctorRequest = () => {
 
   const doctor = useSelector((store) => store.doctor.doctorRequests);
 
-  console.log("Doc: ",doctor)
+  // console.log("Doc: ",doctor)
 
   const formattedRequests = doctor?.map((item, index) => ({
     id: item._id || index,
