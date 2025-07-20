@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Index.module.scss";
 import CommonPanel from "./components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
@@ -24,19 +24,20 @@ import DoughnutChart from "./components/DoughnutChart.jsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAppointmentRequests,
-  getAppointments, getCriticalPatients,
+  getAppointments,
+  getCriticalPatients,
   getDoctorRequests,
   getMostCommonDiagnosis,
-  getUpcomingEvents
+  getUpcomingEvents,
 } from "../../components/State/Doctor/Action.js";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import AddEventPanel from "./components/AddEventPanel.jsx";
-import {CalendarToday} from "@mui/icons-material";
+import { CalendarToday } from "@mui/icons-material";
 import Library from "./consultation/components/Library.jsx";
 
 dayjs.extend(customParseFormat);
@@ -44,7 +45,20 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const generateNextDates = (count = 11) => {
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const today = new Date();
 
   const dates = Array.from({ length: count }, (_, i) => {
@@ -66,7 +80,7 @@ const DoctorOverview = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(
-      dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD")
   );
   const navigate = useNavigate();
 
@@ -141,7 +155,7 @@ const DoctorOverview = () => {
         paddingLeft: "1px",
       }}
     >
-      {localStorage.getItem('doctorRequestsCount')}
+      {localStorage.getItem("doctorRequestsCount")}
     </Box>
   );
 
@@ -222,31 +236,34 @@ const DoctorOverview = () => {
 
     dispatch(getAppointments(startDate, endDate));
     dispatch(getMostCommonDiagnosis());
-    dispatch(getUpcomingEvents(new Date()))
-    dispatch(getDoctorRequests())
-    dispatch(getAppointmentRequests())
-    dispatch(getCriticalPatients())
-  }, [dispatch,selectedDate,internalSelectedDate]);
+    dispatch(getUpcomingEvents(new Date()));
+    dispatch(getDoctorRequests());
+    dispatch(getAppointmentRequests());
+    dispatch(getCriticalPatients());
+  }, [dispatch, selectedDate, internalSelectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
 
-  const diagnosis = doctor.diagnosis
+  const diagnosis = doctor.diagnosis;
 
   const totalAppointments = doctor.totalAppointments;
 
-  console.log("Total : ",totalAppointments)
+  // console.log("Total : ",totalAppointments)
 
-  const index = totalAppointments.findIndex(item => item.status === "Ongoing");
+  const index = totalAppointments.findIndex(
+    (item) => item.status === "Ongoing"
+  );
 
-  const appointmentsFromOngoing = index !== -1 ? totalAppointments.slice(index) : [];
+  const appointmentsFromOngoing =
+    index !== -1 ? totalAppointments.slice(index) : [];
 
   const appointmentRequests = doctor.appointmentRequests;
 
   const events = doctor.events;
 
-  const criticalPatients = doctor.criticalPatients
+  const criticalPatients = doctor.criticalPatients;
 
-  console.log("Crit: ",criticalPatients)
+  // console.log("Crit: ",criticalPatients)
 
   const EVENTS = events.map((event) => {
     const hasTime = event.startTime && event.endTime;
@@ -270,8 +287,14 @@ const DoctorOverview = () => {
         safeEndTime = "11:59 PM"; // 👈 TEMP FIX for your backend's time format
       }
 
-      start = dayjs(`${date.format("YYYY-MM-DD")} ${safeStartTime}`, "YYYY-MM-DD hh:mm A");
-      end = dayjs(`${date.format("YYYY-MM-DD")} ${safeEndTime}`, "YYYY-MM-DD hh:mm A");
+      start = dayjs(
+        `${date.format("YYYY-MM-DD")} ${safeStartTime}`,
+        "YYYY-MM-DD hh:mm A"
+      );
+      end = dayjs(
+        `${date.format("YYYY-MM-DD")} ${safeEndTime}`,
+        "YYYY-MM-DD hh:mm A"
+      );
 
       const now = dayjs();
 
@@ -290,7 +313,7 @@ const DoctorOverview = () => {
     }
 
     return {
-        allDay: event.allDay,
+      allDay: event.allDay,
       eventType: event.eventType,
       hospital: event.hospital,
       labelTag: event.labelTag,
@@ -305,8 +328,8 @@ const DoctorOverview = () => {
         month: "long",
         day: "numeric",
       }),
-      status
-    }
+      status,
+    };
   });
 
   // console.log("Events: ",events)
@@ -327,33 +350,46 @@ const DoctorOverview = () => {
     inColor: colorPalette[index % colorPalette.length].inColor,
   }));
 
-    const handleDateSelected = (day,monthName) => {
-        setSelected(day);
+  const handleDateSelected = (day, monthName) => {
+    setSelected(day);
 
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const monthIndex = monthNames.indexOf(monthName);
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const monthIndex = monthNames.indexOf(monthName);
 
-        if (monthIndex === -1) {
-            console.error("Invalid month name:", monthName);
-            return;
-        }
-
-      const year = new Date().getFullYear();
-      const selectedDate = new Date(year, monthIndex, day);
-
-      if (isNaN(selectedDate.getTime())) {
-        console.error("Constructed invalid date:", selectedDate);
-        return;
-      }
-        dispatch(getUpcomingEvents(selectedDate))
+    if (monthIndex === -1) {
+      console.error("Invalid month name:", monthName);
+      return;
     }
+
+    const year = new Date().getFullYear();
+    const selectedDate = new Date(year, monthIndex, day);
+
+    if (isNaN(selectedDate.getTime())) {
+      console.error("Constructed invalid date:", selectedDate);
+      return;
+    }
+    dispatch(getUpcomingEvents(selectedDate));
+  };
 
   const handleOpenPanel = () => setIsPanelOpen(true);
   const handleClosePanel = () => setIsPanelOpen(false);
 
   useEffect(() => {
     document.body.style.overflow =
-        isPanelOpen || selectedEvent ? "hidden" : "auto";
+      isPanelOpen || selectedEvent ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -373,81 +409,81 @@ const DoctorOverview = () => {
           }}
         >
           <CommonPanel
-              setSelectedDate={setSelectedDate}
-              selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            selectedDate={selectedDate}
           />
 
           <Grid
             container
             // sx={{ margin: "0 0 20px 0" }}
           >
-            <Grid size={4} sx={{display: "flex", alignItems: "center"}}>
+            <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
               <div className={styles.headerLeft}>
                 <div className={styles.dateSelections}>
                   <div className={styles.text}>
-                <span className={styles.label}>
-                  {internalSelectedDate === dayjs().format("YYYY-MM-DD")
-                      ? "Today"
-                      : "Date"}
-                </span>
+                    <span className={styles.label}>
+                      {internalSelectedDate === dayjs().format("YYYY-MM-DD")
+                        ? "Today"
+                        : "Date"}
+                    </span>
                     <span className={styles.date}>
-                  {dayjs(internalSelectedDate).format("DD-MM-YYYY")}
-                </span>
+                      {dayjs(internalSelectedDate).format("DD-MM-YYYY")}
+                    </span>
                   </div>
 
                   <div className={styles["calendar-wrapper"]}>
                     <label htmlFor="datePicker">
-                      <CalendarToday className={styles["calendar-icon"]}/>
+                      <CalendarToday className={styles["calendar-icon"]} />
                     </label>
                     <input
-                        type="date"
-                        id="datePicker"
-                        value={internalSelectedDate}
-                        onChange={handleDateChange}
+                      type="date"
+                      id="datePicker"
+                      value={internalSelectedDate}
+                      onChange={handleDateChange}
                     />
                   </div>
                 </div>
               </div>
             </Grid>
             <Grid
-                size={8}
-                sx={{display: "flex", justifyContent: "flex-end", gap: "1vw"}}
+              size={8}
+              sx={{ display: "flex", justifyContent: "flex-end", gap: "1vw" }}
             >
               <Button
-                  variant="contained"
-                  onClick={handleDoctorRequest}
-                  sx={{
-                    fontSize: "14px",
-                    color: "#000",
-                    fontFamily: "Inter",
-                    fontWeight: "400",
-                    textTransform: "capitalize",
-                    padding: "2px 6px",
-                    backgroundColor: "#fff",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    "&:focus": {
-                      outline: "none",
-                      boxShadow: "none",
-                    },
-                  }}
+                variant="contained"
+                onClick={handleDoctorRequest}
+                sx={{
+                  fontSize: "14px",
+                  color: "#000",
+                  fontFamily: "Inter",
+                  fontWeight: "400",
+                  textTransform: "capitalize",
+                  padding: "2px 6px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 4px 0px #C2C2C240",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                }}
               >
                 <div
-                    style={{
-                      height: "8px",
-                      width: "8px",
-                      borderRadius: "50%",
-                      backgroundColor: "#F14400",
-                      position: "absolute",
-                      left: "31px",
-                      top: "6px",
-                    }}
+                  style={{
+                    height: "8px",
+                    width: "8px",
+                    borderRadius: "50%",
+                    backgroundColor: "#F14400",
+                    position: "absolute",
+                    left: "31px",
+                    top: "6px",
+                  }}
                 ></div>
                 {circle}
                 <span
-                    style={{
-                      marginLeft: "16px",
-                      marginRight: "8px",
-                      marginTop: "2px",
+                  style={{
+                    marginLeft: "16px",
+                    marginRight: "8px",
+                    marginTop: "2px",
                   }}
                 >
                   Requests
@@ -758,138 +794,140 @@ const DoctorOverview = () => {
                       </TableHead>
                       <TableBody>
                         {appointmentsFromOngoing.length > 0 ? (
-                          appointmentsFromOngoing.slice(0, 4).map((row, index) => (
-                            <TableRow
-                              key={index}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                                backgroundColor:
-                                  row.status === "Ongoing"
-                                    ? "#EEF8F1"
-                                    : "#ffffff",
-                                "& td, & th": { py: 1.5 }, // Removes padding from all cells
-                              }}
-                            >
-                              <TableCell
-                                component="th"
-                                scope="row"
+                          appointmentsFromOngoing
+                            .slice(0, 4)
+                            .map((row, index) => (
+                              <TableRow
+                                key={index}
                                 sx={{
-                                  color: "#25307f",
-                                  border: "none",
-                                  px: 0.6,
-                                  pl: 2,
-                                  fontSize: "12px",
-                                  fontWeight: 600,
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
                                   backgroundColor:
-                                      row.status === "Ongoing"
-                                          ? "#EEF8F1"
-                                          : "#ffffff",
+                                    row.status === "Ongoing"
+                                      ? "#EEF8F1"
+                                      : "#ffffff",
+                                  "& td, & th": { py: 1.5 }, // Removes padding from all cells
                                 }}
                               >
-                                {truncateText(row.caseId, 8)}
-                              </TableCell>
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                sx={{
-                                  color: "#25307f",
-                                  fontSize: "12px",
-                                  fontWeight: 600,
-                                  border: "none",
-                                  px: 0.6,
-                                  backgroundColor:
-                                      row.status === "Ongoing"
-                                          ? "#EEF8F1"
-                                          : "#ffffff",
-                                }}
-                              >
-                                {truncateText(row.patient?.name, 13)}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                sx={{
-                                  border: "none",
-                                  fontSize: "12px",
-                                  px: 0.6,
-                                  color: "#747474",
-                                }}
-                              >
-                                {truncateText(row.doctor?.name, 14)}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                sx={{
-                                  border: "none",
-                                  fontSize: "12px",
-                                  px: 0.6,
-                                  color: "#747474",
-                                }}
-                              >
-                                {row.typeVisit}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                sx={{
-                                  border: "none",
-                                  fontSize: "12px",
-                                  px: 0.6,
-                                  color: "#747474",
-                                }}
-                              >
-                                {row.department.name}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                sx={{
-                                  border: "none",
-                                  fontSize: "12px",
-                                  px: 0.6,
-                                  color: "#747474",
-                                }}
-                              >
-                                {truncateText(row?.tokenNumber || "N/A", 13)}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                sx={{
-                                  border: "none",
-                                  px: 0.6,
-                                  pr: 2,
-                                  color: "#747474",
-                                  fontSize: "12px",
-                                }}
-                              >
-                                <Chip
-                                  label={row.status}
-                                  size="small"
+                                <TableCell
+                                  component="th"
+                                  scope="row"
                                   sx={{
-                                    bgcolor:
+                                    color: "#25307f",
+                                    border: "none",
+                                    px: 0.6,
+                                    pl: 2,
+                                    fontSize: "12px",
+                                    fontWeight: 600,
+                                    backgroundColor:
                                       row.status === "Ongoing"
-                                        ? "#3DB461"
-                                        : row.status === "Scheduled"
-                                        ? "#25307F"
-                                        : row.status === "Waiting"
-                                        ? "#ffffff"
-                                        : "white",
-                                    color:
-                                      row.status === "Ongoing"
-                                        ? "#FFFFFF"
-                                        : row.status === "Completed"
-                                        ? "orange"
-                                        : row.status === "Scheduled"
-                                        ? "white"
-                                        : row.status === "Waiting"
-                                        ? "#878787"
-                                        : "#757575",
-                                    fontWeight: 500,
-                                    px: 0.7,
+                                        ? "#EEF8F1"
+                                        : "#ffffff",
                                   }}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))
+                                >
+                                  {truncateText(row.caseId, 8)}
+                                </TableCell>
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  sx={{
+                                    color: "#25307f",
+                                    fontSize: "12px",
+                                    fontWeight: 600,
+                                    border: "none",
+                                    px: 0.6,
+                                    backgroundColor:
+                                      row.status === "Ongoing"
+                                        ? "#EEF8F1"
+                                        : "#ffffff",
+                                  }}
+                                >
+                                  {truncateText(row.patient?.name, 13)}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  sx={{
+                                    border: "none",
+                                    fontSize: "12px",
+                                    px: 0.6,
+                                    color: "#747474",
+                                  }}
+                                >
+                                  {truncateText(row.doctor?.name, 14)}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  sx={{
+                                    border: "none",
+                                    fontSize: "12px",
+                                    px: 0.6,
+                                    color: "#747474",
+                                  }}
+                                >
+                                  {row.typeVisit}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  sx={{
+                                    border: "none",
+                                    fontSize: "12px",
+                                    px: 0.6,
+                                    color: "#747474",
+                                  }}
+                                >
+                                  {row.department.name}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  sx={{
+                                    border: "none",
+                                    fontSize: "12px",
+                                    px: 0.6,
+                                    color: "#747474",
+                                  }}
+                                >
+                                  {truncateText(row?.tokenNumber || "N/A", 13)}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  sx={{
+                                    border: "none",
+                                    px: 0.6,
+                                    pr: 2,
+                                    color: "#747474",
+                                    fontSize: "12px",
+                                  }}
+                                >
+                                  <Chip
+                                    label={row.status}
+                                    size="small"
+                                    sx={{
+                                      bgcolor:
+                                        row.status === "Ongoing"
+                                          ? "#3DB461"
+                                          : row.status === "Scheduled"
+                                          ? "#25307F"
+                                          : row.status === "Waiting"
+                                          ? "#ffffff"
+                                          : "white",
+                                      color:
+                                        row.status === "Ongoing"
+                                          ? "#FFFFFF"
+                                          : row.status === "Completed"
+                                          ? "orange"
+                                          : row.status === "Scheduled"
+                                          ? "white"
+                                          : row.status === "Waiting"
+                                          ? "#878787"
+                                          : "#757575",
+                                      fontWeight: 500,
+                                      px: 0.7,
+                                    }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))
                         ) : (
                           <TableRow>
                             <TableCell
@@ -996,7 +1034,7 @@ const DoctorOverview = () => {
                     className={
                       d.day === selected ? styles.dateActive : styles.dateBtn
                     }
-                    onClick={() => handleDateSelected(d.day,d.month)}
+                    onClick={() => handleDateSelected(d.day, d.month)}
                   >
                     <span className={styles.dateDay}>{d.day}</span>
                     <span className={styles.dateMon}>{d.month}</span>
@@ -1006,94 +1044,97 @@ const DoctorOverview = () => {
 
               {/* Event list */}
               <div className={styles.eventList}>
-                {
-                  EVENTS.length === 0 ? (
-                      <div className={styles.noEvents}>No events found</div>
-                  ): (
-                      EVENTS.map((e, i) => (
-                            <div
-                                key={i}
-                                className={styles.eventRow}
-                                onClick={() => setSelectedEvent(e)}
-                            >
-                              <div className={`${styles.eventTime} ${e.allDay ? styles.smallText : ""}`}>
-                                {e.allDay? 'All Day' : e.time}</div>
-                              <div
-                                  className={`${styles.commonEventCard} ${
-                                      e.status === "active" || e.allDay
-                                          ? styles.eventCardActive
-                                          : e.status === "queued"
-                                              ? styles.eventCardQueued
-                                              : styles.eventCardCancelled
-                                  }`}
-                              >
-                                {e.type === "call" ? (
-                                    <svg
-                                        width="18"
-                                        height="18"
-                                        viewBox="0 0 18 18"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                          d="M16.95 18C14.8667 18 12.8083 17.546 10.775 16.638C8.74167 15.73 6.89167 14.4423 5.225 12.775C3.55833 11.1077 2.271 9.25767 1.363 7.225C0.455 5.19233 0.000666667 3.134 0 1.05C0 0.75 0.0999999 0.5 0.3 0.3C0.5 0.0999999 0.75 0 1.05 0H5.1C5.33333 0 5.54167 0.0793332 5.725 0.238C5.90833 0.396667 6.01667 0.584 6.05 0.8L6.7 4.3C6.73333 4.56667 6.725 4.79167 6.675 4.975C6.625 5.15833 6.53333 5.31667 6.4 5.45L3.975 7.9C4.30833 8.51667 4.704 9.11233 5.162 9.687C5.62 10.2617 6.12433 10.816 6.675 11.35C7.19167 11.8667 7.73333 12.346 8.3 12.788C8.86667 13.23 9.46667 13.634 10.1 14L12.45 11.65C12.6 11.5 12.796 11.3877 13.038 11.313C13.28 11.2383 13.5173 11.2173 13.75 11.25L17.2 11.95C17.4333 12.0167 17.625 12.1377 17.775 12.313C17.925 12.4883 18 12.684 18 12.9V16.95C18 17.25 17.9 17.5 17.7 17.7C17.5 17.9 17.25 18 16.95 18Z"
-                                          fill="#616AA5"
-                                      />
-                                    </svg>
-                                ) : e.type === "meeting" ? (
-                                    <svg
-                                        width="19"
-                                        height="18"
-                                        viewBox="0 0 19 18"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                          opacity="0.7"
-                                          d="M9.03886 3.02125C9.039 2.62449 8.96094 2.23159 8.80917 1.86501C8.6574 1.49842 8.43488 1.16534 8.15433 0.884787C7.87377 0.604236 7.54069 0.381715 7.17411 0.229942C6.80752 0.0781693 6.41462 0.00011862 6.01786 0.00025002H3.05986C2.6599 -0.00489579 2.2629 0.0694369 1.8919 0.218935C1.52089 0.368433 1.18327 0.590121 0.898616 0.871134C0.613964 1.15215 0.387951 1.48689 0.233693 1.85594C0.0794339 2.22499 0 2.62101 0 3.021C0 3.42099 0.0794339 3.81701 0.233693 4.18606C0.387951 4.55511 0.613964 4.88985 0.898616 5.17087C1.18327 5.45188 1.52089 5.67357 1.8919 5.82306C2.2629 5.97256 2.6599 6.0469 3.05986 6.04175H3.63886V7.50025C3.63886 7.50025 9.03886 6.77125 9.03886 3.02125ZM6.28886 11.0002C6.28886 12.1052 5.39386 13.0002 4.28886 13.0002C3.18386 13.0002 2.28886 12.1052 2.28886 11.0002C2.28886 9.89525 3.18386 9.00025 4.28886 9.00025C5.39386 9.00025 6.28886 9.89525 6.28886 11.0002ZM4.28886 14.0002C2.87036 14.0002 0.0388644 14.7152 0.0388644 16.1337V18.0002H8.53886V16.1337C8.53886 14.7147 5.70736 14.0002 4.28886 14.0002ZM13.7889 13.0002C14.8939 13.0002 15.7889 12.1052 15.7889 11.0002C15.7889 9.89525 14.8939 9.00025 13.7889 9.00025C12.6839 9.00025 11.7889 9.89525 11.7889 11.0002C11.7889 12.1052 12.6839 13.0002 13.7889 13.0002ZM13.7889 14.0002C12.3704 14.0002 9.53886 14.7152 9.53886 16.1337V18.0002H18.0389V16.1337C18.0389 14.7147 15.2074 14.0002 13.7889 14.0002ZM13.0599 0.50025C12.6631 0.500119 12.2702 0.578169 11.9036 0.729942C11.537 0.881715 11.204 1.10424 10.9234 1.38479C10.6428 1.66534 10.4203 1.99842 10.2686 2.36501C10.1168 2.73159 10.0387 3.12449 10.0389 3.52125C10.0389 7.27125 14.8389 8.00025 14.8389 8.00025V6.54175H15.0179C15.4178 6.5469 15.8148 6.47256 16.1858 6.32306C16.5568 6.17357 16.8945 5.95188 17.1791 5.67087C17.4638 5.38985 17.6898 5.05511 17.844 4.68606C17.9983 4.31701 18.0777 3.92099 18.0777 3.521C18.0777 3.12101 17.9983 2.72499 17.844 2.35594C17.6898 1.98689 17.4638 1.65215 17.1791 1.37113C16.8945 1.09012 16.5568 0.868433 16.1858 0.718935C15.8148 0.569437 15.4178 0.495104 15.0179 0.50025H13.0599Z"
-                                          fill="#25307F"
-                                      />
-                                    </svg>
-                                ) : null}
-                                <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      width: "100%",
-                                    }}
-                                >
-                                  <div
-                                      style={{
-                                        display: "flex",
-                                        width: "100%",
-                                        marginRight: "1rem",
-                                        justifyContent: "space-between",
-                                      }}
-                                  >
-                                    <div className={styles.eventTitle}>{e.title}</div>
-                                    <div className={styles.eventDuration}>
-                                      {e.duration}
-                                    </div>
-                                  </div>
-                                  <svg
-                                      width="11"
-                                      height="18"
-                                      viewBox="0 0 11 18"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                        opacity="0.6"
-                                        d="M0.380428 17.2593C0.870428 17.7085 1.66043 17.7085 2.15043 17.2593L10.4604 9.64182C10.8504 9.28432 10.8504 8.70682 10.4604 8.34932L2.15043 0.731815C1.66043 0.282648 0.870428 0.282648 0.380428 0.731815C-0.109572 1.18098 -0.109572 1.90515 0.380428 2.35432L7.62043 9.00015L0.37043 15.646C-0.109571 16.086 -0.109572 16.8193 0.380428 17.2593Z"
-                                        fill="#333333"
-                                    />
-                                  </svg>
-                                </div>
-                              </div>
+                {EVENTS.length === 0 ? (
+                  <div className={styles.noEvents}>No events found</div>
+                ) : (
+                  EVENTS.map((e, i) => (
+                    <div
+                      key={i}
+                      className={styles.eventRow}
+                      onClick={() => setSelectedEvent(e)}
+                    >
+                      <div
+                        className={`${styles.eventTime} ${
+                          e.allDay ? styles.smallText : ""
+                        }`}
+                      >
+                        {e.allDay ? "All Day" : e.time}
+                      </div>
+                      <div
+                        className={`${styles.commonEventCard} ${
+                          e.status === "active" || e.allDay
+                            ? styles.eventCardActive
+                            : e.status === "queued"
+                            ? styles.eventCardQueued
+                            : styles.eventCardCancelled
+                        }`}
+                      >
+                        {e.type === "call" ? (
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 18 18"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M16.95 18C14.8667 18 12.8083 17.546 10.775 16.638C8.74167 15.73 6.89167 14.4423 5.225 12.775C3.55833 11.1077 2.271 9.25767 1.363 7.225C0.455 5.19233 0.000666667 3.134 0 1.05C0 0.75 0.0999999 0.5 0.3 0.3C0.5 0.0999999 0.75 0 1.05 0H5.1C5.33333 0 5.54167 0.0793332 5.725 0.238C5.90833 0.396667 6.01667 0.584 6.05 0.8L6.7 4.3C6.73333 4.56667 6.725 4.79167 6.675 4.975C6.625 5.15833 6.53333 5.31667 6.4 5.45L3.975 7.9C4.30833 8.51667 4.704 9.11233 5.162 9.687C5.62 10.2617 6.12433 10.816 6.675 11.35C7.19167 11.8667 7.73333 12.346 8.3 12.788C8.86667 13.23 9.46667 13.634 10.1 14L12.45 11.65C12.6 11.5 12.796 11.3877 13.038 11.313C13.28 11.2383 13.5173 11.2173 13.75 11.25L17.2 11.95C17.4333 12.0167 17.625 12.1377 17.775 12.313C17.925 12.4883 18 12.684 18 12.9V16.95C18 17.25 17.9 17.5 17.7 17.7C17.5 17.9 17.25 18 16.95 18Z"
+                              fill="#616AA5"
+                            />
+                          </svg>
+                        ) : e.type === "meeting" ? (
+                          <svg
+                            width="19"
+                            height="18"
+                            viewBox="0 0 19 18"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              opacity="0.7"
+                              d="M9.03886 3.02125C9.039 2.62449 8.96094 2.23159 8.80917 1.86501C8.6574 1.49842 8.43488 1.16534 8.15433 0.884787C7.87377 0.604236 7.54069 0.381715 7.17411 0.229942C6.80752 0.0781693 6.41462 0.00011862 6.01786 0.00025002H3.05986C2.6599 -0.00489579 2.2629 0.0694369 1.8919 0.218935C1.52089 0.368433 1.18327 0.590121 0.898616 0.871134C0.613964 1.15215 0.387951 1.48689 0.233693 1.85594C0.0794339 2.22499 0 2.62101 0 3.021C0 3.42099 0.0794339 3.81701 0.233693 4.18606C0.387951 4.55511 0.613964 4.88985 0.898616 5.17087C1.18327 5.45188 1.52089 5.67357 1.8919 5.82306C2.2629 5.97256 2.6599 6.0469 3.05986 6.04175H3.63886V7.50025C3.63886 7.50025 9.03886 6.77125 9.03886 3.02125ZM6.28886 11.0002C6.28886 12.1052 5.39386 13.0002 4.28886 13.0002C3.18386 13.0002 2.28886 12.1052 2.28886 11.0002C2.28886 9.89525 3.18386 9.00025 4.28886 9.00025C5.39386 9.00025 6.28886 9.89525 6.28886 11.0002ZM4.28886 14.0002C2.87036 14.0002 0.0388644 14.7152 0.0388644 16.1337V18.0002H8.53886V16.1337C8.53886 14.7147 5.70736 14.0002 4.28886 14.0002ZM13.7889 13.0002C14.8939 13.0002 15.7889 12.1052 15.7889 11.0002C15.7889 9.89525 14.8939 9.00025 13.7889 9.00025C12.6839 9.00025 11.7889 9.89525 11.7889 11.0002C11.7889 12.1052 12.6839 13.0002 13.7889 13.0002ZM13.7889 14.0002C12.3704 14.0002 9.53886 14.7152 9.53886 16.1337V18.0002H18.0389V16.1337C18.0389 14.7147 15.2074 14.0002 13.7889 14.0002ZM13.0599 0.50025C12.6631 0.500119 12.2702 0.578169 11.9036 0.729942C11.537 0.881715 11.204 1.10424 10.9234 1.38479C10.6428 1.66534 10.4203 1.99842 10.2686 2.36501C10.1168 2.73159 10.0387 3.12449 10.0389 3.52125C10.0389 7.27125 14.8389 8.00025 14.8389 8.00025V6.54175H15.0179C15.4178 6.5469 15.8148 6.47256 16.1858 6.32306C16.5568 6.17357 16.8945 5.95188 17.1791 5.67087C17.4638 5.38985 17.6898 5.05511 17.844 4.68606C17.9983 4.31701 18.0777 3.92099 18.0777 3.521C18.0777 3.12101 17.9983 2.72499 17.844 2.35594C17.6898 1.98689 17.4638 1.65215 17.1791 1.37113C16.8945 1.09012 16.5568 0.868433 16.1858 0.718935C15.8148 0.569437 15.4178 0.495104 15.0179 0.50025H13.0599Z"
+                              fill="#25307F"
+                            />
+                          </svg>
+                        ) : null}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              width: "100%",
+                              marginRight: "1rem",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div className={styles.eventTitle}>{e.title}</div>
+                            <div className={styles.eventDuration}>
+                              {e.duration}
                             </div>
-                        ))
-                  )
-                }
+                          </div>
+                          <svg
+                            width="11"
+                            height="18"
+                            viewBox="0 0 11 18"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              opacity="0.6"
+                              d="M0.380428 17.2593C0.870428 17.7085 1.66043 17.7085 2.15043 17.2593L10.4604 9.64182C10.8504 9.28432 10.8504 8.70682 10.4604 8.34932L2.15043 0.731815C1.66043 0.282648 0.870428 0.282648 0.380428 0.731815C-0.109572 1.18098 -0.109572 1.90515 0.380428 2.35432L7.62043 9.00015L0.37043 15.646C-0.109571 16.086 -0.109572 16.8193 0.380428 17.2593Z"
+                              fill="#333333"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
               {/* Event Details Modal */}
