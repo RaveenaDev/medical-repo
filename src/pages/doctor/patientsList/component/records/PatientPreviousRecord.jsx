@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "./PatientPreviousRecord.scss"; // Assuming you have a CSS file for styling
-import VisitRecords from "./visitRecord/visitRecords";
-import VisitCard from "./VisitCard/VisitCard";
-import Diagnosis from "./diagnosis/Diagnosis";
+import VisitRecords from "./visitRecord/VisitRecords.jsx";
+import VisitCard from "./VisitCard/VisitCard.jsx";
+import Diagnosis from "./diagnosis/Diagnosis.jsx";
 import Procedures from "./procudures/Procedures.jsx";
 import DoctorNotes from "./doctorNotes/DoctorNotes.jsx";
 import DischargeSummary from "./dischargeSummary/DischargeSummary.jsx";
