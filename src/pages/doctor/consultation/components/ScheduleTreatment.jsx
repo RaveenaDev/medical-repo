@@ -1,10 +1,18 @@
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import styles from "./ScheduleTreatment.module.scss";
-import {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {getAllDoctors, submitConsultation} from "../../../../components/State/Doctor/Action.js";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllDoctors,
+  submitConsultation,
+} from "../../../../components/State/Doctor/Action.js";
 
-const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
+const ScheduleTreatment = ({
+  setCompleteData,
+  onClose,
+  modalData,
+  onSuccess,
+}) => {
   // Dropdown 1: Date Range
   const treatmentOptions = [
     "Consultation",
@@ -22,28 +30,28 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
     treatmentType: "",
     treatmentDate: "",
     availableSlot: "",
-    note: ""
+    note: "",
   });
 
   const [openTreatment, setOpenTreatment] = useState(false);
   const [selectedTreatment, setSelectedTreatment] = useState("");
-  console.log("Modal Data: ",modalData)
+  //console.log("Modal Data: ",modalData)
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllDoctors())
+    dispatch(getAllDoctors());
   }, [dispatch]);
 
-  const doctors = useSelector((store) => store.doctor.allDoctors)
+  const doctors = useSelector((store) => store.doctor.allDoctors);
 
   const handleSubmit = () => {
     const finalData = {
       ...modalData,
-      treatment: treatment
-    }
+      treatment: treatment,
+    };
     // console.log("Final Schedule Treatment Data: ", finalData);
-    dispatch(submitConsultation(finalData,onSuccess,onClose))
+    dispatch(submitConsultation(finalData, onSuccess, onClose));
     setCompleteData({});
   };
 
@@ -58,8 +66,8 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
 
   const convert12To24 = (time12) => {
     if (!time12) return "";
-    const [time, modifier] = time12.split(" ");     // e.g. ["11:30", "AM"]
-    let [hours, minutes] = time.split(":");         // e.g. ["11", "30"]
+    const [time, modifier] = time12.split(" "); // e.g. ["11:30", "AM"]
+    let [hours, minutes] = time.split(":"); // e.g. ["11", "30"]
 
     if (modifier === "PM" && hours !== "12") {
       hours = String(parseInt(hours, 10) + 12);
@@ -68,7 +76,7 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
       hours = "00";
     }
 
-    return `${hours.padStart(2, "0")}:${minutes}`;  // e.g. "11:30"
+    return `${hours.padStart(2, "0")}:${minutes}`; // e.g. "11:30"
   };
 
   return (
@@ -96,14 +104,18 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
             </div>
             <div className={styles.piValue}>
               <input
-                  type="text"
-                  value={treatment.patientName}
-                  onChange={(e) => setTreatment({...treatment, patientName: e.target.value})}
+                type="text"
+                value={treatment.patientName}
+                onChange={(e) =>
+                  setTreatment({ ...treatment, patientName: e.target.value })
+                }
               />
               <input
-                  type="number"
-                  value={treatment.age}
-                  onChange={(e) => setTreatment({...treatment, age: e.target.value})}
+                type="number"
+                value={treatment.age}
+                onChange={(e) =>
+                  setTreatment({ ...treatment, age: e.target.value })
+                }
               />
             </div>
           </div>
@@ -116,54 +128,68 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
             <div className={styles.piValue}>
               <div className={styles.dropdown}>
                 <button
-                    className={styles.trigger}
-                    onClick={() => setOpenDoctorDropdown((prev) => !prev)}
+                  className={styles.trigger}
+                  onClick={() => setOpenDoctorDropdown((prev) => !prev)}
                 >
                   <p>
                     {treatment.assignedDoctor
-                        ? doctors.find((d) => d._id === treatment.assignedDoctor)?.name
-                        : "Select Doctor"}
+                      ? doctors.find((d) => d._id === treatment.assignedDoctor)
+                          ?.name
+                      : "Select Doctor"}
                   </p>
                   <span className={styles.arrow}>
-      {openDoctorDropdown ? <ChevronUp/> : <ChevronDown/>}
-    </span>
+                    {openDoctorDropdown ? <ChevronUp /> : <ChevronDown />}
+                  </span>
                 </button>
 
                 {openDoctorDropdown && (
-                    <ul className={styles.menu}>
-                      {doctors.map((doc) => (
-                          <li
-                              key={doc._id}
-                              className={styles.item}
-                              onClick={() => {
-                                setTreatment({...treatment, assignedDoctor: doc._id});
-                                setOpenDoctorDropdown(false);
-                              }}
-                          >
-                            {doc.name}
-                          </li>
-                      ))}
-                    </ul>
+                  <ul className={styles.menu}>
+                    {doctors.map((doc) => (
+                      <li
+                        key={doc._id}
+                        className={styles.item}
+                        onClick={() => {
+                          setTreatment({
+                            ...treatment,
+                            assignedDoctor: doc._id,
+                          });
+                          setOpenDoctorDropdown(false);
+                        }}
+                      >
+                        {doc.name}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
               <div className={styles.radioGroup}>
                 <label>
                   <input
-                      type="radio"
-                      name="admit"
-                      value="true"
-                      checked={treatment.admissionRecommendation === "true"}
-                      onChange={(e) => setTreatment({...treatment, admissionRecommendation: e.target.value})}
+                    type="radio"
+                    name="admit"
+                    value="true"
+                    checked={treatment.admissionRecommendation === "true"}
+                    onChange={(e) =>
+                      setTreatment({
+                        ...treatment,
+                        admissionRecommendation: e.target.value,
+                      })
+                    }
                   />
                   Yes
                 </label>
                 <label>
                   <input
-                      type="radio"
-                      name="admit"
-                      value="false"
-                      checked={treatment.admissionRecommendation === "false"}
-                      onChange={(e) => setTreatment({...treatment, admissionRecommendation: e.target.value})}
+                    type="radio"
+                    name="admit"
+                    value="false"
+                    checked={treatment.admissionRecommendation === "false"}
+                    onChange={(e) =>
+                      setTreatment({
+                        ...treatment,
+                        admissionRecommendation: e.target.value,
+                      })
+                    }
                   />
                   No
                 </label>
@@ -174,7 +200,7 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
         {/* Section 1 */}
         <div className={styles.section1}>
           <div className={styles.treatmentType}>
-          <p className={styles.label}>Treatment Type</p>{" "}
+            <p className={styles.label}>Treatment Type</p>{" "}
             <div className={styles.dropdown}>
               <button
                 className={styles.trigger}
@@ -216,26 +242,28 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
             <div className={styles.date}>
               <p className={styles.label}>Date</p>
               <input
-                  className={styles.input2}
-                  type="date"
-                  value={treatment.treatmentDate}
-                  onChange={(e) => setTreatment({...treatment, treatmentDate: e.target.value})}
+                className={styles.input2}
+                type="date"
+                value={treatment.treatmentDate}
+                onChange={(e) =>
+                  setTreatment({ ...treatment, treatmentDate: e.target.value })
+                }
               />
             </div>
             <div className={styles.time}>
               <p className={styles.label}>Time</p>
               <input
-                  type="time"
-                  className={styles.input2}
-                  value={
-                    treatment.availableSlot
-                        ? convert12To24(treatment.availableSlot)
-                        : ""
-                  }
-                  onChange={(e) => {
-                    const formattedTime = formatTo12Hour(e.target.value); // e.g., "11:30 AM"
-                    setTreatment({...treatment, availableSlot: formattedTime});
-                  }}
+                type="time"
+                className={styles.input2}
+                value={
+                  treatment.availableSlot
+                    ? convert12To24(treatment.availableSlot)
+                    : ""
+                }
+                onChange={(e) => {
+                  const formattedTime = formatTo12Hour(e.target.value); // e.g., "11:30 AM"
+                  setTreatment({ ...treatment, availableSlot: formattedTime });
+                }}
               />
             </div>
           </div>
@@ -245,12 +273,14 @@ const ScheduleTreatment = ({setCompleteData,onClose,modalData,onSuccess }) => {
               Doctor Notes
             </label>
             <textarea
-                name="notes"
-                id="notes"
-                placeholder="Additional Instruction or Notes"
-                rows={4}
-                value={treatment.note}
-                onChange={(e) => setTreatment({...treatment, note: e.target.value})}
+              name="notes"
+              id="notes"
+              placeholder="Additional Instruction or Notes"
+              rows={4}
+              value={treatment.note}
+              onChange={(e) =>
+                setTreatment({ ...treatment, note: e.target.value })
+              }
             />
           </div>
         </div>

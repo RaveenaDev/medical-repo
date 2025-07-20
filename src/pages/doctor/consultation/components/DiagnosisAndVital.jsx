@@ -168,7 +168,7 @@ const DiagnosisAndVital = ({ onConfirm, selectedComponent, existingData }) => {
       videos: videos.map((vid) => vid.file.name),
     };
 
-    console.log("Diagnosis & Vital Submitted:", finalData);
+    // console.log("Diagnosis & Vital Submitted:", finalData);
     onConfirm(finalData);
   };
 

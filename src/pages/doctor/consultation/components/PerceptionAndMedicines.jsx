@@ -1,24 +1,36 @@
 import { useEffect, useState } from "react";
 import styles from "./PerceptionAndMedicines.module.scss";
 import PNMLoader from "./PNMLoader";
-import {useDispatch, useSelector} from "react-redux";
-import {generatePrescriptionsWithAI} from "../../../../components/State/Doctor/Action.js";
-const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,onConfirm,selectedComponent,existingData }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { generatePrescriptionsWithAI } from "../../../../components/State/Doctor/Action.js";
+const PerceptionAndMedicines = ({
+  patient,
+  completeData,
+  generatedPrescriptions,
+  onConfirm,
+  selectedComponent,
+  existingData,
+}) => {
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // If existingData is available, skip loading
     if (existingData && selectedComponent && existingData[selectedComponent]) {
       setLoading(false);
-    } else if (generatedPrescriptions && Object.keys(generatedPrescriptions).length > 0) {
+    } else if (
+      generatedPrescriptions &&
+      Object.keys(generatedPrescriptions).length > 0
+    ) {
       setLoading(false);
     }
   }, [existingData, selectedComponent, generatedPrescriptions]);
 
   useEffect(() => {
-    if (generatedPrescriptions && Object.keys(generatedPrescriptions).length > 0) {
-
+    if (
+      generatedPrescriptions &&
+      Object.keys(generatedPrescriptions).length > 0
+    ) {
       setLoading(false);
     }
   }, [generatedPrescriptions]);
@@ -32,14 +44,14 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
   const handleRegenerate = () => {
     const aidData = {
       ...completeData,
-      patientId: patient._id
-    }
+      patientId: patient._id,
+    };
     dispatch(generatePrescriptionsWithAI(aidData));
-    console.log("Regenerate: ",aidData)
+    // console.log("Regenerate: ",aidData)
     setLoading(true);
-  }
+  };
 
-  console.log("Pat: ",patient)
+  //console.log("Pat: ",patient)
   return (
     <div>
       <div className={styles.container1}>
@@ -50,7 +62,8 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
 
         {/* row2 */}
         <p className={styles.row2}>
-          {patient?.name} | Age: {patient?.age ?? "N/A"} | {patient?.symptoms?.[0] ?? "N/A"} | BP: 140/90
+          {patient?.name} | Age: {patient?.age ?? "N/A"} |{" "}
+          {patient?.symptoms?.[0] ?? "N/A"} | BP: 140/90
         </p>
 
         <img
@@ -70,42 +83,49 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
           {/* row4 */}
           <div className={styles.row4}>
             <p className={styles.value}>
-              <span className={styles.key}>Problem Statement:</span> {generatedPrescriptions?.aiGeneratedText?.problemStatement}
+              <span className={styles.key}>Problem Statement:</span>{" "}
+              {generatedPrescriptions?.aiGeneratedText?.problemStatement}
             </p>
           </div>
 
           {/* row5 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>ICD:</span> {generatedPrescriptions?.aiGeneratedText.icdCode}
+              <span className={styles.key}>ICD:</span>{" "}
+              {generatedPrescriptions?.aiGeneratedText.icdCode}
             </p>
           </div>
 
           {/* row6 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Therapy Plan:</span> {generatedPrescriptions?.aiGeneratedText.therapyPlan}
+              <span className={styles.key}>Therapy Plan:</span>{" "}
+              {generatedPrescriptions?.aiGeneratedText.therapyPlan}
             </p>
           </div>
 
           {/* row7 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Precautions:</span> {generatedPrescriptions?.aiGeneratedText.precautions}
+              <span className={styles.key}>Precautions:</span>{" "}
+              {generatedPrescriptions?.aiGeneratedText.precautions}
             </p>
           </div>
 
           {/* row8 */}
           <div className={styles.row5}>
             <p className={styles.value}>
-              <span className={styles.key}>Follow-Up:</span> {generatedPrescriptions?.aiGeneratedText.followUp}
+              <span className={styles.key}>Follow-Up:</span>{" "}
+              {generatedPrescriptions?.aiGeneratedText.followUp}
             </p>
           </div>
 
           {/* row9 */}
           <div className={styles.row9}>
             {/*<button className={styles.row9Button}>Edit</button>*/}
-            <button className={styles.row9Button} onClick={handleRegenerate}>Regenerate</button>
+            <button className={styles.row9Button} onClick={handleRegenerate}>
+              Regenerate
+            </button>
           </div>
 
           {/* Instruct */}
@@ -118,22 +138,29 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                {
-                  generatedPrescriptions?.aiGeneratedText.medications.map((medic, index) => (
-                      <div key={index} style={{display: 'flex', alignItems: 'flex-start', marginBottom: '4px'}}>
-                        <span style={{marginRight: '10px'}}>&#8226;</span>
-                        <p style={{margin: 0}}>{medic}</p>
-                      </div>
-                  ))
-                }
+                {generatedPrescriptions?.aiGeneratedText.medications.map(
+                  (medic, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      <span style={{ marginRight: "10px" }}>&#8226;</span>
+                      <p style={{ margin: 0 }}>{medic}</p>
+                    </div>
+                  )
+                )}
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                      src="/assets/Group.svg"
-                      alt=""
-                      className={styles.leftArrow}
-                      width={18}
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -162,22 +189,29 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                {
-                  generatedPrescriptions?.aiGeneratedText.injectionsTherapies.map((inject, index) => (
-                      <div key={index} style={{display: 'flex', alignItems: 'flex-start', marginBottom: '4px'}}>
-                        <span style={{marginRight: '10px'}}>&#8226;</span>
-                        <p style={{margin: 0}}>{inject}</p>
-                      </div>
-                  ))
-                }
+                {generatedPrescriptions?.aiGeneratedText.injectionsTherapies.map(
+                  (inject, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      <span style={{ marginRight: "10px" }}>&#8226;</span>
+                      <p style={{ margin: 0 }}>{inject}</p>
+                    </div>
+                  )
+                )}
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                      src="/assets/Group.svg"
-                      alt=""
-                      className={styles.leftArrow}
-                      width={18}
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -206,20 +240,22 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                {generatedPrescriptions?.aiGeneratedText.nonDrugRecommendations.map((nonDrug, index) => (
-                    <div key={index} style={{display: 'flex'}}>
-                      <span style={{marginRight: '10px'}}>&#8226;</span>
-                      <p style={{margin: 0}}>{nonDrug}</p>
+                {generatedPrescriptions?.aiGeneratedText.nonDrugRecommendations.map(
+                  (nonDrug, index) => (
+                    <div key={index} style={{ display: "flex" }}>
+                      <span style={{ marginRight: "10px" }}>&#8226;</span>
+                      <p style={{ margin: 0 }}>{nonDrug}</p>
                     </div>
-                ))}
+                  )
+                )}
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                      src="/assets/Group.svg"
-                      alt=""
-                      className={styles.leftArrow}
-                      width={18}
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -247,22 +283,29 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
             {/* row11 */}
             <div className={styles.row11}>
               <div>
-                {
-                  generatedPrescriptions?.aiGeneratedText.lifestyle.map((life, index) => (
-                      <div key={index} style={{display: 'flex', alignItems: 'flex-start', marginBottom: '4px'}}>
-                        <span style={{marginRight: '10px'}}>&#8226;</span>
-                        <p style={{margin: 0}}>{life}</p>
-                      </div>
-                  ))
-                }
+                {generatedPrescriptions?.aiGeneratedText.lifestyle.map(
+                  (life, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      <span style={{ marginRight: "10px" }}>&#8226;</span>
+                      <p style={{ margin: 0 }}>{life}</p>
+                    </div>
+                  )
+                )}
               </div>
               <div className={styles.iconBtn}>
                 <button className={styles.leftArrowBtn}>
                   <img
-                      src="/assets/Group.svg"
-                      alt=""
-                      className={styles.leftArrow}
-                      width={18}
+                    src="/assets/Group.svg"
+                    alt=""
+                    className={styles.leftArrow}
+                    width={18}
                   />
                 </button>
                 <button className={styles.rightArrowBtn}>
@@ -292,10 +335,18 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
             <div className={styles.row11}>
               <div>
                 <p>
-                  <span>&#8226; </span>&nbsp; Review Date: {generatedPrescriptions?.aiGeneratedText.followUpInstructions.reviewDate}
+                  <span>&#8226; </span>&nbsp; Review Date:{" "}
+                  {
+                    generatedPrescriptions?.aiGeneratedText.followUpInstructions
+                      .reviewDate
+                  }
                 </p>
                 <p>
-                  <span>&#8226; </span>&nbsp; Notes: {generatedPrescriptions?.aiGeneratedText.followUpInstructions.notes}
+                  <span>&#8226; </span>&nbsp; Notes:{" "}
+                  {
+                    generatedPrescriptions?.aiGeneratedText.followUpInstructions
+                      .notes
+                  }
                 </p>
               </div>
               <div className={styles.iconBtn}>
@@ -338,7 +389,10 @@ const PerceptionAndMedicines = ({ patient,completeData,generatedPrescriptions,on
             <img src="/assets/Print-icon.svg" alt="" />
             <p>Print</p>
           </button>
-          <button className={styles.approve} onClick={() => onConfirm(generatedPrescriptions.aiGeneratedText)}>
+          <button
+            className={styles.approve}
+            onClick={() => onConfirm(generatedPrescriptions.aiGeneratedText)}
+          >
             <img src="/assets/Tick.svg" alt="" height={12} />
             <p>Approve</p>
           </button>

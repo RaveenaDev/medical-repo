@@ -10,8 +10,8 @@ import {
 } from "../../../../components/State/Doctor/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
-const Refer = ({ setCompleteData,onClose, modalData, patient, onSuccess }) => {
-  console.log("Modal Data: ", modalData);
+const Refer = ({ setCompleteData, onClose, modalData, patient, onSuccess }) => {
+  //console.log("Modal Data: ", modalData);
 
   const dispatch = useDispatch();
   const [primaryDiagnosis, setPrimaryDiagnosis] = useState("");
