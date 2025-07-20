@@ -246,7 +246,7 @@ const DoctorOverview = () => {
 
   const criticalPatients = doctor.criticalPatients
 
-  console.log("Crit: ",criticalPatients)
+  // console.log("Crit: ",criticalPatients)
 
   const EVENTS = events.map((event) => {
     const hasTime = event.startTime && event.endTime;
