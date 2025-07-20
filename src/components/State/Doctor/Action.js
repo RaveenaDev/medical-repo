@@ -74,7 +74,7 @@ export const getInpatients = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/inPatients`, {
+    const { data } = await axios.get(`${API_URL}/getInPatients`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -91,15 +91,15 @@ export const getSurgeries = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/patients/surgeries`, {
+    const { data } = await axios.get(`${API_URL}/getpatientsinsurgery`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
 
-    // console.log("Surgeries: ", data.data);
+    // console.log("Surgeries: ", data);
 
-    dispatch({ type: GET_SURGERIES, payload: data.data });
+    dispatch({ type: GET_SURGERIES, payload: data });
   } catch (error) {
     console.log(error);
   }
