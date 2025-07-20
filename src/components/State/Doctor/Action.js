@@ -131,7 +131,7 @@ export const getMostCommonDiagnosis = () => async (dispatch) => {
       },
     });
 
-    console.log("Diag: ", data);
+    // console.log("Diag: ", data);
 
     dispatch({ type: GET_MOST_COMMON_DIAGNOSIS, payload: data });
   } catch (error) {
@@ -285,7 +285,7 @@ export const createDoctorRequests = (requestData) => async (dispatch) => {
       },
     });
 
-    console.log("Sent Successfully : ", data);
+    // console.log("Sent Successfully : ", data);
 
     dispatch({ type: CREATE_DOCTOR_REQUESTS, payload: data.data });
 
@@ -354,7 +354,7 @@ export const getUpcomingEvents = (date) => async (dispatch) => {
       },
     });
 
-    console.log("Upcoming Events: ", data);
+    // console.log("Upcoming Events: ", data);
     dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
@@ -375,7 +375,7 @@ export const getMonthlyEvents = (month, year) => async (dispatch) => {
       },
     });
 
-    console.log("Monthly Events: ", data);
+    // console.log("Monthly Events: ", data);
     dispatch({ type: GET_MONTHLY_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
@@ -392,7 +392,7 @@ export const getCriticalPatients = () => async (dispatch) => {
       },
     });
 
-    console.log("Critical Patients: ", data);
+    // console.log("Critical Patients: ", data);
     dispatch({ type: GET_CRITICAL_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
@@ -434,7 +434,7 @@ export const createNewEvent = (eventData, onClose) => async (dispatch) => {
       },
     });
 
-    console.log("Created New Event: ", data);
+    // console.log("Created New Event: ", data);
     dispatch({ type: CREATE_NEW_EVENT, payload: data.event });
     onClose();
     toast.success("Request Created Successfully!", {
@@ -574,7 +574,7 @@ export const createDoctorNote = (note) => async (dispatch) => {
       },
     });
 
-    console.log("Doctor Notes: ", data);
+    // console.log("Doctor Notes: ", data);
 
     dispatch({ type: CREATE_DOCTOR_NOTE, payload: data });
   } catch (error) {
@@ -677,7 +677,7 @@ export const getAppointmentByDate =
         },
       });
 
-      console.log("All Appointments below: ", data);
+      // console.log("All Appointments below: ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);
@@ -744,7 +744,7 @@ export const generatePrescriptionsWithAI =
         }
       );
 
-      console.log("Generated With AI : ", data.data);
+      // console.log("Generated With AI : ", data.data);
 
       dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data.data });
     } catch (error) {
@@ -826,7 +826,7 @@ export const getAppointmentHistory = () => async (dispatch) => {
       },
     });
 
-    console.log("Appointments History: ", data);
+    // console.log("Appointments History: ", data);
 
     dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data.appointments });
   } catch (error) {
@@ -890,7 +890,7 @@ export const submitConsultation =
         }
       );
 
-      console.log("Consultation from Backend : ", data);
+      // console.log("Consultation from Backend : ", data);
 
       dispatch({ type: SUBMIT_CONSULTATION, payload: data });
 
@@ -1063,7 +1063,7 @@ export const createNewConsultationForm =
         }
       );
 
-      console.log("Consultation Template Creation from Backend : ", data);
+      // console.log("Consultation Template Creation from Backend : ", data);
       dispatch({ type: CREATE_NEW_CONSULTATION_FORM, payload: data.form });
       toast.success("Form Template Created Successfully!", {
         position: "bottom-right",
@@ -1111,7 +1111,7 @@ export const admitPatient = (requestId) => async (dispatch) => {
       }
     );
 
-    console.log("Patient Admitted Successfully", data);
+    // console.log("Patient Admitted Successfully", data);
     toast.success("Patient Admitted Successfully!", {
       position: "bottom-right",
       autoClose: 2000,

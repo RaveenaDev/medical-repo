@@ -1,0 +1,254 @@
+.container {
+  width: 100%;
+  display: flex;
+  margin-top: 1.5vh;
+  justify-content: space-between;
+}
+
+.appointment {
+  background: white;
+  width: 34.1%;
+}
+
+.carePlan {
+  width: 65%;
+  background: #f1f1f1;
+}
+
+.titleCR {
+  background: white;
+  padding: 1.1vh 1.5vw;
+  p {
+    font-size: 2.45vh;
+    font-weight: 510;
+  }
+}
+
+.contentCR {
+  margin-top: 1vh;
+  display: flex;
+  justify-content: space-between;
+  height: 30vh;
+  background: white;
+  overflow-y: auto;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+// .contentLeftCR {
+//   border-right: 2px solid #f1f1f1;
+// }
+// .contentRightCR {
+//   border-left: 2px solid #f1f1f1;
+// }
+.gap {
+  background: #f1f1f1;
+}
+.contentLeftCR,
+.contentRightCR {
+  width: 48%;
+  padding: 1vh 1vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+.contentLeftSectionCR,
+.contentRightSectionCR {
+  ul {
+    margin-left: 0.5vw;
+    li {
+      font-size: 2.2vh;
+      list-style-type: none;
+      line-height: 2vh;
+    }
+
+    li::before {
+      content: "•";
+      margin-right: 0.5vw; /* reduce this */
+    }
+  }
+
+  p {
+    font-size: 2.2vh;
+    font-weight: 510;
+    line-height: 3vh;
+    margin-top: 0.5vh;
+  }
+}
+.contentLeftTitle {
+  color: #25307f;
+  font-weight: 490;
+  font-size: 2.4vh;
+}
+.contentRightTitle {
+  color: #f14400;
+  font-weight: 490;
+  font-size: 2.4vh;
+}
+
+.followUpSchedule {
+  background: #f2f5ff;
+  padding: 1vh 1vw;
+  ul {
+    margin-left: 0.5vw;
+    li {
+      font-size: 2.2vh;
+      list-style-type: none;
+      line-height: 2vh;
+      color: #25307f;
+    }
+
+    li::before {
+      content: "•";
+      color: #25307f;
+      margin-right: 0.5vw; /* reduce this */
+    }
+  }
+  h2 {
+    color: #25307f;
+    font-weight: 490;
+    font-size: 2.4vh;
+  }
+}
+
+.appointment {
+  width: 31.5%;
+  font-family: "Karla", sans-serif;
+  padding: 1.4vh 1vw;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .appointmentTitle {
+      font-size: 1.15vw;
+      font-weight: 500;
+    }
+
+    select {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 4px 8px;
+    }
+  }
+
+  .weekRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 0vw;
+  }
+
+  .dayBox {
+    text-align: center;
+    cursor: pointer;
+    padding: 0.8vh 0vw;
+    border-radius: 6px;
+    transition: background 0.3s;
+    width: 3vw;
+    .dateNum {
+      font-size: 1vw;
+      font-weight: bold;
+    }
+
+    .dayName {
+      font-size: 0.8vw;
+      text-align: center;
+      color: #777;
+    }
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  .selected {
+    background-color: #1a237e;
+    color: white;
+    border-radius: 6px;
+
+    .dayName {
+      color: white;
+    }
+  }
+
+  .appointmentBox {
+    margin-top: 12px;
+    background: #f4f4f4;
+    padding: 1vh 0.4vw;
+    border-left: 3px solid #4caf50;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+}
+
+.dropdown {
+  position: relative;
+  width: 40%; // Use a percentage of viewport width for the dropdown
+  // min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Karla", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #f1f1f1;
+
+  border: none;
+
+  border-radius: 4px;
+
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1vw;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4vh;
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
+  border-radius: 4px;
+  border: 1px solid #cfcfcf;
+  width: 99.5%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 1vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.2vh 1vw;
+  cursor: pointer;
+  font-size: 1.7vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}

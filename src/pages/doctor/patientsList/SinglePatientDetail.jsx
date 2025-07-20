@@ -11,8 +11,12 @@ const SinglePatientDetail = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const patientId = location.state;
+  const { patientId, isFollowUpStatus } = location.state || {};
   // console.log("ID: ",patientId)
+
+  console.log("Patient ID:", patientId);
+  console.log("Is Follow Up:", isFollowUpStatus); // true or false
+
   const handleBackBtn = () => {
     navigate("/doctor/patientList");
   };
@@ -104,7 +108,10 @@ const SinglePatientDetail = () => {
 
         <section>
           {activeTab === "profile" ? (
-            <PatientProfile patientId={patientId} />
+            <PatientProfile
+              patientId={patientId}
+              isFollowUpStatus={isFollowUpStatus}
+            />
           ) : (
             <PatientPreviousRecord />
           )}

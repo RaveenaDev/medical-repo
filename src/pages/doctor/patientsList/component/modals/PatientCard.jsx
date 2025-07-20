@@ -4,16 +4,24 @@ import { useNavigate } from "react-router-dom";
 
 const PatientCard = ({ patient }) => {
   const navigate = useNavigate();
+  const isFollowUp = patient.type?.toLowerCase().trim() === "followup";
   const formatStatus = (status) => {
     if (!status) return "";
     return status.replace(/\+/g, "-").toLowerCase(); // e.g., "Admitted+FollowUp" → "admitted-followup"
   };
   // console.log("Patient in adimitted:", patient);
+  console.log("is follow up status:", isFollowUp);
+
   return (
     <div
       className="patientCard"
       onClick={() =>
-        navigate(`/doctor/patientList/patient-details`, { state: patient._id })
+        navigate(`/doctor/patientList/patient-details`, {
+          state: {
+            patientId: patient._id,
+            isFollowUpStatus: isFollowUp,
+          },
+        })
       }
     >
       <div className="patientInfo">

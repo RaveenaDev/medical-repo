@@ -21,7 +21,8 @@ import {
 } from "../../../../components/State/Doctor/Action.js";
 import BedInfo from "./modals/BedInfo.jsx";
 import Discharge from "./modals/Discharge.jsx";
-const PatientProfile = ({ patientId }) => {
+import IsFollowUp from "./components/isFollowUp/IsFollowUp.jsx";
+const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
@@ -283,47 +284,51 @@ const PatientProfile = ({ patientId }) => {
           </>
         )}
       </div>
-      <div className={styles.section2}>
-        <div className={styles.header2}>
-          <div
-            onClick={() => setActiveTab("medical admin")}
-            className={
-              activeTab === "medical admin"
-                ? styles.activeTab
-                : styles.inactiveTab
-            }
-          >
-            <p className={styles.headerText}>Medical Administration Record</p>
+      {!isFollowUpStatus ? (
+        <div className={styles.section2}>
+          <div className={styles.header2}>
+            <div
+              onClick={() => setActiveTab("medical admin")}
+              className={
+                activeTab === "medical admin"
+                  ? styles.activeTab
+                  : styles.inactiveTab
+              }
+            >
+              <p className={styles.headerText}>Medical Administration Record</p>
+            </div>
+            <div
+              onClick={() => setActiveTab("nursing")}
+              className={
+                activeTab === "nursing" ? styles.activeTab : styles.inactiveTab
+              }
+            >
+              <p className={styles.headerText}>Nursing Section</p>
+            </div>
+            <div
+              onClick={() => setActiveTab("past reports")}
+              className={
+                activeTab === "past reports"
+                  ? styles.activeTab
+                  : styles.inactiveTab
+              }
+            >
+              <p className={styles.headerText}>Past Reports & Discharges</p>
+            </div>
           </div>
-          <div
-            onClick={() => setActiveTab("nursing")}
-            className={
-              activeTab === "nursing" ? styles.activeTab : styles.inactiveTab
-            }
-          >
-            <p className={styles.headerText}>Nursing Section</p>
-          </div>
-          <div
-            onClick={() => setActiveTab("past reports")}
-            className={
-              activeTab === "past reports"
-                ? styles.activeTab
-                : styles.inactiveTab
-            }
-          >
-            <p className={styles.headerText}>Past Reports & Discharges</p>
+          <div className={styles.content}>
+            {activeTab === "medical admin" && (
+              <MedAdminRecord patientId={patientId} />
+            )}
+            {activeTab === "nursing" && <Nursing patientId={patientId} />}
+            {activeTab === "past reports" && (
+              <PastReportsAndDischarge patientId={patientId} />
+            )}
           </div>
         </div>
-        <div className={styles.content}>
-          {activeTab === "medical admin" && (
-            <MedAdminRecord patientId={patientId} />
-          )}
-          {activeTab === "nursing" && <Nursing patientId={patientId} />}
-          {activeTab === "past reports" && (
-            <PastReportsAndDischarge patientId={patientId} />
-          )}
-        </div>
-      </div>
+      ) : (
+        <IsFollowUp />
+      )}
     </div>
   );
 };

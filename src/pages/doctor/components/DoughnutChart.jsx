@@ -80,7 +80,7 @@ const DoughnutChart = ({ data, height = 240 }) => {
       }}
     >
       {/* Left: Chart */}
-      <div style={{ width: "50%" }}>
+      <div style={{ width: "20vw" }}>
         <ResponsiveContainer width="100%" height={height}>
           <PieChart>
             <Pie
@@ -184,7 +184,7 @@ const DoughnutChart = ({ data, height = 240 }) => {
           >
             <div
               style={{
-                width: 16,
+                minWidth: 16,
                 height: 16,
                 backgroundColor: entry.color,
                 borderRadius: 4,
