@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@100;200;300;400;500;600;700;800&display=swap");
+
+.header {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 7vh;
+  margin-top: 3vh;
+  .leftHeader {
+    margin-left: 0.5vw;
+    color: #25307f;
+    display: flex;
+    align-items: center;
+    gap: 0.3vw;
+    span {
+      font-size: 2.3vh;
+      font-weight: 500;
+    }
+
+    .backBtn {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .rightHeader {
+    button {
+      background-color: #25307f;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.4vw;
+      border-radius: 5px;
+      font-family: "Karla", sans-serif;
+      font-size: 2vh;
+      font-weight: 400;
+      margin-right: 1vw;
+    }
+  }
+}
+
+.content {
+  background-color: white;
+  margin-top: 1.8vh;
+  font-family: "Karla", sans-serif;
+  .selection {
+    display: flex;
+    justify-content: space-between;
+    height: 5vh;
+    cursor: pointer;
+    div {
+      width: 24vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #25307f;
+      font-family: "Karla", sans-serif;
+      font-weight: 600;
+    }
+  }
+}
+
+.noData {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+  font-size: 16px;
+}
+
+.activeReq {
+  padding: 0vh 1vw 2vh 1vw;
+  height: 80vh;
+  overflow-y: auto;
+  .dateSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2vh;
+    margin-top: 2vh;
+    p {
+      font-family: "Karla", sans-serif;
+      font-weight: 400;
+    }
+
+    .requestItem {
+      display: flex;
+      align-items: center;
+      padding: 2vh 1vw 2vh 1vw;
+      // background: #f1f1f1;
+      cursor: pointer;
+      gap: 1vw;
+      height: 8vh;
+      img {
+        height: 6vh;
+        width: 6vh;
+        border-radius: 50%;
+      }
+
+      .reqContent {
+        display: flex;
+
+        flex-direction: column;
+        justify-content: center;
+        background: #f1f1f1;
+
+        .message {
+          font-size: 2.4vh;
+          font-weight: 500;
+          color: #333333;
+        }
+
+        .subText {
+          font-size: 1.8vh;
+          color: #636363;
+        }
+      }
+    }
+  }
+}
+
+.selectedTab {
+  border-bottom: solid #25307f;
+}
+
+.blueBackground {
+  border-left: 4px solid #25307f;
+  background-color: #f3f5ff;
+}
+
+.blueText {
+  font-size: 2.4vh;
+  font-weight: 500;
+  color: #25307f;
+  background-color: #f3f5ff;
+}
+
+.blueSubText {
+  font-size: 1.8vh;
+  color: #636363;
+  background: #f3f5ff;
+}
+
+.grayBackground {
+  background-color: #f1f1f1;
+}
+
+.TLMessage {
+  font-size: 2.4vh;
+  font-weight: 500;
+  color: #333333;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: #333333;
+}
+
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 19;
+}
+
+.newRequest {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  // height: 80vh;
+  width: 52%;
+  background: #fff;
+  border-radius: 0px;
+  //box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  // padding: 0vh 0vw 3vh 2vw;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: stretch;
+}

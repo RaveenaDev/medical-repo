@@ -1,0 +1,302 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 2vw 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  height: 80vh;
+  overflow-y: auto;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.title {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 550;
+  margin-bottom: 3vh;
+}
+
+.label {
+  color: #4a4a4a;
+  font-size: 1.9vh;
+  font-weight: 500;
+}
+
+.labelRow {
+  color: #4a4a4a;
+  font-size: 1.9vh;
+  width: 35%;
+  margin-right: 1vw;
+}
+
+.ansRow {
+  width: 65%;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+}
+.uploadWrapper {
+  margin-top: 0vh;
+}
+
+.content {
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font-size: 1.8vh;
+  width: 80%;
+  color: #484848;
+  padding: 1vh 0.5vw;
+  outline: none;
+  resize: none;
+  overflow-y: auto;
+  height: 10.8vh;
+  padding-right: 2vw;
+  font-family: "Karla", sans-serif;
+}
+
+.contentSave {
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font-size: 1.8vh;
+  width: 80%;
+  color: #484848;
+  padding: 1vh 0.5vw;
+  outline: none;
+  resize: none;
+  overflow-y: auto;
+  word-break: break-all;
+  height: 10.8vh;
+  overflow-y: auto;
+  padding-right: 2vw;
+  font-family: "Karla", sans-serif;
+}
+
+.editBtn {
+  position: absolute;
+  top: 4vh;
+  right: 2.5vw;
+  width: 1.3vw;
+  color: #b0b0b0;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.editBtnActive {
+  color: #25307f;
+}
+
+.submitContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5vw;
+  margin-top: 4vh;
+  .saveBtn {
+    background: #25307f;
+    color: white;
+    padding: 0.6vh 0vh;
+    border-radius: 4px;
+    font-size: 2vh;
+    font-weight: 400;
+    width: 5vw;
+  }
+  .cancelBtn {
+    width: 5vw;
+    background: #dae4ff;
+    color: black;
+    padding: 0.6vh 0vh;
+    border-radius: 4px;
+    font-size: 2vh;
+    font-weight: 400;
+    border: 1px solid #25307f;
+  }
+}
+
+.uploadBox {
+  border: 1px dashed #c3c3c3;
+  border-radius: 4px;
+  padding: 2vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4vh;
+
+  text-align: center;
+}
+
+.uploadPrompt {
+  font-size: 1.8vh;
+  color: #333;
+  font-weight: 500;
+}
+
+.uploadHint {
+  font-size: 1.6vh;
+  color: #b0b0b0;
+}
+
+.browseBtn {
+  background-color: white;
+  border: 1px solid #25307f;
+  border-radius: 4px;
+  color: #25307f;
+  padding: 0.5vh 1vw;
+  font-size: 1.5vh;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+
+  input[type="file"] {
+    display: none;
+  }
+
+  &:hover {
+    background: #e5edff;
+  }
+}
+.uploadedFiles {
+  border: 1px solid #cfcfcf;
+}
+.uploadFilesContainer {
+  padding: 1vh 0.5vw;
+}
+.uploadedFilesWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5vh;
+  gap: 1.2vh;
+
+  li {
+    background: #ebf1ff;
+    padding: 1.2vh 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 4px;
+
+    .fileIcon {
+      width: 0.95vw;
+    }
+
+    .fileDetails {
+      // flex-grow: 1;
+      margin-left: 0vw;
+      width: 80%;
+      word-break: break-all;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8vh;
+      .fileName {
+        font-size: 1.7vh;
+        font-weight: 500;
+        color: #4a4a4a;
+        margin: 0;
+        line-height: 1.7vh;
+        cursor: pointer;
+      }
+
+      .uploadedText {
+        font-size: 1.55vh;
+        color: #25307f;
+        font-weight: 600;
+        line-height: 1.55vh;
+      }
+    }
+
+    .trashIcon {
+      color: #989898;
+      cursor: pointer;
+      width: 1.1vw;
+    }
+
+    .trashWrapper {
+      width: 5%;
+    }
+  }
+}
+
+.fileRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.medWrapper {
+  ul {
+    li {
+      font-size: 1.9vh;
+      color: #6571c5;
+    }
+  }
+}
+
+.addInfo {
+  margin-top: 2vh;
+
+  button {
+    background: #f2f5ff;
+    color: #25307f;
+    font-size: 1.9vh;
+    font-weight: 450;
+    border: 1px solid #25307f;
+    border-radius: 0px;
+    width: 100%;
+    &:hover {
+      border: 1px solid #25307f;
+    }
+  }
+}
+
+.left {
+  flex: 1;
+  max-width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.right {
+  flex: 1;
+  max-width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+.sec1RowLeft {
+  display: flex;
+  gap: 0vw;
+  font-size: 1.9vh;
+}
+
+.sec2Left {
+  position: relative;
+}
+
+.sec1Left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+  width: 85%;
+  background: #f2f5ff;
+  padding: 1vh 0.6vw;
+}

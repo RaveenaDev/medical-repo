@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 1.8vw;
+  font-family: "Karla", sans-serif;
+
+  h4 {
+    font-size: 2.2vh;
+    font-family: "Karla", sans-serif;
+    color: #25307f;
+    font-weight: 450;
+    margin-top: -1vh;
+  }
+
+  input {
+    border: none;
+    border-bottom: 1px solid #25307f;
+    width: 96%;
+    padding-left: 1vw;
+    height: 4vh;
+    margin-top: 5.5vh;
+    font-size: 2vh;
+    outline: none;
+    &::placeholder {
+      opacity: 0.7;
+      font-family: "Karla", sans-serif;
+    }
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 6vh 0vh 2vh 0vh;
+}
+.confirmBtn {
+  background: #25307f;
+  color: white;
+  font-size: 2vh;
+  font-weight: 350;
+  border-radius: 4px;
+  padding: 1vh 4vw;
+}

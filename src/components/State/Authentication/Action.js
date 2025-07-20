@@ -11,12 +11,14 @@ import { toast } from "react-toastify";
 export const login = (data) => async (dispatch) => {
   try {
     const response = await axios.post(`${API_URL}/login`, data);
-    // console.log("Res: ",response.data)
+    // console.log("Res: ", response.data);
 
     if (response.data.token) {
       localStorage.setItem("jwt", response.data.token);
       localStorage.setItem("hospitalName", response.data.hospitalName);
       localStorage.setItem("role", response.data.role);
+      localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem("departmentId", response.data.departmentIds);
     }
     dispatch({ type: LOGIN, payload: response.data });
 

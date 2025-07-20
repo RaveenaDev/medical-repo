@@ -1,0 +1,160 @@
+.discharge-summary {
+  font-family: 'Inter', sans-serif;
+  margin: auto;
+  padding: 1rem;
+  color: #333;
+
+  // ✅ Fixed height + scroll
+  height: 60vh; // or whatever height you want
+  overflow-y: auto;
+  border-radius: 8px;
+
+  //// Optional: prevent scrollbar from being ugly
+  //scrollbar-width: thin;
+  //scrollbar-color: #ccc transparent;
+  //
+  //&::-webkit-scrollbar {
+  //  width: 6px;
+  //}
+  //
+  //&::-webkit-scrollbar-thumb {
+  //  background-color: #ccc;
+  //  border-radius: 4px;
+  //}
+
+  // Hide scrollbar - Chrome, Safari
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // Hide scrollbar - Firefox
+  scrollbar-width: none;
+
+  // Hide scrollbar - Edge, modern
+  -ms-overflow-style: none;
+
+  .section {
+    margin-bottom: 2rem;
+
+    h3, h4 {
+      color: #25307F;
+      margin-bottom: 0.5rem;
+    }
+
+    h3{
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 0.4rem 0;
+      font-size: 14px;
+
+      strong{
+        color: #5461be;
+        font-weight: 500;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .info-grid {
+    background-color: #f2f5ff;
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 0.6rem;
+    column-gap: 2rem;
+    font-size: 14px;
+
+    strong{
+      font-weight: 500;
+      color: #000000;
+      font-size: 12px;
+      display: inline-block; // 👈 Add this line
+      width: 8rem;
+    }
+
+    div{
+      color: #25307F;
+      font-size: 12px;
+    }
+  }
+
+  .treatment-diagnosis {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: -1rem;
+
+    h4{
+      font-size: 15px;
+    }
+
+    div {
+      flex: 1;
+      p {
+        font-size: 13px;
+        width: 16vw;
+      }
+    }
+  }
+
+  .hospital-course {
+    background: #eaf4ef;
+    padding: 0.5rem 1.4rem;
+    border-radius: 6px;
+
+    h4{
+      font-size: 16px;
+      margin-top: 3px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+
+  .advice-medication {
+    display: flex;
+    gap: 2rem;
+
+    .box {
+      flex: 1;
+      background-color: #f2f5ff;
+      padding: 0 1rem;
+      border-radius: 6px;
+
+      h4{
+        font-size: 15px;
+      }
+
+      p, li {
+        font-size: 12px;
+        font-weight: 400;
+      }
+
+      ul {
+        padding-left: 0.5rem;
+      }
+    }
+  }
+
+  .signature {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6rem;
+    font-size: 14px;
+    color: #444;
+
+    div{
+      width: 18vw;
+      hr {
+        border: none;
+        border-top: 1px dashed #ccc;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,326 @@
+.patientsListContainer {
+  margin-top: 0.25rem;
+  height: 98vh;
+  .listHeader {
+    display: flex; // Enables flexbox layout
+    justify-content: flex-end; // Aligns items to the right
+    align-items: center; // Vertically centers items
+    padding-bottom: 5px;
+    gap: 10px; // Optional: Add space between Searchbar and NotificationIcon
+  }
+
+  .greeting {
+    margin-top: -2.7rem;
+    margin-bottom: 0.4rem;
+    font-family: "Karla", "sans-serif";
+    .heading {
+      color: #333333;
+      font-size: 18px;
+      font-weight: 500;
+      justify-content: left;
+    }
+    p {
+      margin-top: 0.15rem;
+      color: #4a4a4a;
+      font-size: 12px;
+      font-weight: 300;
+    }
+  }
+
+  .listHeading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.25rem;
+
+    .headingContainer {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: -0.5rem;
+
+      .heading {
+        color: #25307f;
+        font-family: "Hanken Grotesk", "sans-serif";
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+    }
+
+    .buttonsContainer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .filterButton {
+        background-color: #fff;
+        border: 1px solid #25307f;
+        border-radius: 6px;
+        padding: 4px 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-weight: 500;
+        color: #25307f;
+
+        svg {
+          font-size: 14px;
+          color: #25307f;
+        }
+      }
+
+      .addButton {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #25307f;
+        color: #d9d9d9;
+        padding: 5px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+
+        // &:hover {
+        //   //background-color: darken(#25307f, 5%);
+        // }
+      }
+    }
+  }
+
+  .toAdmit {
+    background: #f2f5ff;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+
+    .description {
+      font-family: "Karla";
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      color: #000000;
+
+      .count {
+        font-weight: 600;
+        color: #25307f;
+      }
+    }
+
+    .toAdmitList {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+
+      .patientCard {
+        background: #faf5f9;
+        border-radius: 10px;
+        padding: 1rem;
+        width: 20vw;
+        display: flex;
+        justify-content: space-between;
+
+        .patientInfo {
+          .patientDetailsContainer {
+            display: flex;
+            align-items: center;
+
+            .patientAvatar {
+              width: 45px;
+              height: 45px;
+              border-radius: 50%;
+              background-color: #e0e0e0; // Placeholder for avatar
+              margin-right: 10px;
+            }
+            .patientName {
+              font-family: "Karla", "sans-serif";
+              font-weight: 600;
+              font-size: 16px;
+              line-height: 100%;
+              letter-spacing: 0%;
+              vertical-align: middle;
+              color: #000000;
+              margin-bottom: 5px;
+            }
+            .patientAge {
+              font-family: "Karla", "sans-serif";
+              font-weight: 400;
+              font-size: 14px;
+              line-height: 100%;
+              letter-spacing: 0%;
+              vertical-align: middle;
+              color: #333333;
+            }
+          }
+          .patientDetails {
+            margin-top: 0.75rem;
+            margin-left: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: "Karla", "sans-serif";
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            vertical-align: middle;
+
+            .value {
+              font-family: "Karla", "sans-serif";
+              font-weight: 400;
+              font-size: 13px;
+              line-height: 100%;
+              letter-spacing: 0%;
+              vertical-align: middle;
+            }
+          }
+        }
+
+        .actionButtons {
+          display: flex;
+          gap: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .admittedPatients {
+    background: #ffffff;
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    height: 56vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .admittedHeader {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .headerItem {
+        font-family: "Karla";
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        padding: 6px 16px;
+
+        &.active {
+          border-bottom: 2px solid #25307f;
+        }
+      }
+
+      .Critical {
+        color: #f14400;
+      }
+
+      .Admitted {
+        color: #eaa000;
+      }
+
+      .Follow-Up {
+        color: #2e823b;
+      }
+    }
+
+    .admittedList {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 columns */
+      grid-auto-rows: auto;
+      row-gap: 10px;
+      column-gap: 1rem;
+      padding: 0rem 1rem;
+    }
+
+    .pagination {
+      margin-top: auto;
+      justify-content: flex-end;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
+    .page-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 24px;
+      height: 28px;
+
+      border-radius: 5px;
+      background: #f2f5ff;
+      cursor: pointer;
+      transition: background 0.3s;
+      color: #333333;
+      font-family: Karla;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      vertical-align: middle;
+    }
+
+    .page-btn.active {
+      background: #dae4ff;
+    }
+  }
+}
+
+@media screen and (max-width: 1250px) {
+  .patientsListContainer {
+    .listHeading {
+      .headingContainer {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+
+      .buttonsContainer {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+
+        .filterButton,
+        .addButton {
+          padding: 6px 12px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .toAdmit {
+      .toAdmitList {
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: space-between;
+
+        .patientCard {
+          width: calc(40% - 0.5rem); // Two cards per row with a gap
+        }
+      }
+    }
+
+    .admittedPatients {
+      height: auto;
+      padding: 0.75rem;
+
+      .admittedList {
+        grid-template-columns: repeat(
+          2,
+          1fr
+        ); // Reduce columns on smaller screens
+      }
+
+      .pagination {
+        justify-content: center;
+        position: static;
+        margin-top: 1rem;
+      }
+    }
+  }
+}

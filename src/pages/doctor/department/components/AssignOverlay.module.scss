@@ -1,0 +1,225 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background: #ffffff;
+  padding: 24px;
+  width: 95vw;
+  max-width: 1100px;
+  height: 80vh;
+  border-radius: 12px;
+  position: relative;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.heading {
+  font-size: 32px;
+  font-weight: 600;
+  color: #25307f;
+  margin-bottom: 16px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  background-color: #dae4ff;
+  color: #000000;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Karla";
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+}
+.close {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #25307f;
+
+  &:hover {
+    color: red;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+}
+
+.left {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 32px;
+}
+.subheading {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.label {
+  font-size: 18px;
+  font-weight: 500;
+  color: #25307f;
+  display: block;
+}
+
+.searchWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  margin-bottom: 12px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 16px 10px 36px; // left padding to make space for icon
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  color: #25307f;
+
+  &::placeholder {
+    color: #c7c7c7;
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  pointer-events: none;
+}
+
+.tableContainer {
+  width: 100%;
+}
+
+.tableWrapper {
+  height: 340px;
+  overflow-y: auto;
+  width: 100%;
+  display: block;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: fixed;
+}
+
+th,
+td {
+  padding: 8px 4px;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+th {
+  font-family: "Karla";
+  font-weight: 500;
+  font-size: 16px;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+td {
+  font-family: "Inter";
+  font-weight: 600;
+  font-size: 12px;
+  color: #747474;
+}
+
+.selectedRow {
+  background-color: #eef2ff;
+  border-left: 4px solid #25307f;
+}
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.toggleBtn {
+  flex: 1;
+  border: 1px solid #ccc;
+  background-color: #e5ebff;
+  color: #333333;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.active {
+  background-color: #25307f;
+  color: white;
+  border-color: #25307f;
+}
+
+.assignBtn {
+  margin-top: auto;
+  padding: 10px 0;
+  background-color: #25307f;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.assignBtn:hover {
+  background-color: #dae4ff;
+  color: #333333;
+}
+
+.assignBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

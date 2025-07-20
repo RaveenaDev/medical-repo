@@ -1,0 +1,101 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); // Dimmed background
+  display: flex;
+  justify-content: end;
+  z-index: 1000;
+
+  .modal-content {
+    position: relative;
+    width: 40%;
+    height: 100%;
+    background-color: #f1f1f1;
+    padding-top: 20px;
+    overflow-y: auto; // Allows scrolling if content overflows
+
+    // Initial off-screen position
+    transform: translateX(100%);
+    transition: transform 1s ease-in-out; // Transition for sliding effect
+
+    // When modal is open, slide it in
+    &.open {
+      transform: translateX(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      color: black;
+      margin-bottom: 20px;
+
+      h2 {
+        font-weight: 600;
+        margin-right: 4px;
+      }
+
+      .request-count {
+        font-size: 24px;
+        margin-left: 8px; // Add some spacing between the heading and the count
+        font-weight: 600;
+      }
+
+      .close-btn {
+        padding: 6px;
+        min-width: none;
+      }
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      background-color: white;
+      overflow-y: auto;
+      margin: 1.5rem;
+      height: 80%;
+      gap: 1rem;
+
+      .request-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+
+        .request-info {
+          display: flex;
+          align-items: center;
+        }
+        .request-text {
+          display: flex;
+          flex-direction: column;
+
+          .request-detail {
+            color: #878787;
+          }
+        }
+
+        .request-img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+
+        .request-name {
+          flex: 1;
+          font-weight: bold;
+          color: black;
+        }
+
+        .request-actions {
+          display: flex;
+          gap: 10px;
+        }
+      }
+    }
+  }
+}

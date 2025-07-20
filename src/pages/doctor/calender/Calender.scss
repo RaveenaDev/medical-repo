@@ -10,6 +10,14 @@
     display: flex;
     align-items: center;
     height: 42px;
+    padding: 0px 16px 0px 16px;
+    height: 5vh;
+    border-radius: 6px;
+    &:hover {
+      background-color: #5c6ea7;
+
+      border: none;
+    }
   }
 }
 
@@ -17,9 +25,13 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  font-size: 21px;
+  font-size: 18px;
 }
 
+.add-event-text {
+  font-size: 14px;
+  margin-left: 6px;
+}
 .chevron-icon {
   display: flex;
   align-items: center;
@@ -28,6 +40,7 @@
 
 .month-selection-container {
   display: flex;
+  justify-content: space-between;
   background-color: white;
   border-radius: 35px;
   align-items: center;
@@ -35,7 +48,7 @@
   height: 55px;
 }
 
-.month-selection {
+.week-selection {
   display: flex;
   align-items: center;
   margin-left: 18px;
@@ -62,6 +75,34 @@
     padding: 5px;
     border-radius: 500px;
   }
+}
+
+.month-selection {
+  display: flex;
+  align-items: center;
+  margin-right: 38px;
+}
+
+.month-button {
+  position: relative;
+
+  .chevron-icon {
+    transition: transform 0.3s ease;
+  }
+
+  .chevron-icon.rotate {
+    transform: rotate(180deg);
+  }
+}
+
+.chevron-icon {
+  color: #25307f;
+  margin-right: 8px;
+  transition: transform 3s ease;
+}
+
+.chevron-icon.rotate {
+  transform: rotate(180deg);
 }
 
 .calendar-wrapper {
@@ -97,10 +138,10 @@
 
 .calendar-body {
   display: flex;
-  height: 4640px; // 60px * 28 time slots (9 AM to 11 PM)
-  overflow-y: auto;
+  height: 4480px; // 60px * 28 time slots (9 AM to 11 PM)
+  // overflow-y: auto;
   position: relative;
-
+  top: 0px;
   .calendar-times {
     width: 80px;
     display: flex;
@@ -141,29 +182,30 @@
   }
 
   .current-time-line {
-    position: absolute;
-    left: 0px; // Aligns to match .calendar-times width
+    position: sticky;
+    top: 40%;
+    left: 0px;
     right: 0;
     height: 2px;
     background-color: #5461be;
-    z-index: 5;
+    z-index: 15;
     display: flex;
     align-items: center;
 
     .time-label {
       position: absolute;
-      left: -65px;
+      left: -75px;
       top: -10px;
-      font-size: 12px;
+      font-size: 11px;
       color: #25307f;
       background: white;
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 4px;
       white-space: nowrap;
       font-weight: 600;
       background-color: #dae4ff;
       border-radius: 20px;
-      padding: 1px 8px 1px 8px;
+      padding: 1px 7px 1px 7px;
     }
 
     .dot {
@@ -172,13 +214,13 @@
       left: 20px;
       border-radius: 50%;
       background-color: #5461be;
-      margin-left: 5px;
+      margin-left: -8px;
     }
   }
 }
 .calendar-event {
   position: absolute;
-  margin-top: 15px;
+  margin-top: 12px;
   left: 10px;
   right: 10px;
   border-radius: 10px;
@@ -212,6 +254,92 @@
     }
     p {
       font-weight: 300;
+    }
+  }
+}
+
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2); // subtle darkening
+  z-index: 50; // just below your AddEventPanel z-index
+}
+
+.calendar-cols {
+  /* iPad / tablet */
+  @media (min-width: 768px) and (max-width: 1370px) {
+    height: 660px;
+    overflow-y: auto;
+  }
+
+  @media (min-width: 768px) and (max-width: 1180px) {
+    height: 462px;
+    overflow-y: auto;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    height: 413px;
+    overflow-y: auto;
+  }
+  /* Laptop / desktop */
+  @media (min-width: 1440px) {
+    height: 70vh;
+    overflow-y: auto;
+    /* Hide scrollbar for IE, Edge */
+    -ms-overflow-style: none;
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+  }
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+.calender-cols::-webkit-scrollbar {
+  display: none;
+}
+
+.calendar-event-current {
+  position: sticky;
+  margin-left: 10px;
+  top: 21%;
+  left: 20px;
+  width: 110px;
+  z-index: 10;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 12px;
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .event-title {
+    margin-bottom: 4px;
+    font-weight: 700;
+    color: #25307f;
+  }
+
+  .event-time {
+    font-size: 11px;
+    color: #333;
+  }
+
+  .event-user {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+    p {
+      font-weight: 400;
+      color: #25307f;
     }
   }
 }

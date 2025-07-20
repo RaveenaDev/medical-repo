@@ -1,0 +1,29 @@
+.parent{
+  margin-top: 27vh;
+
+
+  .headerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    span {
+      transform: translateY(6px);
+      color: black;
+      cursor: pointer;
+    }
+
+    .departmentTitle {
+      color: black;
+      font-weight: 500;
+      font-size: 1.3rem;
+    }
+
+    .departmentTitleDetails {
+      color: #747474;
+      font-weight: 500;
+      margin-left: 8px;
+      font-size: 1.3rem;
+    }
+  }
+}

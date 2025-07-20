@@ -1,0 +1,155 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0 1vw 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  height: 78vh;
+  overflow-y: auto;
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 3vh;
+  }
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.submitContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 4vh;
+
+  button {
+    background: #25307f;
+    color: white;
+    padding: 0.6vh 3vh;
+    border-radius: 4px;
+    font-size: 2vh;
+    font-weight: 400;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.iconLabel {
+  display: flex;
+
+  img {
+    width: 2.4vh;
+  }
+}
+
+.label {
+  font-size: 1.9vh;
+}
+
+.attachmentBox {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+h6 {
+  font-weight: 550;
+}
+
+.customFileUpload {
+  display: inline-block;
+  padding: 0.8vh 1.6vw;
+  font-size: 1.8vh;
+  font-weight: 500;
+  color: #25307f;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Karla", sans-serif;
+  text-align: center;
+  transition: background 0.2s ease;
+  width: 30%;
+  &:hover {
+    background-color: #e5edff;
+  }
+
+  .inputFile {
+    display: none;
+  }
+}
+
+.fileList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1vh;
+}
+
+.filePreviewBox {
+  position: relative;
+  display: inline-block;
+  margin-right: 1vw;
+
+  img {
+    width: 8vh;
+    height: 8vh;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .fileName {
+    display: block;
+    font-size: 1.5vh;
+    color: #333;
+    padding: 0.5vh;
+    background: #f0f0f0;
+    border-radius: 4px;
+    max-width: 100px;
+    word-wrap: break-word;
+  }
+}
+
+.removeIcon {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 1px;
+  color: #ed4301;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #ed4301;
+    color: white;
+  }
+}
+
+.section1 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 3vw;
+  input {
+    width: 98%;
+  }
+}

@@ -1,0 +1,267 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 47vh;
+  overflow-y: auto;
+  margin-top: 0vh;
+  padding: 0vh 0vw;
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.timelineContainer {
+  width: 3vw;
+  display: flex;
+  justify-content: center;
+  padding-top: 9vh;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+.timelineItem {
+  display: flex;
+  margin-bottom: 0vh;
+}
+
+.timelineSeparator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 10vh;
+}
+
+.timelineDot {
+  width: 1.6vh;
+  height: 1.6vh;
+  border-radius: 50%;
+  margin-bottom: 0.5vh;
+  z-index: 1;
+  background-color: #ccc;
+}
+
+.ongoing {
+  background-color: #2e823b;
+  box-shadow: 0px 0px 1px 3px rgba(46, 130, 59, 0.3);
+}
+
+.completed {
+  background-color: #eaa000;
+}
+
+.timelineConnector {
+  width: 2px;
+  flex-grow: 1;
+  background-color: #ddd;
+  height: 100%;
+}
+
+.tableContainer {
+  padding-right: 0px;
+  width: 45vw;
+  overflow-x: auto;
+}
+
+// Header row styling
+.tableHeaderRow {
+  display: flex;
+  width: 44vw;
+  padding: 0px;
+  margin-bottom: 0px;
+  border-bottom: 1px solid #eee;
+}
+
+.headerCell {
+  color: #878787;
+  font-size: 1vw;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 5vh;
+  padding: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  // Default for all columns
+
+  width: 25%;
+
+  // Phase column - wider
+  &.phaseHeader {
+    width: 25%;
+
+    padding-left: 0px;
+  }
+
+  // Date column - medium width
+  &.dateHeader {
+    width: 25%;
+  }
+}
+
+// Data row styling
+.tableRow {
+  display: flex;
+  width: 44vw;
+  height: 9vh;
+  border-radius: 8px;
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  margin-bottom: 1vh;
+  margin-left: 4px;
+  padding: 0px;
+  overflow-x: auto;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
+
+    // background-color: #d4d1d1;
+  }
+}
+
+@keyframes blinkBorder {
+  0% {
+    border-color: #2e823b;
+  }
+  50% {
+    border-color: #aacdae;
+  }
+  100% {
+    border-color: #2e823b;
+  }
+}
+
+.activeRow {
+  border: 2px solid #2e823b;
+  background-color: #e8f5e9;
+  cursor: pointer;
+  animation: blinkBorder 1s infinite;
+}
+
+.tableCell {
+  display: flex;
+  align-items: center;
+  font-size: 1vw;
+  padding: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  // Default for all columns
+
+  width: 25%;
+  justify-content: center;
+  text-align: center;
+  // Phase column - wider
+  &.phaseCell {
+    width: 25%;
+    justify-content: center;
+  }
+
+  // Date column - medium width
+  &.dateCell {
+    justify-content: center;
+
+    width: 25%;
+  }
+}
+
+.statusCompleted {
+  color: #eaa000;
+  font-weight: 600;
+}
+
+.statusOngoing {
+  color: #2e823b;
+  font-weight: 600;
+}
+
+// Modal styles remain unchanged
+.backdropOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+
+.followUpModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 52vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.labTestsModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 45vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.initialConsultationModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 40vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.surgeryModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 50vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 3vh 0vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}

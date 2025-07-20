@@ -1,0 +1,153 @@
+.procedures {
+  padding: 1rem;
+  font-family: "Inter", sans-serif;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+
+    .btn-outline,
+    .btn-primary {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0px 4px 4px 0px #c2c2c240;
+    }
+
+    .btn-outline {
+      //border: 1px solid #ccc;
+      border: none;
+      background: white;
+      display: flex;
+      gap: 5px;
+
+      p {
+        margin-top: 3px;
+        font-size: 14px;
+        color: #878787;
+      }
+
+      transition: border-color 0.3s ease;
+
+      &:hover {
+        background-color: #dae4ff;
+
+        p {
+          color: #25307f; // Blue text on hover
+        }
+      }
+    }
+
+    .btn-primary {
+      border: none;
+      background: white;
+      display: flex;
+      gap: 5px;
+
+      p {
+        margin-top: 3px;
+        font-size: 14px;
+        color: #878787;
+      }
+
+      transition: border-color 0.3s ease;
+
+      &:hover {
+        background-color: #dae4ff;
+
+        p {
+          color: #25307f; // Blue text on hover
+        }
+      }
+    }
+  }
+
+  &__summary {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f2f5ff;
+    padding: 1rem 2rem;
+    border-radius: 2px;
+    margin-bottom: 30px;
+
+    .summary-item {
+      text-align: center;
+
+      .count {
+        font-size: 24px;
+        font-weight: bold;
+        color: #25307f;
+      }
+
+      .word {
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .critical {
+        color: #f14400;
+      }
+
+      .sub {
+        font-size: 14px;
+        color: #878787;
+        font-weight: 500;
+        margin-top: 4px;
+      }
+    }
+    .last-performed {
+      margin-top: 6px;
+    }
+  }
+
+  &__log {
+    .head {
+      display: flex;
+      gap: 10px;
+
+      p {
+        color: #25307f;
+        font-weight: 500;
+        font-size: 17px;
+        margin-top: -2px;
+      }
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+
+      th {
+        text-align: left;
+        padding: 12px;
+        font-weight: 500;
+        color: #aaa9a9;
+        font-size: 13px;
+      }
+
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .status.completed {
+        color: green;
+        font-weight: 500;
+      }
+
+      .action .details-btn {
+        background: none;
+        border: none;
+        color: #25307f;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+}

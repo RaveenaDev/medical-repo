@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.container {
+  width: 97%;
+  height: 100%;
+  padding-left: 1.5vw;
+  padding-top: 7vh;
+  //padding-right: 4vw;
+}
+
+.row1 {
+  display: flex;
+  gap: 1vw;
+  align-items: center;
+  img {
+    height: 8vh;
+    border-radius: 50%;
+  }
+
+  .patientName {
+    color: #25307f;
+    font-weight: 600;
+  }
+
+  .followUp {
+    font-size: 1.7vh;
+    font-weight: 400;
+  }
+}
+
+.row2 {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 5.2vh;
+}
+
+.row3 {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 7.5vh;
+}
+
+.label {
+  color: gray;
+  font-size: 1.8vh;
+}
+
+.value {
+  color: #25307f;
+  font-weight: 500;
+  font-size: 1.8vh;
+}
+
+.label2 {
+  color: gray;
+  font-size: 1.8vh;
+}
+
+.value2 {
+  color: #25307f;
+  font-weight: 600;
+  font-size: 1.8vh;
+}
+
+.lv {
+  width: 9vw;
+}
+.addValue {
+  color: #25307f;
+  font-weight: 600;
+  font-size: 1.8vh;
+  //word-break: break-word;
+}
+
+.row4 {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 7.5vh;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.3vw;
+}
+
+.dot {
+  display: inline-block;
+  height: 1vh;
+  width: 0.5vw;
+  border-radius: 50%;
+  background-color: #3db461;
+}
+
+.row5 {
+  display: flex;
+  justify-content: center;
+  margin-top: 14vh;
+  button {
+    background-color: #25307f;
+    color: white;
+    font-size: 1.7vh;
+    font-weight: 500;
+    font-family: "Karla", sans-serif;
+    padding: 10px 60px 10px 60px;
+    border-radius: 6px;
+  }
+}

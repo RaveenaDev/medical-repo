@@ -1,0 +1,169 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk&display=swap");
+.event-details-panel {
+  position: fixed;
+  top: 100px;
+  right: 150px;
+  width: 650px;
+  height: 80vh;
+  background: #fff;
+  z-index: 1500;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
+
+  padding: 0;
+  overflow-y: auto;
+}
+
+.top-bar {
+  top: 0px;
+  display: flex;
+  justify-content: flex-end;
+  background-color: #25307f;
+  .close-button {
+    top: 0px;
+    margin: 0px;
+
+    background-color: transparent;
+    padding: 0px;
+    outline: none;
+    border: none;
+    color: #5461be;
+    :hover {
+      outline: none;
+      background-color: red;
+      color: white;
+    }
+  }
+}
+.event-details-header {
+  margin-top: -12px;
+  margin-left: 0px;
+  font-weight: 10px;
+  font-size: 14px;
+  font-family: "Karla", sans-serif;
+  color: white;
+}
+
+.event-header {
+  margin-top: 0px;
+  background: #25307f;
+  padding-left: 20px;
+  padding-bottom: 20px;
+
+  .event-title {
+    color: white;
+    font-size: 21px;
+    font-family: "Hanken Grotesk", sans-serif;
+    margin-top: 15px;
+  }
+}
+
+.event-date-time {
+  color: white;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 15px;
+  .event-date {
+    display: flex;
+    align-items: center;
+    p {
+      margin-left: 2px;
+    }
+  }
+}
+
+.event-buttons {
+  font-size: 14px;
+  font-family: "Karla", sans-serif;
+  margin-top: 14px;
+  display: flex;
+  padding-bottom: 6px;
+
+  .start-meeting-button {
+    background-color: #fff;
+    color: #25307f;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-right: 11px;
+    border: none;
+    p {
+      margin-right: 10px;
+    }
+  }
+
+  .edit-button {
+    background-color: #25307f;
+    color: #fff;
+    border-color: #fff;
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+}
+.content {
+  padding: 22px 22px 10px 22px;
+  height: max-content;
+}
+.participants {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Karla", sans-serif;
+  font-size: 18px;
+  .add-participants {
+    gap: 2px;
+    display: flex;
+    align-items: center;
+    color: #25307f;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 18px;
+  }
+}
+
+.participant-item {
+  display: flex;
+  //align-items: center;
+  font-size: 10px;
+  padding: 0px;
+  margin: 0px;
+}
+.participants-name {
+  margin-top: 10px;
+}
+.participants-row {
+  display: flex;
+  gap: 10px; // space between images
+  align-items: center;
+  margin-top: 7px;
+}
+
+.participant-avatar {
+  width: 36x;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.description-header {
+  margin-top: 40px;
+  font-size: 18px;
+  font-family: "Karla", sans-serif;
+}
+
+.event-description {
+  font-family: "Karla", sans-serif;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.meeting-link-header {
+  font-family: "Karla", sans-serif;
+  font-size: 18px;
+  margin-top: 25px;
+  margin-bottom: 8px;
+}
+.meeting-link {
+  font-family: "Karla", sans-serif;
+  font-size: 13px;
+  color: #25307f;
+}

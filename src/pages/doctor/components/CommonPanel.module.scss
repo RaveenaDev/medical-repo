@@ -9,12 +9,16 @@
   }
 
   .cardhandling {
-    margin-top: -34px;
+    margin-top: -2.7rem;
+    margin-bottom: 0.6rem;
     .heading {
-      color: #000000;
-      font-size: 19px;
+      color: #333333;
+      font-size: 18px;
       font-weight: 500;
-      padding: 4px 0;
+    }
+    p{
+      color: #4a4a4a;
+      font-size: 12px;
     }
   }
 

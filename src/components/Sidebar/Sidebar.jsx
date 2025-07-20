@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import styles from "./sidebar.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, IconButton, Typography } from "@mui/material";
@@ -6,6 +7,7 @@ import adi from "../../pages/receptionist/Settings/Settings.module.scss";
 import Logout from "../../pages/receptionist/Settings/Logout.jsx";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import DoctorNotesPopup from "./DoctorNotesPopup.jsx";
 
 const roleOptions = {
   receptionist: [
@@ -28,12 +30,12 @@ const roleOptions = {
     { title: "Settings", path: "/patient/settings" },
   ],
   doctor: [
-    {title: "Overview", path:"/doctor"},
-    {title: "Calender", path:"/doctor/calendar"},
-    {title: "Patient", path:"/doctor/patient"},
-    {title: "Department", path:"/doctor/department"},
-    {title: "Setting", path:"/doctor/settings"},
-  ]
+    { title: "Overview", path: "/doctor" },
+    { title: "Consultation", path: "/doctor/consultation" },
+    { title: "Patient", path: "/doctor/patientList" },
+    { title: "Department", path: "/doctor/department" },
+    { title: "Settings", path: "/doctor/settings" },
+  ],
 };
 
 const Sidebar = ({ role }) => {
@@ -42,8 +44,13 @@ const Sidebar = ({ role }) => {
   const location = useLocation();
   const [isLogout, setIsLogout] = useState(false);
 
+  const [showDoctorNotes, setShowDoctorNotes] = useState(false);
+  const buttonRef = useRef(null);
+
   // Get side options based on role
   const sideOptions = roleOptions[role] || [];
+
+  const isSettingsPage = location.pathname.includes("settings");
 
   // Sync activeIndex with the current route
   useEffect(() => {
@@ -67,16 +74,28 @@ const Sidebar = ({ role }) => {
       navigate(`/admin/settings/${path}`);
     } else if (role === "receptionist") {
       navigate(`/receptionist/settings/${path}`);
-    }
-    else if(role === "doctor"){
-      navigate(`/doctor/settings/${path}`);
-    }
-    else {
+    } else if (role === "doctor") {
       navigate(`/doctor/settings/${path}`);
     }
   };
   const handlelogout = () => {
     setIsLogout((prev) => !prev);
+  };
+
+  const [showChildPopup, setShowChildPopup] = useState(false);
+  const popupRef = useRef(null);
+  const [childPopupPosition, setChildPopupPosition] = useState({
+    left: 550,
+  });
+  const handleAdd = () => {
+    if (popupRef.current) {
+      const rect = popupRef.current.getBoundingClientRect();
+      setChildPopupPosition({
+        top: rect.top,
+        left: rect.right + 16, // 16px gap to the right
+      });
+      setShowChildPopup(true);
+    }
   };
   return (
     <div
@@ -102,7 +121,6 @@ const Sidebar = ({ role }) => {
           </div>
         ))}
       </div>
-
       {/* Conditionally render settings options when "Settings" is active */}
       {activeIndex ===
         sideOptions.findIndex((option) => option.title === "Settings") && (
@@ -149,36 +167,126 @@ const Sidebar = ({ role }) => {
 
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
           marginTop: "auto",
           paddingBottom: "5px",
           paddingTop: "20px",
-          borderTop: "1px solid #E2E2E2 ",
+          position: "relative", // start a new stacking context
+          zIndex: 9999999, // very high
         }}
       >
-        <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
-          <Avatar sx={{ width: 50, height: 50 }} />
-          <div style={{ paddingTop: "2px" }}>
-            <p style={{ color: "#25307F", fontWeight: 500 }}>Hospital</p>
-            <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
+        {role === "doctor" && !isSettingsPage && (
+          <div style={{ position: "relative", margin: "0 25px 10px 25px" }}>
+            <div
+              ref={buttonRef}
+              onClick={() => setShowDoctorNotes((prev) => !prev)}
+              style={{
+                backgroundColor: "#DAE4FF",
+                color: "#25307F",
+                height: "140px",
+                border: "none",
+                cursor: "pointer",
+                width: "100%",
+                fontWeight: 600,
+                boxShadow: "0px 0px 3px 0px #00000036",
+                position: "relative",
+              }}
+            >
+              <p
+                style={{
+                  padding: "1rem 0rem 0rem 1rem",
+                }}
+              >
+                Doctor Notes
+              </p>
+              <svg
+                style={{
+                  position: "absolute",
+                  bottom: "0px",
+                  left: "0px",
+                  cursor: "pointer",
+                }}
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 0H20V20L0 0Z" fill="black" fillOpacity="0.2" />
+              </svg>
+              <svg
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  pointerEvents: "none",
+                  zIndex: 1, // ensure it stays behind the button
+                }}
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0,40 L0,0 L40,40 Z" fill="white" />
+              </svg>
+            </div>
+            {showDoctorNotes && (
+              <DoctorNotesPopup
+                anchorRef={buttonRef}
+                onClose={() => {
+                  setShowDoctorNotes(false);
+                  setShowChildPopup(false);
+                }}
+                onAdd={() => setShowChildPopup(true)}
+                disableAdd={showChildPopup}
+                popupRef={popupRef}
+              />
+            )}
+            {showChildPopup && (
+              <DoctorNotesPopup
+                anchorRef={buttonRef}
+                onClose={() => setShowChildPopup(false)}
+                onAdd={() => {}}
+                disableAdd={true}
+                popupRef={null}
+                // override position manually
+                customStyle={{
+                  left: childPopupPosition.left,
+                }}
+              />
+            )}
+          </div>
+        )}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingBottom: "5px",
+            paddingTop: "20px",
+            borderTop: "1px solid #E2E2E2 ",
+          }}
+        >
+          <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
+            <Avatar sx={{ width: 50, height: 50 }} />
+            <div style={{ paddingTop: "2px" }}>
+              <p style={{ color: "#25307F", fontWeight: 500 }}>Hospital</p>
+              <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
+            </div>
+          </div>
+
+          <div style={{ paddingRight: "0.7rem" }}>
+            <IconButton
+              sx={{
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
+            </IconButton>
           </div>
         </div>
-
-        <div style={{ paddingRight: "0.7rem" }}>
-          <IconButton
-            sx={{
-              "&:focus": {
-                outline: "none",
-                boxShadow: "none",
-              },
-            }}
-          >
-            <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
-          </IconButton>
-        </div>
       </div>
-
       {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout} />}
     </div>
   );

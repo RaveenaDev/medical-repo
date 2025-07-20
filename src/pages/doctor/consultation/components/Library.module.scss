@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+.row1 {
+  display: flex;
+  background-color: #dae4ff;
+  padding: 0.7vh;
+  border-radius: 5px;
+  width: fit-content;
+  gap: 1vh;
+}
+.tabButton {
+  background: #ffffff;
+  border: 1px solid #656ca4;
+  height: 4.8vh;
+  font-size: 1.9vh;
+  font-family: "Karla", sans-serif;
+  padding: 0.2vh 1vh 0.2vh 1vh;
+  color: #25307f;
+}
+.activeTab {
+  border: none;
+}
+
+.formsContainer {
+  height: 70vh;
+  overflow-y: auto;
+  margin-top: 2vh;
+  padding-right: 2vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vh;
+}
+
+.row2 {
+  border: 1px solid #bebebe;
+  padding: 1vh 1vw 1.6vh 1vw;
+
+  h4 {
+    color: #25307f;
+    font-weight: 500;
+    font-size: 2vh;
+  }
+
+  p {
+    color: #909090;
+    font-size: 1.7vh;
+  }
+
+  .btnContainer {
+    display: flex;
+    justify-content: end;
+    gap: 1vw;
+    margin-top: 0.5vh;
+    button {
+      height: 4.5vh;
+      border-radius: 5px;
+      gap: 0.5vw;
+      padding: 0px 10px;
+      border: none;
+      font-size: 1.8vh;
+
+      img {
+        height: 2.6vh;
+      }
+    }
+  }
+}
+
+.previewBtn {
+  background: #f1f1f1;
+
+  color: #25307f;
+  display: flex;
+  align-items: center;
+  font-size: 1.8vh;
+}
+
+.applyBtn {
+  background: #25307f;
+
+  color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  font-size: 1.8vh;
+}
+
+.container {
+  //overflow-y: auto;
+}

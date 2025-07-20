@@ -46,6 +46,7 @@ import Information from "./pages/register/info/Information.jsx";
 import { Navigate } from "react-router-dom";
 import Base from "./pages/landing/Base.jsx";
 import DoctorRoutes from "./pages/doctor/DoctorRoutes.jsx";
+import IpdRoutes from "./pages/ipd/IpdRoutes.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -69,6 +70,8 @@ function App() {
       setRole("receptionist");
     } else if (location.pathname.startsWith("/doctor")) {
       setRole("doctor");
+    } else if (location.pathname.startsWith("/ipd")) {
+      setRole("staff");
     } else {
       setRole(""); // Default or no role
     }
@@ -81,12 +84,13 @@ function App() {
     "/recovery-link",
     "/update-password",
     "/register",
+    "/ipd",
   ].includes(location.pathname);
 
   const isHomePage = "/".includes(location.pathname);
 
   useEffect(() => {
-    if (location.pathname === "/") {
+    if (location.pathname === "/" || location.pathname === "/ipd") {
       setShouldShowSidebar(false);
     }
   }, [location.pathname]);
@@ -607,13 +611,29 @@ function App() {
               {/* DOCTOR ROUTES */}
 
               <Route
-              path="/doctor/*"
-              element={
-                <DoctorRoutes
-                    setIsSignUpOrLogin={setIsSignUpOrLogin}
-                    setEntity={setEntity}
-                    entity={entity}/>
-              }
+                path="/doctor/*"
+                element={
+                  <ProtectedRoute allowedRoles={["doctor"]}>
+                    <DoctorRoutes
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/ipd/*"
+                element={
+                  <ProtectedRoute allowedRoles={["staff"]}>
+                    <IpdRoutes
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
               />
             </Routes>
           </div>

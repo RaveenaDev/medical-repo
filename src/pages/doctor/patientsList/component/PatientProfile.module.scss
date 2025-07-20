@@ -1,0 +1,471 @@
+.section1 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.8vh;
+}
+
+.patientInfo {
+  background-color: white;
+  width: 31%;
+  padding: 0vh 1.2vw;
+  //height: fit-content;
+  h4 {
+    margin-top: 0vh;
+    font-size: 2.4vh;
+    color: #25307f;
+    font-weight: 640;
+  }
+}
+
+.patientCard {
+  background: #f2f5ff;
+  display: flex;
+  gap: 1.8vh;
+  // justify-content: space-between;
+  padding: 1vh 0vw 1vh 1vw;
+  img {
+    border-radius: 50%;
+  }
+
+  p {
+    font-size: 1.85vh;
+    font-weight: 550;
+  }
+
+  @media (max-width: 1200px) {
+    p {
+      font-size: 1.4vh;
+      font-weight: 550;
+    }
+  }
+}
+
+.imgWrapper {
+  display: flex;
+  align-items: center;
+  img {
+    width: 4vw;
+  }
+}
+.patientCardInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+}
+.patientKey {
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  line-height: 1.4;
+}
+
+.patientValue {
+  color: #25307f;
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.patientKey2 {
+  width: 40%;
+  font-weight: 550;
+  color: #333;
+  font-size: 1.8vh;
+  line-height: 1.4;
+
+  @media (max-width: 1200px) {
+    font-size: 1.5vh;
+    font-weight: 550;
+  }
+}
+
+.patientValue2 {
+  width: 55%;
+  color: #25307f;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+
+  @media (max-width: 1200px) {
+    font-size: 1vh;
+    font-weight: 550;
+  }
+}
+
+.patientDetail,
+.emergencyContact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+  margin-left: 1vw;
+  margin-top: 2vh;
+  padding-bottom: 1vh;
+  height: 24.5vh;
+}
+.emergencyContact {
+  gap: 0.9vh;
+}
+.patientDetail {
+  gap: 0.9vh;
+}
+
+.emergencyContact {
+  background: #f1f1f1;
+  border: 1px solid #bebebe;
+  padding-left: 0;
+  margin-left: 0;
+  padding-left: 1vw;
+  padding-top: 1vh;
+  margin-top: 1vh;
+  border-radius: 14px;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+.patientInfoControl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  button {
+    background: white;
+    border: none;
+    border: 1px solid #b5b8d3;
+    border-radius: 4px;
+    font-size: max(0.9vw, 9px);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.3vw;
+    padding: 0.8vh 0.7vw;
+    box-shadow: 0px 0px 4px rgba(181, 184, 211, 0.5);
+    &:hover {
+      border: 1px solid #b5b8d3;
+    }
+  }
+}
+
+.bedIcon {
+  color: #25307f;
+  height: 2.4vh;
+}
+.patientInfoControlRight {
+  display: flex;
+  align-items: center;
+  color: #25307f;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: max(1vw, 10px);
+}
+
+.rightIcon {
+  color: #58595b;
+  height: 2.3vh;
+}
+.patientValue2 {
+  width: 60%;
+  color: #25307f;
+  font-size: 1.8vh;
+  font-weight: 550;
+  line-height: 1.4;
+  word-break: break-word;
+
+  @media (max-width: 1200px) {
+    font-size: 1.5vh;
+    font-weight: 550;
+  }
+}
+
+.patientAddress {
+  display: flex;
+  align-items: center;
+}
+
+.progressTracker {
+  background-color: white;
+  width: 65%;
+
+  h4 {
+    color: #25307f;
+    margin-left: 3vw;
+    margin-top: -2vh;
+    font-size: 2.4vh;
+    margin-bottom: 0vh;
+  }
+}
+
+.row1PT {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1.4vh;
+}
+.dischargeBtn {
+  background: white;
+  color: #25307f;
+  font-size: 2vh;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.6vh;
+  padding: 0.6vh 1.2vh;
+  margin-right: 0.5vw;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+  border: none;
+  img {
+    width: 1.2vw;
+  }
+}
+.updateBtn {
+  margin-right: 3vh;
+  background: #25307f;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.6vh;
+  border-radius: 4px;
+  padding: 0.6vh 1.2vh;
+  font-size: 2vh;
+}
+.section2 {
+  margin-top: 1vh;
+}
+
+.header2 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 12vw;
+  background-color: white;
+  height: 5.4vh;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+
+  @media (max-width: 1200px) {
+    font-size: 1.8vh;
+  }
+}
+
+.activeTab {
+  position: relative;
+  color: #25307f;
+  font-weight: 600;
+  cursor: pointer;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    transform: translateX(-50%); // center horizontally
+    width: 110%;
+    height: 2px;
+    background-color: #25307f;
+
+    @media (max-width: 1200px) {
+      left: 0;
+      transform: none;
+      width: 100%;
+    }
+  }
+}
+
+.inactiveTab {
+  color: #878787;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.backdropOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+
+.updateProgressModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: 45vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.bedInfo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: max(38vw, 550px);
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 0vh 0vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.dischargeModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  // height: 80vh;
+  width: max(48vw, 550px);
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0vh 0vw 0vh 0vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.plusIcon {
+  height: 2.4vh;
+}
+
+.headerText {
+  text-align: center;
+}
+
+.dropdown {
+  position: relative;
+  width: 9vw; // Use a percentage of viewport width for the dropdown
+  // min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Karla", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+
+  border-radius: 4px;
+
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.2vh;
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
+  border-radius: 4px;
+  border: 1px solid #cfcfcf;
+  width: 99.5%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 0.8vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 7vh;
+}
+
+.critical {
+  p {
+    color: white;
+    background: #f14400;
+    padding: 0.3vh 0.6vw;
+    border-radius: 15px;
+  }
+
+  strong {
+    color: white;
+    background: #f14400;
+    padding: 0.3vh 0.3vw;
+    border-radius: 15px;
+  }
+}
+
+.high {
+  strong {
+    color: #f14400;
+  }
+}
+
+.moderate {
+  strong {
+    color: #f39c12;
+  }
+}
+
+.stable {
+  strong {
+    color: #2e823b;
+  }
+}
+.dot {
+  display: inline-block;
+  width: 0.6vw;
+  height: 0.6vw;
+  border-radius: 50%;
+  margin-right: 0.6vw;
+}
+
+.critical .dot {
+  background-color: #d32f2f;
+}
+
+.high .dot {
+  background-color: #f57c00;
+}
+
+.moderate .dot {
+  background-color: #fbc02d;
+}
+
+.stable .dot {
+  background-color: #388e3c;
+}

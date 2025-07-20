@@ -1,0 +1,143 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0 2vw 2vh 2vw;
+  font-family: "Karla", sans-serif;
+  height: 48vh;
+  overflow-y: auto;
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 3vh;
+  }
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.label {
+  font-size: 1.9vh;
+  color: #4a4a4a;
+  font-weight: 500;
+}
+
+.labelRow {
+  font-size: 1.9vh;
+  color: #4a4a4a;
+  font-weight: 500;
+  //width: 35%;
+}
+
+.ans {
+  font-size: 1.9vh;
+  // width: 60%;
+  font-weight: 500;
+  color: #404040;
+}
+
+.section1 {
+  background: #f2f5ff;
+  justify-content: space-between;
+  display: flex;
+  gap: 1vw;
+  padding: 1.6vh 1vw;
+}
+
+.sec1Left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
+
+.sec1Left,
+.sec1Right {
+  width: 48%;
+}
+
+.sec1LeftRow {
+  // display: flex;
+  //gap: 5%;
+}
+
+.uploadedFilesWrapper {
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4vh;
+  padding: 1.8vh 0.6vw;
+  margin-top: 1vh;
+  li {
+    list-style-type: none;
+    background-color: #e5ecff;
+    padding: 1.2vh 0.6vw;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    overflow-x: hidden;
+    a {
+      color: #454648;
+      font-size: 1.8vh;
+    }
+  }
+}
+
+.sec2Left,
+.sec2Right {
+  width: 41%;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  padding: 1vh 0.8vw;
+
+  @media (max-width: 1000px) {
+    width: 96%;
+  }
+  ul {
+    li {
+      font-size: 1.8vh;
+      font-weight: 400;
+      color: #404040;
+      font-family: "Inter", sans-serif;
+    }
+  }
+}
+
+.section2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 5.5%;
+  margin-top: 4vh;
+
+  @media (max-width: 1000px) {
+    flex-direction: column;
+    gap: 3vh;
+  }
+}
+
+.fileDetails {
+  display: flex;
+  flex-direction: column;
+}
+.uploadedText {
+  font-size: 1.55vh;
+  color: #25307f;
+  font-weight: 600;
+  line-height: 1.55vh;
+}

@@ -1,0 +1,132 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 1vw 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  height: 72vh;
+  overflow-y: auto;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.title {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 550;
+  margin-bottom: 3vh;
+}
+
+.section1 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 2.6vw;
+  row-gap: 4vh;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 0vh 2vw; /* Stack columns on smaller screens */
+  }
+  p {
+    font-size: 1.9vh;
+  }
+
+  input {
+    width: 94%;
+    font-family: "Karla", sans-serif;
+    outline: none;
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+    padding: 0.9vh 0.5vw;
+    height: 3.5vh;
+  }
+}
+
+.section2 {
+  margin-top: 4vh;
+  p {
+    font-size: 1.9vh;
+  }
+  @media (max-width: 768px) {
+    padding: 0vh 2vw;
+  }
+  input {
+    width: 97%;
+    font-family: "Karla", sans-serif;
+    outline: none;
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+    padding: 0.9vh 0.5vw;
+    height: 3.5vh;
+
+    @media (max-width: 768px) {
+      width: 95%;
+    }
+  }
+}
+
+.submitContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 6vh;
+  button {
+    border: none;
+    background: #25307f;
+    color: white;
+    padding: 0.6vh 3vh;
+    border-radius: 4px;
+    font-size: 2vh;
+    font-weight: 400;
+  }
+}
+
+.addVitalWrapper {
+  button {
+    margin-top: 4vh;
+    width: 99.3%;
+    background: white;
+    border: 1px solid #25307f;
+    border-radius: 4px;
+    padding: 1.4vh 0vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vh;
+    color: #25307f;
+
+    &:hover {
+      border: 1px solid #25307f;
+    }
+    .icon {
+      height: 2.2vh;
+    }
+  }
+}
+.customVitalRow {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+
+  input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+}

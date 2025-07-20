@@ -1,0 +1,343 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0 1vw 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  height: 78vh;
+  overflow-y: auto;
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 0vh;
+  }
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.submitBtnContainer1 {
+  display: flex;
+  justify-content: center;
+  gap: 0.8vw;
+  margin-top: 14vh;
+  button {
+    border-radius: 4px;
+    padding: 1.2vh 0.8vw;
+    font-size: 1.9vh;
+  }
+}
+.submitBtnContainer2 {
+  display: flex;
+  justify-content: center;
+  gap: 0.8vw;
+  margin-top: 4vh;
+  button {
+    border-radius: 4px;
+    padding: 1.2vh 0.8vw;
+    font-size: 1.9vh;
+  }
+}
+
+.submitBtnContainer3 {
+  display: flex;
+  justify-content: center;
+  gap: 0.8vw;
+  margin-top: 12vh;
+  button {
+    border-radius: 4px;
+    padding: 1.2vh 0.8vw;
+    font-size: 1.9vh;
+  }
+}
+.blueBtn {
+  border: none;
+  background: #25307f;
+  color: white;
+  font-weight: 350;
+}
+
+.whiteBtn {
+  background: white;
+  font-weight: 500;
+  color: #25307f;
+  border: 1px solid #25307f;
+  &:hover {
+    border: 1px solid #25307f;
+  }
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+.sectionHeading {
+  font-size: 2.15vh;
+  font-weight: 510;
+}
+.actionBtns {
+  display: flex;
+  justify-content: space-between;
+
+  button {
+    background: #dae4ff;
+    color: #25307f;
+    border-radius: 2px;
+    border: 1px solid #25307f;
+    font-size: 1.9vh;
+    width: 48.5%;
+    padding: 1.7vh 0vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5vw;
+
+    &:hover {
+      border: 1px solid #25307f;
+    }
+    img {
+      height: 2vh;
+    }
+  }
+}
+
+.labelRB {
+  color: #25307f;
+  font-size: 2.05vh;
+  font-weight: 510;
+}
+
+.valueRB {
+  color: #292929;
+}
+
+.editBtn {
+  height: 2.8vh;
+}
+
+.contentRB {
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  padding: 0.5vh 1vw 0.5vh 0vw;
+}
+.contentRB {
+  display: flex;
+}
+.dataRB {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0vh 2vw 0vh 1vw;
+}
+
+.dataChildRB {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+}
+
+.roomAndBed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+}
+.contentWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.amenities {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+.amenitiesBtnWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.amenitiesBtn {
+  background: white;
+  border: 1.6px solid #5461be;
+  border-radius: 4px;
+  padding: 0.8vh 0.5vw;
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-size: 2vh;
+  font-weight: 475;
+
+  img {
+    height: 2.2vh;
+  }
+}
+.activeAmenity {
+  background: #5461be;
+  color: white;
+
+  img {
+    filter: brightness(0) invert(1); // makes the icon white
+  }
+}
+
+.changeBed {
+}
+
+.inputText {
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  width: 97%;
+  outline: none;
+  font-family: "Karla", sans-serif;
+  padding: 1.4vh 0.5vw;
+  font-size: 1.9vh;
+}
+
+.changeReason {
+  textarea {
+    resize: none;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid #cfcfcf;
+    padding: 1vh 0.5vw;
+    width: 97%;
+  }
+}
+
+.sectionHeadingS {
+  font-size: 1.9vh;
+  font-weight: 510;
+  color: #4a4a4a;
+}
+
+.dataRA {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+.selectBedHeading {
+  color: #25307f;
+  font-size: 2.1vh;
+  font-weight: 550;
+  display: flex;
+  align-items: center;
+  gap: 0.4vw;
+  img {
+    height: 1.7vh;
+  }
+}
+
+.dropdown {
+  position: relative;
+  width: 100%; // Use a percentage of viewport width for the dropdown
+  // min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  border: 1px solid #cfcfcf;
+
+  border-radius: 4px;
+
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 5.2vh;
+  &:hover {
+    border: 1px solid #cfcfcf;
+  }
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
+  border-radius: 4px;
+  border: 1px solid #cfcfcf;
+  width: 99.5%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.2vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #f5f8fd;
+  }
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}
+
+.newRoomPrefContain {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+}
+
+.newRoomPrefContain {
+  margin-top: 1.5vh;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2vh;
+  gap: 0.5vw;
+}
+
+.backBtn {
+  color: #58595b;
+  height: 3.4vh;
+  cursor: pointer;
+}

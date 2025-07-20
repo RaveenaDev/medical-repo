@@ -1,0 +1,368 @@
+.container1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 90%;
+  height: 100%;
+  margin-left: 1.2vw;
+  margin-top: 2vh;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  p {
+    font-size: 2.4vh;
+    font-weight: 500;
+    color: #25307f;
+  }
+
+  .attachments {
+    background-color: #eaebf3;
+    display: flex;
+    border-radius: 5px;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+    opacity: 100%;
+    height: 3.6vh;
+  }
+
+  .tooltipWrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      padding: 0.6vh;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    &:hover img {
+      //  background-color: #d4d8e6;
+    }
+
+    &:hover .tooltipText {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  .tooltipText {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dae4ff;
+    color: black;
+    padding: 0.4vh 0.5vw;
+    border-radius: 4px;
+    font-size: 1.4vh;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    z-index: 10;
+  }
+}
+
+h4 {
+  margin-top: 1rem;
+  color: #25307f;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.imagePreviewRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 5px 0;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+}
+
+.uploadedImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.removeBtn {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  background: none;
+  height: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: black;
+    transform: scale(1.15);
+  }
+}
+
+.videoPreviewRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 20px 0;
+}
+
+.videoWrapper {
+  position: relative;
+  width: 150px;
+  height: 100px;
+}
+
+.uploadedVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.removeBtn {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  background: none;
+  height: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: black;
+    transform: scale(1.15);
+  }
+}
+
+.row2 {
+  margin-top: 4vh;
+}
+
+.input {
+  font-family: "Inter", sans-serif;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  width: 40vw;
+  //width: 97.5%;
+  padding: 1.9vh 0.5vw;
+  border-radius: 5px;
+  //margin-top: 6vh;
+}
+.question {
+  font-family: "Inter", sans-serif;
+  font-size: 1.9vh;
+  color: #4a4a4a;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.row3 {
+  margin-top: 3vh;
+  display: flex;
+  gap: 4vw;
+}
+
+.inputSmall {
+  font-family: "Inter", sans-serif;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  width: 20vw;
+  //width: 97.5%;
+  padding: 1.9vh 0.5vw;
+  border-radius: 5px;
+  //margin-top: 6vh;
+}
+
+.row4 {
+  margin-top: 3vh;
+}
+
+.row5 {
+  margin-top: 3vh;
+  display: flex;
+  gap: 4vw;
+}
+
+.questionBlue {
+  font-family: "Inter", sans-serif;
+  font-size: 1.9vh;
+  color: #25307f;
+}
+
+.row6 {
+  margin-top: 3vh;
+}
+
+.row7 {
+  display: flex;
+  justify-content: center;
+  margin-top: 10vh;
+  button {
+    background-color: #25307f;
+    color: white;
+    font-size: 1.7vh;
+    font-weight: 500;
+    font-family: "Karla", sans-serif;
+    padding: 10px 60px 10px 60px;
+    border-radius: 6px;
+  }
+}
+
+// Colors
+$color-1: #2ecc71;
+$color-2: #3498db;
+$color-3: #f1c40f;
+$color-4: #e74c3c;
+.customRadios {
+  display: flex;
+  gap: 20px;
+  margin-top: 1.5vh;
+
+  label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 6px;
+    font-size: 1.6vh;
+
+    input[type="radio"] {
+      display: none;
+    }
+
+    .circle {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 2vh;
+      height: 2vh;
+      border-radius: 50%;
+      border: 2px solid #25307f;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    .checked {
+      background: #25307f;
+      border-color: #25307f;
+    }
+    .checked img {
+      opacity: 1;
+      filter: brightness(0) invert(1);
+    }
+    .circle img {
+      opacity: 0.8;
+      width: 2vh;
+      height: 2vh;
+    }
+  }
+}
+
+.noQuestionMsg {
+  background-color: #f2f5ff;
+  color: #25307F;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #e0e0e0;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.customQuestion {
+  margin-top: 4vh;
+  margin-left: 0.5vw;
+  padding: 2vh 1vw;
+  width: 39vw;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(66, 114, 203, 1);
+  input {
+    width: 97%;
+    outline: none;
+    border: 2px solid $color-2;
+    font-family: "Inter", sans-serif;
+    padding: 1.9vh 0.5vw;
+    border-radius: 20px;
+  }
+
+  .customQuestionBtns {
+    display: flex;
+    margin-top: 1vh;
+    gap: 1vw;
+    justify-content: flex-end;
+
+    button {
+      padding: 0.5vh 1vw;
+      font-size: 1.9vh;
+    }
+
+    .cancelBtn {
+      background-color: white;
+      color: #25307f;
+      border: 1px solid #25307f;
+      border-radius: 4px;
+    }
+
+    .saveBtn {
+      background: #25307f;
+      color: white;
+      border-radius: 4px;
+      font-weight: 350;
+    }
+  }
+}
+
+.dynamicQuestion {
+  margin-top: 4vh;
+
+  p {
+    font-size: 1.9vh;
+    color: #4a4a4a;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1vh;
+}
+
+.removeButton {
+  background: transparent;
+  border: none;
+  color: #ff4d4f;
+  font-size: 2vh;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}

@@ -124,3 +124,10 @@ button:hover {
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+[contenteditable][data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  pointer-events: none;
+  display: block;
+}
