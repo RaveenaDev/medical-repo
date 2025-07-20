@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import inventoryStyles from "./Inventory.module.scss";
 import CommonPanelMini from "../components/CommonPanelMini.jsx";
 import AddItemModal from "./components/addItem/AddItemModal.jsx";
@@ -34,8 +34,10 @@ const Inventory = () => {
     dispatch(getInventoryByDepartment());
   }, []);
 
-  const inventoryData = useSelector(
-    (state) => state.doctor.inventory.data || []
+  const rawInventoryData = useSelector((state) => state.doctor.inventory.data);
+  const inventoryData = useMemo(
+    () => rawInventoryData || [],
+    [rawInventoryData]
   );
   const [selectedCategory, setSelectedCategory] = useState("");
   useEffect(() => {
