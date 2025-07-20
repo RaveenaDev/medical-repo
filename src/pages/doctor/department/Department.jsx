@@ -14,20 +14,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  Box,
-  Button,
-  FormControl,
-  IconButton,
-  MenuItem,
-  Modal,
-  TextField,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,98 +52,8 @@ const getDateRange = (filterType) => {
   }
 };
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
-const doctors = [
-  {
-    id: 1,
-    name: "Deepak Singh",
-    role: "Doctor",
-    avatar: "https://randomuser.me/api/portraits/men/11.jpg",
-  },
-  {
-    id: 2,
-    name: "Raj Malhotra",
-    role: "Practitioner Doctor",
-    avatar: "https://randomuser.me/api/portraits/men/24.jpg",
-  },
-  {
-    id: 3,
-    name: "Chandan Shukla",
-    role: "Junior Doctor",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: 4,
-    name: "Anmol Arora",
-    role: "Junior Doctor",
-    avatar: "https://randomuser.me/api/portraits/men/45.jpg",
-  },
-];
-
-const staffMembers = [
-  {
-    id: 1,
-    name: "Ritika Bhola",
-    role: "Nurse Manager",
-    avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-  },
-  {
-    id: 2,
-    name: "Sonia Kapoor",
-    role: "Receptionist",
-    avatar: "https://randomuser.me/api/portraits/women/34.jpg",
-  },
-  {
-    id: 3,
-    name: "Vikram Joshi",
-    role: "Lab Technician",
-    avatar: "https://randomuser.me/api/portraits/men/56.jpg",
-  },
-  {
-    id: 4,
-    name: "Pooja Mehta",
-    role: "Pharmacist",
-    avatar: "https://randomuser.me/api/portraits/women/67.jpg",
-  },
-];
-
-const inventoryDatas = [
-  { name: "Medicines", value: 200, percentage: "15" },
-  { name: "Surgical tools", value: 150, percentage: "29" },
-  { name: "Devices", value: 100, percentage: "19" },
-  { name: "Emergency Supplies", value: 105, percentage: "29" },
-];
-
-const doctors1 = [
-  { _id: "607f1f77bcf86cd799439011", name: "Dr. Amit Sharma" },
-  { _id: "607f1f77bcf86cd799439012", name: "Dr. Priya Singh" },
-  { _id: "607f1f77bcf86cd799439013", name: "Dr. Rohit Patel" },
-  { _id: "607f1f77bcf86cd799439014", name: "Dr. Neha Verma" },
-  { _id: "607f1f77bcf86cd799439015", name: "Dr. Sunita Rao" },
-];
-
 /* A simple color palette for the Pie chart slices */
 const COLORS = ["#25307F", "#5461BE", "#586EB4", "#DAE4FF"];
-
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight: personName.includes(name)
-      ? theme.typography.fontWeightMedium
-      : theme.typography.fontWeightRegular,
-  };
-}
 
 const Department = () => {
   const dispatch = useDispatch();
@@ -259,11 +155,6 @@ const Department = () => {
 
   const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   const [department, setDepartment] = useState({
     name: "",
     head: "",
@@ -271,29 +162,6 @@ const Department = () => {
     nurses: [],
     // services: []
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setDepartment((prev) => ({
-      ...prev,
-      [name]: name === "head" && value !== "" ? JSON.parse(value) : value,
-    }));
-  };
-
-  const handleMultipleChange = (event) => {
-    const {
-      target: { name, value },
-    } = event;
-
-    setDepartment((prevDepartment) => ({
-      ...prevDepartment,
-      [name]: typeof value === "string" ? value.split(",") : value,
-    }));
-  };
-
-  const handleAdd = () => {
-    console.log("Adding new Dep... : ", department);
-  };
 
   // Date range for patient overview
   const [filter, setFilter] = useState("month");
@@ -360,7 +228,6 @@ const Department = () => {
 
   const totalCases_graph = procedureStats?.totalCases || 0;
   const percentageChange = procedureStats?.percentageChange || null;
-  const breakdown = procedureStats?.breakdown || {};
 
   const doctors = useSelector((state) => state.doctor.doctors) || [];
   const staff = useSelector((state) => state.doctor.staff) || [];
@@ -369,15 +236,9 @@ const Department = () => {
   const departmentName = useSelector(
     (state) => state.authentication.departmentName
   );
-  const inventoryData =
-    useSelector((state) => state.doctor.inventoryData) || [];
 
   const totalInventory =
     useSelector((state) => state.doctor.totalInventory) || 0;
-
-  const selectedDoctorObjects = doctors.filter((doc) =>
-    selectedDoctors.has(doc._id)
-  );
 
   // Add state for overlay
   const [showAssignModal, setShowAssignModal] = useState(false);
@@ -484,15 +345,6 @@ const Department = () => {
 
     return null;
   };
-
-  // Uncomment these console logs to debug the data
-
-  // console.log("Inventory Data: ", inventoryData);
-  // console.log("Staff List: ", staff);
-  // console.log("Doctors List: ", doctors);
-  // console.log("Chart Data: ", procedureStats);
-  // console.log("Hospital Statistics: ", hospitalStatistics);
-  // console.log("Patient Overview: ", patientOverview);
 
   return (
     <>
@@ -888,7 +740,7 @@ const Department = () => {
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <g clip-path="url(#clip0_3883_12012)">
+                      <g clipPath="url(#clip0_3883_12012)">
                         <path
                           d="M28.1275 14.4338V16.5976H2.88V8.84009H0.5V24.3576H2.88V20.8113H28.1275V24.6538H30.5V14.4313L28.1275 14.4338Z"
                           fill="#25307F"
