@@ -11,12 +11,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   admitPatient,
   getAdmissionRequests,
-  getAdmittedPatients,
+  getAdmittedPatients, getAppointmentsOfToday,
   getApprovedAdmissions,
 } from "../../../components/State/Doctor/Action.js";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import dayjs from "dayjs";
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -109,6 +110,24 @@ const PatientsList = () => {
       },
     ],
   };
+
+  const [selectedDate, setSelectedDate] = useState(
+      dayjs().format("YYYY-MM-DD")
+  );
+
+  useEffect(() => {
+    const startDate = dayjs(selectedDate).startOf("day").toISOString();
+    const endDate = dayjs(selectedDate).endOf("day").toISOString();
+
+    if (selectedDate) {
+      dispatch(getAppointmentsOfToday(startDate, endDate));
+    }
+
+  }, [dispatch, selectedDate]);
+
+  const appointments = useSelector((store) => store.doctor.appointmentsOfToday);
+  const todayAppointments = appointments ? appointments.length : 0;
+
   const doctorName = useSelector((store) => store.authentication.userName);
   return (
     <div className="patientsListDoctorContainer">
@@ -120,7 +139,7 @@ const PatientsList = () => {
       <div className="greeting">
         <h4 className="heading">Good Morning, Dr. {doctorName}</h4>
         <p>
-          I hope you are in good mood because there are 45 patients waiting for
+          I hope you are in good mood because there are {todayAppointments} patients waiting for
           you.
         </p>
       </div>

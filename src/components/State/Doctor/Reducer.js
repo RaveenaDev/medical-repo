@@ -14,7 +14,7 @@ import {
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_APPOINTMENTS_BY_DATE,
+  GET_APPOINTMENTS_BY_DATE, GET_APPOINTMENTS_OF_TODAY,
   GET_APPROVED_ADMISSIONS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
@@ -85,6 +85,7 @@ const initialState = {
   totalInventory: null,
   doctorNotes: [],
   appointmentsByDate: [],
+  appointmentsOfToday: [],
   inventory: [],
   generatedPrescriptionsByAI: null,
   admittedPatients: [],
@@ -334,6 +335,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentsByDate: action.payload.appointments,
+      };
+
+    case GET_APPOINTMENTS_OF_TODAY:
+      return {
+        ...state,
+        appointmentsOfToday: action.payload.appointments,
       };
 
     case GENERATE_PRESCRIPTIONS_WITH_AI:

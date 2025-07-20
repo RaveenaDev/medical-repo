@@ -76,52 +76,13 @@ const generateNextDates = (count = 11) => {
 
 const DATES = generateNextDates();
 
-const DoctorOverview = () => {
+const DoctorOverview = ({todayAppointments}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(
     dayjs().format("YYYY-MM-DD")
   );
   const navigate = useNavigate();
-
-  const dummyTotalAppointments = [
-    {
-      caseId: "CASE1234567890",
-      patient: { name: "John Doe" },
-      doctor: { name: "Dr. Smith" },
-      typeVisit: "Follow-up",
-      department: { name: "Cardiology" },
-      tokenNumber: "TKN001",
-      status: "Ongoing",
-    },
-    {
-      caseId: "CASE2345678901",
-      patient: { name: "Jane Roe" },
-      doctor: { name: "Dr. Adams" },
-      typeVisit: "Consultation",
-      department: { name: "Neurology" },
-      tokenNumber: "TKN002",
-      status: "Waiting",
-    },
-    {
-      caseId: "CASE3456789012",
-      patient: { name: "Michael Lee" },
-      doctor: { name: "Dr. Watson" },
-      typeVisit: "First Visit",
-      department: { name: "Orthopedics" },
-      tokenNumber: "TKN003",
-      status: "Waiting",
-    },
-    {
-      caseId: "CASE4567890123",
-      patient: { name: "Emily Clark" },
-      doctor: { name: "Dr. Patel" },
-      typeVisit: "Follow-up",
-      department: { name: "Pediatrics" },
-      tokenNumber: "TKN004",
-      status: "Completed",
-    },
-  ];
 
   const phases = [
     { name: "Early stage", count: 26, color: "#25307F" },
@@ -411,6 +372,7 @@ const DoctorOverview = () => {
           <CommonPanel
             setSelectedDate={setSelectedDate}
             selectedDate={selectedDate}
+            todayAppointments={todayAppointments}
           />
 
           <Grid

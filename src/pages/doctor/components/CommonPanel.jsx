@@ -8,6 +8,7 @@ import Notifications from "../../../components/NotificationFunc/Notification.jsx
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getAppointmentsOfToday,
   getInpatients,
   getPatients,
   getRooms,
@@ -15,28 +16,25 @@ import {
 } from "../../../components/State/Doctor/Action.js";
 
 const CommonPanel = ({
-  setSelectedDate,
-  selectedDate,
   setSelectedDepartment,
   selectedDepartment,
 }) => {
   const navigate = useNavigate();
 
-  const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
 
-  // Default to today's date if props are not provided
-  const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
-
-  const handleDateChange = (newValue) => {
-    if (setSelectedDate) {
-      setSelectedDate(newValue);
-    } else {
-      setInternalSelectedDate(newValue);
-    }
-  };
+  const [selectedDate, setSelectedDate] = useState(
+      dayjs().format("YYYY-MM-DD")
+  );
 
   useEffect(() => {
+    const startDate = dayjs(selectedDate).startOf("day").toISOString();
+    const endDate = dayjs(selectedDate).endOf("day").toISOString();
+
+    if (selectedDate) {
+      dispatch(getAppointmentsOfToday(startDate, endDate));
+    }
+
     dispatch(getPatients());
     dispatch(getInpatients());
     dispatch(getSurgeries());
@@ -44,6 +42,9 @@ const CommonPanel = ({
   }, [dispatch]);
 
   const doctor = useSelector((store) => store.doctor);
+
+  const appointments = useSelector((store) => store.doctor.appointmentsOfToday);
+  const todayAppointments = appointments ? appointments.length : 0;
 
   const noOfPatients = doctor.totalPatients;
   const patients = doctor.patients;
@@ -84,7 +85,7 @@ const CommonPanel = ({
         <div className={ayu.cardhandling}>
           <h4 className={ayu.heading}>Good Morning, Dr. {doctorName}</h4>
           <p>
-            I hope you are in good mood because there are 45 patients waiting
+            I hope you are in good mood because there are {todayAppointments} patients waiting
             for you.
           </p>
         </div>

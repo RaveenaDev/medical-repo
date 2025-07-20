@@ -20,7 +20,7 @@ import {
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_APPOINTMENTS_BY_DATE,
+  GET_APPOINTMENTS_BY_DATE, GET_APPOINTMENTS_OF_TODAY,
   GET_APPROVED_ADMISSIONS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
@@ -683,6 +683,30 @@ export const getAppointmentByDate =
       console.log(error);
     }
   };
+
+export const getAppointmentsOfToday =
+    (startDate, endDate) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+        const departmentId = localStorage.getItem("departmentId");
+
+        const { data } = await axios.get(`${API_URL}/getAppointments`, {
+          params: {
+            start: startDate,
+            end: endDate,
+            departmentId: departmentId,
+          }, // Sending status as a query parameter
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        });
+
+        // console.log("All Appointments below: ", data);
+        dispatch({ type: GET_APPOINTMENTS_OF_TODAY, payload: data });
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
 export const addInventoryItem = (itemData) => async (dispatch) => {
   try {
