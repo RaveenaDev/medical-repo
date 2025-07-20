@@ -12,23 +12,31 @@ import Refer from "./Refer";
 import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
-import {generatePrescriptionsWithAI, submitConsultation} from "../../../../components/State/Doctor/Action.js";
+import {
+  generatePrescriptionsWithAI,
+  submitConsultation,
+} from "../../../../components/State/Doctor/Action.js";
 import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
 
-const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setCompleteData,selectedComponent,setSelectedComponent}) => {
-
+const ConsultBody = ({
+  selectedForm,
+  appointments,
+  onSuccess,
+  completeData,
+  setCompleteData,
+  selectedComponent,
+  setSelectedComponent,
+}) => {
   const [final, setFinal] = useState({
     doctor: null,
     patient: null,
     appointment: null,
     department: null,
     action: null,
-    consultationData: null
-  })
-
-  console.log("Selected Form : ",selectedForm)
+    consultationData: null,
+  });
 
   const [modalData, setModalData] = useState(null);
 
@@ -123,36 +131,29 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
     (app) => app.status === "Ongoing"
   );
 
-  // console.log("On: ",ongoingAppointment)
-
   useEffect(() => {
     setFinal({
       ...final,
       patient: ongoingAppointment?.patient._id,
       department: ongoingAppointment?.department._id,
       doctor: ongoingAppointment?.doctor._id,
-      appointment: ongoingAppointment?._id
+      appointment: ongoingAppointment?._id,
     });
   }, [ongoingAppointment]);
 
   useEffect(() => {
-    console.log("Selected Component: ",selectedComponent)
     if (
       selectedComponent === "PerceptionAndMedicines" ||
-        selectedComponent === "static-2"
+      selectedComponent === "static-2"
     ) {
-
       const aiData = {
         ...completeData,
         patientId: ongoingAppointment?.patient._id,
-      }
-      console.log("Data for AI: ", aiData);
+      };
+
       dispatch(generatePrescriptionsWithAI(aiData));
     }
-  }, [
-    selectedComponent,
-    dispatch,
-  ]);
+  }, [selectedComponent, dispatch]);
 
   if (!ongoingAppointment || ongoingAppointment.length === 0) {
     return (
@@ -161,8 +162,6 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
       </div>
     );
   }
-
-  console.log("App: ",appointments)
 
   const openComplete = () => setActiveModal("complete");
   const openRefer = () => setActiveModal("refer");
@@ -188,52 +187,44 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
     nextAppointment = futureAppointments[0] || null;
   }
 
-  // console.log("Ongoing: ",ongoingAppointment)
-  // console.log("Next: ",nextAppointment)
-
   const handleComplete = () => {
     const updatedFinal = {
       ...final,
-      action: 'complete',
-      consultationData: completeData
-    }
+      action: "complete",
+      consultationData: completeData,
+    };
 
-    console.log("Final: ",updatedFinal)
-
-    dispatch(submitConsultation(updatedFinal))
-    setCompleteData({})
+    dispatch(submitConsultation(updatedFinal));
+    setCompleteData({});
     onSuccess();
   };
 
   const handleRefer = () => {
-
     const updatedFinal = {
       ...final,
-      action: 'refer',
-      consultationData: completeData
-    }
-    // console.log("Final: ", updatedFinal);
-    setActiveModal("refer")
-    setModalData(updatedFinal)
+      action: "refer",
+      consultationData: completeData,
+    };
+
+    setActiveModal("refer");
+    setModalData(updatedFinal);
   };
 
   const handleSchedule = () => {
-
     const updatedFinal = {
       ...final,
-      action: 'schedule',
-      consultationData: completeData
-    }
-    console.log("Final: ", updatedFinal);
+      action: "schedule",
+      consultationData: completeData,
+    };
+
     setActiveModal("scheduleTreatment");
-    setModalData(updatedFinal)
+    setModalData(updatedFinal);
   };
 
   const handleAddSection = (sectionName) => {
     setCustomSections([...customSections, sectionName]);
     setSelectedComponent(sectionName);
   };
-
 
   if (!appointments || appointments.length === 0) {
     return (
@@ -254,24 +245,22 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
           </p>
           <p className={styles["pat-status-l"]}>{ongoingAppointment.status}</p>
         </div>
-        {
-          nextAppointment ? (
-              <div className={styles["h2-right"]} onClick={openNextAppointment}>
-                <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
-                <p className={styles["pat-name-r"]}>
-                  {nextAppointment.patient?.name}
-                </p>
-                <p className={styles["pat-status-r"]}>Next</p>
-              </div>
-          ) :
-              (
-                  <div style={{display:'flex',justifyContent:'center'}} className={styles["h2-right"]}>
-                    <p className={styles["pat-name-r"]}>
-                      No next appointments
-                    </p>
-                  </div>
-              )
-        }
+        {nextAppointment ? (
+          <div className={styles["h2-right"]} onClick={openNextAppointment}>
+            <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
+            <p className={styles["pat-name-r"]}>
+              {nextAppointment.patient?.name}
+            </p>
+            <p className={styles["pat-status-r"]}>Next</p>
+          </div>
+        ) : (
+          <div
+            style={{ display: "flex", justifyContent: "center" }}
+            className={styles["h2-right"]}
+          >
+            <p className={styles["pat-name-r"]}>No next appointments</p>
+          </div>
+        )}
       </div>
 
       {/* Main Panel */}
@@ -279,10 +268,10 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
         {/* Left Panel */}
         <div className={styles["left-panel"]}>
           <div
-              className={`${styles["lp-1"]} ${
-                  selectedComponent === "PatientInfo" ? styles.active : ""
-              }`}
-              onClick={() => setSelectedComponent("PatientInfo")}
+            className={`${styles["lp-1"]} ${
+              selectedComponent === "PatientInfo" ? styles.active : ""
+            }`}
+            onClick={() => setSelectedComponent("PatientInfo")}
           >
             <img
               src={ongoingPatients[0].profileURL}
@@ -299,155 +288,159 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
             </div>
           </div>
 
-          {
-            !selectedForm ? (
-                  <>
-                    <div
-                        className={`${styles["lp-2"]} ${
-                            selectedComponent === "MedicalHistory" ? styles.active : ""
-                        }`}
-                        onClick={() => setSelectedComponent("MedicalHistory")}
-                    >
-                      <p>Medical History</p>
-                    </div>
-                    <div
-                        className={`${styles["lp-3"]} ${
-                            selectedComponent === "CurrentMedication" ? styles.active : ""
-                        }`}
-                        onClick={() => setSelectedComponent("CurrentMedication")}
-                    >
-                      <p>Current Medication</p>
-                    </div>
-                    <div
-                        className={`${styles["lp-4"]} ${
-                            selectedComponent === "DiagnosisAndVital" ? styles.active : ""
-                        }`}
-                        onClick={() => setSelectedComponent("DiagnosisAndVital")}
-                    >
-                      <p>Diagnosis & Vital</p>
-                    </div>
-                    <div
-                        className={`${styles["lp-5"]} ${
-                            selectedComponent === "PerceptionAndMedicines" ? styles.active : ""
-                        } ${!completeData.medicalHistory ? styles.disabled : ""}`}
-                        onClick={() => {
-                          if (completeData.medicalHistory) {
-                            setSelectedComponent("PerceptionAndMedicines");
-                          }
-                        }}
-                    >
-                      <p>Prescription & Medicines</p>
-                    </div>
-                    <div
-                        onClick={() => setSelectedComponent("TreatmentAndTest")}
-                        className={`${styles["lp-6"]} ${
-                            selectedComponent === "TreatmentAndTest" ? styles.active : ""
-                        }`}
-                    >
-                      <p>Treatment and Tests</p>
-                    </div>
+          {!selectedForm ? (
+            <>
+              <div
+                className={`${styles["lp-2"]} ${
+                  selectedComponent === "MedicalHistory" ? styles.active : ""
+                }`}
+                onClick={() => setSelectedComponent("MedicalHistory")}
+              >
+                <p>Medical History</p>
+              </div>
+              <div
+                className={`${styles["lp-3"]} ${
+                  selectedComponent === "CurrentMedication" ? styles.active : ""
+                }`}
+                onClick={() => setSelectedComponent("CurrentMedication")}
+              >
+                <p>Current Medication</p>
+              </div>
+              <div
+                className={`${styles["lp-4"]} ${
+                  selectedComponent === "DiagnosisAndVital" ? styles.active : ""
+                }`}
+                onClick={() => setSelectedComponent("DiagnosisAndVital")}
+              >
+                <p>Diagnosis & Vital</p>
+              </div>
+              <div
+                className={`${styles["lp-5"]} ${
+                  selectedComponent === "PerceptionAndMedicines"
+                    ? styles.active
+                    : ""
+                } ${!completeData.medicalHistory ? styles.disabled : ""}`}
+                onClick={() => {
+                  if (completeData.medicalHistory) {
+                    setSelectedComponent("PerceptionAndMedicines");
+                  }
+                }}
+              >
+                <p>Prescription & Medicines</p>
+              </div>
+              <div
+                onClick={() => setSelectedComponent("TreatmentAndTest")}
+                className={`${styles["lp-6"]} ${
+                  selectedComponent === "TreatmentAndTest" ? styles.active : ""
+                }`}
+              >
+                <p>Treatment and Tests</p>
+              </div>
+            </>
+          ) : (
+            <>
+              {selectedForm?.sections?.map((section, index) => {
+                const isDisabled =
+                  section.name === "Prescription & Medicines" &&
+                  !completeData?.medicalHistory;
 
-                  </>
-              ) : (
-                <>
-                  {selectedForm?.sections?.map((section, index) => {
-                    console.log("Sections: ",section)
-                    const isDisabled =
-                        section.name === "Prescription & Medicines" && !completeData?.medicalHistory;
-
-                    return (
-                        <div
-                            key={section.id}
-                            className={`${styles["lp-6"]} ${
-                                selectedComponent === section.id ? styles.active : ""
-                            } ${isDisabled ? styles.disabled : ""}`}
-                            onClick={() => {
-                              if (!isDisabled) {
-                                setSelectedComponent(section.id);
-                              }
-                            }}
-                        >
-                          <p>{section.name}</p>
-                        </div>
-                    );
-                  })}
-                </>
-
-            )
-          }
+                return (
+                  <div
+                    key={section.id}
+                    className={`${styles["lp-6"]} ${
+                      selectedComponent === section.id ? styles.active : ""
+                    } ${isDisabled ? styles.disabled : ""}`}
+                    onClick={() => {
+                      if (!isDisabled) {
+                        setSelectedComponent(section.id);
+                      }
+                    }}
+                  >
+                    <p>{section.name}</p>
+                  </div>
+                );
+              })}
+            </>
+          )}
 
           {customSections.map((section, index) => (
-              <div
-                  key={index}
-                  className={`${styles["lp-6"]} ${
-                      selectedComponent === section ? styles.active : ""
-                  }`}
-                  onClick={() => setSelectedComponent(section)}
-              >
-                <p>{section}</p>
-              </div>
+            <div
+              key={index}
+              className={`${styles["lp-6"]} ${
+                selectedComponent === section ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent(section)}
+            >
+              <p>{section}</p>
+            </div>
           ))}
 
           <div className={styles["lp-7"]} onClick={openAddQuestion}>
-            <Plus className={styles["lp-7-icon"]} size={38}/>
+            <Plus className={styles["lp-7-icon"]} size={38} />
             <p>Add Question</p>
           </div>
 
           <div className={styles["lp-8"]}>
             <button onClick={handleComplete}>
-              <CircleCheck size={15}/>
+              <CircleCheck size={15} />
               <p>Complete</p>
             </button>
             <button className={styles["lp-8-refBtn"]} onClick={handleRefer}>
-              <img src="/assets/healthicons_referral.svg" sizes={""} alt=""/>
+              <img src="/assets/healthicons_referral.svg" sizes={""} alt="" />
               <p>Refer</p>
             </button>
           </div>
           <button
-              type="button"
-              className={styles["btn"]}
-              onClick={handleSchedule}
+            type="button"
+            className={styles["btn"]}
+            onClick={handleSchedule}
           >
-            <CalendarCheck className={styles["calendar-icon2"]}/>
+            <CalendarCheck className={styles["calendar-icon2"]} />
             <p>Schedule Treatment</p>
           </button>
         </div>
         {activeModal === "complete" && (
-            <>
-              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
-              <div className={styles["complete-modal"]}>
-                <Complete onClose={closeModal} onComplete={openNextAppointment}/>
-              </div>
-            </>
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["complete-modal"]}>
+              <Complete onClose={closeModal} onComplete={openNextAppointment} />
+            </div>
+          </>
         )}
         {activeModal === "refer" && (
-            <>
-              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
-              <div className={styles["refer-modal"]}>
-                <Refer setCompleteData={setCompleteData} onClose={closeModal} modalData={modalData} patient={ongoingAppointment.patient} onSuccess={onSuccess}/>
-              </div>
-            </>
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["refer-modal"]}>
+              <Refer
+                setCompleteData={setCompleteData}
+                onClose={closeModal}
+                modalData={modalData}
+                patient={ongoingAppointment.patient}
+                onSuccess={onSuccess}
+              />
+            </div>
+          </>
         )}
         {activeModal === "nextAppointment" && (
-            <>
-              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
-              <div className={styles["nextAppointment-modal"]}>
-                <NextAppointment
-                    onClose={closeModal}
-                    nextAppointment={nextAppointment}
-                />
-              </div>
-            </>
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["nextAppointment-modal"]}>
+              <NextAppointment
+                onClose={closeModal}
+                nextAppointment={nextAppointment}
+              />
+            </div>
+          </>
         )}
         {activeModal === "addQuestion" && (
-            <>
-              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
-              <div className={styles["addQuestion-modal"]}>
-                <AddQuestion
-                    onClose={closeModal}
-                    onAddSection={handleAddSection}
-                />
-              </div>
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["addQuestion-modal"]}>
+              <AddQuestion
+                onClose={closeModal}
+                onAddSection={handleAddSection}
+              />
+            </div>
           </>
         )}{" "}
         {activeModal === "scheduleTreatment" && (
@@ -455,7 +448,7 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["scheduleTreatment-modal"]}>
               <ScheduleTreatment
-                  setCompleteData={setCompleteData}
+                setCompleteData={setCompleteData}
                 onClose={closeModal}
                 onAddSection={handleAddSection}
                 modalData={modalData}
@@ -467,83 +460,101 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
         {/* Right Panel */}
         <div className={styles["right-panel"]}>
           <div className={styles["rp-content"]}>
+            {selectedForm &&
+              selectedForm.sections?.some(
+                (sec) => sec.id === selectedComponent
+              ) &&
+              (() => {
+                const currentSection = selectedForm.sections.find(
+                  (sec) => sec.id === selectedComponent
+                );
 
-            {selectedForm && selectedForm.sections?.some(sec => sec.id === selectedComponent) && (() => {
-              const currentSection = selectedForm.sections.find(sec => sec.id === selectedComponent);
+                if (!currentSection) return null;
 
-              if (!currentSection) return null;
-
-              // Check for static Medical History
-              if (currentSection.isStatic && currentSection.name === "Medical History") {
-                return (
+                // Check for static Medical History
+                if (
+                  currentSection.isStatic &&
+                  currentSection.name === "Medical History"
+                ) {
+                  return (
                     <MedicalHistory
-                        patient={ongoingPatients[0]}
-                        existingData={completeData}
-                        selectedComponent='medicalHistory'
-                        onConfirm={(medicalData) => {
-                          setCompleteData((prev) => ({
-                            ...prev,
-                            medicalHistory: medicalData
-                          }));
-
-                          const currentIndex = selectedForm.sections.findIndex(sec => sec.id === selectedComponent);
-                          const nextSection = selectedForm.sections[currentIndex + 1];
-                          if (nextSection) {
-                            setSelectedComponent(nextSection.id);
-                          }
-                        }}
-                    />
-                );
-              }
-
-              // Check for static Prescription & Medicines
-              if (currentSection.isStatic && currentSection.name === "Prescription & Medicines") {
-                return (
-                    <PerceptionAndMedicines
-                        patient={ongoingAppointment.patient}
-                        existingData={completeData}
-                        selectedComponent='perceptionsAndMedicines'
-                        completeData={completeData}
-                        generatedPrescriptions={generatedPrescriptionsWithAI}
-                        onConfirm={(perceptionData) => {
-                          setCompleteData((prev) => ({
-                            ...prev,
-                            perceptionsAndMedicines: perceptionData
-                          }));
-
-                          const currentIndex = selectedForm.sections.findIndex(sec => sec.id === selectedComponent);
-                          const nextSection = selectedForm.sections[currentIndex + 1];
-                          if (nextSection) {
-                            setSelectedComponent(nextSection.id);
-                          }
-                        }}
-                    />
-                );
-              }
-
-              // Default Dynamic Section for all others
-              return (
-                  <DynamicFormSection
-                      key={selectedComponent}
-                      section={currentSection}
-                      onConfirm={(data) => {
+                      patient={ongoingPatients[0]}
+                      existingData={completeData}
+                      selectedComponent="medicalHistory"
+                      onConfirm={(medicalData) => {
                         setCompleteData((prev) => ({
                           ...prev,
-                          [currentSection.name]: data,
+                          medicalHistory: medicalData,
                         }));
 
-                        const currentIndex = selectedForm.sections.findIndex(sec => sec.id === selectedComponent);
-                        const nextSection = selectedForm.sections[currentIndex + 1];
+                        const currentIndex = selectedForm.sections.findIndex(
+                          (sec) => sec.id === selectedComponent
+                        );
+                        const nextSection =
+                          selectedForm.sections[currentIndex + 1];
                         if (nextSection) {
                           setSelectedComponent(nextSection.id);
                         }
                       }}
+                    />
+                  );
+                }
+
+                // Check for static Prescription & Medicines
+                if (
+                  currentSection.isStatic &&
+                  currentSection.name === "Prescription & Medicines"
+                ) {
+                  return (
+                    <PerceptionAndMedicines
+                      patient={ongoingAppointment.patient}
                       existingData={completeData}
+                      selectedComponent="perceptionsAndMedicines"
+                      completeData={completeData}
+                      generatedPrescriptions={generatedPrescriptionsWithAI}
+                      onConfirm={(perceptionData) => {
+                        setCompleteData((prev) => ({
+                          ...prev,
+                          perceptionsAndMedicines: perceptionData,
+                        }));
+
+                        const currentIndex = selectedForm.sections.findIndex(
+                          (sec) => sec.id === selectedComponent
+                        );
+                        const nextSection =
+                          selectedForm.sections[currentIndex + 1];
+                        if (nextSection) {
+                          setSelectedComponent(nextSection.id);
+                        }
+                      }}
+                    />
+                  );
+                }
+
+                // Default Dynamic Section for all others
+                return (
+                  <DynamicFormSection
+                    key={selectedComponent}
+                    section={currentSection}
+                    onConfirm={(data) => {
+                      setCompleteData((prev) => ({
+                        ...prev,
+                        [currentSection.name]: data,
+                      }));
+
+                      const currentIndex = selectedForm.sections.findIndex(
+                        (sec) => sec.id === selectedComponent
+                      );
+                      const nextSection =
+                        selectedForm.sections[currentIndex + 1];
+                      if (nextSection) {
+                        setSelectedComponent(nextSection.id);
+                      }
+                    }}
+                    existingData={completeData}
                   />
-              );
-            })()}
-
-
+                );
+              })()}
 
             {selectedComponent === "PatientInfo" && (
               <PatientInfo
@@ -562,16 +573,12 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
               <MedicalHistory
                 patient={ongoingPatients[0]}
                 existingData={completeData}
-                selectedComponent='medicalHistory'
+                selectedComponent="medicalHistory"
                 onConfirm={(medicalData) => {
-                  console.log(
-                    "Data coming from medical History: ",
-                    medicalData
-                  );
                   setCompleteData((prev) => ({
                     ...prev,
-                    medicalHistory: medicalData
-                  }))
+                    medicalHistory: medicalData,
+                  }));
                   setSelectedComponent("CurrentMedication");
                 }}
               />
@@ -580,16 +587,12 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
               <CurrentMedication
                 patient={ongoingPatients[0]}
                 existingData={completeData}
-                selectedComponent='currentMedications'
+                selectedComponent="currentMedications"
                 onConfirm={(currentMedicationData) => {
-                  console.log(
-                    "Data coming from current Medications: ",
-                    currentMedicationData
-                  );
                   setCompleteData((prev) => ({
                     ...prev,
-                    currentMedications: currentMedicationData
-                  }))
+                    currentMedications: currentMedicationData,
+                  }));
                   setSelectedComponent("DiagnosisAndVital");
                 }}
               />
@@ -598,16 +601,12 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
               <DiagnosisAndVital
                 patient={ongoingPatients[0]}
                 existingData={completeData}
-                selectedComponent='diagnosisVitals'
+                selectedComponent="diagnosisVitals"
                 onConfirm={(diagnosisAndVital) => {
-                  console.log(
-                    "Data coming from diagnosis and vital : ",
-                    diagnosisAndVital
-                  );
                   setCompleteData((prev) => ({
                     ...prev,
-                    diagnosisVitals: diagnosisAndVital
-                  }))
+                    diagnosisVitals: diagnosisAndVital,
+                  }));
                   setSelectedComponent("PerceptionAndMedicines");
                 }}
               />
@@ -616,18 +615,14 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
               <PerceptionAndMedicines
                 patient={ongoingAppointment.patient}
                 existingData={completeData}
-                selectedComponent='perceptionsAndMedicines'
+                selectedComponent="perceptionsAndMedicines"
                 completeData={completeData}
                 generatedPrescriptions={generatedPrescriptionsWithAI}
                 onConfirm={(perceptionData) => {
-                  console.log(
-                    "Data coming from perceptions and medicines: ",
-                    perceptionData
-                  );
                   setCompleteData((prev) => ({
                     ...prev,
-                    perceptionsAndMedicines: perceptionData
-                  }))
+                    perceptionsAndMedicines: perceptionData,
+                  }));
                   setSelectedComponent("TreatmentAndTest");
                 }}
               />
@@ -636,17 +631,12 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
               <TreatmentAndTest
                 patient={ongoingPatients[0]}
                 existingData={completeData}
-                selectedComponent='treatmentAndTests'
+                selectedComponent="treatmentAndTests"
                 onConfirm={(treatmentAndTestsData) => {
-                  console.log(
-                    "Data coming from treatment and tests: ",
-                    treatmentAndTestsData
-                  );
-
                   setCompleteData((prev) => ({
                     ...prev,
-                    treatmentAndTests: treatmentAndTestsData
-                  }))
+                    treatmentAndTests: treatmentAndTestsData,
+                  }));
                   setSelectedComponent("TreatmentAndTest");
                 }}
               />
@@ -661,8 +651,6 @@ const ConsultBody = ({selectedForm,appointments,onSuccess,completeData,setComple
                     ...prev,
                     [selectedComponent]: data,
                   }));
-
-                  console.log("Complete Data:", completeData);
                 }}
               />
             )}
