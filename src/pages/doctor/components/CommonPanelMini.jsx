@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import ayu from "./CommonPanel.module.scss";
 import Searchbar from "../../../components/Searchbar/index.jsx";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
+import { useSelector } from "react-redux";
 
 const CommonPanelMini = () => {
+  const doctorName = useSelector((store) => store.authentication.userName);
   return (
     <>
       <div className={ayu.patients}>
@@ -13,7 +15,7 @@ const CommonPanelMini = () => {
         </div>
 
         <div className={ayu.cardhandling} style={{ marginTop: "-4rem" }}>
-          <h4 className={ayu.heading}>Good Morning, Dr. Amit Patil</h4>
+          <h4 className={ayu.heading}>Good Morning, Dr. {doctorName}</h4>
           <p>
             I hope you are in good mood because there are 45 patients waiting
             for you.

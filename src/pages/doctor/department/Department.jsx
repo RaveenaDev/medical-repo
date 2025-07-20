@@ -366,7 +366,7 @@ const Department = () => {
             <div className={style.heading}>
               {departmentName || "Department Name"}
             </div>
-            <p>Head: {doctorName || "N/A"}</p>
+            <p>Dr. {doctorName || "N/A"}</p>
           </div>
         </div>
 

@@ -109,7 +109,7 @@ const PatientsList = () => {
       },
     ],
   };
-
+  const doctorName = useSelector((store) => store.authentication.userName);
   return (
     <div className="patientsListDoctorContainer">
       <div className="listHeader">
@@ -118,7 +118,7 @@ const PatientsList = () => {
       </div>
 
       <div className="greeting">
-        <h4 className="heading">Good Morning, Dr. Amit Patil</h4>
+        <h4 className="heading">Good Morning, Dr. {doctorName}</h4>
         <p>
           I hope you are in good mood because there are 45 patients waiting for
           you.

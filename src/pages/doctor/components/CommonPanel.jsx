@@ -7,8 +7,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import {getInpatients, getPatients, getRooms, getSurgeries} from "../../../components/State/Doctor/Action.js";
-
+import {
+  getInpatients,
+  getPatients,
+  getRooms,
+  getSurgeries,
+} from "../../../components/State/Doctor/Action.js";
 
 const CommonPanel = ({
   setSelectedDate,
@@ -58,14 +62,16 @@ const CommonPanel = ({
   };
 
   const handlePatientsClick = (patients) => {
-    navigate(`/doctor/patient`, {state: {patients}})
-  }
+    navigate(`/doctor/patient`, { state: { patients } });
+  };
   const handleInpatientsClick = (inPatients) => {
     navigate(`/doctor/inpatients`, { state: { inPatients } });
   };
   const handleSurgeriesClick = (surgeries) => {
     navigate(`/doctor/surgeries`, { state: { surgeries } });
   };
+
+  const doctorName = useSelector((store) => store.authentication.userName);
 
   return (
     <>
@@ -76,8 +82,11 @@ const CommonPanel = ({
         </div>
 
         <div className={ayu.cardhandling}>
-          <h4 className={ayu.heading}>Good Morning, Dr. Amit Patil</h4>
-          <p>I hope you are in good mood because there are 45 patients waiting for you.</p>
+          <h4 className={ayu.heading}>Good Morning, Dr. {doctorName}</h4>
+          <p>
+            I hope you are in good mood because there are 45 patients waiting
+            for you.
+          </p>
         </div>
 
         <Grid
