@@ -292,11 +292,11 @@ const TotalSurgeries = () => {
                     <tbody>
                     {surgeries.map((patient, index) => (
                         <tr key={index}>
-                            <td className={styles.patientId}>{patient.id}</td>
+                            <td className={styles.patientId}>{patient.patId}</td>
                             <td className={styles.patientInfo}>
                                 <div>
-                                    <div className={styles.patientName}>{patient.name}</div>
-                                    <div className={styles.patientEmail}>{patient.email}</div>
+                                    <div className={styles.patientName}>{patient.patient.name}</div>
+                                    <div className={styles.patientEmail}>{patient.patient.email}</div>
                                 </div>
                             </td>
                             <td className={styles.date}>{patient.date}</td>
@@ -305,14 +305,14 @@ const TotalSurgeries = () => {
                             <td className={styles.status2}>
               <span
                   className={`${styles.statusBadge} ${
-                      patient.status2.toLowerCase() === "completed"
+                      patient.status.toLowerCase() === "completed"
                           ? styles.completed
-                          : patient.status2.toLowerCase() === "cancelled"
+                          : patient.status.toLowerCase() === "cancelled"
                               ? styles.cancelled
                               : styles.scheduled
                   }`}
               >
-                {patient.status2}
+                {patient.status}
               </span>
                             </td>
                             <td className={styles.actions}>

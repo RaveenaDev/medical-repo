@@ -297,17 +297,17 @@ const InPatients = () => {
                     {inPatients.map((patient, index) => (
                         <tr key={index}>
                             <td className={styles.patientId}>
-                                {truncateText(patient.patientId, 10)}
+                                {truncateText(patient.patId, 10)}
                             </td>
                             <td className={styles.patientInfo}>
                                 <div>
-                                    <div className={styles.patientName}>{patient.patientName}</div>
+                                    <div className={styles.patientName}>{patient.name}</div>
                                     <div className={styles.patientEmail}>{patient.email}</div>
                                 </div>
                             </td>
                             <td className={styles.bedNumber}>{patient.bedType}</td>
-                            <td className={styles.condition}>{patient.condition}</td>
-                            <td className={styles.doctor}>{patient.doctorName}</td>
+                            <td className={styles.condition}>{patient.admissionStatus}</td>
+                            <td className={styles.doctor}>{patient.doctor.name}</td>
                             <td className={styles.status}>
               <span
                   className={`${styles.statusBadge} ${
