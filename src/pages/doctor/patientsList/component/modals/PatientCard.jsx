@@ -10,7 +10,7 @@ const PatientCard = ({ patient }) => {
     return status.replace(/\+/g, "-").toLowerCase(); // e.g., "Admitted+FollowUp" → "admitted-followup"
   };
   // console.log("Patient in adimitted:", patient);
-  console.log("is follow up status:", isFollowUp);
+  // console.log("is follow up status:", isFollowUp);
 
   return (
     <div
