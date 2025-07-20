@@ -15,7 +15,7 @@ const ProgressTracker2 = ({ patientId }) => {
     dispatch(getProgressTrackerDetails(patientId));
   }, [dispatch]);
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
-  console.log("progressTracker details: ", progressTracker);
+  // console.log("progressTracker details: ", progressTracker);
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";

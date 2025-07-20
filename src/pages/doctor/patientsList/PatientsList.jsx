@@ -90,7 +90,7 @@ const PatientsList = () => {
       return 0; // maintain order for others
     });
 
-  console.log("Addmitted Patiemts", patientsAdmitted);
+  // console.log("Addmitted Patiemts", patientsAdmitted);
   // console.log("Admission Requests", filteredAdmissions);
   const sliderSettings = {
     dots: false,

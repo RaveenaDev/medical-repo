@@ -52,7 +52,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
 
-  console.log("patieny details: ", patientDetails);
+  // console.log("patieny details: ", patientDetails);
 
   return (
     <div>
