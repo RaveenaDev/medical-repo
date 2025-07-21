@@ -113,7 +113,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                   {patientDetails?.name || "n/a"}
                 </p>
               </div>
-              <div className={styles1.detailRow}>
+              <div className={styles.detailRow}>
                 {" "}
                 <p className={styles.patientKey}>Patient ID:</p>
                 <p className={styles.patientValue}>
