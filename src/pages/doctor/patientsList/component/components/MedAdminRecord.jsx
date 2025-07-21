@@ -6,6 +6,7 @@ import ManageMedication from "./form/ManageMedication";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientMedicalRecords } from "../../../../../components/State/Doctor/Action";
 export const combineDateAndTime = (dateStr, timeStr) => {
+  if (!dateStr || !timeStr) return null;
   try {
     const datePart = new Date(dateStr);
     const [time, modifier] = timeStr.includes(" ")
@@ -19,17 +20,21 @@ export const combineDateAndTime = (dateStr, timeStr) => {
     const combined = new Date(datePart);
     combined.setHours(hours, minutes || 0, 0, 0);
     return combined;
-  } catch (error) {
-    console.error("Error combining date and time:", error);
+  } catch {
     return null;
   }
 };
+
 const MedAdminRecord = ({ patientId }) => {
   const dispatch = useDispatch();
   const [selectedRecordId, setSelectedRecordId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    dispatch(getPatientMedicalRecords(patientId));
-  }, []);
+    dispatch(getPatientMedicalRecords(patientId)).finally(() =>
+      setLoading(false)
+    );
+  }, [dispatch, patientId]);
 
   const medicalRecords = useSelector(
     (store) => store.doctor.patientMedicalRecords
@@ -165,70 +170,79 @@ const MedAdminRecord = ({ patientId }) => {
             </div>
           </div>
           <div className={styles.tbody}>
-            {medicationData.map((item, idx) => {
-              const now = new Date();
-              const isPast = item.dateTime ? item.dateTime < now : false;
+            {loading ? (
+              <div className={styles.noData}>Loading medical records...</div>
+            ) : !Array.isArray(medicationData) ||
+              medicationData.length === 0 ? (
+              <div className={styles.noData}>No medical records available.</div>
+            ) : (
+              medicationData.map((item, idx) => {
+                const now = new Date();
+                const isPast = item.dateTime ? item.dateTime < now : false;
 
-              const rowClass =
-                item.status === "Given"
-                  ? "past"
-                  : idx === nextUpcomingIndex
-                  ? "next"
-                  : "future";
-              return (
-                <div key={idx} className={`${styles.row} ${styles[rowClass]}`}>
-                  {/* Wrap 7 cells in .rowContent */}
-                  <div className={styles.rowContent}>
-                    <div className={styles.td}>
-                      <span>{item.time}</span>
+                const rowClass =
+                  item.status === "Given"
+                    ? "past"
+                    : idx === nextUpcomingIndex
+                    ? "next"
+                    : "future";
+
+                return (
+                  <div
+                    key={idx}
+                    className={`${styles.row} ${styles[rowClass]}`}
+                  >
+                    <div className={styles.rowContent}>
+                      <div className={styles.td}>
+                        <span>{item.time ?? "—"}</span>
+                      </div>
+                      <div className={styles.td}>
+                        <span>{item.medication ?? "—"}</span>
+                      </div>
+                      <div className={styles.td}>
+                        <span>{item.dose ?? "—"}</span>
+                      </div>
+                      <div className={styles.td}>
+                        <span>{item.route ?? "—"}</span>
+                      </div>
+                      <div className={styles.td}>
+                        <span>{item.givenBy ?? "—"}</span>
+                      </div>
+                      <div className={styles.td}>
+                        <span>{item.notes ?? "—"}</span>
+                      </div>
+                      <div
+                        className={`${styles.td} ${
+                          rowClass === "past"
+                            ? styles.givenStatus
+                            : rowClass === "next"
+                            ? styles.nextStatus
+                            : styles.scheduledStatus
+                        }`}
+                      >
+                        <span>
+                          {rowClass === "past"
+                            ? "Given"
+                            : rowClass === "next"
+                            ? "Next"
+                            : "Scheduled"}
+                        </span>
+                      </div>
                     </div>
-                    <div className={styles.td}>
-                      <span>{item.medication}</span>
-                    </div>
-                    <div className={styles.td}>
-                      <span>{item.dose}</span>
-                    </div>
-                    <div className={styles.td}>
-                      <span>{item.route}</span>
-                    </div>
-                    <div className={styles.td}>
-                      <span>{item.givenBy}</span>
-                    </div>
-                    <div className={styles.td}>
-                      <span>{item.notes}</span>
-                    </div>
-                    <div
-                      className={`${styles.td} ${
-                        rowClass === "past"
-                          ? styles.givenStatus
-                          : rowClass === "next"
-                          ? styles.nextStatus
-                          : styles.scheduledStatus
-                      }`}
-                    >
-                      <span>
-                        {rowClass === "past"
-                          ? "Given"
-                          : rowClass === "next"
-                          ? "Next"
-                          : "Scheduled"}
-                      </span>
+                    <div className={`${styles.actionWrapper} ${styles.t}`}>
+                      <img
+                        onClick={() => openAction(item._id)}
+                        className={`${styles.actionTap} ${
+                          rowClass === "past" ? styles.givenAction : ""
+                        }`}
+                        src="/assets/tapAction.svg"
+                        alt=""
+                      />
                     </div>
                   </div>
-                  {/* Action column */}
-                  <div className={`${styles.actionWrapper} ${styles.t}`}>
-                    <img
-                      onClick={() => openAction(item._id)}
-                      className={`${styles.actionTap} ${
-                        rowClass === "past" ? styles.givenAction : ""
-                      }`}
-                      src="/assets/tapAction.svg"
-                      alt=""
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
       </div>

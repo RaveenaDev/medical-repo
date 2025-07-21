@@ -119,7 +119,7 @@ const Nursing = ({ patientId }) => {
             </div>
           </div>
           <div className={styles.body}>
-            {patientVitals.length === 0 ? (
+            {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
               <div className={styles.noData}>No vitals recorded.</div>
             ) : (
               [...patientVitals].map((item, idx) => {
@@ -132,28 +132,28 @@ const Nursing = ({ patientId }) => {
                   >
                     <div className={styles.td}>
                       <span className={styles.value}>
-                        {item.vitals.heartRate}
+                        {item?.vitals?.heartRate ?? "—"}
                       </span>
                       <span className={styles.unit}>bpm</span>
                     </div>
-
                     <div className={styles.td}>
                       <span className={styles.value}>
-                        {item.vitals.temperature}
+                        {item?.vitals?.temperature ?? "—"}
                       </span>
                       <span className={styles.unit}>°F</span>
                     </div>
-
                     <div className={styles.td}>
-                      <span className={styles.value}>{item.vitals.bp}</span>
+                      <span className={styles.value}>
+                        {item?.vitals?.bp ?? "—"}
+                      </span>
                       <span className={styles.unit}>mmHg</span>
                     </div>
-
                     <div className={styles.td}>
-                      <span className={styles.value}>{item.vitals.spo2}</span>
+                      <span className={styles.value}>
+                        {item?.vitals?.spo2 ?? "—"}
+                      </span>
                       <span className={styles.unit}>%</span>
                     </div>
-
                     <div className={styles.td}>
                       <span className={styles.value}>{formattedDate}</span>
                     </div>
