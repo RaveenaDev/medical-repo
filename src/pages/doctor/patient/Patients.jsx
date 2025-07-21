@@ -419,9 +419,9 @@ const Patients = () => {
                                 </div>
                             </td>
                             <td className={styles.phoneNumber}>{patient.phone}</td>
-                            <td className={styles.typeVisit}>{patient?.appointments.typeVisit}</td>
-                            <td className={styles.branch}>{patient?.appointments.branch}</td>
-                            <td className={styles.date}>{truncateText(patient?.appointments.date, 10)}</td>
+                            <td className={styles.typeVisit}>{patient?.appointments[0].typeVisit}</td>
+                            <td className={styles.branch}>{patient?.appointments[0].branch}</td>
+                            <td className={styles.date}>{truncateText(patient?.appointments[0].date, 10)}</td>
                             <td className={styles.booking}>
               <span
                   className={` ${styles.bookingBadge} ${
