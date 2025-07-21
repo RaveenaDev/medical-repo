@@ -110,7 +110,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
               <div className={styles.detailRow}>
                 <p className={styles.patientKey}>Patient Name:</p>
                 <p className={styles.patientValue}>
-                  {patientDetails.name || "n/a"}
+                  {patientDetails?.name || "n/a"}
                 </p>
               </div>
               <div className={styles.detailRow}>
@@ -118,7 +118,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                 <p className={styles.patientKey}>Patient ID:</p>
                 <p className={styles.patientValue}>
                   {" "}
-                  {patientDetails.patId || "n/a"}
+                  {patientDetails?.patId || "n/a"}
                 </p>
               </div>
               <div className={styles.detailRow}>
@@ -126,7 +126,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                 <p className={styles.patientKey}>Contact Info:</p>
                 <p className={styles.patientValue}>
                   {" "}
-                  {patientDetails.phone || "n/a"}
+                  {patientDetails?.phone || "n/a"}
                 </p>
               </div>
               <div className={styles.detailRow}>

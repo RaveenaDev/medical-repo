@@ -138,27 +138,27 @@ const AssignOverlay = ({
                 </thead>
                 <tbody>
                   {filteredPatients.map((p, i) => {
-                    const isSelected = selectedPatients.includes(p.caseId);
+                    const isSelected = selectedPatients.includes(p._id);
                     return (
                       <tr
                         key={i}
                         onClick={() => {
                           setSelectedPatients((prev) =>
                             isSelected
-                              ? prev.filter((id) => id !== p.caseId)
-                              : [...prev, p.caseId]
+                              ? prev.filter((id) => id !== p._id)
+                              : [...prev, p._id]
                           );
                         }}
                         className={isSelected ? styles.selectedRow : ""}
                         style={{ cursor: "pointer" }}
                       >
                         <td style={{ color: "#25307f" }}>
-                          {p.caseId || "N/A"}
+                          {p?.patId || "N/A"}
                         </td>
-                        <td style={{ color: "#25307f" }}>{p.name || "N/A"}</td>
-                        <td>{p.room || "N/A"}</td>
-                        <td>{p.diagnosis || "N/A"}</td>
-                        <td>{p.realStatus || "N/A"}</td>
+                        <td style={{ color: "#25307f" }}>{p?.name || "N/A"}</td>
+                        <td>{p?.roomName || "N/A"}</td>
+                        <td>{p?.condition || "N/A"}</td>
+                        <td>{p?.status || "N/A"}</td>
                       </tr>
                     );
                   })}
