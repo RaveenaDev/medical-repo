@@ -8,7 +8,7 @@ const initialState = {
   role: null,
   hospitalName: null,
   departmentId: [],
-  departmentName: [],
+  departmentName: null,
 };
 
 export const authReducer = (state = initialState, action) => {

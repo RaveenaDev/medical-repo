@@ -197,6 +197,7 @@ const Department = () => {
   const totalRooms = hospitalStatistics?.rooms?.available || 0;
 
   const patientOverview = useSelector((state) => state.doctor.patientOverview);
+  // console.log(patientOverview);
   const totalCases = useSelector((state) => state.doctor.totalCases) || 0;
   const totalInpatientsCount =
     useSelector((state) => state.doctor.totalInpatientsCount) || 0;
@@ -345,7 +346,7 @@ const Department = () => {
 
     return null;
   };
-
+  // console.log("Patient Overview: ", departmentName);
   return (
     <>
       <div
@@ -364,7 +365,7 @@ const Department = () => {
         <div className={style.head}>
           <div className={style.headingSection}>
             <div className={style.heading}>
-              {departmentName || "Department Name"}
+              {departmentName ? departmentName : "Department Name"}
             </div>
             <p>Dr. {doctorName || "N/A"}</p>
           </div>
