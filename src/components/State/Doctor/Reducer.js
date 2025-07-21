@@ -109,8 +109,8 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_PATIENTS:
       return {
         ...state,
-        totalPatients: action.payload.totalCount,
-        patients: action.payload.patients,
+        totalPatients: action.payload.length,
+        patients: action.payload,
         isLoading: false,
       };
     case GET_DOCTORS:

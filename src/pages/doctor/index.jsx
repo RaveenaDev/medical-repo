@@ -966,7 +966,7 @@ const DoctorOverview = ({todayAppointments}) => {
               <div className={styles.eventsHeader}>
                 <div>
                   <h3>Upcoming Events</h3>
-                  <small>6 events left today</small>
+                  <small>{EVENTS.length} events today</small>
                 </div>
                 <button className={styles.createBtn} onClick={handleOpenPanel}>
                   <svg

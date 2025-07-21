@@ -225,7 +225,7 @@ const InPatients = () => {
         <hr />
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
-            56 <span>Inpatients</span>
+            {inPatients?.length} <span>Inpatients</span>
           </span>
           <div className={styles.verticalDivider}></div>
           <div className={styles.sortFilterSection}>

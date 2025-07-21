@@ -339,7 +339,7 @@ const Patients = () => {
         <hr />
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
-            56 <span>Patients</span>
+            {patients?.length} <span>Patients</span>
           </span>
           <div className={styles.verticalDivider}></div>
           <div className={styles.sortFilterSection}>
@@ -411,7 +411,7 @@ const Patients = () => {
                     <tbody>
                     {patients.map((patient, index) => (
                         <tr key={index}>
-                            <td className={styles.patientId}>{patient.caseId}</td>
+                            <td className={styles.patientId}>{patient?.patId}</td>
                             <td className={styles.patientInfo}>
                                 <div>
                                     <div className={styles.patientName}>{patient.name}</div>
@@ -419,18 +419,18 @@ const Patients = () => {
                                 </div>
                             </td>
                             <td className={styles.phoneNumber}>{patient.phone}</td>
-                            <td className={styles.typeVisit}>{patient.typeVisit}</td>
-                            <td className={styles.branch}>{patient.branch}</td>
-                            <td className={styles.date}>{truncateText(patient.date, 10)}</td>
+                            <td className={styles.typeVisit}>{patient?.appointments.typeVisit}</td>
+                            <td className={styles.branch}>{patient?.appointments.branch}</td>
+                            <td className={styles.date}>{truncateText(patient?.appointments.date, 10)}</td>
                             <td className={styles.booking}>
               <span
                   className={` ${styles.bookingBadge} ${
-                      patient.booking.toLowerCase() === "active"
+                      patient?.status.toLowerCase() === "active"
                           ? styles.activeBooking
                           : styles.inactiveBooking
                   }`}
               >
-                {patient.booking}
+                {patient?.status}
               </span>
                             </td>
                             <td className={styles.actions}>
