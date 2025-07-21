@@ -42,8 +42,9 @@ const PastReportsAndDischarge = ({ patientId }) => {
 
   const closeModal = () => setActiveModal(null);
   const patientHistory = useSelector((store) => store.doctor.patientHistory);
+  const capitalize = (str) =>
+    typeof str === "string" ? str.charAt(0).toUpperCase() + str.slice(1) : str;
 
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
   return (
     <div className={styles.container}>
       <header>
@@ -181,23 +182,29 @@ const PastReportsAndDischarge = ({ patientId }) => {
                 <div className={styles.left}>
                   <img src="/assets/labIcon.svg" alt="icon" />
                   <div className={styles.meta}>
-                    <h3>Consultation with {entry.doctor}</h3>
-                    <p>{dayjs(entry.date).format("DD MMM YYYY, hh:mm A")}</p>
+                    <h3>
+                      Consultation with {entry.doctor || "Doctor not specified"}
+                    </h3>
+                    <p>
+                      {entry.date
+                        ? dayjs(entry.date).format("DD MMM YYYY, hh:mm A")
+                        : "Date not available"}
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className={styles.details}>
                 <p>
-                  <strong>Department:</strong> {entry.department}
+                  <strong>Department:</strong> {entry.department || "N/A"}
                 </p>
                 <p>
                   <strong>Diagnosis:</strong>{" "}
-                  {entry.consultationData?.diagnosis}
+                  {entry.consultationData?.diagnosis || "Not specified"}
                 </p>
                 <p>
                   <strong>Complaints:</strong>{" "}
-                  {entry.consultationData?.complaints}
+                  {entry.consultationData?.complaints || "Not specified"}
                 </p>
               </div>
             </div>

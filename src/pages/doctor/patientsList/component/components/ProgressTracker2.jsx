@@ -34,22 +34,26 @@ const ProgressTracker2 = ({ patientId }) => {
     <div className={styles.container}>
       <div className={styles.timelineContainer}>
         <div className={styles.timeline}>
-          {[...progressTracker].reverse().map((step, index) => (
-            <div key={index} className={styles.timelineItem}>
-              <div className={styles.timelineSeparator}>
-                <div
-                  className={`${styles.timelineDot} ${
-                    step.status === "ongoing"
-                      ? styles.ongoing
-                      : styles.completed
-                  }`}
-                ></div>
-                {index < progressTracker.length - 1 && (
-                  <div className={styles.timelineConnector}></div>
-                )}
+          {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
+            [...progressTracker].reverse().map((step, index) => (
+              <div key={index} className={styles.timelineItem}>
+                <div className={styles.timelineSeparator}>
+                  <div
+                    className={`${styles.timelineDot} ${
+                      step.status === "ongoing"
+                        ? styles.ongoing
+                        : styles.completed
+                    }`}
+                  ></div>
+                  {index < progressTracker.length - 1 && (
+                    <div className={styles.timelineConnector}></div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className={styles.noData}>No progress steps available.</div>
+          )}
         </div>
       </div>
 
@@ -67,43 +71,53 @@ const ProgressTracker2 = ({ patientId }) => {
         </div>
 
         {/* Data rows */}
-        {[...progressTracker].reverse().map((step, index) => (
-          <div
-            key={index}
-            className={`${styles.tableRow} ${
-              step.status === "ongoing" ? styles.activeRow : ""
-            }`}
-            onClick={
-              step.phase === "Post-Surgery Follow-up"
-                ? openFollowUp
-                : step.phase === "Lab Tests"
-                ? openLabTests
-                : step.phase === "Initial Consultation"
-                ? openInitialConsultation
-                : step.phase === "Surgery"
-                ? openSurgery
-                : null
-            }
-          >
-            <div className={`${styles.tableCell} ${styles.phaseCell}`}>
-              {step?.data.title}
-            </div>
-            <div className={`${styles.tableCell} ${styles.dateCell}`}>
-              {new Date(step.date).toISOString().split("T")[0]}
-            </div>
-            <div className={styles.tableCell}>{step.doctor.name}</div>
-
+        {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
+          [...progressTracker].reverse().map((step, index) => (
             <div
-              className={`${styles.tableCell} ${
-                step.status === "completed"
-                  ? styles.statusCompleted
-                  : styles.statusOngoing
+              key={index}
+              className={`${styles.tableRow} ${
+                step.status === "ongoing" ? styles.activeRow : ""
               }`}
+              onClick={
+                step.phase === "Post-Surgery Follow-up"
+                  ? openFollowUp
+                  : step.phase === "Lab Tests"
+                  ? openLabTests
+                  : step.phase === "Initial Consultation"
+                  ? openInitialConsultation
+                  : step.phase === "Surgery"
+                  ? openSurgery
+                  : null
+              }
             >
-              {step.status.charAt(0).toUpperCase() + step.status.slice(1)}
+              <div className={`${styles.tableCell} ${styles.phaseCell}`}>
+                {step?.data?.title || "Untitled Phase"}
+              </div>
+              <div className={`${styles.tableCell} ${styles.dateCell}`}>
+                {step?.date
+                  ? new Date(step.date).toISOString().split("T")[0]
+                  : "Date N/A"}
+              </div>
+              <div className={styles.tableCell}>
+                {step?.doctor?.name || "Unknown"}
+              </div>
+
+              <div
+                className={`${styles.tableCell} ${
+                  step.status === "completed"
+                    ? styles.statusCompleted
+                    : styles.statusOngoing
+                }`}
+              >
+                {step?.status
+                  ? step.status.charAt(0).toUpperCase() + step.status.slice(1)
+                  : "N/A"}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className={styles.noData}>No progress steps available.</div>
+        )}
       </div>
 
       {/* Modals remain the same */}
