@@ -120,135 +120,58 @@
 .appointment {
   width: 31.5%;
   font-family: "Karla", sans-serif;
-  padding: 1.4vh 1vw;
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-
-    .appointmentTitle {
-      font-size: 1.15vw;
-      font-weight: 500;
-    }
-
-    select {
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 4px 8px;
-    }
-  }
-
-  .weekRow {
-    display: flex;
-    justify-content: space-between;
-    gap: 0vw;
-  }
-
-  .dayBox {
-    text-align: center;
-    cursor: pointer;
-    padding: 0.8vh 0vw;
-    border-radius: 6px;
-    transition: background 0.3s;
-    width: 3vw;
-    .dateNum {
-      font-size: 1vw;
-      font-weight: bold;
-    }
-
-    .dayName {
-      font-size: 0.8vw;
-      text-align: center;
-      color: #777;
-    }
-
-    &:hover {
-      background-color: #f0f0f0;
-    }
-  }
-
-  .selected {
-    background-color: #1a237e;
-    color: white;
-    border-radius: 6px;
-
-    .dayName {
-      color: white;
-    }
-  }
-
-  .appointmentBox {
-    margin-top: 12px;
-    background: #f4f4f4;
-    padding: 1vh 0.4vw;
-    border-left: 3px solid #4caf50;
-    border-radius: 4px;
-    font-size: 14px;
-  }
+  padding: 1.4vh 1vw 1vh 1vw;
 }
 
-.dropdown {
-  position: relative;
-  width: 40%; // Use a percentage of viewport width for the dropdown
-  // min-width: 120px; // Optional: fallback for very small screens
-  font-family: "Karla", sans-serif;
+.appointmentWrapper {
+  height: 30vh;
+  overflow-y: auto;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-.trigger {
-  width: 100%;
-  background: #f1f1f1;
-
-  border: none;
-
+.appointmentBox {
+  margin-top: 12px;
+  background: #f4f4f4;
+  padding: 1vh 0.4vw;
+  border-left: 3px solid #4caf50;
   border-radius: 4px;
-
-  padding: 0vh 0.7vw;
-  cursor: pointer;
-  font-size: 1vw;
-  font-family: "Karla", sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 4vh;
+  font-size: 14px;
 }
 
-.arrow {
-  color: #777;
-}
-
-.menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #fff;
-  box-shadow: 0 0.3vh 4px rgba(60, 64, 67, 0.08);
-  border-radius: 4px;
-  border: 1px solid #cfcfcf;
-  width: 99.5%;
-  z-index: 10;
-  margin-top: 0.2vh;
-  padding: 0;
-  list-style: none;
-  font-size: 1vh;
-  font-family: "Karla", sans-serif;
-}
-
-.item {
-  padding: 1.2vh 1vw;
-  cursor: pointer;
-  font-size: 1.7vh;
-  color: #222;
-  background: #fff;
-  transition: background 0.15s;
-
-  &:hover {
-    background: #f5f8fd;
-  }
-}
-
-.active {
-  background: #e6edfd !important;
-  color: #25307f;
+.appointmentTitle {
+  font-size: 1.15vw;
   font-weight: 500;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.drName {
+  font-weight: 500;
+  font-size: 0.95vw;
+}
+
+.time,
+.date {
+  font-size: 0.85vw;
+}
+
+.heading {
+  font-size: 0.85vw;
+  font-weight: 450;
+}
+
+.room {
+  font-size: 0.85vw;
+  color: #4b5563;
 }
