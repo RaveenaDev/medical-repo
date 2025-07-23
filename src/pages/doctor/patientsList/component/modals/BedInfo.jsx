@@ -107,12 +107,6 @@ const BedInfo = ({ onClose, patientId }) => {
                         </p>
                       </div>
                     </div>
-                    <div>
-                      <SquarePen
-                        strokeWidth={1.75}
-                        className={styles.editBtn}
-                      />
-                    </div>
                   </div>
                 </div>
 
@@ -239,12 +233,6 @@ const BedInfo = ({ onClose, patientId }) => {
                           </span>
                         </p>
                       </div>
-                    </div>
-                    <div>
-                      <SquarePen
-                        strokeWidth={1.75}
-                        className={styles.editBtn}
-                      />
                     </div>
                   </div>
                 </div>
