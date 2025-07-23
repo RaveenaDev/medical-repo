@@ -14,11 +14,9 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
   useEffect(() => {
     dispatch(getDoctorsByDepartment());
   }, []);
-  const progressOptions = ["Ongoing", "Completed", "Pending"];
+  const [isFinalPhase, setIsFinalPhase] = useState(false);
 
-  const [openProgress, setOpenProgress] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState("");
-  const [selectedProgress, setSelectedProgress] = useState("");
   const [doctor, setDoctor] = useState("");
   const [date, setDate] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -57,6 +55,8 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
     formData.append("date", date);
     formData.append("assignedDoctor", doctor);
     formData.append("description", description);
+    formData.append("isDone", false);
+    formData.append("isFinalPhase", isFinalPhase);
 
     selectedFiles.forEach((item, index) => {
       formData.append("files", item.file); // key must match backend field
@@ -91,6 +91,9 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
           </div>
 
           {/* Date of Activity */}
+        </div>
+
+        <div className={styles.row1}>
           <div className={styles.dateField}>
             <p className={styles.label}>Date of Activity</p>
             <div className={styles.inputWrapper}>
@@ -101,9 +104,6 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
               />
             </div>
           </div>
-        </div>
-
-        <div className={styles.row1}>
           {/* Assigned Doctor */}
           <div>
             <p className={styles.label}>Assigned Doctor</p>
@@ -125,42 +125,17 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
               ))}
             </select>
           </div>
-
-          {/* Progress Status */}
-          <div>
-            <p className={styles.label}>Progress Status</p>
-            <div className={styles.dropdown}>
-              <button
-                className={styles.trigger}
-                onClick={() => setOpenProgress((prev) => !prev)}
-              >
-                <p>{selectedProgress || "Select Status"}</p>
-                <span className={styles.arrow}>
-                  {openProgress ? <ChevronUp /> : <ChevronDown />}
-                </span>
-              </button>
-              {openProgress && (
-                <ul className={styles.menu}>
-                  {progressOptions.map((option) => (
-                    <li
-                      key={option}
-                      className={`${styles.item} ${
-                        selectedProgress === option ? styles.active : ""
-                      }`}
-                      onClick={() => {
-                        setSelectedProgress(option);
-                        setOpenProgress(false);
-                      }}
-                    >
-                      {option}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
         </div>
-
+        <div className={styles.checkboxContainer}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={isFinalPhase}
+              onChange={(e) => setIsFinalPhase(e.target.checked)}
+            />
+            Mark this as the final stage of treatment
+          </label>
+        </div>
         <div className={styles.row3}>
           {/* Description */}
           <div className={styles.descriptionContainer}>
