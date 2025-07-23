@@ -128,6 +128,7 @@ const MedAdminRecord = ({ patientId }) => {
             <ManageMedication
               onClose={closeModal}
               recordId={selectedRecordId}
+              patientId={patientId}
             />
           </div>
         </>
