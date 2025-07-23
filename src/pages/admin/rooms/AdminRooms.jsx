@@ -53,8 +53,11 @@ const AdminRooms = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-
+  const [newRoomTypeVisible, setNewRoomTypeVisible] = useState(false);
+  const [newRoomType, setNewRoomType] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const roomTypes = ["Available", "Occupied", "Under Maintenance"];
+
   // State for editing room
   const [editedRoom, setEditedRoom] = useState({
     roomID: "",
@@ -342,16 +345,17 @@ const AdminRooms = (props) => {
                         </Grid>
                         <Grid xs={3}>
                           <TextField
+                            autoFocus
                             margin="dense"
-                            label="Room Name"
-                            name="name"
-                            value={formData.name}
+                            label="Bed ID"
+                            name="bedID"
+                            value={formData.bedID}
                             onChange={handleChange}
                             type="text"
                             fullWidth
                             variant="outlined"
-                            error={!!errors.name}
-                            helperText={errors.name}
+                            error={!!errors.bedID}
+                            helperText={errors.bedID}
                             required
                           />
                         </Grid>
@@ -388,7 +392,6 @@ const AdminRooms = (props) => {
                             )}
                           </FormControl>
                         </Grid>
-
                         <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
                           <FormControl
                             fullWidth
@@ -420,6 +423,94 @@ const AdminRooms = (props) => {
                               </Typography>
                             )}
                           </FormControl>
+                        </Grid>
+                        <Grid xs={3}>
+                          <TextField
+                            margin="dense"
+                            label="Room Name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            error={!!errors.name}
+                            helperText={errors.name}
+                            required
+                          />
+                        </Grid>
+                        <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
+                          <FormControl
+                            fullWidth
+                            margin="dense"
+                            error={!!errors.roomType}
+                          >
+                            <InputLabel id="roomType-select-label">
+                              Room Type
+                            </InputLabel>
+                            <Select
+                              labelId="roomType-select-label"
+                              id="roomType-select"
+                              name="roomType"
+                              value={formData.roomType}
+                              onChange={handleChange}
+                              label="Room Type"
+                              variant="outlined"
+                              sx={{ width: "100%" }}
+                              required
+                            >
+                              {roomTypes.map((type) => (
+                                <MenuItem key={type} value={type}>
+                                  {type}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            {errors.status && (
+                              <Typography variant="caption" color="error">
+                                {errors.status}
+                              </Typography>
+                            )}
+                          </FormControl>
+                        </Grid>
+
+                        {/* Add Room Type Button */}
+
+                        <Grid item xs={3}>
+                          {!newRoomTypeVisible ? (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                height: "100%",
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  cursor: "pointer",
+                                  color: "#1976d2",
+                                  "&:hover": { textDecoration: "underline" },
+                                }}
+                                onClick={() => setNewRoomTypeVisible(true)}
+                              >
+                                + Add New Room Type
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <TextField
+                              margin="dense"
+                              label="Add New Room Type"
+                              name="newRoomType"
+                              value={formData.newRoomType}
+                              onChange={handleChange}
+                              type="text"
+                              fullWidth
+                              variant="outlined"
+                              error={!!errors.newRoomType}
+                              helperText={errors.newRoomType}
+                            />
+                          )}
                         </Grid>
                       </Grid>
                     </Box>

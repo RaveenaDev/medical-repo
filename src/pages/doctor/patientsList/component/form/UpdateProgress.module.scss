@@ -336,3 +336,14 @@
 .editBtnActive {
   color: #25307f;
 }
+.checkboxContainer {
+  margin-top: 1rem;
+}
+
+.checkboxLabel {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}

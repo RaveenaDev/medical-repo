@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Nursing.module.scss";
 import {
-  Plus,
-  Heart,
-  MoveUp,
-  MoveDown,
-  MoveRight,
-  Thermometer,
   HeartPulse,
+  Thermometer,
+  Activity,
+  Droplet,
+  Stethoscope,
+  Syringe,
   Calendar,
+  AlertTriangle,
+  Plus,
 } from "lucide-react";
 import UpdateNursing from "./form/UpdateNursing";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,8 +22,6 @@ const Nursing = ({ patientId }) => {
     dispatch(getPatientVitals(patientId));
   }, [dispatch]);
   const patientVitals = useSelector((store) => store.doctor.patientVitals);
-
-  // console.log("patient Vitals: ", patientVitals);
 
   const formatDate = (isoString) => {
     const inputDate = new Date(isoString);
@@ -60,6 +59,32 @@ const Nursing = ({ patientId }) => {
 
   const openUpdate = () => setActiveModal("Update");
   const closeModal = () => setActiveModal(null);
+  const vitalIconMap = {
+    heartRate: HeartPulse,
+    temperature: Thermometer,
+    bp: Activity,
+    spo2: Droplet,
+    respiratoryRate: Stethoscope,
+    glucose: Syringe,
+    painScore: AlertTriangle,
+  };
+  // Extract All Unique Vital Keys
+  const allVitalKeys = Array.from(
+    new Set(
+      patientVitals?.flatMap((item) => Object.keys(item.vitals || {})) || []
+    )
+  );
+  const getUnitForVital = (key) => {
+    const units = {
+      heartRate: "bpm",
+      temperature: "°F",
+      bp: "mmHg",
+      spo2: "%",
+      respiratoryRate: "rpm",
+      glucose: "mg/dL",
+    };
+    return units[key] || "";
+  };
 
   return (
     <div className={styles.container}>
@@ -85,39 +110,25 @@ const Nursing = ({ patientId }) => {
       <div className={styles.tableContainer}>
         <div className={styles.table}>
           <div className={styles.head}>
+            {allVitalKeys.map((key) => {
+              const Icon = vitalIconMap[key];
+              const label = key
+                .replace(/([A-Z])/g, " $1")
+                .replace(/^./, (s) => s.toUpperCase());
+
+              return (
+                <div className={styles.th} key={key}>
+                  {Icon && <Icon className={styles.icon} />}
+                  <span>{label}</span>
+                </div>
+              );
+            })}
             <div className={styles.th}>
-              <Heart fill="#f14400" color="#f14400" className={styles.icon} />
-              <span>Heart Rate</span>
-            </div>
-            <div className={styles.th}>
-              <Thermometer
-                color="#ffa629"
-                fill="#ffa629"
-                className={styles.icon}
-              />
-              <span>Temperature</span>
-            </div>
-            <div className={styles.th}>
-              <HeartPulse
-                fill="#25307f"
-                color="white"
-                className={styles.heartPluse}
-              />
-              <span>Blood Plessure</span>
-            </div>
-            <div className={styles.th}>
-              <img
-                src="/assets/mdi_oxygen-tank.svg"
-                alt=""
-                className={styles.icon}
-              />
-              <span>Sp02</span>
-            </div>
-            <div className={styles.th}>
-              <Calendar color="#25307f" className={styles.icon} />
+              <Calendar className={styles.icon} />
               <span>Last Updated</span>
             </div>
           </div>
+
           <div className={styles.body}>
             {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
               <div className={styles.noData}>No vitals recorded.</div>
@@ -130,30 +141,16 @@ const Nursing = ({ patientId }) => {
                     className={`${styles.tr} ${isToday ? styles.todayRow : ""}`}
                     key={item._id || idx}
                   >
-                    <div className={styles.td}>
-                      <span className={styles.value}>
-                        {item?.vitals?.heartRate ?? "—"}
-                      </span>
-                      <span className={styles.unit}>bpm</span>
-                    </div>
-                    <div className={styles.td}>
-                      <span className={styles.value}>
-                        {item?.vitals?.temperature ?? "—"}
-                      </span>
-                      <span className={styles.unit}>°F</span>
-                    </div>
-                    <div className={styles.td}>
-                      <span className={styles.value}>
-                        {item?.vitals?.bp ?? "—"}
-                      </span>
-                      <span className={styles.unit}>mmHg</span>
-                    </div>
-                    <div className={styles.td}>
-                      <span className={styles.value}>
-                        {item?.vitals?.spo2 ?? "—"}
-                      </span>
-                      <span className={styles.unit}>%</span>
-                    </div>
+                    {allVitalKeys.map((key) => (
+                      <div className={styles.td} key={key}>
+                        <span className={styles.value}>
+                          {item?.vitals?.[key] ?? "—"}
+                        </span>
+                        <span className={styles.unit}>
+                          {getUnitForVital(key)}
+                        </span>
+                      </div>
+                    ))}
                     <div className={styles.td}>
                       <span className={styles.value}>{formattedDate}</span>
                     </div>
