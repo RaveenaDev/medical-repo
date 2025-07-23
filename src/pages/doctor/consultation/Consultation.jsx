@@ -35,6 +35,8 @@ export const Consultation = () => {
 
   const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
   const [completeData, setCompleteData] = useState({});
+  const [confirmedSections, setConfirmedSections] = useState([]);
+  const [customSections, setCustomSections] = useState([]);
 
   const [activeView, setActiveView] = useState("consult");
   const [shouldRefetch, setShouldRefetch] = useState(false);
@@ -108,7 +110,10 @@ export const Consultation = () => {
                 <div className={styles["library-modal"]}>
                   <Library onClose={closeModal} onApply={handleApplyForm}
                            setCompleteData={setCompleteData}
-                           setSelectedComponent={setSelectedComponent}/>
+                           setSelectedComponent={setSelectedComponent}
+                           setConfirmedSections={setConfirmedSections}
+                           setCustomSections={setCustomSections}
+                  />
                 </div>
               </>
             )}
@@ -153,6 +158,10 @@ export const Consultation = () => {
                        setSelectedComponent={setSelectedComponent}
                        completeData={completeData}
                        setCompleteData={setCompleteData}
+                       confirmedSections={confirmedSections}
+                       setConfirmedSections={setConfirmedSections}
+                       customSections={customSections}
+                       setCustomSections={setCustomSections}
                        appointments={appointments} onSuccess={() => setShouldRefetch(true)}/>
         )}
       </div>

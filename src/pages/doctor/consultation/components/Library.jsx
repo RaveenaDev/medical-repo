@@ -12,6 +12,8 @@ export default function Library({
   onApply,
   setSelectedComponent,
   setCompleteData,
+    setConfirmedSections,
+    setCustomSections
 }) {
   const prebuilt = [
     {
@@ -88,6 +90,8 @@ export default function Library({
                     onApply(null); // send data to parent
                     setSelectedComponent("PatientInfo");
                     setCompleteData({});
+                    setConfirmedSections([]);
+                    setCustomSections([]);
                     dispatch(removePrescriptionsWithAI());
                     onClose(); // close modal
                   }}
@@ -118,6 +122,8 @@ export default function Library({
                     onApply(form); // send data to parent
                     setSelectedComponent("PatientInfo");
                     setCompleteData({});
+                    setConfirmedSections([]);
+                    setCustomSections([]);
                     dispatch(removePrescriptionsWithAI());
                     onClose(); // close modal
                   }}
