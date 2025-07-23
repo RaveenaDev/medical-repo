@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./ManageMedication.module.scss";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import { updateMedicationAdministration } from "../../../../../../components/State/Doctor/Action";
-import { useDispatch } from "react-redux";
+import {
+  getStaff,
+  updateMedicationAdministration,
+} from "../../../../../../components/State/Doctor/Action";
+import { useDispatch, useSelector } from "react-redux";
 const ManageMedication = ({ onClose, recordId, patientId }) => {
   const [activeTab, setActiveTab] = useState(false); // true = reschedule, false = mark given
 
@@ -12,7 +15,11 @@ const ManageMedication = ({ onClose, recordId, patientId }) => {
   const [newTime, setNewTime] = useState("");
   const [notes, setNotes] = useState("");
   const [givenBy, setGivenBy] = useState("");
+  useEffect(() => {
+    dispatch(getStaff());
+  }, []);
 
+  const staff = useSelector((state) => state.doctor.staff);
   const handleAction = async (actionType) => {
     try {
       const body = {
@@ -102,12 +109,18 @@ const ManageMedication = ({ onClose, recordId, patientId }) => {
                 <label className={styles.label2}>Notes</label>
               </div>
               <div className={styles.part1Right}>
-                <input
-                  type="text"
-                  placeholder="Enter nurse name"
+                <select
                   value={givenBy}
                   onChange={(e) => setGivenBy(e.target.value)}
-                />
+                  className={styles.selectInput}
+                >
+                  <option value="">Select Staff</option>
+                  {staff?.map((person) => (
+                    <option key={person._id} value={person.name}>
+                      {person.name}
+                    </option>
+                  ))}
+                </select>
                 <input
                   type="text"
                   placeholder="Optional notes"
