@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import { updateMedicationAdministration } from "../../../../../../components/State/Doctor/Action";
 import { useDispatch } from "react-redux";
-const ManageMedication = ({ onClose, recordId }) => {
+const ManageMedication = ({ onClose, recordId, patientId }) => {
   const [activeTab, setActiveTab] = useState(false); // true = reschedule, false = mark given
 
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const ManageMedication = ({ onClose, recordId }) => {
         if (notes.trim()) body.notes = notes.trim();
       }
 
-      dispatch(updateMedicationAdministration(body));
+      dispatch(updateMedicationAdministration(body, patientId));
       onClose();
     } catch (err) {
       console.error(err);
