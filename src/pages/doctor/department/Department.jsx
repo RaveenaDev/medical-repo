@@ -233,10 +233,12 @@ const Department = () => {
   const doctors = useSelector((state) => state.doctor.doctors) || [];
   const staff = useSelector((state) => state.doctor.staff) || [];
 
-  const doctorName = useSelector((state) => state.authentication.userName);
-  const departmentName = useSelector(
-    (state) => state.authentication.departmentName
-  );
+  const doctorName =
+    useSelector((state) => state.authentication.userName) ||
+    localStorage.getItem("username");
+  const departmentName =
+    useSelector((state) => state.authentication.departmentName) ||
+    localStorage.getItem("departmentName");
 
   const totalInventory =
     useSelector((state) => state.doctor.totalInventory) || 0;
