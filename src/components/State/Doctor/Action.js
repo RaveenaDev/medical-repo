@@ -996,6 +996,7 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
 
     // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
     // return data.request;
+    dispatch(getAdmissionRequests()); // Refresh the list of requests
     toast.success("Admission Request Created successfully!", {
       position: "bottom-right",
       autoClose: 2000,

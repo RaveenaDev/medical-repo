@@ -15,15 +15,12 @@ const UpdateMAR = ({ onClose, patientId }) => {
       medFreq: "",
       route: "",
       notes: "",
-      givenBy: "",
     },
   ]);
 
   const medFreqOptions = ["Regular", "Alternative", "Custom"];
-  const givenByOptions = ["Nurse 1", "Nurse 2", "Nurse 3"];
 
   const [openMedFreq, setOpenMedFreq] = useState(null);
-  const [openGivenBy, setOpenGivenBy] = useState(null);
 
   const handleChange = (index, field, value) => {
     const updated = [...medications];
@@ -32,17 +29,17 @@ const UpdateMAR = ({ onClose, patientId }) => {
   };
 
   const addMedicine = () => {
+    const lastMed = medications[medications.length - 1];
     setMedications([
       ...medications,
       {
         medication: "",
         dose: "",
-        time: "",
-        date: "",
+        time: lastMed.time, // inherit last time
+        date: lastMed.date, // inherit last date
         medFreq: "",
         route: "",
         notes: "",
-        givenBy: "",
       },
     ]);
   };
@@ -63,7 +60,7 @@ const UpdateMAR = ({ onClose, patientId }) => {
           medFreq: med.medFreq,
           route: med.route,
           notes: med.notes,
-          givenBy: med.givenBy,
+
           status: "Scheduled",
         })),
       };
@@ -173,7 +170,11 @@ const UpdateMAR = ({ onClose, patientId }) => {
               />
             </div>
 
-            <div>
+            <div
+              style={{
+                gridColumn: "1 / -1",
+              }}
+            >
               <p>Notes</p>
               <input
                 type="text"
@@ -183,40 +184,6 @@ const UpdateMAR = ({ onClose, patientId }) => {
               />
             </div>
 
-            <div>
-              <p>Given By</p>
-              <div className={styles.dropdown}>
-                <button
-                  className={styles.trigger}
-                  onClick={() =>
-                    setOpenGivenBy((prev) => (prev === index ? null : index))
-                  }
-                >
-                  <p>{med.givenBy || "Select"}</p>
-                  <span className={styles.arrow}>
-                    {openGivenBy === index ? <ChevronUp /> : <ChevronDown />}
-                  </span>
-                </button>
-                {openGivenBy === index && (
-                  <ul className={styles.menu}>
-                    {givenByOptions.map((option) => (
-                      <li
-                        key={option}
-                        className={`${styles.item} ${
-                          med.givenBy === option ? styles.active : ""
-                        }`}
-                        onClick={() => {
-                          handleChange(index, "givenBy", option);
-                          setOpenGivenBy(null);
-                        }}
-                      >
-                        {option}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
             {medications.length > 1 && (
               <div
                 style={{

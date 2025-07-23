@@ -33,6 +33,8 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import AddEventPanel from "./components/AddEventPanel.jsx";
 import { CalendarToday } from "@mui/icons-material";
+import { ChevronRight } from "lucide-react";
+import AdmitNewPatient from "./components/admintNewPatient/AdmitNewPatient.jsx";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -70,7 +72,7 @@ const generateNextDates = (count = 11) => {
 
 const DATES = generateNextDates();
 
-const DoctorOverview = ({todayAppointments}) => {
+const DoctorOverview = ({ todayAppointments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(
@@ -183,7 +185,6 @@ const DoctorOverview = ({todayAppointments}) => {
     setIsModalOpen(true);
   };
 
-
   useEffect(() => {
     const container = document.querySelector(`.${styles.datePicker}`);
 
@@ -238,7 +239,6 @@ const DoctorOverview = ({todayAppointments}) => {
       container.removeEventListener("mousemove", onMouseMove);
     };
   }, []);
-
 
   const dispatch = useDispatch();
 
@@ -425,6 +425,15 @@ const DoctorOverview = ({todayAppointments}) => {
     return end.isAfter(now) && start.isBefore(now.endOf("day"));
   });
 
+  const [activeModal, setActiveModal] = useState(null);
+  const openAdmitNewPatient = () => setActiveModal("admitNewPatient");
+  const closeModal = () => setActiveModal(null);
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
   return (
     <>
       <div>
@@ -474,6 +483,16 @@ const DoctorOverview = ({todayAppointments}) => {
                     />
                   </div>
                 </div>
+                <button
+                  className={styles.newPatientBtn}
+                  onClick={openAdmitNewPatient}
+                >
+                  <p>
+                    <span className={styles.greenDot} />{" "}
+                    <span>15 New Patients </span>
+                  </p>
+                  <ChevronRight className={styles.rightArrow} />
+                </button>
               </div>
             </Grid>
             <Grid
@@ -574,7 +593,26 @@ const DoctorOverview = ({todayAppointments}) => {
                   Appointment Requests
                 </span>
               </Button>
+              <>
+                <div
+                  className={styles["backdrop-overlay"]}
+                  style={{
+                    display:
+                      activeModal === "admitNewPatient" ? "block" : "none",
+                  }}
+                  onClick={closeModal}
+                />
 
+                <div
+                  className={`${styles["admitNewPatient-modal"]} ${
+                    activeModal === "admitNewPatient"
+                      ? styles["admitNewPatient-modalOpen"]
+                      : ""
+                  }`}
+                >
+                  <AdmitNewPatient onClose={closeModal} />
+                </div>
+              </>
               {/* Modal Component */}
               <AppointmentRequestModal
                 isOpen={isModalOpen}
