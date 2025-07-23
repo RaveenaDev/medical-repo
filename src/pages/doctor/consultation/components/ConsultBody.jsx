@@ -377,7 +377,7 @@ const ConsultBody = ({
 
           <div className={styles["lp-7"]} onClick={openAddQuestion}>
             <Plus className={styles["lp-7-icon"]} size={38} />
-            <p>Add Question</p>
+            <p>Add Section</p>
           </div>
 
           <div className={styles["lp-8"]}>
