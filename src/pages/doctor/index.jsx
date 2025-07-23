@@ -2,14 +2,10 @@ import React, { useEffect, useState } from "react";
 import styles from "./Index.module.scss";
 import CommonPanel from "./components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   Box,
   Button,
   Chip,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -17,7 +13,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "./components/DoughnutChart.jsx";
@@ -38,7 +33,6 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import AddEventPanel from "./components/AddEventPanel.jsx";
 import { CalendarToday } from "@mui/icons-material";
-import Library from "./consultation/components/Library.jsx";
 import { ChevronRight } from "lucide-react";
 import AdmitNewPatient from "./components/admintNewPatient/AdmitNewPatient.jsx";
 
@@ -259,6 +253,7 @@ const DoctorOverview = ({ todayAppointments }) => {
     dispatch(getAppointmentRequests());
     dispatch(getCriticalPatients());
   }, [dispatch, selectedDate, internalSelectedDate]);
+
 
   const doctor = useSelector((store) => store.doctor);
 
@@ -522,24 +517,28 @@ const DoctorOverview = ({ todayAppointments }) => {
                   },
                 }}
               >
-                <div
-                  style={{
-                    height: "8px",
-                    width: "8px",
-                    borderRadius: "50%",
-                    backgroundColor: "#F14400",
-                    position: "absolute",
-                    left: "31px",
-                    top: "6px",
-                  }}
-                ></div>
+                {
+                  localStorage.getItem("doctorRequestsCount") > 0 && (
+                        <div
+                            style={{
+                              height: "8px",
+                              width: "8px",
+                              borderRadius: "50%",
+                              backgroundColor: "#F14400",
+                              position: "absolute",
+                              left: "31px",
+                              top: "6px",
+                            }}
+                        ></div>
+                    )
+                }
                 {circle}
                 <span
-                  style={{
-                    marginLeft: "16px",
-                    marginRight: "8px",
-                    marginTop: "2px",
-                  }}
+                    style={{
+                      marginLeft: "16px",
+                      marginRight: "8px",
+                      marginTop: "2px",
+                    }}
                 >
                   Requests
                 </span>
