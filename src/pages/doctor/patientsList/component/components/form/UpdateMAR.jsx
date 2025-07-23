@@ -29,13 +29,14 @@ const UpdateMAR = ({ onClose, patientId }) => {
   };
 
   const addMedicine = () => {
+    const lastMed = medications[medications.length - 1];
     setMedications([
       ...medications,
       {
         medication: "",
         dose: "",
-        time: "",
-        date: "",
+        time: lastMed.time, // inherit last time
+        date: lastMed.date, // inherit last date
         medFreq: "",
         route: "",
         notes: "",
