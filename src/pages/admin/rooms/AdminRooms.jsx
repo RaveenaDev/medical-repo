@@ -160,15 +160,15 @@ const AdminRooms = (props) => {
     };
     delete finalData.customRoomType;
 
-    // console.log("To: ",finalData)
-    dispatch(addRoom(finalData));
+    console.log("To: ",finalData)
+    // dispatch(addRoom(finalData));
     setErrors({});
     setAddDialogOpen(false);
   };
 
   const [formData, setFormData] = useState({
     roomID: "",
-    name: "",
+    cost: "",
     doctorId: "",
     status: "",
   });
@@ -422,6 +422,19 @@ const AdminRooms = (props) => {
                               label="Doctor Assigned"
                               variant="outlined"
                               required
+                              MenuProps={{
+                                PaperProps: {
+                                  sx: {
+                                    maxHeight: 200, // Fixed dropdown height
+                                    overflowY: "auto",
+                                    "&::-webkit-scrollbar": {
+                                      display: "none",
+                                    },
+                                    "-ms-overflow-style": "none", // IE and Edge
+                                    "scrollbar-width": "none",    // Firefox
+                                  },
+                                },
+                              }}
                             >
                               {doctors?.map((doctor) => (
                                 <MenuItem key={doctor._id} value={doctor._id}>
@@ -439,15 +452,15 @@ const AdminRooms = (props) => {
                         <Grid xs={3}>
                           <TextField
                             margin="dense"
-                            label="Room Name"
-                            name="name"
-                            value={formData.name}
+                            label="Cost"
+                            name="cost"
+                            value={formData.cost}
                             onChange={handleChange}
                             type="text"
                             fullWidth
                             variant="outlined"
-                            error={!!errors.name}
-                            helperText={errors.name}
+                            error={!!errors.cost}
+                            helperText={errors.cost}
                             required
                           />
                         </Grid>
@@ -484,6 +497,19 @@ const AdminRooms = (props) => {
                                   label="Room Type"
                                   variant="outlined"
                                   required
+                                  MenuProps={{
+                                    PaperProps: {
+                                      sx: {
+                                        maxHeight: 200, // Fixed dropdown height
+                                        overflowY: "auto",
+                                        "&::-webkit-scrollbar": {
+                                          display: "none",
+                                        },
+                                        "-ms-overflow-style": "none", // IE and Edge
+                                        "scrollbar-width": "none",    // Firefox
+                                      },
+                                    },
+                                  }}
                               >
                                 {roomTypes.map((type) => (
                                     <MenuItem key={type} value={type}>

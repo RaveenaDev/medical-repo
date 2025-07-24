@@ -188,24 +188,24 @@ const PerceptionAndMedicines = ({
                                     )
                                 )}
                               </div>
-                              <div className={styles.iconBtn}>
-                                <button className={styles.leftArrowBtn}>
-                                  <img
-                                      src="/assets/Group.svg"
-                                      alt=""
-                                      className={styles.leftArrow}
-                                      width={18}
-                                  />
-                                </button>
-                                <button className={styles.rightArrowBtn}>
-                                  <img
-                                      src="/assets/ion_return-down-back-outline.svg"
-                                      width={30}
-                                      alt=""
-                                      className={styles.rightArrow}
-                                  />
-                                </button>
-                              </div>
+                              {/*<div className={styles.iconBtn}>*/}
+                              {/*  <button className={styles.leftArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/Group.svg"*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.leftArrow}*/}
+                              {/*        width={18}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*  <button className={styles.rightArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/ion_return-down-back-outline.svg"*/}
+                              {/*        width={30}*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.rightArrow}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*</div>*/}
                             </div>
 
                             <div className={styles.lineContainer}>
@@ -239,24 +239,24 @@ const PerceptionAndMedicines = ({
                                     )
                                 )}
                               </div>
-                              <div className={styles.iconBtn}>
-                                <button className={styles.leftArrowBtn}>
-                                  <img
-                                      src="/assets/Group.svg"
-                                      alt=""
-                                      className={styles.leftArrow}
-                                      width={18}
-                                  />
-                                </button>
-                                <button className={styles.rightArrowBtn}>
-                                  <img
-                                      src="/assets/ion_return-down-back-outline.svg"
-                                      width={30}
-                                      alt=""
-                                      className={styles.rightArrow}
-                                  />
-                                </button>
-                              </div>
+                              {/*<div className={styles.iconBtn}>*/}
+                              {/*  <button className={styles.leftArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/Group.svg"*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.leftArrow}*/}
+                              {/*        width={18}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*  <button className={styles.rightArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/ion_return-down-back-outline.svg"*/}
+                              {/*        width={30}*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.rightArrow}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*</div>*/}
                             </div>
 
                             <div className={styles.lineContainer}>
@@ -283,24 +283,24 @@ const PerceptionAndMedicines = ({
                                     )
                                 )}
                               </div>
-                              <div className={styles.iconBtn}>
-                                <button className={styles.leftArrowBtn}>
-                                  <img
-                                      src="/assets/Group.svg"
-                                      alt=""
-                                      className={styles.leftArrow}
-                                      width={18}
-                                  />
-                                </button>
-                                <button className={styles.rightArrowBtn}>
-                                  <img
-                                      src="/assets/ion_return-down-back-outline.svg"
-                                      width={30}
-                                      alt=""
-                                      className={styles.rightArrow}
-                                  />
-                                </button>
-                              </div>
+                              {/*<div className={styles.iconBtn}>*/}
+                              {/*  <button className={styles.leftArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/Group.svg"*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.leftArrow}*/}
+                              {/*        width={18}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*  <button className={styles.rightArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/ion_return-down-back-outline.svg"*/}
+                              {/*        width={30}*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.rightArrow}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*</div>*/}
                             </div>
 
                             <div className={styles.lineContainer}>
@@ -333,24 +333,24 @@ const PerceptionAndMedicines = ({
                                     )
                                 )}
                               </div>
-                              <div className={styles.iconBtn}>
-                                <button className={styles.leftArrowBtn}>
-                                  <img
-                                      src="/assets/Group.svg"
-                                      alt=""
-                                      className={styles.leftArrow}
-                                      width={18}
-                                  />
-                                </button>
-                                <button className={styles.rightArrowBtn}>
-                                  <img
-                                      src="/assets/ion_return-down-back-outline.svg"
-                                      width={30}
-                                      alt=""
-                                      className={styles.rightArrow}
-                                  />
-                                </button>
-                              </div>
+                              {/*<div className={styles.iconBtn}>*/}
+                              {/*  <button className={styles.leftArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/Group.svg"*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.leftArrow}*/}
+                              {/*        width={18}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*  <button className={styles.rightArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/ion_return-down-back-outline.svg"*/}
+                              {/*        width={30}*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.rightArrow}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*</div>*/}
                             </div>
 
                             <div className={styles.lineContainer}>
@@ -383,24 +383,24 @@ const PerceptionAndMedicines = ({
                                   }
                                 </p>
                               </div>
-                              <div className={styles.iconBtn}>
-                                <button className={styles.leftArrowBtn}>
-                                  <img
-                                      src="/assets/Group.svg"
-                                      alt=""
-                                      className={styles.leftArrow}
-                                      width={18}
-                                  />
-                                </button>
-                                <button className={styles.rightArrowBtn}>
-                                  <img
-                                      src="/assets/ion_return-down-back-outline.svg"
-                                      width={30}
-                                      alt=""
-                                      className={styles.rightArrow}
-                                  />
-                                </button>
-                              </div>
+                              {/*<div className={styles.iconBtn}>*/}
+                              {/*  <button className={styles.leftArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/Group.svg"*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.leftArrow}*/}
+                              {/*        width={18}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*  <button className={styles.rightArrowBtn}>*/}
+                              {/*    <img*/}
+                              {/*        src="/assets/ion_return-down-back-outline.svg"*/}
+                              {/*        width={30}*/}
+                              {/*        alt=""*/}
+                              {/*        className={styles.rightArrow}*/}
+                              {/*    />*/}
+                              {/*  </button>*/}
+                              {/*</div>*/}
                             </div>
 
                             <div className={styles.lineContainer}>
