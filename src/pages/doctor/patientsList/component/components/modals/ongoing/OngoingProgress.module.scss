@@ -15,13 +15,12 @@
 
 .modalContent {
   background: #fff;
-  width: 90vw;
+  width: 50vw;
   max-width: 960px;
   max-height: 92vh;
-  border-radius: 12px;
+  border-radius: 0px;
   overflow-y: auto;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
-  padding: 2vh 2vw;
   font-family: "Karla", sans-serif;
   position: relative;
 
@@ -47,8 +46,8 @@
 }
 
 .container {
-  padding: 0vh 1vw 0vw 0vw;
   font-family: "Karla", sans-serif;
+  padding: 2vh 1.5vw 2vh 1.5vw;
 
   height: 70vh;
   overflow-y: auto;
@@ -70,12 +69,12 @@
 
 .label {
   color: #4a4a4a;
-  font-size: 1.9vh;
+  font-size: 2.1vh;
   font-weight: 500;
 }
 
 .row1 {
-  margin-top: 3.8vh;
+  margin-top: 0vh;
   display: flex;
   justify-content: space-between;
   gap: 3vw;
@@ -148,16 +147,15 @@
 }
 
 .textarea {
-  height: 14vh;
-  width: 88.5%;
+  width: 97%;
   border-color: #cfcfcf;
   outline: none;
-  padding: 0.8vh 0.8vh;
+  padding: 0.8vh 0.5vw;
   font-family: "Karla", sans-serif;
   resize: none;
   font-size: 1.8vh;
   border-radius: 4px;
-  padding-right: 2.4vw;
+
   line-height: 2.8vh;
 }
 
@@ -194,7 +192,7 @@
 }
 
 .checkboxContainer {
-  margin-top: 1rem;
+  margin-top: 3.8vh;
 }
 
 .checkboxLabel {
@@ -250,6 +248,7 @@
 
 .uploadedFiles {
   width: 46.5%;
+  margin-top: 2vh;
 }
 
 .uploadFilesContainer {
@@ -369,4 +368,28 @@
       box-shadow: 0 0 0 1px rgba(37, 49, 127, 0.2);
     }
   }
+}
+
+.qna {
+  display: flex;
+  font-size: 2.2vh;
+}
+
+.label1 {
+  color: #25307f;
+  font-weight: 550;
+}
+
+.row4 {
+  margin-top: 2vh;
+}
+
+.section1 {
+  border: 2px solid #cfcfcf;
+  border-radius: 4px;
+  padding: 2vh 1vw;
+  margin-top: 3vh;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
 }

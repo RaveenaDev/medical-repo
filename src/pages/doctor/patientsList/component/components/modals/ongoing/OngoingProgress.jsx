@@ -40,33 +40,30 @@ const OngoingProgress = ({ step, onClose }) => {
         <div className={styles.crossContainer}>
           <X size={20} onClick={onClose} />
         </div>
-
         <div className={styles.container}>
           <h1 className={styles.title}>Ongoing Phase - {step?.data?.title}</h1>
 
-          <div className={styles.row1}>
-            <div>
-              <p className={styles.label}>Phase</p>
-              <p className={styles.descriptionText}>
-                {step?.data?.title || "N/A"}
-              </p>
+          <div className={styles.section1}>
+            <div className={styles.row1}>
+              <div className={styles.qna}>
+                <p className={styles.label1}>Phase:&nbsp;</p>
+                <p className={styles.value}>{step?.data?.title || "N/A"}</p>
+              </div>
+              <div className={styles.qna}>
+                <p className={styles.label1}>Date:&nbsp;</p>
+                <p className={styles.value}>
+                  {step?.date
+                    ? new Date(step.date).toISOString().split("T")[0]
+                    : "N/A"}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className={styles.label}>Date</p>
-              <p className={styles.descriptionText}>
-                {step?.date
-                  ? new Date(step.date).toISOString().split("T")[0]
-                  : "N/A"}
-              </p>
-            </div>
-          </div>
 
-          <div className={styles.row1}>
-            <div>
-              <p className={styles.label}>Doctor</p>
-              <p className={styles.descriptionText}>
-                {step?.doctor?.name || "N/A"}
-              </p>
+            <div className={styles.row1}>
+              <div>
+                <p className={styles.label1}>Doctor:</p>
+                <p className={styles.value}>{step?.doctor?.name || "N/A"}</p>
+              </div>
             </div>
           </div>
 
@@ -88,6 +85,7 @@ const OngoingProgress = ({ step, onClose }) => {
                 className={styles.textarea}
                 placeholder="Enter doctor's note here"
                 value={note}
+                rows={4}
                 onChange={(e) => setNote(e.target.value)}
               />
             </div>
@@ -98,6 +96,7 @@ const OngoingProgress = ({ step, onClose }) => {
                 className={styles.textarea}
                 placeholder="Enter treatment details"
                 value={treatment}
+                rows={4}
                 onChange={(e) => setTreatment(e.target.value)}
               />
             </div>

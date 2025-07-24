@@ -13,13 +13,21 @@
 
 .modalContent {
   background: white;
-  padding: 2rem;
-  border-radius: 12px;
   width: 650px;
   max-width: 95%;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .modalHeader {
@@ -30,30 +38,31 @@
 }
 
 .modalBody {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1vw;
 }
 
 .sectionBox {
-  border: 1px solid #dadce0;
-  background: #f9f9f9;
   padding: 1rem;
   border-radius: 8px;
 
   h3 {
-    margin: 0 0 0.5rem 0;
-    color: #333;
-    font-size: 16px;
-    font-weight: 600;
+    color: #4a4a4a;
+    font-size: 2.1vh;
+    font-weight: 500;
   }
 
   p {
     margin: 0.3rem 0;
+    font-size: 2.1vh;
   }
 
+  strong {
+    color: #25307f;
+    font-weight: 600;
+  }
   ul {
-    margin-left: 1.2rem;
   }
 }
 
@@ -62,15 +71,112 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9rem;
-  color: #555;
+
+  padding: 1rem;
+
+  font-size: 2.1vh;
+  font-weight: 500;
+  span {
+    color: #25307f;
+    font-weight: 600;
+  }
+  p {
+    color: black;
+  }
 }
 
-.closeBtn {
-  background-color: #5461be;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.title {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 550;
+}
+
+.container {
+  padding: 1vh 1.5vw 2vh 1.5vw;
+}
+
+li {
+  background: #ebf1ff;
+  padding: 0vh;
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  border-radius: 4px;
+
+  .fileIcon {
+    width: 0.95vw;
+  }
+
+  .fileDetails {
+    margin-left: 0vw;
+    width: 80%;
+    word-break: break-all;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vh;
+
+    .fileName {
+      font-size: 1.7vh;
+      font-weight: 500;
+      color: #4a4a4a;
+      margin: 0;
+      line-height: 1.7vh;
+      cursor: pointer;
+    }
+
+    .uploadedText {
+      font-size: 1.55vh;
+      color: #25307f;
+      font-weight: 600;
+      line-height: 1.55vh;
+    }
+  }
+
+  .trashIcon {
+    color: #989898;
+    cursor: pointer;
+    width: 1.1vw;
+  }
+
+  .trashWrapper {
+    width: 5%;
+  }
+}
+
+.fileRow {
+  padding: 1vh 0.5vw;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: center;
+
+  button {
+    background-color: #25307f;
+    color: white;
+    padding: 1vh 2vw;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.9vh;
+    font-family: "Karla", sans-serif;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s;
+
+    &:hover {
+      background-color: #1d2c6b;
+    }
+  }
 }
