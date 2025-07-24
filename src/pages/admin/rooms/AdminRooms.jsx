@@ -149,7 +149,19 @@ const AdminRooms = (props) => {
       });
       return;
     }
-    dispatch(addRoom(formData));
+
+    // Convert customRoomType into roomType before sending
+    const finalData = {
+      ...formData,
+      roomType:
+          formData.roomType === "custom"
+              ? formData.customRoomType
+              : formData.roomType,
+    };
+    delete finalData.customRoomType;
+
+    // console.log("To: ",finalData)
+    dispatch(addRoom(finalData));
     setErrors({});
     setAddDialogOpen(false);
   };
@@ -439,78 +451,71 @@ const AdminRooms = (props) => {
                             required
                           />
                         </Grid>
-                        <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                          <FormControl
-                            fullWidth
-                            margin="dense"
-                            error={!!errors.roomType}
-                          >
-                            <InputLabel id="roomType-select-label">
-                              Room Type
-                            </InputLabel>
-                            <Select
-                              labelId="roomType-select-label"
-                              id="roomType-select"
-                              name="roomType"
-                              value={formData.roomType}
-                              onChange={handleChange}
-                              label="Room Type"
-                              variant="outlined"
-                              sx={{ width: "100%" }}
-                              required
-                            >
-                              {roomTypes.map((type) => (
-                                <MenuItem key={type} value={type}>
-                                  {type}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            {errors.status && (
-                              <Typography variant="caption" color="error">
-                                {errors.status}
-                              </Typography>
-                            )}
-                          </FormControl>
-                        </Grid>
-
-                        {/* Add Room Type Button */}
-
-                        <Grid item xs={3}>
-                          {!newRoomTypeVisible ? (
-                            <Box
+                        <Grid xs={6}>
+                          <Box
                               sx={{
                                 display: "flex",
                                 alignItems: "center",
-                                justifyContent: "center",
-                                height: "100%",
+                                gap: 1,
                               }}
+                          >
+                            <FormControl
+                                sx={{ flex: 1 ,width:'14rem'}}
+                                margin="dense"
+                                error={!!errors.roomType}
+                                fullWidth
                             >
-                              <Typography
-                                variant="body2"
-                                sx={{
-                                  cursor: "pointer",
-                                  color: "#1976d2",
-                                  "&:hover": { textDecoration: "underline" },
-                                }}
-                                onClick={() => setNewRoomTypeVisible(true)}
+                              <InputLabel id="roomType-select-label">Room Type</InputLabel>
+                              <Select
+                                  fullWidth
+                                  labelId="roomType-select-label"
+                                  id="roomType-select"
+                                  name="roomType"
+                                  value={
+                                      formData.roomType || ""
+                                  }
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    setFormData({
+                                      ...formData,
+                                      roomType: value ,
+                                    });
+                                  }}
+                                  label="Room Type"
+                                  variant="outlined"
+                                  required
                               >
-                                + Add New Room Type
-                              </Typography>
-                            </Box>
-                          ) : (
-                            <TextField
-                              margin="dense"
-                              label="Add New Room Type"
-                              name="newRoomType"
-                              value={formData.newRoomType}
-                              onChange={handleChange}
-                              type="text"
-                              fullWidth
-                              variant="outlined"
-                              error={!!errors.newRoomType}
-                              helperText={errors.newRoomType}
-                            />
-                          )}
+                                {roomTypes.map((type) => (
+                                    <MenuItem key={type} value={type}>
+                                      {type}
+                                    </MenuItem>
+                                ))}
+                                <MenuItem value="custom">Custom</MenuItem>
+                              </Select>
+                              {errors.roomType && (
+                                  <Typography variant="caption" color="error">
+                                    {errors.roomType}
+                                  </Typography>
+                              )}
+                            </FormControl>
+
+                            {formData.roomType === "custom" && (
+                                <TextField
+                                    name="customRoomType"
+                                    value={formData.customRoomType || ""}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, customRoomType: e.target.value })
+                                    }
+                                    label="Custom Room Type"
+                                    margin="dense"
+                                    variant="outlined"
+                                    required
+                                    error={!!errors.roomType}
+                                    helperText={errors.roomType}
+                                    sx={{ flex: 1 }}
+                                />
+                            )}
+                          </Box>
                         </Grid>
                       </Grid>
                     </Box>
@@ -565,6 +570,7 @@ const AdminRooms = (props) => {
                       Status
                     </TableCell>
                     <TableCell align="left">Doctor Assigned</TableCell>
+                    <TableCell align="left"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
