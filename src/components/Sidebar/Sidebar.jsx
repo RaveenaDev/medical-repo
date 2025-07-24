@@ -272,19 +272,6 @@ const Sidebar = ({ role }) => {
               <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
             </div>
           </div>
-
-          <div style={{ paddingRight: "0.7rem" }}>
-            <IconButton
-              sx={{
-                "&:focus": {
-                  outline: "none",
-                  boxShadow: "none",
-                },
-              }}
-            >
-              <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
-            </IconButton>
-          </div>
         </div>
       </div>
       {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout} />}

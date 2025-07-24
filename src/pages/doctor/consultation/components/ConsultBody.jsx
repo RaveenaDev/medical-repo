@@ -164,9 +164,6 @@ const ConsultBody = ({
       </div>
     );
   }
-
-  const openComplete = () => setActiveModal("complete");
-  const openRefer = () => setActiveModal("refer");
   const openNextAppointment = () => setActiveModal("nextAppointment");
   const openAddQuestion = () => setActiveModal("addQuestion");
 

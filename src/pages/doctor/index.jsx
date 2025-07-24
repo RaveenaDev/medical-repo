@@ -673,7 +673,13 @@ const DoctorOverview = ({ todayAppointments }) => {
                     </div>
                   </div>
 
-                  <DoughnutChart data={resultantData} />
+                  {resultantData && resultantData.length > 0 ? (
+                      <DoughnutChart data={resultantData} />
+                  ) : (
+                      <div style={{ textAlign: "center", color: "#888", fontSize: "15px", padding: "1rem",fontStyle:'italic'}}>
+                        No data found.
+                      </div>
+                  )}
                 </div>
                 <div className={styles.card}>
                   <div
@@ -713,41 +719,47 @@ const DoctorOverview = ({ todayAppointments }) => {
                   </div>
 
                   <div>
-                    {criticalPatients.map((patient, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          borderBottom: "1px solid #eee",
-                          padding: "8px 0",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <div
-                            style={{
-                              fontWeight: "bold",
-                              fontSize: "14px",
-                              color: "#2d3179",
-                            }}
-                          >
-                            {patient.patientName}
-                          </div>
-                          <div
-                            style={{
-                              fontSize: "12px",
-                              color: "#878787",
-                            }}
-                          >
-                            {patient.condition}
-                          </div>
+                    {criticalPatients.length > 0 ? (
+                        criticalPatients.map((patient, index) => (
+                              <div
+                                  key={index}
+                                  style={{
+                                    borderBottom: "1px solid #eee",
+                                    padding: "8px 0",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                  }}
+                              >
+                                <div>
+                                  <div
+                                      style={{
+                                        fontWeight: "bold",
+                                        fontSize: "14px",
+                                        color: "#2d3179",
+                                      }}
+                                  >
+                                    {patient.patientName}
+                                  </div>
+                                  <div
+                                      style={{
+                                        fontSize: "12px",
+                                        color: "#878787",
+                                      }}
+                                  >
+                                    {patient.condition}
+                                  </div>
+                                </div>
+                                <div style={getStatusStyle(patient.severity)}>
+                                  {patient.severity}
+                                </div>
+                              </div>
+                          ))
+                    ) : (
+                        <div style={{fontStyle: "italic",fontSize:'15px', color: "#888", padding: "1rem",textAlign:'center'}}>
+                          No alerts found.
                         </div>
-                        <div style={getStatusStyle(patient.severity)}>
-                          {patient.severity}
-                        </div>
-                      </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>

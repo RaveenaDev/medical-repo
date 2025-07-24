@@ -197,12 +197,6 @@ const AdminDoctors = (props) => {
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
   };
-
-  const handleMenuOpen = (event, doctor) => {
-    event.stopPropagation(); // Prevents unwanted event bubbling
-    setAnchorEl(event.currentTarget);
-    setSelectedDoctor(doctor); // Correct reference
-  };
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedDoctor(null); // Fix: Clear selected doctor
