@@ -276,17 +276,12 @@ const BedInfo = ({ onClose, patientId }) => {
                         )}
                       </div>
                     </div>
-                    <div className={styles.changeBed}>
-                      <p className={styles.sectionHeadingS}>
-                        Change Bed No. To
-                      </p>
-                      <input type="text" className={styles.inputText} />
-                    </div>
+
                     <div className={styles.changeReason}>
                       <p className={styles.sectionHeadingS}>
                         Reason For Change
                       </p>
-                      <textarea name="" rows={3} id=""></textarea>
+                      <textarea name="" rows={4} id=""></textarea>
                     </div>
                   </div>
                 </div>
