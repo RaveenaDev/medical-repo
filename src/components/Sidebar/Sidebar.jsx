@@ -259,8 +259,8 @@ const Sidebar = ({ role }) => {
           <div style={{ display: "flex", gap: 12, marginLeft: "25px" }}>
             <img style={{width:'3.8rem',height:'3.8rem'}} src={SaiAsha} alt="Sai Asha"/>
             <div style={{ paddingTop: "9px" }}>
-              <p style={{ color: "#25307F", fontWeight: 500,fontSize:'15px' }}>{hospitalName.toUpperCase()}</p>
-              <p style={{ color: "#878787", fontSize: "12px" }}>We will do</p>
+              <p style={{ color: "#25307F", fontWeight: 600,fontSize:'15px' }}>{hospitalName?.toUpperCase()}</p>
+              <p style={{ color: "#878787", fontSize: "12px" }}>You will be fine...</p>
             </div>
           </div>
         </div>
