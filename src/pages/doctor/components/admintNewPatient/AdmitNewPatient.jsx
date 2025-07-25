@@ -1,89 +1,20 @@
 import styles from "./AdmitNewPatient.module.scss";
-import { ChevronLeft, X } from "lucide-react";
-const AdmitNewPatient = ({ onClose }) => {
-  const admissionData = [
-    {
-      name: "Jasmine Kaur",
-      age: 49,
-      gender: "Female",
-      admissionDate: "26 Jan 2025",
-      reason: "Surgery Schedule",
-      status: "Pending Admission",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/women/44.jpg",
-    },
-    {
-      name: "Rahul Ramchandra Mehta",
-      age: 55,
-      gender: "Male",
-      admissionDate: "25 Jan 2025",
-      reason: "Cardiac Evaluation",
-      status: "Pending Admission",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/men/21.jpg",
-    },
-    {
-      name: "Anjali Deshmukh",
-      age: 34,
-      gender: "Female",
-      admissionDate: "27 Jan 2025",
-      reason: "Maternity Check-up",
-      status: "Admitted",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/women/68.jpg",
-    },
-    {
-      name: "Sameer Sheikh",
-      age: 60,
-      gender: "Male",
-      admissionDate: "28 Jan 2025",
-      reason: "Orthopedic Surgery",
-      status: "Pending Admission",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/men/35.jpg",
-    },
-    {
-      name: "Pooja Verma",
-      age: 41,
-      gender: "Female",
-      admissionDate: "29 Jan 2025",
-      reason: "Routine Check-up",
-      status: "Cancelled",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/women/23.jpg",
-    },
-    {
-      name: "Vikram Nair",
-      age: 37,
-      gender: "Male",
-      admissionDate: "30 Jan 2025",
-      reason: "Neurology Review",
-      status: "Admitted",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/men/56.jpg",
-    },
-    {
-      name: "Vikram Nair",
-      age: 37,
-      gender: "Male",
-      admissionDate: "30 Jan 2025",
-      reason: "Neurology Review",
-      status: "Admitted",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/men/56.jpg",
-    },
-    {
-      name: "Vikram Nair",
-      age: 37,
-      gender: "Male",
-      admissionDate: "30 Jan 2025",
-      reason: "Neurology Review",
-      status: "Admitted",
-      formUrl: "#",
-      imageUrl: "https://randomuser.me/api/portraits/men/56.jpg",
-    },
-  ];
+import { ChevronLeft, X, Plus } from "lucide-react";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { approveAdmissionRequestWithSignature } from "../../../../components/State/Doctor/Action";
+const AdmitNewPatient = ({ onClose, requests }) => {
+  const dispatch = useDispatch();
+  const [signature, setSignature] = useState(null);
+  const handleApprove = async (requestId) => {
+    if (!signature) {
+      alert("Please upload your signature before approving.");
+      return;
+    }
 
+    dispatch(approveAdmissionRequestWithSignature(requestId, signature));
+  };
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
@@ -91,47 +22,75 @@ const AdmitNewPatient = ({ onClose }) => {
           onClick={onClose}
           strokeWidth={1.65}
           className={styles.leftArrow}
-        />{" "}
+        />
         <p>Admit New Patient</p>
+        <label htmlFor="signatureUpload" className={styles.uploadButton}>
+          <Plus size={16} strokeWidth={2} />
+          {signature ? "Uploaded" : "Upload Signature"}
+          <input
+            id="signatureUpload"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              const reader = new FileReader();
+              reader.onloadend = () => setSignature(reader.result); // base64
+              if (file) reader.readAsDataURL(file);
+            }}
+          />
+        </label>
       </div>
 
       <div className={styles.admissionList}>
-        {admissionData.length > 0 ? (
-          admissionData.map((patient, idx) => (
-            <div key={idx} className={styles.card}>
-              <div className={styles.cardLeft}>
-                <img src={patient.imageUrl} alt="" />
-                <div className={styles.patientDetails}>
-                  <p className={styles.name}>{patient.name}</p>
+        {requests?.length > 0 ? (
+          requests.map((req, idx) => {
+            const details = req.admissionDetails;
+            const name = details?.name || "Patient";
+            const firstInitial = name.charAt(0).toUpperCase();
 
-                  <p className={styles.ageNdGender}>
-                    {patient.gender}&nbsp;
-                    {patient.age} Y
-                  </p>
+            return (
+              <div key={req._id} className={styles.card}>
+                <div className={styles.cardLeft}>
+                  <div className={styles.avatarCircle}>
+                    <span>{firstInitial}</span>
+                  </div>
+                  <div className={styles.patientDetails}>
+                    <p className={styles.name}>{name}</p>
+                    <p className={styles.ageNdGender}>
+                      {details?.age ? `${details.age} Y` : "Age N/A"}
+                    </p>
+                  </div>
+                </div>
+                <div className={styles.middleLine} />
+                <div className={styles.cardRight}>
+                  <div className={styles.admitDetails}>
+                    <p>
+                      Admission date:{" "}
+                      <span>{dayjs(details.date).format("DD MMM YYYY")}</span>
+                    </p>
+                    <p>
+                      Reason: <span>{details?.medicalNote || "N/A"}</span>
+                    </p>
+                    <p>
+                      Status: <span>{req.status}</span>
+                    </p>
+                  </div>
+                  <div className={styles.btnContainer}>
+                    <button
+                      onClick={() => handleApprove(req._id)}
+                      className={styles.acceptBtn}
+                    >
+                      Accept
+                    </button>
+                    <button className={styles.rejectBtn}>
+                      <X className={styles.rejectIcon} />
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div className={styles.middleLine} />
-              <div className={styles.cardRight}>
-                <div className={styles.admitDetails}>
-                  <p>
-                    Admission date: <span>{patient.admissionDate}</span>
-                  </p>
-                  <p>
-                    Reason: <span>{patient.reason}</span>
-                  </p>
-                  <p>
-                    Status: <span>{patient.status}</span>
-                  </p>
-                </div>
-                <div className={styles.btnContainer}>
-                  <button className={styles.acceptBtn}>Accept</button>
-                  <button className={styles.rejectBtn}>
-                    <X className={styles.rejectIcon} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <p>No New Patient</p>
         )}

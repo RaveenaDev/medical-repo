@@ -7,6 +7,7 @@ import {
   CREATE_NEW_EVENT,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
+  GET_ADMISSION_REQUESTS_TO_APPROVE,
   GET_ADMITTED_PATIENTS,
   GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
@@ -14,7 +15,8 @@ import {
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
-  GET_APPOINTMENTS_BY_DATE, GET_APPOINTMENTS_OF_TODAY,
+  GET_APPOINTMENTS_BY_DATE,
+  GET_APPOINTMENTS_OF_TODAY,
   GET_APPROVED_ADMISSIONS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
@@ -102,6 +104,7 @@ const initialState = {
   patientMedicalRecords: [],
   appointmentHistory: [],
   patientBedInfo: [],
+  requestsToApprove: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -192,6 +195,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         admissionRequests: action.payload.requests,
         admissionRequestsCount: action.payload.count,
+        isLoading: false,
+      };
+    case GET_ADMISSION_REQUESTS_TO_APPROVE:
+      return {
+        ...state,
+        requestsToApprove: action.payload.requests,
         isLoading: false,
       };
     case GET_STATS:

@@ -146,3 +146,32 @@
   color: #dc3545;
   cursor: pointer;
 }
+.avatarCircle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #e3e3e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  color: #25307f;
+}
+.uploadButton {
+  margin-left: auto;
+  font-size: 14px;
+  background-color: #5461be;
+  color: white;
+  padding: 0.6vh 1vw;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background-color: #3c48a1;
+  }
+}
