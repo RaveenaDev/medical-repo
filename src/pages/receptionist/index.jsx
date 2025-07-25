@@ -142,10 +142,10 @@ function Receptionist(props) {
   const completedCount = useSelector((store) => store.admin.completedCount);
 
   const boxData = [
-    { id: 1, label: "Scheduled", count: scheduledAppointments.length },
-    { id: 2, label: "Ongoing", count: ongoingAppointments.length },
-    { id: 3, label: "Waiting", count: waitingAppointments.length },
-    { id: 4, label: "Completed", count: completedAppointments.length },
+    { id: 1, label: "Scheduled", count: scheduledCount },
+    { id: 2, label: "Ongoing", count: ongoingCount },
+    { id: 3, label: "Waiting", count: waitingCount },
+    { id: 4, label: "Completed", count: completedCount },
   ];
 
   const activeLabel = boxData.find((box) => box.id === activeBox)?.label;
@@ -417,135 +417,143 @@ function Receptionist(props) {
                               </TableRow>
                             </TableHead>
                             <TableBody sx={{ marginBottom: "50px" }}>
-                              {appointments.length > 0 ? (
-                                appointments.map((appointment) => (
-                                  <TableRow
-                                    key={appointment._id}
-                                    sx={{
-                                      bgcolor:
-                                        appointment.status === "Ongoing"
-                                          ? "#3DB46117"
-                                          : "white",
-                                      boxShadow:
-                                        "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                                      borderRadius: "8px",
-                                      "&:hover": {
-                                        backgroundColor: "#f9f9f9",
-                                      },
-                                      "& > *": {
-                                        borderBottom: "unset",
-                                      },
-                                    }}
-                                  >
-                                    <TableCell>
-                                      <Typography
-                                        sx={{
-                                          fontWeight: "bold",
-                                          cursor: "pointer",
-                                          color: "#25307F",
-                                        }}
-                                      >
-                                        {truncateText(appointment.caseId, 12)}
-                                      </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                      <Typography
-                                        variant="body1"
-                                        sx={{
-                                          fontWeight: "bold",
-                                          cursor: "pointer",
-                                          color: "#25307F",
-                                        }}
-                                      >
-                                        {appointment.patient.name}
-                                      </Typography>
-                                    </TableCell>
-                                    <TableCell
-                                      sx={{
-                                        color: "#747474",
-                                        fontWeight: "600",
-                                      }}
-                                    >
-                                      {appointment.doctor?.name}
-                                    </TableCell>
-                                    <TableCell
-                                      sx={{
-                                        color: "#747474",
-                                        fontWeight: "600",
-                                      }}
-                                    >
-                                      {appointment.typeVisit}
-                                    </TableCell>
-                                    <TableCell
-                                      sx={{
-                                        color: "#747474",
-                                        fontWeight: "600",
-                                      }}
-                                    >
-                                      {appointment.department.name}
-                                    </TableCell>
-                                    <TableCell
-                                      sx={{
-                                        color: "#747474",
-                                        fontWeight: "600",
-                                      }}
-                                      align="center"
-                                    >
-                                      {appointment?.tokenNumber || "N/A"}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      <Box
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "space-between",
+                              {appointments.length > 0 ?
+                                  (
+                                      [...appointments]
+                                          .sort((a, b) => {
+                                            if (a.status === "Ongoing" && b.status !== "Ongoing") return -1;
+                                            if (a.status !== "Ongoing" && b.status === "Ongoing") return 1;
+                                            return 0;
+                                          })
+                                          .map((appointment) => (
+                                              <TableRow
+                                                  key={appointment._id}
+                                                  sx={{
+                                                    bgcolor:
+                                                        appointment.status === "Ongoing"
+                                                            ? "#3DB46117"
+                                                            : "white",
+                                                    boxShadow:
+                                                        "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                                                    borderRadius: "8px",
+                                                    "&:hover": {
+                                                      backgroundColor: "#f9f9f9",
+                                                    },
+                                                    "& > *": {
+                                                      borderBottom: "unset",
+                                                    },
+                                                  }}
+                                              >
+                                                <TableCell>
+                                                  <Typography
+                                                      sx={{
+                                                        fontWeight: "bold",
+                                                        cursor: "pointer",
+                                                        color: "#25307F",
+                                                      }}
+                                                  >
+                                                    {truncateText(appointment.caseId, 12)}
+                                                  </Typography>
+                                                </TableCell>
+                                                <TableCell>
+                                                  <Typography
+                                                      variant="body1"
+                                                      sx={{
+                                                        fontWeight: "bold",
+                                                        cursor: "pointer",
+                                                        color: "#25307F",
+                                                      }}
+                                                  >
+                                                    {appointment.patient.name}
+                                                  </Typography>
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={{
+                                                      color: "#747474",
+                                                      fontWeight: "600",
+                                                    }}
+                                                >
+                                                  {appointment.doctor?.name}
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={{
+                                                      color: "#747474",
+                                                      fontWeight: "600",
+                                                    }}
+                                                >
+                                                  {appointment.typeVisit}
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={{
+                                                      color: "#747474",
+                                                      fontWeight: "600",
+                                                    }}
+                                                >
+                                                  {appointment.department.name}
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={{
+                                                      color: "#747474",
+                                                      fontWeight: "600",
+                                                    }}
+                                                    align="center"
+                                                >
+                                                  {appointment?.tokenNumber || "N/A"}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                  <Box
+                                                      sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between",
 
-                                          width: "100%",
-                                        }}
-                                      >
-                                        <Chip
-                                          label={appointment.status}
-                                          size="small"
-                                          sx={{
-                                            bgcolor:
-                                              appointment.status === "Ongoing"
-                                                ? "#3DB461"
-                                                : "white",
-                                            color:
-                                              appointment.status === "Ongoing"
-                                                ? "white"
-                                                : appointment.status ===
-                                                  "Completed"
-                                                ? "#EAA000"
-                                                : appointment.status ===
-                                                  "Scheduled"
-                                                ? "#25307F"
-                                                : "#757575",
-                                            fontWeight: "600",
-                                            px: 0.7,
-                                          }}
-                                        />
-                                        {appointment.status === "Waiting" && (
-                                          <Box sx={{ ml: "auto" }}>
-                                            <IconButton
-                                              size="small"
-                                              sx={{
-                                                p: 0,
-                                                "&:focus": {
-                                                  outline: "none",
-                                                  boxShadow: "none",
-                                                },
-                                              }}
-                                            >
-                                              <MoreVertIcon fontSize="small" />
-                                            </IconButton>
-                                          </Box>
-                                        )}
-                                      </Box>
-                                    </TableCell>
-                                  </TableRow>
-                                ))
-                              ) : (
+                                                        width: "100%",
+                                                      }}
+                                                  >
+                                                    <Chip
+                                                        label={appointment.status}
+                                                        size="small"
+                                                        sx={{
+                                                          bgcolor:
+                                                              appointment.status === "Ongoing"
+                                                                  ? "#3DB461"
+                                                                  : "white",
+                                                          color:
+                                                              appointment.status === "Ongoing"
+                                                                  ? "white"
+                                                                  : appointment.status ===
+                                                                  "Completed"
+                                                                      ? "#EAA000"
+                                                                      : appointment.status ===
+                                                                      "Scheduled"
+                                                                          ? "#25307F"
+                                                                          : "#757575",
+                                                          fontWeight: "600",
+                                                          px: 0.7,
+                                                        }}
+                                                    />
+                                                    {appointment.status === "Waiting" && (
+                                                        <Box sx={{ ml: "auto" }}>
+                                                          <IconButton
+                                                              size="small"
+                                                              sx={{
+                                                                p: 0,
+                                                                "&:focus": {
+                                                                  outline: "none",
+                                                                  boxShadow: "none",
+                                                                },
+                                                              }}
+                                                          >
+                                                            <MoreVertIcon fontSize="small" />
+                                                          </IconButton>
+                                                        </Box>
+                                                    )}
+                                                  </Box>
+                                                </TableCell>
+                                              </TableRow>
+                                          ))
+                                          )
+                                : (
                                 <TableRow>
                                   <TableCell align="center" colSpan={7}>
                                     No data found!
