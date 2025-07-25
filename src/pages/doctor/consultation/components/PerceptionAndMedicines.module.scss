@@ -27,6 +27,33 @@
   color: #4a4a4a;
 }
 
+.toggleWrapper {
+  position: absolute;
+  display: flex;
+  width: 7rem;
+  right: 3rem;
+  font-weight: 500;
+  padding: 4px 5px;
+  border: 1px solid #2563eb;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  font-size: 12px;
+
+  span {
+    flex: 1; // ensures equal width for each
+    text-align: center;
+    padding: 4px 10px;
+    background: #ffffff;
+    transition: background 0.3s;
+  }
+
+  .activeToggle {
+    background-color: #dae4ff;
+  }
+}
+
+
 .container2 {
   margin-top: 9vh;
 

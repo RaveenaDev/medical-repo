@@ -28,6 +28,10 @@ const ConsultBody = ({
   setCompleteData,
   selectedComponent,
   setSelectedComponent,
+    confirmedSections,
+    setConfirmedSections,
+    customSections,
+    setCustomSections
 }) => {
   const [final, setFinal] = useState({
     doctor: null,
@@ -112,8 +116,6 @@ const ConsultBody = ({
 
   const [activeModal, setActiveModal] = useState(null);
 
-  const [customSections, setCustomSections] = useState([]);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -162,9 +164,6 @@ const ConsultBody = ({
       </div>
     );
   }
-
-  const openComplete = () => setActiveModal("complete");
-  const openRefer = () => setActiveModal("refer");
   const openNextAppointment = () => setActiveModal("nextAppointment");
   const openAddQuestion = () => setActiveModal("addQuestion");
 
@@ -234,6 +233,8 @@ const ConsultBody = ({
     );
   }
 
+  console.log("Seel: ",confirmedSections)
+
   return (
     <div>
       {/* Header 2 */}
@@ -292,8 +293,9 @@ const ConsultBody = ({
             <>
               <div
                 className={`${styles["lp-2"]} ${
-                  selectedComponent === "MedicalHistory" ? styles.active : ""
-                }`}
+                  selectedComponent === "MedicalHistory" ? styles.active : ""}
+                ${confirmedSections.includes("MedicalHistory") ? styles.confirmed : ""}
+                `}
                 onClick={() => setSelectedComponent("MedicalHistory")}
               >
                 <p>Medical History</p>
@@ -301,7 +303,9 @@ const ConsultBody = ({
               <div
                 className={`${styles["lp-3"]} ${
                   selectedComponent === "CurrentMedication" ? styles.active : ""
-                }`}
+                }
+                ${confirmedSections.includes("CurrentMedication") ? styles.confirmed : ""}
+                `}
                 onClick={() => setSelectedComponent("CurrentMedication")}
               >
                 <p>Current Medication</p>
@@ -309,7 +313,9 @@ const ConsultBody = ({
               <div
                 className={`${styles["lp-4"]} ${
                   selectedComponent === "DiagnosisAndVital" ? styles.active : ""
-                }`}
+                }
+                ${confirmedSections.includes("DiagnosisAndVital") ? styles.confirmed : ""}
+                `}
                 onClick={() => setSelectedComponent("DiagnosisAndVital")}
               >
                 <p>Diagnosis & Vital</p>
@@ -319,7 +325,9 @@ const ConsultBody = ({
                   selectedComponent === "PerceptionAndMedicines"
                     ? styles.active
                     : ""
-                } ${!completeData.medicalHistory ? styles.disabled : ""}`}
+                } ${!completeData.medicalHistory ? styles.disabled : ""}
+                ${confirmedSections.includes("PerceptionAndMedicines") ? styles.confirmed : ""}
+                `}
                 onClick={() => {
                   if (completeData.medicalHistory) {
                     setSelectedComponent("PerceptionAndMedicines");
@@ -332,7 +340,9 @@ const ConsultBody = ({
                 onClick={() => setSelectedComponent("TreatmentAndTest")}
                 className={`${styles["lp-6"]} ${
                   selectedComponent === "TreatmentAndTest" ? styles.active : ""
-                }`}
+                }
+                ${confirmedSections.includes("TreatmentAndTest") ? styles.confirmed : ""}
+                `}
               >
                 <p>Treatment and Tests</p>
               </div>
@@ -349,7 +359,9 @@ const ConsultBody = ({
                     key={section.id}
                     className={`${styles["lp-6"]} ${
                       selectedComponent === section.id ? styles.active : ""
-                    } ${isDisabled ? styles.disabled : ""}`}
+                    }
+                     ${confirmedSections.includes(section.name) ? styles.confirmed : ""}
+                     ${isDisabled ? styles.disabled : ""}`}
                     onClick={() => {
                       if (!isDisabled) {
                         setSelectedComponent(section.id);
@@ -368,7 +380,9 @@ const ConsultBody = ({
               key={index}
               className={`${styles["lp-6"]} ${
                 selectedComponent === section ? styles.active : ""
-              }`}
+              }
+              ${confirmedSections.includes(section) ? styles.confirmed : ""}
+              `}
               onClick={() => setSelectedComponent(section)}
             >
               <p>{section}</p>
@@ -377,7 +391,7 @@ const ConsultBody = ({
 
           <div className={styles["lp-7"]} onClick={openAddQuestion}>
             <Plus className={styles["lp-7-icon"]} size={38} />
-            <p>Add Question</p>
+            <p>Add Section</p>
           </div>
 
           <div className={styles["lp-8"]}>
@@ -487,6 +501,8 @@ const ConsultBody = ({
                           medicalHistory: medicalData,
                         }));
 
+                        setConfirmedSections((prev) => [...new Set([...prev, "Medical History"])]);
+
                         const currentIndex = selectedForm.sections.findIndex(
                           (sec) => sec.id === selectedComponent
                         );
@@ -517,6 +533,8 @@ const ConsultBody = ({
                           ...prev,
                           perceptionsAndMedicines: perceptionData,
                         }));
+
+                        setConfirmedSections((prev) => [...new Set([...prev, "Prescription & Medicines"])]);
 
                         const currentIndex = selectedForm.sections.findIndex(
                           (sec) => sec.id === selectedComponent
@@ -550,6 +568,7 @@ const ConsultBody = ({
                       if (nextSection) {
                         setSelectedComponent(nextSection.id);
                       }
+                      setConfirmedSections((prev) => [...new Set([...prev, currentSection.name])]);
                     }}
                     existingData={completeData}
                   />
@@ -580,6 +599,7 @@ const ConsultBody = ({
                     medicalHistory: medicalData,
                   }));
                   setSelectedComponent("CurrentMedication");
+                  setConfirmedSections((prev) => [...new Set([...prev, "MedicalHistory"])]);
                 }}
               />
             )}
@@ -594,6 +614,7 @@ const ConsultBody = ({
                     currentMedications: currentMedicationData,
                   }));
                   setSelectedComponent("DiagnosisAndVital");
+                  setConfirmedSections((prev) => [...new Set([...prev, "CurrentMedication"])]);
                 }}
               />
             )}
@@ -608,6 +629,7 @@ const ConsultBody = ({
                     diagnosisVitals: diagnosisAndVital,
                   }));
                   setSelectedComponent("PerceptionAndMedicines");
+                  setConfirmedSections((prev) => [...new Set([...prev, "DiagnosisAndVital"])]);
                 }}
               />
             )}
@@ -623,7 +645,9 @@ const ConsultBody = ({
                     ...prev,
                     perceptionsAndMedicines: perceptionData,
                   }));
+                  console.log("Perception Data: ",perceptionData)
                   setSelectedComponent("TreatmentAndTest");
+                  setConfirmedSections((prev) => [...new Set([...prev, "PerceptionAndMedicines"])]);
                 }}
               />
             )}
@@ -638,6 +662,7 @@ const ConsultBody = ({
                     treatmentAndTests: treatmentAndTestsData,
                   }));
                   setSelectedComponent("TreatmentAndTest");
+                  setConfirmedSections((prev) => [...new Set([...prev, "TreatmentAndTest"])]);
                 }}
               />
             )}
@@ -651,6 +676,8 @@ const ConsultBody = ({
                     ...prev,
                     [selectedComponent]: data,
                   }));
+                  console.log("Selected Comp ; ",selectedComponent)
+                  setConfirmedSections((prev) => [...new Set([...prev, selectedComponent])]);
                 }}
               />
             )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import CommonPanelMini from "../components/CommonPanelMini";
 import styles from "./Consultation.module.scss";
 import dayjs from "dayjs";
@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAppointmentByDate } from "../../../components/State/Doctor/Action.js";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import CircularProgress from "@mui/material/CircularProgress";
+import {Box} from "@mui/material";
 export const Consultation = () => {
   const [activeModal, setActiveModal] = useState(null);
 
@@ -32,9 +34,11 @@ export const Consultation = () => {
   const handleChange = (e) => {
     setSelectedDate(e.target.value);
   };
-
+  const [loading, setLoading] = useState(true);
   const [selectedComponent, setSelectedComponent] = useState("PatientInfo");
   const [completeData, setCompleteData] = useState({});
+  const [confirmedSections, setConfirmedSections] = useState([]);
+  const [customSections, setCustomSections] = useState([]);
 
   const [activeView, setActiveView] = useState("consult");
   const [shouldRefetch, setShouldRefetch] = useState(false);
@@ -47,7 +51,10 @@ export const Consultation = () => {
     const endDate = dayjs(selectedDate).endOf("day").toISOString();
 
     if (shouldRefetch || selectedDate) {
-      dispatch(getAppointmentByDate(startDate, endDate));
+      setLoading(true); // Show loader before dispatch
+      dispatch(getAppointmentByDate(startDate, endDate)).finally(() => {
+        setLoading(false); // Hide loader after fetch completes
+      });
       if (shouldRefetch) setShouldRefetch(false); // reset after triggering
     }
 
@@ -108,7 +115,10 @@ export const Consultation = () => {
                 <div className={styles["library-modal"]}>
                   <Library onClose={closeModal} onApply={handleApplyForm}
                            setCompleteData={setCompleteData}
-                           setSelectedComponent={setSelectedComponent}/>
+                           setSelectedComponent={setSelectedComponent}
+                           setConfirmedSections={setConfirmedSections}
+                           setCustomSections={setCustomSections}
+                  />
                 </div>
               </>
             )}
@@ -148,12 +158,32 @@ export const Consultation = () => {
           </DndProvider>
         )}
         {activeView === "consult" && (
-          <ConsultBody selectedForm={selectedForm}
-                       selectedComponent={selectedComponent}
-                       setSelectedComponent={setSelectedComponent}
-                       completeData={completeData}
-                       setCompleteData={setCompleteData}
-                       appointments={appointments} onSuccess={() => setShouldRefetch(true)}/>
+            loading ? (
+                <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "50vh", // or full height you need
+                    }}
+                >
+                  <CircularProgress sx={{ color: "#25307F" }} size={58} />
+                </Box>
+            ) : (
+                <ConsultBody
+                    selectedForm={selectedForm}
+                    selectedComponent={selectedComponent}
+                    setSelectedComponent={setSelectedComponent}
+                    completeData={completeData}
+                    setCompleteData={setCompleteData}
+                    confirmedSections={confirmedSections}
+                    setConfirmedSections={setConfirmedSections}
+                    customSections={customSections}
+                    setCustomSections={setCustomSections}
+                    appointments={appointments}
+                    onSuccess={() => setShouldRefetch(true)}
+                />
+            )
         )}
       </div>
     </div>

@@ -53,8 +53,11 @@ const AdminRooms = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-
+  const [newRoomTypeVisible, setNewRoomTypeVisible] = useState(false);
+  const [newRoomType, setNewRoomType] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const roomTypes = ["Available", "Occupied", "Under Maintenance"];
+
   // State for editing room
   const [editedRoom, setEditedRoom] = useState({
     roomID: "",
@@ -134,10 +137,16 @@ const AdminRooms = (props) => {
     let newErrors = {};
 
     Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
+      if (key !== "beds" && !formData[key]) {
         newErrors[key] = "This field is required";
       }
     });
+
+// Validate bed fields
+    const bed = formData.beds[0];
+    if (!bed.bedId) newErrors.bedId = "Bed ID is required";
+    if (!bed.status) newErrors.bedStatus = "Bed status is required";
+    if (!bed.cost) newErrors.cost = "Cost is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -146,7 +155,20 @@ const AdminRooms = (props) => {
       });
       return;
     }
-    dispatch(addRoom(formData));
+
+
+    // Convert customRoomType into roomType before sending
+    const finalData = {
+      ...formData,
+      roomType:
+          formData.roomType === "custom"
+              ? formData.customRoomType
+              : formData.roomType,
+    };
+    delete finalData.customRoomType;
+
+    console.log("To: ",finalData)
+    // dispatch(addRoom(finalData));
     setErrors({});
     setAddDialogOpen(false);
   };
@@ -154,13 +176,28 @@ const AdminRooms = (props) => {
   const [formData, setFormData] = useState({
     roomID: "",
     name: "",
+    roomType: "",
     doctorId: "",
-    status: "",
+    floor: "",
+    wing: "",
+    beds: [
+      {
+        bedId: "",
+        status: "",
+        cost: ""
+      }
+    ]
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleBedChange = (key, value) => {
+    const updatedBed = { ...formData.beds[0], [key]: value };
+    setFormData({ ...formData, beds: [updatedBed] });
+  };
+
 
   const dispatch = useDispatch();
 
@@ -342,53 +379,51 @@ const AdminRooms = (props) => {
                         </Grid>
                         <Grid xs={3}>
                           <TextField
-                            margin="dense"
-                            label="Room Name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            error={!!errors.name}
-                            helperText={errors.name}
-                            required
+                              label="Bed ID"
+                              name="bedId"
+                              value={formData.beds[0].bedId}
+                              onChange={(e) => handleBedChange("bedId", e.target.value)}
+                              fullWidth
+                              margin="dense"
+                              variant="outlined"
+                              required
+                              error={!!errors.bedId}
+                              helperText={errors.bedId}
                           />
                         </Grid>
-                        <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                          <FormControl
-                            fullWidth
-                            margin="dense"
-                            error={!!errors.status}
-                          >
-                            <InputLabel id="status-select-label">
-                              Status
-                            </InputLabel>
-                            <Select
-                              labelId="status-select-label"
-                              id="status-select"
-                              name="status"
-                              value={formData.status}
-                              onChange={handleChange}
-                              label="Status"
+                        <Grid xs={3}>
+                          <TextField
+                              label="Cost"
+                              name="cost"
+                              type="number"
+                              value={formData.beds[0].cost}
+                              onChange={(e) => handleBedChange("cost", e.target.value)}
+                              fullWidth
+                              margin="dense"
                               variant="outlined"
-                              sx={{ width: "100%" }}
                               required
+                              error={!!errors.cost}
+                              helperText={errors.cost}
+                          />
+                        </Grid>
+                        <Grid xs={3} sx={{width: '22%'}}>
+                          <FormControl fullWidth margin="dense" error={!!errors.bedStatus}>
+                            <InputLabel>Status</InputLabel>
+                            <Select
+                                value={formData.beds[0].status}
+                                onChange={(e) => handleBedChange("status", e.target.value)}
                             >
                               <MenuItem value="Available">Available</MenuItem>
                               <MenuItem value="Occupied">Occupied</MenuItem>
-                              <MenuItem value="Under Maintenance">
-                                Under Maintenance
-                              </MenuItem>
+                              <MenuItem value="Under Maintenance">Under Maintenance</MenuItem>
                             </Select>
-                            {errors.status && (
-                              <Typography variant="caption" color="error">
-                                {errors.status}
-                              </Typography>
+                            {errors.bedStatus && (
+                                <Typography variant="caption" color="error">
+                                  {errors.bedStatus}
+                                </Typography>
                             )}
                           </FormControl>
                         </Grid>
-
                         <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
                           <FormControl
                             fullWidth
@@ -407,6 +442,19 @@ const AdminRooms = (props) => {
                               label="Doctor Assigned"
                               variant="outlined"
                               required
+                              MenuProps={{
+                                PaperProps: {
+                                  sx: {
+                                    maxHeight: 200, // Fixed dropdown height
+                                    overflowY: "auto",
+                                    "&::-webkit-scrollbar": {
+                                      display: "none",
+                                    },
+                                    "-ms-overflow-style": "none", // IE and Edge
+                                    "scrollbar-width": "none",    // Firefox
+                                  },
+                                },
+                              }}
                             >
                               {doctors?.map((doctor) => (
                                 <MenuItem key={doctor._id} value={doctor._id}>
@@ -420,6 +468,85 @@ const AdminRooms = (props) => {
                               </Typography>
                             )}
                           </FormControl>
+                        </Grid>
+                        <Grid xs={6}>
+                          <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                          >
+                            <FormControl
+                                sx={{ flex: 1 ,width:'14rem'}}
+                                margin="dense"
+                                error={!!errors.roomType}
+                                fullWidth
+                            >
+                              <InputLabel id="roomType-select-label">Room Type</InputLabel>
+                              <Select
+                                  fullWidth
+                                  labelId="roomType-select-label"
+                                  id="roomType-select"
+                                  name="roomType"
+                                  value={
+                                      formData.roomType || ""
+                                  }
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    setFormData({
+                                      ...formData,
+                                      roomType: value ,
+                                    });
+                                  }}
+                                  label="Room Type"
+                                  variant="outlined"
+                                  required
+                                  MenuProps={{
+                                    PaperProps: {
+                                      sx: {
+                                        maxHeight: 200, // Fixed dropdown height
+                                        overflowY: "auto",
+                                        "&::-webkit-scrollbar": {
+                                          display: "none",
+                                        },
+                                        "-ms-overflow-style": "none", // IE and Edge
+                                        "scrollbar-width": "none",    // Firefox
+                                      },
+                                    },
+                                  }}
+                              >
+                                {roomTypes.map((type) => (
+                                    <MenuItem key={type} value={type}>
+                                      {type}
+                                    </MenuItem>
+                                ))}
+                                <MenuItem value="custom">Custom</MenuItem>
+                              </Select>
+                              {errors.roomType && (
+                                  <Typography variant="caption" color="error">
+                                    {errors.roomType}
+                                  </Typography>
+                              )}
+                            </FormControl>
+
+                            {formData.roomType === "custom" && (
+                                <TextField
+                                    name="customRoomType"
+                                    value={formData.customRoomType || ""}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, customRoomType: e.target.value })
+                                    }
+                                    label="Custom Room Type"
+                                    margin="dense"
+                                    variant="outlined"
+                                    required
+                                    error={!!errors.roomType}
+                                    helperText={errors.roomType}
+                                    sx={{ flex: 1 }}
+                                />
+                            )}
+                          </Box>
                         </Grid>
                       </Grid>
                     </Box>
@@ -474,6 +601,7 @@ const AdminRooms = (props) => {
                       Status
                     </TableCell>
                     <TableCell align="left">Doctor Assigned</TableCell>
+                    <TableCell align="left"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

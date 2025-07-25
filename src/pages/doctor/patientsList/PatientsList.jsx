@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   admitPatient,
   getAdmissionRequests,
-  getAdmittedPatients, getAppointmentsOfToday,
+  getAdmittedPatients,
+  getAppointmentsOfToday,
   getApprovedAdmissions,
 } from "../../../components/State/Doctor/Action.js";
 import Slider from "react-slick";
@@ -33,14 +34,9 @@ const PatientsList = () => {
   const patientsAdmitted = useSelector(
     (store) => store.doctor.admittedPatients
   );
-  const approvedAdmissions = useSelector(
-    (store) => store.doctor.approvedAdmissions
-  );
+
   const admissionRequests = useSelector(
     (store) => store.doctor.admissionRequests
-  );
-  const admissionRequestsCount = useSelector(
-    (store) => store.doctor.admissionRequestsCount
   );
 
   const [filter, setFilter] = useState("Total");
@@ -112,7 +108,7 @@ const PatientsList = () => {
   };
 
   const [selectedDate, setSelectedDate] = useState(
-      dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD")
   );
 
   useEffect(() => {
@@ -122,7 +118,6 @@ const PatientsList = () => {
     if (selectedDate) {
       dispatch(getAppointmentsOfToday(startDate, endDate));
     }
-
   }, [dispatch, selectedDate]);
 
   const appointments = useSelector((store) => store.doctor.appointmentsOfToday);
@@ -139,8 +134,8 @@ const PatientsList = () => {
       <div className="greeting">
         <h4 className="heading">Good Morning, Dr. {doctorName}</h4>
         <p>
-          I hope you are in good mood because there are {todayAppointments} patients waiting for
-          you.
+          I hope you are in good mood because there are {todayAppointments}{" "}
+          patients waiting for you.
         </p>
       </div>
 
@@ -175,7 +170,7 @@ const PatientsList = () => {
       <section className="toAdmit">
         <div className="description">
           To be admitted:{" "}
-          <span className="count">{admissionRequestsCount}</span>
+          <span className="count">{filteredAdmissions.length}</span>
         </div>
         <div className=" toAdmitSliderWrapper">
           <Slider {...sliderSettings}>

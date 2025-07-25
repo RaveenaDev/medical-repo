@@ -8,7 +8,7 @@ import Logout from "../../pages/receptionist/Settings/Logout.jsx";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DoctorNotesPopup from "./DoctorNotesPopup.jsx";
-
+import SaiAsha from "../../assets/Sai Asha.jpeg"
 const roleOptions = {
   receptionist: [
     { title: "Overview", path: "/receptionist" },
@@ -87,16 +87,10 @@ const Sidebar = ({ role }) => {
   const [childPopupPosition, setChildPopupPosition] = useState({
     left: 550,
   });
-  const handleAdd = () => {
-    if (popupRef.current) {
-      const rect = popupRef.current.getBoundingClientRect();
-      setChildPopupPosition({
-        top: rect.top,
-        left: rect.right + 16, // 16px gap to the right
-      });
-      setShowChildPopup(true);
-    }
-  };
+
+  const hospitalName = localStorage.getItem('hospitalName')
+  // console.log(hospitalName)
+
   return (
     <div
       className={styles.sidebar}
@@ -260,30 +254,17 @@ const Sidebar = ({ role }) => {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            paddingBottom: "5px",
-            paddingTop: "20px",
+            paddingBottom: "2px",
+            paddingTop: "10px",
             borderTop: "1px solid #E2E2E2 ",
           }}
         >
           <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
-            <Avatar sx={{ width: 50, height: 50 }} />
-            <div style={{ paddingTop: "2px" }}>
-              <p style={{ color: "#25307F", fontWeight: 500 }}>Hospital</p>
-              <p style={{ color: "#878787", fontSize: "12px" }}>TextField</p>
+            <img style={{width:'3.6rem',height:'3.6rem'}} src={SaiAsha} alt="Sai Asha"/>
+            <div style={{ paddingTop: "7px" }}>
+              <p style={{ color: "#25307F", fontWeight: 500 }}>{hospitalName}</p>
+              <p style={{ color: "#878787", fontSize: "12px" }}>Sai Asha Tagline</p>
             </div>
-          </div>
-
-          <div style={{ paddingRight: "0.7rem" }}>
-            <IconButton
-              sx={{
-                "&:focus": {
-                  outline: "none",
-                  boxShadow: "none",
-                },
-              }}
-            >
-              <KeyboardArrowDownIcon sx={{ width: 32, height: 32 }} />
-            </IconButton>
           </div>
         </div>
       </div>

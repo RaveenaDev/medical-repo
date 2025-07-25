@@ -372,7 +372,7 @@ export const MedicalHistory = ({ patient, onConfirm,selectedComponent,existingDa
         {/* row3 */}
         <div className={styles.row3}>
           <p className={styles.question}>
-            Have you had heart surgery or procedures? (e.g., stents, bypass
+            Have you had surgery or procedures? (e.g., stents, bypass
             surgery)
           </p>
           <input

@@ -1,34 +1,65 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import PostSurgeryFollowUp from "./form/PostSurgeryFollowUp";
-import LabTests from "./form/LabTests";
-import InitialConsultation from "./form/InitialConsultation";
-import Surgery from "./form/Surgery";
 import styles from "./ProgressTracker2.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getProgressTrackerDetails } from "../../../../../components/State/Doctor/Action";
+import CompletedProgress from "./modals/completed/CompletedProgress";
+import OngoingProgress from "./modals/ongoing/OngoingProgress";
+
+const OngoingModal = ({ step, onClose }) => {
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <div className={styles.modalHeader}>
+          <h2>Ongoing Phase</h2>
+          <button onClick={onClose}>✖</button>
+        </div>
+        <div className={styles.modalBody}>
+          <p>This step is currently ongoing.</p>
+          <p>
+            <strong>Phase:</strong> {step?.phase}
+          </p>
+          <p>
+            <strong>Doctor:</strong> {step?.doctor?.name}
+          </p>
+        </div>
+        <div className={styles.modalFooter}>
+          <button onClick={onClose} className={styles.closeBtn}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ProgressTracker2 = ({ patientId }) => {
   const dispatch = useDispatch();
-  const [activeModal, setActiveModal] = useState(null);
+  const [selectedStep, setSelectedStep] = useState(null);
+  const [modalType, setModalType] = useState(null); // 'completed' or 'ongoing'
+
   useEffect(() => {
     dispatch(getProgressTrackerDetails(patientId));
   }, [dispatch]);
+
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
-  // console.log("progressTracker details: ", progressTracker);
+  console.log("progressTracker details: ", progressTracker);
 
   useEffect(() => {
-    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    document.body.style.overflow = selectedStep ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [activeModal]);
+  }, [selectedStep]);
 
-  const openFollowUp = () => setActiveModal("FollowUp");
-  const openSurgery = () => setActiveModal("Surgery");
-  const openLabTests = () => setActiveModal("LabTests");
-  const openInitialConsultation = () => setActiveModal("InitialConsultation");
-  const closeModal = () => setActiveModal(null);
+  const openModal = (step) => {
+    if (step.status === "completed") {
+      setModalType("completed");
+      setSelectedStep(step);
+    } else if (step.status === "ongoing") {
+      setModalType("ongoing");
+      setSelectedStep(step);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -58,7 +89,6 @@ const ProgressTracker2 = ({ patientId }) => {
       </div>
 
       <div className={styles.tableContainer}>
-        {/* Header row */}
         <div className={styles.tableHeaderRow}>
           <div className={`${styles.headerCell} ${styles.phaseHeader}`}>
             Phase
@@ -70,7 +100,6 @@ const ProgressTracker2 = ({ patientId }) => {
           <div className={styles.headerCell}>Progress Status</div>
         </div>
 
-        {/* Data rows */}
         {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
           [...progressTracker].reverse().map((step, index) => (
             <div
@@ -78,17 +107,7 @@ const ProgressTracker2 = ({ patientId }) => {
               className={`${styles.tableRow} ${
                 step.status === "ongoing" ? styles.activeRow : ""
               }`}
-              onClick={
-                step.phase === "Post-Surgery Follow-up"
-                  ? openFollowUp
-                  : step.phase === "Lab Tests"
-                  ? openLabTests
-                  : step.phase === "Initial Consultation"
-                  ? openInitialConsultation
-                  : step.phase === "Surgery"
-                  ? openSurgery
-                  : null
-              }
+              onClick={() => openModal(step)}
             >
               <div className={`${styles.tableCell} ${styles.phaseCell}`}>
                 {step?.data?.title || "Untitled Phase"}
@@ -101,7 +120,6 @@ const ProgressTracker2 = ({ patientId }) => {
               <div className={styles.tableCell}>
                 {step?.doctor?.name || "Unknown"}
               </div>
-
               <div
                 className={`${styles.tableCell} ${
                   step.status === "completed"
@@ -120,38 +138,20 @@ const ProgressTracker2 = ({ patientId }) => {
         )}
       </div>
 
-      {/* Modals remain the same */}
-      {activeModal === "FollowUp" && (
-        <>
-          <div className={styles.backdropOverlay} onClick={closeModal} />
-          <div className={styles.followUpModal}>
-            <PostSurgeryFollowUp onClose={closeModal} />
-          </div>
-        </>
+      {/* Completed Step Modal */}
+      {modalType === "completed" && selectedStep && (
+        <CompletedProgress
+          step={selectedStep}
+          onClose={() => setSelectedStep(null)}
+        />
       )}
-      {activeModal === "Surgery" && (
-        <>
-          <div className={styles.backdropOverlay} onClick={closeModal} />
-          <div className={styles.surgeryModal}>
-            <Surgery onClose={closeModal} />
-          </div>
-        </>
-      )}
-      {activeModal === "LabTests" && (
-        <>
-          <div className={styles.backdropOverlay} onClick={closeModal} />
-          <div className={styles.labTestsModal}>
-            <LabTests onClose={closeModal} />
-          </div>
-        </>
-      )}
-      {activeModal === "InitialConsultation" && (
-        <>
-          <div className={styles.backdropOverlay} onClick={closeModal} />
-          <div className={styles.initialConsultationModal}>
-            <InitialConsultation onClose={closeModal} />
-          </div>
-        </>
+
+      {/* Ongoing Step Modal */}
+      {modalType === "ongoing" && selectedStep && (
+        <OngoingProgress
+          step={selectedStep}
+          onClose={() => setSelectedStep(null)}
+        />
       )}
     </div>
   );

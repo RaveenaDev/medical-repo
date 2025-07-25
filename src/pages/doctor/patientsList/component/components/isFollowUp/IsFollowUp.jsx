@@ -1,99 +1,90 @@
 import { useState } from "react";
 import styles from "./isFollowUp.module.scss";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Heading } from "lucide-react";
 
 const IsFollowUp = () => {
-  const getWeekDates = (startDate = new Date()) => {
-    const week = [];
-    const start = new Date(startDate);
-    start.setDate(start.getDate() - start.getDay() + 1); // Start from Monday
+  const appointmentsData = [
+    {
+      drName: "Dr. Smith",
+      heading: "Department of Cardiology",
+      roomNumber: 101,
+      wardNumber: 6,
+      startTime: "10:00 AM",
+      endTime: "11:00 AM",
+      date: "2024-07-01",
+    },
+    {
+      drName: "Dr. Patel",
+      heading: "Neurology Department",
+      roomNumber: 202,
+      wardNumber: 3,
+      startTime: "11:30 AM",
+      date: "2024-07-01",
+      endTime: "12:30 PM",
+    },
+    {
+      drName: "Dr. Khan",
+      heading: "Orthopedic Department",
+      roomNumber: 305,
+      wardNumber: 5,
+      startTime: "01:00 PM",
+      date: "2024-07-01",
+      endTime: "02:00 PM",
+    },
+    {
+      drName: "Dr. Roy",
+      heading: "Pediatrics",
+      roomNumber: 107,
+      wardNumber: 1,
+      startTime: "02:30 PM",
+      date: "2024-07-01",
+      endTime: "03:30 PM",
+    },
+    {
+      drName: "Dr. Mehra",
+      heading: "Dermatology",
+      roomNumber: 402,
+      wardNumber: 7,
+      startTime: "04:00 PM",
+      date: "2024-07-01",
+      endTime: "05:00 PM",
+    },
+  ];
 
-    for (let i = 0; i < 7; i++) {
-      const current = new Date(start);
-      current.setDate(start.getDate() + i);
-      week.push(current);
-    }
-    return week;
-  };
-
-  const appointmentsData = {
-    "2024-07-10": "Next OPD: July 10, 2024",
-    "2024-07-08": "Blood Test Review: July 8, 2024",
-    "2024-07-12": "Rehab Counseling: July 12, 2024",
-  };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const weekDates = getWeekDates(selectedDate);
-  const selectedDateStr = selectedDate.toISOString().split("T")[0];
-  const appointment = appointmentsData[selectedDateStr];
-
-  const selectedBed1 = ["option 1", "option 2", "optioon 3"];
-  const [openSelectedBed1, setOpenSelectedBed1] = useState(false);
-  const [selectedSelectedBed1, setSelectedSelectedBed1] = useState("");
-  const handleDateClick = (date) => {
-    setSelectedDate(date);
-  };
   return (
     <div className={styles.container}>
       <div className={styles.appointment}>
         <div className={styles.header}>
           <p className={styles.appointmentTitle}>Appointments</p>
-          <div className={styles.dropdown}>
-            <button
-              className={styles.trigger}
-              onClick={() => setOpenSelectedBed1((prev) => !prev)}
-            >
-              <p>{selectedSelectedBed1 || "Select"}</p>
-              <span className={styles.arrow}>
-                {openSelectedBed1 ? <ChevronUp /> : <ChevronDown />}
-              </span>
-            </button>
-            {openSelectedBed1 && (
-              <ul className={styles.menu}>
-                {selectedBed1.map((option) => (
-                  <li
-                    key={option}
-                    className={`${styles.item} ${
-                      selectedSelectedBed1 === option ? styles.active : ""
-                    }`}
-                    onClick={() => {
-                      setSelectedSelectedBed1(option);
-                      setOpenSelectedBed1(false);
-                    }}
-                  >
-                    {option}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
         </div>
 
-        <div className={styles.weekRow}>
-          {weekDates.map((date, idx) => {
-            const isSelected =
-              date.toDateString() === selectedDate.toDateString();
-            return (
-              <div
-                key={idx}
-                onClick={() => handleDateClick(date)}
-                className={`${styles.dayBox} ${
-                  isSelected ? styles.selected : ""
-                }`}
-              >
-                <div className={styles.dateNum}>
-                  {String(date.getDate()).padStart(2, "0")}
+        <div className={styles.appointmentWrapper}>
+          {appointmentsData.length > 0 ? (
+            appointmentsData.map((appointmentsData, index) => (
+              <div key={index} className={styles.appointmentBox}>
+                <div className={styles.row1}>
+                  <p className={styles.drName}>{appointmentsData.drName}</p>
+
+                  <p className={styles.time}>
+                    {appointmentsData.startTime} to {appointmentsData.endTime}
+                  </p>
                 </div>
-                <div className={styles.dayName}>
-                  {date.toLocaleDateString("en-US", { weekday: "short" })}
+                <div className={styles.row1}>
+                  <p className={styles.heading}>{appointmentsData.heading}</p>
+                  <p className={styles.date}>{appointmentsData.date}</p>
                 </div>
+
+                <p className={styles.room}>
+                  Room at {appointmentsData.roomNumber}, ward no.{" "}
+                  {appointmentsData.wardNumber}
+                </p>
               </div>
-            );
-          })}
-        </div>
-
-        <div className={styles.appointmentBox}>
-          {appointment ? <p>{appointment}</p> : <p>No Appointment For Today</p>}
+            ))
+          ) : (
+            <div>
+              <p>No Appointment For Today</p>
+            </div>
+          )}
         </div>
       </div>
       <div className={styles.carePlan}>

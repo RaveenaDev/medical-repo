@@ -996,6 +996,7 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
 
     // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
     // return data.request;
+    dispatch(getAdmissionRequests()); // Refresh the list of requests
     toast.success("Admission Request Created successfully!", {
       position: "bottom-right",
       autoClose: 2000,
@@ -1253,32 +1254,33 @@ export const addMedicalAdministration = (payload) => async (dispatch) => {
     throw error;
   }
 };
-export const updateMedicationAdministration = (payload) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const updateMedicationAdministration =
+  (payload, patientId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(
-      `${API_URL}/updateMedicationAction`,
-      payload,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    // console.log("Update medicinal administration recorded", data);
-    // dispatch(getPatientMedicalRecords(patient));
-    toast.success("Updated Successfully!", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.error("Medicinal administration POST error:", error);
+      const { data } = await axios.post(
+        `${API_URL}/updateMedicationAction`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // console.log("Update medicinal administration recorded", data);
+      dispatch(getPatientMedicalRecords(patientId));
+      toast.success("Updated Successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Medicinal administration POST error:", error);
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };
 
 export const getPatientBedInfo = (patientId) => async (dispatch) => {
   try {

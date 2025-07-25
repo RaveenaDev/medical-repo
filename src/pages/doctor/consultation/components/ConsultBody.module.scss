@@ -460,6 +460,12 @@
   border-radius: 5px;
 }
 
+.confirmed {
+  border: 2px solid #28a745 !important; // Green outline
+  border-radius: 8px;
+}
+
+
 .lp-1:not(.active):hover,
 .lp-2:not(.active):hover,
 .lp-3:not(.active):hover,

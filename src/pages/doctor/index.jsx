@@ -2,14 +2,10 @@ import React, { useEffect, useState } from "react";
 import styles from "./Index.module.scss";
 import CommonPanel from "./components/CommonPanel.jsx";
 import Grid from "@mui/material/Grid2";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   Box,
   Button,
   Chip,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -17,7 +13,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import DoughnutChart from "./components/DoughnutChart.jsx";
@@ -38,7 +33,8 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import AddEventPanel from "./components/AddEventPanel.jsx";
 import { CalendarToday } from "@mui/icons-material";
-import Library from "./consultation/components/Library.jsx";
+import { ChevronRight } from "lucide-react";
+import AdmitNewPatient from "./components/admintNewPatient/AdmitNewPatient.jsx";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -76,7 +72,7 @@ const generateNextDates = (count = 11) => {
 
 const DATES = generateNextDates();
 
-const DoctorOverview = ({todayAppointments}) => {
+const DoctorOverview = ({ todayAppointments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(
@@ -189,6 +185,61 @@ const DoctorOverview = ({todayAppointments}) => {
     setIsModalOpen(true);
   };
 
+  useEffect(() => {
+    const container = document.querySelector(`.${styles.datePicker}`);
+
+    // Mouse wheel scroll (vertical to horizontal)
+    const onWheel = (e) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      container.scrollLeft += e.deltaY;
+    };
+
+    // Click and drag scroll
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    const onMouseDown = (e) => {
+      isDown = true;
+      container.classList.add(styles.activeDrag); // Optional styling
+      startX = e.pageX - container.offsetLeft;
+      scrollLeft = container.scrollLeft;
+    };
+
+    const onMouseLeave = () => {
+      isDown = false;
+      container.classList.remove(styles.activeDrag);
+    };
+
+    const onMouseUp = () => {
+      isDown = false;
+      container.classList.remove(styles.activeDrag);
+    };
+
+    const onMouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 1.5; // scroll speed factor
+      container.scrollLeft = scrollLeft - walk;
+    };
+
+    container.addEventListener("wheel", onWheel, { passive: false });
+    container.addEventListener("mousedown", onMouseDown);
+    container.addEventListener("mouseleave", onMouseLeave);
+    container.addEventListener("mouseup", onMouseUp);
+    container.addEventListener("mousemove", onMouseMove);
+
+    return () => {
+      container.removeEventListener("wheel", onWheel);
+      container.removeEventListener("mousedown", onMouseDown);
+      container.removeEventListener("mouseleave", onMouseLeave);
+      container.removeEventListener("mouseup", onMouseUp);
+      container.removeEventListener("mousemove", onMouseMove);
+    };
+  }, []);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -202,6 +253,7 @@ const DoctorOverview = ({todayAppointments}) => {
     dispatch(getAppointmentRequests());
     dispatch(getCriticalPatients());
   }, [dispatch, selectedDate, internalSelectedDate]);
+
 
   const doctor = useSelector((store) => store.doctor);
 
@@ -356,6 +408,32 @@ const DoctorOverview = ({todayAppointments}) => {
     };
   }, [isPanelOpen, selectedEvent]);
 
+  const now = dayjs();
+
+  const getEventEndTime = (startTime, duration) => {
+    const [hrs, mins] = duration.split(":").map(Number);
+    return dayjs(startTime).add(hrs, "hour").add(mins, "minute");
+  };
+
+  const eventsLeftToday = EVENTS.filter((event) => {
+    if (event.allDay) return true; // count allDay events if you want
+
+    const start = dayjs(event.time);
+    const end = getEventEndTime(start, event.duration);
+
+    // Event is either currently running or yet to start
+    return end.isAfter(now) && start.isBefore(now.endOf("day"));
+  });
+
+  const [activeModal, setActiveModal] = useState(null);
+  const openAdmitNewPatient = () => setActiveModal("admitNewPatient");
+  const closeModal = () => setActiveModal(null);
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
   return (
     <>
       <div>
@@ -405,6 +483,16 @@ const DoctorOverview = ({todayAppointments}) => {
                     />
                   </div>
                 </div>
+                <button
+                  className={styles.newPatientBtn}
+                  onClick={openAdmitNewPatient}
+                >
+                  <p>
+                    <span className={styles.greenDot} />{" "}
+                    <span>15 New Patients </span>
+                  </p>
+                  <ChevronRight className={styles.rightArrow} />
+                </button>
               </div>
             </Grid>
             <Grid
@@ -429,24 +517,28 @@ const DoctorOverview = ({todayAppointments}) => {
                   },
                 }}
               >
-                <div
-                  style={{
-                    height: "8px",
-                    width: "8px",
-                    borderRadius: "50%",
-                    backgroundColor: "#F14400",
-                    position: "absolute",
-                    left: "31px",
-                    top: "6px",
-                  }}
-                ></div>
+                {
+                  localStorage.getItem("doctorRequestsCount") > 0 && (
+                        <div
+                            style={{
+                              height: "8px",
+                              width: "8px",
+                              borderRadius: "50%",
+                              backgroundColor: "#F14400",
+                              position: "absolute",
+                              left: "31px",
+                              top: "6px",
+                            }}
+                        ></div>
+                    )
+                }
                 {circle}
                 <span
-                  style={{
-                    marginLeft: "16px",
-                    marginRight: "8px",
-                    marginTop: "2px",
-                  }}
+                    style={{
+                      marginLeft: "16px",
+                      marginRight: "8px",
+                      marginTop: "2px",
+                    }}
                 >
                   Requests
                 </span>
@@ -501,7 +593,26 @@ const DoctorOverview = ({todayAppointments}) => {
                   Appointment Requests
                 </span>
               </Button>
+              <>
+                <div
+                  className={styles["backdrop-overlay"]}
+                  style={{
+                    display:
+                      activeModal === "admitNewPatient" ? "block" : "none",
+                  }}
+                  onClick={closeModal}
+                />
 
+                <div
+                  className={`${styles["admitNewPatient-modal"]} ${
+                    activeModal === "admitNewPatient"
+                      ? styles["admitNewPatient-modalOpen"]
+                      : ""
+                  }`}
+                >
+                  <AdmitNewPatient onClose={closeModal} />
+                </div>
+              </>
               {/* Modal Component */}
               <AppointmentRequestModal
                 isOpen={isModalOpen}
@@ -562,7 +673,13 @@ const DoctorOverview = ({todayAppointments}) => {
                     </div>
                   </div>
 
-                  <DoughnutChart data={resultantData} />
+                  {resultantData && resultantData.length > 0 ? (
+                      <DoughnutChart data={resultantData} />
+                  ) : (
+                      <div style={{ textAlign: "center", color: "#888", fontSize: "15px", padding: "1rem",fontStyle:'italic'}}>
+                        No data found.
+                      </div>
+                  )}
                 </div>
                 <div className={styles.card}>
                   <div
@@ -602,41 +719,47 @@ const DoctorOverview = ({todayAppointments}) => {
                   </div>
 
                   <div>
-                    {criticalPatients.map((patient, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          borderBottom: "1px solid #eee",
-                          padding: "8px 0",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <div
-                            style={{
-                              fontWeight: "bold",
-                              fontSize: "14px",
-                              color: "#2d3179",
-                            }}
-                          >
-                            {patient.patientName}
-                          </div>
-                          <div
-                            style={{
-                              fontSize: "12px",
-                              color: "#878787",
-                            }}
-                          >
-                            {patient.condition}
-                          </div>
+                    {criticalPatients.length > 0 ? (
+                        criticalPatients.map((patient, index) => (
+                              <div
+                                  key={index}
+                                  style={{
+                                    borderBottom: "1px solid #eee",
+                                    padding: "8px 0",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                  }}
+                              >
+                                <div>
+                                  <div
+                                      style={{
+                                        fontWeight: "bold",
+                                        fontSize: "14px",
+                                        color: "#2d3179",
+                                      }}
+                                  >
+                                    {patient.patientName}
+                                  </div>
+                                  <div
+                                      style={{
+                                        fontSize: "12px",
+                                        color: "#878787",
+                                      }}
+                                  >
+                                    {patient.condition}
+                                  </div>
+                                </div>
+                                <div style={getStatusStyle(patient.severity)}>
+                                  {patient.severity}
+                                </div>
+                              </div>
+                          ))
+                    ) : (
+                        <div style={{fontStyle: "italic",fontSize:'15px', color: "#888", padding: "1rem",textAlign:'center'}}>
+                          No alerts found.
                         </div>
-                        <div style={getStatusStyle(patient.severity)}>
-                          {patient.severity}
-                        </div>
-                      </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
@@ -966,7 +1089,7 @@ const DoctorOverview = ({todayAppointments}) => {
               <div className={styles.eventsHeader}>
                 <div>
                   <h3>Upcoming Events</h3>
-                  <small>{EVENTS.length} events today</small>
+                  <small>{eventsLeftToday.length} events left today</small>
                 </div>
                 <button className={styles.createBtn} onClick={handleOpenPanel}>
                   <svg

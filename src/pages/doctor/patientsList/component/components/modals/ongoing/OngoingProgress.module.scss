@@ -1,5 +1,38 @@
 @import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
 
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modalContent {
+  background: #fff;
+  width: 50vw;
+  max-width: 960px;
+  max-height: 92vh;
+  border-radius: 0px;
+  overflow-y: auto;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+  font-family: "Karla", sans-serif;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .crossContainer {
   display: flex;
   justify-content: flex-end;
@@ -13,20 +46,19 @@
 }
 
 .container {
-  padding: 0vh 1vw 0vw 0vw;
   font-family: "Karla", sans-serif;
+  padding: 2vh 1.5vw 2vh 1.5vw;
 
   height: 70vh;
   overflow-y: auto;
-  /* Hide scrollbar for Chrome, Safari, Opera */
+
   &::-webkit-scrollbar {
     width: 0;
     background: transparent;
   }
 
-  /* Hide scrollbar for Firefox */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .title {
@@ -35,111 +67,48 @@
   font-weight: 550;
 }
 
-.dropdown,
-.dropdown2 {
-  position: relative;
-  //width: 4%; // Use a percentage of viewport width for the dropdown
-  // min-width: 120px; // Optional: fallback for very small screens
-  font-family: "Inter", sans-serif;
-  border: 1px solid #cfcfcf;
-  border-radius: 4px;
-}
-
-.trigger {
-  width: 100%;
-  background: #fff;
-  border: none;
-
-  padding: 0vh 0.7vw;
-  cursor: pointer;
-  font-size: 1.8vh;
-  font-family: "Karla", sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 5vh;
-}
-
-.arrow {
-  color: #777;
-}
-
-.menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #fff;
-  box-shadow: 0 0.3vh 1vh rgba(60, 64, 67, 0.08);
-  border-radius: 0.7vh;
-  width: 100%;
-  z-index: 10;
-  margin-top: 0.2vh;
-  padding: 0;
-  list-style: none;
-  font-size: 2vh;
-  font-family: "Karla", sans-serif;
-}
-
-.item {
-  padding: 1.2vh 1vw;
-  cursor: pointer;
-  font-size: 1.9vh;
-  color: #222;
-  background: #fff;
-  transition: background 0.15s;
-  &:hover {
-    background: #f5f8fd;
-  }
-}
-
-.active {
-  background: #e6edfd !important;
-  color: #25307f;
-  font-weight: 500;
-}
-
 .label {
   color: #4a4a4a;
-  font-size: 1.9vh;
+  font-size: 2.1vh;
   font-weight: 500;
 }
 
 .row1 {
-  margin-top: 3.8vh;
+  margin-top: 0vh;
   display: flex;
   justify-content: space-between;
   gap: 3vw;
+
   div {
     width: 100%;
   }
 }
 
+.row3 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3.8vh;
+}
+
 .dateField {
   display: flex;
   flex-direction: column;
-  // gap: 0.4rem;
-  //font-family: "Inter", sans-serif;
   width: 100%;
-  //   p {
-  //     font-size: 0.85rem;
-  //     color: #4b5563; // gray-600
-  //     font-weight: 500;
-  //   }
 
   input[type="date"] {
     padding: 0vh 0.8vh;
-    border: 1px solid #d1d5db; // gray-300
+    border: 1px solid #d1d5db;
     border-radius: 4px;
     font-size: 2vh;
-    color: #111827; // gray-900
+    color: #111827;
     background-color: #fff;
     outline: none;
     min-height: 5vh;
-
     width: 95%;
     font-family: "Karla", sans-serif;
+
     &:focus {
-      border-color: #2563eb; // blue-600
+      border-color: #2563eb;
       box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
     }
   }
@@ -149,7 +118,7 @@
   position: relative;
 
   input {
-    padding-right: 2rem; // space for icon
+    padding-right: 2rem;
   }
 
   .icon {
@@ -168,6 +137,70 @@
   padding: 0vh 0.8vh;
   font-family: "Karla", sans-serif;
   border-radius: 4px;
+  border: 1px solid #cfcfcf;
+  font-size: 1.8vh;
+}
+
+.descriptionContainer {
+  width: 45.5%;
+  position: relative;
+}
+
+.textarea {
+  width: 97%;
+  border-color: #cfcfcf;
+  outline: none;
+  padding: 0.8vh 0.5vw;
+  font-family: "Karla", sans-serif;
+  resize: none;
+  font-size: 1.8vh;
+  border-radius: 4px;
+
+  line-height: 2.8vh;
+}
+
+.descriptionText {
+  height: 14vh;
+  line-height: 2.8vh;
+  width: 88.5%;
+  word-break: break-word;
+  border: 1px solid #cfcfcf;
+  font-size: 1.8vh;
+  padding: 0.8vh 0.8vh;
+  font-family: "Karla", sans-serif;
+  padding-right: 2.4vw;
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+.editBtn {
+  position: absolute;
+  top: 4vh;
+  right: 0.3vw;
+  width: 1.3vw;
+  color: #b0b0b0;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.placeholder {
+  color: #b0b0b0;
+}
+
+.editBtnActive {
+  color: #25307f;
+}
+
+.checkboxContainer {
+  margin-top: 3.8vh;
+}
+
+.checkboxLabel {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
 }
 
 .uploadBox {
@@ -178,7 +211,6 @@
   flex-direction: column;
   align-items: center;
   gap: 1.4vh;
-
   text-align: center;
 }
 
@@ -213,12 +245,16 @@
     background: #e5edff;
   }
 }
+
 .uploadedFiles {
   width: 46.5%;
+  margin-top: 2vh;
 }
+
 .uploadFilesContainer {
   padding: 0vh 0vw;
 }
+
 .uploadedFilesWrapper {
   display: flex;
   flex-direction: column;
@@ -238,13 +274,13 @@
     }
 
     .fileDetails {
-      // flex-grow: 1;
       margin-left: 0vw;
       width: 80%;
       word-break: break-all;
       display: flex;
       flex-direction: column;
       gap: 0.8vh;
+
       .fileName {
         font-size: 1.7vh;
         font-weight: 500;
@@ -279,71 +315,81 @@
   justify-content: space-between;
 }
 
-.row3 {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 3.8vh;
-}
-
-.descriptionContainer {
-  width: 45.5%;
-  position: relative;
-}
-
-.textarea {
-  height: 14vh;
-  width: 88.5%;
-  border-color: #cfcfcf;
-  outline: none;
-  padding: 0.8vh 0.8vh;
-  font-family: "Karla", sans-serif;
-  resize: none;
-  font-size: 1.8vh;
+.saveBtn {
+  background-color: #25307f;
+  color: white;
+  padding: 1.2vh 2vw;
+  border: none;
   border-radius: 4px;
-  padding-right: 2.4vw;
-  line-height: 2.8vh;
-}
-
-.descriptionText {
-  height: 14vh;
-  line-height: 2.8vh;
-
-  width: 88.5%;
-  word-break: break-all;
-  border: 1px solid #cfcfcf;
-  font-size: 1.8vh;
-  padding: 0.8vh 0.8vh;
+  font-size: 1.9vh;
   font-family: "Karla", sans-serif;
-  padding-right: 2.4vw;
-  overflow-y: auto;
-  border-radius: 4px;
-}
-
-.editBtn {
-  position: absolute;
-  top: 4vh;
-  right: 0.3vw;
-  width: 1.3vw;
-  color: #b0b0b0;
   cursor: pointer;
-  transition: 0.2s;
+  text-align: center;
+  transition: background 0.2s;
+
+  &:hover {
+    background-color: #1d2c6b;
+  }
 }
 
-.placeholder {
-  color: #b0b0b0;
-}
-
-.editBtnActive {
+.addFieldButton {
+  background: #f0f3ff;
+  border: 1px dashed #25307f;
+  padding: 1vh 1vw;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Karla", sans-serif;
   color: #25307f;
-}
-.checkboxContainer {
-  margin-top: 1rem;
+  font-size: 1.8vh;
+  margin-bottom: 2vh;
+  display: inline-block;
+
+  &:hover {
+    background: #e5edff;
+  }
 }
 
-.checkboxLabel {
-  font-size: 1rem;
+.dynamicFieldRow {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
+  gap: 2vw;
+  margin-bottom: 1.5vh;
+
+  input {
+    flex: 1;
+    padding: 1vh 1vw;
+    font-family: "Karla", sans-serif;
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+    font-size: 1.8vh;
+    outline: none;
+
+    &:focus {
+      border-color: #25307f;
+      box-shadow: 0 0 0 1px rgba(37, 49, 127, 0.2);
+    }
+  }
+}
+
+.qna {
+  display: flex;
+  font-size: 2.2vh;
+}
+
+.label1 {
+  color: #25307f;
+  font-weight: 550;
+}
+
+.row4 {
+  margin-top: 2vh;
+}
+
+.section1 {
+  border: 2px solid #cfcfcf;
+  border-radius: 4px;
+  padding: 2vh 1vw;
+  margin-top: 3vh;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
 }
