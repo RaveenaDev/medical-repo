@@ -137,10 +137,16 @@ const AdminRooms = (props) => {
     let newErrors = {};
 
     Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
+      if (key !== "beds" && !formData[key]) {
         newErrors[key] = "This field is required";
       }
     });
+
+// Validate bed fields
+    const bed = formData.beds[0];
+    if (!bed.bedId) newErrors.bedId = "Bed ID is required";
+    if (!bed.status) newErrors.bedStatus = "Bed status is required";
+    if (!bed.cost) newErrors.cost = "Cost is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -149,6 +155,7 @@ const AdminRooms = (props) => {
       });
       return;
     }
+
 
     // Convert customRoomType into roomType before sending
     const finalData = {
@@ -168,14 +175,29 @@ const AdminRooms = (props) => {
 
   const [formData, setFormData] = useState({
     roomID: "",
-    cost: "",
+    name: "",
+    roomType: "",
     doctorId: "",
-    status: "",
+    floor: "",
+    wing: "",
+    beds: [
+      {
+        bedId: "",
+        status: "",
+        cost: ""
+      }
+    ]
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleBedChange = (key, value) => {
+    const updatedBed = { ...formData.beds[0], [key]: value };
+    setFormData({ ...formData, beds: [updatedBed] });
+  };
+
 
   const dispatch = useDispatch();
 
@@ -357,50 +379,48 @@ const AdminRooms = (props) => {
                         </Grid>
                         <Grid xs={3}>
                           <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Bed ID"
-                            name="bedID"
-                            value={formData.bedID}
-                            onChange={handleChange}
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            error={!!errors.bedID}
-                            helperText={errors.bedID}
-                            required
+                              label="Bed ID"
+                              name="bedId"
+                              value={formData.beds[0].bedId}
+                              onChange={(e) => handleBedChange("bedId", e.target.value)}
+                              fullWidth
+                              margin="dense"
+                              variant="outlined"
+                              required
+                              error={!!errors.bedId}
+                              helperText={errors.bedId}
                           />
                         </Grid>
-                        <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                          <FormControl
-                            fullWidth
-                            margin="dense"
-                            error={!!errors.status}
-                          >
-                            <InputLabel id="status-select-label">
-                              Status
-                            </InputLabel>
-                            <Select
-                              labelId="status-select-label"
-                              id="status-select"
-                              name="status"
-                              value={formData.status}
-                              onChange={handleChange}
-                              label="Status"
+                        <Grid xs={3}>
+                          <TextField
+                              label="Cost"
+                              name="cost"
+                              type="number"
+                              value={formData.beds[0].cost}
+                              onChange={(e) => handleBedChange("cost", e.target.value)}
+                              fullWidth
+                              margin="dense"
                               variant="outlined"
-                              sx={{ width: "100%" }}
                               required
+                              error={!!errors.cost}
+                              helperText={errors.cost}
+                          />
+                        </Grid>
+                        <Grid xs={3} sx={{width: '22%'}}>
+                          <FormControl fullWidth margin="dense" error={!!errors.bedStatus}>
+                            <InputLabel>Status</InputLabel>
+                            <Select
+                                value={formData.beds[0].status}
+                                onChange={(e) => handleBedChange("status", e.target.value)}
                             >
                               <MenuItem value="Available">Available</MenuItem>
                               <MenuItem value="Occupied">Occupied</MenuItem>
-                              <MenuItem value="Under Maintenance">
-                                Under Maintenance
-                              </MenuItem>
+                              <MenuItem value="Under Maintenance">Under Maintenance</MenuItem>
                             </Select>
-                            {errors.status && (
-                              <Typography variant="caption" color="error">
-                                {errors.status}
-                              </Typography>
+                            {errors.bedStatus && (
+                                <Typography variant="caption" color="error">
+                                  {errors.bedStatus}
+                                </Typography>
                             )}
                           </FormControl>
                         </Grid>
@@ -448,21 +468,6 @@ const AdminRooms = (props) => {
                               </Typography>
                             )}
                           </FormControl>
-                        </Grid>
-                        <Grid xs={3}>
-                          <TextField
-                            margin="dense"
-                            label="Cost"
-                            name="cost"
-                            value={formData.cost}
-                            onChange={handleChange}
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            error={!!errors.cost}
-                            helperText={errors.cost}
-                            required
-                          />
                         </Grid>
                         <Grid xs={6}>
                           <Box
