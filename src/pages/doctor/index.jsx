@@ -443,7 +443,7 @@ const DoctorOverview = ({ todayAppointments }) => {
   const filteredRequests = requestsToApprove.filter(
     (req) =>
       (req.sendTo === "Both" || req.sendTo === "Doctor") &&
-      req.approval?.doctor?.approved === true
+      req.approval?.doctor?.approved === false
   );
 
   return (
