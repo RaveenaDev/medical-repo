@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
 import styles from "./sidebar.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import adi from "../../pages/receptionist/Settings/Settings.module.scss";
 import Logout from "../../pages/receptionist/Settings/Logout.jsx";
-import Avatar from "@mui/material/Avatar";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DoctorNotesPopup from "./DoctorNotesPopup.jsx";
-import SaiAsha from "../../assets/Sai Asha.jpeg"
+import SaiAsha from "../../assets/SaiAsha.png"
 const roleOptions = {
   receptionist: [
     { title: "Overview", path: "/receptionist" },
@@ -255,15 +252,15 @@ const Sidebar = ({ role }) => {
             display: "flex",
             justifyContent: "space-between",
             paddingBottom: "2px",
-            paddingTop: "10px",
+            paddingTop: "6px",
             borderTop: "1px solid #E2E2E2 ",
           }}
         >
-          <div style={{ display: "flex", gap: 16, marginLeft: "25px" }}>
-            <img style={{width:'3.6rem',height:'3.6rem'}} src={SaiAsha} alt="Sai Asha"/>
-            <div style={{ paddingTop: "7px" }}>
-              <p style={{ color: "#25307F", fontWeight: 500 }}>{hospitalName}</p>
-              <p style={{ color: "#878787", fontSize: "12px" }}>Sai Asha Tagline</p>
+          <div style={{ display: "flex", gap: 12, marginLeft: "25px" }}>
+            <img style={{width:'3.8rem',height:'3.8rem'}} src={SaiAsha} alt="Sai Asha"/>
+            <div style={{ paddingTop: "9px" }}>
+              <p style={{ color: "#25307F", fontWeight: 500,fontSize:'15px' }}>{hospitalName.toUpperCase()}</p>
+              <p style={{ color: "#878787", fontSize: "12px" }}>We will do</p>
             </div>
           </div>
         </div>
