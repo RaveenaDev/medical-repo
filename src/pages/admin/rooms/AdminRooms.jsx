@@ -53,8 +53,6 @@ const AdminRooms = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [newRoomTypeVisible, setNewRoomTypeVisible] = useState(false);
-  const [newRoomType, setNewRoomType] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(null);
   const roomTypes = ["Available", "Occupied", "Under Maintenance"];
 
@@ -142,20 +140,20 @@ const AdminRooms = (props) => {
       }
     });
 
-// Validate each bed
-    formData.beds.forEach((bed, i) => {
-      if (!bed.bedId) newErrors[`bedId-${i}`] = "Bed ID is required";
-      if (!bed.status) newErrors[`status-${i}`] = "Status is required";
-      if (!bed.cost) newErrors[`cost-${i}`] = "Cost is required";
-    });
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      toast.error("Please fill all required fields!", {
-        position: "bottom-right",
-      });
-      return;
-    }
+// // Validate each bed
+//     formData.beds.forEach((bed, i) => {
+//       if (!bed.bedId) newErrors[`bedId-${i}`] = "Bed ID is required";
+//       if (!bed.status) newErrors[`status-${i}`] = "Status is required";
+//       if (!bed.cost) newErrors[`cost-${i}`] = "Cost is required";
+//     });
+//
+//     if (Object.keys(newErrors).length > 0) {
+//       setErrors(newErrors);
+//       toast.error("Please fill all required fields!", {
+//         position: "bottom-right",
+//       });
+//       return;
+//     }
 
     // Convert customRoomType into roomType before sending
     const finalData = {
@@ -167,8 +165,8 @@ const AdminRooms = (props) => {
     };
     delete finalData.customRoomType;
 
-    console.log("To: ",finalData)
-    // dispatch(addRoom(finalData));
+    // console.log("To: ",finalData)
+    dispatch(addRoom(finalData));
     setErrors({});
     setAddDialogOpen(false);
   };
@@ -178,8 +176,6 @@ const AdminRooms = (props) => {
     name: "",
     roomType: "",
     doctorId: "",
-    floor: "",
-    wing: "",
     beds: [
       {
         bedId: "",
@@ -390,6 +386,23 @@ const AdminRooms = (props) => {
                             error={!!errors.roomID}
                             helperText={errors.roomID}
                             required
+                          />
+                        </Grid>
+
+                        <Grid xs={3}>
+                          <TextField
+                              autoFocus
+                              margin="dense"
+                              label="Room Name"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                              type="text"
+                              fullWidth
+                              variant="outlined"
+                              error={!!errors.name}
+                              helperText={errors.name}
+                              required
                           />
                         </Grid>
 
@@ -626,59 +639,72 @@ const AdminRooms = (props) => {
                   }}
                 >
                   <TableRow>
-                    <TableCell>Room ID</TableCell>
-                    <TableCell align="center" sx={{ pl: 8 }}>
+                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                      Room ID
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
                       Name
                     </TableCell>
-                    <TableCell align="center" sx={{ pr: 14 }}>
+                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
                       Status
                     </TableCell>
-                    <TableCell align="left">Doctor Assigned</TableCell>
-                    <TableCell align="left"></TableCell>
+                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                      Doctor Assigned
+                    </TableCell>
+                    <TableCell
+                        sx={{
+                          fontWeight: "600",
+                          width: "auto",
+                          textAlign: "right",
+                        }}
+                    ></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rooms.length > 0 ? (
                     rooms.map((room, index) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          background: "#fff",
-                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          "&:hover": {
-                            backgroundColor: "#f9f9f9",
-                          },
-                          "& > *": {
-                            borderBottom: "unset",
-                          },
-                        }}
-                      >
+                        <TableRow
+                            key={room._id}
+                            sx={{
+                              background: "#fff",
+                              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                              borderRadius: "8px",
+                              "&:hover": {
+                                backgroundColor: "#f9f9f9",
+                              },
+                            }}
+                        >
                         <TableCell
-                          sx={{ color: "#25307F", fontWeight: "bold" }}
+                            sx={{
+                              color: "#25307F",
+                              fontWeight: "bold",
+                              width: "25%",
+                            }}
                         >
                           {room.roomID}
                         </TableCell>
-                        <TableCell align="center" sx={{ pl: 8 }}>
+                        <TableCell sx={{ width: "25%" }}>
                           <Typography
                             variant="body1"
                             sx={{
                               fontWeight: "bold",
                               color: "#25307F",
                               cursor: "pointer",
+                              whiteSpace: "nowrap", // Prevents text from wrapping
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
                             }}
                           >
                             {room.name}
                           </Typography>
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell sx={{ width: "25%" }}>
                           {" "}
                           {/* Increase 'pl' value for more spacing */}
                           <Box
                             display="flex"
                             alignItems="center"
                             gap={1}
-                            sx={{ ml: 16 }}
                           >
                             <Box
                               sx={{
@@ -696,11 +722,11 @@ const AdminRooms = (props) => {
                             {room.status}
                           </Box>
                         </TableCell>
-                        <TableCell align="left" sx={{ color: "#747474" }}>
+                        <TableCell sx={{ width: "25%" }}>
                           {room.assignedDoctor?.name || "Not Assigned"}
                         </TableCell>
 
-                        <TableCell align="right">
+                        <TableCell sx={{ width: "auto", textAlign: "right" }}>
                           <IconButton
                             onClick={(event) => handleMenuOpen(event, room)}
                           >

@@ -52,6 +52,7 @@ const Rooms = (props) => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const roomTypes = ["Available", "Occupied", "Under Maintenance"];
   // State for editing room
   const [editedRoom, setEditedRoom] = useState({
     roomID: "",
@@ -136,19 +137,23 @@ const Rooms = (props) => {
     let newErrors = {};
 
     Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
+      if (key !== "beds" && !formData[key]) {
         newErrors[key] = "This field is required";
       }
     });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      toast.error("Please fill all required fields!", {
-        position: "bottom-right",
-      });
-      return;
-    }
-    dispatch(addRoom(formData));
+    // Convert customRoomType into roomType before sending
+    const finalData = {
+      ...formData,
+      roomType:
+          formData.roomType === "custom"
+              ? formData.customRoomType
+              : formData.roomType,
+    };
+    delete finalData.customRoomType;
+
+    // console.log("To: ",finalData)
+    dispatch(addRoom(finalData));
     setErrors({});
     setAddDialogOpen(false);
   };
@@ -156,12 +161,38 @@ const Rooms = (props) => {
   const [formData, setFormData] = useState({
     roomID: "",
     name: "",
+    roomType: "",
     doctorId: "",
-    status: "",
+    beds: [
+      {
+        bedId: "",
+        status: "",
+        cost: ""
+      }
+    ]
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleBedChange = (index, key, value) => {
+    const updatedBeds = [...formData.beds];
+    updatedBeds[index][key] = value;
+    setFormData({ ...formData, beds: updatedBeds });
+  };
+
+  const handleAddBed = () => {
+    setFormData({
+      ...formData,
+      beds: [...formData.beds, { bedId: "", status: "", cost: "" }],
+    });
+  };
+
+  const handleRemoveBed = (index) => {
+    const updatedBeds = [...formData.beds];
+    updatedBeds.splice(index, 1);
+    setFormData({ ...formData, beds: updatedBeds });
   };
 
   const navigate = useNavigate();
@@ -339,97 +370,226 @@ const Rooms = (props) => {
                       <Grid container spacing={2}>
                         <Grid xs={3}>
                           <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Room ID"
-                            name="roomID"
-                            value={formData.roomID}
-                            onChange={handleChange}
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            error={!!errors.roomID}
-                            helperText={errors.roomID}
-                            required
+                              autoFocus
+                              margin="dense"
+                              label="Room ID"
+                              name="roomID"
+                              value={formData.roomID}
+                              onChange={handleChange}
+                              type="text"
+                              fullWidth
+                              variant="outlined"
+                              error={!!errors.roomID}
+                              helperText={errors.roomID}
+                              required
                           />
                         </Grid>
+
                         <Grid xs={3}>
                           <TextField
-                            margin="dense"
-                            label="Room Name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            error={!!errors.name}
-                            helperText={errors.name}
-                            required
-                          />
-                        </Grid>
-                        <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
-                          <FormControl fullWidth margin="dense">
-                            <InputLabel id="status-select-label">
-                              Status
-                            </InputLabel>
-                            <Select
-                              labelId="status-select-label"
-                              id="status-select"
-                              name="status"
-                              value={formData.status}
+                              autoFocus
+                              margin="dense"
+                              label="Room Name"
+                              name="name"
+                              value={formData.name}
                               onChange={handleChange}
-                              label="Status"
+                              type="text"
+                              fullWidth
                               variant="outlined"
-                              sx={{ width: "100%" }}
+                              error={!!errors.name}
+                              helperText={errors.name}
                               required
-                            >
-                              <MenuItem value="Available">Available</MenuItem>
-                              <MenuItem value="Occupied">Occupied</MenuItem>
-                              <MenuItem value="Under Maintenance">
-                                Under Maintenance
-                              </MenuItem>
-                            </Select>{" "}
-                            {errors.status && (
-                              <Typography variant="caption" color="error">
-                                {errors.status}
-                              </Typography>
-                            )}
-                          </FormControl>
+                          />
                         </Grid>
 
                         <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
                           <FormControl
-                            fullWidth
-                            margin="dense"
-                            error={!!errors.doctorId}
+                              fullWidth
+                              margin="dense"
+                              error={!!errors.doctorId}
                           >
                             <InputLabel id="doctor-select-label">
                               Doctor Assigned
                             </InputLabel>
                             <Select
-                              labelId="doctor-select-label"
-                              id="doctor-select"
-                              name="doctorId"
-                              value={formData.doctorId}
-                              onChange={handleChange}
-                              label="Doctor Assigned"
-                              variant="outlined"
-                              required
+                                labelId="doctor-select-label"
+                                id="doctor-select"
+                                name="doctorId"
+                                value={formData.doctorId}
+                                onChange={handleChange}
+                                label="Doctor Assigned"
+                                variant="outlined"
+                                required
+                                MenuProps={{
+                                  PaperProps: {
+                                    sx: {
+                                      maxHeight: 200, // Fixed dropdown height
+                                      overflowY: "auto",
+                                      "&::-webkit-scrollbar": {
+                                        display: "none",
+                                      },
+                                      "-ms-overflow-style": "none", // IE and Edge
+                                      "scrollbar-width": "none",    // Firefox
+                                    },
+                                  },
+                                }}
                             >
                               {doctors?.map((doctor) => (
-                                <MenuItem key={doctor._id} value={doctor._id}>
-                                  {doctor.name}
-                                </MenuItem>
+                                  <MenuItem key={doctor._id} value={doctor._id}>
+                                    {doctor.name}
+                                  </MenuItem>
                               ))}
                             </Select>
                             {errors.doctorId && (
-                              <Typography variant="caption" color="error">
-                                {errors.doctorId}
-                              </Typography>
+                                <Typography variant="caption" color="error">
+                                  {errors.doctorId}
+                                </Typography>
                             )}
                           </FormControl>
                         </Grid>
+                        <Grid container spacing={2} xs={6} alignItems="center">
+                          <Grid item xs={formData.roomType === "custom" ? 6 : 12}>
+                            <FormControl
+                                fullWidth
+                                sx={{ minWidth: 150 }}
+                                margin="dense"
+                                error={!!errors.roomType}
+                            >
+                              <InputLabel id="roomType-select-label">Room Type</InputLabel>
+                              <Select
+                                  fullWidth
+                                  labelId="roomType-select-label"
+                                  id="roomType-select"
+                                  name="roomType"
+                                  value={formData.roomType || ""}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    setFormData({
+                                      ...formData,
+                                      roomType: value,
+                                      customRoomType: value === "custom" ? "" : "", // optional reset
+                                    });
+                                  }}
+                                  label="Room Type"
+                                  variant="outlined"
+                                  required
+                              >
+                                {roomTypes.map((type) => (
+                                    <MenuItem key={type} value={type}>
+                                      {type}
+                                    </MenuItem>
+                                ))}
+                                <MenuItem value="custom">Custom</MenuItem>
+                              </Select>
+                              {errors.roomType && (
+                                  <Typography variant="caption" color="error">
+                                    {errors.roomType}
+                                  </Typography>
+                              )}
+                            </FormControl>
+                          </Grid>
+
+                          {formData.roomType === "custom" && (
+                              <Grid item xs={6}>
+                                <TextField
+                                    name="customRoomType"
+                                    value={formData.customRoomType || ""}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, customRoomType: e.target.value })
+                                    }
+                                    label="Custom Room Type"
+                                    margin="dense"
+                                    variant="outlined"
+                                    required
+                                    error={!!errors.roomType}
+                                    helperText={errors.roomType}
+                                    fullWidth
+                                />
+                              </Grid>
+                          )}
+                        </Grid>
+
+                        {formData.beds.map((bed, index) => (
+                            <Grid  container sx={{width:'100vw'}} spacing={2} key={index}>
+                              <Grid xs={3}>
+                                <TextField
+                                    label="Bed ID"
+                                    name={`bedId-${index}`}
+                                    value={bed.bedId}
+                                    onChange={(e) =>
+                                        handleBedChange(index, "bedId", e.target.value)
+                                    }
+                                    fullWidth
+                                    margin="dense"
+                                    variant="outlined"
+                                    required
+                                    error={!!errors[`bedId-${index}`]}
+                                    helperText={errors[`bedId-${index}`]}
+                                />
+                              </Grid>
+                              <Grid xs={3}>
+                                <TextField
+                                    label="Cost"
+                                    name={`cost-${index}`}
+                                    type="number"
+                                    value={bed.cost}
+                                    onChange={(e) =>
+                                        handleBedChange(index, "cost", e.target.value)
+                                    }
+                                    fullWidth
+                                    margin="dense"
+                                    variant="outlined"
+                                    required
+                                    error={!!errors[`cost-${index}`]}
+                                    helperText={errors[`cost-${index}`]}
+                                />
+                              </Grid>
+                              <Grid xs={3} sx={{width:'22%'}}>
+                                <FormControl
+                                    fullWidth
+                                    margin="dense"
+                                    error={!!errors[`status-${index}`]}
+                                >
+                                  <InputLabel>Status</InputLabel>
+                                  <Select
+                                      value={bed.status}
+                                      onChange={(e) =>
+                                          handleBedChange(index, "status", e.target.value)
+                                      }
+                                  >
+                                    <MenuItem value="Available">Available</MenuItem>
+                                    <MenuItem value="Occupied">Occupied</MenuItem>
+                                    <MenuItem value="Under Maintenance">
+                                      Under Maintenance
+                                    </MenuItem>
+                                  </Select>
+                                  {errors[`status-${index}`] && (
+                                      <Typography variant="caption" color="error">
+                                        {errors[`status-${index}`]}
+                                      </Typography>
+                                  )}
+                                </FormControl>
+                              </Grid>
+                              <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>
+                                {formData.beds.length > 1 && (
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={() => handleRemoveBed(index)}
+                                    >
+                                      Remove
+                                    </Button>
+                                )}
+                              </Grid>
+                            </Grid>
+                        ))}
+                        <Button
+                            variant="contained"
+                            sx={{ mt: 2, backgroundColor: "#25307F", color: "white" }}
+                            onClick={handleAddBed}
+                        >
+                          + Add Bed
+                        </Button>
                       </Grid>
                     </Box>
                   </DialogContent>
