@@ -441,9 +441,11 @@ const DoctorOverview = ({ todayAppointments }) => {
     (state) => state.doctor.requestsToApprove
   );
   const filteredRequests = requestsToApprove.filter(
-    (req) => req.sendTo === "Both" || req.sendTo === "Doctor"
+    (req) =>
+      (req.sendTo === "Both" || req.sendTo === "Doctor") &&
+      req.approval?.doctor?.approved === true
   );
-  // console.log("Requests to Approve: ", filteredRequests);
+
   return (
     <>
       <div>

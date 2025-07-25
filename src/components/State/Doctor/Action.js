@@ -1387,7 +1387,7 @@ export const approveAdmissionRequestWithSignature =
           },
         }
       );
-      // console.log("Approval Response:", data);
+      console.log("Approval Response:", data);
       toast.success("Approval submitted successfully!", {
         position: "bottom-right",
         autoClose: 2000,
