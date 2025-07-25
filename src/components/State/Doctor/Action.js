@@ -13,6 +13,7 @@ import {
   EDIT_DOCTOR_NOTE,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
+  GET_ADMISSION_REQUESTS_TO_APPROVE,
   GET_ADMITTED_PATIENTS,
   GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
@@ -1050,7 +1051,27 @@ export const getAdmissionRequests =
       console.error("Error fetching admission requests:", error);
     }
   };
+export const getAdmissionRequestsToApprove =
+  (status = "") =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params: status ? { status } : {}, // Only send if provided
+      });
+
+      // console.log("Admission Requests:", data);
+
+      dispatch({ type: GET_ADMISSION_REQUESTS_TO_APPROVE, payload: data });
+    } catch (error) {
+      console.error("Error fetching admission requests:", error);
+    }
+  };
 export const getAllUserConsultationForms = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1351,3 +1372,31 @@ export const dischargePatient = (payload) => async (dispatch) => {
     throw error;
   }
 };
+export const approveAdmissionRequestWithSignature =
+  (requestId, signature) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.put(
+        `${API_URL}/approveAdmissionRequest/${requestId}`,
+        { signature }, // send base64 signature
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // console.log("Approval Response:", data);
+      toast.success("Approval submitted successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+
+      // Optional: dispatch to refresh data
+      dispatch(getAdmissionRequestsToApprove("Pending"));
+    } catch (error) {
+      console.error("Error approving admission request:", error);
+      toast.error(error?.response?.data?.message || "Approval failed");
+    }
+  };

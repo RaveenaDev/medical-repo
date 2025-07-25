@@ -21,6 +21,8 @@ import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getAdmissionRequests,
+  getAdmissionRequestsToApprove,
   getAppointmentRequests,
   getAppointments,
   getCriticalPatients,
@@ -252,8 +254,8 @@ const DoctorOverview = ({ todayAppointments }) => {
     dispatch(getDoctorRequests());
     dispatch(getAppointmentRequests());
     dispatch(getCriticalPatients());
+    dispatch(getAdmissionRequestsToApprove("Pending"));
   }, [dispatch, selectedDate, internalSelectedDate]);
-
 
   const doctor = useSelector((store) => store.doctor);
 
@@ -434,6 +436,14 @@ const DoctorOverview = ({ todayAppointments }) => {
       document.body.style.overflow = "auto";
     };
   }, [activeModal]);
+
+  const requestsToApprove = useSelector(
+    (state) => state.doctor.requestsToApprove
+  );
+  const filteredRequests = requestsToApprove.filter(
+    (req) => req.sendTo === "Both" || req.sendTo === "Doctor"
+  );
+  // console.log("Requests to Approve: ", filteredRequests);
   return (
     <>
       <div>
@@ -489,7 +499,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                 >
                   <p>
                     <span className={styles.greenDot} />{" "}
-                    <span>15 New Patients </span>
+                    <span>{filteredRequests.length} New Patients </span>
                   </p>
                   <ChevronRight className={styles.rightArrow} />
                 </button>
@@ -517,28 +527,26 @@ const DoctorOverview = ({ todayAppointments }) => {
                   },
                 }}
               >
-                {
-                  localStorage.getItem("doctorRequestsCount") > 0 && (
-                        <div
-                            style={{
-                              height: "8px",
-                              width: "8px",
-                              borderRadius: "50%",
-                              backgroundColor: "#F14400",
-                              position: "absolute",
-                              left: "31px",
-                              top: "6px",
-                            }}
-                        ></div>
-                    )
-                }
+                {localStorage.getItem("doctorRequestsCount") > 0 && (
+                  <div
+                    style={{
+                      height: "8px",
+                      width: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: "#F14400",
+                      position: "absolute",
+                      left: "31px",
+                      top: "6px",
+                    }}
+                  ></div>
+                )}
                 {circle}
                 <span
-                    style={{
-                      marginLeft: "16px",
-                      marginRight: "8px",
-                      marginTop: "2px",
-                    }}
+                  style={{
+                    marginLeft: "16px",
+                    marginRight: "8px",
+                    marginTop: "2px",
+                  }}
                 >
                   Requests
                 </span>
@@ -610,7 +618,10 @@ const DoctorOverview = ({ todayAppointments }) => {
                       : ""
                   }`}
                 >
-                  <AdmitNewPatient onClose={closeModal} />
+                  <AdmitNewPatient
+                    onClose={closeModal}
+                    requests={filteredRequests}
+                  />
                 </div>
               </>
               {/* Modal Component */}
@@ -674,11 +685,19 @@ const DoctorOverview = ({ todayAppointments }) => {
                   </div>
 
                   {resultantData && resultantData.length > 0 ? (
-                      <DoughnutChart data={resultantData} />
+                    <DoughnutChart data={resultantData} />
                   ) : (
-                      <div style={{ textAlign: "center", color: "#888", fontSize: "15px", padding: "1rem",fontStyle:'italic'}}>
-                        No data found.
-                      </div>
+                    <div
+                      style={{
+                        textAlign: "center",
+                        color: "#888",
+                        fontSize: "15px",
+                        padding: "1rem",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      No data found.
+                    </div>
                   )}
                 </div>
                 <div className={styles.card}>
@@ -720,45 +739,53 @@ const DoctorOverview = ({ todayAppointments }) => {
 
                   <div>
                     {criticalPatients.length > 0 ? (
-                        criticalPatients.map((patient, index) => (
-                              <div
-                                  key={index}
-                                  style={{
-                                    borderBottom: "1px solid #eee",
-                                    padding: "8px 0",
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                  }}
-                              >
-                                <div>
-                                  <div
-                                      style={{
-                                        fontWeight: "bold",
-                                        fontSize: "14px",
-                                        color: "#2d3179",
-                                      }}
-                                  >
-                                    {patient.patientName}
-                                  </div>
-                                  <div
-                                      style={{
-                                        fontSize: "12px",
-                                        color: "#878787",
-                                      }}
-                                  >
-                                    {patient.condition}
-                                  </div>
-                                </div>
-                                <div style={getStatusStyle(patient.severity)}>
-                                  {patient.severity}
-                                </div>
-                              </div>
-                          ))
-                    ) : (
-                        <div style={{fontStyle: "italic",fontSize:'15px', color: "#888", padding: "1rem",textAlign:'center'}}>
-                          No alerts found.
+                      criticalPatients.map((patient, index) => (
+                        <div
+                          key={index}
+                          style={{
+                            borderBottom: "1px solid #eee",
+                            padding: "8px 0",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                fontWeight: "bold",
+                                fontSize: "14px",
+                                color: "#2d3179",
+                              }}
+                            >
+                              {patient.patientName}
+                            </div>
+                            <div
+                              style={{
+                                fontSize: "12px",
+                                color: "#878787",
+                              }}
+                            >
+                              {patient.condition}
+                            </div>
+                          </div>
+                          <div style={getStatusStyle(patient.severity)}>
+                            {patient.severity}
+                          </div>
                         </div>
+                      ))
+                    ) : (
+                      <div
+                        style={{
+                          fontStyle: "italic",
+                          fontSize: "15px",
+                          color: "#888",
+                          padding: "1rem",
+                          textAlign: "center",
+                        }}
+                      >
+                        No alerts found.
+                      </div>
                     )}
                   </div>
                 </div>
