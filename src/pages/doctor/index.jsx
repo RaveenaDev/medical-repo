@@ -499,7 +499,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                 >
                   <p>
                     <span className={styles.greenDot} />{" "}
-                    <span>15 New Patients </span>
+                    <span>{filteredRequests.length} New Patients </span>
                   </p>
                   <ChevronRight className={styles.rightArrow} />
                 </button>
