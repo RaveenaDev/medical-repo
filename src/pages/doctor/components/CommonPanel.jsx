@@ -83,7 +83,7 @@ const CommonPanel = ({
         </div>
 
         <div className={ayu.cardhandling}>
-          <h4 className={ayu.heading}>Good Morning, Dr. {doctorName}</h4>
+          <h4 className={ayu.heading}>Hello, Dr. {doctorName}</h4>
           <p>
             I hope you are in good mood because there are {todayAppointments} patients waiting
             for you.

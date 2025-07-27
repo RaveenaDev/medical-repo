@@ -21,7 +21,6 @@ import EventDetails from "./components/EventDetails.jsx";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAdmissionRequests,
   getAdmissionRequestsToApprove,
   getAppointmentRequests,
   getAppointments,

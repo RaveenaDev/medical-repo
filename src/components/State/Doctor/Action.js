@@ -437,7 +437,10 @@ export const createNewEvent = (eventData, onClose) => async (dispatch) => {
     });
 
     // console.log("Created New Event: ", data);
-    dispatch({ type: CREATE_NEW_EVENT, payload: data.event });
+    // dispatch({ type: CREATE_NEW_EVENT, payload: data.event });
+    const selectedDate = new Date();
+    selectedDate.setHours(0, 0, 0, 0); // sets time to 00:00:00.000
+    dispatch(getUpcomingEvents(selectedDate));
     onClose();
     toast.success("Request Created Successfully!", {
       position: "bottom-right", // Use string for position

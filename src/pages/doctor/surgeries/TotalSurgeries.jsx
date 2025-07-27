@@ -1,16 +1,12 @@
 import CommonPanel from "../components/CommonPanel";
-import { FaUserCircle } from "react-icons/fa";
 import { FiFilter } from "react-icons/fi";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { patientData } from "../../../constants/patientsData";
 import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 import styles from "./TotalSurgeries.module.scss";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import AppointmentRequestModal from "../components/appointmentRequests/AppointmentRequest";
 import {Box, Button} from "@mui/material";
-import {useDispatch} from "react-redux";
-import {getSurgeries} from "../../../components/State/Doctor/Action.js";
 
 const TotalSurgeries = () => {
   const sortOptions = ["Newest to Oldest", "Oldest to Newest"];
@@ -286,7 +282,7 @@ const TotalSurgeries = () => {
                         <th>Surgery Type</th>
                         <th>Doctor</th>
                         <th>Status</th>
-                        <th></th>
+                        {/*<th></th>*/}
                     </tr>
                     </thead>
                     <tbody>
@@ -315,9 +311,9 @@ const TotalSurgeries = () => {
                 {patient.status}
               </span>
                             </td>
-                            <td className={styles.actions}>
-                                <BsThreeDotsVertical className={styles.menuIcon}/>
-                            </td>
+                            {/*<td className={styles.actions}>*/}
+                            {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
+                            {/*</td>*/}
                         </tr>
                     ))}
                     </tbody>

@@ -97,9 +97,29 @@ const AddEventPanel = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.startTime || !formData.endTime) {
+    if ((!formData.startTime || !formData.endTime) && !formData.allDay) {
       alert("Please select both start and end times");
       return;
+    }
+
+    if (dayjs(value2).isBefore(dayjs(value))) {
+      alert("End time must be after start time");
+      return;
+    }
+
+    if (!formData.allDay && isToday) {
+      const start = dayjs(`${formData.date} ${formData.startTime}`, "YYYY-MM-DD hh:mm A");
+      const end = dayjs(`${formData.date} ${formData.endTime}`, "YYYY-MM-DD hh:mm A");
+
+      if (start.isBefore(dayjs())) {
+        alert("Start time must be in the future");
+        return;
+      }
+
+      if (end.isBefore(start)) {
+        alert("End time must be after start time");
+        return;
+      }
     }
 
     const finalParticipants = inputName.trim()
@@ -124,6 +144,12 @@ const AddEventPanel = ({ onClose }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
+
+  const selectedDate = dayjs(formData.date);
+  const today = dayjs().startOf("day");
+  const isToday = selectedDate.isSame(today, "day");
+  const minSelectableTime = isToday ? dayjs() : dayjs().startOf("day");
+
 
   return (
     <div ref={panelRef} className={`add-event-panel slide-in`}>
@@ -198,87 +224,93 @@ const AddEventPanel = ({ onClose }) => {
             </div>
           </div>
 
-          <div className="time">
-            <label htmlFor="timePicker">Time</label>
-            <div className="time-selection">
-              <div className="time-picker-container">
-                <LocalizationProvider
-                  dateAdapter={AdapterDayjs}
-                  className="time-picker"
-                >
-                  <p className="time-label-from">From:</p>
-                  <TimePicker
-                    className="time-picker-1"
-                    label=""
-                    value={value}
-                    onChange={(newValue) => {
-                      setValue(newValue);
-                      setFormData({
-                        ...formData,
-                        startTime: newValue?.format("hh:mm A") || "",
-                      });
-                    }}
-                    slots={{
-                      openPickerIcon: () => null, // removes the clock icon
-                    }}
-                    slotProps={{
-                      textField: {
-                        sx: {
-                          height: "45px", // overall height
-                          "& .MuiInputBase-root": {
-                            height: "45px", // input container
-                            width: "180px",
-                          },
-                          "& input": {
-                            padding: "10px 12px", // input padding
-                          },
-                        },
-                        variant: "outlined",
-                        inputProps: {
-                          placeholder: "Start time", // ✅ your placeholder here
-                        },
-                      },
-                    }}
-                    open={false}
-                  />
-                  <p className="time-label-to">To:</p>
-                  <TimePicker
-                    className="time-picker-2"
-                    label=""
-                    value={value2}
-                    onChange={(newValue) => {
-                      setValue2(newValue);
-                      setFormData({
-                        ...formData,
-                        endTime: newValue?.format("hh:mm A") || "",
-                      });
-                    }}
-                    slots={{
-                      openPickerIcon: () => null, // removes the clock icon
-                    }}
-                    slotProps={{
-                      textField: {
-                        sx: {
-                          height: "45px", // overall height
-                          "& .MuiInputBase-root": {
-                            height: "45px", // input container
-                            width: "180px",
-                          },
-                          "& input": {
-                            padding: "10px 12px", // input padding
-                          },
-                        },
-                        inputProps: {
-                          placeholder: "End time", // ✅ your placeholder here
-                        },
-                      },
-                    }}
-                    open={false}
-                  />
-                </LocalizationProvider>
-              </div>
-            </div>
-          </div>
+          {
+            !formData.allDay && (
+                  <div className="time">
+                    <label htmlFor="timePicker">Time</label>
+                    <div className="time-selection">
+                      <div className="time-picker-container">
+                        <LocalizationProvider
+                            dateAdapter={AdapterDayjs}
+                            className="time-picker"
+                        >
+                          <p className="time-label-from">From:</p>
+                          <TimePicker
+                              className="time-picker-1"
+                              label=""
+                              value={value}
+                              onChange={(newValue) => {
+                                setValue(newValue);
+                                setFormData({
+                                  ...formData,
+                                  startTime: newValue?.format("hh:mm A") || "",
+                                });
+                              }}
+                              minTime={minSelectableTime} // ⬅ restrict to current time
+                              slots={{
+                                openPickerIcon: () => null, // removes the clock icon
+                              }}
+                              slotProps={{
+                                textField: {
+                                  sx: {
+                                    height: "45px", // overall height
+                                    "& .MuiInputBase-root": {
+                                      height: "45px", // input container
+                                      width: "180px",
+                                    },
+                                    "& input": {
+                                      padding: "10px 12px", // input padding
+                                    },
+                                  },
+                                  variant: "outlined",
+                                  inputProps: {
+                                    placeholder: "Start time", // ✅ your placeholder here
+                                  },
+                                },
+                              }}
+                              open={false}
+                          />
+                          <p className="time-label-to">To:</p>
+                          <TimePicker
+                              className="time-picker-2"
+                              label=""
+                              value={value2}
+                              onChange={(newValue) => {
+                                setValue2(newValue);
+                                setFormData({
+                                  ...formData,
+                                  endTime: newValue?.format("hh:mm A") || "",
+                                });
+                              }}
+                              minTime={minSelectableTime} // ⬅ restrict to current time
+                              slots={{
+                                openPickerIcon: () => null, // removes the clock icon
+                              }}
+                              slotProps={{
+                                textField: {
+                                  sx: {
+                                    height: "45px", // overall height
+                                    "& .MuiInputBase-root": {
+                                      height: "45px", // input container
+                                      width: "180px",
+                                    },
+                                    "& input": {
+                                      padding: "10px 12px", // input padding
+                                    },
+                                  },
+                                  inputProps: {
+                                    placeholder: "End time", // ✅ your placeholder here
+                                  },
+                                },
+                              }}
+                              open={false}
+                          />
+                        </LocalizationProvider>
+                      </div>
+                    </div>
+                  </div>
+              )
+          }
           <div className="patient-name">
             <label>Participants Name</label>
             <input
@@ -307,9 +339,9 @@ const AddEventPanel = ({ onClose }) => {
                   styles={customStyles}
                   isSearchable={false}
                   onMenuOpen={() => setIsFocused(true)}
-                onMenuClose={() => setIsFocused(false)}
+                  onMenuClose={() => setIsFocused(false)}
                   onChange={(option) =>
-                      setFormData({ ...formData, eventType: option.value })
+                      setFormData({...formData, eventType: option.value})
                   }
               />
             </div>
@@ -317,13 +349,13 @@ const AddEventPanel = ({ onClose }) => {
           <div className="note">
             <label htmlFor="note">Note</label>
             <textarea
-              id="note"
-              placeholder="Enter additional Note"
-              rows="6"
-              value={formData.note}
-              onChange={(e) =>
-                  setFormData({ ...formData, note: e.target.value })
-              }
+                id="note"
+                placeholder="Enter additional Note"
+                rows="6"
+                value={formData.note}
+                onChange={(e) =>
+                    setFormData({...formData, note: e.target.value})
+                }
             ></textarea>
           </div>
 
@@ -334,16 +366,16 @@ const AddEventPanel = ({ onClose }) => {
                 <p>Priority:</p>
               </div>
               {["High", "Medium", "Low"].map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  className={`tag-btn ${tag.toLowerCase()} ${
-                      formData.labelTag === tag ? "active" : ""
-                  }`}
-                  onClick={() => handleSelect(tag)}
-                >
-                  {tag}
-                </button>
+                  <button
+                      key={tag}
+                      type="button"
+                      className={`tag-btn ${tag.toLowerCase()} ${
+                          formData.labelTag === tag ? "active" : ""
+                      }`}
+                      onClick={() => handleSelect(tag)}
+                  >
+                    {tag}
+                  </button>
               ))}
             </div>
           </div>

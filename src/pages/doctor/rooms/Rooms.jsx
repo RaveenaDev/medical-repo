@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import {
   Box,
   Button,
@@ -47,7 +47,6 @@ const Rooms = () => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   // State for editing room
@@ -137,44 +136,6 @@ const Rooms = () => {
 
   // const rooms = useSelector((state) => state.admin.rooms);
   // const loading = useSelector((state) => state.admin.isLoading);
-  const dummyRooms = [
-    {
-      roomID: "RM101",
-      name: "Deluxe Room 1",
-      status: "Available",
-      assignedDoctor: { name: "Dr. Aditi Sharma" },
-    },
-    {
-      roomID: "RM102",
-      name: "Deluxe Room 2",
-      status: "Occupied",
-      assignedDoctor: { name: "Dr. Ravi Mehta" },
-    },
-    {
-      roomID: "RM103",
-      name: "General Ward 1",
-      status: "Maintenance",
-      assignedDoctor: null,
-    },
-    {
-      roomID: "RM104",
-      name: "ICU Room 1",
-      status: "Available",
-      assignedDoctor: { name: "Dr. Sneha Verma" },
-    },
-    {
-      roomID: "RM105",
-      name: "ICU Room 2",
-      status: "Occupied",
-      assignedDoctor: { name: "Dr. Vikram Singh" },
-    },
-    {
-      roomID: "RM106",
-      name: "General Ward 2",
-      status: "Available",
-      assignedDoctor: null,
-    },
-  ];
 
   const location = useLocation();
   const rooms = location.state?.rooms || [];
@@ -323,9 +284,9 @@ const Rooms = () => {
                     <TableCell align="center" sx={{ pl: 8 }}>
                       Doctor Assigned
                     </TableCell>
-                    <TableCell align="right" sx={{ pr: 2 }}>
-                      {/* Optional: Add label or keep empty */}
-                    </TableCell>
+                    {/*<TableCell align="right" sx={{ pr: 2 }}>*/}
+                    {/*  /!* Optional: Add label or keep empty *!/*/}
+                    {/*</TableCell>*/}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -394,13 +355,13 @@ const Rooms = () => {
                           {room.assignedDoctor?.name || "Not Assigned"}
                         </TableCell>
 
-                        <TableCell align="right">
-                          <IconButton
-                            onClick={(event) => handleMenuOpen(event, room)}
-                          >
-                            <MoreVertIcon />
-                          </IconButton>
-                        </TableCell>
+                        {/*<TableCell align="right">*/}
+                        {/*  <IconButton*/}
+                        {/*    onClick={(event) => handleMenuOpen(event, room)}*/}
+                        {/*  >*/}
+                        {/*    <MoreVertIcon />*/}
+                        {/*  </IconButton>*/}
+                        {/*</TableCell>*/}
                       </TableRow>
                     ))
                   ) : (
