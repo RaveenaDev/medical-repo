@@ -197,6 +197,16 @@
                 letter-spacing: 0%;
                 vertical-align: middle;
               }
+
+              .reason-truncate {
+                display: -webkit-box;
+                -webkit-line-clamp: 2; // Show only 2 lines
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+                max-width: 220px; // adjust as per card width
+              }
             }
           }
 
