@@ -35,7 +35,10 @@ const Patients = (props) => {
         >
           <CommonPanel />
         </div>
-        <div style={{ marginTop: "150px" }}>
+        <div
+          className={styles.patientListContainer}
+          style={{ marginTop: "155px", height: "80vh", overflowY: "auto" }}
+        >
           {!props.entity ? (
             <div className={styles.section}>
               <p className={styles.title}>Patient List</p>

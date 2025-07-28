@@ -290,7 +290,7 @@ const InPatients = () => {
                         <th>Condition</th>
                         <th>Doctor</th>
                         <th>Status</th>
-                        <th></th>
+                        {/*<th></th>*/}
                     </tr>
                     </thead>
                     <tbody>
@@ -317,9 +317,9 @@ const InPatients = () => {
                 {patient.status}
               </span>
                             </td>
-                            <td className={styles.actions}>
-                                <BsThreeDotsVertical className={styles.menuIcon}/>
-                            </td>
+                            {/*<td className={styles.actions}>*/}
+                            {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
+                            {/*</td>*/}
                         </tr>
                     ))}
                     </tbody>

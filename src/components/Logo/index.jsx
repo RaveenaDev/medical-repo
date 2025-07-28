@@ -3,9 +3,21 @@ import styles from "../../styles/components/logo.module.scss";
 
 const Logo = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        marginTop: "10px",
+        alignItems: "center",
+        height: "12vh",
+      }}
+    >
       <img
-        style={{ width: "170px", height: "70px",marginTop:'1rem',marginBottom:'0.8rem' }}
+        style={{
+          width: "170px",
+          height: "70px",
+          marginTop: "0rem",
+          marginBottom: "0",
+        }}
         src="/sidebar_logo.jpg"
       />
     </div>

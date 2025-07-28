@@ -203,6 +203,10 @@
             font-weight: 500;
           }
 
+          &.status2{
+            min-width: 5rem;
+          }
+
           &.status {
             .statusBadge {
               padding: 4px 12px;
