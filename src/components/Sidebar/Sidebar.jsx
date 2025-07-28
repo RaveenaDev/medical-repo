@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 import adi from "../../pages/receptionist/Settings/Settings.module.scss";
 import Logout from "../../pages/receptionist/Settings/Logout.jsx";
 import DoctorNotesPopup from "./DoctorNotesPopup.jsx";
-import SaiAsha from "../../assets/SaiAsha.png"
+import SaiAsha from "../../assets/SaiAsha.png";
 const roleOptions = {
   receptionist: [
     { title: "Overview", path: "/receptionist" },
@@ -45,22 +45,34 @@ const Sidebar = ({ role }) => {
   const buttonRef = useRef(null);
 
   // Get side options based on role
-  const sideOptions = roleOptions[role] || [];
+  const sideOptions = React.useMemo(() => roleOptions[role] || [], [role]);
 
   const isSettingsPage = location.pathname.includes("settings");
 
   // Sync activeIndex with the current route
   useEffect(() => {
-    const currentIndex = sideOptions.findIndex(
+    if (!role || sideOptions.length === 0) return;
+
+    // First try to find an exact match
+    let currentIndex = sideOptions.findIndex(
       (option) => option.path === location.pathname
     );
+
+    // If not exact, fallback to first that startsWith
+    if (currentIndex === -1) {
+      currentIndex = sideOptions.findIndex((option) =>
+        location.pathname.startsWith(option.path)
+      );
+    }
+
     if (currentIndex !== -1) {
       setActiveIndex(currentIndex);
     }
-  }, [location.pathname]); // Runs whenever the route changes
+  }, [location.pathname, role, sideOptions]);
+
+  // Runs whenever the route changes
 
   const handleClick = (index, option) => {
-    setActiveIndex(index);
     navigate(`${option.path}`);
   };
   const [activeSub, setActiveSub] = useState("");
@@ -85,7 +97,7 @@ const Sidebar = ({ role }) => {
     left: 550,
   });
 
-  const hospitalName = localStorage.getItem('hospitalName')
+  const hospitalName = localStorage.getItem("hospitalName");
   // console.log(hospitalName)
 
   return (
@@ -96,7 +108,7 @@ const Sidebar = ({ role }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        height: "83vh",
+        height: "86.7vh",
       }}
     >
       <div>
@@ -162,7 +174,7 @@ const Sidebar = ({ role }) => {
           paddingBottom: "5px",
           paddingTop: "20px",
           position: "relative", // start a new stacking context
-          zIndex: 9999999, // very high
+          zIndex: 1, //
         }}
       >
         {role === "doctor" && !isSettingsPage && (
@@ -251,16 +263,27 @@ const Sidebar = ({ role }) => {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            paddingBottom: "2px",
+            paddingBottom: "6px",
             paddingTop: "6px",
             borderTop: "1px solid #E2E2E2 ",
+            zIndex: -1,
           }}
         >
           <div style={{ display: "flex", gap: 12, marginLeft: "25px" }}>
-            <img style={{width:'3.8rem',height:'3.8rem'}} src={SaiAsha} alt="Sai Asha"/>
+            <img
+              style={{ width: "3.8rem", height: "3.8rem" }}
+              src={SaiAsha}
+              alt="Sai Asha"
+            />
             <div style={{ paddingTop: "9px" }}>
-              <p style={{ color: "#25307F", fontWeight: 600,fontSize:'15px' }}>{hospitalName?.toUpperCase()}</p>
-              <p style={{ color: "#878787", fontSize: "12px" }}>You will be fine...</p>
+              <p
+                style={{ color: "#25307F", fontWeight: 600, fontSize: "15px" }}
+              >
+                {hospitalName?.toUpperCase()}
+              </p>
+              <p style={{ color: "#878787", fontSize: "12px" }}>
+                You will be fine...
+              </p>
             </div>
           </div>
         </div>
