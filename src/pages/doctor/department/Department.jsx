@@ -54,6 +54,7 @@ const getDateRange = (filterType) => {
 
 /* A simple color palette for the Pie chart slices */
 const COLORS = ["#25307F", "#5461BE", "#586EB4", "#DAE4FF"];
+const dynamicData = null; // using for Alerts and Notifs
 
 const Department = () => {
   const dispatch = useDispatch();
@@ -938,23 +939,25 @@ const Department = () => {
             </div>
 
             {/* ===== 4. Alerts & Notifs Section ===== */}
-            <section className={style.alertsSection}>
-              <h4 className={style.alertsTitle}>Alerts and Notifs</h4>
-              <div className={style.alertsList}>
-                <span className={style.alertItem}>
-                  Doctors: <strong>12</strong>
-                </span>
-                <span className={style.alertItem}>
-                  Patients: <strong>45</strong>
-                </span>
-                <span className={style.alertItem}>
-                  Rooms: <strong>8</strong>
-                </span>
-                <span className={style.alertItem}>
-                  Beds: <strong>24</strong>
-                </span>
-              </div>
-            </section>
+            {dynamicData && (
+              <section className={style.alertsSection}>
+                <h4 className={style.alertsTitle}>Alerts and Notifs</h4>
+                <div className={style.alertsList}>
+                  <span className={style.alertItem}>
+                    Doctors: <strong>12</strong>
+                  </span>
+                  <span className={style.alertItem}>
+                    Patients: <strong>45</strong>
+                  </span>
+                  <span className={style.alertItem}>
+                    Rooms: <strong>8</strong>
+                  </span>
+                  <span className={style.alertItem}>
+                    Beds: <strong>24</strong>
+                  </span>
+                </div>
+              </section>
+            )}
           </div>
         </div>
       </div>
