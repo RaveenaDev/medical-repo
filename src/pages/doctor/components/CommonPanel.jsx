@@ -15,16 +15,14 @@ import {
   getSurgeries,
 } from "../../../components/State/Doctor/Action.js";
 
-const CommonPanel = ({
-  setSelectedDepartment,
-  selectedDepartment,
-}) => {
+const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const dispatch = useDispatch();
 
+  const isActive = (path) => location.pathname.startsWith(path);
   const [selectedDate, setSelectedDate] = useState(
-      dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD")
   );
 
   useEffect(() => {
@@ -85,8 +83,8 @@ const CommonPanel = ({
         <div className={ayu.cardhandling}>
           <h4 className={ayu.heading}>Hello, Dr. {doctorName}</h4>
           <p>
-            I hope you are in good mood because there are {todayAppointments} patients waiting
-            for you.
+            I hope you are in good mood because there are {todayAppointments}{" "}
+            patients waiting for you.
           </p>
         </div>
 
@@ -97,16 +95,32 @@ const CommonPanel = ({
           alignItems="center"
           flexDirection={{ md: "row" }}
           size={12}
-          sx={{ margin: "0 0 10px 0" }}
+          sx={{
+            margin: "0 0 10px 0",
+          }}
         >
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/doctor/patient")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               title="Total Patients"
               subtitle={noOfPatients}
               handleClickCb={() => handlePatientsClick(patients)}
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/doctor/inpatients")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#EAA000",
@@ -116,7 +130,14 @@ const CommonPanel = ({
               handleClickCb={() => handleInpatientsClick(inPatients)}
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/doctor/surgeries")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#2E823B",
@@ -126,7 +147,14 @@ const CommonPanel = ({
               handleClickCb={() => handleSurgeriesClick(surgeries)}
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/doctor/rooms")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#66A7B4",

@@ -24,6 +24,7 @@ import styles from "../styles.module.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, Button } from "@mui/material";
 import dayjs from "dayjs";
+import { borderBottom } from "@mui/system";
 const CommonPanel = ({
   setIsBookAppointment,
   setSelectedDate,
@@ -78,6 +79,9 @@ const CommonPanel = ({
 
   const noOfRooms = receptionist.totalRooms;
   const rooms = receptionist.rooms;
+
+  const isActive = (path) => location.pathname === path;
+
   // const [selectedDate, setSelectedDate] = useState(dayjs());
   const handleAppointmentRequests = () => {
     // Any other logic before opening the modal
@@ -114,14 +118,28 @@ const CommonPanel = ({
           size={10}
           sx={{ margin: "0 0 18px 0" }}
         >
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/receptionist/patients")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               title="Total Patient"
               subtitle={noOfPatients ?? 0}
               handleClickCb={() => navigate(`/receptionist/patients`)}
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/receptionist/doctors")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#EAA000",
@@ -133,7 +151,14 @@ const CommonPanel = ({
               }
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/receptionist/staffs")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#2E823B",
@@ -145,7 +170,14 @@ const CommonPanel = ({
               }
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/receptionist/rooms")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#66A7B4",
