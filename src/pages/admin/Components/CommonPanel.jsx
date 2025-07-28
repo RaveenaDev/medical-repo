@@ -99,6 +99,7 @@ const CommonPanel = ({
 
   const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
   const shapeCircleStyles = { borderRadius: "50%" };
+  const isActive = (path) => location.pathname.startsWith(path);
 
   const circle = (
     <Box
@@ -150,14 +151,28 @@ const CommonPanel = ({
           size={12}
           sx={{ margin: "0 0 10px 0" }}
         >
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/admin/earnings")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               title="Total Earnings"
               subtitle="80000"
               handleClickCb={() => navigate(`/admin/earnings`)}
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/admin/doctors")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#EAA000",
@@ -167,7 +182,14 @@ const CommonPanel = ({
               handleClickCb={() => handleDocClick(doctors)}
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/admin/staffs")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#2E823B",
@@ -177,7 +199,14 @@ const CommonPanel = ({
               handleClickCb={() => handleStaffClick(staffs)}
             />
           </Grid>
-          <Grid size={3}>
+          <Grid
+            size={3}
+            sx={{
+              borderBottom: isActive("/admin/rooms")
+                ? "3px solid #25307F"
+                : "none",
+            }}
+          >
             <Card
               customStyle={{
                 backgroundColor: "#66A7B4",
