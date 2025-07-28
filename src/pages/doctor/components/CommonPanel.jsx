@@ -70,8 +70,9 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
     navigate(`/doctor/surgeries`, { state: { surgeries } });
   };
 
-  const doctorName = useSelector((store) => store.authentication.userName);
-
+  const doctorName =
+    useSelector((state) => state.authentication.userName) ||
+    localStorage.getItem("username");
   return (
     <>
       <div className={ayu.patients}>
