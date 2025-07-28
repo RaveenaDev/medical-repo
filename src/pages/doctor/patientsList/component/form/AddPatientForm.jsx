@@ -36,7 +36,7 @@ const AddPatientForm = ({ onClose }) => {
         : selectedRoles[0] || "";
 
     const payload = {
-      patientPatId: form.patientId,
+      patId: form.patientId,
       sendTo: sendToValue,
       admissionDetails: {
         name: form.patientName,
