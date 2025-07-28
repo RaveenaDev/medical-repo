@@ -40,7 +40,7 @@ const DoctorRequest = () => {
 
   const doctor = useSelector((store) => store.doctor.doctorRequests);
 
-  // console.log("Doc: ",doctor)
+  console.log("Doc: ",doctor)
 
   const formattedRequests = doctor?.map((item, index) => ({
     id: item._id || index,

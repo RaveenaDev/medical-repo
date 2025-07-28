@@ -186,6 +186,64 @@ const DoctorOverview = ({ todayAppointments }) => {
     setIsModalOpen(true);
   };
 
+  const processEvents = (events) => {
+    return events.map((event) => {
+      const hasTime = event.startTime && event.endTime;
+
+      let status = "queued";
+      let startHour = "";
+      let duration = "";
+      let time = "";
+      let start, end;
+
+      if (hasTime) {
+        const [parsedStartHour] = event.startTime.split(" ");
+        startHour = parsedStartHour;
+
+        const date = dayjs.utc(event.date).local();
+
+        const safeStartTime = event.startTime;
+        let safeEndTime = event.endTime;
+        if (safeEndTime === "12:00 AM" || safeEndTime === "00:00") {
+          safeEndTime = "11:59 PM"; // TEMP FIX
+        }
+
+        start = dayjs(`${date.format("YYYY-MM-DD")} ${safeStartTime}`, "YYYY-MM-DD hh:mm A");
+        end = dayjs(`${date.format("YYYY-MM-DD")} ${safeEndTime}`, "YYYY-MM-DD hh:mm A");
+
+        const now = dayjs();
+
+        if (now.isAfter(end)) {
+          status = "cancelled";
+        } else if (now.isBetween(start, end) || now.isSame(start) || now.isSame(end)) {
+          status = "active";
+        }
+
+        duration = `${event.startTime} – ${safeEndTime}`;
+        time = startHour;
+      }
+
+      return {
+        allDay: event.allDay,
+        eventType: event.eventType,
+        hospital: event.hospital,
+        labelTag: event.labelTag,
+        note: event.note,
+        participants: event.participants,
+        title: event.title,
+        time,
+        type: event.eventType.toLowerCase(),
+        duration,
+        date: new Date(event.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        status,
+      };
+    });
+  };
+
   useEffect(() => {
     const container = document.querySelector(`.${styles.datePicker}`);
 
@@ -258,6 +316,18 @@ const DoctorOverview = ({ todayAppointments }) => {
 
   const doctor = useSelector((store) => store.doctor);
 
+  const [EVENTS, setEVENTS] = useState(() => processEvents(doctor.events || []));
+
+  useEffect(() => {
+    setEVENTS(processEvents(doctor.events || []));
+    // console.log("Running: ")
+    const interval = setInterval(() => {
+      setEVENTS(processEvents(doctor.events || []));
+    }, 5000); // refresh every 15 seconds
+
+    return () => clearInterval(interval);
+  }, [doctor.events]);
+
   const diagnosis = doctor.diagnosis;
 
   const totalAppointments = doctor.totalAppointments;
@@ -279,72 +349,73 @@ const DoctorOverview = ({ todayAppointments }) => {
 
   // console.log("Crit: ",criticalPatients)
 
-  const EVENTS = events.map((event) => {
-    const hasTime = event.startTime && event.endTime;
 
-    let status = "queued";
-    let startHour = "";
-    let duration = "";
-    let time = "";
-    let start, end;
-
-    if (hasTime) {
-      // Example: "10:00 AM"
-      const [parsedStartHour] = event.startTime.split(" ");
-      startHour = parsedStartHour;
-
-      const date = dayjs.utc(event.date).local();
-
-      const safeStartTime = event.startTime;
-      let safeEndTime = event.endTime;
-      if (safeEndTime === "12:00 AM" || safeEndTime === "00:00") {
-        safeEndTime = "11:59 PM"; // 👈 TEMP FIX for your backend's time format
-      }
-
-      start = dayjs(
-        `${date.format("YYYY-MM-DD")} ${safeStartTime}`,
-        "YYYY-MM-DD hh:mm A"
-      );
-      end = dayjs(
-        `${date.format("YYYY-MM-DD")} ${safeEndTime}`,
-        "YYYY-MM-DD hh:mm A"
-      );
-
-      const now = dayjs();
-
-      // console.log("NOW:", dayjs().format("YYYY-MM-DD hh:mm A"));
-      // console.log("START:", start.format("YYYY-MM-DD hh:mm A"));
-      // console.log("END:", end.format("YYYY-MM-DD hh:mm A"));
-
-      if (now.isAfter(end)) {
-        status = "cancelled";
-      } else if (now.isBetween(start, end)) {
-        status = "active";
-      }
-
-      duration = `${event.startTime} – ${safeEndTime}`;
-      time = startHour;
-    }
-
-    return {
-      allDay: event.allDay,
-      eventType: event.eventType,
-      hospital: event.hospital,
-      labelTag: event.labelTag,
-      note: event.note,
-      participants: event.participants,
-      title: event.title,
-      time,
-      type: event.eventType.toLowerCase(), // e.g. "meeting"
-      duration,
-      date: new Date(event.date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      status,
-    };
-  });
+  // const EVENTS = events.map((event) => {
+  //   const hasTime = event.startTime && event.endTime;
+  //
+  //   let status = "queued";
+  //   let startHour = "";
+  //   let duration = "";
+  //   let time = "";
+  //   let start, end;
+  //
+  //   if (hasTime) {
+  //     // Example: "10:00 AM"
+  //     const [parsedStartHour] = event.startTime.split(" ");
+  //     startHour = parsedStartHour;
+  //
+  //     const date = dayjs.utc(event.date).local();
+  //
+  //     const safeStartTime = event.startTime;
+  //     let safeEndTime = event.endTime;
+  //     if (safeEndTime === "12:00 AM" || safeEndTime === "00:00") {
+  //       safeEndTime = "11:59 PM"; // 👈 TEMP FIX for your backend's time format
+  //     }
+  //
+  //     start = dayjs(
+  //       `${date.format("YYYY-MM-DD")} ${safeStartTime}`,
+  //       "YYYY-MM-DD hh:mm A"
+  //     );
+  //     end = dayjs(
+  //       `${date.format("YYYY-MM-DD")} ${safeEndTime}`,
+  //       "YYYY-MM-DD hh:mm A"
+  //     );
+  //
+  //     const now = dayjs();
+  //
+  //     // console.log("NOW:", dayjs().format("YYYY-MM-DD hh:mm A"));
+  //     // console.log("START:", start.format("YYYY-MM-DD hh:mm A"));
+  //     // console.log("END:", end.format("YYYY-MM-DD hh:mm A"));
+  //
+  //     if (now.isAfter(end)) {
+  //       status = "cancelled";
+  //     } else if (now.isBetween(start, end)) {
+  //       status = "active";
+  //     }
+  //
+  //     duration = `${event.startTime} – ${safeEndTime}`;
+  //     time = startHour;
+  //   }
+  //
+  //   return {
+  //     allDay: event.allDay,
+  //     eventType: event.eventType,
+  //     hospital: event.hospital,
+  //     labelTag: event.labelTag,
+  //     note: event.note,
+  //     participants: event.participants,
+  //     title: event.title,
+  //     time,
+  //     type: event.eventType.toLowerCase(), // e.g. "meeting"
+  //     duration,
+  //     date: new Date(event.date).toLocaleDateString("en-US", {
+  //       year: "numeric",
+  //       month: "long",
+  //       day: "numeric",
+  //     }),
+  //     status,
+  //   };
+  // });
 
   // console.log("Events: ",events)
 
