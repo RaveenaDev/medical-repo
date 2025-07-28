@@ -1055,60 +1055,60 @@ const DoctorOverview = ({ todayAppointments }) => {
                   </TableContainer>
                 </div>
               </div>
-              <div className={styles.child3}>
-                <div className={styles.card}>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div>
-                      <h3 className={styles.title}>
-                        Patients’ treatment phases
-                      </h3>
-                      <p className={styles.subtitle}>
-                        You are coach to {totalPatients} active patients
-                      </p>
-                    </div>
+              {/*<div className={styles.child3}>*/}
+              {/*  <div className={styles.card}>*/}
+              {/*    <div*/}
+              {/*      style={{ display: "flex", justifyContent: "space-between" }}*/}
+              {/*    >*/}
+              {/*      <div>*/}
+              {/*        <h3 className={styles.title}>*/}
+              {/*          Patients’ treatment phases*/}
+              {/*        </h3>*/}
+              {/*        <p className={styles.subtitle}>*/}
+              {/*          You are coach to {totalPatients} active patients*/}
+              {/*        </p>*/}
+              {/*      </div>*/}
 
-                    <div className={styles.legend}>
-                      {phases.map((p) => (
-                        <div key={p.name} className={styles.legendItem}>
-                          <span
-                            className={styles.legendSwatch}
-                            style={{ backgroundColor: p.color }}
-                          />
-                          <span>{p.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+              {/*      <div className={styles.legend}>*/}
+              {/*        {phases.map((p) => (*/}
+              {/*          <div key={p.name} className={styles.legendItem}>*/}
+              {/*            <span*/}
+              {/*              className={styles.legendSwatch}*/}
+              {/*              style={{ backgroundColor: p.color }}*/}
+              {/*            />*/}
+              {/*            <span>{p.name}</span>*/}
+              {/*          </div>*/}
+              {/*        ))}*/}
+              {/*      </div>*/}
+              {/*    </div>*/}
 
-                  <div className={styles.bars}>
-                    {phases.map((p) => (
-                      <div
-                        key={p.name}
-                        style={{
-                          flexGrow: p.count,
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <span className={styles.phaseLabel}>
-                          {p.count} Patients
-                        </span>
-                        <div className={styles.barTrack}>
-                          <div
-                            className={styles.barFill}
-                            style={{
-                              width: "100%",
-                              backgroundColor: p.color,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              {/*    <div className={styles.bars}>*/}
+              {/*      {phases.map((p) => (*/}
+              {/*        <div*/}
+              {/*          key={p.name}*/}
+              {/*          style={{*/}
+              {/*            flexGrow: p.count,*/}
+              {/*            display: "flex",*/}
+              {/*            flexDirection: "column",*/}
+              {/*          }}*/}
+              {/*        >*/}
+              {/*          <span className={styles.phaseLabel}>*/}
+              {/*            {p.count} Patients*/}
+              {/*          </span>*/}
+              {/*          <div className={styles.barTrack}>*/}
+              {/*            <div*/}
+              {/*              className={styles.barFill}*/}
+              {/*              style={{*/}
+              {/*                width: "100%",*/}
+              {/*                backgroundColor: p.color,*/}
+              {/*              }}*/}
+              {/*            />*/}
+              {/*          </div>*/}
+              {/*        </div>*/}
+              {/*      ))}*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
             </div>
             <div className={styles.div2}>
               {/* Header */}

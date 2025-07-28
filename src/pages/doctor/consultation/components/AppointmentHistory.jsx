@@ -4,49 +4,11 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getAppointmentHistory} from "../../../../components/State/Doctor/Action.js";
 
-const appointments = [
-  {
-    caseId: "XXXXXX",
-    name: "Khushi Saini",
-    appointmentWith: "+91 79327728",
-    typeVisit: "Referral",
-    token: "XXXXXX",
-    date: "08-10-2024",
-    status: "View",
-    nameLink: "#",
-  },
-  {
-    caseId: "XXXXXX",
-    name: "Aditya Soni",
-    appointmentWith: "+91 79327728",
-    typeVisit: "Referral",
-    token: "XXXXXX",
-    date: "08-10-2024",
-    status: "View",
-    nameLink: "#",
-  },
-  {
-    caseId: "XXXXXX",
-    name: "Yash Sharma",
-    appointmentWith: "+91 79327728",
-    typeVisit: "Walk In",
-    token: "XXXXXX",
-    date: "08-10-2024",
-    status: "View",
-    nameLink: "#",
-  },
-];
-
 const AppointmentHistory = ({ onBack }) => {
   // Dropdown 1: Date Range
-  const dateOptions = ["Last 7 days", "Last 30 days", "Last month", "Custom"];
+  const dateOptions = ["Last 7 days", "Last 30 days", "Last month"];
   const [openDate, setOpenDate] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
-
-  // Dropdown 2: Status
-  const statusOptions = ["Ongoing", "Complete"];
-  const [openStatus, setOpenStatus] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
 
   const dispatch = useDispatch()
 
@@ -93,36 +55,6 @@ const AppointmentHistory = ({ onBack }) => {
                     onClick={() => {
                       setSelectedDate(option);
                       setOpenDate(false);
-                    }}
-                  >
-                    {option}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          {/* Status Dropdown */}
-          <div className={styles.dropdown2}>
-            <button
-              className={styles.trigger}
-              onClick={() => setOpenStatus((prev) => !prev)}
-            >
-              <p>{selectedStatus || "Status"}</p>
-              <span className={styles.arrow}>
-                {openStatus ? <ChevronUp /> : <ChevronDown />}
-              </span>
-            </button>
-            {openStatus && (
-              <ul className={styles.menu}>
-                {statusOptions.map((option) => (
-                  <li
-                    key={option}
-                    className={`${styles.item} ${
-                      selectedStatus === option ? styles.active : ""
-                    }`}
-                    onClick={() => {
-                      setSelectedStatus(option);
-                      setOpenStatus(false);
                     }}
                   >
                     {option}
