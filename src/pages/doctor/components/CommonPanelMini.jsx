@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import ayu from "./CommonPanel.module.scss";
 import Searchbar from "../../../components/Searchbar/index.jsx";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
-import {getAppointmentsOfToday} from "../../../components/State/Doctor/Action.js";
+import { getAppointmentsOfToday } from "../../../components/State/Doctor/Action.js";
 
 const CommonPanelMini = () => {
   const [selectedDate, setSelectedDate] = useState(
-      dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD")
   );
-
 
   const dispatch = useDispatch();
 
@@ -21,12 +20,17 @@ const CommonPanelMini = () => {
     if (selectedDate) {
       dispatch(getAppointmentsOfToday(startDate, endDate));
     }
-
   }, [dispatch, selectedDate]);
 
   const appointments = useSelector((store) => store.doctor.appointmentsOfToday);
   const todayAppointments = appointments ? appointments.length : 0;
-  const doctorName = useSelector((store) => store.authentication.userName);
+  const doctorName =
+    useSelector((state) => state.authentication.userName) ||
+    localStorage.getItem("username");
+  const departmentName =
+    useSelector((state) => state.authentication.departmentName) ||
+    localStorage.getItem("departmentName");
+
   return (
     <>
       <div className={ayu.patients}>
@@ -36,10 +40,10 @@ const CommonPanelMini = () => {
         </div>
 
         <div className={ayu.cardhandling} style={{ marginTop: "-4rem" }}>
-          <h4 className={ayu.heading}>Good Morning, Dr. {doctorName}</h4>
+          <h4 className={ayu.heading}>Hello, Dr. {doctorName}</h4>
           <p>
-            I hope you are in good mood because there are {todayAppointments} patients waiting
-            for you.
+            I hope you are in good mood because there are {todayAppointments}{" "}
+            patients waiting for you.
           </p>
         </div>
       </div>
