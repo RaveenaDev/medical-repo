@@ -43,6 +43,7 @@ import {
 } from "../../../components/State/Receptionist/Action";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CircularProgress from "@mui/material/CircularProgress";
+import styles from "./PatientList.module.scss";
 
 const PatientList = () => {
   const [sortOrder, setSortOrder] = useState("desc");
@@ -158,7 +159,15 @@ const PatientList = () => {
           <CircularProgress sx={{ color: "#25307F" }} size={58} />
         </Box>
       ) : (
-        <Box sx={{ padding: 2 }}>
+        <Box
+          sx={{
+            padding: "2vh 2vh 1.5vh 2vh",
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+            minHeight: 0,
+          }}
+        >
           {/* Header Section */}
           <Box
             sx={{
@@ -254,8 +263,10 @@ const PatientList = () => {
           </Box>
           {/* Table Section */}
           <TableContainer
+            className={styles.tableContainer}
             sx={{
-              maxHeight: "60vh", // Adjust this to fit your layout needs
+              flex: "1 1 auto",
+              minHeight: 0,
               overflowY: "auto",
               position: "relative",
             }}
@@ -265,7 +276,7 @@ const PatientList = () => {
                 borderCollapse: "separate",
                 borderSpacing: "0 10px",
                 background: "#F1F1F1",
-                marginBottom: "20px",
+                marginBottom: "0px",
               }}
             >
               <TableHead
