@@ -484,26 +484,33 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
         >
             <div>
                 <div className={styles.heading1} style={{padding: "0"}}>
-                    <h3>Appointment Requests ({totalAppointmentRequests.length})</h3>
+                    <h3>Appointment Requests ({totalAppointmentRequests?.length})</h3>
                 </div>
 
-                {totalAppointmentRequests.map((req, index) => (
-                    <div key={index} className={styles.items}>
-                        <div className={styles.circle}></div>
+                {
+                    totalAppointmentRequests ? (
+                        totalAppointmentRequests.map((req, index) => (
+                            <div key={index} className={styles.items}>
+                                <div className={styles.circle}></div>
+                                <div>
+                                    <h4>{req.patient.name}</h4>
+                                    <p>
+                                        Appointment for {req.department.name},{" "}
+                                        {new Date(req.tokenDate).toLocaleDateString("en-IN", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                        })}
+                                    </p>
+                                    {/*<p>Appointment for ENT, 28 September</p>*/}
+                                </div>
+                            </div>
+                        ))
+                    ) :
                         <div>
-                            <h4>{req.patient.name}</h4>
-                            <p>
-                                Appointment for {req.department.name},{" "}
-                                {new Date(req.tokenDate).toLocaleDateString("en-IN", {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                })}
-                            </p>
-                            {/*<p>Appointment for ENT, 28 September</p>*/}
+                            No appointment found
                         </div>
-                    </div>
-                ))}
+                }
             </div>
 
             <div>

@@ -170,7 +170,14 @@ const DoctorNotesPopup = ({
 
   const doctorNotes = useSelector((store) => store.doctor.doctorNotes)
 
-  console.log("Doc: ",doctorNotes)
+  // console.log("Doc: ",doctorNotes)
+
+  const stripHtml = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
+  };
+
 
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -290,7 +297,8 @@ const DoctorNotesPopup = ({
                                 border: 'none'
                               }}
                           >
-                            {selectedNote ? "Edit" : "Save"}
+                            {/*{selectedNote ? "Edit" : "Save"}*/}
+                            Save
                           </button>
                       )}
 
@@ -646,7 +654,7 @@ const DoctorNotesPopup = ({
                               }}
                           >
                             <p style={{ color: '#424242', fontSize: '13px', marginBottom: 0 }}>
-                              {truncateText(note?.note,25) || 'No content'}
+                              {note?.note ? truncateText(stripHtml(note.note), 25) : 'No content'}
                             </p>
                             <div style={{
                               position: 'absolute',
