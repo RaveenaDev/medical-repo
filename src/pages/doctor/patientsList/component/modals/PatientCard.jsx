@@ -9,7 +9,7 @@ const PatientCard = ({ patient }) => {
     if (!status) return "";
     return status.replace(/\+/g, "-").toLowerCase(); // e.g., "Admitted+FollowUp" → "admitted-followup"
   };
-  // console.log("Patient in adimitted:", patient);
+  console.log("Patient in adimitted:", patient);
   // console.log("is follow up status:", isFollowUp);
 
   return (
@@ -40,7 +40,7 @@ const PatientCard = ({ patient }) => {
             </div>
           </div>
           <div className={`statusDot ${formatStatus(patient.type)}`}>
-            {patient.type === "admitted+followup+critical" && (
+            {patient.healthStatus === "Critical" && (
               <div className="innerCircle" />
             )}
           </div>
