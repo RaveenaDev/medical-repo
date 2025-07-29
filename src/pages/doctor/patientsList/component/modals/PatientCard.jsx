@@ -2,6 +2,7 @@ import React from "react";
 import "./PatientCard.scss"; // Assuming you have a CSS file for styling
 import { useNavigate } from "react-router-dom";
 
+import { Tooltip } from "@mui/material";
 const PatientCard = ({ patient }) => {
   const navigate = useNavigate();
   const isFollowUp = patient.type?.toLowerCase().trim() === "followup";
@@ -61,7 +62,10 @@ const PatientCard = ({ patient }) => {
           </div>
         </div>
         <div className="actionButtons">
-          <div>
+          <Tooltip
+            title={patient?.phone || "No contact available"} // Tooltip content
+            arrow
+          >
             <svg
               width="21"
               height="21"
@@ -75,7 +79,7 @@ const PatientCard = ({ patient }) => {
                 fill="#333333"
               />
             </svg>
-          </div>
+          </Tooltip>
         </div>
       </div>
     </div>
