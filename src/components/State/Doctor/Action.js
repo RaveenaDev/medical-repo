@@ -114,7 +114,7 @@ export const getInpatients = () => async (dispatch) => {
       },
     });
 
-    console.log("InPatt: ", data);
+    // console.log("InPatt: ", data);
     dispatch({ type: GET_INPATIENTS, payload: data.totalInpatients });
   } catch (error) {
     console.log(error);

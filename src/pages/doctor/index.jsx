@@ -870,7 +870,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                   </span>
                 </div>
 
-                <div style={{ marginTop: "1rem" }}>
+                <div style={{ marginTop: "1rem",minHeight:'44vh' }}>
                   <TableContainer>
                     <Table
                       sx={{
@@ -1117,7 +1117,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                             <TableCell
                               align="center"
                               colSpan={7}
-                              sx={{ backgroundColor: "#EEF8F1" }}
+                              sx={{ backgroundColor: "#EEF8F1"}}
                             >
                               No appointments found.
                             </TableCell>
