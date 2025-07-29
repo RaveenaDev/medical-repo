@@ -1521,7 +1521,7 @@ export const getAvailableRooms = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
     const { data } = await axios.get(
-      `${API_URL}/getAllRooms`,
+      `${API_URL}/getAvailableRooms`,
 
       {
         headers: {

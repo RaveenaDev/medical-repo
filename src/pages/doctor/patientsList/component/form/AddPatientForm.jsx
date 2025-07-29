@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 const AddPatientForm = ({ onClose }) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    // dispatch(getAvailableBeds());
     dispatch(getAvailableRooms());
   }, []);
   const [form, setForm] = useState({
@@ -30,6 +29,34 @@ const AddPatientForm = ({ onClose }) => {
     deposit: "",
     medicalNote: "",
   });
+
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [availableBeds, setAvailableBeds] = useState([]);
+  const [bedsAvailable, setBedsAvailable] = useState(true);
+
+  const availableRooms = useSelector((state) => state.doctor.roomsAvailable);
+  const handleRoomChange = (e) => {
+    const roomId = e.target.value;
+    setSelectedRoom(roomId);
+
+    // If "Select a room" is chosen, clear bed selection and re-enable the bed dropdown
+    if (roomId === "") {
+      setAvailableBeds([]); // Clear the available beds
+      setBedsAvailable(true); // Re-enable the bed dropdown
+      setForm((prevForm) => ({ ...prevForm, bedNo: "" })); // Clear selected bed
+    } else {
+      // Find the selected room and its available beds
+      const room = availableRooms.find((room) => room.roomID === roomId);
+      if (room && room.beds.length > 0) {
+        setBedsAvailable(true); // There are available beds
+        setAvailableBeds(room.beds); // Set available beds
+      } else {
+        setBedsAvailable(false); // No available beds
+        setAvailableBeds([]); // Clear available beds
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Handle form submission logic
@@ -54,7 +81,7 @@ const AddPatientForm = ({ onClose }) => {
         emergencyContact: form.emergencyContact,
         emergencyName: form.emergencyContactName,
         admissionDate: form.date,
-        room: form.roomNo,
+        room: selectedRoom,
         bed: form.bedNo,
         deposit: parseFloat(form.deposit),
         medicalNote: form.medicalNote,
@@ -74,10 +101,7 @@ const AddPatientForm = ({ onClose }) => {
       setSelectedRoles([...selectedRoles, role]);
     }
   };
-
-  const availableRooms = useSelector((state) => state.doctor.roomsAvailable);
   // console.log("Available Rooms:", availableRooms);
-  // const availableBeds = useSelector((state) => state.doctor.bedsAvailable);
   return (
     <div className="add-patient-modal">
       <div className="modal-overlay" onClick={onClose}></div>
@@ -228,36 +252,46 @@ const AddPatientForm = ({ onClose }) => {
                   />
                 </div>
 
+                {/* Room Dropdown */}
                 <div className="form-field">
                   <label>Room No.</label>
                   <select
-                    value={form.roomNo}
-                    onChange={(e) =>
-                      setForm({ ...form, roomNo: e.target.value })
-                    }
+                    value={selectedRoom}
+                    onChange={handleRoomChange}
                     required
                   >
                     <option value="">Select a room</option>
-                    {availableRooms &&
-                      availableRooms.map((room) => (
-                        <option key={room._id} value={room.roomID}>
-                          {room.name} {/* Displaying the room name */}
-                        </option>
-                      ))}
+                    {availableRooms.map((room) => (
+                      <option key={room._id} value={room.roomID}>
+                        {room.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
                 <div className="form-field">
                   <label>Bed No.</label>
-                  <input
-                    type="text"
+                  <select
                     value={form.bedNo}
                     onChange={(e) =>
                       setForm({ ...form, bedNo: e.target.value })
                     }
+                    disabled={!selectedRoom || !bedsAvailable}
                     required
-                  />
+                  >
+                    <option value="">Select a bed</option>
+                    {bedsAvailable ? (
+                      availableBeds.map((bed) => (
+                        <option key={bed._id} value={bed.bedNumber}>
+                          {bed.bedNumber}
+                        </option>
+                      ))
+                    ) : (
+                      <option>No beds available</option>
+                    )}
+                  </select>
                 </div>
+
                 <div className="form-field">
                   <label>Deposit Given Rs.</label>
                   <input

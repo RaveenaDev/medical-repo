@@ -88,7 +88,7 @@ const PatientsList = () => {
     });
 
   // console.log("Addmitted Patiemts", patientsAdmitted);
-  console.log("Admission Requests", filteredAdmissions);
+  // console.log("Admission Requests", filteredAdmissions);
   const sliderSettings = {
     dots: false,
     infinite: false,
