@@ -2,37 +2,59 @@ import CommonPanel from "../components/CommonPanel";
 import { FiFilter } from "react-icons/fi";
 import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 import styles from "./Patients.module.scss";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppointmentRequestModal from "../components/appointmentRequests/AppointmentRequest";
 import {
-     Box,
+    Box,
     Button, Drawer,
     FormControl,
     FormControlLabel,
     FormLabel,
-    IconButton,
+    IconButton, MenuItem,
     Radio,
-    RadioGroup,
+    RadioGroup, Select, TablePagination,
     Typography
- } from "@mui/material";
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import {useDispatch, useSelector} from "react-redux";
+import {getFilteredPatients} from "../../../components/State/Doctor/Action.js";
 const Patients = () => {
-  const location = useLocation();
-  const patients = location.state?.patients || [];
+    const dispatch = useDispatch();
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+  // const location = useLocation();
+  // const patients = location.state?.patients || [];
 
   // console.log("Transferred : ",patients)
 
-  const sortOptions = ["Newest to Oldest", "Oldest to Newest"];
+    const [sortOrder, setSortOrder] = useState("desc");
     const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
-    const [openSort, setOpenSort] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("Newest to Oldest");
 
     const [filters, setFilters] = useState({
         status: "",
         type: "",
         sort: "desc",
     });
+
+    useEffect(() => {
+        // dispatch(getPatients());
+        dispatch(getFilteredPatients(filters, page, rowsPerPage));
+    }, [dispatch, sortOrder, page, rowsPerPage]);
+
+    const doctor = useSelector((store) => store.doctor)
+    const totalFilteredPatients = doctor.totalFilteredPatients
+    const filteredPatients = doctor.filteredPatients
+
+    const handleSortChange = (event) => {
+        // admin = null;
+        setSortOrder(event.target.value);
+        setFilters({
+            ...filters,
+            sort: event.target.value,
+        });
+        // console.log(event.target.value)
+    };
 
   const navigate = useNavigate();
 
@@ -54,8 +76,17 @@ const Patients = () => {
 
     const handleSearchResults = () => {
         // admin = null;
-        // dispatch(getFilteredPatients(filters));
+        dispatch(getFilteredPatients(filters, page, rowsPerPage));
         setFilterDrawerOpen(false);
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0); // Reset to first page when rows per page changes
     };
 
   const appointmentRequests = [
@@ -145,14 +176,6 @@ const Patients = () => {
             <span className={styles.backText}>Patient List</span>
           </div>
           <div className={styles.headerRight}>
-            {/*<button onClick={handleRequestBtn} className={styles.requestButton}>*/}
-            {/*  <div className={styles.badgeCircle}>*/}
-            {/*    10*/}
-            {/*    <span className={styles.notificationDot}></span>*/}
-            {/*  </div>*/}
-            {/*  <span className={styles.buttonLabel}>Request</span>*/}
-            {/*</button>*/}
-
             <Button
               variant="contained"
               onClick={handleRequestBtn}
@@ -243,54 +266,39 @@ const Patients = () => {
                 Appointment Requests
               </span>
             </Button>
-
-            {/*<button*/}
-            {/*  onClick={handleAppointmentRequests}*/}
-            {/*  className={`${styles.appointmentSection} ${styles.boxStyle}`}*/}
-            {/*>*/}
-            {/*  <FaUserCircle className={styles.userIcon} />*/}
-            {/*  <span>Appointment Requests</span>*/}
-            {/*</button>*/}
           </div>
         </div>
         <hr />
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
-            {patients?.length} <span>Patients</span>
+            {totalFilteredPatients} <span>Patients</span>
           </span>
           <div className={styles.verticalDivider}></div>
           <div className={styles.sortFilterSection}>
             <div className={styles.sortBy}>
               <span>Sort by:</span>
-              <div className={styles.dropdown}>
-                <button
-                  className={styles.trigger}
-                  onClick={() => setOpenSort((prev) => !prev)}
+                <Select
+                    value={sortOrder}
+                    onChange={handleSortChange}
+                    size="small"
+                    sx={{
+                        minWidth: 180,
+                        background: "#fff",
+                        color: "#4A4A4A",
+                        boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                        border: "1px solid transparent",
+                        outline: "none",
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "inherit", // Removes hover effect
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "transparent", // Hides the border
+                        },
+                    }}
                 >
-                  <p>{selectedSort}</p>
-                  <span className={styles.arrow}>
-                    {openSort ? <ChevronUp /> : <ChevronDown />}
-                  </span>
-                </button>
-                {openSort && (
-                  <ul className={styles.menu}>
-                    {sortOptions.map((option) => (
-                      <li
-                        key={option}
-                        className={`${styles.item} ${
-                          selectedSort === option ? styles.active : ""
-                        }`}
-                        onClick={() => {
-                          setSelectedSort(option);
-                          setOpenSort(false);
-                        }}
-                      >
-                        {option}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+                    <MenuItem value="desc">Newest to Oldest</MenuItem>
+                    <MenuItem value="asc">Oldest to Newest</MenuItem>
+                </Select>
             </div>
             <div
                 onClick={() => setFilterDrawerOpen(true)}
@@ -313,130 +321,155 @@ const Patients = () => {
       </AppointmentRequestModal>
 
       <div className={styles.patientsTableContainer}>
-        {patients && patients.length > 0 ? (
-          <table className={styles.patientsTable}>
-            <thead>
-              <tr>
-                <th>Case ID</th>
-                <th>Name</th>
-                <th>Phone Number</th>
-                <th>Type Visit</th>
-                <th>Branch</th>
-                <th>Date</th>
-                <th>Booking</th>
-                {/*<th></th>*/}
-              </tr>
-            </thead>
-            <tbody>
-              {patients.map((patient, index) => (
-                <tr key={index}>
-                  <td className={styles.patientId}>{patient?.patId}</td>
-                  <td className={styles.patientInfo}>
-                    <div>
-                      <div className={styles.patientName}>{patient.name}</div>
-                      <div className={styles.patientEmail}>{patient.email}</div>
-                    </div>
-                  </td>
-                  <td className={styles.phoneNumber}>{patient.phone}</td>
-                  <td className={styles.typeVisit}>
-                    {patient?.appointments[0].typeVisit}
-                  </td>
-                  <td className={styles.branch}>
-                    {patient?.appointments[0].branch}
-                  </td>
-                  <td className={styles.date}>
-                    {truncateText(patient?.appointments[0].date, 10)}
-                  </td>
-                  <td className={styles.booking}>
+        {filteredPatients && filteredPatients.length > 0 ? (
+            <>
+                <table className={styles.patientsTable}>
+                    <thead>
+                    <tr>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Case ID</th>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Name</th>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Phone Number</th>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Type Visit</th>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Branch</th>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Date</th>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Booking</th>
+                        {/*<th></th>*/}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {filteredPatients.map((patient, index) => (
+                        <tr key={index}>
+                            <td className={styles.patientId}>{patient?.patId || "Not Assigned"}</td>
+                            <td className={styles.patientInfo}>
+                                <div>
+                                    <div className={styles.patientName}>{patient.name || "Not Assigned"}</div>
+                                    <div className={styles.patientEmail}>{patient.email || "Not Assigned"}</div>
+                                </div>
+                            </td>
+                            <td className={styles.phoneNumber}>{patient.phone}</td>
+                            <td className={styles.typeVisit}>
+                                {patient?.typeVisit || "Not Assigned"}
+                            </td>
+                            <td className={styles.branch}>
+                                {patient.appointments[patient.appointments.length - 1]
+                                    ?.department.name || "Not Assigned"}
+                            </td>
+                            <td className={styles.date}>
+                                {/*{truncateText(patient?.appointments[0].date, 10)}*/}
+                                {new Date(
+                                    patient.registrationDate
+                                ).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                })}
+                            </td>
+                            <td className={styles.booking}>
                     <span
-                      className={` ${styles.bookingBadge} ${
-                        patient?.status.toLowerCase() === "active"
-                          ? styles.activeBooking
-                          : styles.inactiveBooking
-                      }`}
+                        className={` ${styles.bookingBadge} ${
+                            patient?.status.toLowerCase() === "active"
+                                ? styles.activeBooking
+                                : styles.inactiveBooking
+                        }`}
                     >
                       {patient?.status}
                     </span>
-                  </td>
-                  {/*<td className={styles.actions}>*/}
-                  {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
-                  {/*</td>*/}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                            </td>
+                            {/*<td className={styles.actions}>*/}
+                            {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
+                            {/*</td>*/}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                <TablePagination
+                    component="div"
+                    count={totalFilteredPatients}
+                    page={page} // current page
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage} // items per page
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                    sx={{
+                        width: '100%',
+                        backgroundColor: "#fff",
+                        borderTop: "2px solid #ddd",
+                        zIndex: 11,
+                    }}
+                />
+            </>
         ) : (
-          <div className={styles.noDataMessage}>No patients found.</div>
+            <div className={styles.noDataMessage}>No patients found.</div>
         )}
 
-            <Drawer
-                anchor="right"
-                open={filterDrawerOpen}
-                onClose={() => setFilterDrawerOpen(false)}
-                sx={{
-                    "& .MuiDrawer-paper": {
-                        height: "58vh", // Adjust height as needed
-                        top: "18vh", // Center it vertically
-                        borderRadius: "10px 0 0 10px", // Optional rounded corners
-                    },
-                }}
-            >
-                <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            marginBottom: 2,
-                        }}
-                    >
-                        <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
-                            Filter By
-                        </Typography>
-                        <IconButton
-                            sx={{
-                                "&:focus": {
-                                    outline: "none",
-                                    boxShadow: "none",
-                                },
-                                color: "black",
-                            }}
-                            onClick={() => setFilterDrawerOpen(false)}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </Box>
+          <Drawer
+              anchor="right"
+              open={filterDrawerOpen}
+              onClose={() => setFilterDrawerOpen(false)}
+              sx={{
+                  "& .MuiDrawer-paper": {
+                      height: "58vh", // Adjust height as needed
+                      top: "18vh", // Center it vertically
+                      borderRadius: "10px 0 0 10px", // Optional rounded corners
+                  },
+              }}
+          >
+              <Box sx={{width: 200, padding: 2, paddingLeft: 4}}>
+                  <Box
+                      sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: 2,
+                      }}
+                  >
+                      <Typography variant="h6" sx={{color: "#0B0B0B"}}>
+                          Filter By
+                      </Typography>
+                      <IconButton
+                          sx={{
+                              "&:focus": {
+                                  outline: "none",
+                                  boxShadow: "none",
+                              },
+                              color: "black",
+                          }}
+                          onClick={() => setFilterDrawerOpen(false)}
+                      >
+                          <CloseIcon/>
+                      </IconButton>
+                  </Box>
 
-                    {/* Filter Options */}
-                    <FormControl
-                        sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}
-                        component="fieldset"
-                    >
-                        <FormLabel
-                            component="legend"
-                            sx={{
-                                marginBottom: 1,
-                                color: "#000000",
-                                "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
-                            }}
-                        >
-                            Status
-                        </FormLabel>
-                        <RadioGroup
-                            name="status"
-                            value={filters.status}
-                            onChange={handleFilterChange}
-                        >
-                            <FormControlLabel
-                                value="active"
-                                control={
-                                    <Radio
-                                        sx={{
-                                            color: "#878787", // Default color
-                                            "&.Mui-checked": {
-                                                color: "#25307F", // Selected dot color
-                                            },
-                                        }}
+                  {/* Filter Options */}
+                  <FormControl
+                      sx={{marginBottom: 6, marginTop: 2, width: "100%"}}
+                      component="fieldset"
+                  >
+                      <FormLabel
+                          component="legend"
+                          sx={{
+                              marginBottom: 1,
+                              color: "#000000",
+                              "&.Mui-focused": {color: "#000000"}, // Prevents blue color on focus
+                          }}
+                      >
+                          Status
+                      </FormLabel>
+                      <RadioGroup
+                          name="status"
+                          value={filters.status}
+                          onChange={handleFilterChange}
+                      >
+                          <FormControlLabel
+                              value="active"
+                              control={
+                                  <Radio
+                                      sx={{
+                                          color: "#878787", // Default color
+                                          "&.Mui-checked": {
+                                              color: "#25307F", // Selected dot color
+                                          },
+                                      }}
                                     />
                                 }
                                 label="Active"

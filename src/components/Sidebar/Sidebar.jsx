@@ -53,20 +53,30 @@ const Sidebar = ({ role }) => {
   useEffect(() => {
     if (!role || sideOptions.length === 0) return;
 
-    // First try to find an exact match
-    let currentIndex = sideOptions.findIndex(
-      (option) => option.path === location.pathname
+    const currentPath = location.pathname;
+
+    // Step 1: Try exact match first
+    let matchedIndex = sideOptions.findIndex(
+      (option) => option.path === currentPath
     );
 
-    // If not exact, fallback to first that startsWith
-    if (currentIndex === -1) {
-      currentIndex = sideOptions.findIndex((option) =>
-        location.pathname.startsWith(option.path)
-      );
+    // Step 2: If not exact match, try to find the most specific (longest) matching path
+    if (matchedIndex === -1) {
+      let longestMatchLength = 0;
+
+      sideOptions.forEach((option, index) => {
+        if (
+          currentPath.startsWith(option.path) &&
+          option.path.length > longestMatchLength
+        ) {
+          longestMatchLength = option.path.length;
+          matchedIndex = index;
+        }
+      });
     }
 
-    if (currentIndex !== -1) {
-      setActiveIndex(currentIndex);
+    if (matchedIndex !== -1) {
+      setActiveIndex(matchedIndex);
     }
   }, [location.pathname, role, sideOptions]);
 

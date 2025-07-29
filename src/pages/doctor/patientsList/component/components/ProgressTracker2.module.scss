@@ -87,7 +87,7 @@
 
 .headerCell {
   color: #878787;
-  font-size: 1vw;
+  font-size: max(1vw, 9px);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -157,7 +157,7 @@
 .tableCell {
   display: flex;
   align-items: center;
-  font-size: 1vw;
+  font-size: max(1vw, 9px);
   padding: 0px;
   overflow: hidden;
   text-overflow: ellipsis;

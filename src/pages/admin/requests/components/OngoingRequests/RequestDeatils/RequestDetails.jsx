@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./requestDetails.scss";
+import styles from "./RequestInnerDetails.module.scss";
 import {
   Timeline,
   TimelineItem,
@@ -31,10 +31,10 @@ const RequestDetails = ({ request, onBack }) => {
   };
 
   return (
-    <div className="requestDetailsPage">
-      <div className="details">
-        <div className="about">
-          <div className="heading">
+    <div className={styles.requestInnerDetailsPage}>
+      <div className={styles.details}>
+        <div className={styles.about}>
+          <div className={styles.heading}>
             <svg
               width="30"
               height="30"
@@ -51,7 +51,7 @@ const RequestDetails = ({ request, onBack }) => {
             </svg>
             <p>Request Details</p>
           </div>
-          <div className="info">
+          <div className={styles.info}>
             <p>
               <strong>Requested By:</strong> <span>{request.name}</span>
             </p>
@@ -67,7 +67,7 @@ const RequestDetails = ({ request, onBack }) => {
           </div>
         </div>
 
-        <div className="medicineDetails">
+        <div className={styles.medicineDetails}>
           {request.medicines && request.medicines.length > 0 && (
             <div>
               <p>
@@ -92,7 +92,7 @@ const RequestDetails = ({ request, onBack }) => {
       </div>
 
       {/* Request Progress Section */}
-      <div className="requestProgress">
+      <div className={styles.requestProgress}>
         <h4>Updates on the Request</h4>
 
         <Timeline
@@ -110,15 +110,15 @@ const RequestDetails = ({ request, onBack }) => {
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              <div className="addUpdateTimeline">
+              <div className={styles.addUpdateTimeline}>
                 <input
                   type="text"
                   placeholder="Add Update"
                   value={newUpdate}
                   onChange={(e) => setNewUpdate(e.target.value)}
-                  className="updateInput"
+                  className={styles.updateInput}
                 />
-                <button className="sendButton" onClick={handleAddUpdate}>
+                <button className={styles.sendButton} onClick={handleAddUpdate}>
                   Send
                 </button>
               </div>
@@ -130,7 +130,6 @@ const RequestDetails = ({ request, onBack }) => {
             <TimelineItem key={index}>
               <TimelineSeparator>
                 <TimelineDot color="primary" />
-                {/* Only show connector if it's NOT the last item */}
                 {index !== updates.length - 1 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineContent>{update}</TimelineContent>
