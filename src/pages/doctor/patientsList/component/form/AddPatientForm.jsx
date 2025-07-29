@@ -240,7 +240,7 @@ const AddPatientForm = ({ onClose }) => {
                     <option value="">Select a room</option>
                     {availableRooms &&
                       availableRooms.map((room) => (
-                        <option key={room._id} value={room._id}>
+                        <option key={room._id} value={room.roomID}>
                           {room.name} {/* Displaying the room name */}
                         </option>
                       ))}

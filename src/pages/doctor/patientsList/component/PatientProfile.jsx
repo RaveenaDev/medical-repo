@@ -18,6 +18,7 @@ import {
   getPatientDetailsByID,
   getPatientVitals,
   getProgressTrackerDetails,
+  updatePatientStatus,
 } from "../../../../components/State/Doctor/Action.js";
 import BedInfo from "./modals/BedInfo.jsx";
 import Discharge from "./modals/Discharge.jsx";
@@ -26,9 +27,8 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
-  const statusOptions = ["Critical", "High", "Moderate", "Stable"];
+  const statusOptions = ["Critical", "High", "Low", "Stable"];
   const [openStatus, setOpenStatus] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -52,8 +52,27 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
 
-  // console.log("patieny details: ", patientDetails);
+  // Check if there's a stored value in localStorage on initial load
+  const savedStatus = localStorage.getItem(`status-${patientId}`);
 
+  // If savedStatus exists, use it; otherwise, fall back to patientDetails?.healthStatus
+  const [selectedStatus, setSelectedStatus] = useState(
+    savedStatus || patientDetails?.healthStatus
+  );
+
+  useEffect(() => {
+    // Whenever selectedStatus changes, update localStorage
+    if (selectedStatus) {
+      localStorage.setItem(`status-${patientId}`, selectedStatus);
+    }
+  }, [selectedStatus, patientId]);
+  // console.log("patieny details: ", patientDetails);
+  const handleStatusChange = (status) => {
+    setSelectedStatus(status);
+    setOpenStatus(false);
+
+    dispatch(updatePatientStatus(patientId, status));
+  };
   return (
     <div>
       <div className={styles.section1}>
@@ -86,10 +105,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                       className={`${styles.item} ${
                         styles[option.toLowerCase()]
                       } `}
-                      onClick={() => {
-                        setSelectedStatus(option);
-                        setOpenStatus(false);
-                      }}
+                      onClick={() => handleStatusChange(option)}
                     >
                       <span className={styles.dot}></span>
                       <strong>{option}</strong>
@@ -99,9 +115,16 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
               )}
             </div>
           </div>
-          <div className={styles.patientCard}>
-            <div className={styles.imgWrapper}>
+          <div
+            className={`${styles.patientCard} ${
+              selectedStatus === "Critical" ? styles.criticalBg : ""
+            }`}
+          >
+            <div className={`${styles.imgWrapper} `}>
               <img
+                className={` ${
+                  selectedStatus === "Critical" ? styles.criticalImg : ""
+                } `}
                 src="https://randomuser.me/api/portraits/women/17.jpg"
                 alt=""
               />

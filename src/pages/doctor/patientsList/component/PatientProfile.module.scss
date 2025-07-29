@@ -16,7 +16,9 @@
     font-weight: 640;
   }
 }
-
+.criticalBg {
+  background-color: #fde6df !important; /* Ensuring it overrides other background styles */
+}
 .patientCard {
   background: #f2f5ff;
   display: flex;
@@ -46,6 +48,10 @@
   img {
     width: 4vw;
   }
+}
+
+.criticalImg {
+  border: 3px solid #f2703e;
 }
 .patientCardInfo {
   width: 100%;
@@ -435,7 +441,7 @@
   }
 }
 
-.moderate {
+.low {
   strong {
     color: #f39c12;
   }
@@ -462,7 +468,7 @@
   background-color: #f57c00;
 }
 
-.moderate .dot {
+.low .dot {
   background-color: #fbc02d;
 }
 
