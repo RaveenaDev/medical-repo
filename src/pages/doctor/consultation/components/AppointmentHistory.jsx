@@ -1,22 +1,47 @@
 import styles from "./AppointmentHistory.module.scss";
 import { ChevronLeft, ChevronUp, ChevronDown } from "lucide-react";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getAppointmentHistory} from "../../../../components/State/Doctor/Action.js";
+import {TablePagination} from "@mui/material";
 
 const AppointmentHistory = ({ onBack }) => {
   // Dropdown 1: Date Range
-  const dateOptions = ["Last 7 days", "Last 30 days", "Last month"];
+  const dateOptions = ["Last 7 days", "Last 30 days", "All"];
+  const dateRangeMap = {
+    "Last 7 days": 7,
+    "Last 30 days": 30,
+    "All": "",
+  };
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const [openDate, setOpenDate] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [filteredDays, setFilteredDays] = useState(""); // default empty = no filter
+
 
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getAppointmentHistory());
-  }, [dispatch]);
+    console.log("Page: ",page)
+    console.log("Rows: ",rowsPerPage)
+    dispatch(getAppointmentHistory(page, rowsPerPage,filteredDays));
+  }, [dispatch,page, rowsPerPage,filteredDays]);
 
-  const appointmentHistory = useSelector((store) => store.doctor.appointmentHistory)
+  const doctor = useSelector((store) => store.doctor)
+  const totalAppointmentHistory = doctor.totalAppointmentHistory
+  const appointmentHistory = doctor.appointmentHistory
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
 
   return (
     <div>
@@ -55,6 +80,9 @@ const AppointmentHistory = ({ onBack }) => {
                     onClick={() => {
                       setSelectedDate(option);
                       setOpenDate(false);
+                      const days = dateRangeMap[option];
+                      setFilteredDays(days);
+                      setPage(0);
                     }}
                   >
                     {option}
@@ -92,6 +120,21 @@ const AppointmentHistory = ({ onBack }) => {
           ))}
         </div>
       </div>
+      <TablePagination
+          component="div"
+          count={totalAppointmentHistory}
+          page={page} // current page
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage} // items per page
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+          sx={{
+            width: '100%',
+            backgroundColor: "#fff",
+            borderTop: "2px solid #ddd",
+            zIndex: 11,
+          }}
+      />
     </div>
   );
 };

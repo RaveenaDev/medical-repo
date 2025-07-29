@@ -2,7 +2,7 @@ import CommonPanel from "../components/CommonPanel";
 import { FiFilter } from "react-icons/fi";
 import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 import styles from "./TotalSurgeries.module.scss";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import AppointmentRequestModal from "../components/appointmentRequests/AppointmentRequest";
 import {
@@ -11,18 +11,37 @@ import {
     FormControl,
     FormControlLabel,
     FormLabel,
-    IconButton,
+    IconButton, MenuItem,
     Radio,
-    RadioGroup,
+    RadioGroup, Select, TablePagination,
     Typography
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import {useDispatch, useSelector} from "react-redux";
+import {getFilteredSurgeries} from "../../../components/State/Doctor/Action.js";
 
 const TotalSurgeries = () => {
-  const sortOptions = ["Newest to Oldest", "Oldest to Newest"];
-  const [openSort, setOpenSort] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("Newest to Oldest");
+    const dispatch = useDispatch();
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [sortOrder, setSortOrder] = useState("desc");
+
+    const [filters, setFilters] = useState({
+        status: "",
+        type: "",
+        sort: "desc",
+    });
+
   const navigate = useNavigate();
+
+    useEffect(() => {
+        // dispatch(getPatients());
+        dispatch(getFilteredSurgeries(filters, page, rowsPerPage));
+    }, [dispatch, sortOrder, page, rowsPerPage]);
+
+    const doctor = useSelector((store) => store.doctor)
+    const totalFilteredSurgeries = doctor.totalFilteredSurgeries
+    const filteredSurgeries = doctor.filteredSurgeries
 
   const handleRequestBtn = () => {
     navigate("/doctor/doctor-request");
@@ -84,11 +103,15 @@ const TotalSurgeries = () => {
   const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
   const shapeCircleStyles = { borderRadius: "50%" };
 
-    const [filters, setFilters] = useState({
-        status: "",
-        type: "",
-        sort: "desc",
-    });
+    const handleSortChange = (event) => {
+        // admin = null;
+        setSortOrder(event.target.value);
+        setFilters({
+            ...filters,
+            sort: event.target.value,
+        });
+        // console.log(event.target.value)
+    };
 
     const handleFilterChange = (event) => {
         const { name, value } = event.target;
@@ -97,8 +120,17 @@ const TotalSurgeries = () => {
 
     const handleSearchResults = () => {
         // admin = null;
-        // dispatch(getFilteredPatients(filters));
+        dispatch(getFilteredSurgeries(filters, page, rowsPerPage));
         setFilterDrawerOpen(false);
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0); // Reset to first page when rows per page changes
     };
 
   const circle = (
@@ -134,14 +166,6 @@ const TotalSurgeries = () => {
             <span className={styles.backText}>Surgeries List</span>
           </div>
           <div className={styles.headerRight}>
-            {/*<button className={styles.requestButton} onClick={handleRequestBtn}>*/}
-            {/*  <div className={styles.badgeCircle}>*/}
-            {/*    10*/}
-            {/*    <span className={styles.notificationDot}></span>*/}
-            {/*  </div>*/}
-            {/*  <span className={styles.buttonLabel}>Request</span>*/}
-            {/*</button>*/}
-
             <Button
                 variant="contained"
                 onClick={handleRequestBtn}
@@ -232,54 +256,39 @@ const TotalSurgeries = () => {
                   Appointment Requests
                 </span>
             </Button>
-
-            {/*<button*/}
-            {/*  onClick={handleAppointmentRequests}*/}
-            {/*  className={`${styles.appointmentSection} ${styles.boxStyle}`}*/}
-            {/*>*/}
-            {/*  <FaUserCircle className={styles.userIcon} />*/}
-            {/*  <span>Appointment Requests</span>*/}
-            {/*</button>*/}
           </div>
         </div>
         <hr />
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
-            {surgeries.length} <span>Inpatients</span>
+            {totalFilteredSurgeries} <span>Surgeries</span>
           </span>
           <div className={styles.verticalDivider}></div>
           <div className={styles.sortFilterSection}>
             <div className={styles.sortBy}>
               <span>Sort by:</span>
-              <div className={styles.dropdown}>
-                <button
-                  className={styles.trigger}
-                  onClick={() => setOpenSort((prev) => !prev)}
+                <Select
+                    value={sortOrder}
+                    onChange={handleSortChange}
+                    size="small"
+                    sx={{
+                        minWidth: 180,
+                        background: "#fff",
+                        color: "#4A4A4A",
+                        boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                        border: "1px solid transparent",
+                        outline: "none",
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "inherit", // Removes hover effect
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "transparent", // Hides the border
+                        },
+                    }}
                 >
-                  <p>{selectedSort}</p>
-                  <span className={styles.arrow}>
-                    {openSort ? <ChevronUp /> : <ChevronDown />}
-                  </span>
-                </button>
-                {openSort && (
-                  <ul className={styles.menu}>
-                    {sortOptions.map((option) => (
-                      <li
-                        key={option}
-                        className={`${styles.item} ${
-                          selectedSort === option ? styles.active : ""
-                        }`}
-                        onClick={() => {
-                          setSelectedSort(option);
-                          setOpenSort(false);
-                        }}
-                      >
-                        {option}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+                    <MenuItem value="desc">Newest to Oldest</MenuItem>
+                    <MenuItem value="asc">Oldest to Newest</MenuItem>
+                </Select>
             </div>
             <div
                 onClick={() => setFilterDrawerOpen(true)}
@@ -302,33 +311,34 @@ const TotalSurgeries = () => {
       </AppointmentRequestModal>
 
         <div className={styles.patientsTableContainer}>
-            {surgeries && surgeries.length > 0 ? (
-                <table className={styles.patientsTable}>
-                    <thead>
-                    <tr>
-                        <th>Patient ID</th>
-                        <th>Patient</th>
-                        <th>Date</th>
-                        <th>Surgery Type</th>
-                        <th>Doctor</th>
-                        <th>Status</th>
-                        {/*<th></th>*/}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {surgeries.map((patient, index) => (
-                        <tr key={index}>
-                            <td className={styles.patientId}>{patient.patId}</td>
-                            <td className={styles.patientInfo}>
-                                <div>
-                                    <div className={styles.patientName}>{patient.patient.name}</div>
-                                    <div className={styles.patientEmail}>{patient.patient.email}</div>
-                                </div>
-                            </td>
-                            <td className={styles.date}>{patient.date}</td>
-                            <td className={styles.surgeryType}>{patient.surgeryType}</td>
-                            <td className={styles.doctor}>{patient.doctor}</td>
-                            <td className={styles.status2}>
+            {filteredSurgeries && filteredSurgeries.length > 0 ? (
+                <>
+                    <table className={styles.patientsTable}>
+                        <thead>
+                        <tr>
+                            <th style={{backgroundColor: '#F1F1F1'}}>Patient ID</th>
+                            <th style={{backgroundColor: '#F1F1F1'}}>Patient</th>
+                            <th style={{backgroundColor: '#F1F1F1'}}>Date</th>
+                            <th style={{backgroundColor: '#F1F1F1'}}>Surgery Type</th>
+                            <th style={{backgroundColor: '#F1F1F1'}}>Doctor</th>
+                            <th style={{backgroundColor: '#F1F1F1'}}>Status</th>
+                            {/*<th></th>*/}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {filteredSurgeries.map((patient, index) => (
+                            <tr key={index}>
+                                <td className={styles.patientId}>{patient.patId}</td>
+                                <td className={styles.patientInfo}>
+                                    <div>
+                                        <div className={styles.patientName}>{patient.patient.name}</div>
+                                        <div className={styles.patientEmail}>{patient.patient.email}</div>
+                                    </div>
+                                </td>
+                                <td className={styles.date}>{patient.date}</td>
+                                <td className={styles.surgeryType}>{patient.surgeryType}</td>
+                                <td className={styles.doctor}>{patient.doctor}</td>
+                                <td className={styles.status2}>
               <span
                   className={`${styles.statusBadge} ${
                       patient.status.toLowerCase() === "completed"
@@ -340,14 +350,30 @@ const TotalSurgeries = () => {
               >
                 {patient.status}
               </span>
-                            </td>
-                            {/*<td className={styles.actions}>*/}
-                            {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
-                            {/*</td>*/}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                                </td>
+                                {/*<td className={styles.actions}>*/}
+                                {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
+                                {/*</td>*/}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <TablePagination
+                        component="div"
+                        count={totalFilteredSurgeries}
+                        page={page} // current page
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage} // items per page
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                        sx={{
+                            width: '100%',
+                            backgroundColor: "#fff",
+                            borderTop: "2px solid #ddd",
+                            zIndex: 11,
+                        }}
+                    />
+                </>
             ) : (
                 <div className={styles.noDataMessage}>No data found.</div>
             )}
@@ -364,7 +390,7 @@ const TotalSurgeries = () => {
                     },
                 }}
             >
-                <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
+                <Box sx={{width: 200, padding: 2, paddingLeft: 4}}>
                     <Box
                         sx={{
                             display: "flex",
@@ -373,7 +399,7 @@ const TotalSurgeries = () => {
                             marginBottom: 2,
                         }}
                     >
-                        <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
+                        <Typography variant="h6" sx={{color: "#0B0B0B"}}>
                             Filter By
                         </Typography>
                         <IconButton
@@ -386,13 +412,13 @@ const TotalSurgeries = () => {
                             }}
                             onClick={() => setFilterDrawerOpen(false)}
                         >
-                            <CloseIcon />
+                            <CloseIcon/>
                         </IconButton>
                     </Box>
 
                     {/* Filter Options */}
                     <FormControl
-                        sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}
+                        sx={{marginBottom: 6, marginTop: 2, width: "100%"}}
                         component="fieldset"
                     >
                         <FormLabel
@@ -400,7 +426,7 @@ const TotalSurgeries = () => {
                             sx={{
                                 marginBottom: 1,
                                 color: "#000000",
-                                "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                                "&.Mui-focused": {color: "#000000"}, // Prevents blue color on focus
                             }}
                         >
                             Status
@@ -411,7 +437,7 @@ const TotalSurgeries = () => {
                             onChange={handleFilterChange}
                         >
                             <FormControlLabel
-                                value="scheduled"
+                                value="Scheduled"
                                 control={
                                     <Radio
                                         sx={{
@@ -426,7 +452,7 @@ const TotalSurgeries = () => {
                                 sx={{ height: "34px", color: "#878787" }}
                             />
                             <FormControlLabel
-                                value="cancelled"
+                                value="Cancelled"
                                 control={
                                     <Radio
                                         sx={{
@@ -442,7 +468,7 @@ const TotalSurgeries = () => {
                             />
 
                             <FormControlLabel
-                                value="completed"
+                                value="Completed"
                                 control={
                                     <Radio
                                         sx={{

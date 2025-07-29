@@ -28,7 +28,7 @@ import {
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
-  GET_DOCTORS,
+  GET_DOCTORS, GET_FILTERED_INPATIENTS, GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_FILTERED_SURGERIES,
   GET_INPATIENTS,
   GET_INVENTORY,
   GET_INVENTORY_DATA,
@@ -66,12 +66,39 @@ export const getPatients = () => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    // console.log("Pattt: ", data.patients);
-    dispatch({ type: GET_PATIENTS, payload: data.patients });
+    // console.log("Pattt: ", data);
+    dispatch({ type: GET_PATIENTS, payload: data.totalPatients });
   } catch (error) {
     console.log(error);
   }
 };
+
+export const getFilteredPatients =
+    (filteredData, page, rowsPerPage) => async (dispatch) => {
+      // console.log("Fil:",filteredData)
+      try {
+        const token = localStorage.getItem("jwt");
+
+        const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
+          params: {
+            status: filteredData.status,
+            sort: filteredData.sort,
+            page: page + 1,
+            limit: rowsPerPage,
+          }, // Sending status as a query parameter
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        });
+
+        // console.log("Filtered Data: ",data)
+
+        dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
 export const getInpatients = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -82,8 +109,32 @@ export const getInpatients = () => async (dispatch) => {
       },
     });
 
-    // console.log("InPatt: ",data)
-    dispatch({ type: GET_INPATIENTS, payload: data });
+    console.log("InPatt: ",data)
+    dispatch({ type: GET_INPATIENTS, payload: data.totalInpatients });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFilteredInpatients = (filteredData, page, rowsPerPage) => async (dispatch) => {
+  // console.log("Fil:",filteredData)
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getInPatients`, {
+      params: {
+        status: filteredData.status,
+        sort: filteredData.sort,
+        page: page + 1,
+        limit: rowsPerPage,
+      }, // Sending status as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("InPatt Filtered: ",data)
+    dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
   } catch (error) {
     console.log(error);
   }
@@ -107,6 +158,31 @@ export const getSurgeries = () => async (dispatch) => {
   }
 };
 
+export const getFilteredSurgeries = (filteredData, page, rowsPerPage) => async (dispatch) => {
+  // console.log("Fil:",filteredData)
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getpatientsinsurgery`, {
+      params: {
+        status: filteredData.status,
+        sort: filteredData.sort,
+        page: page + 1,
+        limit: rowsPerPage,
+      }, // Sending status as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Surgeries: ", data);
+
+    dispatch({ type: GET_FILTERED_SURGERIES, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getRooms = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -118,6 +194,30 @@ export const getRooms = () => async (dispatch) => {
     });
 
     dispatch({ type: GET_ROOMS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFilteredRooms = (filteredData, page, rowsPerPage) => async (dispatch) => {
+  console.log("Fil:",filteredData)
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
+      params: {
+        status: filteredData.status,
+        sort: filteredData.sort,
+        page: page + 1,
+        limit: rowsPerPage,
+      }, // Sending status as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    console.log("Rooms: ", data);
+
+    dispatch({ type: GET_FILTERED_ROOMS, payload: data });
   } catch (error) {
     console.log(error);
   }
@@ -844,20 +944,25 @@ export const updateInventoryItem = (itemId, itemData) => async (dispatch) => {
   }
 };
 
-export const getAppointmentHistory = () => async (dispatch) => {
+export const getAppointmentHistory = (page,rowsPerPage,filteredData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getAppointmentsHistory`, {
+      params: {
+        dateRange: filteredData,
+        page: page + 1,
+        limit: rowsPerPage,
+      }, // Sending status as a query parameter
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
 
-    // console.log("Appointments History: ", data);
+    console.log("Appointments History: ", data);
 
-    dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data.appointments });
+    dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data });
   } catch (error) {
     console.error("Error Updating inventory item:", error);
   }

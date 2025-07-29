@@ -1,4 +1,3 @@
-import { getApprovedAdmissions } from "./Action.js";
 import {
   APPROVE_APPOINTMENT,
   CREATE_DOCTOR_NOTE,
@@ -22,7 +21,7 @@ import {
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
-  GET_DOCTORS,
+  GET_DOCTORS, GET_FILTERED_INPATIENTS, GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_FILTERED_SURGERIES,
   GET_INPATIENTS,
   GET_INVENTORY,
   GET_INVENTORY_DATA,
@@ -53,12 +52,20 @@ import {
 const initialState = {
   totalPatients: null,
   patients: [],
+  totalFilteredPatients: null,
+  filteredPatients: [],
   totalInpatients: null,
   inPatients: [],
+  totalFilteredInpatients: null,
+  filteredInPatients: [],
   totalSurgeries: null,
   surgeries: [],
+  totalFilteredSurgeries: null,
+  filteredSurgeries: [],
   totalRooms: null,
   rooms: [],
+  totalFilteredRooms: null,
+  filteredRooms: [],
   criticalPatients: [],
   totalDiagnosis: null,
   diagnosis: [],
@@ -102,6 +109,7 @@ const initialState = {
   patientHistory: [],
   allDepartments: [],
   patientMedicalRecords: [],
+  totalAppointmentHistory: null,
   appointmentHistory: [],
   patientBedInfo: [],
   requestsToApprove: [],
@@ -112,10 +120,62 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_PATIENTS:
       return {
         ...state,
-        totalPatients: action.payload.length,
-        patients: action.payload,
+        totalPatients: action.payload
+      };
+
+    case GET_FILTERED_PATIENTS:
+      return {
+        ...state,
+        totalFilteredPatients: action.payload.totalPatients,
+        filteredPatients: action.payload.patients,
         isLoading: false,
       };
+
+    case GET_INPATIENTS:
+      return {
+        ...state,
+        totalInpatients: action.payload,
+        isLoading: false,
+      };
+
+    case GET_FILTERED_INPATIENTS:
+      return {
+        ...state,
+        totalFilteredInpatients: action.payload.totalInpatients,
+        filteredInPatients: action.payload.inpatients,
+        isLoading: false,
+      };
+
+    case GET_SURGERIES:
+      return {
+        ...state,
+        totalSurgeries: action.payload.totalSurgeries,
+        isLoading: false,
+      };
+
+    case GET_FILTERED_SURGERIES:
+      return {
+        ...state,
+        totalFilteredSurgeries: action.payload.totalSurgeries,
+        filteredSurgeries: action.payload.surgeries,
+        isLoading: false,
+      };
+
+    case GET_ROOMS:
+      return {
+        ...state,
+        totalRooms: action.payload.totalRooms,
+        isLoading: false,
+      };
+
+    case GET_FILTERED_ROOMS:
+      return {
+        ...state,
+        totalFilteredRooms: action.payload.totalRooms,
+        filteredRooms: action.payload.rooms,
+        isLoading: false,
+      };
+
     case GET_DOCTORS:
       return {
         ...state,
@@ -140,29 +200,6 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         inventory: action.payload,
-        isLoading: false,
-      };
-
-    case GET_INPATIENTS:
-      return {
-        ...state,
-        totalInpatients: action.payload.count,
-        inPatients: action.payload.inpatients,
-        isLoading: false,
-      };
-
-    case GET_SURGERIES:
-      return {
-        ...state,
-        totalSurgeries: action.payload.count,
-        surgeries: action.payload.surgeries,
-        isLoading: false,
-      };
-    case GET_ROOMS:
-      return {
-        ...state,
-        totalRooms: action.payload.rooms.length,
-        rooms: action.payload.rooms,
         isLoading: false,
       };
 
@@ -411,7 +448,8 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_APPOINTMENT_HISTORY:
       return {
         ...state,
-        appointmentHistory: action.payload,
+        totalAppointmentHistory: action.payload.totalAppointments,
+        appointmentHistory: action.payload.appointments,
       };
 
     case GET_PATIENT_BED_INFO:

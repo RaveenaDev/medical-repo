@@ -1,22 +1,21 @@
-import React, {useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  FormControl,
-  IconButton,
+  DialogTitle, Drawer,
+  FormControl, FormControlLabel, FormLabel, IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
-  MenuItem,
+  MenuItem, Radio, RadioGroup,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
+  TableHead, TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -27,7 +26,6 @@ import styles from "../rooms/Rooms.module.scss";
 import Grid from "@mui/material/Grid2";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -41,6 +39,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from "@mui/material/CircularProgress";
 import CommonPanel from "../components/CommonPanel.jsx";
+import {getFilteredPatients, getFilteredRooms} from "../../../components/State/Doctor/Action.js";
+import {FiFilter} from "react-icons/fi";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Rooms = () => {
   const [errors, setErrors] = useState({}); // Added error state
@@ -57,6 +58,57 @@ const Rooms = () => {
     status: "",
     originalRoomID: "",
   });
+
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [filters, setFilters] = useState({
+    status: "",
+    type: "",
+    sort: "desc",
+  });
+
+  useEffect(() => {
+    // dispatch(getPatients());
+    dispatch(getFilteredRooms(filters, page, rowsPerPage));
+  }, [dispatch, sortOrder, page, rowsPerPage]);
+
+  const doctor = useSelector((store) => store.doctor)
+  const totalFilteredRooms = doctor.totalFilteredRooms
+  const filteredRooms = doctor.filteredRooms
+
+  const handleSortChange = (event) => {
+    // admin = null;
+    setSortOrder(event.target.value);
+    setFilters({
+      ...filters,
+      sort: event.target.value,
+    });
+    // console.log(event.target.value)
+  };
+
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSearchResults = () => {
+    // admin = null;
+    dispatch(getFilteredRooms(filters, page, rowsPerPage));
+    setFilterDrawerOpen(false);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
 
   // Handle Edit Action
   const handleEdit = () => {
@@ -130,8 +182,6 @@ const Rooms = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   // const rooms = useSelector((state) => state.admin.rooms);
@@ -195,56 +245,63 @@ const Rooms = () => {
                   <h2 className={ayu.departmentTitleDetails}>{rooms.length}</h2>
                 </div>
                 <div style={{ display: "flex", gap: "1rem" }}>
-                  <Box sx={{ display: "flex", gap: 3 }}>
+                  <Box sx={{display: "flex", gap: 3}}>
                     {/* Adjust gap for spacing */}
                     <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ color: "black", fontWeight: 500, fontSize: 15 }}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        sx={{color: "black", fontWeight: 500, fontSize: 15}}
                     >
                       <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor: "#3DB461",
-                        }}
+                          sx={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: "50%",
+                            backgroundColor: "#3DB461",
+                          }}
                       />
                       Available
                     </Box>
                     <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ color: "black", fontWeight: 500, fontSize: 15 }}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        sx={{color: "black", fontWeight: 500, fontSize: 15}}
                     >
                       <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor: "#FFA412",
-                        }}
+                          sx={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: "50%",
+                            backgroundColor: "#FFA412",
+                          }}
                       />
                       Occupied
                     </Box>
                     <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ color: "black", fontWeight: 500, fontSize: 15 }}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        sx={{color: "black", fontWeight: 500, fontSize: 15}}
                     >
                       <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor: "#AEC3FF",
-                        }}
+                          sx={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: "50%",
+                            backgroundColor: "#AEC3FF",
+                          }}
                       />
                       Under Maintenance
                     </Box>
+
+                    <div
+                        onClick={() => setFilterDrawerOpen(true)}
+                        className={`${styles.filter} ${styles.boxStyle}`}>
+                      <FiFilter fill="#25307f"/>
+                      <p>Filter</p>
+                    </div>
                   </Box>
                 </div>
               </div>
@@ -252,9 +309,9 @@ const Rooms = () => {
 
             {/* Table Section */}
             <TableContainer
-              sx={{
-                maxHeight: "70vh", // Adjust this to fit your layout needs
-                overflowY: "auto",
+                sx={{
+                  maxHeight: "70vh", // Adjust this to fit your layout needs
+                  overflowY: "auto",
               }}
             >
               <Table
@@ -290,8 +347,8 @@ const Rooms = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rooms.length > 0 ? (
-                    rooms.map((room, index) => (
+                  {filteredRooms.length > 0 ? (
+                    filteredRooms.map((room, index) => (
                       <TableRow
                         key={index}
                         sx={{
@@ -387,6 +444,22 @@ const Rooms = () => {
                   )}
                 </TableBody>
               </Table>
+
+              <TablePagination
+                  component="div"
+                  count={totalFilteredRooms}
+                  page={page} // current page
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage} // items per page
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                  sx={{
+                    width: '100%',
+                    backgroundColor: "#fff",
+                    borderTop: "2px solid #ddd",
+                    zIndex: 11,
+                  }}
+              />
             </TableContainer>
 
             {/* Actions Menu */}
@@ -540,6 +613,158 @@ const Rooms = () => {
                 </Button>
               </DialogActions>
             </Dialog>
+
+            <Drawer
+                anchor="right"
+                open={filterDrawerOpen}
+                onClose={() => setFilterDrawerOpen(false)}
+                sx={{
+                  "& .MuiDrawer-paper": {
+                    height: "58vh", // Adjust height as needed
+                    top: "18vh", // Center it vertically
+                    borderRadius: "10px 0 0 10px", // Optional rounded corners
+                  },
+                }}
+            >
+              <Box sx={{width: 200, padding: 2, paddingLeft: 4}}>
+                <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 2,
+                    }}
+                >
+                  <Typography variant="h6" sx={{color: "#0B0B0B"}}>
+                    Filter By
+                  </Typography>
+                  <IconButton
+                      sx={{
+                        "&:focus": {
+                          outline: "none",
+                          boxShadow: "none",
+                        },
+                        color: "black",
+                      }}
+                      onClick={() => setFilterDrawerOpen(false)}
+                  >
+                    <CloseIcon/>
+                  </IconButton>
+                </Box>
+
+                {/* Filter Options */}
+                <FormControl
+                    sx={{marginBottom: 6, marginTop: 2, width: "100%"}}
+                    component="fieldset"
+                >
+                  <FormLabel
+                      component="legend"
+                      sx={{
+                        marginBottom: 1,
+                        color: "#000000",
+                        "&.Mui-focused": {color: "#000000"}, // Prevents blue color on focus
+                      }}
+                  >
+                    Status
+                  </FormLabel>
+                  <RadioGroup
+                      name="status"
+                      value={filters.status}
+                      onChange={handleFilterChange}
+                  >
+                    <FormControlLabel
+                        value="Available"
+                        control={
+                          <Radio
+                              sx={{
+                                color: "#878787", // Default color
+                                "&.Mui-checked": {
+                                  color: "#25307F", // Selected dot color
+                                },
+                              }}
+                          />
+                        }
+                        label="Available"
+                        sx={{ height: "34px", color: "#878787" }}
+                    />
+                    <FormControlLabel
+                        value="Occupied"
+                        control={
+                          <Radio
+                              sx={{
+                                color: "#878787", // Default color
+                                "&.Mui-checked": {
+                                  color: "#25307F", // Selected dot color
+                                },
+                              }}
+                          />
+                        }
+                        label="Occupied"
+                        sx={{ height: "34px", color: "#878787" }}
+                    />
+                    <FormControlLabel
+                        value="Under Maintenance"
+                        control={
+                          <Radio
+                              sx={{
+                                color: "#878787", // Default color
+                                "&.Mui-checked": {
+                                  color: "#25307F", // Selected dot color
+                                },
+                              }}
+                          />
+                        }
+                        label="Under Maintenance"
+                        sx={{ height: "34px", color: "#878787" }}
+                    />
+                    <FormControlLabel
+                        value="Full"
+                        control={
+                          <Radio
+                              sx={{
+                                color: "#878787", // Default color
+                                "&.Mui-checked": {
+                                  color: "#25307F", // Selected dot color
+                                },
+                              }}
+                          />
+                        }
+                        label="Full"
+                        sx={{ height: "34px", color: "#878787" }}
+                    />
+                    <FormControlLabel
+                        value=""
+                        control={
+                          <Radio
+                              sx={{
+                                color: "#878787", // Default color
+                                "&.Mui-checked": {
+                                  color: "#25307F", // Selected dot color
+                                },
+                              }}
+                          />
+                        }
+                        label="All"
+                        sx={{ height: "34px", color: "#878787" }}
+                    />
+                  </RadioGroup>
+                </FormControl>
+
+                <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#25307F",
+                      textTransform: "none", // Prevents uppercase transformation
+                      borderRadius: "16px",
+                      padding: "6px 35px",
+                      marginLeft: "4px",
+                    }}
+                    onClick={handleSearchResults}
+                >
+                  Search Results
+                </Button>
+              </Box>
+            </Drawer>
           </>
         )}
       </div>

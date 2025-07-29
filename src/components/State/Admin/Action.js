@@ -400,7 +400,7 @@ export const getFilteredPatients =
     } catch (error) {
       console.log(error);
     }
-  };
+};
 
 // ADD ROOMS
 
