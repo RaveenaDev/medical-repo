@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AddPatientForm.scss";
-import { createAdmissionRequest } from "../../../../../components/State/Doctor/Action";
-import { useDispatch } from "react-redux";
+import {
+  createAdmissionRequest,
+  getAvailableRooms,
+} from "../../../../../components/State/Doctor/Action";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddPatientForm = ({ onClose }) => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    // dispatch(getAvailableBeds());
+    dispatch(getAvailableRooms());
+  }, []);
   const [form, setForm] = useState({
     patientName: "",
     patientId: "",
@@ -67,6 +74,10 @@ const AddPatientForm = ({ onClose }) => {
       setSelectedRoles([...selectedRoles, role]);
     }
   };
+
+  const availableRooms = useSelector((state) => state.doctor.roomsAvailable);
+  // console.log("Available Rooms:", availableRooms);
+  // const availableBeds = useSelector((state) => state.doctor.bedsAvailable);
   return (
     <div className="add-patient-modal">
       <div className="modal-overlay" onClick={onClose}></div>
@@ -216,17 +227,26 @@ const AddPatientForm = ({ onClose }) => {
                     required
                   />
                 </div>
+
                 <div className="form-field">
                   <label>Room No.</label>
-                  <input
-                    type="text"
+                  <select
                     value={form.roomNo}
                     onChange={(e) =>
                       setForm({ ...form, roomNo: e.target.value })
                     }
                     required
-                  />
+                  >
+                    <option value="">Select a room</option>
+                    {availableRooms &&
+                      availableRooms.map((room) => (
+                        <option key={room._id} value={room._id}>
+                          {room.name} {/* Displaying the room name */}
+                        </option>
+                      ))}
+                  </select>
                 </div>
+
                 <div className="form-field">
                   <label>Bed No.</label>
                   <input

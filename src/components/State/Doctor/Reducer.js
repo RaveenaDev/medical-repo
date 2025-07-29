@@ -18,6 +18,8 @@ import {
   GET_APPOINTMENTS_BY_DATE,
   GET_APPOINTMENTS_OF_TODAY,
   GET_APPROVED_ADMISSIONS,
+  GET_AVAILABLE_BEDS,
+  GET_AVAILABLE_ROOMS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
@@ -105,6 +107,8 @@ const initialState = {
   appointmentHistory: [],
   patientBedInfo: [],
   requestsToApprove: [],
+  roomsAvailable: [],
+  bedsAvailable: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -418,6 +422,17 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientBedInfo: action.payload,
+      };
+
+    case GET_AVAILABLE_BEDS:
+      return {
+        ...state,
+        bedsAvailable: action.payload,
+      };
+    case GET_AVAILABLE_ROOMS:
+      return {
+        ...state,
+        roomsAvailable: action.payload,
       };
     default:
       return state;

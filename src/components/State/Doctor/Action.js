@@ -24,6 +24,7 @@ import {
   GET_APPOINTMENTS_BY_DATE,
   GET_APPOINTMENTS_OF_TODAY,
   GET_APPROVED_ADMISSIONS,
+  GET_AVAILABLE_ROOMS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
@@ -1403,3 +1404,24 @@ export const approveAdmissionRequestWithSignature =
       toast.error(error?.response?.data?.message || "Approval failed");
     }
   };
+export const getAvailableRooms = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/getAllRooms`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("ROOM INFO", data);
+    dispatch({ type: GET_AVAILABLE_ROOMS, payload: data.rooms });
+  } catch (error) {
+    console.error("patient ROOM Info not available:", error);
+
+    throw error;
+  }
+};
