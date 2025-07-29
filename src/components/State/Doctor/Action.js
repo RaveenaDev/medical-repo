@@ -208,7 +208,7 @@ export const getRooms = () => async (dispatch) => {
 
 export const getFilteredRooms =
   (filteredData, page, rowsPerPage) => async (dispatch) => {
-    console.log("Fil:", filteredData);
+    // console.log("Fil:", filteredData);
     try {
       const token = localStorage.getItem("jwt");
 
@@ -223,7 +223,7 @@ export const getFilteredRooms =
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
       });
-      console.log("Rooms: ", data);
+      // console.log("Rooms: ", data);
 
       dispatch({ type: GET_FILTERED_ROOMS, payload: data });
     } catch (error) {

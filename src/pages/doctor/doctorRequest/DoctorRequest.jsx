@@ -5,8 +5,8 @@ import { ChevronLeft, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import DoctorNewRequest from "./DoctorNewRequest";
-import {useDispatch, useSelector} from "react-redux";
-import {getDoctorRequests} from "../../../components/State/Doctor/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getDoctorRequests } from "../../../components/State/Doctor/Action.js";
 
 const DoctorRequest = () => {
   const now = dayjs();
@@ -40,19 +40,20 @@ const DoctorRequest = () => {
 
   const doctor = useSelector((store) => store.doctor.doctorRequests);
 
-  console.log("Doc: ",doctor)
+  // console.log("Doc: ",doctor)
 
-  const formattedRequests = doctor?.map((item, index) => ({
-    id: item._id || index,
-    message: item.description || item.purpose || "No message provided",
-    requester: item.requestBy?.name || "Unknown Doctor",
-    role: item.requestBy?.specialization || "Unknown Role",
-    requestedOn: item.createdAt,
-    avatarUrl: "https://i.pravatar.cc/30?img=33",
-    active: item.status?.toLowerCase() === "active",
-    background: item.status?.toLowerCase() === "active" ? "blue" : "gray",
-    target: item.status?.toLowerCase() === "active" // customize if needed
-  })) || [];
+  const formattedRequests =
+    doctor?.map((item, index) => ({
+      id: item._id || index,
+      message: item.description || item.purpose || "No message provided",
+      requester: item.requestBy?.name || "Unknown Doctor",
+      role: item.requestBy?.specialization || "Unknown Role",
+      requestedOn: item.createdAt,
+      avatarUrl: "https://i.pravatar.cc/30?img=33",
+      active: item.status?.toLowerCase() === "active",
+      background: item.status?.toLowerCase() === "active" ? "blue" : "gray",
+      target: item.status?.toLowerCase() === "active", // customize if needed
+    })) || [];
 
   const requests = formattedRequests;
 
@@ -85,21 +86,21 @@ const DoctorRequest = () => {
 
   const closeModal = () => setActiveModal(null);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getDoctorRequests('active'));
+    dispatch(getDoctorRequests("active"));
   }, [dispatch]);
 
   const handleActive = () => {
-    setSelectedTab("active")
-    dispatch(getDoctorRequests('active'))
-  }
+    setSelectedTab("active");
+    dispatch(getDoctorRequests("active"));
+  };
 
   const handleInactive = () => {
-    setSelectedTab("inactive")
-    dispatch(getDoctorRequests('inactive'))
-  }
+    setSelectedTab("inactive");
+    dispatch(getDoctorRequests("inactive"));
+  };
 
   return (
     <div>
@@ -148,103 +149,101 @@ const DoctorRequest = () => {
             </>
           )}
 
-            {filteredRequests.length === 0 ? (
-                      <div className={styles.noData}>
-                        <p>No requests found.</p>
-                      </div>
-                  )
-            : (
+          {filteredRequests.length === 0 ? (
+            <div className={styles.noData}>
+              <p>No requests found.</p>
+            </div>
+          ) : (
             <div className={styles.activeReq}>
-          {selectedTab === "active" &&
-              Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
+              {selectedTab === "active" &&
+                Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
                   <div key={dayLabel} className={styles.dateSection}>
                     <p>{dayLabel}</p>
                     {reqs.map((req) => (
-                        <div
-                            key={req.id}
-                            onClick={handleRequestDetail}
-                            className={`${styles.requestItem} ${
-                                req.background === "blue"
-                                    ? styles.blueBackground
-                                    : styles.grayBackground
+                      <div
+                        key={req.id}
+                        onClick={handleRequestDetail}
+                        className={`${styles.requestItem} ${
+                          req.background === "blue"
+                            ? styles.blueBackground
+                            : styles.grayBackground
+                        }`}
+                      >
+                        <img
+                          src={req.avatarUrl}
+                          alt="avatar"
+                          className={styles.avatar}
+                        />
+                        <div className={styles.reqContent}>
+                          <div
+                            className={`styles.message ${
+                              req.background === "blue"
+                                ? styles.blueText
+                                : styles.message
                             }`}
-                        >
-                          <img
-                              src={req.avatarUrl}
-                              alt="avatar"
-                              className={styles.avatar}
-                          />
-                          <div className={styles.reqContent}>
-                            <div
-                                className={`styles.message ${
-                                    req.background === "blue"
-                                        ? styles.blueText
-                                        : styles.message
-                                }`}
-                            >
-                              {req.message}
-                            </div>
-                            <div
-                                className={`styles.subText ${
-                                    req.background === "blue"
-                                        ? styles.blueSubText
-                                        : styles.subText
-                                }`}
-                            >
-                              {req.requester} ({req.role}) has requested on{" "}
-                              {dayjs(req.requestedOn).format(
-                                  "dddd, D MMM at h:mm A"
-                              )}
-                            </div>
+                          >
+                            {req.message}
                           </div>
-                        </div>
-                    ))}
-                  </div>
-              ))}
-
-          {selectedTab === "inactive" &&
-              Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
-                  <div key={dayLabel} className={styles.dateSection}>
-                    <p>{dayLabel}</p>
-                    {reqs.map((req) => (
-                        <div
-                            key={req.id}
-                            onClick={handleRequestDetail}
-                            className={`${styles.requestItem} ${
-                                req.background === "blue"
-                                    ? styles.blueBackground
-                                    : styles.grayBackground
+                          <div
+                            className={`styles.subText ${
+                              req.background === "blue"
+                                ? styles.blueSubText
+                                : styles.subText
                             }`}
-                        >
-                          <img
-                              src={req.avatarUrl}
-                              alt="avatar"
-                              className={styles.avatar}
-                          />
-                          <div className={styles.reqContent}>
-                            <div
-                                className={`${
-                                    req.target === true
-                                        ? styles.TLMessage
-                                        : styles.message
-                                }`}
-                            >
-                              {req.message}
-                            </div>
-                            <div className={styles.subText}>
+                          >
                             {req.requester} ({req.role}) has requested on{" "}
-                              {dayjs(req.requestedOn).format(
-                                  "dddd, D MMM at h:mm A"
-                              )}
-                            </div>
+                            {dayjs(req.requestedOn).format(
+                              "dddd, D MMM at h:mm A"
+                            )}
                           </div>
                         </div>
+                      </div>
                     ))}
                   </div>
-              ))}
-        </div>
-            )
-          }
+                ))}
+
+              {selectedTab === "inactive" &&
+                Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
+                  <div key={dayLabel} className={styles.dateSection}>
+                    <p>{dayLabel}</p>
+                    {reqs.map((req) => (
+                      <div
+                        key={req.id}
+                        onClick={handleRequestDetail}
+                        className={`${styles.requestItem} ${
+                          req.background === "blue"
+                            ? styles.blueBackground
+                            : styles.grayBackground
+                        }`}
+                      >
+                        <img
+                          src={req.avatarUrl}
+                          alt="avatar"
+                          className={styles.avatar}
+                        />
+                        <div className={styles.reqContent}>
+                          <div
+                            className={`${
+                              req.target === true
+                                ? styles.TLMessage
+                                : styles.message
+                            }`}
+                          >
+                            {req.message}
+                          </div>
+                          <div className={styles.subText}>
+                            {req.requester} ({req.role}) has requested on{" "}
+                            {dayjs(req.requestedOn).format(
+                              "dddd, D MMM at h:mm A"
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

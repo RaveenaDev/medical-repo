@@ -122,8 +122,9 @@ const PatientsList = () => {
 
   const appointments = useSelector((store) => store.doctor.appointmentsOfToday);
   const todayAppointments = appointments ? appointments.length : 0;
-
-  const doctorName = useSelector((store) => store.authentication.userName);
+  const doctorName =
+    useSelector((state) => state.authentication.userName) ||
+    localStorage.getItem("username");
   return (
     <div className="patientsListDoctorContainer">
       <div className="listHeader">
