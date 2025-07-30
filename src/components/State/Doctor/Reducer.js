@@ -139,6 +139,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         totalInpatients: action.payload,
+        inPatients: action.payload.inpatients,
         isLoading: false,
       };
 
