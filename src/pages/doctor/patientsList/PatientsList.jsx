@@ -47,7 +47,10 @@ const PatientsList = () => {
       return patient.type?.toLowerCase() === "followup";
     }
     if (filter === "Admitted") {
-      return patient.type?.toLowerCase() === "admitted+followup";
+      return (
+        patient.type?.toLowerCase() === "admitted+followup" &&
+        patient.healthStatus?.toLowerCase() !== "critical"
+      );
     }
     if (filter === "Critical") {
       return patient.healthStatus?.toLowerCase() === "critical";
