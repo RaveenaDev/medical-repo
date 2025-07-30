@@ -60,9 +60,18 @@ const PatientCard = ({ patient }) => {
             <div className="value">19 Feb 2025</div>
           </div>
           <div>
-            <div> Last Data Received: </div>
-            <div className="value">24 Jan 2025</div>
+            <div>Admission Date: </div>
+            <div className="value">
+              {patient?.date
+                ? new Date(patient.date).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "N/A"}
+            </div>
           </div>
+
           <div>
             <div> Major Issue: </div>
             <div className="value reason-truncate">
