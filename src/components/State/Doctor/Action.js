@@ -1566,3 +1566,4 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
     throw error;
   }
 };
+
