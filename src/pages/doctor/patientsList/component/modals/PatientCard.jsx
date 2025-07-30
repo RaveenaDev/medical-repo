@@ -21,6 +21,7 @@ const PatientCard = ({ patient }) => {
           state: {
             patientId: patient._id,
             isFollowUpStatus: isFollowUp,
+            caseId: patient.latestCaseId,
           },
         })
       }
@@ -40,10 +41,16 @@ const PatientCard = ({ patient }) => {
               </p>
             </div>
           </div>
-          <div className={`statusDot ${formatStatus(patient.type)}`}>
-            {(patient.type === "admitted+followup+critical" ||
-              patient.type.includes("followup+critical")) && (
-              <div className={`innerCircle followup-critical`} />
+
+          <div
+            className={`statusDot ${
+              patient.healthStatus === "Critical"
+                ? "critical-outer"
+                : formatStatus(patient.type)
+            }`}
+          >
+            {patient.healthStatus === "Critical" && (
+              <div className="innerCircle" />
             )}
           </div>
         </div>
@@ -58,7 +65,9 @@ const PatientCard = ({ patient }) => {
           </div>
           <div>
             <div> Major Issue: </div>
-            <div className="value">Follow-up-Required</div>
+            <div className="value reason-truncate">
+              {patient?.medicalNote || "No major issue reported"}
+            </div>
           </div>
         </div>
         <div className="actionButtons">

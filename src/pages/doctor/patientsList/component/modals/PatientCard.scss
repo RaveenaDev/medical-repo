@@ -58,6 +58,14 @@
         align-items: center;
         justify-content: space-between;
       }
+      .reason-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px; // Adjust to suit layout
+        display: inline-block;
+        text-align: right;
+      }
     }
   }
 
@@ -69,8 +77,8 @@
   }
 
   .statusDot {
-    width: 20px; /* base size */
-    height: 20px;
+    width: 17px; /* base size */
+    height: 17px;
     border-radius: 50%;
     margin-right: 10px;
     display: flex;
@@ -78,31 +86,25 @@
     justify-content: center;
   }
 
-  /* Critical outer circle */
-  .admitted-followup-critical {
-    background-color: #e5b5b8;
+  /* Outer circle by type (used only if healthStatus !== Critical) */
+  .followup {
+    background-color: #2e823b; // green
   }
-  .followup-critical {
-    background-color: #e5b5b8;
+
+  .admitted-followup {
+    background-color: #eaa000; // orange
   }
-  /* Critical inner circle */
+
+  /* Outer circle override if Critical */
+  .critical-outer {
+    background-color: #e5b5b8; // redish outer
+  }
+
+  /* Red inner circle */
   .innerCircle {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
     background-color: #f44336;
     border-radius: 50%;
-  }
-
-  /* Other statuses */
-  .admitted-followup {
-    background-color: #eaa000;
-    width: 15px; /* base size */
-    height: 15px;
-  }
-
-  .followup {
-    background-color: #2e823b;
-    width: 15px; /* base size */
-    height: 15px;
   }
 }

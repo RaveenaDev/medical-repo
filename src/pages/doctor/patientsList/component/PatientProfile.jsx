@@ -29,7 +29,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
-  const statusOptions = ["Critical", "High", "Low", "Stable"];
+  const statusOptions = ["Critical", "High", "Moderate", "Stable"];
   const [openStatus, setOpenStatus] = useState(false);
   const dispatch = useDispatch();
 
