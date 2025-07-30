@@ -241,7 +241,7 @@ export const getMostCommonDiagnosis = () => async (dispatch) => {
       },
     });
 
-    // console.log("Diag: ", data);
+    console.log("Diag: ", data);
 
     dispatch({ type: GET_MOST_COMMON_DIAGNOSIS, payload: data });
   } catch (error) {
@@ -502,7 +502,7 @@ export const getCriticalPatients = () => async (dispatch) => {
       },
     });
 
-    // console.log("Critical Patients: ", data);
+    console.log("Critical Patients: ", data);
     dispatch({ type: GET_CRITICAL_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);

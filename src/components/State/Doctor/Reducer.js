@@ -265,14 +265,14 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_CRITICAL_PATIENTS:
       return {
         ...state,
-        criticalPatients: action.payload.data,
+        criticalPatients: action.payload.patients,
       };
 
     case GET_MOST_COMMON_DIAGNOSIS:
       return {
         ...state,
-        totalDiagnosis: action.payload.totalDiagnoses,
-        diagnosis: action.payload.data,
+        totalDiagnosis: action.payload.totalDiagnosis,
+        diagnosis: action.payload.commonDiagnosis,
         isLoading: false,
       };
 

@@ -830,19 +830,19 @@ const DoctorOverview = ({ todayAppointments }) => {
                                 color: "#2d3179",
                               }}
                             >
-                              {patient.patientName}
+                              {patient.name}
                             </div>
-                            <div
-                              style={{
-                                fontSize: "12px",
-                                color: "#878787",
-                              }}
-                            >
-                              {patient.condition}
-                            </div>
+                            {/*<div*/}
+                            {/*  style={{*/}
+                            {/*    fontSize: "12px",*/}
+                            {/*    color: "#878787",*/}
+                            {/*  }}*/}
+                            {/*>*/}
+                            {/*  {patient.condition}*/}
+                            {/*</div>*/}
                           </div>
-                          <div style={getStatusStyle(patient.severity)}>
-                            {patient.severity}
+                          <div style={getStatusStyle(patient.healthStatus)}>
+                            {patient.healthStatus}
                           </div>
                         </div>
                       ))
