@@ -235,7 +235,7 @@ export const getMostCommonDiagnosis = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/diagnosis/most-common`, {
+    const { data } = await axios.get(`${API_URL}/getMostCommonDiagnosis`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -496,7 +496,7 @@ export const getCriticalPatients = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/critical-patients`, {
+    const { data } = await axios.get(`${API_URL}/getCriticalPatients`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
