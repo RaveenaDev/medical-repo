@@ -21,6 +21,7 @@ const PatientCard = ({ patient }) => {
           state: {
             patientId: patient._id,
             isFollowUpStatus: isFollowUp,
+            caseId: patient.latestCaseId,
           },
         })
       }
@@ -64,7 +65,9 @@ const PatientCard = ({ patient }) => {
           </div>
           <div>
             <div> Major Issue: </div>
-            <div className="value">Follow-up-Required</div>
+            <div className="value reason-truncate">
+              {patient?.medicalNote || "No major issue reported"}
+            </div>
           </div>
         </div>
         <div className="actionButtons">

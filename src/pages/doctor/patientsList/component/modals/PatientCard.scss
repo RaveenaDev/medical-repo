@@ -58,6 +58,14 @@
         align-items: center;
         justify-content: space-between;
       }
+      .reason-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px; // Adjust to suit layout
+        display: inline-block;
+        text-align: right;
+      }
     }
   }
 
