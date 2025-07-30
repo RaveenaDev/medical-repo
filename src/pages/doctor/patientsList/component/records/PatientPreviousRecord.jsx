@@ -141,7 +141,7 @@ const PatientPreviousRecord = ({patientDetails}) => {
                   month: "2-digit",
                   year: "numeric",
                 }) || "N/A"}
-                description={visit.consultationData.complaints || "N/A"}
+                description={visit.treatment.note || "N/A"}
                 doctor={visit.doctor.name || "N/A"}
                 typeofVisit={visit.typeofVisit || "N/A"}
                 department={visit.department.name || "N/A"}
