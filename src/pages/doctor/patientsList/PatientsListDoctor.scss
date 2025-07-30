@@ -140,40 +140,45 @@
         justify-content: space-between;
         height: 100%; // Important to fill card container
         min-height: 180px;
-        .card_upper {
-          display: flex;
-          justify-content: space-between;
-          flex-grow: 1;
-          .patientInfo {
-            .patientDetailsContainer {
-              display: flex;
-              align-items: center;
+        width: 280px;
 
-              .patientAvatar {
-                width: 45px;
-                height: 45px;
-                border-radius: 50%;
-                background-color: #e0e0e0; // Placeholder for avatar
-                margin-right: 10px;
-              }
-              .patientName {
-                font-family: "Karla", "sans-serif";
-                font-weight: 600;
-                font-size: 16px;
-                line-height: 100%;
-                letter-spacing: 0%;
-                vertical-align: middle;
-                color: #000000;
-                margin-bottom: 5px;
-              }
-              .patientAge {
-                font-family: "Karla", "sans-serif";
-                font-weight: 400;
-                font-size: 14px;
-                line-height: 100%;
-                letter-spacing: 0%;
-                vertical-align: middle;
-                color: #333333;
+        .card_upper {
+          .patientInfo {
+            .card_top_row {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 0.5rem;
+              .patientDetailsContainer {
+                display: flex;
+                align-items: center;
+
+                .patientAvatar {
+                  width: 45px;
+                  height: 45px;
+                  border-radius: 50%;
+                  background-color: #e0e0e0; // Placeholder for avatar
+                  margin-right: 10px;
+                }
+                .patientName {
+                  font-family: "Karla", "sans-serif";
+                  font-weight: 600;
+                  font-size: 16px;
+                  line-height: 100%;
+                  letter-spacing: 0%;
+                  vertical-align: middle;
+                  color: #000000;
+                  margin-bottom: 5px;
+                }
+                .patientAge {
+                  font-family: "Karla", "sans-serif";
+                  font-weight: 400;
+                  font-size: 14px;
+                  line-height: 100%;
+                  letter-spacing: 0%;
+                  vertical-align: middle;
+                  color: #333333;
+                }
               }
             }
             .patientDetails {
@@ -188,24 +193,32 @@
               line-height: 100%;
               letter-spacing: 0%;
               vertical-align: middle;
+              .detail-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 8px;
+              }
+              .label {
+                flex-shrink: 0;
+                color: #000;
+              }
 
               .value {
                 font-family: "Karla", "sans-serif";
                 font-weight: 400;
                 font-size: 13px;
-                line-height: 100%;
-                letter-spacing: 0%;
-                vertical-align: middle;
+                color: #333;
+                text-align: right;
               }
 
               .reason-truncate {
-                display: -webkit-box;
-                -webkit-line-clamp: 2; // Show only 2 lines
-                -webkit-box-orient: vertical;
+                white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                white-space: normal;
-                max-width: 220px; // adjust as per card width
+                max-width: 160px; // Adjust to suit layout
+                display: inline-block;
+                text-align: right;
               }
             }
           }
