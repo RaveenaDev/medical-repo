@@ -40,10 +40,16 @@ const PatientCard = ({ patient }) => {
               </p>
             </div>
           </div>
-          <div className={`statusDot ${formatStatus(patient.type)}`}>
-            {(patient.type === "admitted+followup+critical" ||
-              patient.type.includes("followup+critical")) && (
-              <div className={`innerCircle followup-critical`} />
+
+          <div
+            className={`statusDot ${
+              patient.healthStatus === "Critical"
+                ? "critical-outer"
+                : formatStatus(patient.type)
+            }`}
+          >
+            {patient.healthStatus === "Critical" && (
+              <div className="innerCircle" />
             )}
           </div>
         </div>
