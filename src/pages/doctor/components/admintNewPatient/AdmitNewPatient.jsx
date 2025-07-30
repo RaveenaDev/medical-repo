@@ -24,24 +24,33 @@ const AdmitNewPatient = ({ onClose, requests }) => {
           className={styles.leftArrow}
         />
         <p>Admit New Patient</p>
-        <label htmlFor="signatureUpload" className={styles.uploadButton}>
-          <Plus size={16} strokeWidth={2} />
-          {signature ? "Uploaded" : "Upload Signature"}
-          <input
-            id="signatureUpload"
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={(e) => {
-              const file = e.target.files[0];
-              const reader = new FileReader();
-              reader.onloadend = () => setSignature(reader.result); // base64
-              if (file) reader.readAsDataURL(file);
-            }}
-          />
-        </label>
+        <div className={styles.signatureSection}>
+          <label
+            htmlFor="signatureUpload"
+            className={styles.signatureUploadLabel}
+          >
+            <input
+              id="signatureUpload"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={(e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onloadend = () => setSignature(reader.result);
+                if (file) reader.readAsDataURL(file);
+              }}
+            />
+            <Plus size={16} />
+            <span>{signature ? "Change Signature" : "Upload Signature"}</span>
+          </label>
+        </div>
       </div>
-
+      {signature && (
+        <div className={styles.signaturePreview}>
+          <img src={signature} alt="Signature Preview" />
+        </div>
+      )}
       <div className={styles.admissionList}>
         {requests?.length > 0 ? (
           requests.map((req, idx) => {
@@ -92,7 +101,9 @@ const AdmitNewPatient = ({ onClose, requests }) => {
             );
           })
         ) : (
-          <p>No New Patient</p>
+          <div className={styles.noPatient}>
+            <p>No new patients to admit right now</p>
+          </div>
         )}
       </div>
     </div>
