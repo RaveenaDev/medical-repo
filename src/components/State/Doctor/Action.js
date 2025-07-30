@@ -72,7 +72,7 @@ export const getPatients = () => async (dispatch) => {
       },
     });
     // console.log("Pattt: ", data);
-    dispatch({ type: GET_PATIENTS, payload: data.totalPatients });
+    dispatch({ type: GET_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
   }
