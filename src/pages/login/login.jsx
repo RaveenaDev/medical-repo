@@ -143,8 +143,8 @@ const Login = (props) => {
             InputProps={{
               sx: {
                 height: "58px", // Adjust height of the input box
-                fontSize: "1rem", // Adjust font size if needed
-                padding: "0 14px", // Adjust padding inside input
+                fontSize: "3vh", // Adjust font size if needed
+                padding: "0 0.5vw", // Adjust padding inside input
               },
             }}
             sx={{
@@ -227,18 +227,18 @@ const Login = (props) => {
                 sx={{
                   backgroundColor: "#25307F",
                   color: "white",
-                  padding: "7px 2px",
+                  padding: "10px 2px",
                   paddingLeft: "12px",
                   borderRadius: "8px",
                   textAlign: "center",
-                  fontSize: "1.8rem", // Bigger font size
+                  fontSize: "3vh", // Bigger font size
                   letterSpacing: "0.8rem", // Gap between digits
                   fontWeight: 600,
                 }}
               >
                 {captcha}
               </Box>
-              <Grid sx={{ transform: "translateY(10px)" }}>
+              <Grid sx={{ transform: "translateY(3px)" }}>
                 <Tooltip title="Refresh CAPTCHA">
                   <IconButton
                     onClick={refreshCaptcha}
@@ -259,6 +259,7 @@ const Login = (props) => {
             </Grid>
             <Grid size={6}>
               <TextField
+                fullWidth
                 name="captcha"
                 id="captcha_write"
                 placeholder="Enter Captcha"
@@ -266,9 +267,10 @@ const Login = (props) => {
                 onChange={handleCaptchaChange}
                 InputProps={{
                   sx: {
-                    height: "58px", // Adjust height of the input box
-                    fontSize: "1rem", // Adjust font size if needed
-                    padding: "0 14px", // Adjust padding inside input
+                    height: "55px",
+                    // Adjust height of the input box
+                    fontSize: "3vh", // Adjust font size if needed
+                    padding: "0px 4px", // Adjust padding inside input
                   },
                 }}
                 sx={{

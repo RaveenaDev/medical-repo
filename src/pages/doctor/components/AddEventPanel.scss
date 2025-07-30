@@ -409,6 +409,9 @@
   display: flex;
 }
 
+.time-picker {
+}
+
 .time-picker-container {
   width: 30vw;
   height: 3vh;
@@ -417,13 +420,13 @@
   margin-top: 2vh;
 }
 .time-label-from {
-  margin-right: 1vw;
+  margin-right: 5px;
   font-size: 2vh;
   font-weight: 500;
 }
 .time-label-to {
-  margin-right: 1vw;
-  margin-left: 4vw;
+  margin-right: 5px;
+  margin-left: 0vw;
   font-size: 2vh;
   font-weight: 500;
 }

@@ -7,6 +7,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  MessageSquareText,
+  Phone,
   Plus,
 } from "lucide-react";
 import MedAdminRecord from "./components/MedAdminRecord";
@@ -79,41 +81,58 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
         <div className={styles.patientInfo}>
           <div className={styles.title}>
             <h4>Patient Info</h4>
-            <div className={styles.dropdown}>
-              <button
-                className={styles.trigger}
-                onClick={() => setOpenStatus((prev) => !prev)}
-              >
-                <p
-                  className={
-                    selectedStatus ? styles[selectedStatus.toLowerCase()] : ""
-                  }
+
+            {isFollowUpStatus ? (
+              <div className={styles.messageCallRow}>
+                <img
+                  src="/assets/inpatient/message.svg"
+                  alt="message"
+                  className={styles.messageIcon}
+                />
+                <Phone
+                  fill="#2e823b"
+                  //stroke="#2e823b"
+                  strokeWidth="0px"
+                  className={styles.callIcon}
+                />
+              </div>
+            ) : (
+              <div className={styles.dropdown}>
+                <button
+                  className={styles.trigger}
+                  onClick={() => setOpenStatus((prev) => !prev)}
                 >
-                  {" "}
-                  <span className={styles.dot}></span>
-                  <strong>{selectedStatus || "Select"}</strong>
-                </p>
-                <span className={styles.arrow}>
-                  {openStatus ? <ChevronUp /> : <ChevronDown />}
-                </span>
-              </button>
-              {openStatus && (
-                <ul className={styles.menu}>
-                  {statusOptions.map((option) => (
-                    <li
-                      key={option}
-                      className={`${styles.item} ${
-                        styles[option.toLowerCase()]
-                      } `}
-                      onClick={() => handleStatusChange(option)}
-                    >
-                      <span className={styles.dot}></span>
-                      <strong>{option}</strong>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+                  <p
+                    className={
+                      selectedStatus ? styles[selectedStatus.toLowerCase()] : ""
+                    }
+                  >
+                    {" "}
+                    <span className={styles.dot}></span>
+                    <strong>{selectedStatus || "Select"}</strong>
+                  </p>
+                  <span className={styles.arrow}>
+                    {openStatus ? <ChevronUp /> : <ChevronDown />}
+                  </span>
+                </button>
+                {openStatus && (
+                  <ul className={styles.menu}>
+                    {statusOptions.map((option) => (
+                      <li
+                        key={option}
+                        className={`${styles.item} ${
+                          styles[option.toLowerCase()]
+                        } `}
+                        onClick={() => handleStatusChange(option)}
+                      >
+                        <span className={styles.dot}></span>
+                        <strong>{option}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
           </div>
           <div
             className={`${styles.patientCard} ${
