@@ -242,7 +242,7 @@ const Rooms = () => {
                     <ArrowBackIosIcon sx={{ height: 21, width: 21 }} />
                   </span>
                   <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-                  <h2 className={ayu.departmentTitleDetails}>{rooms.length}</h2>
+                  <h2 className={ayu.departmentTitleDetails}>{totalFilteredRooms}</h2>
                 </div>
                 <div style={{ display: "flex", gap: "1rem" }}>
                   <Box sx={{display: "flex", gap: 3}}>
@@ -310,7 +310,7 @@ const Rooms = () => {
             {/* Table Section */}
             <TableContainer
                 sx={{
-                  maxHeight: "70vh", // Adjust this to fit your layout needs
+                  maxHeight: "65vh", // Adjust this to fit your layout needs
                   overflowY: "auto",
               }}
             >
@@ -319,7 +319,6 @@ const Rooms = () => {
                   borderCollapse: "separate",
                   borderSpacing: "0 10px",
                   width: "100%",
-                  marginBottom: "30px",
                 }}
               >
                 <TableHead
@@ -444,6 +443,7 @@ const Rooms = () => {
                   )}
                 </TableBody>
               </Table>
+
 
               <TablePagination
                   component="div"
