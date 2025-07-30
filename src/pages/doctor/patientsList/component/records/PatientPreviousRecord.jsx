@@ -9,7 +9,8 @@ import DischargeSummary from "./dischargeSummary/DischargeSummary.jsx";
 import TestsAndRecords from "./testandrecords/TestsAndRecords.jsx";
 import Prescriptions from "./prescription/Prescriptions.jsx";
 
-const PatientPreviousRecord = () => {
+const PatientPreviousRecord = ({patientDetails}) => {
+  console.log("GOTCHA: ",patientDetails)
   const visitData = [
     {
       date: "15 May - 18 May 2025",
@@ -48,7 +49,7 @@ const PatientPreviousRecord = () => {
       departmentbgColor: "#FAF5F9",
     },
   ];
-  const colors = ["#5461BE", "#2E823B", "#EAA000", "#878787C2"];
+  const colors = ["#5461BE", "#2E823B", "#EAA000", "#F14400"];
   const [selectedVisit, setSelectedVisit] = useState(visitData[0]);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
@@ -84,11 +85,11 @@ const PatientPreviousRecord = () => {
           />
         </div>
         <div className="patient-info-container">
-          <h2 className="patient_name">Alice</h2>
+          <h2 className="patient_name">{patientDetails.name || "N/A"}</h2>
           <div className="patient-info">
-            <span className="patient-id">Patient ID: 12345</span>
-            <span className="patient-age">Age: 30</span>
-            <span className="patient-gender">Female</span>
+            <span className="patient-id">Patient ID: {patientDetails.patId || "N/A"}</span>
+            <span className="patient-age">Age: {patientDetails.age || "N/A"}</span>
+            <span className="patient-gender">{patientDetails.gender || "N/A"}</span>
           </div>
           <div className="patient-Allergy">
             Allergies
@@ -100,7 +101,14 @@ const PatientPreviousRecord = () => {
             </div>
           </div>
         </div>
-        <div className="patient-lastVisit">Last Visit: 22 May 2025</div>
+        <div className="patient-lastVisit">Last Visit: {new Date(
+              patientDetails.consultations[0].date
+          ).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }) || "N/A"}
+        </div>
       </section>
       <div className="patient-records-container">
         <section className="patient-visits">
@@ -123,14 +131,20 @@ const PatientPreviousRecord = () => {
             </div>
           </div>
           <div className="visit-list">
-            {visitData.map((visit, index) => (
+            {patientDetails?.consultations?.map((visit, index) => (
               <VisitCard
                 key={index}
-                date={visit.date}
-                description={visit.description}
-                doctor={visit.doctor}
-                typeofVisit={visit.typeofVisit}
-                department={visit.department}
+                date={new Date(
+                    visit.date
+                ).toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                }) || "N/A"}
+                description={visit.consultationData.complaints || "N/A"}
+                doctor={visit.doctor.name || "N/A"}
+                typeofVisit={visit.typeofVisit || "N/A"}
+                department={visit.department.name || "N/A"}
                 color={colors[index % colors.length]}
                 departmentbgColor={visit.departmentbgColor}
                 departmentColor={visit.departmentColor}
@@ -188,7 +202,13 @@ const PatientPreviousRecord = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              {selectedVisit.date}
+              {new Date(
+                  selectedVisit.date
+              ).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              }) || "N/A"}
             </div>
             <div>
               <VisitRecords

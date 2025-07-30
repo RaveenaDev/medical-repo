@@ -441,7 +441,7 @@
   }
 }
 
-.low {
+.moderate {
   strong {
     color: #f39c12;
   }
@@ -468,10 +468,26 @@
   background-color: #f57c00;
 }
 
-.low .dot {
+.moderate .dot {
   background-color: #fbc02d;
 }
 
 .stable .dot {
   background-color: #388e3c;
+}
+
+.messageCallRow {
+  display: flex;
+  gap: 1.5vw;
+  align-items: center;
+}
+
+.messageIcon,
+.callIcon {
+  width: 2.4vh;
+  height: 2.4vh;
+}
+
+.callIcon {
+  color: #fff;
 }

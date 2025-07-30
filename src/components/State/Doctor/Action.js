@@ -72,7 +72,7 @@ export const getPatients = () => async (dispatch) => {
       },
     });
     // console.log("Pattt: ", data);
-    dispatch({ type: GET_PATIENTS, payload: data.totalPatients });
+    dispatch({ type: GET_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
   }
@@ -115,7 +115,7 @@ export const getInpatients = () => async (dispatch) => {
     });
 
     // console.log("InPatt: ", data);
-    dispatch({ type: GET_INPATIENTS, payload: data.totalInpatients });
+    dispatch({ type: GET_INPATIENTS, payload: data });
   } catch (error) {
     console.log(error);
   }
@@ -1566,3 +1566,4 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
     throw error;
   }
 };
+

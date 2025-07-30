@@ -6,9 +6,12 @@ import PatientProfile from "./component/PatientProfile";
 import PatientPreviousRecord from "./component/records/PatientPreviousRecord.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import BillingDetails from "./component/components/BillingDetails.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {getPatientDetailsByID} from "../../../components/State/Doctor/Action.js";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const location = useLocation();
   const { patientId, isFollowUpStatus } = location.state || {};
@@ -25,6 +28,14 @@ const SinglePatientDetail = () => {
   };
 
   const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    dispatch(getPatientDetailsByID(patientId))
+  }, [dispatch]);
+
+  const patientDetails = useSelector((store) => store.doctor.patientDetails)
+
+  // console.log("GOTCHA: ",patientDetails)
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
@@ -113,7 +124,7 @@ const SinglePatientDetail = () => {
               isFollowUpStatus={isFollowUpStatus}
             />
           ) : (
-            <PatientPreviousRecord />
+            <PatientPreviousRecord patientDetails={patientDetails}/>
           )}
         </section>
       </div>

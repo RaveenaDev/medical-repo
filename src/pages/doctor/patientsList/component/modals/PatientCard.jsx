@@ -10,7 +10,7 @@ const PatientCard = ({ patient }) => {
     if (!status) return "";
     return status.replace(/\+/g, "-").toLowerCase(); // e.g., "Admitted+FollowUp" → "admitted-followup"
   };
-  // console.log("Patient in adimitted:", patient);
+  // console.log("Patient Details:", patient);
   // console.log("is follow up status:", isFollowUp);
 
   return (
@@ -21,6 +21,7 @@ const PatientCard = ({ patient }) => {
           state: {
             patientId: patient._id,
             isFollowUpStatus: isFollowUp,
+            caseId: patient.latestCaseId,
           },
         })
       }
@@ -40,10 +41,16 @@ const PatientCard = ({ patient }) => {
               </p>
             </div>
           </div>
-          <div className={`statusDot ${formatStatus(patient.type)}`}>
-            {(patient.type === "admitted+followup+critical" ||
-              patient.type.includes("followup+critical")) && (
-              <div className={`innerCircle followup-critical`} />
+
+          <div
+            className={`statusDot ${
+              patient.healthStatus === "Critical"
+                ? "critical-outer"
+                : formatStatus(patient.type)
+            }`}
+          >
+            {patient.healthStatus === "Critical" && (
+              <div className="innerCircle" />
             )}
           </div>
         </div>
@@ -53,12 +60,23 @@ const PatientCard = ({ patient }) => {
             <div className="value">19 Feb 2025</div>
           </div>
           <div>
-            <div> Last Data Received: </div>
-            <div className="value">24 Jan 2025</div>
+            <div>Admission Date: </div>
+            <div className="value">
+              {patient?.date
+                ? new Date(patient.date).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "N/A"}
+            </div>
           </div>
+
           <div>
             <div> Major Issue: </div>
-            <div className="value">Follow-up-Required</div>
+            <div className="value reason-truncate">
+              {patient?.medicalNote || "No major issue reported"}
+            </div>
           </div>
         </div>
         <div className="actionButtons">
