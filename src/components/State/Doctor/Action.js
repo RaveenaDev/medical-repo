@@ -789,7 +789,7 @@ export const getAppointmentByDate =
         },
       });
 
-      // console.log("All Appointments below: ", data);
+      console.log("Fetching: ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);
@@ -1046,12 +1046,17 @@ export const submitConsultation =
         position: "bottom-right",
         autoClose: 2000,
       });
+
+      return Promise.resolve(data); // 🔑 return promise
+
     } catch (error) {
       console.log(error);
       toast.error("Please Confirm all the fields!", {
         position: "bottom-right",
         autoClose: 2000,
       });
+
+      return Promise.reject(error); // 🔑 return promise
     }
   };
 
@@ -1583,7 +1588,9 @@ export const setOngoing = (patientId) => async (dispatch) => {
     // console.log("Ongoing app. successful : ", data);
 
     dispatch({ type: SET_ONGOING, payload: data });
+    return Promise.resolve(data); // 🔑 return promise
   } catch (error) {
     console.log(error);
+    return Promise.reject(error); // 🔑 return promise
   }
 };

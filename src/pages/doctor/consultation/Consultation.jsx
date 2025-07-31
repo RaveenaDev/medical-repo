@@ -55,6 +55,7 @@ export const Consultation = () => {
       setLoading(true); // Show loader before dispatch
       dispatch(getAppointmentByDate(startDate, endDate)).finally(() => {
         setLoading(false); // Hide loader after fetch completes
+        setShouldRefetch1(false);
       });
     }
 
@@ -65,10 +66,9 @@ export const Consultation = () => {
     const endDate = dayjs(selectedDate).endOf("day").toISOString();
 
     if (shouldRefetch) {
-      dispatch(getAppointmentByDate(startDate, endDate)).finally(() => {
-        setLoading(false); // Hide loader after fetch completes
-      });
-      if (shouldRefetch) setShouldRefetch(false); // reset after triggering
+      console.log("Again dispatched...")
+      dispatch(getAppointmentByDate(startDate, endDate));
+      if (shouldRefetch) setShouldRefetch(false);
     }
 
   }, [shouldRefetch]);

@@ -144,7 +144,7 @@ const Refer = ({ setCompleteData, onClose, modalData, patient, onSuccess,openNex
     };
 
     // console.log("Final: ", finalData);
-    dispatch(submitConsultation(finalData, onSuccess, onClose));
+    dispatch(submitConsultation(finalData, onSuccess));
 
     setCompleteData({});
     onSuccess();

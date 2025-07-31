@@ -280,9 +280,14 @@ const ConsultBody = ({
     };
 
     // console.log("Updated Final: ",updatedFinal)
-    dispatch(submitConsultation(updatedFinal));
-    setCompleteData({});
-    onSuccess();
+    dispatch(submitConsultation(updatedFinal))
+        .then(() => {
+          setCompleteData({});
+          onSuccess(); // ✅ Will only run after dispatch finishes
+        })
+        .catch((err) => {
+          console.error("Submission failed:", err);
+        });
     openNextAppointment(true);
   };
 

@@ -6,26 +6,34 @@ import {setOngoing} from "../../../../components/State/Doctor/Action.js";
 
 const NextAppointment = ({ onClose,nextAppointment,allowance,onStart }) => {
     const dispatch = useDispatch()
+    if (!nextAppointment) {
+        return (
+            <div className={styles.container1}>
+                <div className={styles.crossContainer}>
+                    <X size={20} onClick={onClose} />
+                </div>
+                <div style={{ height: '20vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <p style={{ fontWeight: 600, fontSize: '1rem' }}>No next appointments</p>
+                </div>
+            </div>
+        );
+    }
     // console.log("app: ",nextAppointment)
     const pat = {
         patientId: nextAppointment.patient._id
     };
     const handleStartConsultation = () => {
-        dispatch(setOngoing(pat))
-        onClose();
-        onStart();
+        dispatch(setOngoing(pat)).then(() => {
+            onClose();
+            onStart();
+        })
+            .catch((err) => {
+                console.error("Start failed:", err);
+            });
     }
 
     const handleRescheduleConsultation = () => {
 
-    }
-
-    if(!nextAppointment){
-        return(
-            <>
-                <p>No next appointment found.</p>
-            </>
-        )
     }
 
   return (
