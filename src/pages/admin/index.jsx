@@ -226,7 +226,8 @@ function Admin(props) {
           <Button
             variant="contained"
             sx={{
-              fontSize: "14px",
+              fontSize: "1vw",
+              width: "13vw",
               color: "#25307F",
               fontWeight: 500,
               textTransform: "capitalize",
