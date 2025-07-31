@@ -14,6 +14,7 @@ const AddPatientForm = ({ onClose }) => {
   const [form, setForm] = useState({
     patientName: "",
     patientId: "",
+    email: "",
     contactNo: "",
     address: "",
     age: "",
@@ -29,6 +30,7 @@ const AddPatientForm = ({ onClose }) => {
     deposit: "",
     medicalNote: "",
   });
+  const [isExistingPatient, setIsExistingPatient] = useState(true);
 
   const [selectedRoom, setSelectedRoom] = useState("");
   const [availableBeds, setAvailableBeds] = useState([]);
@@ -70,8 +72,12 @@ const AddPatientForm = ({ onClose }) => {
         : selectedRoles[0] || "";
 
     const payload = {
-      patId: form.patientId,
+      ...(isExistingPatient
+        ? { patId: form.patientId }
+        : { email: form.email }),
       sendTo: sendToValue,
+      mobileNumber: form.contactNo,
+      name: form.patientName,
       admissionDetails: {
         name: form.patientName,
         contact: form.contactNo,
@@ -81,6 +87,7 @@ const AddPatientForm = ({ onClose }) => {
         emergencyContact: form.emergencyContact,
         emergencyName: form.emergencyContactName,
         admissionDate: form.date,
+        date: new Date(form.date),
         room: selectedRoom,
         bed: form.bedNo,
         deposit: parseFloat(form.deposit),
@@ -126,6 +133,27 @@ const AddPatientForm = ({ onClose }) => {
 
         <h3>Admission Form</h3>
         <form onSubmit={handleSubmit}>
+          <div className="radio-group patient-type-toggle">
+            <label>
+              <input
+                type="radio"
+                name="patientType"
+                checked={isExistingPatient}
+                onChange={() => setIsExistingPatient(true)}
+              />
+              Existing Patient
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="patientType"
+                checked={!isExistingPatient}
+                onChange={() => setIsExistingPatient(false)}
+              />
+              New Patient
+            </label>
+          </div>
+
           <section>
             <h4>Personal Details</h4>
             <div className="form-section">
@@ -141,17 +169,31 @@ const AddPatientForm = ({ onClose }) => {
                     required
                   />
                 </div>
-                <div className="form-field">
-                  <label>Patient ID</label>
-                  <input
-                    type="text"
-                    value={form.patientId}
-                    onChange={(e) =>
-                      setForm({ ...form, patientId: e.target.value })
-                    }
-                    required
-                  />
-                </div>
+                {isExistingPatient ? (
+                  <div className="form-field">
+                    <label>Patient ID</label>
+                    <input
+                      type="text"
+                      value={form.patientId}
+                      onChange={(e) =>
+                        setForm({ ...form, patientId: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                ) : (
+                  <div className="form-field">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={(e) =>
+                        setForm({ ...form, email: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                )}
               </div>
               <div className="form-group">
                 <div className="form-field">

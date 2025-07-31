@@ -263,7 +263,7 @@ const CommonPanel = ({
                             },
                           },
                           "& .MuiInputBase-input": {
-                            fontSize: "14px",
+                            fontSize: "max(1vw, 12px)",
                             padding: "10px",
                             "&:focus": {
                               outline: "none !important",
@@ -291,7 +291,7 @@ const CommonPanel = ({
                 variant="contained"
                 onClick={() => navigate(`/admin/billings`)}
                 sx={{
-                  fontSize: "16px",
+                  fontSize: "max(1vw, 12px)",
                   color: "#878787",
                   textTransform: "capitalize",
                   padding: "0px 8px",
@@ -330,7 +330,7 @@ const CommonPanel = ({
                 variant="contained"
                 onClick={() => navigate(`/admin/requests`)}
                 sx={{
-                  fontSize: "16px",
+                  fontSize: "max(1vw, 12px)",
                   color: "#878787",
                   textTransform: "capitalize",
                   padding: "0px 8px",
@@ -384,6 +384,7 @@ const CommonPanel = ({
                   sx={{
                     background: "transparent", // keep outer div background
                     color: "#FFFFFF",
+                    fontSize: "max(1vw, 12px)",
                     width: "9.2rem",
                     height: "2.4rem",
                     ".MuiOutlinedInput-notchedOutline": {

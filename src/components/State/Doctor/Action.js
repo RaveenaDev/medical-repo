@@ -58,6 +58,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
+  SET_ONGOING,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -241,7 +242,7 @@ export const getMostCommonDiagnosis = () => async (dispatch) => {
       },
     });
 
-    console.log("Diag: ", data);
+    // console.log("Diag: ", data);
 
     dispatch({ type: GET_MOST_COMMON_DIAGNOSIS, payload: data });
   } catch (error) {
@@ -417,7 +418,7 @@ export const getHospitalStatistics = () => async (dispatch) => {
     const token = localStorage.getItem("jwt");
     const departmentId = localStorage.getItem("departmentId");
 
-    const { data } = await axios.get(`${API_URL}/statistics`, {
+    const { data } = await axios.get(`${API_URL}/getHospitalStats`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -502,7 +503,7 @@ export const getCriticalPatients = () => async (dispatch) => {
       },
     });
 
-    console.log("Critical Patients: ", data);
+    // console.log("Critical Patients: ", data);
     dispatch({ type: GET_CRITICAL_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
@@ -510,25 +511,23 @@ export const getCriticalPatients = () => async (dispatch) => {
 };
 
 export const getMedicalProcedureStats =
-  (filterType = "month", month = null, year = null) =>
+  (filterType = "monthly") =>
   async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
       const departmentId = localStorage.getItem("departmentId");
 
-      const { data } = await axios.get(`${API_URL}/medical-procedures`, {
+      const { data } = await axios.get(`${API_URL}/getTop4Procedures`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
           departmentId,
-          filterType,
-          month,
-          year,
+          filter: filterType,
         },
       });
-
-      dispatch({ type: GET_MEDICAL_PROCEDURE_STATS, payload: data.data });
+      // console.log("MedicalProcedureStats: ", data);
+      dispatch({ type: GET_MEDICAL_PROCEDURE_STATS, payload: data });
     } catch (error) {
       console.error("MedicalProcedureStats error:", error);
     }
@@ -790,7 +789,7 @@ export const getAppointmentByDate =
         },
       });
 
-      // console.log("All Appointments below: ", data);
+      console.log("Fetching: ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);
@@ -996,27 +995,29 @@ export const getAdmittedPatients = () => async (dispatch) => {
   }
 };
 
-export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getProgressTrackerDetails =
+  (patientId, caseId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-      `${API_URL}/getProgressTracker/${patientId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      const { data } = await axios.get(
+        `${API_URL}/getProgressTracker/${patientId}/${caseId}`,
 
-    // console.log("Progress Tracker: ", data);
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
-  } catch (error) {
-    console.error("Error getting progress details:", error);
-  }
-};
+      // console.log("Progress Tracker: ", data);
+
+      dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
+    } catch (error) {
+      console.error("Error getting progress details:", error);
+    }
+  };
 
 export const submitConsultation =
   (consultationData, onSuccess, onClose) => async (dispatch) => {
@@ -1045,12 +1046,17 @@ export const submitConsultation =
         position: "bottom-right",
         autoClose: 2000,
       });
+
+      return Promise.resolve(data); // 🔑 return promise
+
     } catch (error) {
       console.log(error);
       toast.error("Please Confirm all the fields!", {
         position: "bottom-right",
         autoClose: 2000,
       });
+
+      return Promise.reject(error); // 🔑 return promise
     }
   };
 
@@ -1115,6 +1121,7 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
     // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
     // return data.request;
     dispatch(getAdmissionRequests()); // Refresh the list of requests
+    dispatch(getAdmittedPatients());
     toast.success("Admission Request Created successfully!", {
       position: "bottom-right",
       autoClose: 2000,
@@ -1567,3 +1574,23 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
   }
 };
 
+export const setOngoing = (patientId) => async (dispatch) => {
+  console.log("Pat: ", patientId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/setOngoing`, patientId, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Ongoing app. successful : ", data);
+
+    dispatch({ type: SET_ONGOING, payload: data });
+    return Promise.resolve(data); // 🔑 return promise
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error); // 🔑 return promise
+  }
+};

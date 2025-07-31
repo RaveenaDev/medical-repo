@@ -374,7 +374,7 @@
 
   padding: 0vh 0.7vw;
   cursor: pointer;
-  font-size: 1.8vh;
+  font-size: 0.8vw;
   font-family: "Karla", sans-serif;
   display: flex;
   align-items: center;
@@ -386,6 +386,10 @@
   color: #777;
 }
 
+.arrorwIcon {
+  height: 0.5vw;
+  width: 0.5vw;
+}
 .menu {
   position: absolute;
   top: 100%;
@@ -454,8 +458,8 @@
 }
 .dot {
   display: inline-block;
-  width: 0.6vw;
-  height: 0.6vw;
+  width: 0.5vw;
+  height: 0.5vw;
   border-radius: 50%;
   margin-right: 0.6vw;
 }

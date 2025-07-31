@@ -41,6 +41,9 @@ const InPatients = () => {
     const totalFilteredInPatients = doctor.totalFilteredInpatients
     const filteredInPatients = doctor.filteredInPatients
 
+    // console.log("Total: ",totalFilteredInPatients)
+    // console.log("Fil: ",filteredInPatients)
+
   const handleRequestBtn = () => {
     navigate("/doctor/doctor-request");
   };
@@ -98,7 +101,7 @@ const InPatients = () => {
     },
   ];
 
-  const location = useLocation();
+  // const location = useLocation();
   // const inPatients = location.state?.inPatients || [];
 
   // console.log("Tranferred: ",inPatients)
@@ -333,24 +336,24 @@ const InPatients = () => {
                         {filteredInPatients.map((patient, index) => (
                             <tr key={index}>
                                 <td className={styles.patientId}>
-                                    {truncateText(patient.patId || "Not Assigned", 12)}
+                                    {truncateText(patient?.patId || "Not Assigned", 12)}
                                 </td>
                                 <td className={styles.patientInfo}>
                                     <div>
-                                        <div className={styles.patientName}>{patient.name || "Not Assigned"}</div>
-                                        <div className={styles.patientEmail}>{patient.email || "Not Assigned"}</div>
+                                        <div className={styles.patientName}>{patient?.name || "Not Assigned"}</div>
+                                        <div className={styles.patientEmail}>{patient?.email || "Not Assigned"}</div>
                                     </div>
                                 </td>
-                                <td className={styles.bedNumber}>{patient.bedType || "Not Assigned"}</td>
-                                <td className={styles.condition}>{patient.admissionStatus || "Not Assigned"}</td>
-                                <td className={styles.doctor}>{patient.doctor.name || "Not Assigned"}</td>
+                                <td className={styles.bedNumber}>{patient?.bedType || "Not Assigned"}</td>
+                                <td className={styles.condition}>{patient?.admissionStatus || "Not Assigned"}</td>
+                                <td className={styles.doctor}>{patient?.doctor?.name || "Not Assigned"}</td>
                                 <td className={styles.status}>
               <span
                   className={`${styles.statusBadge} ${
                       styles[patient.status.toLowerCase()]
                   }`}
               >
-                {patient.status}
+                {patient?.status}
               </span>
                                 </td>
                                 {/*<td className={styles.actions}>*/}

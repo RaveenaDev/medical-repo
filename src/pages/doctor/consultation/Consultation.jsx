@@ -42,6 +42,7 @@ export const Consultation = () => {
 
   const [activeView, setActiveView] = useState("consult");
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const [shouldRefetch1, setShouldRefetch1] = useState(false);
   const [selectedForm, setSelectedForm] = useState(null);
 
   const dispatch = useDispatch();
@@ -50,15 +51,27 @@ export const Consultation = () => {
     const startDate = dayjs(selectedDate).startOf("day").toISOString();
     const endDate = dayjs(selectedDate).endOf("day").toISOString();
 
-    if (shouldRefetch || selectedDate) {
+    if (selectedDate || shouldRefetch1) {
       setLoading(true); // Show loader before dispatch
       dispatch(getAppointmentByDate(startDate, endDate)).finally(() => {
         setLoading(false); // Hide loader after fetch completes
+        setShouldRefetch1(false);
       });
-      if (shouldRefetch) setShouldRefetch(false); // reset after triggering
     }
 
-  }, [dispatch, selectedDate, shouldRefetch]);
+  }, [dispatch, selectedDate,shouldRefetch1]);
+
+  useEffect(() => {
+    const startDate = dayjs(selectedDate).startOf("day").toISOString();
+    const endDate = dayjs(selectedDate).endOf("day").toISOString();
+
+    if (shouldRefetch) {
+      // console.log("Again dispatched...")
+      dispatch(getAppointmentByDate(startDate, endDate));
+      if (shouldRefetch) setShouldRefetch(false);
+    }
+
+  }, [shouldRefetch]);
 
   const appointments = useSelector((store) => store.doctor.appointmentsByDate);
 
@@ -182,6 +195,7 @@ export const Consultation = () => {
                     setCustomSections={setCustomSections}
                     appointments={appointments}
                     onSuccess={() => setShouldRefetch(true)}
+                    onStart = {() => setShouldRefetch1(true)}
                 />
             )
         )}

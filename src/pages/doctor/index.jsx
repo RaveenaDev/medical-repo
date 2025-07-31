@@ -119,10 +119,10 @@ const DoctorOverview = ({ todayAppointments }) => {
 
   const getStatusStyle = (status) => {
     const baseStyle = {
-      padding: "4px 1px",
-      width: "4.4rem",
+      padding: "2px 0",
+      width: "4.2rem",
       borderRadius: "12px",
-      fontSize: "12px",
+      fontSize: "11px",
       fontWeight: 500,
       textTransform: "capitalize",
       border: "1px solid",

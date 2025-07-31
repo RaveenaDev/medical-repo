@@ -190,3 +190,36 @@
     }
   }
 }
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.patient-type-toggle {
+  display: flex;
+  gap: 2rem;
+  margin: 0.5rem 0;
+  align-items: center;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #333;
+
+    input[type="radio"] {
+      accent-color: #5461be;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    &:hover {
+      color: #5461be;
+    }
+  }
+}
