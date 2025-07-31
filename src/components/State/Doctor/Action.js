@@ -417,7 +417,7 @@ export const getHospitalStatistics = () => async (dispatch) => {
     const token = localStorage.getItem("jwt");
     const departmentId = localStorage.getItem("departmentId");
 
-    const { data } = await axios.get(`${API_URL}/statistics`, {
+    const { data } = await axios.get(`${API_URL}/getHospitalStats`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -510,25 +510,23 @@ export const getCriticalPatients = () => async (dispatch) => {
 };
 
 export const getMedicalProcedureStats =
-  (filterType = "month", month = null, year = null) =>
+  (filterType = "monthly") =>
   async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
       const departmentId = localStorage.getItem("departmentId");
 
-      const { data } = await axios.get(`${API_URL}/medical-procedures`, {
+      const { data } = await axios.get(`${API_URL}/getTop4Procedures`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
           departmentId,
-          filterType,
-          month,
-          year,
+          filter: filterType,
         },
       });
-
-      dispatch({ type: GET_MEDICAL_PROCEDURE_STATS, payload: data.data });
+      // console.log("MedicalProcedureStats: ", data);
+      dispatch({ type: GET_MEDICAL_PROCEDURE_STATS, payload: data });
     } catch (error) {
       console.error("MedicalProcedureStats error:", error);
     }
@@ -996,27 +994,29 @@ export const getAdmittedPatients = () => async (dispatch) => {
   }
 };
 
-export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getProgressTrackerDetails =
+  (patientId, caseId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-      `${API_URL}/getProgressTracker/${patientId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      const { data } = await axios.get(
+        `${API_URL}/getProgressTracker/${patientId}/${caseId}`,
 
-    // console.log("Progress Tracker: ", data);
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
-  } catch (error) {
-    console.error("Error getting progress details:", error);
-  }
-};
+      // console.log("Progress Tracker: ", data);
+
+      dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
+    } catch (error) {
+      console.error("Error getting progress details:", error);
+    }
+  };
 
 export const submitConsultation =
   (consultationData, onSuccess, onClose) => async (dispatch) => {
@@ -1585,4 +1585,3 @@ export const setOngoing = (patientId) => async (dispatch) => {
     console.log(error);
   }
 };
-

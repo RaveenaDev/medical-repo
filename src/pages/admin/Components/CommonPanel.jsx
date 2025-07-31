@@ -108,10 +108,10 @@ const CommonPanel = ({
         ...shapeStyles,
         ...shapeCircleStyles,
         color: "#ffffff",
-        marginTop: "2px",
+        marginTop: "3px",
         paddingTop: "2px",
         paddingBottom: "2px",
-        fontSize: "15px",
+        fontSize: "1vw",
         paddingLeft: "1px",
       }}
     >
@@ -291,7 +291,7 @@ const CommonPanel = ({
                 variant="contained"
                 onClick={() => navigate(`/admin/billings`)}
                 sx={{
-                  fontSize: "16px",
+                  fontSize: "1vw",
                   color: "#878787",
                   textTransform: "capitalize",
                   padding: "0px 8px",
@@ -330,7 +330,7 @@ const CommonPanel = ({
                 variant="contained"
                 onClick={() => navigate(`/admin/requests`)}
                 sx={{
-                  fontSize: "16px",
+                  fontSize: "1vw",
                   color: "#878787",
                   textTransform: "capitalize",
                   padding: "0px 8px",
@@ -384,6 +384,7 @@ const CommonPanel = ({
                   sx={{
                     background: "transparent", // keep outer div background
                     color: "#FFFFFF",
+                    fontSize: "1vw",
                     width: "9.2rem",
                     height: "2.4rem",
                     ".MuiOutlinedInput-notchedOutline": {

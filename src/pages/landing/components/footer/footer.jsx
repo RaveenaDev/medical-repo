@@ -1,5 +1,11 @@
 import React from "react";
-import { FaTwitter, FaFacebook, FaInstagram, FaGithub } from "react-icons/fa";
+import {
+  FaTwitter,
+  FaFacebook,
+  FaInstagram,
+  FaGithub,
+  FaLinkedinIn,
+} from "react-icons/fa";
 import "./footer.scss";
 
 const Footer = () => {
@@ -30,12 +36,19 @@ const Footer = () => {
           <div className="heading">Get in touch</div>
           <div className="address">
             {" "}
-            SRD House, LNB Road, Mangaldoi, Assam,784125
+            <a
+              href="https://www.google.com/maps/place/Reliable+Tech+Park/@19.1699746,73.0013554,17z/data=!3m1!4b1!4m6!3m5!1s0x3be7bf5fad9a6ebb:0xff55fed18a75a987!8m2!3d19.1699746!4d73.0013554!16s%2Fg%2F1hd_wnr99?entry=ttu&g_ep=EgoyMDI1MDcyOC4wIKXMDSoASAFQAw%3D%3D
+            "
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              12B, Reliable Tech Park, C Wing, Thane – Belapur Rd, MIDC, Airoli,
+              Mumbai, Navi Mumbai, Maharashtra 400708
+            </a>
           </div>
 
-          <div className="address">Email us : hello@organictea.com</div>
-
-          <div className="address">Call us: +91 8210687508</div>
+          <div className="address">Email us: contact@steptechindia.com</div>
+          <div className="address">Call us: +91-8692845191</div>
         </div>
       </div>
       <div className="footer__divider"></div>
@@ -60,18 +73,18 @@ const Footer = () => {
             <FaFacebook className="footer-icon" />
           </a>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/stepconsultancy_?igsh=dnFtcHVyNDdvMWY3"
             target="_blank"
             rel="noopener noreferrer"
           >
             <FaInstagram className="footer-icon" />
           </a>
           <a
-            href="https://github.com"
+            href="https://www.linkedin.com/company/step-consultancyy/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaGithub className="footer-icon" />
+            <FaLinkedinIn className="footer-icon" />
           </a>
         </div>
       </div>

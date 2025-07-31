@@ -92,13 +92,13 @@ const DonutChart = () => {
         height="100%"
         style={{ outline: "none" }}
       >
-        <PieChart width={480} height={300} style={{ outline: "none" }}>
+        <PieChart style={{ outline: "none" }}>
           <Pie
             data={data}
-            cx={240}
-            cy={140}
-            innerRadius={70}
-            outerRadius={102}
+            cx="50%" // Center X responsive
+            cy="50%"
+            innerRadius="40%"
+            outerRadius="60%"
             fill="#8884d8"
             dataKey="value"
             labelLine={false}
