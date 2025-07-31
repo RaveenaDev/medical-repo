@@ -23,7 +23,11 @@ import {
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
-  GET_DOCTORS, GET_FILTERED_INPATIENTS, GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_FILTERED_SURGERIES,
+  GET_DOCTORS,
+  GET_FILTERED_INPATIENTS,
+  GET_FILTERED_PATIENTS,
+  GET_FILTERED_ROOMS,
+  GET_FILTERED_SURGERIES,
   GET_INPATIENTS,
   GET_INVENTORY,
   GET_INVENTORY_DATA,
@@ -86,7 +90,7 @@ const initialState = {
   appointmentRequests: [],
   events: [],
   monthlyEvents: [],
-  totalCases: null,
+
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
@@ -124,7 +128,7 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_PATIENTS:
       return {
         ...state,
-        totalPatients: action.payload.totalPatients
+        totalPatients: action.payload.totalPatients,
       };
 
     case GET_FILTERED_PATIENTS:
@@ -248,7 +252,7 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_STATS:
       return {
         ...state,
-        hospitalStatistics: action.payload.statistics,
+        hospitalStatistics: action.payload.stats,
 
         isLoading: false,
       };
@@ -256,7 +260,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientOverview: action.payload.overview,
-        totalCases: action.payload.totalCases,
+
         totalInpatientsCount: action.payload.totalInpatients,
         totalOutpatientsCount: action.payload.totalOutpatients,
         isLoading: false,

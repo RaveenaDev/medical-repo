@@ -166,7 +166,7 @@ const Department = () => {
 
   // Date range for patient overview
   const [filter, setFilter] = useState("month");
-  const [filter2, setFilter2] = useState("month");
+  const [filter2, setFilter2] = useState("monthly");
   const [dateRange, setDateRange] = useState(getDateRange("month"));
 
   const handleFilterChange = (e) => {
@@ -193,17 +193,18 @@ const Department = () => {
     (state) => state.doctor.hospitalStatistics
   );
 
-  const totalPatients = hospitalStatistics?.patients?.total || 0;
-  const totalBeds = hospitalStatistics?.beds?.available || 0;
-  const totalRooms = hospitalStatistics?.rooms?.available || 0;
+  const totalPatients = hospitalStatistics?.availableBeds || 0;
+  const totalBeds = hospitalStatistics?.availableBeds || 0;
+  const totalRooms = hospitalStatistics?.availableRooms || 0;
 
   const patientOverview = useSelector((state) => state.doctor.patientOverview);
   // console.log(patientOverview);
-  const totalCases = useSelector((state) => state.doctor.totalCases) || 0;
+
   const totalInpatientsCount =
     useSelector((state) => state.doctor.totalInpatientsCount) || 0;
   const totalOutpatientsCount =
     useSelector((state) => state.doctor.totalOutpatientsCount) || 0;
+  const totalCases = totalInpatientsCount + totalOutpatientsCount;
   const totalInpatientsCountPercent =
     totalCases > 0 ? (totalInpatientsCount / totalCases) * 100 : 0;
 
@@ -504,9 +505,9 @@ const Department = () => {
                     value={filter2}
                     onChange={handleFilterChange2}
                   >
-                    <option value="month">This Month</option>
-                    <option value="week">This Week</option>
-                    <option value="year">This Year</option>
+                    <option value="monthly">This Month</option>
+                    <option value="weekly">This Week</option>
+                    <option value="yearly">This Year</option>
                   </select>
                 </div>
               </div>

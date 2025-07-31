@@ -417,7 +417,7 @@ export const getHospitalStatistics = () => async (dispatch) => {
     const token = localStorage.getItem("jwt");
     const departmentId = localStorage.getItem("departmentId");
 
-    const { data } = await axios.get(`${API_URL}/statistics`, {
+    const { data } = await axios.get(`${API_URL}/getHospitalStats`, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -510,25 +510,23 @@ export const getCriticalPatients = () => async (dispatch) => {
 };
 
 export const getMedicalProcedureStats =
-  (filterType = "month", month = null, year = null) =>
+  (filterType = "monthly") =>
   async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
       const departmentId = localStorage.getItem("departmentId");
 
-      const { data } = await axios.get(`${API_URL}/medical-procedures`, {
+      const { data } = await axios.get(`${API_URL}/getTop4Procedures`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
           departmentId,
-          filterType,
-          month,
-          year,
+          filter: filterType,
         },
       });
-
-      dispatch({ type: GET_MEDICAL_PROCEDURE_STATS, payload: data.data });
+      // console.log("MedicalProcedureStats: ", data);
+      dispatch({ type: GET_MEDICAL_PROCEDURE_STATS, payload: data });
     } catch (error) {
       console.error("MedicalProcedureStats error:", error);
     }
@@ -1566,4 +1564,3 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
     throw error;
   }
 };
-
