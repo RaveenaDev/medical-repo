@@ -76,6 +76,8 @@ const AddPatientForm = ({ onClose }) => {
         ? { patId: form.patientId }
         : { email: form.email }),
       sendTo: sendToValue,
+      mobileNumber: form.contactNo,
+      name: form.patientName,
       admissionDetails: {
         name: form.patientName,
         contact: form.contactNo,
@@ -85,6 +87,7 @@ const AddPatientForm = ({ onClose }) => {
         emergencyContact: form.emergencyContact,
         emergencyName: form.emergencyContactName,
         admissionDate: form.date,
+        date: new Date(form.date),
         room: selectedRoom,
         bed: form.bedNo,
         deposit: parseFloat(form.deposit),

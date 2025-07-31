@@ -57,7 +57,8 @@ import {
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT,
-  REMOVE_PRESCRIPTIONS_WITH_AI, SET_ONGOING,
+  REMOVE_PRESCRIPTIONS_WITH_AI,
+  SET_ONGOING,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -1115,6 +1116,7 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
     // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
     // return data.request;
     dispatch(getAdmissionRequests()); // Refresh the list of requests
+    dispatch(getAdmittedPatients());
     toast.success("Admission Request Created successfully!", {
       position: "bottom-right",
       autoClose: 2000,
@@ -1568,7 +1570,7 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
 };
 
 export const setOngoing = (patientId) => async (dispatch) => {
-  console.log("Pat: ",patientId)
+  console.log("Pat: ", patientId);
   try {
     const token = localStorage.getItem("jwt");
 

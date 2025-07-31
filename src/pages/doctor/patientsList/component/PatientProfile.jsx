@@ -28,7 +28,13 @@ import IsFollowUp from "./components/isFollowUp/IsFollowUp.jsx";
 import { useLocation } from "react-router-dom";
 const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   const location = useLocation();
-  const { caseId } = location.state || {};
+  const [caseId, setCaseId] = useState(location.state?.caseId);
+
+  useEffect(() => {
+    // Whenever the location state changes, update the caseId
+    setCaseId(location.state?.caseId);
+    console.log("caseId updated:", caseId); // Optional, for logging
+  }, [location.state]);
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
