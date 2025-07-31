@@ -25,7 +25,10 @@ import {
 import BedInfo from "./modals/BedInfo.jsx";
 import Discharge from "./modals/Discharge.jsx";
 import IsFollowUp from "./components/isFollowUp/IsFollowUp.jsx";
+import { useLocation } from "react-router-dom";
 const PatientProfile = ({ patientId, isFollowUpStatus }) => {
+  const location = useLocation();
+  const { caseId } = location.state || {};
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
@@ -298,7 +301,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
           </div>
           <h4>Progress Tracker</h4>
           <div>
-            <ProgressTracker2 patientId={patientId} />
+            <ProgressTracker2 patientId={patientId} caseId={caseId} />
           </div>
         </div>
         {activeModal === "bedInfo" && (
@@ -324,7 +327,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
               <UpdateProgress
                 onClose={closeModal}
                 patientId={patientId}
-                caseId={patientDetails?.consultations[0].caseId}
+                caseId={caseId}
               />
             </div>
           </>

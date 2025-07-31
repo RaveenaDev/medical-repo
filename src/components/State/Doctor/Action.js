@@ -994,27 +994,29 @@ export const getAdmittedPatients = () => async (dispatch) => {
   }
 };
 
-export const getProgressTrackerDetails = (patientId) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getProgressTrackerDetails =
+  (patientId, caseId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-      `${API_URL}/getProgressTracker/${patientId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      const { data } = await axios.get(
+        `${API_URL}/getProgressTracker/${patientId}/${caseId}`,
 
-    // console.log("Progress Tracker: ", data);
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
-  } catch (error) {
-    console.error("Error getting progress details:", error);
-  }
-};
+      // console.log("Progress Tracker: ", data);
+
+      dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
+    } catch (error) {
+      console.error("Error getting progress details:", error);
+    }
+  };
 
 export const submitConsultation =
   (consultationData, onSuccess, onClose) => async (dispatch) => {
