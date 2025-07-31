@@ -62,7 +62,7 @@ export const Consultation = () => {
 
   const appointments = useSelector((store) => store.doctor.appointmentsByDate);
 
-  // console.log("Appointments: ",appointments)
+  console.log("Appointments: ",appointments)
 
   const ongoingAppointment = appointments.find(
       (app) => app.status === "Ongoing"

@@ -19,6 +19,7 @@ import {
 import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
+import {toast} from "react-toastify";
 
 const ConsultBody = ({
   selectedForm,
@@ -187,13 +188,22 @@ const ConsultBody = ({
   }
 
   const handleComplete = () => {
+    if (!completeData || Object.keys(completeData).length === 0) {
+      toast.error("Kindly fill the details of consultation!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+      return;
+    }
+
     const updatedFinal = {
       ...final,
       action: "complete",
       consultationData: completeData,
     };
 
-    dispatch(submitConsultation(updatedFinal));
+    console.log("Updated Final: ",updatedFinal)
+    // dispatch(submitConsultation(updatedFinal));
     setCompleteData({});
     onSuccess();
   };

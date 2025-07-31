@@ -141,9 +141,9 @@ const PatientPreviousRecord = ({patientDetails}) => {
                   month: "2-digit",
                   year: "numeric",
                 }) || "N/A"}
-                description={visit.treatment.note || "N/A"}
-                doctor={visit.doctor.name || "N/A"}
-                typeofVisit={visit.typeofVisit || "N/A"}
+                description={visit?.treatment?.note || "N/A"}
+                doctor={visit?.doctor.name || "N/A"}
+                typeofVisit={visit?.typeofVisit || "N/A"}
                 department={visit.department.name || "N/A"}
                 color={colors[index % colors.length]}
                 departmentbgColor={visit.departmentbgColor}
