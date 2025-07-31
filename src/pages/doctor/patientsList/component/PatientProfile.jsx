@@ -112,7 +112,11 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                     <strong>{selectedStatus || "Select"}</strong>
                   </p>
                   <span className={styles.arrow}>
-                    {openStatus ? <ChevronUp /> : <ChevronDown />}
+                    {openStatus ? (
+                      <ChevronUp className={styles.arrowIcon} />
+                    ) : (
+                      <ChevronDown className={styles.arrowIcon} />
+                    )}
                   </span>
                 </button>
                 {openStatus && (
