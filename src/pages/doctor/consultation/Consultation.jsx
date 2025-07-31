@@ -66,7 +66,7 @@ export const Consultation = () => {
     const endDate = dayjs(selectedDate).endOf("day").toISOString();
 
     if (shouldRefetch) {
-      console.log("Again dispatched...")
+      // console.log("Again dispatched...")
       dispatch(getAppointmentByDate(startDate, endDate));
       if (shouldRefetch) setShouldRefetch(false);
     }

@@ -44,7 +44,7 @@ const ConsultBody = ({
     consultationData: null,
   });
 
-  console.log("App: ",appointments)
+  // console.log("App: ",appointments)
 
   const [modalData, setModalData] = useState(null);
 
@@ -741,7 +741,7 @@ const ConsultBody = ({
                     ...prev,
                     perceptionsAndMedicines: perceptionData,
                   }));
-                  console.log("Perception Data: ",perceptionData)
+                  // console.log("Perception Data: ",perceptionData)
                   setSelectedComponent("TreatmentAndTest");
                   setConfirmedSections((prev) => [...new Set([...prev, "PerceptionAndMedicines"])]);
                 }}
@@ -772,7 +772,7 @@ const ConsultBody = ({
                     ...prev,
                     [selectedComponent]: data,
                   }));
-                  console.log("Selected Comp ; ",selectedComponent)
+                  // console.log("Selected Comp ; ",selectedComponent)
                   setConfirmedSections((prev) => [...new Set([...prev, selectedComponent])]);
                 }}
               />
