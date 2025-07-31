@@ -10,8 +10,8 @@
 
   .visit-card-color {
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
+    width: 1.5vh;
+    height: 1.5vh;
   }
 
   .visit-card-content {
@@ -27,7 +27,7 @@
       .card-date {
         font-family: "Karla";
         font-weight: 500;
-        font-size: 14px;
+        font-size: max(0.9vw, 9px);
 
         display: flex;
         align-items: center;
@@ -42,7 +42,7 @@
         padding: 0.125rem 0.625rem;
         font-family: "Karla", sans-serif;
         font-weight: 500;
-        font-size: 14px;
+        font-size: max(0.9vw, 9px);
         line-height: 100%;
         letter-spacing: 0%;
         vertical-align: middle;
@@ -53,7 +53,7 @@
       color: #333333;
       font-family: "Karla", sans-serif;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 1.8vh;
       line-height: 100%;
       letter-spacing: 0%;
       vertical-align: middle;
@@ -64,7 +64,7 @@
       gap: 0.625rem;
       font-family: "Karla", sans-serif;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 1.8vh;
       line-height: 100%;
       letter-spacing: 0%;
       vertical-align: middle;

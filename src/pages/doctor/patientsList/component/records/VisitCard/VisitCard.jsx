@@ -13,16 +13,16 @@ const VisitCard = ({
 }) => {
   // Define your color mappings
   const colorMap = {
-    '#5461BE': { bg: '#DAE4FF', text: '#FFFFFF' },
-    '#2E823B': { bg: '#E9F0EC', text: '#E9F0EC' },
-    '#EAA000': { bg: '#FFFFFF', text: '#004d00' },
-    '#F14400': { bg: '#FFFFFF', text: '#F14400' },
+    "#5461BE": { bg: "#DAE4FF", text: "#FFFFFF" },
+    "#2E823B": { bg: "#E9F0EC", text: "#E9F0EC" },
+    "#EAA000": { bg: "#FFFFFF", text: "#004d00" },
+    "#F14400": { bg: "#FFFFFF", text: "#F14400" },
   };
 
   // Fallback to defaults if color doesn't match
   const matchedColors = colorMap[color] || {
-    bg: departmentbgColor || '#f2f5ff',
-    text: departmentColor || '#25307F',
+    bg: departmentbgColor || "#f2f5ff",
+    text: departmentColor || "#25307F",
   };
   return (
     <div className="visit-card" onClick={onClick}>
@@ -31,7 +31,7 @@ const VisitCard = ({
         <div className="visit-card-row">
           <p className="card-date" style={{ color: color }}>
             <svg
-              width="16"
+              width="1vw"
               height="18"
               viewBox="0 0 16 18"
               fill="none"
@@ -55,7 +55,7 @@ const VisitCard = ({
             }}
           >
             <svg
-              width="20"
+              width="1.2vw"
               height="20"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
