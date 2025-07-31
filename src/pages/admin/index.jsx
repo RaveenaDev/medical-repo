@@ -226,12 +226,12 @@ function Admin(props) {
           <Button
             variant="contained"
             sx={{
-              fontSize: "1vw",
+              fontSize: "max(1vw, 10px)",
               width: "13vw",
               color: "#25307F",
               fontWeight: 500,
               textTransform: "capitalize",
-              padding: "3px 8px",
+              padding: "3px 9px",
               backgroundColor: "#fff",
               marginLeft: "16px",
               position: "absolute",
