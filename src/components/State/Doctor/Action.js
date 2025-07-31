@@ -57,7 +57,7 @@ import {
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT,
-  REMOVE_PRESCRIPTIONS_WITH_AI,
+  REMOVE_PRESCRIPTIONS_WITH_AI, SET_ONGOING,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -1564,6 +1564,25 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
     console.error("Patient status update error:", error);
     toast.error(error.message || "Something went wrong");
     throw error;
+  }
+};
+
+export const setOngoing = (patientId) => async (dispatch) => {
+  console.log("Pat: ",patientId)
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/setOngoing`, patientId, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Ongoing app. successful : ", data);
+
+    dispatch({ type: SET_ONGOING, payload: data });
+  } catch (error) {
+    console.log(error);
   }
 };
 

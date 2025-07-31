@@ -25,6 +25,7 @@ const ConsultBody = ({
   selectedForm,
   appointments,
   onSuccess,
+    onStart,
   completeData,
   setCompleteData,
   selectedComponent,
@@ -42,6 +43,8 @@ const ConsultBody = ({
     action: null,
     consultationData: null,
   });
+
+  console.log("App: ",appointments)
 
   const [modalData, setModalData] = useState(null);
 
@@ -117,7 +120,11 @@ const ConsultBody = ({
 
   const [activeModal, setActiveModal] = useState(null);
 
+  const [isAllowed, setIsAllowed] = useState(false);
+
   const dispatch = useDispatch();
+
+  const closeModal = () => setActiveModal(null);
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
@@ -133,6 +140,12 @@ const ConsultBody = ({
   const ongoingAppointment = appointments.find(
     (app) => app.status === "Ongoing"
   );
+
+  const openNextAppointment = (data) => {
+    // console.log("Working")
+    setActiveModal("nextAppointment")
+    setIsAllowed(data);
+  };
 
   useEffect(() => {
     setFinal({
@@ -158,20 +171,78 @@ const ConsultBody = ({
     }
   }, [selectedComponent, dispatch]);
 
-  if (!ongoingAppointment || ongoingAppointment.length === 0) {
+
+  if (!appointments || appointments.length === 0) {
     return (
-      <div className={styles["no-appointments"]}>
-        <p>No ongoing appointments found</p>
-      </div>
+        <div className={styles["no-appointments"]}>
+          <p>No appointments found</p>
+        </div>
     );
   }
-  const openNextAppointment = () => setActiveModal("nextAppointment");
+
+  if (!ongoingAppointment || ongoingAppointment.length === 0) {
+    // Step 1: Filter for 'Waiting' status
+    const waitingAppointments = appointments.filter(
+        (appointment) => appointment.status === "Waiting"
+    );
+
+// Step 2: Find the one with the minimum tokenNumber
+    const nextAppointment = waitingAppointments.length > 0
+        ? waitingAppointments.reduce((min, curr) =>
+                curr.tokenNumber < min.tokenNumber ? curr : min,
+            waitingAppointments[0])
+        : null;
+
+
+    // console.log("Next Appointment:", nextAppointment);
+    return (
+        <>
+          <div style={{display:'flex',flexDirection:'column'
+            ,justifyContent:'center',alignItems:'center',marginTop:'1rem'}}>
+            {
+              nextAppointment ? (
+                  <div className={styles["h2-right"]} style={{
+                    backgroundColor: '#ffffff', border: '1px solid #25307F',
+                    textAlign: 'center'
+                  }} onClick={openNextAppointment}>
+                    <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
+                    <p className={styles["pat-name-r"]}>
+                      {nextAppointment.patient?.name}
+                    </p>
+                    <p className={styles["pat-status-r"]}>Next</p>
+                  </div>
+              ) : (
+                  <p>No next appointments.</p>
+              )
+            }
+
+            <div className={styles["no-appointments"]}>
+              <p>No ongoing appointments found</p>
+            </div>
+          </div>
+
+          {activeModal === "nextAppointment" && (
+              <>
+                <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
+                <div className={styles["nextAppointment-modal"]}>
+                  <NextAppointment
+                      onClose={closeModal}
+                      nextAppointment={nextAppointment}
+                      allowance = {true}
+                      onStart={onStart}
+                  />
+                </div>
+              </>
+          )}
+        </>
+    )
+
+  }
+
   const openAddQuestion = () => setActiveModal("addQuestion");
 
-  const closeModal = () => setActiveModal(null);
-
   const ongoingPatients = dummyPatient.filter(
-    (patient) => patient.consultStatus === "Ongoing"
+      (patient) => patient.consultStatus === "Ongoing"
   );
 
   // Step 2: Find the next appointment with a token number greater than ongoing
@@ -187,7 +258,9 @@ const ConsultBody = ({
     nextAppointment = futureAppointments[0] || null;
   }
 
-  const handleComplete = () => {
+  // console.log("Next Appointment:", nextAppointment);
+
+  const handleCompleteBtn = () => {
     if (!completeData || Object.keys(completeData).length === 0) {
       toast.error("Kindly fill the details of consultation!", {
         position: "bottom-right", // Use string for position
@@ -196,19 +269,32 @@ const ConsultBody = ({
       return;
     }
 
+    setActiveModal("complete");
+  };
+
+  const handleComplete = () => {
     const updatedFinal = {
       ...final,
       action: "complete",
       consultationData: completeData,
     };
 
-    console.log("Updated Final: ",updatedFinal)
-    // dispatch(submitConsultation(updatedFinal));
+    // console.log("Updated Final: ",updatedFinal)
+    dispatch(submitConsultation(updatedFinal));
     setCompleteData({});
     onSuccess();
+    openNextAppointment(true);
   };
 
   const handleRefer = () => {
+    if (!completeData || Object.keys(completeData).length === 0) {
+      toast.error("Kindly fill the details of consultation!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+      return;
+    }
+
     const updatedFinal = {
       ...final,
       action: "refer",
@@ -235,15 +321,8 @@ const ConsultBody = ({
     setSelectedComponent(sectionName);
   };
 
-  if (!appointments || appointments.length === 0) {
-    return (
-      <div className={styles["no-appointments"]}>
-        <p>No appointments found</p>
-      </div>
-    );
-  }
 
-  console.log("Seel: ",confirmedSections)
+  // console.log("Seel: ",confirmedSections)
 
   return (
     <div>
@@ -257,7 +336,7 @@ const ConsultBody = ({
           <p className={styles["pat-status-l"]}>{ongoingAppointment.status}</p>
         </div>
         {nextAppointment ? (
-          <div className={styles["h2-right"]} onClick={openNextAppointment}>
+          <div className={styles["h2-right"]} onClick={() => openNextAppointment(false)}>
             <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
             <p className={styles["pat-name-r"]}>
               {nextAppointment.patient?.name}
@@ -405,7 +484,7 @@ const ConsultBody = ({
           </div>
 
           <div className={styles["lp-8"]}>
-            <button onClick={handleComplete}>
+            <button onClick={handleCompleteBtn}>
               <CircleCheck size={15} />
               <p>Complete</p>
             </button>
@@ -427,7 +506,7 @@ const ConsultBody = ({
           <>
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["complete-modal"]}>
-              <Complete onClose={closeModal} onComplete={openNextAppointment} />
+              <Complete onClose={closeModal} onComplete={handleComplete} nextAppointment={openNextAppointment}/>
             </div>
           </>
         )}
@@ -441,6 +520,7 @@ const ConsultBody = ({
                 modalData={modalData}
                 patient={ongoingAppointment.patient}
                 onSuccess={onSuccess}
+                openNextAppointment={openNextAppointment}
               />
             </div>
           </>
@@ -452,6 +532,7 @@ const ConsultBody = ({
               <NextAppointment
                 onClose={closeModal}
                 nextAppointment={nextAppointment}
+                allowance={isAllowed}
               />
             </div>
           </>
