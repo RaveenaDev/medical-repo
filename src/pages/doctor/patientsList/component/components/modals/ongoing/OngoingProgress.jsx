@@ -41,13 +41,13 @@ const OngoingProgress = ({ step, onClose }) => {
           <X size={20} onClick={onClose} />
         </div>
         <div className={styles.container}>
-          <h1 className={styles.title}>Ongoing Phase - {step?.data?.title}</h1>
+          <h1 className={styles.title}>Ongoing Phase - {step?.phase}</h1>
 
           <div className={styles.section1}>
             <div className={styles.row1}>
               <div className={styles.qna}>
                 <p className={styles.label1}>Phase:&nbsp;</p>
-                <p className={styles.value}>{step?.data?.title || "N/A"}</p>
+                <p className={styles.value}>{step?.phase || "N/A"}</p>
               </div>
               <div className={styles.qna}>
                 <p className={styles.label1}>Date:&nbsp;</p>

@@ -32,13 +32,13 @@ const OngoingModal = ({ step, onClose }) => {
   );
 };
 
-const ProgressTracker2 = ({ patientId }) => {
+const ProgressTracker2 = ({ patientId, caseId }) => {
   const dispatch = useDispatch();
   const [selectedStep, setSelectedStep] = useState(null);
   const [modalType, setModalType] = useState(null); // 'completed' or 'ongoing'
 
   useEffect(() => {
-    dispatch(getProgressTrackerDetails(patientId));
+    dispatch(getProgressTrackerDetails(patientId, caseId));
   }, [dispatch]);
 
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
@@ -110,7 +110,7 @@ const ProgressTracker2 = ({ patientId }) => {
               onClick={() => openModal(step)}
             >
               <div className={`${styles.tableCell} ${styles.phaseCell}`}>
-                {step?.data?.title || "Untitled Phase"}
+                {step?.phase || "Untitled Phase"}
               </div>
               <div className={`${styles.tableCell} ${styles.dateCell}`}>
                 {step?.date
