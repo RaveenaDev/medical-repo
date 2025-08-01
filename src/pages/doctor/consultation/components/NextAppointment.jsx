@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./NextAppointment.module.scss";
 import { X } from "lucide-react";
 import {useDispatch} from "react-redux";
-import {setOngoing} from "../../../../components/State/Doctor/Action.js";
+import {setOngoing, setReschedule} from "../../../../components/State/Doctor/Action.js";
 
 const NextAppointment = ({ onClose,nextAppointment,allowance,onStart }) => {
     const dispatch = useDispatch()
@@ -22,6 +22,11 @@ const NextAppointment = ({ onClose,nextAppointment,allowance,onStart }) => {
     const pat = {
         patientId: nextAppointment.patient._id
     };
+
+    const appt = {
+        appointmentId: nextAppointment._id
+    }
+
     const handleStartConsultation = () => {
         dispatch(setOngoing(pat)).then(() => {
             onClose();
@@ -33,7 +38,13 @@ const NextAppointment = ({ onClose,nextAppointment,allowance,onStart }) => {
     }
 
     const handleRescheduleConsultation = () => {
-
+        dispatch(setReschedule(appt)).then(() => {
+            onClose();
+            onStart();
+        })
+            .catch((err) => {
+                console.error("Reschedule failed:", err);
+            });
     }
 
   return (
@@ -102,7 +113,7 @@ const NextAppointment = ({ onClose,nextAppointment,allowance,onStart }) => {
                       allowance && (
                           <div className={styles.buttons}>
                               <button onClick={handleStartConsultation} className={styles.startBtn}>Start Consultation</button>
-                              <button className={styles.rescheduleBtn}>Reschedule</button>
+                              <button onClick={handleRescheduleConsultation} className={styles.rescheduleBtn}>Reschedule</button>
                           </div>
                       )
                   }

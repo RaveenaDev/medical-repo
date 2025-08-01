@@ -284,6 +284,8 @@ const ConsultBody = ({
         .then(() => {
           setCompleteData({});
           onSuccess(); // ✅ Will only run after dispatch finishes
+          setConfirmedSections([]);
+          setSelectedComponent("PatientInfo")
         })
         .catch((err) => {
           console.error("Submission failed:", err);
@@ -525,7 +527,9 @@ const ConsultBody = ({
                 modalData={modalData}
                 patient={ongoingAppointment.patient}
                 onSuccess={onSuccess}
+                setConfirmedSections={setConfirmedSections}
                 openNextAppointment={openNextAppointment}
+                setSelectedComponent={setSelectedComponent}
               />
             </div>
           </>
