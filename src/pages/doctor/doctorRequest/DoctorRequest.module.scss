@@ -181,3 +181,18 @@
   // flex-direction: column;
   // align-items: stretch;
 }
+
+.comingSoonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #f2f5ff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.comingSoonHeading {
+  font-size: 4vh;
+  color: #25307f;
+}

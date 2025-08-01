@@ -270,10 +270,21 @@
     margin: 0.5rem 0;
     padding: 0.75rem 1rem;
     border-radius: 5px;
-    height: 56vh;
+    height: 64vh;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    /* Hide scrollbar for Chrome, Safari, Opera */
+    &::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
 
     .admittedHeader {
       display: flex;
