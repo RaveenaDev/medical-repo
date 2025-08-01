@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {toast} from "react-toastify";
 import Complete from "./Complete.jsx";
 
-const Refer = ({ setCompleteData, onClose, modalData, patient, onSuccess,setConfirmedSections,openNextAppointment,setSelectedComponent}) => {
+const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSuccess,setConfirmedSections,openNextAppointment,setSelectedComponent}) => {
   //console.log("Modal Data: ", modalData);
 
   const dispatch = useDispatch();
@@ -163,7 +163,7 @@ const Refer = ({ setCompleteData, onClose, modalData, patient, onSuccess,setConf
             <>
               <div className={styles["backdrop-overlay"]} onClick={closeModal} />
               <div className={styles["complete-modal"]}>
-                <Complete onClose={closeModal} onComplete={handleSubmit} nextAppointment={openNextAppointment}/>
+                <Complete onClose={closeModal} onComplete={handleSubmit} nextAppointment={openNextAppointment} completeData={completeData}/>
               </div>
             </>
         ) : (
