@@ -58,7 +58,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
-  SET_ONGOING,
+  SET_ONGOING, SET_RESCHEDULE,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -789,7 +789,7 @@ export const getAppointmentByDate =
         },
       });
 
-      console.log("Fetching: ", data);
+      // console.log("Fetching: ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);
@@ -1588,6 +1588,27 @@ export const setOngoing = (patientId) => async (dispatch) => {
     // console.log("Ongoing app. successful : ", data);
 
     dispatch({ type: SET_ONGOING, payload: data });
+    return Promise.resolve(data); // 🔑 return promise
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error); // 🔑 return promise
+  }
+};
+
+export const setReschedule = (appointmentId) => async (dispatch) => {
+  // console.log("Pat: ", appointmentId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/send-to-last`, appointmentId, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Rescheduled app. successful : ", data);
+
+    dispatch({ type: SET_RESCHEDULE, payload: data });
     return Promise.resolve(data); // 🔑 return promise
   } catch (error) {
     console.log(error);

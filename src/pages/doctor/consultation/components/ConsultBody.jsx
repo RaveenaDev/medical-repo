@@ -284,6 +284,8 @@ const ConsultBody = ({
         .then(() => {
           setCompleteData({});
           onSuccess(); // ✅ Will only run after dispatch finishes
+          setConfirmedSections([]);
+          setSelectedComponent("PatientInfo")
         })
         .catch((err) => {
           console.error("Submission failed:", err);
@@ -511,7 +513,7 @@ const ConsultBody = ({
           <>
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["complete-modal"]}>
-              <Complete onClose={closeModal} onComplete={handleComplete} nextAppointment={openNextAppointment}/>
+              <Complete onClose={closeModal} onComplete={handleComplete} nextAppointment={openNextAppointment} completeData={completeData}/>
             </div>
           </>
         )}
@@ -522,10 +524,13 @@ const ConsultBody = ({
               <Refer
                 setCompleteData={setCompleteData}
                 onClose={closeModal}
+                completeData={completeData}
                 modalData={modalData}
                 patient={ongoingAppointment.patient}
                 onSuccess={onSuccess}
+                setConfirmedSections={setConfirmedSections}
                 openNextAppointment={openNextAppointment}
+                setSelectedComponent={setSelectedComponent}
               />
             </div>
           </>

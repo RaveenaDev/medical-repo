@@ -18,7 +18,7 @@ const CircularButton = styled(Button)(({ theme }) => ({
   borderRadius: "50%",
   minWidth: "unset",
   padding: "10px",
-  backgroundColor: 'white',
+  backgroundColor: "white",
   // boxShadow: theme.shadows[3],
   "&:hover": {
     backgroundColor: theme.palette.grey[300],
@@ -29,6 +29,7 @@ const CircularButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const comingSoon = true;
 const NotificationButton = ({ onClick, badgeContent }) => {
   return (
     <CircularButton onClick={onClick}>
@@ -105,7 +106,29 @@ const NotificationPopup = ({ onClose }) => {
         </Typography>
       </Box>
       <Divider />
-      {/* Notification List - Takes up remaining space */}
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          background: "#f2f5ff",
+          padding: "20px",
+          boxSizing: "border-box",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "4vh",
+            color: "#25307f",
+          }}
+        >
+          Coming Soon
+        </h1>
+      </div>
+
+      {/* Notification List - Takes up remaining space 
       <Box sx={{ flex: 1, overflowY: "auto", padding: "18px" }}>
         {notifications.map((notification) => (
           <Paper
@@ -122,9 +145,9 @@ const NotificationPopup = ({ onClose }) => {
             <Typography>{notification.text}</Typography>
           </Paper>
         ))}
-      </Box>
+    </Box>
 
-      {/* Footer - Sticks to the bottom */}
+      {/* Footer - Sticks to the bottom *}
       <Typography
         sx={{
           position: "absolute",
@@ -138,6 +161,7 @@ const NotificationPopup = ({ onClose }) => {
       >
         {notifications.length} New Notifications
       </Typography>
+      */}
     </Box>
   );
 };

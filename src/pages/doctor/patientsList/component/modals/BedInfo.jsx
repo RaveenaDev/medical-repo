@@ -14,6 +14,7 @@ import { getPatientBedInfo } from "../../../../../components/State/Doctor/Action
 
 const BedInfo = ({ onClose, patientId }) => {
   const dispatch = useDispatch();
+  const comingSoon = true;
   useEffect(() => {
     dispatch(getPatientBedInfo(patientId));
   }, []);
@@ -109,63 +110,70 @@ const BedInfo = ({ onClose, patientId }) => {
                     </div>
                   </div>
                 </div>
+                {comingSoon ? (
+                  <div className={styles.comingSoonContainer}>
+                    <h1 className={styles.comingSoonHeading}>Coming Soon</h1>
+                  </div>
+                ) : (
+                  <div>
+                    {/* Amenities */}
+                    <div className={styles.amenities}>
+                      <p className={styles.sectionHeading}>Amenities</p>
+                      <div className={styles.amenitiesBtnWrapper}>
+                        {[
+                          {
+                            label: "Private Bed",
+                            icon: "/assets/inpatient/bed.svg",
+                          },
+                          {
+                            label: "Attached Bathroom",
+                            icon: "/assets/inpatient/bathroom.svg",
+                          },
+                          { label: "AC", icon: "/assets/inpatient/ac.svg" },
+                          {
+                            label: "Meals Included",
+                            icon: "/assets/inpatient/meal.svg",
+                          },
+                        ].map(({ label, icon }) => (
+                          <button
+                            key={label}
+                            onClick={() => toggleAmenity(label)}
+                            className={`${styles.amenitiesBtn} ${
+                              selectedAmenities.includes(label)
+                                ? styles.activeAmenity
+                                : ""
+                            }`}
+                          >
+                            {label} <img src={icon} alt="" />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-                {/* Amenities */}
-                <div className={styles.amenities}>
-                  <p className={styles.sectionHeading}>Amenities</p>
-                  <div className={styles.amenitiesBtnWrapper}>
-                    {[
-                      {
-                        label: "Private Bed",
-                        icon: "/assets/inpatient/bed.svg",
-                      },
-                      {
-                        label: "Attached Bathroom",
-                        icon: "/assets/inpatient/bathroom.svg",
-                      },
-                      { label: "AC", icon: "/assets/inpatient/ac.svg" },
-                      {
-                        label: "Meals Included",
-                        icon: "/assets/inpatient/meal.svg",
-                      },
-                    ].map(({ label, icon }) => (
-                      <button
-                        key={label}
-                        onClick={() => toggleAmenity(label)}
-                        className={`${styles.amenitiesBtn} ${
-                          selectedAmenities.includes(label)
-                            ? styles.activeAmenity
-                            : ""
-                        }`}
-                      >
-                        {label} <img src={icon} alt="" />
+                    {/* Actions */}
+                    <div className={styles.actions}>
+                      <p className={styles.sectionHeading}>Actions</p>
+                      <div className={styles.actionBtns}>
+                        <button onClick={() => setActiveTab("transfer")}>
+                          Room Transfer Request{" "}
+                          <img src="/assets/transfer-line.svg" alt="" />
+                        </button>
+                        <button onClick={() => setActiveTab("attendent")}>
+                          Request Attendent Bed
+                          <img src="/assets/man.svg" alt="" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className={styles.submitBtnContainer1}>
+                      <button className={styles.blueBtn}>
+                        Confirm and Apply Changes
                       </button>
-                    ))}
+                      <button className={styles.whiteBtn}>Cancel</button>
+                    </div>
                   </div>
-                </div>
-
-                {/* Actions */}
-                <div className={styles.actions}>
-                  <p className={styles.sectionHeading}>Actions</p>
-                  <div className={styles.actionBtns}>
-                    <button onClick={() => setActiveTab("transfer")}>
-                      Room Transfer Request{" "}
-                      <img src="/assets/transfer-line.svg" alt="" />
-                    </button>
-                    <button onClick={() => setActiveTab("attendent")}>
-                      Request Attendent Bed
-                      <img src="/assets/man.svg" alt="" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className={styles.submitBtnContainer1}>
-                <button className={styles.blueBtn}>
-                  Confirm and Apply Changes
-                </button>
-                <button className={styles.whiteBtn}>Cancel</button>
+                )}{" "}
               </div>
             </div>
           </div>
