@@ -109,7 +109,7 @@ const PatientPreviousRecord = ({ patientDetails }) => {
         </div>
         <div className="patient-lastVisit">
           Last Visit:{" "}
-          {new Date(patientDetails.consultations[0].date).toLocaleDateString(
+          {new Date(patientDetails?.consultations[0]?.date).toLocaleDateString(
             "en-IN",
             {
               day: "2-digit",

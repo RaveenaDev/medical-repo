@@ -54,8 +54,8 @@ const Footer = () => {
       <div className="footer__divider"></div>
       <div className="footer__bottom">
         <div className="copyright-info">
-          <p> © Copyright 2024</p>
-          <p> All Rights Reserved by NaturaLeaf</p>
+          <p> © Copyright 2025</p>
+          <p> All Rights Reserved by Step Group of Companies</p>
         </div>
         <div className="footer__icons">
           <a
