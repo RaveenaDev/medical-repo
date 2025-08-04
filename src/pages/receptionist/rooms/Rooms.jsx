@@ -185,7 +185,7 @@ const Rooms = (props) => {
   const handleAddBed = () => {
     setFormData({
       ...formData,
-      beds: [...formData.beds, { bedId: "", status: "", cost: "" }],
+      beds: [...formData.beds, { bedId: "", status: "", cost: ""}],
     });
   };
 
@@ -550,12 +550,16 @@ const Rooms = (props) => {
                                     margin="dense"
                                     error={!!errors[`status-${index}`]}
                                 >
-                                  <InputLabel>Status</InputLabel>
+                                  <InputLabel id="status-select-label">Status</InputLabel>
                                   <Select
+                                      labelId="status-select-label"
+                                      id="status-select"
+                                      name="status"
                                       value={bed.status}
                                       onChange={(e) =>
                                           handleBedChange(index, "status", e.target.value)
                                       }
+                                      label="Status"
                                   >
                                     <MenuItem value="Available">Available</MenuItem>
                                     <MenuItem value="Occupied">Occupied</MenuItem>
@@ -570,6 +574,35 @@ const Rooms = (props) => {
                                   )}
                                 </FormControl>
                               </Grid>
+                              {/*<Grid xs={3} sx={{width:'22%'}}>*/}
+                              {/*  <FormControl*/}
+                              {/*      fullWidth*/}
+                              {/*      margin="dense"*/}
+                              {/*      error={!!errors[`status-${index}`]}*/}
+                              {/*  >*/}
+                              {/*    <InputLabel>Bed Type</InputLabel>*/}
+                              {/*    <Select*/}
+                              {/*        value={bed.bedType}*/}
+                              {/*        onChange={(e) =>*/}
+                              {/*            handleBedChange(index, "bedType", e.target.value)*/}
+                              {/*        }*/}
+                              {/*        label="Status"*/}
+                              {/*    >*/}
+                              {/*      <MenuItem value="ICU">ICU</MenuItem>*/}
+                              {/*      <MenuItem value="General">General</MenuItem>*/}
+                              {/*      <MenuItem value="Private">Private</MenuItem>*/}
+                              {/*      <MenuItem value="Semi-Private">Semi-Private</MenuItem>*/}
+                              {/*      <MenuItem value="Emergency">Emergency</MenuItem>*/}
+                              {/*      <MenuItem value="Pediatric">Pediatric</MenuItem>*/}
+                              {/*      <MenuItem value="Maternity">Maternity</MenuItem>*/}
+                              {/*    </Select>*/}
+                              {/*    {errors[`status-${index}`] && (*/}
+                              {/*        <Typography variant="caption" color="error">*/}
+                              {/*          {errors[`status-${index}`]}*/}
+                              {/*        </Typography>*/}
+                              {/*    )}*/}
+                              {/*  </FormControl>*/}
+                              {/*</Grid>*/}
                               <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>
                                 {formData.beds.length > 1 && (
                                     <Button
