@@ -10,7 +10,6 @@ import { getDoctorRequests } from "../../../components/State/Doctor/Action.js";
 
 const DoctorRequest = () => {
   const now = dayjs();
-  const comingSoon = true;
   const yesterday = now.subtract(1, "day");
   function groupRequestsByDay(requests) {
     const groups = {};
@@ -106,154 +105,147 @@ const DoctorRequest = () => {
   return (
     <div>
       <CommonPanelMini />
-
-      {comingSoon ? (
-        <div className={styles.comingSoonContainer}>
-          <h1 className={styles.comingSoonHeading}>Coming Soon</h1>
-        </div>
-      ) : (
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <div className={styles.leftHeader}>
-              <div className={styles.backBtn}>
-                <ChevronLeft onClick={handleBackButton} />
-              </div>
-              <span>Request</span>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.leftHeader}>
+            <div className={styles.backBtn}>
+              <ChevronLeft onClick={handleBackButton} />
             </div>
-            <div className={styles.rightHeader}>
-              <button onClick={openNewRequest}>
-                <SquarePen size={18} />
-                <span>New Request</span>
-              </button>
-            </div>
+            <span>Request</span>
           </div>
-          <div className={styles.content}>
-            <div className={styles.selection}>
-              <div
-                onClick={() => handleActive()}
-                className={selectedTab === "active" ? styles.selectedTab : ""}
-              >
-                <span>Active Request</span>
-              </div>
-              <div
-                onClick={() => handleInactive()}
-                className={selectedTab === "inactive" ? styles.selectedTab : ""}
-                style={{ cursor: "pointer" }}
-              >
-                <span>Inactive Request</span>
-              </div>
-            </div>
-
-            {activeModal === "NewRequest" && (
-              <>
-                <div
-                  className={styles["backdrop-overlay"]}
-                  onClick={closeModal}
-                />
-                <div className={styles["newRequest"]}>
-                  <DoctorNewRequest onClose={closeModal} />
-                </div>
-              </>
-            )}
-
-            {filteredRequests.length === 0 ? (
-              <div className={styles.noData}>
-                <p>No requests found.</p>
-              </div>
-            ) : (
-              <div className={styles.activeReq}>
-                {selectedTab === "active" &&
-                  Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
-                    <div key={dayLabel} className={styles.dateSection}>
-                      <p>{dayLabel}</p>
-                      {reqs.map((req) => (
-                        <div
-                          key={req.id}
-                          onClick={handleRequestDetail}
-                          className={`${styles.requestItem} ${
-                            req.background === "blue"
-                              ? styles.blueBackground
-                              : styles.grayBackground
-                          }`}
-                        >
-                          <img
-                            src={req.avatarUrl}
-                            alt="avatar"
-                            className={styles.avatar}
-                          />
-                          <div className={styles.reqContent}>
-                            <div
-                              className={`styles.message ${
-                                req.background === "blue"
-                                  ? styles.blueText
-                                  : styles.message
-                              }`}
-                            >
-                              {req.message}
-                            </div>
-                            <div
-                              className={`styles.subText ${
-                                req.background === "blue"
-                                  ? styles.blueSubText
-                                  : styles.subText
-                              }`}
-                            >
-                              {req.requester} ({req.role}) has requested on{" "}
-                              {dayjs(req.requestedOn).format(
-                                "dddd, D MMM at h:mm A"
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-
-                {selectedTab === "inactive" &&
-                  Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
-                    <div key={dayLabel} className={styles.dateSection}>
-                      <p>{dayLabel}</p>
-                      {reqs.map((req) => (
-                        <div
-                          key={req.id}
-                          onClick={handleRequestDetail}
-                          className={`${styles.requestItem} ${
-                            req.background === "blue"
-                              ? styles.blueBackground
-                              : styles.grayBackground
-                          }`}
-                        >
-                          <img
-                            src={req.avatarUrl}
-                            alt="avatar"
-                            className={styles.avatar}
-                          />
-                          <div className={styles.reqContent}>
-                            <div
-                              className={`${
-                                req.target === true
-                                  ? styles.TLMessage
-                                  : styles.message
-                              }`}
-                            >
-                              {req.message}
-                            </div>
-                            <div className={styles.subText}>
-                              {req.requester} ({req.role}) has requested on{" "}
-                              {dayjs(req.requestedOn).format(
-                                "dddd, D MMM at h:mm A"
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-              </div>
-            )}
+          <div className={styles.rightHeader}>
+            <button onClick={openNewRequest}>
+              <SquarePen size={18} />
+              <span>New Request</span>
+            </button>
           </div>
         </div>
-      )}
+        <div className={styles.content}>
+          <div className={styles.selection}>
+            <div
+              onClick={() => handleActive()}
+              className={selectedTab === "active" ? styles.selectedTab : ""}
+            >
+              <span>Active Request</span>
+            </div>
+            <div
+              onClick={() => handleInactive()}
+              className={selectedTab === "inactive" ? styles.selectedTab : ""}
+              style={{ cursor: "pointer" }}
+            >
+              <span>Inactive Request</span>
+            </div>
+          </div>
+
+          {activeModal === "NewRequest" && (
+            <>
+              <div
+                className={styles["backdrop-overlay"]}
+                onClick={closeModal}
+              />
+              <div className={styles["newRequest"]}>
+                <DoctorNewRequest onClose={closeModal} />
+              </div>
+            </>
+          )}
+
+          {filteredRequests.length === 0 ? (
+            <div className={styles.noData}>
+              <p>No requests found.</p>
+            </div>
+          ) : (
+            <div className={styles.activeReq}>
+              {selectedTab === "active" &&
+                Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
+                  <div key={dayLabel} className={styles.dateSection}>
+                    <p>{dayLabel}</p>
+                    {reqs.map((req) => (
+                      <div
+                        key={req.id}
+                        onClick={handleRequestDetail}
+                        className={`${styles.requestItem} ${
+                          req.background === "blue"
+                            ? styles.blueBackground
+                            : styles.grayBackground
+                        }`}
+                      >
+                        <img
+                          src={req.avatarUrl}
+                          alt="avatar"
+                          className={styles.avatar}
+                        />
+                        <div className={styles.reqContent}>
+                          <div
+                            className={`styles.message ${
+                              req.background === "blue"
+                                ? styles.blueText
+                                : styles.message
+                            }`}
+                          >
+                            {req.message}
+                          </div>
+                          <div
+                            className={`styles.subText ${
+                              req.background === "blue"
+                                ? styles.blueSubText
+                                : styles.subText
+                            }`}
+                          >
+                            {req.requester} ({req.role}) has requested on{" "}
+                            {dayjs(req.requestedOn).format(
+                              "dddd, D MMM at h:mm A"
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+
+              {selectedTab === "inactive" &&
+                Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
+                  <div key={dayLabel} className={styles.dateSection}>
+                    <p>{dayLabel}</p>
+                    {reqs.map((req) => (
+                      <div
+                        key={req.id}
+                        onClick={handleRequestDetail}
+                        className={`${styles.requestItem} ${
+                          req.background === "blue"
+                            ? styles.blueBackground
+                            : styles.grayBackground
+                        }`}
+                      >
+                        <img
+                          src={req.avatarUrl}
+                          alt="avatar"
+                          className={styles.avatar}
+                        />
+                        <div className={styles.reqContent}>
+                          <div
+                            className={`${
+                              req.target === true
+                                ? styles.TLMessage
+                                : styles.message
+                            }`}
+                          >
+                            {req.message}
+                          </div>
+                          <div className={styles.subText}>
+                            {req.requester} ({req.role}) has requested on{" "}
+                            {dayjs(req.requestedOn).format(
+                              "dddd, D MMM at h:mm A"
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
