@@ -25,7 +25,7 @@ export const combineDateAndTime = (dateStr, timeStr) => {
   }
 };
 
-const MedAdminRecord = ({ patientId }) => {
+const MedAdminRecord = ({ patientId, caseId }) => {
   const dispatch = useDispatch();
   const [selectedRecordId, setSelectedRecordId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -117,7 +117,11 @@ const MedAdminRecord = ({ patientId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.updateModal}>
-            <UpdateMAR onClose={closeModal} patientId={patientId} />
+            <UpdateMAR
+              onClose={closeModal}
+              caseId={caseId}
+              patientId={patientId}
+            />
           </div>
         </>
       )}
@@ -129,6 +133,7 @@ const MedAdminRecord = ({ patientId }) => {
               onClose={closeModal}
               recordId={selectedRecordId}
               patientId={patientId}
+              caseId={caseId}
             />
           </div>
         </>

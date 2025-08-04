@@ -33,7 +33,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   useEffect(() => {
     // Whenever the location state changes, update the caseId
     setCaseId(location.state?.caseId);
-    console.log("caseId updated:", caseId); // Optional, for logging
+    // console.log("caseId updated:", caseId); // Optional, for logging
   }, [location.state]);
   const [activeTab, setActiveTab] = useState("medical admin");
   const [activePatientInfo, setActivePatientInfo] = useState(true);
@@ -373,7 +373,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
           </div>
           <div className={styles.content}>
             {activeTab === "medical admin" && (
-              <MedAdminRecord patientId={patientId} />
+              <MedAdminRecord patientId={patientId} caseId={caseId} />
             )}
             {activeTab === "nursing" && <Nursing patientId={patientId} />}
             {activeTab === "past reports" && (
