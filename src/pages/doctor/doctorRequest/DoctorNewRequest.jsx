@@ -1,11 +1,10 @@
 import styles from "./DoctorNewRequest.module.scss";
 import { X } from "lucide-react";
-import {useState} from "react";
-import {useDispatch} from "react-redux";
-import {createDoctorRequests} from "../../../components/State/Doctor/Action.js";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createDoctorRequests } from "../../../components/State/Doctor/Action.js";
 const DoctorNewRequest = ({ onClose }) => {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -28,10 +27,10 @@ const DoctorNewRequest = ({ onClose }) => {
       createdAt: new Date().toISOString(),
     };
 
-    console.log("Payload: ",payload)
-    dispatch(createDoctorRequests(payload))
+    // console.log("Payload: ", payload);
+    dispatch(createDoctorRequests(payload));
     onClose();
-  }
+  };
 
   return (
     <div>
@@ -62,44 +61,46 @@ const DoctorNewRequest = ({ onClose }) => {
           <div>
             <h4>Order</h4>
             <input
-                name="title"
-                placeholder="Place an Order"
-                value={formData.title}
-                onChange={handleChange}
+              name="title"
+              placeholder="Place an Order"
+              value={formData.title}
+              onChange={handleChange}
             />
           </div>
           <div>
             <h4>Quantity</h4>
             <input
-                name="quantity"
-                type="text"
-                placeholder="Net Quantity"
-                value={formData.quantity}
-                onChange={handleChange}
+              name="quantity"
+              type="text"
+              placeholder="Net Quantity"
+              value={formData.quantity}
+              onChange={handleChange}
             />
           </div>
           <div>
             <h4>Timeline</h4>
             <input
-                name="timeline"
-                type="text"
-                placeholder="Duration of the Order"
-                value={formData.timeline}
-                onChange={handleChange}
+              name="timeline"
+              type="text"
+              placeholder="Duration of the Order"
+              value={formData.timeline}
+              onChange={handleChange}
             />
           </div>
           <div>
             <h4>Purpose</h4>
             <input
-                name="purpose"
-                type="text"
-                placeholder="Purpose of Order"
-                value={formData.purpose}
-                onChange={handleChange}
+              name="purpose"
+              type="text"
+              placeholder="Purpose of Order"
+              value={formData.purpose}
+              onChange={handleChange}
             />
           </div>
         </div>
-        <button className={styles.reqBtn} onClick={handleRequest}>Request</button>
+        <button className={styles.reqBtn} onClick={handleRequest}>
+          Request
+        </button>
       </div>
     </div>
   );

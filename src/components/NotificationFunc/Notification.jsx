@@ -118,14 +118,15 @@ const NotificationPopup = ({ onClose }) => {
           boxSizing: "border-box",
         }}
       >
-        <h1
+        <p
           style={{
-            fontSize: "4vh",
+            fontSize: "3vh",
+            fontWeight: "500",
             color: "#25307f",
           }}
         >
           Coming Soon
-        </h1>
+        </p>
       </div>
 
       {/* Notification List - Takes up remaining space 

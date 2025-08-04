@@ -173,6 +173,8 @@ export const getRooms = () => async (dispatch) => {
       },
     });
 
+    // console.log("Rooms: ",data)
+
     dispatch({ type: GET_ROOMS, payload: data });
   } catch (error) {
     console.log(error);
