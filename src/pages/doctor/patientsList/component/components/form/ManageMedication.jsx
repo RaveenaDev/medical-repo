@@ -7,7 +7,7 @@ import {
   updateMedicationAdministration,
 } from "../../../../../../components/State/Doctor/Action";
 import { useDispatch, useSelector } from "react-redux";
-const ManageMedication = ({ onClose, recordId, patientId }) => {
+const ManageMedication = ({ onClose, recordId, patientId, caseId }) => {
   const [activeTab, setActiveTab] = useState(false); // true = reschedule, false = mark given
 
   const dispatch = useDispatch();
