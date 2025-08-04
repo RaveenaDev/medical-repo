@@ -4,7 +4,7 @@ import { ChevronDown, ChevronUp, Plus, X, Trash2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { addMedicalAdministration } from "../../../../../../components/State/Doctor/Action";
 
-const UpdateMAR = ({ onClose, patientId }) => {
+const UpdateMAR = ({ onClose, patientId, caseId }) => {
   const dispatch = useDispatch();
   const [medications, setMedications] = useState([
     {
@@ -52,6 +52,7 @@ const UpdateMAR = ({ onClose, patientId }) => {
     try {
       const payload = {
         patient: patientId,
+        caseId: caseId,
         medications: medications.map((med) => ({
           medication: med.medication,
           dose: med.dose,

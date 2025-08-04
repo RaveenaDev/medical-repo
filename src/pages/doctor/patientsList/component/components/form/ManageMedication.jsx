@@ -24,6 +24,7 @@ const ManageMedication = ({ onClose, recordId, patientId }) => {
     try {
       const body = {
         recordId,
+        caseId: caseId,
         action: actionType,
       };
 
