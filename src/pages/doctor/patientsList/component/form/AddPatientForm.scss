@@ -198,6 +198,17 @@
   gap: 0.5rem;
 }
 
+.radio-group1 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  input{
+    transform: translateY(2px);
+    margin-right: 2px;
+  }
+}
+
 .patient-type-toggle {
   display: flex;
   gap: 2rem;
