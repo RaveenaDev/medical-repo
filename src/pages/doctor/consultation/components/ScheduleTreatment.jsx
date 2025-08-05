@@ -3,7 +3,7 @@ import styles from "./ScheduleTreatment.module.scss";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAllDoctors,
+  getAllDoctors, removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
 
@@ -56,6 +56,7 @@ const ScheduleTreatment = ({
     dispatch(submitConsultation(finalData, onSuccess, onClose));
     setConfirmedSections([]);
     setSelectedComponent("PatientInfo")
+    dispatch(removePrescriptionsWithAI());
     setCompleteData({});
   };
 
