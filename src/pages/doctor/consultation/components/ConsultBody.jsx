@@ -566,6 +566,8 @@ const ConsultBody = ({
                 setCompleteData={setCompleteData}
                 onClose={closeModal}
                 onAddSection={handleAddSection}
+                setConfirmedSections={setConfirmedSections}
+                setSelectedComponent={setSelectedComponent}
                 modalData={modalData}
                 onSuccess={onSuccess}
               />

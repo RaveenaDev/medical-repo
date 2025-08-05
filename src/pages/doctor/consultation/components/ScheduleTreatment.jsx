@@ -10,6 +10,8 @@ import {
 const ScheduleTreatment = ({
   setCompleteData,
   onClose,
+    setConfirmedSections,
+    setSelectedComponent,
   modalData,
   onSuccess,
 }) => {
@@ -52,6 +54,8 @@ const ScheduleTreatment = ({
     };
     // console.log("Final Schedule Treatment Data: ", finalData);
     dispatch(submitConsultation(finalData, onSuccess, onClose));
+    setConfirmedSections([]);
+    setSelectedComponent("PatientInfo")
     setCompleteData({});
   };
 
