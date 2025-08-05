@@ -143,6 +143,8 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
         <CompletedProgress
           step={selectedStep}
           onClose={() => setSelectedStep(null)}
+          patientId={patientId}
+          caseId={caseId}
         />
       )}
 
@@ -151,6 +153,8 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
         <OngoingProgress
           step={selectedStep}
           onClose={() => setSelectedStep(null)}
+          patientId={patientId}
+          caseId={caseId}
         />
       )}
     </div>

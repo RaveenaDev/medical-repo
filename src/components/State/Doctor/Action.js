@@ -1644,3 +1644,28 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
     throw error;
   }
 };
+export const updateProgressTrackerPhase =
+  (payload, patientId, caseId, phaseId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const { data } = await axios.put(
+        `${API_URL}/updatePhase/${phaseId}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log("Progress phase UPDATED", data);
+      dispatch(getProgressTrackerDetails(patientId, caseId));
+      toast.success("Progress updated Successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Update progress phase POST error:", error);
+
+      throw error;
+    }
+  };
