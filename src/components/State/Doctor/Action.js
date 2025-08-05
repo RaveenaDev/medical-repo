@@ -42,6 +42,7 @@ import {
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BED_INFO,
+  GET_PATIENT_BILLS,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -58,7 +59,8 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
-  SET_ONGOING, SET_RESCHEDULE,
+  SET_ONGOING,
+  SET_RESCHEDULE,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -1048,7 +1050,6 @@ export const submitConsultation =
       });
 
       return Promise.resolve(data); // 🔑 return promise
-
     } catch (error) {
       console.log(error);
       toast.error("Please Confirm all the fields!", {
@@ -1600,11 +1601,15 @@ export const setReschedule = (appointmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/send-to-last`, appointmentId, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/send-to-last`,
+      appointmentId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
     // console.log("Rescheduled app. successful : ", data);
 
@@ -1613,5 +1618,27 @@ export const setReschedule = (appointmentId) => async (dispatch) => {
   } catch (error) {
     console.log(error);
     return Promise.reject(error); // 🔑 return promise
+  }
+};
+
+export const getBillsByPatientId = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/getBillsByPatient/${patientId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    //console.log("Bill INFO", data);
+    dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
+  } catch (error) {
+    console.error("patient Bill Info not available:", error);
+
+    throw error;
   }
 };

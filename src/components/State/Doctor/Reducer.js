@@ -36,6 +36,7 @@ import {
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BED_INFO,
+  GET_PATIENT_BILLS,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -90,7 +91,7 @@ const initialState = {
   appointmentRequests: [],
   events: [],
   monthlyEvents: [],
-
+  patientBills: [],
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
@@ -476,6 +477,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         roomsAvailable: action.payload,
+      };
+
+    case GET_PATIENT_BILLS:
+      return {
+        ...state,
+        patientsBills: action.payload,
       };
     default:
       return state;

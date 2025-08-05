@@ -1,6 +1,24 @@
+import { useLocation } from "react-router-dom";
 import styles from "./BillingDetails.module.scss";
 import { ChevronLeft } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { getBillsByPatientId } from "../../../../../components/State/Doctor/Action";
+import { useEffect } from "react";
 const BillingDetails = ({ onClose }) => {
+  const location = useLocation();
+  const { patientId } = location.state || {};
+
+  //console.log("Patient Id", patientId);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBillsByPatientId(patientId));
+  }, [patientId]);
+
+  const patientBills = useSelector((state) => state.doctor.patientsBills);
+
+  console.log("Patient Bills", patientBills);
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
