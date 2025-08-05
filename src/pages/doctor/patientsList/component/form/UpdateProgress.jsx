@@ -35,6 +35,14 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
     }));
     setSelectedFiles((prev) => [...prev, ...imageFiles]);
   };
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
 
   const handleRemoveFile = (index) => {
     setSelectedFiles((prev) => {
@@ -43,26 +51,32 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
     });
   };
   const handleSubmit = async () => {
-    if (!caseId || !patientId || !selectedPhase || !doctor) {
+    if (!selectedPhase || !doctor) {
       alert("Please fill all required fields.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("caseId", caseId);
-    formData.append("patient", patientId);
-    formData.append("title", selectedPhase);
-    formData.append("date", date);
-    formData.append("assignedDoctor", doctor);
-    formData.append("description", description);
-    formData.append("isDone", false);
-    formData.append("isFinalPhase", isFinalPhase);
+    // Option 2 (optional): Convert files to base64 (uncomment if needed)
+    const filesBase64 = await Promise.all(
+      selectedFiles.map(async (item) => ({
+        name: item.file.name,
+        type: item.file.type,
+        content: await fileToBase64(item.file),
+      }))
+    );
 
-    selectedFiles.forEach((item, index) => {
-      formData.append("files", item.file); // key must match backend field
-    });
+    const payload = {
+      caseId,
+      patient: patientId,
+      title: selectedPhase,
+      date: `${date}T${new Date().toTimeString().slice(0, 5)}`,
+      assignedDoctor: doctor,
+      description,
+      isFinalPhase,
+      files: filesBase64,
+    };
 
-    dispatch(addProgressTrackerPhase(formData, patientId));
+    dispatch(addProgressTrackerPhase(payload, patientId, caseId));
     onClose();
   };
 

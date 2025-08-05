@@ -5,7 +5,7 @@ import { Box, TextField } from "@mui/material";
 import { fontSize, styled } from "@mui/system";
 import {
   getAllDepartments,
-  getAllDoctors,
+  getAllDoctors, removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -154,6 +154,7 @@ const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSu
         .catch((err) => {
           console.error("Submission failed:", err);
         });
+    dispatch(removePrescriptionsWithAI());
     openNextAppointment(true);
   };
 

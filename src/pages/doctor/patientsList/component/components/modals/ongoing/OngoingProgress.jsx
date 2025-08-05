@@ -1,15 +1,25 @@
 import React, { useState } from "react";
 import { X, Trash2 } from "lucide-react";
 import styles from "./OngoingProgress.module.scss";
+import { useDispatch } from "react-redux";
+import { updateProgressTrackerPhase } from "../../../../../../../components/State/Doctor/Action";
 
-const OngoingProgress = ({ step, onClose }) => {
+const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
+  const dispatch = useDispatch();
   const [isFinal, setIsFinal] = useState(false);
   const [note, setNote] = useState("");
   const [treatment, setTreatment] = useState("");
   const [files, setFiles] = useState([]);
   const [additionalFields, setAdditionalFields] = useState([]);
   const [showAddField, setShowAddField] = useState(false);
-
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files).map((file) => ({
       name: file.name,
@@ -33,7 +43,30 @@ const OngoingProgress = ({ step, onClose }) => {
     updated[index][key] = value;
     setAdditionalFields(updated);
   };
+  const handleSaveClick = async () => {
+    const newFiles = await Promise.all(
+      files.map(async (item) => ({
+        name: item.name,
+        content: await fileToBase64(item.file),
+        type: item.file.type,
+      }))
+    );
+    const phaseId = step.sourceId;
 
+    const payload = {
+      isFinal,
+      isDone: true,
+      description: note,
+      files: newFiles,
+      treatment,
+      additionalFields,
+      date: new Date().toISOString(), // Send updated timestamp
+    };
+    dispatch(updateProgressTrackerPhase(payload, patientId, caseId, phaseId));
+    onClose(); // Close modal
+  };
+
+  // console.log("Ongoing Progress Step: ", step);
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
@@ -41,13 +74,13 @@ const OngoingProgress = ({ step, onClose }) => {
           <X size={20} onClick={onClose} />
         </div>
         <div className={styles.container}>
-          <h1 className={styles.title}>Ongoing Phase - {step?.phase}</h1>
+          <h1 className={styles.title}>Ongoing Phase - {step?.title}</h1>
 
           <div className={styles.section1}>
             <div className={styles.row1}>
               <div className={styles.qna}>
                 <p className={styles.label1}>Phase:&nbsp;</p>
-                <p className={styles.value}>{step?.phase || "N/A"}</p>
+                <p className={styles.value}>{step?.title || "N/A"}</p>
               </div>
               <div className={styles.qna}>
                 <p className={styles.label1}>Date:&nbsp;</p>
@@ -57,16 +90,12 @@ const OngoingProgress = ({ step, onClose }) => {
                     : "N/A"}
                 </p>
               </div>
-            </div>
-
-            <div className={styles.row1}>
-              <div>
-                <p className={styles.label1}>Doctor:</p>
+              <div className={styles.qna}>
+                <p className={styles.label1}>Doctor:&nbsp;</p>
                 <p className={styles.value}>{step?.doctor?.name || "N/A"}</p>
               </div>
             </div>
           </div>
-
           <div className={styles.checkboxContainer}>
             <label className={styles.checkboxLabel}>
               <input
@@ -89,21 +118,7 @@ const OngoingProgress = ({ step, onClose }) => {
                 onChange={(e) => setNote(e.target.value)}
               />
             </div>
-
             <div className={styles.descriptionContainer}>
-              <p className={styles.label}>Treatment</p>
-              <textarea
-                className={styles.textarea}
-                placeholder="Enter treatment details"
-                value={treatment}
-                rows={4}
-                onChange={(e) => setTreatment(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className={styles.uploadedFiles}>
-            <div className={styles.uploadFilesContainer}>
               <h6 className={styles.label}>Upload New Files</h6>
               <div className={styles.uploadBox}>
                 <p className={styles.uploadPrompt}>
@@ -146,38 +161,47 @@ const OngoingProgress = ({ step, onClose }) => {
                   </li>
                 ))}
               </ul>
+              {/* Show already uploaded backend files */}
+              {step?.data?.files?.length > 0 && (
+                <div className={styles.uploadedFiles}>
+                  <p className={styles.label}>Existing Files</p>
+                  <ul className={styles.uploadedFilesWrapper}>
+                    {step.data.files.map((file, idx) => (
+                      <li key={idx} className={styles.fileRow}>
+                        <img
+                          src="/assets/fileIcon.svg"
+                          alt="File"
+                          className={styles.fileIcon}
+                        />
+                        <div className={styles.fileDetails}>
+                          <a
+                            href={file}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.fileName}
+                          >
+                            {file.split("/").pop()}
+                          </a>
+                          <span className={styles.uploadedText}>Uploaded</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Show already uploaded backend files */}
-          {step?.data?.files?.length > 0 && (
-            <div className={styles.uploadedFiles}>
-              <p className={styles.label}>Existing Files</p>
-              <ul className={styles.uploadedFilesWrapper}>
-                {step.data.files.map((file, idx) => (
-                  <li key={idx} className={styles.fileRow}>
-                    <img
-                      src="/assets/fileIcon.svg"
-                      alt="File"
-                      className={styles.fileIcon}
-                    />
-                    <div className={styles.fileDetails}>
-                      <a
-                        href={file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.fileName}
-                      >
-                        {file.split("/").pop()}
-                      </a>
-                      <span className={styles.uploadedText}>Uploaded</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
+          <div className={styles.treatmentContainer}>
+            <p className={styles.label}>Treatment</p>
+            <textarea
+              className={styles.textarea}
+              placeholder="Enter treatment details"
+              value={treatment}
+              rows={4}
+              onChange={(e) => setTreatment(e.target.value)}
+            />
+          </div>
           {/* Add Additional Info */}
           <div style={{ marginTop: "2vh" }}>
             <button
@@ -237,8 +261,7 @@ const OngoingProgress = ({ step, onClose }) => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                // ⬇️ handleSubmit here
-                alert("Submitted!");
+                handleSaveClick();
               }}
             >
               Save & Close

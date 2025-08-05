@@ -3,13 +3,15 @@ import styles from "./ScheduleTreatment.module.scss";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAllDoctors,
+  getAllDoctors, removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
 
 const ScheduleTreatment = ({
   setCompleteData,
   onClose,
+    setConfirmedSections,
+    setSelectedComponent,
   modalData,
   onSuccess,
 }) => {
@@ -52,6 +54,9 @@ const ScheduleTreatment = ({
     };
     // console.log("Final Schedule Treatment Data: ", finalData);
     dispatch(submitConsultation(finalData, onSuccess, onClose));
+    setConfirmedSections([]);
+    setSelectedComponent("PatientInfo")
+    dispatch(removePrescriptionsWithAI());
     setCompleteData({});
   };
 

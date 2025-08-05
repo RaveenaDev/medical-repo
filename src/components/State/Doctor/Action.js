@@ -42,6 +42,7 @@ import {
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BED_INFO,
+  GET_PATIENT_BILLS,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -58,7 +59,8 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
-  SET_ONGOING, SET_RESCHEDULE,
+  SET_ONGOING,
+  SET_RESCHEDULE,
   SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
@@ -1048,7 +1050,6 @@ export const submitConsultation =
       });
 
       return Promise.resolve(data); // 🔑 return promise
-
     } catch (error) {
       console.log(error);
       toast.error("Please Confirm all the fields!", {
@@ -1287,6 +1288,8 @@ export const admitPatient = (requestId) => async (dispatch) => {
       position: "bottom-right",
       autoClose: 2000,
     });
+    dispatch(getAdmissionRequests());
+    dispatch(getAdmittedPatients());
   } catch (error) {
     console.error("Error Admitting patient:", error);
     toast.error(error?.response?.data?.message || "Admission failed");
@@ -1450,10 +1453,9 @@ export const getPatientBedInfo = (patientId) => async (dispatch) => {
 };
 
 export const addProgressTrackerPhase =
-  (payload, patientId) => async (dispatch) => {
+  (payload, patientId, caseId) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
-
       const { data } = await axios.post(
         `${API_URL}/addProgressPhase`,
         payload,
@@ -1464,7 +1466,9 @@ export const addProgressTrackerPhase =
           },
         }
       );
-      dispatch(getProgressTrackerDetails(patientId));
+      // console.log("CASE ID", caseId);
+      // console.log("Progress phase added", data);
+      dispatch(getProgressTrackerDetails(patientId, caseId));
       toast.success("progress added Successfully!", {
         position: "bottom-right",
         autoClose: 2000,
@@ -1482,7 +1486,6 @@ export const dischargePatient = (payload) => async (dispatch) => {
     const { data } = await axios.post(`${API_URL}/dischargePatient`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     });
     // console.log(data);
@@ -1600,11 +1603,15 @@ export const setReschedule = (appointmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/send-to-last`, appointmentId, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/send-to-last`,
+      appointmentId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
     // console.log("Rescheduled app. successful : ", data);
 
@@ -1615,3 +1622,50 @@ export const setReschedule = (appointmentId) => async (dispatch) => {
     return Promise.reject(error); // 🔑 return promise
   }
 };
+
+export const getBillsByPatientId = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/getBillsByPatient/${patientId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    //console.log("Bill INFO", data);
+    dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
+  } catch (error) {
+    console.error("patient Bill Info not available:", error);
+
+    throw error;
+  }
+};
+export const updateProgressTrackerPhase =
+  (payload, patientId, caseId, phaseId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const { data } = await axios.put(
+        `${API_URL}/updatePhase/${phaseId}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log("Progress phase UPDATED", data);
+      dispatch(getProgressTrackerDetails(patientId, caseId));
+      toast.success("Progress updated Successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Update progress phase POST error:", error);
+
+      throw error;
+    }
+  };

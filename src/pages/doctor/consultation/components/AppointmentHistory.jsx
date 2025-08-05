@@ -25,8 +25,8 @@ const AppointmentHistory = ({ onBack }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log("Page: ",page)
-    console.log("Rows: ",rowsPerPage)
+    // console.log("Page: ",page)
+    // console.log("Rows: ",rowsPerPage)
     dispatch(getAppointmentHistory(page, rowsPerPage,filteredDays));
   }, [dispatch,page, rowsPerPage,filteredDays]);
 

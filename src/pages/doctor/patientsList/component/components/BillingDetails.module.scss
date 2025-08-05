@@ -51,9 +51,19 @@
   text-align: center;
 }
 
-.status {
+.paid {
   @extend .value2;
   color: #3db461;
+  font-weight: 600;
+}
+.pending {
+  @extend .value2;
+  color: #f6a600;
+  font-weight: 600;
+}
+.unknown {
+  @extend .value2;
+  color: #878787;
   font-weight: 600;
 }
 .s1row1 {

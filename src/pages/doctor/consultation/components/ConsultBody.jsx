@@ -13,7 +13,7 @@ import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  generatePrescriptionsWithAI,
+  generatePrescriptionsWithAI, removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
 import CustomComponent from "./CustomComponent.jsx";
@@ -290,6 +290,7 @@ const ConsultBody = ({
         .catch((err) => {
           console.error("Submission failed:", err);
         });
+    dispatch(removePrescriptionsWithAI());
     openNextAppointment(true);
   };
 
@@ -566,6 +567,8 @@ const ConsultBody = ({
                 setCompleteData={setCompleteData}
                 onClose={closeModal}
                 onAddSection={handleAddSection}
+                setConfirmedSections={setConfirmedSections}
+                setSelectedComponent={setSelectedComponent}
                 modalData={modalData}
                 onSuccess={onSuccess}
               />
