@@ -140,7 +140,7 @@ const CurrentMedication = ({ onConfirm,selectedComponent,existingData }) => {
             })),
           };
 
-          console.log("Current Medications: ",finalData)
+          // console.log("Current Medications: ",finalData)
           onConfirm(finalData);
         }}
     >
