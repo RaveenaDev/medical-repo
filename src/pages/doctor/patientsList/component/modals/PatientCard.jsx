@@ -22,6 +22,7 @@ const PatientCard = ({ patient }) => {
             patientId: patient._id,
             isFollowUpStatus: isFollowUp,
             caseId: patient.latestCaseId,
+            patientName: patient.name,
           },
         })
       }

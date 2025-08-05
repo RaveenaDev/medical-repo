@@ -482,7 +482,7 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_PATIENT_BILLS:
       return {
         ...state,
-        patientsBills: action.payload,
+        patientBills: action.payload,
       };
     default:
       return state;
