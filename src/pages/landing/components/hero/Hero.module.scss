@@ -147,8 +147,9 @@ $bg-overlay: rgba(230, 232, 238, 0.3);
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 430px) {
   .hero-section {
+    margin-bottom: 1rem;
     .hero-content {
       h2 {
         font-size: 1.5rem;
@@ -194,6 +195,41 @@ $bg-overlay: rgba(230, 232, 238, 0.3);
         width: 11rem;
         height: 3.6rem;
       }
+    }
+  }
+}
+
+@media (max-width: 330px) {
+  .hero-content {
+    width: 90%;
+    padding: 2rem 1rem;
+    margin-top: 5vh;
+
+    h2 {
+      font-size: 1.3rem !important;
+      line-height: 1.2;
+      padding: 0;
+    }
+
+    p {
+      font-size: 0.85rem;
+      padding: 0;
+    }
+
+    .show-more-btn {
+      font-size: 0.9rem;
+      padding: 0.6rem 1.5rem;
+    }
+  }
+
+  .explore-section {
+    margin-top: 2rem;
+    svg {
+      width: 8rem;
+      height: 3rem;
+    }
+    p {
+      font-size: 11px;
     }
   }
 }
