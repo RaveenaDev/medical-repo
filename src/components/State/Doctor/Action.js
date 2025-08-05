@@ -1288,6 +1288,8 @@ export const admitPatient = (requestId) => async (dispatch) => {
       position: "bottom-right",
       autoClose: 2000,
     });
+    dispatch(getAdmissionRequests());
+    dispatch(getAdmittedPatients());
   } catch (error) {
     console.error("Error Admitting patient:", error);
     toast.error(error?.response?.data?.message || "Admission failed");
@@ -1451,10 +1453,9 @@ export const getPatientBedInfo = (patientId) => async (dispatch) => {
 };
 
 export const addProgressTrackerPhase =
-  (payload, patientId) => async (dispatch) => {
+  (payload, patientId, caseId) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
-
       const { data } = await axios.post(
         `${API_URL}/addProgressPhase`,
         payload,
@@ -1465,7 +1466,9 @@ export const addProgressTrackerPhase =
           },
         }
       );
-      dispatch(getProgressTrackerDetails(patientId));
+      // console.log("CASE ID", caseId);
+      // console.log("Progress phase added", data);
+      dispatch(getProgressTrackerDetails(patientId, caseId));
       toast.success("progress added Successfully!", {
         position: "bottom-right",
         autoClose: 2000,
@@ -1483,7 +1486,6 @@ export const dischargePatient = (payload) => async (dispatch) => {
     const { data } = await axios.post(`${API_URL}/dischargePatient`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     });
     // console.log(data);

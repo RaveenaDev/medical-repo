@@ -66,7 +66,7 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
       <div className={styles.timelineContainer}>
         <div className={styles.timeline}>
           {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
-            [...progressTracker].reverse().map((step, index) => (
+            [...progressTracker].map((step, index) => (
               <div key={index} className={styles.timelineItem}>
                 <div className={styles.timelineSeparator}>
                   <div
@@ -101,7 +101,7 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
         </div>
 
         {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
-          [...progressTracker].reverse().map((step, index) => (
+          [...progressTracker].map((step, index) => (
             <div
               key={index}
               className={`${styles.tableRow} ${
@@ -110,7 +110,7 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
               onClick={() => openModal(step)}
             >
               <div className={`${styles.tableCell} ${styles.phaseCell}`}>
-                {step?.phase || "Untitled Phase"}
+                {step?.title || "Untitled Phase"}
               </div>
               <div className={`${styles.tableCell} ${styles.dateCell}`}>
                 {step?.date
