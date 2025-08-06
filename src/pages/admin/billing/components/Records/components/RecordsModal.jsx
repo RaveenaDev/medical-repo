@@ -14,6 +14,8 @@ const RecordModal = ({ open, bill, onClose }) => {
       document.body.style.overflow = "auto";
     };
   }, [open]);
+  console.log("Bill", bill);
+
   const printRef = useRef(); // Reference for print container
   const handlePrint = () => {
     printJS({
@@ -53,7 +55,7 @@ const RecordModal = ({ open, bill, onClose }) => {
               </h2>
             </div>
             <Button className="print-btn" onClick={handlePrint}>
-              Print
+              <img src="/assets/Print-icon.svg" />
             </Button>
           </div>
           <div className="billing-modal-body">
@@ -78,16 +80,24 @@ const RecordModal = ({ open, bill, onClose }) => {
               <div className="billing-invoice-amount">
                 {bill.services.map((service, index) => (
                   <div key={index} className="billing-desc">
-                    <div>
-                      <span className="bold">Description</span>
-                      <span>{service.name}</span>
+                    <div className="">
+                      <div className="billing-description">
+                        <p className="bold">Description</p>
+                      </div>
+                      <div className="billing-quantity">
+                        <p className="bold">Quantity</p>
+                      </div>
+                      <div className="billing-price">
+                        <p className="bold">Price</p>
+                      </div>
                     </div>
                     {service.categories.map((cat, i) => (
                       <div key={i} className="billing-category">
-                        <div>{cat.subCategoryName}</div>
-                        <div>Qty: {cat.quantity}</div>
-                        <div>Price: {cat.rate}</div>
-                        <div>Total: {cat.total}</div>
+                        <div className="billing-description">
+                          {cat.subCategoryName}
+                        </div>
+                        <div className="billing-quantity">{cat.quantity}</div>
+                        <div className="billing-price">₹{cat.rate}</div>
                       </div>
                     ))}
                   </div>
@@ -95,7 +105,7 @@ const RecordModal = ({ open, bill, onClose }) => {
                 <div className="billing-divider"></div>
                 <div className="billing-total">
                   <div className="bold">Total</div>
-                  <div className="bold">{bill.totalAmount}</div>
+                  <div className="bold">₹{bill.totalAmount}</div>
                 </div>
               </div>
             </div>
@@ -103,15 +113,15 @@ const RecordModal = ({ open, bill, onClose }) => {
               <div className="billing-amount-details">
                 <div>
                   <div className="bold">Total Amount</div>
-                  <div>{bill.totalAmount}</div>
+                  <div>₹{bill.totalAmount}</div>
                 </div>
                 <div>
                   <div className="bold">Paid</div>
-                  <div>{bill.paidAmount}</div>
+                  <div>₹{bill.paidAmount}</div>
                 </div>
                 <div>
                   <div className="bold ">Outstanding</div>
-                  <div className="center">{bill.outstanding}</div>
+                  <div className="center">₹{bill.outstanding}</div>
                 </div>
                 <div>
                   <div className="bold">Status</div>
