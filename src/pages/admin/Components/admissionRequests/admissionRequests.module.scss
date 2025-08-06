@@ -1,0 +1,233 @@
+.container {
+  padding: 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  background: #f1f1f1;
+  height: 100vh;
+}
+
+.heading {
+  display: flex;
+  gap: 0.7vw;
+  align-items: center;
+  font-size: 2.5vh;
+  font-weight: 500;
+}
+
+.leftArrow {
+  height: 5vh;
+  width: 5vh;
+  cursor: pointer;
+}
+
+.admissionList {
+  margin-top: 2vh;
+  height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.card {
+  display: flex;
+  background: white;
+  padding: 2vh 0.6vw;
+  height: 9vh;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardLeft {
+  display: flex;
+  width: 40%;
+  gap: 0.5vw;
+  img {
+    width: 4vw;
+    height: 4vw;
+    border-radius: 50%;
+  }
+}
+
+.middleLine {
+  width: 0.1vw;
+  background: #dcdcdc;
+  height: 9vh;
+  margin: 0 0.5vw;
+}
+
+.cardRight {
+  width: 59%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btnContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.3vw;
+}
+
+.name {
+  color: #25307f;
+  font-size: 0.9vw;
+  font-weight: 600;
+}
+
+.ageNdGender {
+  font-size: 0.85vw;
+  color: #6c757d;
+  margin-top: 0vh;
+}
+
+.patientDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0vh;
+  margin-top: 0vh;
+}
+
+.admitDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0vh;
+
+  p {
+    font-size: 0.85vw;
+    font-weight: 500;
+    margin-top: 0vh;
+
+    span {
+      color: #25307f;
+    }
+  }
+}
+
+.acceptBtn {
+  background: #25307f;
+  color: white;
+  border: none;
+  font-size: 0.9vw;
+  font-weight: 450;
+  padding: 0.6vh 1vw;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.rejectBtn {
+  background: white;
+  color: #dc3545;
+  border: none;
+  border: 1px solid #dc3545;
+  padding: 0.5vh 1vw;
+  border-radius: 4px;
+  padding: 0.6vh 0.5vw;
+  display: flex;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid #dc3545;
+  }
+}
+
+.rejectIcon {
+  height: 1vw;
+  width: 1vw;
+  color: #dc3545;
+  cursor: pointer;
+}
+.avatarCircle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #e3e3e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  color: #25307f;
+}
+.uploadButton {
+  margin-left: auto;
+  font-size: 14px;
+  background-color: #5461be;
+  color: white;
+  padding: 0.6vh 1vw;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background-color: #3c48a1;
+  }
+}
+.signatureSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto;
+
+  .signatureUploadLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background-color: #f5f7ff;
+    border: 1px solid #5461be;
+    border-radius: 6px;
+    color: #5461be;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #e6ecff;
+    }
+
+    svg {
+      stroke: #5461be;
+    }
+  }
+}
+.signaturePreview {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  img {
+    height: 100px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .previewLabel {
+    font-size: 12px;
+    color: #6b6b6b;
+    margin-bottom: 2px;
+  }
+}
+.noPatient {
+  margin-top: 4vh;
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1vw;
+
+  p {
+    font-weight: 500;
+  }
+}
