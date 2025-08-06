@@ -52,6 +52,8 @@ const Rooms = (props) => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [addDialogOpen1, setAddDialogOpen1] = useState(false);
+  const [currentRoom, setCurrentRoom] = useState(null);
   const roomTypes = ["Available", "Occupied", "Under Maintenance"];
   // State for editing room
   const [editedRoom, setEditedRoom] = useState({
@@ -129,6 +131,11 @@ const Rooms = (props) => {
   const dispatch = useDispatch();
 
   const handleAddDialogOpen = () => setAddDialogOpen(true);
+
+  const handleAddDialogOpen1 = (room) => {
+    setAddDialogOpen1(true);
+    setCurrentRoom(room);
+  };
   const handleAddDialogClose = () => {
     setAddDialogOpen(false);
   };
@@ -645,6 +652,97 @@ const Rooms = (props) => {
                     </Button>
                   </DialogActions>
                 </Dialog>
+
+                <Dialog open={addDialogOpen1}
+                        onClose={() => setAddDialogOpen1(false)}
+                        maxWidth="md"
+                        fullWidth
+                        sx={{
+                          "& .MuiDialog-paper": {
+                            maxWidth: "65%", // This will reduce the max width between md and lg.
+                          },
+                        }}
+                >
+                  <DialogTitle sx={{ fontWeight: "600"}}>Beds ({currentRoom?.roomID})</DialogTitle>
+                  <DialogContent sx={{
+                    maxHeight: "500px", // Fixed height
+                    overflowY: "auto",  // Enable vertical scrolling
+                    paddingRight: "8px", // Optional: prevent clipping
+                    // Hides scrollbar (for WebKit browsers)
+                    '&::-webkit-scrollbar': {
+                      width: 0,
+                      display: 'none',
+                    },
+                    // Hides scrollbar for Firefox
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none', // IE and Edge
+                  }}>
+                    <Table sx={{
+                      borderCollapse: "separate",
+                      borderSpacing: "0 10px",
+                      width: "100%",
+                      marginBottom: "30px",
+                    }}>
+                      <TableHead sx={{
+                        position: "sticky",
+                        backgroundColor: "#f1f1f1",
+                        top: 0,
+                        zIndex: 10, // Keep it above other elements
+                      }}>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: "600", width: "30%" }}>
+                            Bed ID
+                          </TableCell>
+                          <TableCell sx={{ fontWeight: "600", width: "30%" }}>
+                            Cost
+                          </TableCell>
+                          <TableCell sx={{ fontWeight: "600", width: "30%" }}>
+                            Status
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+
+                      <TableBody>
+                        {
+                          currentRoom?.beds.length > 0 ? (
+                                  currentRoom?.beds.map((bed,index) => (
+                                      <TableRow key={index}>
+                                        <TableCell>
+                                          {bed?.bedNumber || "N/A"}
+                                        </TableCell>
+                                        <TableCell>
+                                          {bed?.cost || "N/A"}
+                                        </TableCell>
+                                        <TableCell>
+                                          {bed?.status || "N/A"}
+                                        </TableCell>
+                                      </TableRow>
+                                  ))
+                              ) :
+                              <TableRow>
+                                <TableCell
+                                    align="center"
+                                    colSpan={7}
+                                    sx={{
+                                      background: "#fff",
+                                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                                      borderRadius: "8px",
+                                      "&:hover": {
+                                        backgroundColor: "#f9f9f9",
+                                      },
+                                      "& > *": {
+                                        borderBottom: "unset",
+                                      },
+                                    }}
+                                >
+                                  No data found!
+                                </TableCell>
+                              </TableRow>
+                        }
+                      </TableBody>
+                    </Table>
+                  </DialogContent>
+                </Dialog>
               </Box>
               {/* Table Section */}
               <TableContainer
@@ -674,12 +772,15 @@ const Rooms = (props) => {
                         Room ID
                       </TableCell>
                       <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                        Room Type
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "600", width: "25%" }}>
                         Name
                       </TableCell>
                       <TableCell sx={{ fontWeight: "600", width: "25%" }}>
                         Status
                       </TableCell>
-                      <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                      <TableCell sx={{ fontWeight: "600", minWidth: "8rem" }}>
                         Doctor Assigned
                       </TableCell>
                       <TableCell
@@ -698,12 +799,14 @@ const Rooms = (props) => {
                           key={room._id}
                           sx={{
                             background: "#fff",
+                            cursor:'pointer',
                             boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
                             borderRadius: "8px",
                             "&:hover": {
                               backgroundColor: "#f9f9f9",
                             },
                           }}
+                          onClick={() => handleAddDialogOpen1(room)}
                         >
                           <TableCell
                             sx={{
@@ -713,6 +816,15 @@ const Rooms = (props) => {
                             }}
                           >
                             {room.roomID}
+                          </TableCell>
+                          <TableCell
+                              sx={{
+                                color: "#25307F",
+                                fontWeight: "bold",
+                                width: "25%",
+                              }}
+                          >
+                            {room?.roomType}
                           </TableCell>
                           <TableCell sx={{ width: "25%" }}>
                             <Typography
