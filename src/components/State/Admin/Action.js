@@ -13,6 +13,7 @@ import {
   DELETE_SERVICE,
   DELETE_SERVICE_CATEGORY,
   DELETE_STAFFS,
+  GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
   GET_APPOINTMENT_REQUESTS,
@@ -400,7 +401,7 @@ export const getFilteredPatients =
     } catch (error) {
       console.log(error);
     }
-};
+  };
 
 // ADD ROOMS
 
@@ -843,5 +844,52 @@ export const updatePatient =
         position: "bottom-right", // Use string for position
         autoClose: 2000,
       });
+    }
+  };
+export const getAdmissionRequestsToApprove =
+  (status = "") =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: status ? { status } : {}, // Only send if provided
+      });
+
+      // console.log("Admission Requests:", data);
+
+      dispatch({ type: GET_ADMISSION_REQUESTS_FOR_APPROVAL, payload: data });
+    } catch (error) {
+      console.error("Error fetching admission requests:", error);
+    }
+  };
+export const approveAdmissionRequestsAdmin =
+  (requestId, signature) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.put(
+        `${API_URL}/approveAdmissionRequest/${requestId}`,
+        { signature }, // send base64 signature
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log("Approval Response:", data);
+      toast.success("Approval submitted successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+
+      // Optional: dispatch to refresh data
+      dispatch(getAdmissionRequestsToApprove("Pending"));
+    } catch (error) {
+      console.error("Error approving admission request:", error);
+      toast.error(error?.response?.data?.message || "Approval failed");
     }
   };

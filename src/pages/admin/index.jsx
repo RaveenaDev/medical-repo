@@ -17,8 +17,12 @@ import {
 import DonutChart from "./Components/DonutChart.jsx";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getAppointmentCounts } from "../../components/State/Admin/Action.js";
+import {
+  getAdmissionRequestsToApprove,
+  getAppointmentCounts,
+} from "../../components/State/Admin/Action.js";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import AdmissionRequests from "./Components/admissionRequests/AdmissionRequests.jsx";
 
 function Admin(props) {
   const [selectedFilter, setSelectedFilter] = useState("Monthly"); // Keep track of selected option
@@ -34,7 +38,8 @@ function Admin(props) {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
     dispatch(getAppointmentCounts());
-  }, []);
+    dispatch(getAdmissionRequestsToApprove());
+  }, [dispatch]);
 
   const [selectedDepartment, setSelectedDepartment] = useState("all");
 
@@ -198,6 +203,19 @@ function Admin(props) {
       canceled: true,
     });
   };
+  const [activeModal, setActiveModal] = useState(null);
+  const openAdmitNewPatient = () => setActiveModal("admitNewPatient");
+  const closeModal = () => setActiveModal(null);
+
+  const requestsToApprove = useSelector(
+    (state) => state.admin.requestsToApprove
+  );
+  // console.log("Requests to Approve:", requestsToApprove);
+  const filteredRequests = requestsToApprove.filter(
+    (req) =>
+      (req.sendTo === "Both" || req.sendTo === "Admin") &&
+      req.approval?.admin?.approved === false
+  );
 
   return (
     <div
@@ -243,6 +261,7 @@ function Admin(props) {
               },
               boxShadow: "0px 4px 4px 0px #C2C2C240",
             }}
+            onClick={openAdmitNewPatient}
           >
             <span
               style={{
@@ -254,11 +273,54 @@ function Admin(props) {
                 marginRight: "4px",
               }}
             ></span>
-            15 new Patients
+            {filteredRequests.length} New Patients
             <span style={{ transform: "translateY(4px)" }}>
               <KeyboardArrowRightIcon />
             </span>
           </Button>
+          <>
+            {/* Backdrop Overlay */}
+            <div
+              style={{
+                display: activeModal === "admitNewPatient" ? "block" : "none",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: "rgba(0, 0, 0, 0.02)",
+                zIndex: 50,
+              }}
+              onClick={closeModal}
+            />
+
+            {/* Modal Panel */}
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                right: 0,
+                height: "100vh",
+                width: "38vw",
+                background: "#fff",
+                zIndex: 60,
+                boxShadow: "-4px 0 24px rgba(0, 0, 0, 0.1)",
+                display: "flex",
+                flexDirection: "column",
+                transition: "transform 0.3s ease-in-out",
+                transform:
+                  activeModal === "admitNewPatient"
+                    ? "translateX(0)"
+                    : "translateX(100%)",
+              }}
+              onClick={(e) => e.stopPropagation()} // ✅ Prevent click from closing modal
+            >
+              <AdmissionRequests
+                onClose={closeModal}
+                requests={filteredRequests}
+              />
+            </div>
+          </>
         </div>
       </div>
       <div
