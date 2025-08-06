@@ -123,15 +123,20 @@ const Nursing = ({ patientId }) => {
                 </div>
               );
             })}
-            <div className={styles.th}>
-              <Calendar className={styles.icon} />
-              <span>Last Updated</span>
-            </div>
+
+            {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
+              <div className={styles.noData}></div>
+            ) : (
+              <div className={styles.th}>
+                <Calendar className={styles.icon} />
+                <span>Last Updated</span>
+              </div>
+            )}
           </div>
 
           <div className={styles.body}>
             {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
-              <div className={styles.noData}>No vitals recorded.</div>
+              <p className={styles.noData}>No vitals recorded.</p>
             ) : (
               [...patientVitals].map((item, idx) => {
                 const formattedDate = formatDate(item.recordedAt);

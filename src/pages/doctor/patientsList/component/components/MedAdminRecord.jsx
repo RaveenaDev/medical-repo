@@ -180,7 +180,7 @@ const MedAdminRecord = ({ patientId, caseId }) => {
               <div className={styles.noData}>Loading medical records...</div>
             ) : !Array.isArray(medicationData) ||
               medicationData.length === 0 ? (
-              <div className={styles.noData}>No medical records available.</div>
+              <p className={styles.noData}>No medical records available.</p>
             ) : (
               medicationData.map((item, idx) => {
                 const now = new Date();
