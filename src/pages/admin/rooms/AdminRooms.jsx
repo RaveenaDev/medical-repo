@@ -18,7 +18,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
+  TableHead, TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -37,7 +37,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addRoom,
-  deleteRoom,
+  deleteRoom, getFilteredRooms,
   updateRoom,
 } from "../../../components/State/Admin/Action.js";
 import { toast } from "react-toastify";
@@ -57,6 +57,8 @@ const AdminRooms = (props) => {
   const [currentRoom, setCurrentRoom] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const roomTypes = ["Available", "Occupied", "Under Maintenance"];
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // State for editing room
   const [editedRoom, setEditedRoom] = useState({
@@ -218,12 +220,27 @@ const AdminRooms = (props) => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getFilteredRooms(page, rowsPerPage))
+  }, [dispatch, page, rowsPerPage]);
+
   const navigate = useNavigate();
 
-  const rooms = useSelector((state) => state.admin.rooms);
+  const rooms = useSelector((state) => state.admin.filteredRooms);
+  const totalRooms = useSelector((state) => state.admin.totalFilteredRooms);
   const loading = useSelector((state) => state.admin.isLoading);
   // const rooms = undefined;
   const doctors = useSelector((state) => state.admin.doctors);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when rows per page changes
+  };
+
 
   return (
     <div
@@ -282,7 +299,7 @@ const AdminRooms = (props) => {
                     <ArrowBackIosIcon />
                   </span>
                   <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-                  <h2 className={ayu.departmentTitleDetails}>{rooms.length}</h2>
+                  <h2 className={ayu.departmentTitleDetails}>{totalRooms}</h2>
                 </div>
                 <div style={{ display: "flex", gap: "1rem" }}>
                   <Box sx={{ display: "flex", gap: 3 }}>
@@ -870,6 +887,23 @@ const AdminRooms = (props) => {
                   )}
                 </TableBody>
               </Table>
+
+              <TablePagination
+                  component="div"
+                  count={totalRooms}
+                  page={page} // current page
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage} // items per page
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                  sx={{
+                    width: '100%',
+                    backgroundColor: "#fff",
+                    borderTop: "2px solid #ddd",
+                    zIndex: 11,
+                  }}
+              />
+
             </TableContainer>
 
             {/* Actions Menu */}

@@ -26,7 +26,7 @@ import {
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS,
+  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -219,7 +219,29 @@ export const getRooms = () => async (dispatch) => {
       },
     });
 
+    // console.log("Rooms: ",data)
     dispatch({ type: GET_ROOMS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFilteredRooms = (page, rowsPerPage) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
+      params: {
+        page: page + 1,
+        limit: rowsPerPage,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Rooms: ",data)
+    dispatch({ type: GET_FILTERED_ROOMS, payload: data });
   } catch (error) {
     console.log(error);
   }

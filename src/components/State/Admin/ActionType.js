@@ -27,6 +27,7 @@ export const GET_PATIENTS = "GET_PATIENTS";
 export const GET_FILTERED_PATIENTS = "GET_FILTERED_PATIENTS";
 
 export const GET_ROOMS = "GET_ROOMS";
+export const GET_FILTERED_ROOMS = "GET_FILTERED_ROOMS";
 export const ADD_ROOM = "ADD_ROOM";
 export const UPDATE_ROOM = "UPDATE_ROOM";
 export const DELETE_ROOM = "DELETE_ROOM";

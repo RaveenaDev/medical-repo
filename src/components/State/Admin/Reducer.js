@@ -24,7 +24,7 @@ import {
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS,
+  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -49,6 +49,7 @@ const initialState = {
   totalStaffs: null,
   staffCount: null,
   totalRooms: null,
+  totalFilteredRooms: null,
   patient: null,
   appointmentCount: null,
   patients: [],
@@ -56,6 +57,7 @@ const initialState = {
   doctors: [],
   staffs: [],
   rooms: [],
+  filteredRooms:[],
   departments: [],
   department: null,
   expenses: [],
@@ -238,6 +240,12 @@ export const adminReducer = (state = initialState, action) => {
         isLoading: false,
       };
 
+    case GET_FILTERED_ROOMS:
+      return{
+        ...state,
+        totalFilteredRooms: action.payload.totalRooms,
+        filteredRooms: action.payload.rooms
+      }
     case GET_APPOINTMENT_REQUESTS:
       return {
         ...state,
