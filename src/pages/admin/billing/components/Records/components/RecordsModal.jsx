@@ -241,30 +241,33 @@ const RecordModal = ({ open, bill, onClose }) => {
                         </div>
                       ))
                     )}
-                    <div className="billing-add">
-                      <button
-                        onClick={() => {
-                          const updated = { ...editableBill };
-                          // If no services, initialize it
-                          if (
-                            !updated.services ||
-                            updated.services.length === 0
-                          ) {
-                            updated.services = [{ categories: [] }];
-                          }
-                          // Add a new empty category to the first service
-                          updated.services[0].categories.push({
-                            subCategoryName: "",
-                            quantity: 1,
-                            rate: 0,
-                            total: 0,
-                          });
-                          setEditableBill(updated);
-                        }}
-                      >
-                        Add
-                      </button>
-                    </div>
+
+                    {isEditing && (
+                      <div className="billing-add">
+                        <button
+                          onClick={() => {
+                            const updated = { ...editableBill };
+                            // If no services, initialize it
+                            if (
+                              !updated.services ||
+                              updated.services.length === 0
+                            ) {
+                              updated.services = [{ categories: [] }];
+                            }
+                            // Add a new empty category to the first service
+                            updated.services[0].categories.push({
+                              subCategoryName: "",
+                              quantity: 1,
+                              rate: 0,
+                              total: 0,
+                            });
+                            setEditableBill(updated);
+                          }}
+                        >
+                          Add
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
                 <div className="billing-divider"></div>
