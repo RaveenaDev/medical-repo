@@ -23,7 +23,7 @@ const BillingDetails = ({ onClose }) => {
     Array.isArray(patientBills) && patientBills.length > 1
       ? patientBills[patientBills.length - 1]
       : {};
-  console.log("Latest Patient Bills", latestBill);
+  //console.log("Latest Patient Bills", latestBill);
   const {
     invoiceNumber,
     invoiceDate,

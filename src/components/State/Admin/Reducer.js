@@ -11,6 +11,7 @@ import {
   DELETE_SERVICE,
   DELETE_SERVICE_CATEGORY,
   DELETE_STAFFS,
+  GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
   GET_APPOINTMENT_REQUESTS,
@@ -78,6 +79,7 @@ const initialState = {
   error: null,
   success: null,
   recordsCount: null,
+  requestsToApprove: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -358,6 +360,12 @@ export const adminReducer = (state = initialState, action) => {
               }
             : service
         ),
+      };
+
+    case GET_ADMISSION_REQUESTS_FOR_APPROVAL:
+      return {
+        ...state,
+        requestsToApprove: action.payload.requests,
       };
 
     default:

@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 80%;
+  width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); // Dimmed background
   display: flex;
@@ -18,7 +18,7 @@
     background-color: #f1f1f1;
     padding-top: 1rem;
     overflow-y: auto; // Allows scrolling if content overflows
-
+    padding: 1vh 1.5vw;
     // Initial off-screen position
     transform: translateX(100%);
     transition: transform 0.5s ease-in-out; // Transition for sliding effect
@@ -33,11 +33,11 @@
       justify-content: space-between;
       align-items: center;
       color: black;
-      padding: 1rem;
-
+      padding: 0;
+      height: 12vh;
       h2 {
         font-weight: 600;
-        padding-bottom: 0.6rem;
+        padding-bottom: 0;
         span {
           color: gray;
         }
@@ -45,26 +45,26 @@
 
       .header-content {
         display: flex;
+        font-size: 1.8vh;
       }
 
       .close-btn {
-        padding-top: 6px;
-        margin-right: 8px;
         background: none;
         border: none;
-        max-width: 30px;
+        padding: 0;
+        margin-right: 0.5vw;
+        display: flex;
+        align-items: center;
       }
 
       .print-btn {
-        padding: 6px 16px;
-        background-color: #25307f;
-        color: white;
-        text-transform: none;
-        border-radius: 1.5rem;
+        display: flex;
+        align-items: center;
+        background-color: #f1f1f1;
       }
 
       .print-btn:hover {
-        background-color: #1b2568;
+        background-color: #f1f1f1;
       }
     }
     .billing-divider {
@@ -79,14 +79,18 @@
       display: flex;
       flex-direction: column;
       overflow-y: auto;
-      padding: 0 2rem;
-      gap: 2rem;
+      padding: 0;
+      gap: 1rem;
 
       .billing-invoice-details {
         background: white;
 
         .bold {
           font-weight: bold;
+        }
+        .bold2 {
+          font-weight: bold;
+          text-align: center;
         }
 
         .billing-no {
@@ -213,4 +217,20 @@
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+.billing-description {
+  width: 50%;
+}
+
+.billing-quantity {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.billing-price {
+  width: 30%;
+  display: flex;
+  justify-content: center;
 }

@@ -1510,11 +1510,10 @@ export const approveAdmissionRequestWithSignature =
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         }
       );
-      console.log("Approval Response:", data);
+      // console.log("Approval Response:", data);
       toast.success("Approval submitted successfully!", {
         position: "bottom-right",
         autoClose: 2000,

@@ -210,7 +210,7 @@ const PastReportsAndDischarge = ({ patientId }) => {
             </div>
           ))
         ) : (
-          <p>No consultation history found.</p>
+          <p className={styles.noData}>No consultation history found.</p>
         )}
       </div>
     </div>
