@@ -23,6 +23,15 @@
     transform: translateX(100%);
     transition: transform 0.5s ease-in-out; // Transition for sliding effect
 
+    /* Hide scrollbar for Chrome, Safari, Opera */
+    &::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
     // When modal is open, slide it in
     &.open {
       transform: translateX(0);
@@ -167,6 +176,7 @@
 
           .billing-summary {
             display: flex;
+            justify-content: space-between;
             gap: 1.5rem;
           }
         }
@@ -175,6 +185,10 @@
   }
   .status.paid {
     color: #3db461;
+    font-weight: 600;
+  }
+  .status.pending {
+    color: #f6a600;
     font-weight: 600;
   }
 }
@@ -233,4 +247,83 @@
   width: 30%;
   display: flex;
   justify-content: center;
+}
+
+.billing-edit-btn {
+  background: #25307f;
+  color: white;
+  border: none;
+  padding: 1vh 1vw;
+  font-size: 1.8vh;
+  border-radius: 18px;
+}
+.heading-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+}
+
+.billing-edited-save-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4vh;
+  button {
+    background-color: #25307f;
+    color: white;
+    padding: 1vh 2vw;
+    font-size: 2vh;
+    border-radius: 24px;
+    border: none;
+  }
+}
+
+.inputDescription,
+.inputQuantity,
+.inputPrice {
+  width: 110%;
+  margin-top: 1vh;
+  border-radius: 4px;
+  border: 1px solid gray;
+  font-size: 2.1vh;
+  padding: 1vh 0.8vw;
+}
+
+.inputQuantity,
+.inputPrice {
+  text-align: center;
+}
+
+.billingCross {
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  button {
+    background: transparent;
+    border: none;
+    color: #ff4d4f;
+    padding: 0;
+  }
+}
+
+.billing-clearAll {
+  width: 10%;
+
+  button {
+    color: #ff4d4f;
+    border: none;
+
+    background: transparent;
+    padding: 0;
+  }
+}
+
+.billing-add {
+  margin-top: 1vh;
+  button {
+    background: #25307f;
+    color: white;
+    padding: 0.5vh 1vw;
+    font-size: 1.8vh;
+    border-radius: 4px;
+  }
 }

@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal, Box, Typography, Button } from "@mui/material";
 import "./RecordModal.scss";
 import arrowBack from "/arrow_back.svg";
+import { X } from "lucide-react";
 import printJS from "print-js"; // Import print-js
 const RecordModal = ({ open, bill, onClose }) => {
   useEffect(() => {
@@ -14,9 +15,17 @@ const RecordModal = ({ open, bill, onClose }) => {
       document.body.style.overflow = "auto";
     };
   }, [open]);
-  console.log("Bill", bill);
-
+  console.log("original Bill", bill);
+  const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
+
+  const [editableBill, setEditableBill] = useState({});
+  console.log("Edited Bill", editableBill);
+
+  useEffect(() => {
+    if (bill) setEditableBill(JSON.parse(JSON.stringify(bill)));
+  }, [bill]);
+
   const handlePrint = () => {
     printJS({
       printable: "printable-bill",
@@ -54,9 +63,18 @@ const RecordModal = ({ open, bill, onClose }) => {
                 Billing Details: <span>{bill.patient.name}</span>
               </h2>
             </div>
-            <Button className="print-btn" onClick={handlePrint}>
-              <img src="/assets/Print-icon.svg" />
-            </Button>
+            <div className="heading-right">
+              <button
+                className="billing-edit-btn"
+                onClick={() => setIsEditing((prev) => !prev)}
+              >
+                {isEditing ? "Cancel" : "Edit"}
+              </button>
+
+              <Button className="print-btn" onClick={handlePrint}>
+                <img src="/assets/Print-icon.svg" />
+              </Button>
+            </div>
           </div>
           <div className="billing-modal-body">
             <div className="billing-invoice-details">
@@ -90,16 +108,166 @@ const RecordModal = ({ open, bill, onClose }) => {
                       <div className="billing-price">
                         <p className="bold">Price</p>
                       </div>
-                    </div>
-                    {service.categories.map((cat, i) => (
-                      <div key={i} className="billing-category">
-                        <div className="billing-description">
-                          {cat.subCategoryName}
+                      {isEditing && (
+                        <div className="billing-clearAll">
+                          <button
+                            className="clear-btn"
+                            onClick={() => {
+                              const updated = { ...editableBill };
+                              updated.services[index].categories =
+                                updated.services[index].categories.map(
+                                  (cat) => ({
+                                    ...cat,
+                                    subCategoryName: "",
+                                    quantity: 0,
+                                    rate: 0,
+                                  })
+                                );
+                              setEditableBill(updated);
+                            }}
+                          >
+                            Clear
+                          </button>
                         </div>
-                        <div className="billing-quantity">{cat.quantity}</div>
-                        <div className="billing-price">₹{cat.rate}</div>
+                      )}
+                    </div>
+                    {editableBill?.services?.map((service, serviceIndex) =>
+                      service.categories.map((cat, i) => (
+                        <div key={i} className="billing-category">
+                          <div className="billing-description">
+                            {isEditing ? (
+                              <input
+                                className="inputDescription"
+                                type="text"
+                                value={cat.subCategoryName}
+                                onChange={(e) => {
+                                  const updated = { ...editableBill };
+                                  updated.services[serviceIndex].categories[
+                                    i
+                                  ].subCategoryName = e.target.value;
+                                  setEditableBill(updated);
+                                }}
+                              />
+                            ) : (
+                              <div>{cat.subCategoryName}</div>
+                            )}
+                          </div>
+
+                          <div className="billing-quantity">
+                            {isEditing ? (
+                              <input
+                                className="inputQuantity"
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                value={cat.quantity}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  if (/^\d*$/.test(value)) {
+                                    const updated = { ...editableBill };
+                                    updated.services[serviceIndex].categories[
+                                      i
+                                    ].quantity = value;
+                                    setEditableBill(updated);
+                                  }
+                                }}
+                                onBlur={() => {
+                                  const updated = { ...editableBill };
+                                  const qtyValue =
+                                    updated.services[serviceIndex].categories[i]
+                                      .quantity || "0";
+                                  updated.services[serviceIndex].categories[
+                                    i
+                                  ].quantity = String(parseInt(qtyValue, 10));
+                                  setEditableBill(updated);
+                                }}
+                              />
+                            ) : (
+                              <div>{cat.quantity}</div>
+                            )}
+                          </div>
+
+                          <div className="billing-price">
+                            {isEditing ? (
+                              <input
+                                className="inputPrice"
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                value={cat.rate}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  // Only allow digits (no letters or special chars)
+                                  if (/^\d*$/.test(value)) {
+                                    const updated = { ...editableBill };
+                                    updated.services[serviceIndex].categories[
+                                      i
+                                    ].rate = value;
+                                    setEditableBill(updated);
+                                  }
+                                }}
+                                onBlur={() => {
+                                  // Optional: Convert to number on blur
+                                  const updated = { ...editableBill };
+                                  const rateValue =
+                                    updated.services[serviceIndex].categories[i]
+                                      .rate || "0";
+                                  updated.services[serviceIndex].categories[
+                                    i
+                                  ].rate = String(parseInt(rateValue, 10));
+                                  setEditableBill(updated);
+                                }}
+                              />
+                            ) : (
+                              <div>₹{cat.rate}</div>
+                            )}
+                          </div>
+                          {isEditing && (
+                            <div className="billingCross">
+                              <button
+                                className="cross-btn"
+                                onClick={() => {
+                                  const updated = { ...editableBill };
+                                  updated.services[
+                                    serviceIndex
+                                  ].categories.splice(i, 1); // remove 1 item at index i
+                                  setEditableBill(updated);
+                                }}
+                              >
+                                <X />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    )}
+
+                    {isEditing && (
+                      <div className="billing-add">
+                        <button
+                          onClick={() => {
+                            const updated = { ...editableBill };
+                            // If no services, initialize it
+                            if (
+                              !updated.services ||
+                              updated.services.length === 0
+                            ) {
+                              updated.services = [{ categories: [] }];
+                            }
+                            // Add a new empty category to the first service
+                            updated.services[0].categories.push({
+                              subCategoryName: "",
+                              quantity: 1,
+                              rate: 0,
+                              total: 0,
+                            });
+                            setEditableBill(updated);
+                          }}
+                        >
+                          Add
+                        </button>
                       </div>
-                    ))}
+                    )}
                   </div>
                 ))}
                 <div className="billing-divider"></div>
@@ -149,6 +317,9 @@ const RecordModal = ({ open, bill, onClose }) => {
                   </p>
                 </div>
               </div>
+            </div>
+            <div className="billing-edited-save-btn">
+              <button>Save</button>
             </div>
           </div>
         </div>
