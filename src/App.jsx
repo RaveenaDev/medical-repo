@@ -139,6 +139,7 @@ function App() {
             style={{
               marginLeft: shouldShowSidebar ? "20%" : "0",
               height: "100%",
+              overflow: "auto",
             }} // Prevent content from going under the sidebar
           >
             <Routes>

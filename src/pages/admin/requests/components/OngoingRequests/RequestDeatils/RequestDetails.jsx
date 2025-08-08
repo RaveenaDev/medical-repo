@@ -10,8 +10,50 @@ import {
   TimelineDot,
 } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
+import { Paperclip } from "lucide-react";
 
 const RequestDetails = ({ request, onBack }) => {
+  const timelineMessages = [
+    {
+      id: 1,
+      sender: "ADMIN",
+      time: "Sept 27 at 9:00 pm",
+      type: "admin",
+      message:
+        "Your package of 12 medicines has been shipped and will arrive to you shortly.",
+      profileImg: "https://i.pravatar.cc/40?img=43",
+    },
+    {
+      id: 2,
+      sender: "ADMIN",
+      time: "Sept 27 at 9:05 pm",
+      type: "admin",
+      message: "Reminder: Patient follow-up is scheduled for tomorrow.",
+      profileImg: "https://i.pravatar.cc/40?img=43",
+    },
+    {
+      id: 3,
+      sender: "Dr. Patil",
+      time: "Sept 27 at 9:10 pm",
+      type: "doctor",
+      message:
+        "Request placed for few medicines needed in cardiology department. List of medicines attached below.",
+      attachment: {
+        label: "List of new medicines",
+        url: "#",
+      },
+      profileImg: "https://i.pravatar.cc/40?img=51",
+    },
+    {
+      id: 4,
+      sender: "ADMIN",
+      time: "Sept 27 at 9:15 pm",
+      type: "admin",
+      message: "The patient's blood report has been reviewed.",
+      profileImg: "https://i.pravatar.cc/40?img=43",
+    },
+  ];
+
   const [updates, setUpdates] = useState([
     "Updated on Wednesday, 2 Oct: Medicines are quality-checked and labeled.",
     "Updated on Monday, 29 Sept: Pharmacy places an order with the supplier for the required medicines.",
@@ -30,14 +72,16 @@ const RequestDetails = ({ request, onBack }) => {
     }
   };
 
+  console.log("Request data: ", request);
+
   return (
     <div className={styles.requestInnerDetailsPage}>
-      <div className={styles.details}>
-        <div className={styles.about}>
-          <div className={styles.heading}>
+      <div className={styles.about}>
+        <div className={styles.heading}>
+          <div className={styles.headingLeft}>
             <svg
-              width="30"
-              height="30"
+              width="3.5vh"
+              height="3.5vh"
               viewBox="0 0 30 30"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -51,91 +95,72 @@ const RequestDetails = ({ request, onBack }) => {
             </svg>
             <p>Request Details</p>
           </div>
-          <div className={styles.info}>
-            <p>
-              <strong>Requested By:</strong> <span>{request.name}</span>
-            </p>
-            <p>
-              <strong>Department:</strong> <span>{request.department}</span>
-            </p>
-            <p>
-              <strong>Date Submitted:</strong> <span>{request.date}</span>
-            </p>
-            <p>
-              <strong>Request:</strong> <span>{request.request}</span>
-            </p>
+          <div className={styles.headingRight}>
+            <p>{request.date}</p>
           </div>
         </div>
+        <div className={styles.info}>
+          <p>
+            <strong>Requested By:</strong> <span>{request.name}</span>
+          </p>
 
-        <div className={styles.medicineDetails}>
-          {request.medicines && request.medicines.length > 0 && (
-            <div>
-              <p>
-                <span>Request:</span> Please order the following medications
-              </p>
-              <ul>
-                {request.medicines.map((med, index) => (
-                  <li key={index}>{med}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {request.attachment && (
-            <p>
-              <span>Attachments: </span>
-              <a href="/path-to-pdf.pdf" download>
-                {request.attachment}
-              </a>
-            </p>
-          )}
+          <p>
+            <strong>Request:</strong> <span>{request.request}</span>
+          </p>
         </div>
       </div>
 
       {/* Request Progress Section */}
       <div className={styles.requestProgress}>
-        <h4>Updates on the Request</h4>
-
-        <Timeline
-          sx={{
-            [`& .${timelineItemClasses.root}:before`]: {
-              flex: 0,
-              padding: 0,
-            },
-          }}
-        >
-          {/* Input Field at the Top of Timeline */}
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color="secondary" />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-              <div className={styles.addUpdateTimeline}>
-                <input
-                  type="text"
-                  placeholder="Add Update"
-                  value={newUpdate}
-                  onChange={(e) => setNewUpdate(e.target.value)}
-                  className={styles.updateInput}
-                />
-                <button className={styles.sendButton} onClick={handleAddUpdate}>
-                  Send
-                </button>
+        {timelineMessages.map((msg) =>
+          msg.type === "admin" ? (
+            <div key={msg.id} className={styles.yourMessage}>
+              <div className={styles.leftYM}>
+                <img src={msg.profileImg} alt="" />
+                <div className={styles.dottedLine}></div>
               </div>
-            </TimelineContent>
-          </TimelineItem>
-
-          {/* Existing Updates */}
-          {updates.map((update, index) => (
-            <TimelineItem key={index}>
-              <TimelineSeparator>
-                <TimelineDot color="primary" />
-                {index !== updates.length - 1 && <TimelineConnector />}
-              </TimelineSeparator>
-              <TimelineContent>{update}</TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
+              <div>
+                <div className={styles.nameAndDateTime}>
+                  <p>{msg.sender}</p>
+                  <span>{msg.time}</span>
+                </div>
+                <div className={styles.adminMessage}>
+                  <p>{msg.message}</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div key={msg.id} className={styles.docRequestContainer}>
+              <div className={styles.docProfile}>
+                <img src={msg.profileImg} alt="" width={40} />
+                <p>{msg.sender} added a comment</p>
+              </div>
+              <div className={styles.docMessage}>
+                <p className={styles.mess1}>{msg.message}</p>
+                {msg.attachment && (
+                  <div className={styles.mess2}>
+                    <Paperclip
+                      size={15}
+                      style={{ transform: "rotate(270deg)" }}
+                    />
+                    <p>{msg.attachment.label}</p>
+                  </div>
+                )}
+              </div>
+              {/* Optional timestamp for doctor message */}
+              <div className={styles.docDateTime}>
+                {/* <p>{msg.time}</p> */}
+              </div>
+            </div>
+          )
+        )}
+      </div>
+      <div className={styles.submitContainer}>
+        <div className={styles.greenDotContainer}>
+          <span className={styles.greenDot}></span>
+        </div>
+        <input type="text" placeholder="Add comments and request updates" />
+        <button>Send</button>
       </div>
     </div>
   );
