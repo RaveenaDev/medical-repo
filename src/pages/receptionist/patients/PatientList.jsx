@@ -72,6 +72,10 @@ const PatientList = () => {
   // console.log("Filter: ",filters)
 
   // Handle Sort Change
+
+  const truncateText = (text, maxLength) => {
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
     setFilters({
@@ -329,10 +333,10 @@ const PatientList = () => {
                           }}
                           onClick={() => handleClick(patient)}
                         >
-                          {patient.name}
+                          {truncateText(patient?.name,18)}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {patient.email}
+                          {truncateText(patient?.email,18)}
                         </Typography>
                       </TableCell>
                       <TableCell>{patient.phone}</TableCell>
