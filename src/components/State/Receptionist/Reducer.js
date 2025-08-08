@@ -13,7 +13,7 @@ import {
   GET_DOCTORS,
   GET_DOCTORS_BY_DEPARTMENT,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS,
+  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
@@ -34,6 +34,7 @@ const initialState = {
   doctorCount: null,
   totalStaffs: null,
   totalRooms: null,
+  totalFilteredRooms: null,
   totalAppointments: [],
   scheduledAppointments: [],
   ongoingAppointments: [],
@@ -50,6 +51,7 @@ const initialState = {
   doctorsByDepartment: [],
   staffs: [],
   rooms: [],
+  filteredRooms: [],
   departments: [],
   department: null,
   appointments: [],
@@ -127,6 +129,13 @@ export const receptionistReducer = (state = initialState, action) => {
         rooms: action.payload.rooms,
         isLoading: false,
       };
+
+    case GET_FILTERED_ROOMS:
+      return{
+        ...state,
+        totalFilteredRooms: action.payload.totalRooms,
+        filteredRooms: action.payload.rooms
+      }
 
     case ADD_ROOM:
       return {

@@ -35,8 +35,6 @@ import {
   GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
-  UPDATE_ROOM,
-  UPDATE_STAFFS,
 } from "./ActionType.js";
 
 const initialState = {
