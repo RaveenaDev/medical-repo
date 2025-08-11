@@ -133,8 +133,7 @@ const ProgressTracker = ({ patient }) => {
               style={{
                 backgroundColor:
                   step.status === "ongoing" ? "#e8f5e9" : "inherit",
-                borderRadius: "8px",
-                height: "60px",
+
                 cursor: step.status === "ongoing" ? "pointer" : "default",
                 transition: "background-color 0.3s",
               }}
@@ -154,8 +153,7 @@ const ProgressTracker = ({ patient }) => {
                 className={styles.tableCell}
                 style={{
                   textAlign: "center",
-                  fontWeight: 600,
-                  fontSize: "14px",
+                  fontWeight: "550",
                   color:
                     step.status === "completed"
                       ? "#EAA000"
@@ -173,7 +171,7 @@ const ProgressTracker = ({ patient }) => {
         ) : (
           <div
             className={styles.noData}
-            style={{ textAlign: "center", color: "#888", padding: "20px" }}
+            style={{ textAlign: "center", color: "#888" }}
           >
             No progress steps available.
           </div>
