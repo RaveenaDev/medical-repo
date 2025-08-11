@@ -345,7 +345,7 @@ const Profile = (props) => {
                     <Box
                       sx={{
                         height: "1px",
-                        backgroundColor: "#8787877A",
+                        //   backgroundColor: "#8787877A",
                         my: 2, // Adds top and bottom margin (equivalent to padding)
                       }}
                     />

@@ -120,6 +120,7 @@ const Sidebar = ({ role }) => {
         flexDirection: "column",
         justifyContent: "space-between",
         height: "86.7vh",
+        overflowY: "auto",
       }}
     >
       <div>

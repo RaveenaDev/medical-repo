@@ -10,7 +10,7 @@ import {
   TimelineDot,
 } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
-import { Paperclip } from "lucide-react";
+import { ChevronDown, ChevronUp, Paperclip } from "lucide-react";
 
 const RequestDetails = ({ request, onBack }) => {
   const timelineMessages = [
@@ -73,6 +73,10 @@ const RequestDetails = ({ request, onBack }) => {
   };
 
   console.log("Request data: ", request);
+
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("Ongoing");
+  const dropdownOptions = ["Completed", "Ongoing"]; // static options
 
   return (
     <div className={styles.requestInnerDetailsPage}>
@@ -156,11 +160,55 @@ const RequestDetails = ({ request, onBack }) => {
         )}
       </div>
       <div className={styles.submitContainer}>
-        <div className={styles.greenDotContainer}>
-          <span className={styles.greenDot}></span>
+        <div className={styles.dropdown}>
+          <button
+            className={`${styles.trigger} ${
+              selectedOption === "Completed"
+                ? styles.completedTrigger
+                : selectedOption === "Ongoing"
+                ? styles.ongoingTrigger
+                : ""
+            }`}
+            onClick={() => setOpenDropdown((prev) => !prev)}
+          >
+            <p>{selectedOption || "Select option"}</p>
+            <span className={styles.arrow}>
+              <img
+                src={
+                  selectedOption === "Completed"
+                    ? "/assets/admin/greenDownArrow.svg"
+                    : "/assets/admin/downArrow.svg"
+                }
+                className={openDropdown ? styles.arrowUp : ""}
+                alt="Dropdown arrow"
+              />
+            </span>
+          </button>
+
+          {openDropdown && (
+            <ul className={styles.menu}>
+              {dropdownOptions.map((option) => (
+                <li
+                  key={option}
+                  className={`${styles.item} `}
+                  onClick={() => {
+                    setSelectedOption(option);
+                    setOpenDropdown(false);
+                  }}
+                >
+                  {option}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <input type="text" placeholder="Add comments and request updates" />
-        <button>Send</button>
+
+        <input
+          className={styles.sendInput}
+          type="text"
+          placeholder="Add comments and request updates"
+        />
+        <button className={styles.sendBtn}>Send</button>
       </div>
     </div>
   );

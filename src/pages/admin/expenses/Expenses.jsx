@@ -465,7 +465,15 @@ const Expenses = (props) => {
                 sx={{
                   maxHeight: "58vh", // Adjust this to fit your layout needs
                   overflowY: "auto",
-                  position: "relative",
+                  position:
+                    "relative" /* Hide scrollbar for Chrome, Safari, Opera */,
+                  "&::-webkit-scrollbar": {
+                    width: 0,
+                    background: "transparent",
+                  },
+                  /* Hide scrollbar for Firefox */
+                  scrollbarWidth: "none", // Firefox
+                  "-ms-overflow-style": "none", // IE 10+
                 }}
               >
                 <Table
@@ -564,7 +572,6 @@ const Expenses = (props) => {
                           }}
                         >
                           <TableCell
-                            component="th"
                             scope="row"
                             sx={{ color: "#25307f", border: "none" }}
                           >

@@ -27,7 +27,8 @@ import {
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
+  GET_FILTERED_PATIENTS,
+  GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -916,6 +917,54 @@ export const approveAdmissionRequestsAdmin =
       toast.error(error?.response?.data?.message || "Approval failed");
     }
   };
+export const editBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.put(
+      `${API_URL}/editBillDetails/${id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    // console.log("Edit Bill Response:", data);
+    toast.success("Bill edited successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    // Optional: dispatch to refresh data
+    dispatch(getBillDetails(id));
+  } catch (error) {
+    console.error("Error editing bill:", error);
+    toast.error(error?.response?.data?.message || "Edit failed");
+  }
+};
+export const addToBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addToBill/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log("Edit Bill Response:", data);
+    toast.success("Added to bill successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    // Optional: dispatch to refresh data
+    dispatch(getBillDetails(id));
+  } catch (error) {
+    console.error("Error adding to bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
 
 export const getDoctorRequests = (status) => async (dispatch) => {
   try {
