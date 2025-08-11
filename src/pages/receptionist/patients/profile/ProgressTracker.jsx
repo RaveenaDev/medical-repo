@@ -159,17 +159,23 @@ const ProgressTracker = ({ patient }) => {
                 <TableRow
                   key={index}
                   style={{
+                    borderRadius: "8px",
                     backgroundColor:
                       step.status === "ongoing" ? "#e8f5e9" : "inherit",
                     height: "60px",
                   }}
-                  onClick={() => openModal(step)}
                   sx={{
                     cursor: step.status === "ongoing" ? "pointer" : "default",
                     transition: "background-color 0.3s",
                   }}
                 >
-                  <TableCell sx={{ padding: "24px 12px", textAlign: "center" }}>
+                  <TableCell
+                    sx={{
+                      padding: "24px 12px",
+                      textAlign: "center",
+                      borderRadius: "80px",
+                    }}
+                  >
                     {step?.title || "Untitled Phase"}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
@@ -177,8 +183,10 @@ const ProgressTracker = ({ patient }) => {
                       ? new Date(step.date).toISOString().split("T")[0]
                       : "Date N/A"}
                   </TableCell>
-                  <TableCell>{step?.doctor?.name || "Unknown"}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {step?.doctor?.name || "Unknown"}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
                     <Typography
                       style={{
                         color:
