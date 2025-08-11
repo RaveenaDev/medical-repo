@@ -221,8 +221,8 @@
   display: flex;
   justify-content: space-between;
   position: relative;
-  padding: 4vh 1.6vw 3vh 1.6vw;
-  button {
+  padding: 4vh 1.6vw 6vh 1.6vw;
+  .sendBtn {
     background-color: #25307f;
     color: white;
     border-radius: 4px;
@@ -230,23 +230,11 @@
     height: 5.6vh;
     font-size: 2vh;
   }
-  .greenDotContainer {
-    position: relative;
 
-    width: 3%;
-  }
-  .greenDot {
-    position: absolute;
-    left: 40%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1vw;
-    height: 1vw;
-    border-radius: 50%;
-    background: #3db461;
-  }
-  input {
-    width: 82%;
+  .sendInput {
+    width: 70%;
+    flex: 1;
+    margin: 0vh 1vw;
     border-radius: 4px;
     outline: none;
     border: 1px solid #4c5597;
@@ -258,4 +246,90 @@
       color: #bfc0c6;
     }
   }
+}
+
+// DateRangeDropdown.module.scss
+.dropdown,
+.dropdown2 {
+  position: relative;
+  width: 11.5%; // Use a percentage of viewport width for the dropdown
+  min-width: 110px; //Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+  display: flex;
+  align-items: center;
+  //height: 1vh;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  //min-height: 5vh;
+}
+
+.arrow {
+  color: #777;
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 1vh rgba(60, 64, 67, 0.2);
+  border-radius: 0.7vh;
+  width: 100%;
+  z-index: 10;
+  margin-top: -1vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 0.3vh 1vw;
+  cursor: pointer;
+  font-size: 1.7vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+}
+
+.active {
+  background: #e6edfd !important;
+  color: #25307f;
+  font-weight: 500;
+}
+
+.ongoingTrigger {
+  background: #f3f5ff;
+  border-radius: 24px;
+  padding: 0.5vh 1vw;
+  color: #25307f;
+}
+
+.completedTrigger {
+  background: #e8f1e9;
+  border-radius: 24px;
+  padding: 0.5vh 1vw;
+  color: #2e823b;
+}
+
+.arrow img {
+  transition: transform 0.3s ease;
+}
+
+.arrowUp {
+  transform: rotate(180deg);
 }

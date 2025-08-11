@@ -21,7 +21,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProgressTrackerDetails } from "../../../../components/State/Receptionist/Action";
-
+import styles from "./ProgressTracker.module.scss";
 const ProgressTracker = ({ patient }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -83,144 +83,103 @@ const ProgressTracker = ({ patient }) => {
   );
   console.log("progressTracker details: ", progressTracker);
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      justifyContent="center"
-      alignItems="start"
-    >
-      <Timeline
-        position="left"
-        style={{
-          marginTop: "55px",
-          paddingRight: "0",
-          marginLeft: "12px",
-          backgroundColor: "none",
-        }}
+    <div className={styles.container}>
+      <div className={styles.timelineContainer}>
+        <div className={styles.timeline}>
+          {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
+            [...progressTracker].map((step, index) => (
+              <div key={index} className={styles.timelineItem}>
+                <div className={styles.timelineSeparator}>
+                  <div
+                    className={`${styles.timelineDot} ${
+                      step.status === "ongoing"
+                        ? styles.ongoing
+                        : styles.completed
+                    }`}
+                  ></div>
+                  {index < progressTracker.length - 1 && (
+                    <div className={styles.timelineConnector}></div>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className={styles.noData}>No progress steps available.</div>
+          )}
+        </div>
+      </div>
+
+      <div
+        className={styles.tableContainer}
+        style={{ marginTop: "0px", paddingRight: "22px" }}
       >
+        {/* Header row */}
+        <div className={styles.tableHeaderRow}>
+          <div className={styles.headerCell}>Phase</div>
+          <div className={styles.headerCell}>Date</div>
+          <div className={styles.headerCell}>Responsible</div>
+          <div className={styles.headerCell}>Progress Status</div>
+        </div>
+
+        {/* Body */}
         {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
           progressTracker.map((step, index) => (
-            <TimelineItem key={index} style={{ padding: 0, margin: 0 }}>
-              <TimelineSeparator style={{ padding: 0, margin: 0 }}>
-                <TimelineDot
-                  sx={{
-                    margin: 0,
-                    backgroundColor:
-                      step.status === "ongoing" ? "#2E823B" : "#EAA000",
-                    borderColor:
-                      step.status === "ongoing" ? "#2E823B" : "#EAA000",
-                    boxShadow:
-                      step.status === "ongoing"
-                        ? "0px 0px 0px 3px rgba(46, 130, 59, 0.3)" // Green glow
-                        : "none", // No glow for completed
-                  }}
-                />
-                {index < progressTracker.length - 1 && (
-                  <TimelineConnector sx={{ width: "13%" }} />
-                )}
-              </TimelineSeparator>
-              <TimelineContent style={{ padding: 0 }}></TimelineContent>
-            </TimelineItem>
+            <div
+              key={index}
+              className={`${styles.tableRow} ${
+                step.status === "ongoing" ? styles.activeRow : ""
+              }`}
+              onClick={handleClick}
+              style={{
+                backgroundColor:
+                  step.status === "ongoing" ? "#e8f5e9" : "inherit",
+                borderRadius: "8px",
+                height: "60px",
+                cursor: step.status === "ongoing" ? "pointer" : "default",
+                transition: "background-color 0.3s",
+              }}
+            >
+              <div className={styles.tableCell} style={{ textAlign: "center" }}>
+                {step?.title || "Untitled Phase"}
+              </div>
+              <div className={styles.tableCell} style={{ textAlign: "center" }}>
+                {step?.date
+                  ? new Date(step.date).toISOString().split("T")[0]
+                  : "Date N/A"}
+              </div>
+              <div className={styles.tableCell} style={{ textAlign: "center" }}>
+                {step?.doctor?.name || "Unknown"}
+              </div>
+              <div
+                className={styles.tableCell}
+                style={{
+                  textAlign: "center",
+                  fontWeight: 600,
+                  fontSize: "14px",
+                  color:
+                    step.status === "completed"
+                      ? "#EAA000"
+                      : step.status === "ongoing"
+                      ? "#2E823B"
+                      : "black",
+                }}
+              >
+                {step?.status
+                  ? step.status.charAt(0).toUpperCase() + step.status.slice(1)
+                  : "N/A"}
+              </div>
+            </div>
           ))
         ) : (
-          <div style={{ padding: "10px", color: "#888" }}>
+          <div
+            className={styles.noData}
+            style={{ textAlign: "center", color: "#888", padding: "20px" }}
+          >
             No progress steps available.
           </div>
         )}
-      </Timeline>
-
-      <TableContainer style={{ marginTop: "-22px", paddingRight: "22px" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell
-                sx={{
-                  color: "#878787",
-                  //paddingLeft: "44px",
-                  textAlign: "center",
-                }}
-              >
-                Phase
-              </TableCell>
-              <TableCell sx={{ color: "#878787", textAlign: "center" }}>
-                Date
-              </TableCell>
-              <TableCell sx={{ color: "#878787", textAlign: "center" }}>
-                Responsible
-              </TableCell>
-              <TableCell sx={{ color: "#878787", textAlign: "center" }}>
-                Progress Status
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
-              progressTracker.map((step, index) => (
-                <TableRow
-                  key={index}
-                  style={{
-                    borderRadius: "8px",
-                    backgroundColor:
-                      step.status === "ongoing" ? "#e8f5e9" : "inherit",
-                    height: "60px",
-                  }}
-                  sx={{
-                    cursor: step.status === "ongoing" ? "pointer" : "default",
-                    transition: "background-color 0.3s",
-                  }}
-                >
-                  <TableCell
-                    sx={{
-                      padding: "24px 12px",
-                      textAlign: "center",
-                      borderRadius: "80px",
-                    }}
-                  >
-                    {step?.title || "Untitled Phase"}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    {step?.date
-                      ? new Date(step.date).toISOString().split("T")[0]
-                      : "Date N/A"}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    {step?.doctor?.name || "Unknown"}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    <Typography
-                      style={{
-                        color:
-                          step.status === "completed"
-                            ? "#EAA000"
-                            : step.status === "ongoing"
-                            ? "#2E823B"
-                            : "black",
-                        fontWeight: 600,
-                        fontSize: "14px",
-                      }}
-                    >
-                      {step?.status
-                        ? step.status.charAt(0).toUpperCase() +
-                          step.status.slice(1)
-                        : "N/A"}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  sx={{ textAlign: "center", color: "#888", padding: "20px" }}
-                >
-                  No progress steps available.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+      </div>
+    </div>
   );
 };
 
