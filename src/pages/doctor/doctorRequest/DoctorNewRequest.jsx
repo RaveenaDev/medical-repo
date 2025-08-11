@@ -7,7 +7,7 @@ const DoctorNewRequest = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    title: "",
+    order: "",
     quantity: "",
     timeline: "",
     purpose: "",
@@ -61,9 +61,9 @@ const DoctorNewRequest = ({ onClose }) => {
           <div>
             <h4>Order</h4>
             <input
-              name="title"
+              name="order"
               placeholder="Place an Order"
-              value={formData.title}
+              value={formData.order}
               onChange={handleChange}
             />
           </div>

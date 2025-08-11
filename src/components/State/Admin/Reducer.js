@@ -1,4 +1,5 @@
 import {
+  ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
   ADD_EXPENSE,
@@ -19,7 +20,7 @@ import {
   GET_BILL_DETAILS,
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
-  GET_DEPARTMENT_BY_ID,
+  GET_DEPARTMENT_BY_ID, GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_EARNINGS,
   GET_EXPENSES,
@@ -80,6 +81,7 @@ const initialState = {
   success: null,
   recordsCount: null,
   requestsToApprove: [],
+  doctorRequests: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -373,6 +375,20 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         requestsToApprove: action.payload.requests,
       };
+
+    case GET_DOCTOR_REQUESTS:
+      return{
+        ...state,
+        doctorRequests: action.payload.data,
+      }
+
+    case ACCEPT_REQUEST:
+      return{
+        ...state,
+        doctorRequests: state.doctorRequests.filter(
+            request => request._id !== action.payload
+        ),
+      }
 
     default:
       return state;

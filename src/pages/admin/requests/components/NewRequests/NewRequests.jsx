@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./NewRequests.scss";
+import {useDispatch, useSelector} from "react-redux";
+import {getDoctorRequests} from "../../../../../components/State/Admin/Action.js";
 
 export default function NewRequests() {
+  const dispatch = useDispatch()
   const [expanded, setExpanded] = useState(null); // Track which request is expanded
 
   const requests = [
@@ -74,20 +77,32 @@ export default function NewRequests() {
     setExpanded(expanded === id ? null : id);
   };
 
+  useEffect(() => {
+    dispatch(getDoctorRequests('pending'))
+  }, [dispatch]);
+
+  const pendingRequests = useSelector((store) => store.admin.doctorRequests)
+
+  // console.log("Pending Req: ",pendingRequests)
+
+  const handleAccept = (id) => {
+    console.log(id)
+  }
+
   return (
     <div className="newRequests">
-      {requests.map((req) => (
-        <div key={req.id} className="requestCard">
+      {pendingRequests.map((req) => (
+        <div key={req._id} className="requestCard">
           <img src={req.img ?? "/img.svg"} alt="request" />
           <div className="requestDetails">
-            <p>{req.text}</p>
+            <p>{req.requestBy.name}</p>
             <div className="details">
               <div className="request">
                 <div
                   className="medicineReq"
-                  onClick={() => toggleExpand(req.id)}
+                  onClick={() => toggleExpand(req._id)}
                 >
-                  <p>Request for Medicines</p>
+                  <p>Request for {req.order}</p>
                   <svg
                     width="31"
                     height="30"
@@ -97,7 +112,7 @@ export default function NewRequests() {
                   >
                     <path
                       d={
-                        expanded === req.id
+                        expanded === req._id
                           ? "M27.7278 20L15.1416 7.5L2.5553 20L4.78936 22.2187L15.1416 11.9375L25.4938 22.2187L27.7278 20Z"
                           : "M27.7278 10L15.1416 22.5L2.5553 10L4.78936 7.78125L15.1416 18.0625L25.4938 7.78125L27.7278 10Z"
                       }
@@ -105,30 +120,33 @@ export default function NewRequests() {
                     />
                   </svg>
                 </div>
-                {expanded === req.id && (
-                  <div className="medicineDetails">
-                    <p>
-                      <span>Request:</span> Please order the following
-                      medications
-                    </p>
-                    <ul>
-                      {req.medicines.length > 0 ? (
-                        req.medicines.map((med, index) => (
-                          <li key={index}>{med}</li>
-                        ))
-                      ) : (
-                        <li>No medications specified</li>
-                      )}
-                    </ul>
-                    {req.attachment && (
+                {expanded === req._id && (
+                    <div className="medicineDetails">
                       <p>
-                        <span>Attachments: </span>
-                        <a href="/path-to-pdf.pdf" download>
-                          {req.attachment}
-                        </a>
+                        <span>Request:</span> {req.purpose}
                       </p>
-                    )}
-                  </div>
+                      {/*<ul>*/}
+                      {/*  {req.medicines.length > 0 ? (*/}
+                      {/*    req.medicines.map((med, index) => (*/}
+                      {/*      <li key={index}>{med}</li>*/}
+                      {/*    ))*/}
+                      {/*  ) : (*/}
+                      {/*    <li>No medications specified</li>*/}
+                      {/*  )}*/}
+                      {/*</ul>*/}
+                      <span>Time: </span>
+                      {
+                        req.timeline
+                      }
+                      {req.attachment && (
+                          <p>
+                            <span>Attachments: </span>
+                            <a href="/path-to-pdf.pdf" download>
+                              {req.description}
+                            </a>
+                          </p>
+                      )}
+                    </div>
                 )}
               </div>
               <div className="response">
@@ -138,7 +156,7 @@ export default function NewRequests() {
                   className="border p-2 rounded w-full my-2"
                 />
                 <div className="buttons">
-                  <button className="accept">Accept</button>
+                  <button onClick={() => handleAccept(req._id)} className="accept">Accept</button>
                   <button className="remind">Remind me later</button>
                 </div>
               </div>

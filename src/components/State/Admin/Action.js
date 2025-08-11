@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
+  ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
   ADD_EXPENSE,
@@ -21,7 +22,7 @@ import {
   GET_BILL_DETAILS,
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
-  GET_DEPARTMENT_BY_ID,
+  GET_DEPARTMENT_BY_ID, GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_EARNINGS,
   GET_EXPENSES,
@@ -915,3 +916,41 @@ export const approveAdmissionRequestsAdmin =
       toast.error(error?.response?.data?.message || "Approval failed");
     }
   };
+
+export const getDoctorRequests = (status) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/requests?status=${status}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("REQ : ", data);
+
+    localStorage.setItem("doctorRequestsCount", data.data?.length);
+
+    dispatch({ type: GET_DOCTOR_REQUESTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const acceptRequest = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/requests/${id}/accept`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Request Accepted : ", data);
+
+    dispatch({ type: ACCEPT_REQUEST, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
