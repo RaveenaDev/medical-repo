@@ -134,9 +134,11 @@ const PatientList = () => {
   };
   const navigate = useNavigate();
   const handleClick = (patient) => {
-    navigate(`/receptionist/patients/profile`, { state: { patient } });
+    const latestAppointment =
+      patient.appointments?.[patient.appointments.length - 1];
+    const caseId = latestAppointment?.caseId || "Not Assigned";
+    navigate("/receptionist/patients/profile", { state: { patient, caseId } });
   };
-
   useEffect(() => {
     // dispatch(getPatients());
     dispatch(getFilteredPatients(filters, page, rowsPerPage));
@@ -333,10 +335,10 @@ const PatientList = () => {
                           }}
                           onClick={() => handleClick(patient)}
                         >
-                          {truncateText(patient?.name,18)}
+                          {truncateText(patient?.name, 18)}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {truncateText(patient?.email,18)}
+                          {truncateText(patient?.email, 18)}
                         </Typography>
                       </TableCell>
                       <TableCell>{patient.phone}</TableCell>

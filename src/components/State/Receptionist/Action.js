@@ -14,9 +14,11 @@ import {
   GET_DOCTORS_BY_DEPARTMENT,
   GET_FILTERED_APPOINTMENTS,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
+  GET_FILTERED_PATIENTS,
+  GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
+  GET_PROGRESS_TRACKER,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_STAFFS,
@@ -533,3 +535,29 @@ export const updatePatient = (patientId, updatedData) => async (dispatch) => {
     });
   }
 };
+
+export const getProgressTrackerDetails =
+  (patientId, caseId) => async (dispatch) => {
+    //console.log("Params:", patientId + " " + caseId);
+    try {
+      const token = localStorage.getItem("jwt");
+      // console.log("this is action of progress tracker");
+
+      const { data } = await axios.get(
+        `${API_URL}/getProgressTracker/${patientId}/${caseId}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      //console.log("Progress Tracker: ", data);
+
+      dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
+    } catch (error) {
+      console.error("Error getting progress details:", error);
+    }
+  };
