@@ -17,6 +17,7 @@ const roleOptions = {
     { title: "Overview", path: "/admin" },
     { title: "Reception", path: "/admin/reception" },
     { title: "Departments", path: "/admin/departments" },
+    { title: "TPA", path: "/admin/tpa" },
     { title: "Expenses", path: "/admin/expenses" },
     { title: "Settings", path: "/admin/settings" },
   ],
@@ -119,6 +120,7 @@ const Sidebar = ({ role }) => {
         flexDirection: "column",
         justifyContent: "space-between",
         height: "86.7vh",
+        overflowY: "auto",
       }}
     >
       <div>

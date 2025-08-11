@@ -87,6 +87,16 @@ const AddPatientForm = ({ onClose }) => {
       sendTo: sendToValue,
       mobileNumber: form.contactNo,
       name: form.patientName,
+      insurance: {
+        hasInsurance: form.hasInsurance,
+        employerName: form.employerName,
+        insuranceIdNumber: form.insuranceIdNumber,
+        policyNumber: form.policyNumber,
+        insuranceCompany: form.insuranceCompany,
+        employeeCode: form.employeeCode,
+        insuranceStartDate: new Date(form.insuranceStartDate),
+        insuranceExpiryDate: new Date(form.insuranceExpiryDate)
+      },
       admissionDetails: {
         name: form.patientName,
         contact: form.contactNo,
@@ -106,6 +116,7 @@ const AddPatientForm = ({ onClose }) => {
 
     dispatch(createAdmissionRequest(payload));
 
+    console.log("Pay: ",payload)
     onClose();
   };
   const [selectedRoles, setSelectedRoles] = useState([]);

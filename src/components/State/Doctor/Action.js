@@ -298,7 +298,7 @@ export const getDoctorRequests = (status) => async (dispatch) => {
       },
     });
 
-    // console.log("REQ : ", data);
+    console.log("REQ : ", data);
 
     localStorage.setItem("doctorRequestsCount", data.data?.length);
 

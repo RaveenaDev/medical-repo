@@ -1,4 +1,5 @@
 import {
+  ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
   ADD_EXPENSE,
@@ -19,12 +20,12 @@ import {
   GET_BILL_DETAILS,
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
-  GET_DEPARTMENT_BY_ID,
+  GET_DEPARTMENT_BY_ID, GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS,
+  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -35,8 +36,6 @@ import {
   GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
-  UPDATE_ROOM,
-  UPDATE_STAFFS,
 } from "./ActionType.js";
 
 const initialState = {
@@ -49,6 +48,7 @@ const initialState = {
   totalStaffs: null,
   staffCount: null,
   totalRooms: null,
+  totalFilteredRooms: null,
   patient: null,
   appointmentCount: null,
   patients: [],
@@ -56,6 +56,7 @@ const initialState = {
   doctors: [],
   staffs: [],
   rooms: [],
+  filteredRooms:[],
   departments: [],
   department: null,
   expenses: [],
@@ -80,6 +81,7 @@ const initialState = {
   success: null,
   recordsCount: null,
   requestsToApprove: [],
+  doctorRequests: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -238,6 +240,12 @@ export const adminReducer = (state = initialState, action) => {
         isLoading: false,
       };
 
+    case GET_FILTERED_ROOMS:
+      return{
+        ...state,
+        totalFilteredRooms: action.payload.totalRooms,
+        filteredRooms: action.payload.rooms
+      }
     case GET_APPOINTMENT_REQUESTS:
       return {
         ...state,
@@ -367,6 +375,20 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         requestsToApprove: action.payload.requests,
       };
+
+    case GET_DOCTOR_REQUESTS:
+      return{
+        ...state,
+        doctorRequests: action.payload.data,
+      }
+
+    case ACCEPT_REQUEST:
+      return{
+        ...state,
+        doctorRequests: state.doctorRequests.filter(
+            request => request._id !== action.payload
+        ),
+      }
 
     default:
       return state;

@@ -14,8 +14,10 @@ import {
   GET_DOCTORS_BY_DEPARTMENT,
   GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
+  GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
+  GET_PROGRESS_TRACKER,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS,
@@ -34,6 +36,7 @@ const initialState = {
   doctorCount: null,
   totalStaffs: null,
   totalRooms: null,
+  totalFilteredRooms: null,
   totalAppointments: [],
   scheduledAppointments: [],
   ongoingAppointments: [],
@@ -50,8 +53,10 @@ const initialState = {
   doctorsByDepartment: [],
   staffs: [],
   rooms: [],
+  filteredRooms: [],
   departments: [],
   department: null,
+  progressTracker: [],
   appointments: [],
   appointmentRequests: [],
   allBills: [],
@@ -126,6 +131,13 @@ export const receptionistReducer = (state = initialState, action) => {
         totalRooms: action.payload.rooms.length,
         rooms: action.payload.rooms,
         isLoading: false,
+      };
+
+    case GET_FILTERED_ROOMS:
+      return {
+        ...state,
+        totalFilteredRooms: action.payload.totalRooms,
+        filteredRooms: action.payload.rooms,
       };
 
     case ADD_ROOM:
@@ -250,6 +262,13 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         bill: action.payload,
+      };
+
+    case GET_PROGRESS_TRACKER:
+      return {
+        ...state,
+        progressTracker: action.payload,
+        isLoading: false,
       };
 
     default:

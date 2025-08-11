@@ -47,6 +47,7 @@ import { Navigate } from "react-router-dom";
 import Base from "./pages/landing/Base.jsx";
 import DoctorRoutes from "./pages/doctor/DoctorRoutes.jsx";
 import IpdRoutes from "./pages/ipd/IpdRoutes.jsx";
+import TPA from "./pages/admin/tpa/TPA.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -139,6 +140,7 @@ function App() {
             style={{
               marginLeft: shouldShowSidebar ? "20%" : "0",
               height: "100%",
+              overflow: "auto",
             }} // Prevent content from going under the sidebar
           >
             <Routes>
@@ -436,7 +438,18 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
+              <Route
+                path="/admin/tpa"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <TPA
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/admin/rooms"
                 element={

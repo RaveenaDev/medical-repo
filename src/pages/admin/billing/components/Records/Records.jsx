@@ -34,6 +34,7 @@ const Records = () => {
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0); // page number
   const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+  const [selectedBillId, setSelectedBillId] = useState(null);
   useEffect(() => {
     dispatch(getBillingRecords(page, rowsPerPage)); // Fetch billing records from API
   }, [dispatch, page, rowsPerPage]);
@@ -50,8 +51,10 @@ const Records = () => {
     setSelectedBill(billDetails);
   }, [billDetails]);
   const handleViewClick = (billId) => {
-    dispatch(getBillDetails(billId)); // Fetch bill details from API
-    setOpenModal(true);
+    setSelectedBillId(billId);
+    setSelectedBill(null); // << clear old bill so modal doesn't flash old data
+    setOpenModal(true); // << open first, show loader inside modal
+    dispatch(getBillDetails(billId)); // fetch new bill
   };
 
   const handleCloseModal = () => {
@@ -311,6 +314,7 @@ const Records = () => {
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
+        billId={selectedBillId}
       />
 
       {/* Filter Drawer */}
