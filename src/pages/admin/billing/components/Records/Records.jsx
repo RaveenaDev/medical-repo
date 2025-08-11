@@ -34,6 +34,7 @@ const Records = () => {
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0); // page number
   const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+  const [selectedBillId, setSelectedBillId] = useState(null);
   useEffect(() => {
     dispatch(getBillingRecords(page, rowsPerPage)); // Fetch billing records from API
   }, [dispatch, page, rowsPerPage]);
@@ -50,6 +51,7 @@ const Records = () => {
     setSelectedBill(billDetails);
   }, [billDetails]);
   const handleViewClick = (billId) => {
+    setSelectedBillId(billId);
     dispatch(getBillDetails(billId)); // Fetch bill details from API
     setOpenModal(true);
   };
@@ -311,6 +313,7 @@ const Records = () => {
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
+        billId={selectedBillId}
       />
 
       {/* Filter Drawer */}
