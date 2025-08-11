@@ -936,9 +936,31 @@ export const editBill = (payload, id) => async (dispatch) => {
     });
 
     // Optional: dispatch to refresh data
-    dispatch(getBillingRecords());
+    dispatch(getBillDetails(id));
   } catch (error) {
     console.error("Error editing bill:", error);
     toast.error(error?.response?.data?.message || "Edit failed");
+  }
+};
+export const addToBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addToBill/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log("Edit Bill Response:", data);
+    toast.success("Added to bill successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    // Optional: dispatch to refresh data
+    dispatch(getBillDetails(id));
+  } catch (error) {
+    console.error("Error adding to bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
   }
 };

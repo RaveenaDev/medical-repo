@@ -52,8 +52,9 @@ const Records = () => {
   }, [billDetails]);
   const handleViewClick = (billId) => {
     setSelectedBillId(billId);
-    dispatch(getBillDetails(billId)); // Fetch bill details from API
-    setOpenModal(true);
+    setSelectedBill(null); // << clear old bill so modal doesn't flash old data
+    setOpenModal(true); // << open first, show loader inside modal
+    dispatch(getBillDetails(billId)); // fetch new bill
   };
 
   const handleCloseModal = () => {

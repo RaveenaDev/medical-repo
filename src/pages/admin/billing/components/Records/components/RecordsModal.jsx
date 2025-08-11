@@ -1,11 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Modal, Box, Typography, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Stack,
+  Grid,
+  InputAdornment,
+  CircularProgress,
+} from "@mui/material";
 import "./RecordModal.scss";
 import arrowBack from "/arrow_back.svg";
 import { X } from "lucide-react";
 import printJS from "print-js"; // Import print-js
-import { editBill } from "../../../../../../components/State/Admin/Action";
+import {
+  addToBill,
+  editBill,
+} from "../../../../../../components/State/Admin/Action";
 import { useDispatch } from "react-redux";
+
 const RecordModal = ({ open, bill, onClose, billId }) => {
   useEffect(() => {
     if (open) {
@@ -17,27 +34,93 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
       document.body.style.overflow = "auto";
     };
   }, [open]);
+
   useEffect(() => {
-    if (!open && bill) {
-      setIsEditing(false);
+    if (open && bill) {
+      setIsEditing(false); // ensure read-only initially
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [open, bill]);
+
   const dispatch = useDispatch();
-  console.log("original Bill", bill);
+  // console.log("original Bill", bill);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
 
   const [editableBill, setEditableBill] = useState({});
+
+  const [addOpen, setAddOpen] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
+  const [addForm, setAddForm] = useState({
+    category: "",
+    quantity: "1",
+    rate: "0",
+    details: "",
+  });
+  const [addErrors, setAddErrors] = useState({});
+
+  const parseIntSafe = (v, fallback = 0) => {
+    const n = parseInt(String(v ?? ""), 10);
+    return Number.isFinite(n) ? n : fallback;
+  };
+
+  const lineTotal = parseIntSafe(addForm.quantity) * parseIntSafe(addForm.rate);
+
+  const openAddDialog = () => setAddOpen(true);
+  const closeAddDialog = () => {
+    setAddOpen(false);
+    setAddErrors({});
+    setAddForm({ category: "", quantity: "1", rate: "0", details: "" });
+  };
+
+  const handleAddChange = (field) => (e) => {
+    let value = e.target.value;
+    if (field === "quantity" || field === "rate") {
+      value = value.replace(/\D+/g, ""); // digits only
+    }
+    setAddForm((p) => ({ ...p, [field]: value }));
+  };
+
+  const validateAdd = () => {
+    const errs = {};
+    if (!addForm.category.trim()) errs.category = "Category is required";
+    if (parseIntSafe(addForm.quantity) <= 0) errs.quantity = "Must be > 0";
+    if (parseIntSafe(addForm.rate) < 0) errs.rate = "Cannot be negative";
+    setAddErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleAddSubmit = async () => {
+    if (!validateAdd()) return;
+    setAddLoading(true);
+    try {
+      const payload = {
+        category: addForm.category.trim(),
+        quantity: parseIntSafe(addForm.quantity, 0),
+        rate: parseIntSafe(addForm.rate, 0),
+        details: addForm.details || undefined,
+      };
+
+      const action = await dispatch(addToBill(payload, billId));
+      closeAddDialog();
+    } catch (e) {
+      console.error(e);
+      // You can replace with a toast
+      toast.error("Failed to add to bill. Please try again.", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setAddLoading(false);
+    }
+  };
+
   // console.log("Edited Bill", editableBill);
   const printGrand = (editableBill?.services || []).reduce((s, r) => {
     const q = Number.isFinite(+r.quantity) ? +r.quantity : 0;
     const pr = Number.isFinite(+r.rate) ? +r.rate : 0;
     return s + q * pr;
   }, 0);
-  useEffect(() => {
-    if (bill) setEditableBill(JSON.parse(JSON.stringify(bill)));
-  }, [bill]);
 
   const handlePrint = () => {
     printJS({
@@ -289,7 +372,12 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
               <div className="billing-amount-details">
                 <div>
                   <div className="bold">Total Amount</div>
-                  <div>₹{isEditing ? computedGrand : bill.totalAmount}</div>
+                  <div>
+                    ₹
+                    {isEditing
+                      ? computedGrand
+                      : editableBill?.totalAmount ?? bill.totalAmount}
+                  </div>
                 </div>
 
                 <div>
@@ -318,7 +406,7 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                       }
                     />
                   ) : (
-                    <div>₹{bill.paidAmount}</div>
+                    <div>₹{editableBill?.paidAmount ?? bill.paidAmount}</div>
                   )}
                 </div>
 
@@ -326,15 +414,17 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                   <div className="bold ">Outstanding</div>
                   <div className="center">
                     ₹
-                    {isEditing
-                      ? Math.max(
-                          computedGrand -
-                            Number(
-                              editableBill.paidAmount ?? bill.paidAmount ?? 0
-                            ),
-                          0
-                        )
-                      : bill.outstanding}
+                    {isEditing ? (
+                      Math.max(
+                        computedGrand -
+                          Number(
+                            editableBill.paidAmount ?? bill.paidAmount ?? 0
+                          ),
+                        0
+                      )
+                    ) : (
+                      <>{editableBill?.outstanding ?? bill.outstanding}</>
+                    )}
                   </div>
                 </div>
 
@@ -358,9 +448,11 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                     </select>
                   ) : (
                     <div
-                      className={`center status ${bill.status.toLowerCase()}`}
+                      className={`center status ${String(
+                        (editableBill?.status ?? bill.status) || ""
+                      ).toLowerCase()}`}
                     >
-                      {bill.status}
+                      {editableBill?.status ?? bill.status}
                     </div>
                   )}
                 </div>
@@ -393,7 +485,7 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                           <option value="Online">Online</option>
                         </select>
                       ) : (
-                        <span> {bill.mode}</span>
+                        <span> {editableBill?.mode ?? bill.mode}</span>
                       )}
                     </span>
                   </p>
@@ -409,14 +501,127 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                 </div>
               </div>
             </div>
-            {isEditing && (
+            {isEditing ? (
               <div className="billing-edited-save-btn">
-                <button onClick={handleSave}>Save</button>
+                <Button variant="contained" onClick={handleSave}>
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <div className="billing-edited-save-btn">
+                <Button variant="contained" onClick={openAddDialog}>
+                  Add to Bill
+                </Button>
               </div>
             )}
           </div>
         </div>
       </div>
+      <Dialog
+        open={addOpen}
+        onClose={addLoading ? undefined : closeAddDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Add to Bill</DialogTitle>
+        <DialogContent dividers>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            <TextField
+              label="Category"
+              value={addForm.category}
+              onChange={handleAddChange("category")}
+              error={!!addErrors.category}
+              helperText={addErrors.category}
+              fullWidth
+              autoFocus
+            />
+
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  label="Quantity"
+                  value={addForm.quantity}
+                  onChange={handleAddChange("quantity")}
+                  onBlur={() =>
+                    setAddForm((p) => ({
+                      ...p,
+                      quantity: String(parseIntSafe(p.quantity, 1)),
+                    }))
+                  }
+                  error={!!addErrors.quantity}
+                  helperText={addErrors.quantity}
+                  fullWidth
+                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Rate"
+                  value={addForm.rate}
+                  onChange={handleAddChange("rate")}
+                  onBlur={() =>
+                    setAddForm((p) => ({
+                      ...p,
+                      rate: String(parseIntSafe(p.rate, 0)),
+                    }))
+                  }
+                  error={!!addErrors.rate}
+                  helperText={addErrors.rate}
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
+                    inputProps: { inputMode: "numeric", pattern: "[0-9]*" },
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            <TextField
+              label="Details (optional)"
+              value={addForm.details}
+              onChange={handleAddChange("details")}
+              fullWidth
+              multiline
+              minRows={2}
+            />
+
+            <Box
+              sx={{
+                mt: 1,
+                p: 1.5,
+                borderRadius: 1,
+                bgcolor: "rgba(37,48,127,0.06)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="body2" sx={{ color: "#0B0B0B" }}>
+                Line total
+              </Typography>
+              <Typography variant="h6">
+                ₹{Number.isFinite(lineTotal) ? lineTotal : 0}
+              </Typography>
+            </Box>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeAddDialog} disabled={addLoading}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleAddSubmit}
+            disabled={addLoading}
+            startIcon={addLoading ? <CircularProgress size={18} /> : null}
+          >
+            {addLoading ? "Adding..." : "Add"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Hidden Printable Section */}
       <div style={{ display: "none" }}>
         <div id="printable-bill" className="print-container" ref={printRef}>
