@@ -5,33 +5,6 @@ import { getProgressTrackerDetails } from "../../../../../components/State/Docto
 import CompletedProgress from "./modals/completed/CompletedProgress";
 import OngoingProgress from "./modals/ongoing/OngoingProgress";
 
-const OngoingModal = ({ step, onClose }) => {
-  return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <div className={styles.modalHeader}>
-          <h2>Ongoing Phase</h2>
-          <button onClick={onClose}>✖</button>
-        </div>
-        <div className={styles.modalBody}>
-          <p>This step is currently ongoing.</p>
-          <p>
-            <strong>Phase:</strong> {step?.phase}
-          </p>
-          <p>
-            <strong>Doctor:</strong> {step?.doctor?.name}
-          </p>
-        </div>
-        <div className={styles.modalFooter}>
-          <button onClick={onClose} className={styles.closeBtn}>
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const ProgressTracker2 = ({ patientId, caseId }) => {
   const dispatch = useDispatch();
   const [selectedStep, setSelectedStep] = useState(null);
@@ -83,7 +56,7 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
               </div>
             ))
           ) : (
-            <div className={styles.noData}>No progress steps available.</div>
+            <div className={styles.noData}></div>
           )}
         </div>
       </div>
