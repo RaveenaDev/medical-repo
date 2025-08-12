@@ -366,14 +366,22 @@ const AddPatientForm = ({ onClose }) => {
                     </div>
                     <div className="form-field">
                       <label>Company</label>
-                      <input
-                          type="text"
+                      <select
                           value={form.insuranceCompany}
                           onChange={(e) =>
                               setForm({...form, insuranceCompany: e.target.value})
                           }
+                          className="styled-select"
                           required
-                      />
+                      >
+                        <option value="">Select Company</option>
+                        <option value="Bajaj Allianz">Bajaj Allianz</option>
+                        <option value="Mediassist TPA">Mediassist TPA</option>
+                        <option value="MD India">MD India</option>
+                        <option value="Health India">Health India</option>
+                        <option value="Navi General Insurance CO. LTD">Navi General Insurance CO. LTD</option>
+                        <option value="Reliance General Insurance">Reliance General Insurance</option>
+                      </select>
                     </div>
                   </div>
 

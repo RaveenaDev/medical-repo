@@ -135,7 +135,13 @@
   align-items: center;
   gap: 1vw;
 }
-
+.patientInfoControl2 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
 .patientInfoControl {
   display: flex;
   justify-content: space-between;
@@ -199,14 +205,6 @@
 .progressTracker {
   background-color: white;
   width: 65%;
-
-  h4 {
-    color: #25307f;
-    margin-left: 3vw;
-    margin-top: -2vh;
-    font-size: 2.4vh;
-    margin-bottom: 0vh;
-  }
 }
 
 .row1PT {

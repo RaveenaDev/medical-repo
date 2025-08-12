@@ -679,7 +679,7 @@ const Rooms = (props) => {
                           },
                         }}
                 >
-                  <DialogTitle sx={{ fontWeight: "600"}}>Beds ({currentRoom?.roomID})</DialogTitle>
+                  <DialogTitle sx={{ fontWeight: "600"}}>Room ({currentRoom?.roomID})</DialogTitle>
                   <DialogContent sx={{
                     maxHeight: "500px", // Fixed height
                     overflowY: "auto",  // Enable vertical scrolling

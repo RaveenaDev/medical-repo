@@ -176,3 +176,18 @@
   color: #25307f;
   height: 2.8vh;
 }
+
+.doseInput {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  span {
+    font-size: 1.9vh;
+  }
+  input {
+    height: 5vh;
+    width: 85%;
+    border-radius: 4px;
+    border: 1px solid #cfcfcf;
+  }
+}

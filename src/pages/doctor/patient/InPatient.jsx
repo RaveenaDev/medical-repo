@@ -340,8 +340,8 @@ const InPatients = () => {
                                 </td>
                                 <td className={styles.patientInfo}>
                                     <div>
-                                        <div className={styles.patientName}>{patient?.name || "Not Assigned"}</div>
-                                        <div className={styles.patientEmail}>{patient?.email || "Not Assigned"}</div>
+                                        <div className={styles.patientName}>{truncateText(patient?.name || "Not Assigned",15)}</div>
+                                        <div className={styles.patientEmail}>{truncateText(patient?.email || "Not Assigned",15)}</div>
                                     </div>
                                 </td>
                                 <td className={styles.bedNumber}>{patient?.bedType || "Not Assigned"}</td>

@@ -98,12 +98,15 @@ const UpdateMAR = ({ onClose, patientId, caseId }) => {
 
             <div>
               <p>Dose</p>
-              <input
-                type="text"
-                className={styles.inputText}
-                value={med.dose}
-                onChange={(e) => handleChange(index, "dose", e.target.value)}
-              />
+              <div className={styles.doseInput}>
+                <input
+                  type="text"
+                  className={styles.inputTextDose}
+                  value={med.dose}
+                  onChange={(e) => handleChange(index, "dose", e.target.value)}
+                />
+                <span>Mg</span>
+              </div>
             </div>
 
             <div>
