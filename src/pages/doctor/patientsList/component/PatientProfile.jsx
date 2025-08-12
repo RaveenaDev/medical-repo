@@ -275,10 +275,18 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
           )}
 
           {/* Patient Info Control */}
-          <div className={styles.patientInfoControl}>
-            <button onClick={openBedInfo}>
-              <Bed className={styles.bedIcon} /> Bed no.
-            </button>
+          <div
+            className={`${
+              isFollowUpStatus
+                ? styles.patientInfoControl2
+                : styles.patientInfoControl
+            }`}
+          >
+            {!isFollowUpStatus && (
+              <button onClick={openBedInfo}>
+                <Bed className={styles.bedIcon} /> Bed no.
+              </button>
+            )}
 
             <div
               className={styles.patientInfoControlRight}

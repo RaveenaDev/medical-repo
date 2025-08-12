@@ -135,7 +135,13 @@
   align-items: center;
   gap: 1vw;
 }
-
+.patientInfoControl2 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
 .patientInfoControl {
   display: flex;
   justify-content: space-between;
