@@ -53,8 +53,6 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
     dispatch(getPatientDetailsByID(patientId));
   }, [dispatch]);
 
-  const openDischarge = () => setActiveModal("discharge");
-  const openUpdateProgress = () => setActiveModal("update progress");
   const openBedInfo = () => setActiveModal("bedInfo");
   const closeModal = () => setActiveModal(null);
   const handleActivePatientInfo = () => {
@@ -296,7 +294,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
           </div>
         </div>
         <div className={styles.progressTracker}>
-          <div className={styles.row1PT}>
+          {/* <div className={styles.row1PT}>
             <button className={styles.dischargeBtn} onClick={openDischarge}>
               <img src="/assets/inpatient/discharge.svg" alt="" /> Discharge
             </button>
@@ -306,6 +304,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
             </button>
           </div>
           <h4>Progress Tracker</h4>
+           */}
           <div>
             <ProgressTracker2 patientId={patientId} caseId={caseId} />
           </div>
