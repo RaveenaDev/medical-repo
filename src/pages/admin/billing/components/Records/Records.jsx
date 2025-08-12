@@ -239,8 +239,8 @@ const Records = () => {
             billingRecords.map((item) => (
               <div className="table-row" key={item._id}>
                 <span className="blue">{item.caseId}</span>
-                <span className="blue">{item.patient.name}</span>
-                <span className="grey">{item.patient.phone}</span>
+                <span className="blue">{item.patient.name || "N/A"}</span>
+                <span className="grey">{item.patient.phone || "N/A"}</span>
                 <span className="grey">
                   {new Date(item.createdAt).toLocaleDateString("en-IN", {
                     day: "2-digit",
