@@ -237,10 +237,10 @@ const Records = () => {
         <div style={{ paddingBottom: "2rem" }}>
           {billingRecords.length > 0 ? (
             billingRecords.map((item) => (
-              <div className="table-row" key={item._id}>
-                <span className="blue">{item.caseId}</span>
-                <span className="blue">{item.patient.name || "N/A"}</span>
-                <span className="grey">{item.patient.phone || "N/A"}</span>
+              <div className="table-row" key={item?._id || "N/A"}>
+                <span className="blue">{item?.caseId || "N/A"}</span>
+                <span className="blue">{item.patient?.name || "N/A"}</span>
+                <span className="grey">{item.patient?.phone || "N/A"}</span>
                 <span className="grey">
                   {new Date(item.createdAt).toLocaleDateString("en-IN", {
                     day: "2-digit",
