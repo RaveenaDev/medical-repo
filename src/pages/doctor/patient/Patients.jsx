@@ -46,6 +46,8 @@ const Patients = () => {
     const totalFilteredPatients = doctor.totalFilteredPatients
     const filteredPatients = doctor.filteredPatients
 
+    // console.log("FIl: ",filteredPatients)
+
     const handleSortChange = (event) => {
         // admin = null;
         setSortOrder(event.target.value);
@@ -330,7 +332,7 @@ const Patients = () => {
                         <th style={{ backgroundColor: '#F1F1F1' }}>Name</th>
                         <th style={{ backgroundColor: '#F1F1F1' }}>Phone Number</th>
                         <th style={{ backgroundColor: '#F1F1F1' }}>Type Visit</th>
-                        <th style={{ backgroundColor: '#F1F1F1' }}>Branch</th>
+                        <th style={{ backgroundColor: '#F1F1F1' }}>Type</th>
                         <th style={{ backgroundColor: '#F1F1F1' }}>Date</th>
                         <th style={{ backgroundColor: '#F1F1F1' }}>Booking</th>
                         {/*<th></th>*/}
@@ -351,8 +353,7 @@ const Patients = () => {
                                 {patient?.typeVisit || "Not Assigned"}
                             </td>
                             <td className={styles.branch}>
-                                {patient.appointments[patient.appointments.length - 1]
-                                    ?.department.name || "Not Assigned"}
+                                {patient.typeVisit || "Not Assigned"}
                             </td>
                             <td className={styles.date}>
                                 {/*{truncateText(patient?.appointments[0].date, 10)}*/}
