@@ -69,12 +69,12 @@ export const getPatients = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const item = localStorage.getItem('userId')
+    const item = localStorage.getItem("userId");
     // console.log("Item: ",item)
 
     const { data } = await axios.get(`${API_URL}/getPatientsByHospital`, {
       params: {
-        doctorId: item
+        doctorId: item,
       },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -93,7 +93,7 @@ export const getFilteredPatients =
     try {
       const token = localStorage.getItem("jwt");
 
-      const item = localStorage.getItem('userId')
+      const item = localStorage.getItem("userId");
 
       const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
         params: {
@@ -1653,11 +1653,11 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
   }
 };
 export const updateProgressTrackerPhase =
-  (payload, patientId, caseId, phaseId) => async (dispatch) => {
+  (payload, patientId, caseId, sourceType, sourceId) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
       const { data } = await axios.put(
-        `${API_URL}/updatePhase/${phaseId}`,
+        `${API_URL}/updatePhase/${sourceType}/${sourceId}`,
         payload,
         {
           headers: {
