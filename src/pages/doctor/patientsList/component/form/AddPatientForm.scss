@@ -84,6 +84,28 @@
             flex: 1;
             gap: 0.5rem;
           }
+
+          .styled-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #fff;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23666' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 10px;
+            transition: border-color 0.2s ease-in-out;
+
+            &:focus {
+              border-color: #5461be;
+              box-shadow: 0 0 0 2px rgba(84, 97, 190, 0.2);
+            }
+          }
+
         }
 
         .form-note {
