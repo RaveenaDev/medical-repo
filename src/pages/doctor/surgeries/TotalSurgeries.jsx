@@ -162,7 +162,7 @@ const TotalSurgeries = () => {
       <div className={styles.patientsHeader}>
         <div className={styles.headerTop}>
           <div className={styles.headerLeft}>
-            <ChevronLeft size={28} strokeWidth={1.7} />
+            <ChevronLeft size={28} strokeWidth={1.7} style={{cursor:'pointer'}} onClick={() => navigate(-1)}/>
             <span className={styles.backText}>Surgeries List</span>
           </div>
           <div className={styles.headerRight}>
