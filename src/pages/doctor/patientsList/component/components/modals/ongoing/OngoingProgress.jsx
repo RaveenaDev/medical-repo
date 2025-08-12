@@ -51,7 +51,8 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
         type: item.file.type,
       }))
     );
-    const phaseId = step.sourceId;
+    const sourceId = step.sourceId;
+    const sourceType = step.sourceType;
 
     const payload = {
       isFinal,
@@ -62,7 +63,15 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
       additionalFields,
       date: new Date().toISOString(), // Send updated timestamp
     };
-    dispatch(updateProgressTrackerPhase(payload, patientId, caseId, phaseId));
+    dispatch(
+      updateProgressTrackerPhase(
+        payload,
+        patientId,
+        caseId,
+        sourceType,
+        sourceId
+      )
+    );
     onClose(); // Close modal
   };
 

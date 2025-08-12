@@ -81,7 +81,7 @@ const ProgressTracker = ({ patient }) => {
   const progressTracker = useSelector(
     (store) => store.receptionist.progressTracker
   );
-  console.log("progressTracker details: ", progressTracker);
+  //console.log("progressTracker details: ", progressTracker);
   return (
     <div className={styles.container}>
       <div className={styles.timelineContainer}>

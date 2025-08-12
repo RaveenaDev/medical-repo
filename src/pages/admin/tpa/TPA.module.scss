@@ -1,0 +1,32 @@
+.container {
+  width: 100%;
+  margin: 0vh;
+}
+.header {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8vw;
+  margin-top: 1vh;
+}
+.content {
+  background: white;
+  margin: 2vh 0vw;
+}
+.selection {
+  display: flex;
+  justify-content: space-between;
+  height: 5vh;
+  cursor: pointer;
+  .selectionDiv {
+    width: 24vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #25307f;
+    font-family: "Karla", sans-serif;
+    font-weight: 600;
+  }
+}
+.selectedTab {
+  border-bottom: solid #25307f;
+}

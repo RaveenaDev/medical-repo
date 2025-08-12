@@ -29,6 +29,8 @@ const CompletedProgress = ({ step, onClose }) => {
 
   const { data, doctor, phase, date } = step;
 
+  // console.log("CompletedProgress", step);
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
