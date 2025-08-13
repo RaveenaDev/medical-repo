@@ -81,13 +81,13 @@ const SinglePatientDetail = () => {
             </div>
           </div>
           <div className={styles.headerRight}>
-            <button
-              onClick={handleUpdateDiagnosis}
-              className={styles.diagnosisBtn}
-            >
-              <Plus className={styles.plusIcon} />
-              Update Diagnosis
-            </button>
+            {/*<button*/}
+            {/*  onClick={handleUpdateDiagnosis}*/}
+            {/*  className={styles.diagnosisBtn}*/}
+            {/*>*/}
+            {/*  <Plus className={styles.plusIcon} />*/}
+            {/*  Update Diagnosis*/}
+            {/*</button>*/}
             <button className={styles.billingBtn} onClick={openBilling}>
               <img src="/assets/payment.svg" alt="" className={styles.icon} />
               Billing Details
