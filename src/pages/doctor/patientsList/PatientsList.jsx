@@ -292,46 +292,73 @@ const PatientsList = () => {
                     </div>
                   </div>
                   <div className="admit_btn_container">
-                    {patient.status == "Approved" ? (
+                    {patient.status === "Approved" ? (
                       <button
                         className="admit_btn"
-                        onClick={() => {
-                          handleAdmitPatientClick(patient._id);
-                        }}
+                        onClick={() => handleAdmitPatientClick(patient._id)}
                       >
                         Admit
                       </button>
                     ) : (
-                      <div className="approval-status">
-                        <div>
-                          Doctor:{" "}
-                          <span
-                            className={
-                              patient.approval?.doctor?.approved
-                                ? "approved-text"
-                                : "pending-text"
-                            }
+                      (() => {
+                        // normalize sendTo -> set of lowercased tokens
+                        const raw = patient?.sendTo ?? "";
+                        const tokens = Array.isArray(raw)
+                          ? raw
+                          : String(raw).split(","); // supports "Doctor,Admin"
+                        const sendToSet = new Set(
+                          tokens
+                            .map((t) => t.trim().toLowerCase())
+                            .filter(Boolean)
+                        );
+
+                        const showDoctor =
+                          sendToSet.has("doctor") || sendToSet.has("both"); // show doctor row if Doctor or Both
+                        const showAdmin =
+                          sendToSet.has("admin") || sendToSet.has("both"); // show admin row if Admin or Both
+                        const hasBoth = showDoctor && showAdmin; // check if both are shown
+                        return (
+                          <div
+                            className={`approval-status ${
+                              hasBoth ? "two-status" : ""
+                            }`}
                           >
-                            {patient.approval?.doctor?.approved
-                              ? "Approved"
-                              : "Pending"}
-                          </span>
-                        </div>
-                        <div>
-                          Admin:{" "}
-                          <span
-                            className={
-                              patient.approval?.admin?.approved
-                                ? "approved-text"
-                                : "pending-text"
-                            }
-                          >
-                            {patient.approval?.admin?.approved
-                              ? "Approved"
-                              : "Pending"}
-                          </span>
-                        </div>
-                      </div>
+                            {showDoctor && (
+                              <div>
+                                Doctor:{" "}
+                                <span
+                                  className={
+                                    patient?.approval?.doctor?.approved
+                                      ? "approved-text"
+                                      : "pending-text"
+                                  }
+                                >
+                                  {patient?.approval?.doctor?.approved
+                                    ? "Approved"
+                                    : "Pending"}
+                                </span>
+                              </div>
+                            )}
+
+                            {showAdmin && (
+                              <div>
+                                Admin:{" "}
+                                <span
+                                  className={
+                                    patient?.approval?.admin?.approved
+                                      ? "approved-text"
+                                      : "pending-text"
+                                  }
+                                >
+                                  {patient?.approval?.admin?.approved
+                                    ? "Approved"
+                                    : "Pending"}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()
                     )}
                   </div>
                 </div>
