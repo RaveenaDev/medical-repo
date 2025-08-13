@@ -12,6 +12,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
   const [files, setFiles] = useState([]);
   const [additionalFields, setAdditionalFields] = useState([]);
   const [showAddField, setShowAddField] = useState(false);
+
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -20,6 +21,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
       reader.readAsDataURL(file);
     });
   };
+
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files).map((file) => ({
       name: file.name,
@@ -37,6 +39,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
   const handleAddField = () => {
     setAdditionalFields([...additionalFields, { label: "", value: "" }]);
   };
+
   const handleDeleteField = (index) => {
     const updatedFields = [...additionalFields];
     updatedFields.splice(index, 1); // Remove the field at the given index
@@ -48,6 +51,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
     updated[index][key] = value;
     setAdditionalFields(updated);
   };
+
   const handleSaveClick = async () => {
     const newFiles = await Promise.all(
       files.map(async (item) => ({
@@ -59,15 +63,20 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
     const sourceId = step.sourceId;
     const sourceType = step.sourceType;
 
+    const updatedData = additionalFields.reduce((acc, field) => {
+      acc[field.label] = field.value; // Use label as key instead of index
+      return acc;
+    }, {});
+
     const payload = {
       isFinal,
       isDone: true,
       description: note,
       files: newFiles,
       treatment,
-      additionalFields,
-      // date: new Date().toISOString(), // Send updated timestamp
+      data: { ...updatedData, treatment }, // Add treatment to the data field
     };
+
     dispatch(
       updateProgressTrackerPhase(
         payload,
@@ -80,7 +89,6 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
     onClose(); // Close modal
   };
 
-  // console.log("Ongoing Progress Step: ", step);
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
@@ -110,6 +118,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               </div>
             </div>
           </div>
+
           <div className={styles.checkboxContainer}>
             <label className={styles.checkboxLabel}>
               <input
@@ -132,6 +141,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
                 onChange={(e) => setNote(e.target.value)}
               />
             </div>
+
             <div className={styles.descriptionContainer}>
               <h6 className={styles.label}>Upload New Files</h6>
               <div className={styles.uploadBox}>
@@ -175,34 +185,6 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
                   </li>
                 ))}
               </ul>
-              {/* Show already uploaded backend files */}
-              {step?.data?.files?.length > 0 && (
-                <div className={styles.uploadedFiles}>
-                  <p className={styles.label}>Existing Files</p>
-                  <ul className={styles.uploadedFilesWrapper}>
-                    {step.data.files.map((file, idx) => (
-                      <li key={idx} className={styles.fileRow}>
-                        <img
-                          src="/assets/fileIcon.svg"
-                          alt="File"
-                          className={styles.fileIcon}
-                        />
-                        <div className={styles.fileDetails}>
-                          <a
-                            href={file}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.fileName}
-                          >
-                            {file.split("/").pop()}
-                          </a>
-                          <span className={styles.uploadedText}>Uploaded</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           </div>
 
@@ -216,7 +198,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               onChange={(e) => setTreatment(e.target.value)}
             />
           </div>
-          {/* Add Additional Info */}
+
           <div style={{ marginTop: "2vh" }}>
             <button
               onClick={handleAddField}
@@ -260,9 +242,6 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
                     color="#e74c3c"
                     style={{
                       cursor: "pointer",
-                      "&:hover": {
-                        transform: "scale(1.1)",
-                      },
                     }}
                     onClick={() => handleDeleteField(index)}
                   />
@@ -271,7 +250,6 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
             ))}
           </div>
 
-          {/* Submit Button */}
           <div style={{ marginTop: "2vh", textAlign: "center" }}>
             <button
               style={{
@@ -284,9 +262,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
                 fontFamily: "Karla, sans-serif",
                 cursor: "pointer",
               }}
-              onClick={() => {
-                handleSaveClick();
-              }}
+              onClick={handleSaveClick}
             >
               Save & Close
             </button>

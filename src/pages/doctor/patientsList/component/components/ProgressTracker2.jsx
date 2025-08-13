@@ -154,7 +154,11 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.dischargeModal}>
-            <Discharge onClose={closeModal} patientId={patientId} />
+            <Discharge
+              onClose={closeModal}
+              patientId={patientId}
+              caseId={caseId}
+            />
           </div>
         </>
       )}
