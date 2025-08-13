@@ -375,7 +375,10 @@ const PatientsList = () => {
               className={`headerItem ${item} ${
                 filter === item ? "active" : ""
               }`}
-              onClick={() => setFilter(item)}
+              onClick={() => {
+                setFilter(item);
+                setCurrentPage(1);
+              }}
               style={{ cursor: "pointer" }}
             >
               {item}
