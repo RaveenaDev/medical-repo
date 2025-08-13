@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Trash2 } from "lucide-react";
+import { X, Trash2, LucideTrash2 } from "lucide-react";
 import styles from "./OngoingProgress.module.scss";
 import { useDispatch } from "react-redux";
 import { updateProgressTrackerPhase } from "../../../../../../../components/State/Doctor/Action";
@@ -36,6 +36,11 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
 
   const handleAddField = () => {
     setAdditionalFields([...additionalFields, { label: "", value: "" }]);
+  };
+  const handleDeleteField = (index) => {
+    const updatedFields = [...additionalFields];
+    updatedFields.splice(index, 1); // Remove the field at the given index
+    setAdditionalFields(updatedFields); // Update the state with the new array
   };
 
   const handleAdditionalChange = (index, key, value) => {
@@ -231,27 +236,37 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
             </button>
 
             {additionalFields.map((field, index) => (
-              <div key={index} className={styles.row1}>
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Label (e.g. Allergies)"
-                  value={field.label}
-                  onChange={(e) =>
-                    handleAdditionalChange(index, "label", e.target.value)
-                  }
-                  style={{ border: "1px solid #cfcfcf" }}
-                />
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Value"
-                  value={field.value}
-                  onChange={(e) =>
-                    handleAdditionalChange(index, "value", e.target.value)
-                  }
-                  style={{ border: "1px solid #cfcfcf" }}
-                />
+              <div key={index} className={styles.row4}>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type="text"
+                    className={styles.textInput}
+                    placeholder="Label (e.g. Allergies)"
+                    value={field.label}
+                    onChange={(e) =>
+                      handleAdditionalChange(index, "label", e.target.value)
+                    }
+                  />
+                  <textarea
+                    className={styles.textInput}
+                    placeholder="Value"
+                    value={field.value}
+                    onChange={(e) =>
+                      handleAdditionalChange(index, "value", e.target.value)
+                    }
+                  />
+                  <LucideTrash2
+                    size={42}
+                    color="#e74c3c"
+                    style={{
+                      cursor: "pointer",
+                      "&:hover": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                    onClick={() => handleDeleteField(index)}
+                  />
+                </div>
               </div>
             ))}
           </div>
