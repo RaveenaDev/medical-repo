@@ -11,7 +11,6 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
   const [treatment, setTreatment] = useState("");
   const [files, setFiles] = useState([]);
   const [additionalFields, setAdditionalFields] = useState([]);
-  const [showAddField, setShowAddField] = useState(false);
 
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
