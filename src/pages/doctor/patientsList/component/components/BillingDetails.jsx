@@ -19,11 +19,12 @@ const BillingDetails = ({ onClose }) => {
   }, [patientId, location.state]);
 
   const patientBills = useSelector((state) => state.doctor.patientBills || []);
+  // console.log("Patient Bills", patientBills);
   const latestBill =
-    Array.isArray(patientBills) && patientBills.length > 1
+    Array.isArray(patientBills) && patientBills.length >= 1
       ? patientBills[patientBills.length - 1]
       : {};
-  //console.log("Latest Patient Bills", latestBill);
+  // console.log("Latest Patient Bills", latestBill);
   const {
     invoiceNumber,
     invoiceDate,

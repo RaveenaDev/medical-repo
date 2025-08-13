@@ -1661,7 +1661,7 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
         },
       }
     );
-    //console.log("Bill INFO", data);
+    // console.log("Bill INFO", data);
     dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
   } catch (error) {
     console.error("patient Bill Info not available:", error);

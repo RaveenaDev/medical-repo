@@ -66,7 +66,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
       files: newFiles,
       treatment,
       additionalFields,
-      date: new Date().toISOString(), // Send updated timestamp
+      // date: new Date().toISOString(), // Send updated timestamp
     };
     dispatch(
       updateProgressTrackerPhase(
