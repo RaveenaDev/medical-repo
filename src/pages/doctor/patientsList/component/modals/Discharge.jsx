@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { dischargePatient } from "../../../../../components/State/Doctor/Action";
 
-const Discharge = ({ onClose, patientId }) => {
+const Discharge = ({ onClose, patientId, caseId }) => {
   const dispatch = useDispatch();
 
   const [patientName, setPatientName] = useState("");
@@ -27,6 +27,7 @@ const Discharge = ({ onClose, patientId }) => {
 
     const payload = {
       patientId,
+      caseId,
       admissionDate,
       dischargeDate,
       onAdmissionNotes,

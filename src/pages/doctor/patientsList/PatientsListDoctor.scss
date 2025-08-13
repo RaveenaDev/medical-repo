@@ -247,8 +247,17 @@
 
           .approval-status {
             display: flex;
-            justify-content: space-between;
+
             width: 100%;
+            // If both status elements exist
+            &.two-status {
+              justify-content: space-between;
+            }
+
+            // If only one status exists
+            &:not(.two-status) {
+              justify-content: center;
+            }
 
             .approved-text {
               color: #2e823b;

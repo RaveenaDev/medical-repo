@@ -22,7 +22,8 @@ import {
   GET_BILL_DETAILS,
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
-  GET_DEPARTMENT_BY_ID, GET_DOCTOR_REQUESTS,
+  GET_DEPARTMENT_BY_ID,
+  GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_EARNINGS,
   GET_EXPENSES,
@@ -914,7 +915,15 @@ export const approveAdmissionRequestsAdmin =
       dispatch(getAdmissionRequestsToApprove("Pending"));
     } catch (error) {
       console.error("Error approving admission request:", error);
-      toast.error(error?.response?.data?.message || "Approval failed");
+      // Check for specific error code (413)
+      if (error?.response?.status === 413) {
+        toast.error(
+          "The image being sent is too large. Please reduce the size and try again."
+        );
+      } else {
+        // Generic error message for other types of errors
+        toast.error(error?.response?.data?.message || "Approval failed");
+      }
     }
   };
 export const editBill = (payload, id) => async (dispatch) => {

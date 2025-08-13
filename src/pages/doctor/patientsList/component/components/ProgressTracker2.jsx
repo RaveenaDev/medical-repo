@@ -40,16 +40,22 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
   const openDischarge = () => setActiveModal("discharge");
   const openUpdateProgress = () => setActiveModal("update progress");
   const closeModal = () => setActiveModal(null);
+
+  // Check if any step has status "completed"
+  const isFinalPhase = progressTracker.some((step) => step.status === "Final");
   return (
     <div>
       <div className={styles.row1PT}>
         <button className={styles.dischargeBtn} onClick={openDischarge}>
           <img src="/assets/inpatient/discharge.svg" alt="" /> Discharge
         </button>
-        <button onClick={openUpdateProgress} className={styles.updateBtn}>
-          <Plus className={styles.plusIcon} />
-          Update
-        </button>
+        {/* Hide Update button if the status is "completed" */}
+        {!isFinalPhase && (
+          <button onClick={openUpdateProgress} className={styles.updateBtn}>
+            <Plus className={styles.plusIcon} />
+            Update
+          </button>
+        )}
       </div>
       <div>
         <h4 className={styles.title}>Progress Tracker</h4>
@@ -154,7 +160,11 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.dischargeModal}>
-            <Discharge onClose={closeModal} patientId={patientId} />
+            <Discharge
+              onClose={closeModal}
+              patientId={patientId}
+              caseId={caseId}
+            />
           </div>
         </>
       )}

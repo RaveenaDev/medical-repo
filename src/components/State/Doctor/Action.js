@@ -120,7 +120,12 @@ export const getInpatients = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
+    const item = localStorage.getItem("userId");
+
     const { data } = await axios.get(`${API_URL}/getInPatients`, {
+      params: {
+        doctorId: item,
+      },
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
@@ -139,8 +144,11 @@ export const getFilteredInpatients =
     try {
       const token = localStorage.getItem("jwt");
 
+      const item = localStorage.getItem("userId");
+
       const { data } = await axios.get(`${API_URL}/getInPatients`, {
         params: {
+          doctorId: item,
           status: filteredData.status,
           sort: filteredData.sort,
           page: page + 1,
@@ -1532,7 +1540,16 @@ export const approveAdmissionRequestWithSignature =
       dispatch(getAdmissionRequestsToApprove("Pending"));
     } catch (error) {
       console.error("Error approving admission request:", error);
-      toast.error(error?.response?.data?.message || "Approval failed");
+
+      // Check for specific error code (413)
+      if (error?.response?.status === 413) {
+        toast.error(
+          "The image being sent is too large. Please reduce the size and try again."
+        );
+      } else {
+        // Generic error message for other types of errors
+        toast.error(error?.response?.data?.message || "Approval failed");
+      }
     }
   };
 export const getAvailableRooms = () => async (dispatch) => {
@@ -1644,7 +1661,7 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
         },
       }
     );
-    //console.log("Bill INFO", data);
+    // console.log("Bill INFO", data);
     dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
   } catch (error) {
     console.error("patient Bill Info not available:", error);

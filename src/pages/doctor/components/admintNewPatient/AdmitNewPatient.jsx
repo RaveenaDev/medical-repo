@@ -3,13 +3,14 @@ import { ChevronLeft, X, Plus } from "lucide-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import { approveAdmissionRequestWithSignature } from "../../../../components/State/Doctor/Action";
 const AdmitNewPatient = ({ onClose, requests }) => {
   const dispatch = useDispatch();
   const [signature, setSignature] = useState(null);
   const handleApprove = async (requestId) => {
     if (!signature) {
-      alert("Please upload your signature before approving.");
+      toast.error("Please upload your signature before approving.");
       return;
     }
 

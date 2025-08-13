@@ -10,18 +10,31 @@ const SectionBox = ({ title, children }) => (
 );
 
 const renderObject = (obj) => {
-  if (!obj || typeof obj !== "object") return null;
+  if (!obj) return <p>No valid data</p>; // Check if obj is null or undefined
 
-  return Object.entries(obj).map(([key, value]) => (
-    <p key={key}>
-      <strong>{key.replace(/([A-Z])/g, " $1")}: </strong>
-      {Array.isArray(value)
-        ? value.map((v, i) => <div key={i}>• {v}</div>)
-        : typeof value === "object"
-        ? renderObject(value)
-        : String(value)}
-    </p>
-  ));
+  // Check if the object is flat (key-value pairs)
+  if (
+    typeof obj === "object" &&
+    !Array.isArray(obj) &&
+    Object.keys(obj).length
+  ) {
+    return Object.entries(obj).map(([key, value]) => (
+      <p key={key}>
+        <strong>{key.replace(/([A-Z])/g, " $1")}: </strong>
+        {Array.isArray(value)
+          ? value.length > 0
+            ? value.map((v, i) => <div key={i}>• {v}</div>)
+            : "No values available" // Handling empty arrays
+          : typeof value === "object"
+          ? renderObject(value) // Recursively render nested objects
+          : String(value)}{" "}
+        // Render the value as a string
+      </p>
+    ));
+  }
+
+  // If it's not an object or it's empty, render it directly
+  return <p>{String(obj)}</p>;
 };
 
 const CompletedProgress = ({ step, onClose }) => {
@@ -29,7 +42,7 @@ const CompletedProgress = ({ step, onClose }) => {
 
   const { data, doctor, phase, date } = step;
 
-  // console.log("CompletedProgress", step);
+  // console.log("CompletedProgress Data:", step); // Log data to the console
 
   return (
     <div className={styles.modalOverlay}>
