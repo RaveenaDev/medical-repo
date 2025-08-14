@@ -1,7 +1,7 @@
 import "./PatientsListDoctor.scss";
 import Searchbar from "../../../components/Searchbar/index.jsx";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import PatientCard from "./component/modals/PatientCard.jsx";
@@ -19,7 +19,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import dayjs from "dayjs";
-import { Tooltip } from "@mui/material";
+import { TablePagination, Tooltip } from "@mui/material";
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -58,20 +58,6 @@ const PatientsList = () => {
     }
     return patient.type === filter;
   });
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const patientsPerPage = 6;
-
-  // Calculate the current page's patients
-  const indexOfLastPatient = currentPage * patientsPerPage;
-  const indexOfFirstPatient = indexOfLastPatient - patientsPerPage;
-  const currentPatients = filteredPatients.slice(
-    indexOfFirstPatient,
-    indexOfLastPatient
-  );
-
-  // Total pages
-  const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
 
   // FORM
   const [showForm, setShowForm] = useState(false);
@@ -158,6 +144,21 @@ const PatientsList = () => {
   const doctorName =
     useSelector((state) => state.authentication.userName) ||
     localStorage.getItem("username");
+
+  const [page, setPage] = useState(0); // TablePagination uses 0-based indexing
+  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const currentPatients = filteredPatients.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page
+  };
   return (
     <div className="patientsListDoctorContainer">
       <div className="listHeader">
@@ -187,15 +188,7 @@ const PatientsList = () => {
         </div>
         <div className="buttonsContainer">
           <div className="addButton" onClick={handleAddPatientClick}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 18 18"
-              fill="#D9D9D9"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M8 18V10H0V8H8V0H10V8H18V10H10V18H8Z" fill="#D9D9D9" />
-            </svg>
+            <Plus size={20} />
             ADD PATIENT
           </div>
         </div>
@@ -377,7 +370,7 @@ const PatientsList = () => {
               }`}
               onClick={() => {
                 setFilter(item);
-                setCurrentPage(1);
+                setPage(0); // Reset to first page when changing filter
               }}
               style={{ cursor: "pointer" }}
             >
@@ -409,15 +402,21 @@ const PatientsList = () => {
           )}
         </div>
         <div className="pagination">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
+          <TablePagination
+            component="div"
+            count={filteredPatients.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[6, 12, 24, 60, 120]}
+            sx={{
+              width: "100%",
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 11,
+            }}
+          />
         </div>
       </section>
       {/* Conditionally Render Form */}

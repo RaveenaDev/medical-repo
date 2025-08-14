@@ -77,11 +77,12 @@
 
       .addButton {
         display: flex;
+        font-size: 14px;
         align-items: center;
         gap: 8px;
         background-color: #25307f;
         color: #d9d9d9;
-        padding: 5px 16px;
+        padding: 8px 16px;
         border-radius: 6px;
         cursor: pointer;
 
@@ -342,30 +343,6 @@
       justify-content: flex-end;
       align-items: flex-end;
       gap: 0.5rem;
-    }
-
-    .page-btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 24px;
-      height: 28px;
-
-      border-radius: 5px;
-      background: #f2f5ff;
-      cursor: pointer;
-      transition: background 0.3s;
-      color: #333333;
-      font-family: Karla;
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 100%;
-      letter-spacing: 0%;
-      vertical-align: middle;
-    }
-
-    .page-btn.active {
-      background: #dae4ff;
     }
   }
 }
