@@ -8,7 +8,7 @@ import Discharge from "../modals/Discharge";
 import UpdateProgress from "../form/UpdateProgress";
 import { Plus } from "lucide-react";
 
-const ProgressTracker2 = ({ patientId, caseId }) => {
+const ProgressTracker2 = ({ patientId, caseId, isFollowUpStatus }) => {
   const dispatch = useDispatch();
   const [selectedStep, setSelectedStep] = useState(null);
   const [modalType, setModalType] = useState(null); // 'completed' or 'ongoing'
@@ -46,9 +46,11 @@ const ProgressTracker2 = ({ patientId, caseId }) => {
   return (
     <div>
       <div className={styles.row1PT}>
-        <button className={styles.dischargeBtn} onClick={openDischarge}>
-          <img src="/assets/inpatient/discharge.svg" alt="" /> Discharge
-        </button>
+        {!isFollowUpStatus && (
+          <button className={styles.dischargeBtn} onClick={openDischarge}>
+            <img src="/assets/inpatient/discharge.svg" alt="" /> Discharge
+          </button>
+        )}
         {/* Hide Update button if the status is "completed" */}
         {!isFinalPhase && (
           <button onClick={openUpdateProgress} className={styles.updateBtn}>

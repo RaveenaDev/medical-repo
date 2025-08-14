@@ -314,7 +314,11 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
           <h4>Progress Tracker</h4>
            */}
           <div>
-            <ProgressTracker2 patientId={patientId} caseId={caseId} />
+            <ProgressTracker2
+              patientId={patientId}
+              caseId={caseId}
+              isFollowUpStatus={isFollowUpStatus}
+            />
           </div>
         </div>
         {activeModal === "bedInfo" && (
