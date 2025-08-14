@@ -947,6 +947,7 @@ export const editBill = (payload, id) => async (dispatch) => {
 
     // Optional: dispatch to refresh data
     dispatch(getBillDetails(id));
+    dispatch(getBillingRecords());
   } catch (error) {
     console.error("Error editing bill:", error);
     toast.error(error?.response?.data?.message || "Edit failed");
@@ -969,6 +970,8 @@ export const addToBill = (payload, id) => async (dispatch) => {
 
     // Optional: dispatch to refresh data
     dispatch(getBillDetails(id));
+
+    dispatch(getBillingRecords());
   } catch (error) {
     console.error("Error adding to bill:", error);
     toast.error(error?.response?.data?.message || "Add failed");
