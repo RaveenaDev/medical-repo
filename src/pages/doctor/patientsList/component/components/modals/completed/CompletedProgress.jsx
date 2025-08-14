@@ -28,7 +28,6 @@ const renderObject = (obj) => {
           : typeof value === "object"
           ? renderObject(value) // Recursively render nested objects
           : String(value)}{" "}
-        // Render the value as a string
       </p>
     ));
   }
