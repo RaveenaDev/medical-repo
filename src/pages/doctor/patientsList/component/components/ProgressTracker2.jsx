@@ -31,7 +31,7 @@ const ProgressTracker2 = ({ patientId, caseId, isFollowUpStatus }) => {
     if (step.status === "completed") {
       setModalType("completed");
       setSelectedStep(step);
-    } else if (step.status === "ongoing") {
+    } else if (step.status === "ongoing" || step.status === "Final") {
       setModalType("ongoing");
       setSelectedStep(step);
     }

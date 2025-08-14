@@ -5,21 +5,22 @@ import { useDispatch } from "react-redux";
 import { updateProgressTrackerPhase } from "../../../../../../../components/State/Doctor/Action";
 
 const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
+  // console.log("OngoingProgress step: ", step);
   const dispatch = useDispatch();
-  const [isFinal, setIsFinal] = useState(false);
-  const [note, setNote] = useState("");
-  const [treatment, setTreatment] = useState("");
-  const [files, setFiles] = useState([]);
-  const [additionalFields, setAdditionalFields] = useState([]);
-
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
+  const [formData, setFormData] = useState({
+    isFinal: step.status === "Final",
+    note: "",
+    treatment: "",
+    files: [],
+    additionalFields: [],
+  });
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
-  };
 
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files).map((file) => ({
@@ -27,53 +28,67 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
       file,
       preview: URL.createObjectURL(file),
     }));
-    setFiles((prev) => [...prev, ...newFiles]);
+    setFormData((prev) => ({ ...prev, files: [...prev.files, ...newFiles] }));
   };
 
   const handleRemoveFile = (index) => {
-    URL.revokeObjectURL(files[index].preview);
-    setFiles(files.filter((_, i) => i !== index));
+    URL.revokeObjectURL(formData.files[index].preview);
+    setFormData((prev) => ({
+      ...prev,
+      files: prev.files.filter((_, i) => i !== index),
+    }));
   };
 
   const handleAddField = () => {
-    setAdditionalFields([...additionalFields, { label: "", value: "" }]);
+    setFormData((prev) => ({
+      ...prev,
+      additionalFields: [...prev.additionalFields, { label: "", value: "" }],
+    }));
   };
 
   const handleDeleteField = (index) => {
-    const updatedFields = [...additionalFields];
-    updatedFields.splice(index, 1); // Remove the field at the given index
-    setAdditionalFields(updatedFields); // Update the state with the new array
+    setFormData((prev) => ({
+      ...prev,
+      additionalFields: prev.additionalFields.filter((_, i) => i !== index),
+    }));
   };
 
   const handleAdditionalChange = (index, key, value) => {
-    const updated = [...additionalFields];
-    updated[index][key] = value;
-    setAdditionalFields(updated);
+    setFormData((prev) => {
+      const updatedFields = [...prev.additionalFields];
+      updatedFields[index][key] = value;
+      return { ...prev, additionalFields: updatedFields };
+    });
   };
 
   const handleSaveClick = async () => {
     const newFiles = await Promise.all(
-      files.map(async (item) => ({
+      formData.files.map(async (item) => ({
         name: item.name,
         content: await fileToBase64(item.file),
         type: item.file.type,
       }))
     );
+
     const sourceId = step.sourceId;
     const sourceType = step.sourceType;
 
-    const updatedData = additionalFields.reduce((acc, field) => {
-      acc[field.label] = field.value; // Use label as key instead of index
+    // Merge additionalFields + treatment + note into a single data object
+    const updatedData = formData.additionalFields.reduce((acc, field) => {
+      if (field.label) acc[field.label] = field.value; // skip empty labels
       return acc;
     }, {});
 
+    // Add treatment and note into data
+    updatedData["Treatment"] = formData.treatment;
+    updatedData["Notes"] = formData.note;
+
+    // Unified payload
     const payload = {
-      isFinal,
+      isFinal: formData.isFinal,
       isDone: true,
-      description: note,
       files: newFiles,
-      treatment,
-      data: { ...updatedData, treatment }, // Add treatment to the data field
+      data: updatedData, // everything now inside data
     };
 
     dispatch(
@@ -85,9 +100,8 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
         sourceId
       )
     );
-    onClose(); // Close modal
+    onClose();
   };
-
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
@@ -122,8 +136,13 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
-                checked={isFinal}
-                onChange={(e) => setIsFinal(e.target.checked)}
+                checked={formData.isFinal}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    isFinal: e.target.checked,
+                  }))
+                }
               />
               Mark this as the final stage of treatment
             </label>
@@ -135,9 +154,11 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               <textarea
                 className={styles.textarea}
                 placeholder="Enter doctor's note here"
-                value={note}
+                value={formData.note}
                 rows={4}
-                onChange={(e) => setNote(e.target.value)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, note: e.target.value }))
+                }
               />
             </div>
 
@@ -157,7 +178,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               </div>
 
               <ul className={styles.uploadedFilesWrapper}>
-                {files.map((item, idx) => (
+                {formData.files.map((item, idx) => (
                   <li key={idx} className={styles.fileRow}>
                     <img
                       src="/assets/fileIcon.svg"
@@ -192,9 +213,11 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
             <textarea
               className={styles.textarea}
               placeholder="Enter treatment details"
-              value={treatment}
+              value={formData.treatment}
               rows={4}
-              onChange={(e) => setTreatment(e.target.value)}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, treatment: e.target.value }))
+              }
             />
           </div>
 
@@ -216,7 +239,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               + Add Additional Info
             </button>
 
-            {additionalFields.map((field, index) => (
+            {formData.additionalFields.map((field, index) => (
               <div key={index} className={styles.row4}>
                 <div className={styles.inputWrapper}>
                   <input
