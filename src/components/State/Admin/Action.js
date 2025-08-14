@@ -29,7 +29,7 @@ import {
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
-  GET_FILTERED_ROOMS,
+  GET_FILTERED_ROOMS, GET_INSURED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -1011,6 +1011,27 @@ export const acceptRequest = (id) => async (dispatch) => {
     console.log("Request Accepted : ", data);
 
     dispatch({ type: ACCEPT_REQUEST, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInsuredPatients = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getAdmissionRequestsWithInsurance`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Data: ",data)
+
+    dispatch({ type: GET_INSURED_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
   }

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Box, TablePagination } from "@mui/material";
 import styles from "./Patients.module.scss";
 import ViewModal from "./modals/ViewModal";
+import {useDispatch, useSelector} from "react-redux";
+import {getInsuredPatients} from "../../../../components/State/Admin/Action.js";
 const Patients = () => {
   const dummyBillingRecords = [
     {
@@ -271,6 +273,7 @@ const Patients = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [activeModal, setActiveModal] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const dispatch = useDispatch();
 
   const closeModal = () => {
     setActiveModal(null);
@@ -300,6 +303,14 @@ const Patients = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  useEffect(() => {
+    dispatch(getInsuredPatients());
+  }, [dispatch]);
+
+  const insuredPatients = useSelector((store) => store.admin.insuredPatients)
+
+  console.log("Ins: ",insuredPatients)
 
   return (
     <div className={styles.billingsContainer}>

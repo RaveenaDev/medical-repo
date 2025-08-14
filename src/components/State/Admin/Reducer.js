@@ -25,7 +25,7 @@ import {
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
+  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_INSURED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -82,6 +82,7 @@ const initialState = {
   recordsCount: null,
   requestsToApprove: [],
   doctorRequests: [],
+  insuredPatients: []
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -388,6 +389,12 @@ export const adminReducer = (state = initialState, action) => {
         doctorRequests: state.doctorRequests.filter(
             request => request._id !== action.payload
         ),
+      }
+
+    case GET_INSURED_PATIENTS:
+      return{
+        ...state,
+        insuredPatients: action.payload.data
       }
 
     default:
