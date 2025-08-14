@@ -41,6 +41,31 @@ dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+// === date helpers ===
+const startOfDay = (d) => {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+};
+const isSameDay = (a, b) => startOfDay(a).getTime() === startOfDay(b).getTime();
+
+/**
+ * An event is visible on `selectedDate` if:
+ * - non-allDay: its event date is the same day
+ * - allDay: selectedDate is the same as or after the event's start date
+ */
+const shouldShowOnDate = (event, selectedDate) => {
+  const startISO = event.dateISO || event.rawDate || event.date; // safe fallback
+  const evtStart = new Date(startISO);
+
+  if (event.allDay) {
+    return startOfDay(selectedDate).getTime() >= startOfDay(evtStart).getTime();
+  }
+  return isSameDay(evtStart, selectedDate);
+};
+
+
+
 const generateNextDates = (count = 11) => {
   const months = [
     "Jan",
@@ -74,6 +99,11 @@ const generateNextDates = (count = 11) => {
 const DATES = generateNextDates();
 
 const DoctorOverview = ({ todayAppointments }) => {
+  // Date actually controlling the "Upcoming Events" right panel
+  const [selectedEventsDate, setSelectedEventsDate] = useState(new Date());
+
+// Cache of active all-day events (keyed by _id). These should render every day from their start date onward.
+  const [allDayEventsCache, setAllDayEventsCache] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(
@@ -209,10 +239,9 @@ const DoctorOverview = ({ todayAppointments }) => {
         }
 
         start = dayjs(`${date.format("YYYY-MM-DD")} ${safeStartTime}`, "YYYY-MM-DD hh:mm A");
-        end = dayjs(`${date.format("YYYY-MM-DD")} ${safeEndTime}`, "YYYY-MM-DD hh:mm A");
+        end   = dayjs(`${date.format("YYYY-MM-DD")} ${safeEndTime}`,   "YYYY-MM-DD hh:mm A");
 
         const now = dayjs();
-
         if (now.isAfter(end)) {
           status = "cancelled";
         } else if (now.isBetween(start, end) || now.isSame(start) || now.isSame(end)) {
@@ -224,6 +253,7 @@ const DoctorOverview = ({ todayAppointments }) => {
       }
 
       return {
+        _id: event._id,                // keep id for dedupe
         allDay: event.allDay,
         eventType: event.eventType,
         hospital: event.hospital,
@@ -232,8 +262,10 @@ const DoctorOverview = ({ todayAppointments }) => {
         participants: event.participants,
         title: event.title,
         time,
-        type: event.eventType.toLowerCase(),
+        type: event.eventType?.toLowerCase?.(),
         duration,
+        // keep ISO for comparisons; keep formatted string for display if you want
+        dateISO: event.date,
         date: new Date(event.date).toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -243,6 +275,7 @@ const DoctorOverview = ({ todayAppointments }) => {
       };
     });
   };
+
 
   useEffect(() => {
     const container = document.querySelector(`.${styles.datePicker}`);
@@ -319,11 +352,27 @@ const DoctorOverview = ({ todayAppointments }) => {
   const [EVENTS, setEVENTS] = useState(() => processEvents(doctor.events || []));
 
   useEffect(() => {
-    setEVENTS(processEvents(doctor.events || []));
-    // console.log("Running: ")
+    const processed = processEvents(doctor.events || []);
+    setEVENTS(processed);
+
+    // Update all-day cache: add when allDay=true; remove if flipped off
+    setAllDayEventsCache((prev) => {
+      const next = { ...prev };
+      // add new/updated all-day events
+      processed.forEach((ev) => {
+        if (ev?.allDay) {
+          next[ev._id ?? `${ev.title}-${ev.dateISO}`] = ev;
+        } else if (ev?._id && next[ev._id]) {
+          // if some event with same id is no longer allDay, remove it
+          delete next[ev._id];
+        }
+      });
+      return next;
+    });
+
     const interval = setInterval(() => {
       setEVENTS(processEvents(doctor.events || []));
-    }, 5000); // refresh every 15 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [doctor.events]);
@@ -346,6 +395,39 @@ const DoctorOverview = ({ todayAppointments }) => {
   const events = doctor.events;
 
   const criticalPatients = doctor.criticalPatients;
+
+  // Build a Dayjs from a date + a "hh:mm A" string
+  const buildDateTime = (dateObj, timeStr) =>
+      dayjs(`${dayjs(dateObj).format("YYYY-MM-DD")} ${timeStr}`, "YYYY-MM-DD hh:mm A");
+
+// Return how many events are "left" relative to NOW if the selected day is today.
+// Otherwise, return total events on that selected day.
+  const countEventsForHeader = (eventsOnSelectedDate, selectedDate) => {
+    const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
+    if (!isToday) return eventsOnSelectedDate.length;
+
+    const now = dayjs();
+    return eventsOnSelectedDate.filter((e) => {
+      // All-day events: always considered "left" for today
+      if (e.allDay) return true;
+
+      // If we don't have a time range, treat as left
+      if (!e.duration || typeof e.duration !== "string" || !e.duration.includes("–")) {
+        return true;
+      }
+
+      // duration format: "10:00 AM – 11:59 PM"
+      let [startStr, endStr] = e.duration.split("–").map((s) => s.trim());
+      if (endStr === "12:00 AM" || endStr === "00:00") endStr = "11:59 PM";
+
+      const start = buildDateTime(selectedDate, startStr);
+      const end = buildDateTime(selectedDate, endStr);
+
+      // Count if the event hasn't finished yet
+      return end.isAfter(now);
+    }).length;
+  };
+
 
   // console.log("Crit: ",criticalPatients)
 
@@ -438,36 +520,27 @@ const DoctorOverview = ({ todayAppointments }) => {
   const handleDateSelected = (day, monthName) => {
     setSelected(day);
 
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const monthIndex = monthNames.indexOf(monthName);
-
     if (monthIndex === -1) {
       console.error("Invalid month name:", monthName);
       return;
     }
 
     const year = new Date().getFullYear();
-    const selectedDate = new Date(year, monthIndex, day);
-
-    if (isNaN(selectedDate.getTime())) {
-      console.error("Constructed invalid date:", selectedDate);
+    const fullDate = new Date(year, monthIndex, day);
+    if (isNaN(fullDate.getTime())) {
+      console.error("Constructed invalid date:", fullDate);
       return;
     }
-    dispatch(getUpcomingEvents(selectedDate));
+
+    // keep your existing fetch by date
+    dispatch(getUpcomingEvents(fullDate));
+
+    // also set the date that controls which events render in the list
+    setSelectedEventsDate(fullDate);
   };
+
 
   const handleOpenPanel = () => setIsPanelOpen(true);
   const handleClosePanel = () => setIsPanelOpen(false);
@@ -515,6 +588,35 @@ const DoctorOverview = ({ todayAppointments }) => {
       (req.sendTo === "Both" || req.sendTo === "Doctor") &&
       req.approval?.doctor?.approved === false
   );
+
+  // Merge the day-scoped EVENTS with cached all-day events, then filter by selectedEventsDate
+  const visibleEvents = React.useMemo(() => {
+    const byId = new Map();
+
+    // 1) day-scoped events from backend
+    (EVENTS || []).forEach((ev) => {
+      const key = ev._id ?? `${ev.title}-${ev.dateISO}`;
+      byId.set(key, ev);
+    });
+
+    // 2) globally-active all-day events
+    Object.values(allDayEventsCache || {}).forEach((ev) => {
+      const key = ev._id ?? `${ev.title}-${ev.dateISO}`;
+      byId.set(key, ev);
+    });
+
+    // 3) filter to the selectedEventsDate
+    const list = Array.from(byId.values());
+    return list.filter((ev) => shouldShowOnDate(ev, selectedEventsDate));
+  }, [EVENTS, allDayEventsCache, selectedEventsDate]);
+
+  const isSelectedToday = dayjs(selectedEventsDate).isSame(dayjs(), "day");
+  const eventsHeaderCount = countEventsForHeader(visibleEvents, selectedEventsDate);
+  const eventsHeaderText = isSelectedToday
+      ? `${eventsHeaderCount} events left today`
+      : `${eventsHeaderCount} events on ${dayjs(selectedEventsDate).format("DD MMM YYYY")}`;
+
+
 
   return (
     <>
@@ -1188,7 +1290,7 @@ const DoctorOverview = ({ todayAppointments }) => {
               <div className={styles.eventsHeader}>
                 <div>
                   <h3>Upcoming Events</h3>
-                  <small>{eventsLeftToday.length} events left today</small>
+                  <small>{eventsHeaderText}</small>
                 </div>
                 <button className={styles.createBtn} onClick={handleOpenPanel}>
                   <svg
@@ -1228,25 +1330,24 @@ const DoctorOverview = ({ todayAppointments }) => {
 
               {/* Event list */}
               <div className={styles.eventList}>
-                {EVENTS.length === 0 ? (
+                {visibleEvents.length === 0 ? (
                   <div className={styles.noEvents}>No events found</div>
                 ) : (
-                  EVENTS.map((e, i) => (
+                  visibleEvents.map((e, i) => (
                     <div
                       key={i}
                       className={styles.eventRow}
                       onClick={() => setSelectedEvent(e)}
                     >
                       <div
-                        className={`${styles.eventTime} ${
-                          e.allDay ? styles.smallText : ""
-                        }`}
+                        className={`${styles.eventTime}`}
                       >
-                        {e.allDay ? "All Day" : e.time}
+                        {/*{e.allDay ? "All Day" : e.time}*/}
+                        {e.time}
                       </div>
                       <div
                         className={`${styles.commonEventCard} ${
-                          e.status === "active" || e.allDay
+                          e.status === "active"
                             ? styles.eventCardActive
                             : e.status === "queued"
                             ? styles.eventCardQueued

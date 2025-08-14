@@ -484,7 +484,7 @@ export const getUpcomingEvents = (date) => async (dispatch) => {
       },
     });
 
-    // console.log("Upcoming Events: ", data);
+    console.log("Upcoming Events: ", data);
     dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
@@ -562,7 +562,7 @@ export const createNewEvent = (eventData, onClose) => async (dispatch) => {
       },
     });
 
-    // console.log("Created New Event: ", data);
+    console.log("Created New Event: ", data);
     // dispatch({ type: CREATE_NEW_EVENT, payload: data.event });
     const selectedDate = new Date();
     selectedDate.setHours(0, 0, 0, 0); // sets time to 00:00:00.000
