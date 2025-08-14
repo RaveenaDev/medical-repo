@@ -1,0 +1,26 @@
+.container {
+  width: 100%;
+  margin: 0vh;
+}
+.searchAndNotification {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8vw;
+  margin-top: 1vh;
+}
+.content {
+  padding: 0vh 0.5vw;
+}
+
+.backContainer {
+  display: flex;
+  align-items: center;
+  font-size: 3.5vh;
+  font-weight: 600;
+  color: #3c3c3c;
+}
+
+.backIcon {
+  height: 6vh;
+  width: 6vh;
+}

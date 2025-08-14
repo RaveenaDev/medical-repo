@@ -48,6 +48,7 @@ import Base from "./pages/landing/Base.jsx";
 import DoctorRoutes from "./pages/doctor/DoctorRoutes.jsx";
 import IpdRoutes from "./pages/ipd/IpdRoutes.jsx";
 import TPA from "./pages/admin/tpa/TPA.jsx";
+import SingleCompanyDetails from "./pages/admin/tpa/companies/singleCompanyDetails/SingleCompanyDetails.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -443,6 +444,18 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
                     <TPA
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/tpa/single-company-details"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <SingleCompanyDetails
                       setIsSignUpOrLogin={setIsSignUpOrLogin}
                       setEntity={setEntity}
                       entity={entity}
