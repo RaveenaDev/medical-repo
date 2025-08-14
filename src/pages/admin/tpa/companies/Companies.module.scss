@@ -81,3 +81,26 @@
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
+
+.header {
+  background: #f1f1f1;
+  display: flex;
+  justify-content: flex-end;
+  button {
+    display: flex;
+    background: #25307f;
+    color: white;
+    align-items: center;
+    border-radius: 4px;
+    padding: 0.5vh 0.5vw;
+    font-size: 1.9vh;
+    margin-right: 1vw;
+    gap: 0.5vw;
+    margin: 1vh;
+  }
+}
+
+.plusIcon {
+  height: 2.8vh;
+  width: 2.8vh;
+}

@@ -2,12 +2,14 @@
   width: 100%;
   margin: 0vh;
 }
+
 .searchAndNotification {
   display: flex;
   justify-content: flex-end;
   gap: 0.8vw;
   margin-top: 1vh;
 }
+
 .content {
   padding: 0vh 0.5vw;
 }
@@ -23,4 +25,111 @@
 .backIcon {
   height: 6vh;
   width: 6vh;
+  cursor: pointer;
+}
+
+.rateContainer {
+  background: #f1f1f1;
+  color: black;
+  padding: 0;
+
+  .header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 2px;
+    gap: 10px;
+  }
+
+  .divider {
+    width: 100%;
+    height: 0.5px;
+    background: #4a4a4a8c;
+    margin: 10px 0 20px 0;
+  }
+
+  .serviceContainer {
+    margin-bottom: 20px; /* Adjust the gap between services as needed */
+    background: #eff1ff;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .rateTable {
+    height: 75vh; /* Ensure vertical scrolling */
+    overflow-y: auto; /* Enable scrolling */
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+
+    /* Hide scrollbar for Chrome, Safari, Opera */
+    &::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+
+    .rateTableHeader,
+    .rateTableRow {
+      display: grid;
+      grid-template-columns: 1.25fr 1.5fr 1.6fr 1.5fr 1.25fr 1.25fr 1.25fr 1fr 0.5fr;
+      padding: 15px;
+      border-radius: 5px;
+      align-items: center;
+    }
+
+    .rateTableHeader {
+      font-size: 16px;
+      padding-left: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #f1f1f1; /* Ensure it has a background */
+    }
+
+    .rateTableRow {
+      font-size: 14px;
+      background: white;
+      margin-bottom: 0.5rem;
+
+      span {
+        padding-left: 1rem;
+      }
+
+      .viewBtn {
+        background: white;
+        color: #25307f;
+        border-radius: 1.5rem;
+        border: 1px solid #25307f;
+        text-transform: none;
+        max-width: 60px;
+      }
+
+      .menuBtn {
+        color: #555;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .grey {
+        color: #747474;
+        font-weight: 600;
+      }
+
+      .blue {
+        color: #25307f;
+        font-weight: 600;
+      }
+
+      .status {
+        font-weight: bold;
+        text-align: center;
+        width: fit-content;
+      }
+    }
+  }
 }

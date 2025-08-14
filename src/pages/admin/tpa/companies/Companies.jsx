@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, TablePagination } from "@mui/material";
 import styles from "./Companies.module.scss";
 import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 const Companies = () => {
   const companies = [
@@ -48,6 +49,11 @@ const Companies = () => {
 
   return (
     <div className={styles.billingsContainer}>
+      <div className={styles.header}>
+        <button>
+          <Plus className={styles.plusIcon} /> ADD
+        </button>
+      </div>
       <div className={styles.billingsTable} style={{ position: "relative" }}>
         {/* Table Header */}
         <div className={styles.tableHeader}>
