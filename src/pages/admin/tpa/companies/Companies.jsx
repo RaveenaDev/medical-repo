@@ -1,32 +1,46 @@
-import React, { useState } from "react";
-import { Box, TablePagination } from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {
+    Box,
+    Button, Dialog, DialogActions,
+    DialogContent,
+    DialogTitle,
+    TablePagination,
+    TextField,
+} from "@mui/material";
 import styles from "./Companies.module.scss";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
+import {useDispatch, useSelector} from "react-redux";
+import {addInsuranceCompany, getInsuranceCompanies} from "../../../../components/State/Admin/Action.js";
+import Grid from "@mui/material/Grid2";
 
 const Companies = () => {
-  const companies = [
-    { _id: "1", companyID: 9897671212, name: "Apollo Healthcare" },
-    { _id: "2", companyID: 9823456712, name: "Medicare Solutions" },
-    { _id: "3", companyID: 9765432189, name: "Lifeline Hospitals" },
-    { _id: "4", companyID: 9932145687, name: "CarePlus Clinics" },
-    { _id: "5", companyID: 9876543210, name: "Global Health Partners" },
-    { _id: "6", companyID: 9812345678, name: "Sunrise Medical Center" },
-    { _id: "7", companyID: 9954321876, name: "Greenfield Health" },
-    { _id: "8", companyID: 9776543219, name: "PrimeCare Hospital" },
-    { _id: "9", companyID: 9867123450, name: "Wellness First" },
-    { _id: "10", companyID: 9723456781, name: "Medicover India" },
-    { _id: "11", companyID: 9898123456, name: "CureWell Clinics" },
-    { _id: "12", companyID: 9745632187, name: "Nova Health Services" },
-    { _id: "13", companyID: 9821675432, name: "CityCare Hospitals" },
-    { _id: "14", companyID: 9912348765, name: "Unity Medical Group" },
-    { _id: "15", companyID: 9786541230, name: "VitalCare Healthcare" },
-    { _id: "16", companyID: 9832147654, name: "HealWell Medicals" },
-    { _id: "17", companyID: 9923456711, name: "SilverLine Hospitals" },
-    { _id: "18", companyID: 9756432189, name: "Optima Health" },
-    { _id: "19", companyID: 9845671239, name: "Evergreen Medical Center" },
-    { _id: "20", companyID: 9934567821, name: "MetroCare Hospitals" },
-  ];
+    const [errors, setErrors] = useState({}); // Added error state
+
+
+    const [formData, setFormData] = useState({
+        companyID: "",
+        companyName: "",
+        services: [
+            {
+                serviceName: "",
+                serviceCost: "",
+                serviceDescription: ""
+            }
+        ]
+    });
+
+    const [addDialogOpen, setAddDialogOpen] = useState(false);
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getInsuranceCompanies())
+    }, [dispatch]);
+
+    const companies = useSelector((store) => store.admin.insuranceCompanies)
+
+    // console.log("Comp: ",companies)
 
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
@@ -34,9 +48,38 @@ const Companies = () => {
 
   const companyCount = companies.length;
 
-  const handleViewClick = () => {
-    navigate("/admin/tpa/single-company-details");
+    const handleAddDialogOpen = () => setAddDialogOpen(true);
+
+    const handleAddDialogClose = () => {
+        setAddDialogOpen(false);
+    };
+
+  const handleViewClick = (company) => {
+    navigate("/admin/tpa/single-company-details",{state: company});
   };
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleServiceChange = (index, key, value) => {
+        const updatedServices = [...formData.services];
+        updatedServices[index][key] = value;
+        setFormData({ ...formData, services: updatedServices });
+    };
+
+    const handleAddService = () => {
+        setFormData({
+            ...formData,
+            services: [...formData.services, { serviceName: "", serviceCost: "",serviceDescription: "" }],
+        });
+    };
+
+    const handleRemoveService = (index) => {
+        const updatedServices = [...formData.services];
+        updatedServices.splice(index, 1);
+        setFormData({ ...formData, services: updatedServices });
+    };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -47,13 +90,194 @@ const Companies = () => {
     setPage(0);
   };
 
+    const handleSubmit = () => {
+        let newErrors = {};
+
+        Object.keys(formData).forEach((key) => {
+            if (key !== "beds" && !formData[key]) {
+                newErrors[key] = "This field is required";
+            }
+        });
+
+        const finalData = {
+            id: formData.companyID,
+            name: formData.companyName,
+            services: formData.services.map(service => ({
+                serviceName: service.serviceName,
+                serviceDescription: service.serviceDescription,
+                pricingDetails: service.serviceCost // renamed field
+            }))
+        };
+
+        // console.log("Testing : ",formData)
+        // console.log("Testing1 : ",finalData)
+        dispatch(addInsuranceCompany(finalData))
+        setErrors({});
+        setAddDialogOpen(false);
+    };
+
   return (
     <div className={styles.billingsContainer}>
       <div className={styles.header}>
-        <button>
-          <Plus className={styles.plusIcon} /> ADD
-        </button>
+          <Button
+              style={{marginTop:'8px'}}
+              variant="contained"
+              sx={{
+                  display:'flex',
+                  gap:1.5,
+                  textTransform: "none",
+                  backgroundColor: "#25307F",
+                  color: "white",
+                  "&:hover": { background: "#AEC3FF" },
+              }}
+              onClick={handleAddDialogOpen} // Open modal on click
+          >
+              <Plus className={styles.plusIcon} />
+              ADD COMPANY
+          </Button>
       </div>
+
+        <Dialog
+            open={addDialogOpen}
+            onClose={handleAddDialogClose}
+            maxWidth="md"
+            fullWidth
+            sx={{
+                "& .MuiDialog-paper": {
+                    maxWidth: "65%", // This will reduce the max width between md and lg.
+                },
+            }}
+        >
+            <DialogTitle>Add Company</DialogTitle>
+            <DialogContent>
+                <Box sx={{ width: "100%" }}>
+                    {" "}
+                    {/* Fix width issue */}
+                    <Grid container spacing={2}>
+                        <Grid xs={3}>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="Company ID"
+                                name="companyID"
+                                value={formData.companyID}
+                                onChange={handleChange}
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                error={!!errors.companyID}
+                                helperText={errors.companyID}
+                                required
+                            />
+                        </Grid>
+
+                        <Grid xs={3}>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="Company Name"
+                                name="companyName"
+                                value={formData.companyName}
+                                onChange={handleChange}
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                error={!!errors.companyName}
+                                helperText={errors.companyName}
+                                required
+                            />
+                        </Grid>
+
+                        {formData.services.map((service, index) => (
+                            <Grid  container sx={{width:'100vw'}} spacing={2} key={index}>
+                                <Grid xs={3}>
+                                    <TextField
+                                        label="Service Name"
+                                        name={`serviceName-${index}`}
+                                        value={service.serviceName}
+                                        onChange={(e) =>
+                                            handleServiceChange(index, "serviceName", e.target.value)
+                                        }
+                                        fullWidth
+                                        margin="dense"
+                                        variant="outlined"
+                                        required
+                                        error={!!errors[`serviceName-${index}`]}
+                                        helperText={errors[`serviceName-${index}`]}
+                                    />
+                                </Grid>
+                                <Grid xs={3}>
+                                    <TextField
+                                        label="Cost"
+                                        name={`serviceCost-${index}`}
+                                        type="number"
+                                        value={service.serviceCost}
+                                        onChange={(e) =>
+                                            handleServiceChange(index, "serviceCost", e.target.value)
+                                        }
+                                        fullWidth
+                                        margin="dense"
+                                        variant="outlined"
+                                        required
+                                        error={!!errors[`serviceCost-${index}`]}
+                                        helperText={errors[`serviceCost-${index}`]}
+                                    />
+                                </Grid>
+                                <Grid xs={3}>
+                                    <TextField
+                                        label="Description"
+                                        name={`serviceDescription-${index}`}
+                                        value={service.serviceDescription}
+                                        onChange={(e) =>
+                                            handleServiceChange(index, "serviceDescription", e.target.value)
+                                        }
+                                        fullWidth
+                                        margin="dense"
+                                        variant="outlined"
+                                        required
+                                        error={!!errors[`serviceDescription-${index}`]}
+                                        helperText={errors[`serviceDescription-${index}`]}
+                                    />
+                                </Grid>
+                                <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>
+                                    {formData.services.length > 1 && (
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() => handleRemoveService(index)}
+                                        >
+                                            Remove
+                                        </Button>
+                                    )}
+                                </Grid>
+                            </Grid>
+                        ))}
+                        <Button
+                            variant="contained"
+                            sx={{ mt: 2, backgroundColor: "#25307F", color: "white" }}
+                            onClick={handleAddService}
+                        >
+                            + Add Service
+                        </Button>
+                    </Grid>
+                </Box>
+            </DialogContent>
+
+            <DialogActions sx={{ justifyContent: "center" }}>
+                <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    sx={{
+                        width: "200px",
+                        backgroundColor: "#25307F",
+                        "&:hover": { backgroundColor: "green" },
+                    }}
+                >
+                    Save
+                </Button>
+            </DialogActions>
+        </Dialog>
+
       <div className={styles.billingsTable} style={{ position: "relative" }}>
         {/* Table Header */}
         <div className={styles.tableHeader}>
@@ -80,7 +304,7 @@ const Companies = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((company) => (
                 <div className={styles.tableRow} key={company._id}>
-                  <span className={styles.blue}>{company.companyID}</span>
+                  <span className={styles.blue}>{company.id}</span>
                   <span style={{ textAlign: "center" }} className={styles.blue}>
                     {company.name}
                   </span>
@@ -92,7 +316,7 @@ const Companies = () => {
                     }}
                   >
                     <button
-                      onClick={() => handleViewClick()}
+                      onClick={() => handleViewClick(company)}
                       className={styles.viewBtn}
                     >
                       View

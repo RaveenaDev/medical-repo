@@ -4,9 +4,9 @@ import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
-  ADD_EXPENSE,
+  ADD_EXPENSE, ADD_INSURANCE_COMPANY,
   ADD_ROOM,
-  ADD_SERVICE,
+  ADD_SERVICE, ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -29,7 +29,7 @@ import {
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
-  GET_FILTERED_ROOMS, GET_INSURED_PATIENTS,
+  GET_FILTERED_ROOMS, GET_INSURANCE_COMPANIES, GET_INSURED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -1032,6 +1032,69 @@ export const getInsuredPatients = () => async (dispatch) => {
     // console.log("Data: ",data)
 
     dispatch({ type: GET_INSURED_PATIENTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInsuranceCompanies = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getInsuranceCompanies`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Insurance Companies : ",data)
+
+    dispatch({ type: GET_INSURANCE_COMPANIES, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addInsuranceCompany = (formData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+        `${API_URL}/addInsuranceCompany`,formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    console.log("Insurance Company Added : ",data)
+
+    dispatch({ type: ADD_INSURANCE_COMPANY, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addServiceToCompany = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+        `${API_URL}/addServiceToCompany/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    console.log("Service Added To Company : ",data)
+
+    dispatch({ type: ADD_SERVICE_TO_COMPANY, payload: data });
   } catch (error) {
     console.log(error);
   }

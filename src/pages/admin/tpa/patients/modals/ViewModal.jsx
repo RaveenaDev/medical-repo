@@ -4,14 +4,11 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import { X } from "lucide-react";
 const ViewModal = ({ onClose, record }) => {
   const {
-    caseId,
-    patient: { name, email, phone },
+    patient,
     status,
-    totalAmount,
-    company,
   } = record;
 
-  const statusOptions = ["Completed", "Ongoing", "Pending"];
+  const statusOptions = ["Accepted", "Rejected", "Pending"];
   const [openStatus, setOpenStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(status);
   return (
@@ -26,23 +23,23 @@ const ViewModal = ({ onClose, record }) => {
         {/* content */}
         <div className={styles.content}>
           <div className={styles.data}>
-            <p className={styles.label}>Case-ID</p>
-            <p className={styles.value}>{caseId}</p>
+            <p className={styles.label}>PAT-ID</p>
+            <p className={styles.value}>{patient?.patId}</p>
           </div>
 
           <div className={styles.data}>
             <p className={styles.label}>Name</p>
-            <p className={styles.value}>{name}</p>
+            <p className={styles.value}>{patient.name}</p>
           </div>
 
           <div className={styles.data}>
             <p className={styles.label}>Email</p>
-            <p className={styles.value}>{email}</p>
+            <p className={styles.value}>{patient.email}</p>
           </div>
 
           <div className={styles.data}>
             <p className={styles.label}>Phone</p>
-            <p className={styles.value}>{phone}</p>
+            <p className={styles.value}>{patient.phone}</p>
           </div>
 
           <div className={styles.data}>
@@ -85,13 +82,13 @@ const ViewModal = ({ onClose, record }) => {
           </div>
 
           <div className={styles.data}>
-            <p className={styles.label}>Total Amount</p>
-            <p className={styles.value}>{totalAmount}</p>
+            <p className={styles.label}>Policy No.</p>
+            <p className={styles.value}>{patient?.insuranceDetails?.policyNumber}</p>
           </div>
 
           <div className={styles.data}>
             <p className={styles.label}>Company</p>
-            <p className={styles.value}>{company}</p>
+            <p className={styles.value}>{patient?.insuranceDetails?.insuranceCompany}</p>
           </div>
         </div>
 

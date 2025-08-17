@@ -25,7 +25,7 @@ import {
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_INSURED_PATIENTS,
+  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_INSURANCE_COMPANIES, GET_INSURED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -82,7 +82,8 @@ const initialState = {
   recordsCount: null,
   requestsToApprove: [],
   doctorRequests: [],
-  insuredPatients: []
+  insuredPatients: [],
+  insuranceCompanies: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -395,6 +396,12 @@ export const adminReducer = (state = initialState, action) => {
       return{
         ...state,
         insuredPatients: action.payload.data
+      }
+
+    case GET_INSURANCE_COMPANIES:
+      return{
+        ...state,
+        insuranceCompanies: action.payload.companies
       }
 
     default:

@@ -317,10 +317,10 @@ const Patients = () => {
       <div className={styles.billingsTable} style={{ position: "relative" }}>
         {/* Table Header */}
         <div className={styles.tableHeader}>
-          <span>Case ID</span>
+          <span>PAT ID</span>
           <span>Name</span>
-          <span>Phone Number</span>
-          <span>Insurance</span>
+          <span>Phone No.</span>
+          <span>Policy No.</span>
           <span>Company</span>
 
           <span>Status</span>
@@ -341,12 +341,12 @@ const Patients = () => {
             overflowY: "auto",
           }}
         >
-          {billingRecords.length > 0 ? (
-            billingRecords
+          {insuredPatients.length > 0 ? (
+            insuredPatients
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item) => (
                 <div className={styles.tableRow} key={item._id}>
-                  <span className={styles.blue}>{item.caseId}</span>
+                  <span className={styles.blue}>{item.patient.patId}</span>
                   <span
                     className={styles.blue}
                     style={{ display: "flex", flexDirection: "column" }}
@@ -367,8 +367,8 @@ const Patients = () => {
                     </span>
                   </span>
                   <span className={styles.grey}>{item.patient.phone}</span>
-                  <span className={styles.grey}>{item.totalAmount}</span>
-                  <span className={styles.grey}>{item.company}</span>
+                  <span className={styles.grey}>{item.patient?.insuranceDetails?.policyNumber}</span>
+                  <span className={styles.grey}>{item.patient?.insuranceDetails?.insuranceCompany}</span>
 
                   <span
                     className={`${styles.status} ${
