@@ -187,7 +187,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                 <p className={styles.patientKey}>Age:</p>
                 <p className={styles.patientValue}>
                   {" "}
-                  {patientDetails.age || "n/a"}
+                  {patientDetails?.Age || "n/a"}
                 </p>
               </div>
             </div>
@@ -204,7 +204,8 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                 <p className={styles.patientKey2}>Admitted On:</p>
                 <p className={styles.patientValue2}>
                   {" "}
-                  {patientDetails.admissionDateTime || "Not specified"}
+                  {new Date(patientDetails.admissionDate).toLocaleString() ||
+                    "Not specified"}
                 </p>
               </div>
               <div className={styles.detailRow}>
@@ -235,7 +236,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Emergency Contact:</p>
                 <p className={styles.patientValue2}>
-                  {patientDetails.emergencyContactName || "Not specified"}
+                  {patientDetails?.emergencyName || "Not specified"}
                 </p>
               </div>
               <div className={styles.detailRow}>
@@ -247,14 +248,15 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Contact:</p>
                 <p className={styles.patientValue2}>
-                  {patientDetails.emergencyContact || "Not specified"}
+                  {patientDetails?.emergencyContact || "Not specified"}
                 </p>
               </div>
               <div className={styles.detailRow}>
                 <p className={styles.patientKey2}>Admisssion Date & Time:</p>
                 <p className={styles.patientValue2}>
                   {" "}
-                  {patientDetails.admissionDateTime || "Not specified"}
+                  {new Date(patientDetails.admissionDate).toLocaleString() ||
+                    "Not specified"}
                 </p>
               </div>
               <div className={styles.detailRow}>
@@ -268,7 +270,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                 <p className={styles.patientKey2}>Admitted By:</p>
                 <p className={styles.patientValue2}>
                   {" "}
-                  {patientDetails.admittingBy || "Not specified"}
+                  {patientDetails.createdByName || "Not specified"}
                 </p>
               </div>
             </div>
