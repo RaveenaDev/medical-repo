@@ -5,6 +5,8 @@ import UpdateMAR from "./form/UpdateMAR";
 import ManageMedication from "./form/ManageMedication";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientMedicalRecords } from "../../../../../components/State/Doctor/Action";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from "@mui/material";
 export const combineDateAndTime = (dateStr, timeStr) => {
   if (!dateStr || !timeStr) return null;
   try {
@@ -177,7 +179,16 @@ const MedAdminRecord = ({ patientId, caseId }) => {
           </div>
           <div className={styles.tbody}>
             {loading ? (
-              <div className={styles.noData}>Loading medical records...</div>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "36vh", // or full height you need
+                }}
+              >
+                <CircularProgress sx={{ color: "#25307F" }} size={58} />
+              </Box>
             ) : !Array.isArray(medicationData) ||
               medicationData.length === 0 ? (
               <p className={styles.noData}>No medical records available.</p>

@@ -14,13 +14,16 @@ import {
 import UpdateNursing from "./form/UpdateNursing";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientVitals } from "../../../../../components/State/Doctor/Action";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from "@mui/material";
 
 const Nursing = ({ patientId }) => {
   const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    dispatch(getPatientVitals(patientId));
-  }, [dispatch]);
+    setLoading(true);
+    dispatch(getPatientVitals(patientId)).finally(() => setLoading(false));
+  }, [dispatch, patientId]);
   const patientVitals = useSelector((store) => store.doctor.patientVitals);
 
   const formatDate = (isoString) => {
@@ -107,65 +110,80 @@ const Nursing = ({ patientId }) => {
         </>
       )}
 
-      <div className={styles.tableContainer}>
-        <div className={styles.table}>
-          <div className={styles.head}>
-            {allVitalKeys.map((key) => {
-              const Icon = vitalIconMap[key];
-              const label = key
-                .replace(/([A-Z])/g, " $1")
-                .replace(/^./, (s) => s.toUpperCase());
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "36vh", // or full height you need
+          }}
+        >
+          <CircularProgress sx={{ color: "#25307F" }} size={58} />
+        </Box>
+      ) : (
+        <div className={styles.tableContainer}>
+          <div className={styles.table}>
+            <div className={styles.head}>
+              {allVitalKeys.map((key) => {
+                const Icon = vitalIconMap[key];
+                const label = key
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (s) => s.toUpperCase());
 
-              return (
-                <div className={styles.th} key={key}>
-                  {Icon && <Icon className={styles.icon} />}
-                  <span>{label}</span>
-                </div>
-              );
-            })}
-
-            {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
-              <div className={styles.noData}></div>
-            ) : (
-              <div className={styles.th}>
-                <Calendar className={styles.icon} />
-                <span>Last Updated</span>
-              </div>
-            )}
-          </div>
-
-          <div className={styles.body}>
-            {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
-              <p className={styles.noData}>No vitals recorded.</p>
-            ) : (
-              [...patientVitals].map((item, idx) => {
-                const formattedDate = formatDate(item.recordedAt);
-                const isToday = formattedDate === "Today";
                 return (
-                  <div
-                    className={`${styles.tr} ${isToday ? styles.todayRow : ""}`}
-                    key={item._id || idx}
-                  >
-                    {allVitalKeys.map((key) => (
-                      <div className={styles.td} key={key}>
-                        <span className={styles.value}>
-                          {item?.vitals?.[key] ?? "—"}
-                        </span>
-                        <span className={styles.unit}>
-                          {getUnitForVital(key)}
-                        </span>
-                      </div>
-                    ))}
-                    <div className={styles.td}>
-                      <span className={styles.value}>{formattedDate}</span>
-                    </div>
+                  <div className={styles.th} key={key}>
+                    {Icon && <Icon className={styles.icon} />}
+                    <span>{label}</span>
                   </div>
                 );
-              })
-            )}
+              })}
+
+              {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
+                <div className={styles.noData}></div>
+              ) : (
+                <div className={styles.th}>
+                  <Calendar className={styles.icon} />
+                  <span>Last Updated</span>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.body}>
+              {!Array.isArray(patientVitals) || patientVitals.length === 0 ? (
+                <p className={styles.noData}>No vitals recorded.</p>
+              ) : (
+                [...patientVitals].map((item, idx) => {
+                  const formattedDate = formatDate(item.recordedAt);
+                  const isToday = formattedDate === "Today";
+                  return (
+                    <div
+                      className={`${styles.tr} ${
+                        isToday ? styles.todayRow : ""
+                      }`}
+                      key={item._id || idx}
+                    >
+                      {allVitalKeys.map((key) => (
+                        <div className={styles.td} key={key}>
+                          <span className={styles.value}>
+                            {item?.vitals?.[key] ?? "—"}
+                          </span>
+                          <span className={styles.unit}>
+                            {getUnitForVital(key)}
+                          </span>
+                        </div>
+                      ))}
+                      <div className={styles.td}>
+                        <span className={styles.value}>{formattedDate}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
