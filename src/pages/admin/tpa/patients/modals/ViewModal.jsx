@@ -2,15 +2,32 @@ import React, { useState } from "react";
 import styles from "./ViewModal.module.scss";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { X } from "lucide-react";
+import {useDispatch} from "react-redux";
+import {updateStatusOfInsuredPatients} from "../../../../../components/State/Admin/Action.js";
 const ViewModal = ({ onClose, record }) => {
   const {
-    patient,
-    status,
+    patient
   } = record;
 
-  const statusOptions = ["Accepted", "Rejected", "Pending"];
+  // console.log("Rec: ",record)
+
+  const statusOptions = ["Approved", "Rejected", "Pending"];
   const [openStatus, setOpenStatus] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(status);
+  const [selectedStatus, setSelectedStatus] = useState(record.admissionDetails.insurance.insuranceApproved.charAt(0).toUpperCase() +
+      record.admissionDetails.insurance.insuranceApproved.slice(1));
+  const dispatch = useDispatch()
+
+  const handleClick = (option) => {
+    setSelectedStatus(option);
+    setOpenStatus(false);
+  }
+
+  const handleSave = () => {
+    // console.log("Sec: ",selectedStatus.toLowerCase())
+    dispatch(updateStatusOfInsuredPatients(record._id,selectedStatus.toLowerCase()))
+    onClose();
+  }
+
   return (
     <div>
       {" "}
@@ -47,9 +64,9 @@ const ViewModal = ({ onClose, record }) => {
             <div className={styles.dropdown}>
               <button
                 className={`${styles.trigger} ${
-                  selectedStatus === "Completed"
-                    ? styles.completed
-                    : selectedStatus === "Ongoing"
+                  selectedStatus === "Rejected"
+                    ? styles.rejected
+                    : selectedStatus === "Approved"
                     ? styles.ongoing
                     : styles.pending
                 } `}
@@ -68,10 +85,7 @@ const ViewModal = ({ onClose, record }) => {
                       className={`${styles.item} ${
                         selectedStatus === option ? styles.active : ""
                       }`}
-                      onClick={() => {
-                        setSelectedStatus(option);
-                        setOpenStatus(false);
-                      }}
+                      onClick={() => handleClick(option)}
                     >
                       {option}
                     </li>
@@ -92,7 +106,7 @@ const ViewModal = ({ onClose, record }) => {
           </div>
         </div>
 
-        <div className={styles.submitContainer}>
+        <div className={styles.submitContainer} onClick={handleSave}>
           <button>Save</button>
         </div>
       </div>

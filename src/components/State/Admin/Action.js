@@ -40,7 +40,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
-  UPDATE_SERVICE,
+  UPDATE_SERVICE, UPDATE_STATUS_OF_INSURED_PATIENTS,
 } from "./ActionType.js";
 
 import { toast } from "react-toastify";
@@ -1034,6 +1034,39 @@ export const getInsuredPatients = () => async (dispatch) => {
     dispatch({ type: GET_INSURED_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const updateStatusOfInsuredPatients = (admissionId,status) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.put(
+        `${API_URL}/updateInsuranceStatus/${admissionId}`,{
+          insuranceApproved: status
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Updated Data: ",data)
+
+    dispatch({ type: UPDATE_STATUS_OF_INSURED_PATIENTS, payload: data });
+    dispatch(getInsuredPatients())
+
+    toast.success("Patient Status Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error(" Patient Updation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 

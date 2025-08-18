@@ -281,7 +281,7 @@ const Patients = () => {
   };
 
   const handleViewClick = (record) => {
-    console.log("View details for:", record);
+    // console.log("View details for:", record);
     setSelectedRecord(record); // store full record data
     setActiveModal("view");
   };
@@ -310,7 +310,7 @@ const Patients = () => {
 
   const insuredPatients = useSelector((store) => store.admin.insuredPatients)
 
-  console.log("Ins: ",insuredPatients)
+  // console.log("Ins: ",insuredPatients)
 
   return (
     <div className={styles.billingsContainer}>
@@ -372,14 +372,15 @@ const Patients = () => {
 
                   <span
                     className={`${styles.status} ${
-                      item.status.toLowerCase() === "completed"
-                        ? styles.completed
-                        : item.status.toLowerCase() === "ongoing"
+                        item.admissionDetails.insurance.insuranceApproved.toLowerCase() === "approved"
                         ? styles.ongoing
-                        : styles.pending
+                        : item.admissionDetails.insurance.insuranceApproved.toLowerCase() === "pending"
+                        ? styles.pending
+                        : styles.rejected
                     }`}
                   >
-                    {item.status}
+                    {item.admissionDetails.insurance.insuranceApproved.charAt(0).toUpperCase() +
+                        item.admissionDetails.insurance.insuranceApproved.slice(1)}
                   </span>
                   <div
                     style={{
