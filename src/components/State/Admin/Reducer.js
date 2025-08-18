@@ -2,7 +2,7 @@ import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
-  ADD_EXPENSE,
+  ADD_EXPENSE, ADD_INSURANCE_COMPANY,
   ADD_ROOM,
   ADD_SERVICE,
   ADD_STAFFS,
@@ -402,6 +402,12 @@ export const adminReducer = (state = initialState, action) => {
       return{
         ...state,
         insuranceCompanies: action.payload.companies
+      }
+
+    case ADD_INSURANCE_COMPANY:
+      return{
+        ...state,
+        insuranceCompanies: [...state.insuranceCompanies,action.payload]
       }
 
     default:

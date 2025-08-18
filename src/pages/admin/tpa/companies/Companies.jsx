@@ -104,8 +104,11 @@ const Companies = () => {
             name: formData.companyName,
             services: formData.services.map(service => ({
                 serviceName: service.serviceName,
-                serviceDescription: service.serviceDescription,
-                pricingDetails: service.serviceCost // renamed field
+                pricingDetails: {
+                    rate: service.serviceCost,
+                    currency: service.currency || "INR", // default to INR if not provided
+                    description: service.serviceDescription
+                }
             }))
         };
 

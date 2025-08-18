@@ -1071,9 +1071,9 @@ export const addInsuranceCompany = (formData) => async (dispatch) => {
         }
     );
 
-    console.log("Insurance Company Added : ",data)
+    // console.log("Insurance Company Added : ",data)
 
-    dispatch({ type: ADD_INSURANCE_COMPANY, payload: data });
+    dispatch({ type: ADD_INSURANCE_COMPANY, payload: data.company });
   } catch (error) {
     console.log(error);
   }
