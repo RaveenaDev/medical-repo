@@ -1505,14 +1505,66 @@ export const dischargePatient = (payload) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(data);
-    toast.success("Patient dischagred Successfully!", {
+    // console.log("Discharge Response:", data);
+    const dischargeId = data.discharge._id; // Assuming the response contains dischargeId
+    dispatch(dischargePdfDownload(dischargeId));
+    toast.success("Patient discharged Successfully!", {
       position: "bottom-right",
       autoClose: 2000,
     });
   } catch (error) {
-    console.error("Patient dischagre error:", error);
-    toast.error(err.message || "Something went wrong");
+    console.error("Patient discharge error:", error);
+    toast.error(error.message || "Something went wrong");
+    throw error;
+  }
+};
+// Safely extract filename from Content-Disposition
+function getFilename(disposition) {
+  if (!disposition) return "discharge-summary.pdf";
+  const match = /filename\*?=(?:UTF-8'')?["']?([^\"';]+)["']?/i.exec(
+    disposition
+  );
+  try {
+    return match ? decodeURIComponent(match[1]) : "discharge-summary.pdf";
+  } catch {
+    return "discharge-summary.pdf";
+  }
+}
+export const dischargePdfDownload = (dischargeId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const response = await axios.get(
+      `${API_URL}/discharge/${dischargeId}/download-pdf`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob", // << important
+      }
+    );
+
+    // Guard: if server sent JSON error instead of PDF
+    const contentType = response.headers["content-type"] || "";
+    if (contentType.includes("application/json")) {
+      // Try to read error text from the blob
+      const text = await response.data.text?.();
+      throw new Error(text || "Failed to generate PDF");
+    }
+
+    // Create a download link for the blob
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const fileName = getFilename(response.headers["content-disposition"]);
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName || "discharge-summary.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Patient discharge error:", error);
+    toast.error(error.message || "Something went wrong");
     throw error;
   }
 };
