@@ -10,7 +10,13 @@ import { Plus } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
 
-const ProgressTracker2 = ({ patientId, caseId, isFollowUpStatus }) => {
+const ProgressTracker2 = ({
+  patientId,
+  caseId,
+  isFollowUpStatus,
+  patientDetails,
+}) => {
+  // console.log("ProgressTracker2 patientDetails: ", caseId);
   const dispatch = useDispatch();
   const [selectedStep, setSelectedStep] = useState(null);
   const [modalType, setModalType] = useState(null); // 'completed' or 'ongoing'
@@ -186,6 +192,7 @@ const ProgressTracker2 = ({ patientId, caseId, isFollowUpStatus }) => {
               onClose={closeModal}
               patientId={patientId}
               caseId={caseId}
+              patientDetails={patientDetails}
             />
           </div>
         </>
