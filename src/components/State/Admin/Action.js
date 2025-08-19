@@ -1112,12 +1112,15 @@ export const addInsuranceCompany = (formData) => async (dispatch) => {
   }
 };
 
-export const addServiceToCompany = (id) => async (dispatch) => {
+export const addServiceToCompany = (id,serviceData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
+    const services = serviceData
+    console.log("Services: ",services)
 
     const { data } = await axios.post(
         `${API_URL}/addServiceToCompany/${id}`,
+        {services},
         {
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -1125,9 +1128,9 @@ export const addServiceToCompany = (id) => async (dispatch) => {
         }
     );
 
-    console.log("Service Added To Company : ",data)
+    // console.log("Service Added To Company : ",data)
 
-    dispatch({ type: ADD_SERVICE_TO_COMPANY, payload: data });
+    dispatch({ type: ADD_SERVICE_TO_COMPANY, payload: data.company });
   } catch (error) {
     console.log(error);
   }

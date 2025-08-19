@@ -4,7 +4,7 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE, ADD_INSURANCE_COMPANY,
   ADD_ROOM,
-  ADD_SERVICE,
+  ADD_SERVICE, ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -409,6 +409,16 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         insuranceCompanies: [...state.insuranceCompanies,action.payload]
       }
+
+    case ADD_SERVICE_TO_COMPANY:
+      return {
+        ...state,
+        insuranceCompanies: state.insuranceCompanies.map((company) =>
+            company._id === action.payload._id
+                ? { ...company, services: action.payload.services }
+                : company
+        ),
+      };
 
     default:
       return state;

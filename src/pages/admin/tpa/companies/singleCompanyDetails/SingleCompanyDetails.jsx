@@ -6,31 +6,53 @@ import {ChevronLeft, MoreVerticalIcon, Plus} from "lucide-react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
     Box,
-    Button,
+    Button, Dialog, DialogActions, DialogContent, DialogTitle,
     IconButton,
     Menu,
     MenuItem,
-    TablePagination,
+    TablePagination, TextField,
     Typography,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import Grid from "@mui/material/Grid2";
+import {addInsuranceCompany, addServiceToCompany} from "../../../../../components/State/Admin/Action.js";
+import {useDispatch, useSelector} from "react-redux";
 
 const SingleCompanyDetails = (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [anchorE2, setAnchorE2] = useState(null);
     const [selectedService, setSelectedService] = useState(null);
+    const [addDialogOpen, setAddDialogOpen] = useState(false);
+    const [formData, setFormData] = useState([{
+        serviceName: "",
+        pricingDetails:
+            {
+                rate: "",
+                description: ""
+            }
+    }]);
+
+    const dispatch = useDispatch()
 
     const navigate = useNavigate();
     const location = useLocation();
-    const company = location.state || {};
+    const companyFromNav = location.state || {};
+    const companyId = companyFromNav._id;
+
+// Get the latest company from Redux
+    const company = useSelector(
+        (state) => state.admin.insuranceCompanies.find((c) => c._id === companyId)
+    ) || companyFromNav;
+
+    const [errors, setErrors] = useState({}); // Added error state
 
     useEffect(() => {
         props?.setIsSignUpOrLogin(false);
     }, []);
 
     const services = company.services || [];
-    console.log(services)
+    // console.log(services)
 
     // Pagination
     const paginatedServices = services.slice(
@@ -63,6 +85,61 @@ const SingleCompanyDetails = (props) => {
     const handleBackBtn = () => {
         navigate("/admin/tpa");
     };
+
+    const handleAddDialogOpen = () => setAddDialogOpen(true);
+
+    const handleAddDialogClose = () => {
+        setAddDialogOpen(false);
+    };
+
+    const handleServiceChange = (index, key, value) => {
+        const updatedServices = [...formData];
+
+        // if the key belongs to pricingDetails
+        if (key in updatedServices[index].pricingDetails) {
+            updatedServices[index].pricingDetails[key] = value;
+        } else {
+            updatedServices[index][key] = value;
+        }
+
+        setFormData(updatedServices);
+    };
+
+    const handleRemoveService = (index) => {
+        const updatedServices = [...formData];
+        updatedServices.splice(index, 1);
+        setFormData(updatedServices);
+    };
+
+    const handleAddService = () => {
+        setFormData([
+            ...formData,
+            {
+                serviceName: "",
+                pricingDetails: {
+                    rate: "",
+                    description: ""
+                }
+            }
+        ]);
+    };
+
+    const handleSubmit = () => {
+        let newErrors = {};
+
+        Object.keys(formData).forEach((key) => {
+            if (key !== "beds" && !formData[key]) {
+                newErrors[key] = "This field is required";
+            }
+        });
+
+        // console.log("Form Data: ",formData)
+
+        dispatch(addServiceToCompany(company._id,formData))
+        setErrors({});
+        setAddDialogOpen(false);
+    };
+
 
     return (
         <div className={styles.container}>
@@ -114,7 +191,7 @@ const SingleCompanyDetails = (props) => {
                                     color: "white",
                                     "&:hover": { background: "#AEC3FF" },
                                 }}
-                                onClick={() => console.log("Open Add Service Modal")}
+                                onClick={handleAddDialogOpen} // Open modal on click
                             >
                                 <Plus className={styles.plusIcon} />
                                  ADD SERVICE
@@ -133,6 +210,114 @@ const SingleCompanyDetails = (props) => {
                             {/*    Filter*/}
                             {/*</Button>*/}
                         </Box>
+
+                        <Dialog
+                            open={addDialogOpen}
+                            onClose={handleAddDialogClose}
+                            maxWidth="md"
+                            fullWidth
+                            sx={{
+                                "& .MuiDialog-paper": {
+                                    minWidth: "55%", // This will reduce the max width between md and lg.
+                                    pl: 6
+                                },
+                            }}
+                        >
+                            <DialogTitle>Add Service</DialogTitle>
+                            <DialogContent>
+                                <Box sx={{ width: "100%" }}>
+                                    {" "}
+                                    {/* Fix width issue */}
+                                    <Grid container spacing={2}>
+                                        {formData.map((service, index) => (
+                                            <Grid  container sx={{width:'100vw'}} spacing={2} key={index}>
+                                                <Grid xs={3}>
+                                                    <TextField
+                                                        label="Service Name"
+                                                        name={`serviceName-${index}`}
+                                                        value={service.serviceName}
+                                                        onChange={(e) =>
+                                                            handleServiceChange(index, "serviceName", e.target.value)
+                                                        }
+                                                        fullWidth
+                                                        margin="dense"
+                                                        variant="outlined"
+                                                        required
+                                                        error={!!errors[`serviceName-${index}`]}
+                                                        helperText={errors[`serviceName-${index}`]}
+                                                    />
+                                                </Grid>
+                                                <Grid xs={3}>
+                                                    <TextField
+                                                        label="Cost"
+                                                        name={`rate-${index}`}
+                                                        type="number"
+                                                        value={service.pricingDetails.rate}
+                                                        onChange={(e) =>
+                                                            handleServiceChange(index, "rate", e.target.value)
+                                                        }
+                                                        fullWidth
+                                                        margin="dense"
+                                                        variant="outlined"
+                                                        required
+                                                        error={!!errors[`rate-${index}`]}
+                                                        helperText={errors[`rate-${index}`]}
+                                                    />
+                                                </Grid>
+                                                <Grid xs={3}>
+                                                    <TextField
+                                                        label="Description"
+                                                        name={`description-${index}`}
+                                                        value={service.pricingDetails.description}
+                                                        onChange={(e) =>
+                                                            handleServiceChange(index, "description", e.target.value)
+                                                        }
+                                                        fullWidth
+                                                        margin="dense"
+                                                        variant="outlined"
+                                                        required
+                                                        error={!!errors[`description-${index}`]}
+                                                        helperText={errors[`description-${index}`]}
+                                                    />
+                                                </Grid>
+                                                <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>
+                                                    {formData.length > 1 && (
+                                                        <Button
+                                                            variant="outlined"
+                                                            color="error"
+                                                            onClick={() => handleRemoveService(index)}
+                                                        >
+                                                            Remove
+                                                        </Button>
+                                                    )}
+                                                </Grid>
+                                            </Grid>
+                                        ))}
+                                        <Button
+                                            variant="contained"
+                                            sx={{ mt: 2, backgroundColor: "#25307F", color: "white" }}
+                                            onClick={handleAddService}
+                                        >
+                                            + Add Service
+                                        </Button>
+                                    </Grid>
+                                </Box>
+                            </DialogContent>
+
+                            <DialogActions sx={{ justifyContent: "center" }}>
+                                <Button
+                                    onClick={handleSubmit}
+                                    variant="contained"
+                                    sx={{
+                                        width: "200px",
+                                        backgroundColor: "#25307F",
+                                        "&:hover": { backgroundColor: "green" },
+                                    }}
+                                >
+                                    Save
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </Box>
 
                     {/* Service Table */}
