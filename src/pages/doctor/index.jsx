@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import DoughnutChart from "./components/DoughnutChart.jsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import EventDetails from "./components/EventDetails.jsx";
+import CircularProgress from "@mui/material/CircularProgress";
 import AppointmentRequestModal from "./components/appointmentRequests/AppointmentRequest.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -64,8 +65,6 @@ const shouldShowOnDate = (event, selectedDate) => {
   return isSameDay(evtStart, selectedDate);
 };
 
-
-
 const generateNextDates = (count = 11) => {
   const months = [
     "Jan",
@@ -102,7 +101,7 @@ const DoctorOverview = ({ todayAppointments }) => {
   // Date actually controlling the "Upcoming Events" right panel
   const [selectedEventsDate, setSelectedEventsDate] = useState(new Date());
 
-// Cache of active all-day events (keyed by _id). These should render every day from their start date onward.
+  // Cache of active all-day events (keyed by _id). These should render every day from their start date onward.
   const [allDayEventsCache, setAllDayEventsCache] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
@@ -238,13 +237,23 @@ const DoctorOverview = ({ todayAppointments }) => {
           safeEndTime = "11:59 PM"; // TEMP FIX
         }
 
-        start = dayjs(`${date.format("YYYY-MM-DD")} ${safeStartTime}`, "YYYY-MM-DD hh:mm A");
-        end   = dayjs(`${date.format("YYYY-MM-DD")} ${safeEndTime}`,   "YYYY-MM-DD hh:mm A");
+        start = dayjs(
+          `${date.format("YYYY-MM-DD")} ${safeStartTime}`,
+          "YYYY-MM-DD hh:mm A"
+        );
+        end = dayjs(
+          `${date.format("YYYY-MM-DD")} ${safeEndTime}`,
+          "YYYY-MM-DD hh:mm A"
+        );
 
         const now = dayjs();
         if (now.isAfter(end)) {
           status = "cancelled";
-        } else if (now.isBetween(start, end) || now.isSame(start) || now.isSame(end)) {
+        } else if (
+          now.isBetween(start, end) ||
+          now.isSame(start) ||
+          now.isSame(end)
+        ) {
           status = "active";
         }
 
@@ -253,7 +262,7 @@ const DoctorOverview = ({ todayAppointments }) => {
       }
 
       return {
-        _id: event._id,                // keep id for dedupe
+        _id: event._id, // keep id for dedupe
         allDay: event.allDay,
         eventType: event.eventType,
         hospital: event.hospital,
@@ -275,7 +284,6 @@ const DoctorOverview = ({ todayAppointments }) => {
       };
     });
   };
-
 
   useEffect(() => {
     const container = document.querySelector(`.${styles.datePicker}`);
@@ -333,23 +341,35 @@ const DoctorOverview = ({ todayAppointments }) => {
   }, []);
 
   const dispatch = useDispatch();
+  const [loadingMCD, setLoadingMCD] = useState(true);
+  const [loadingCP, setLoadingCP] = useState(true);
+  const [loadingAR, setLoadingAR] = useState(true);
+  const [loadingAppointment, setLoadingAppointment] = useState(true);
 
   useEffect(() => {
     const startDate = dayjs(internalSelectedDate).startOf("day").toISOString();
     const endDate = dayjs(internalSelectedDate).endOf("day").toISOString();
 
-    dispatch(getAppointments(startDate, endDate));
-    dispatch(getMostCommonDiagnosis());
+    setLoadingAppointment(true);
+    dispatch(getAppointments(startDate, endDate)).finally(() =>
+      setLoadingAppointment(false)
+    );
+    setLoadingMCD(true);
+    dispatch(getMostCommonDiagnosis()).finally(() => setLoadingMCD(false));
     dispatch(getUpcomingEvents(new Date()));
     dispatch(getDoctorRequests());
-    dispatch(getAppointmentRequests());
-    dispatch(getCriticalPatients());
+    setLoadingAR(true);
+    dispatch(getAppointmentRequests()).finally(() => setLoadingAR(false));
+    setLoadingCP(true);
+    dispatch(getCriticalPatients()).finally(() => setLoadingCP(false));
     dispatch(getAdmissionRequestsToApprove("Pending"));
   }, [dispatch, selectedDate, internalSelectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
 
-  const [EVENTS, setEVENTS] = useState(() => processEvents(doctor.events || []));
+  const [EVENTS, setEVENTS] = useState(() =>
+    processEvents(doctor.events || [])
+  );
 
   useEffect(() => {
     const processed = processEvents(doctor.events || []);
@@ -398,10 +418,13 @@ const DoctorOverview = ({ todayAppointments }) => {
 
   // Build a Dayjs from a date + a "hh:mm A" string
   const buildDateTime = (dateObj, timeStr) =>
-      dayjs(`${dayjs(dateObj).format("YYYY-MM-DD")} ${timeStr}`, "YYYY-MM-DD hh:mm A");
+    dayjs(
+      `${dayjs(dateObj).format("YYYY-MM-DD")} ${timeStr}`,
+      "YYYY-MM-DD hh:mm A"
+    );
 
-// Return how many events are "left" relative to NOW if the selected day is today.
-// Otherwise, return total events on that selected day.
+  // Return how many events are "left" relative to NOW if the selected day is today.
+  // Otherwise, return total events on that selected day.
   const countEventsForHeader = (eventsOnSelectedDate, selectedDate) => {
     const isToday = dayjs(selectedDate).isSame(dayjs(), "day");
     if (!isToday) return eventsOnSelectedDate.length;
@@ -412,7 +435,11 @@ const DoctorOverview = ({ todayAppointments }) => {
       if (e.allDay) return true;
 
       // If we don't have a time range, treat as left
-      if (!e.duration || typeof e.duration !== "string" || !e.duration.includes("–")) {
+      if (
+        !e.duration ||
+        typeof e.duration !== "string" ||
+        !e.duration.includes("–")
+      ) {
         return true;
       }
 
@@ -428,9 +455,7 @@ const DoctorOverview = ({ todayAppointments }) => {
     }).length;
   };
 
-
   // console.log("Crit: ",criticalPatients)
-
 
   // const EVENTS = events.map((event) => {
   //   const hasTime = event.startTime && event.endTime;
@@ -520,7 +545,20 @@ const DoctorOverview = ({ todayAppointments }) => {
   const handleDateSelected = (day, monthName) => {
     setSelected(day);
 
-    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     const monthIndex = monthNames.indexOf(monthName);
     if (monthIndex === -1) {
       console.error("Invalid month name:", monthName);
@@ -540,7 +578,6 @@ const DoctorOverview = ({ todayAppointments }) => {
     // also set the date that controls which events render in the list
     setSelectedEventsDate(fullDate);
   };
-
 
   const handleOpenPanel = () => setIsPanelOpen(true);
   const handleClosePanel = () => setIsPanelOpen(false);
@@ -611,12 +648,15 @@ const DoctorOverview = ({ todayAppointments }) => {
   }, [EVENTS, allDayEventsCache, selectedEventsDate]);
 
   const isSelectedToday = dayjs(selectedEventsDate).isSame(dayjs(), "day");
-  const eventsHeaderCount = countEventsForHeader(visibleEvents, selectedEventsDate);
+  const eventsHeaderCount = countEventsForHeader(
+    visibleEvents,
+    selectedEventsDate
+  );
   const eventsHeaderText = isSelectedToday
-      ? `${eventsHeaderCount} events left today`
-      : `${eventsHeaderCount} events on ${dayjs(selectedEventsDate).format("DD MMM YYYY")}`;
-
-
+    ? `${eventsHeaderCount} events left today`
+    : `${eventsHeaderCount} events on ${dayjs(selectedEventsDate).format(
+        "DD MMM YYYY"
+      )}`;
 
   return (
     <>
@@ -858,7 +898,18 @@ const DoctorOverview = ({ todayAppointments }) => {
                     </div>
                   </div>
 
-                  {resultantData && resultantData.length > 0 ? (
+                  {loadingMCD ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "36vh", // or full height you need
+                      }}
+                    >
+                      <CircularProgress sx={{ color: "#25307F" }} size={58} />
+                    </Box>
+                  ) : resultantData && resultantData.length > 0 ? (
                     <DoughnutChart data={resultantData} />
                   ) : (
                     <div
@@ -910,58 +961,70 @@ const DoctorOverview = ({ todayAppointments }) => {
                       />
                     </svg>
                   </div>
-
-                  <div>
-                    {criticalPatients.length > 0 ? (
-                      criticalPatients.map((patient, index) => (
+                  {loadingCP ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "36vh", // or full height you need
+                      }}
+                    >
+                      <CircularProgress sx={{ color: "#25307F" }} size={58} />
+                    </Box>
+                  ) : (
+                    <div>
+                      {criticalPatients.length > 0 ? (
+                        criticalPatients.map((patient, index) => (
+                          <div
+                            key={index}
+                            style={{
+                              borderBottom: "1px solid #eee",
+                              padding: "8px 0",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <div>
+                              <div
+                                style={{
+                                  fontWeight: "bold",
+                                  fontSize: "14px",
+                                  color: "#2d3179",
+                                }}
+                              >
+                                {patient.name}
+                              </div>
+                              {/*<div*/}
+                              {/*  style={{*/}
+                              {/*    fontSize: "12px",*/}
+                              {/*    color: "#878787",*/}
+                              {/*  }}*/}
+                              {/*>*/}
+                              {/*  {patient.condition}*/}
+                              {/*</div>*/}
+                            </div>
+                            <div style={getStatusStyle(patient.healthStatus)}>
+                              {patient.healthStatus}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
                         <div
-                          key={index}
                           style={{
-                            borderBottom: "1px solid #eee",
-                            padding: "8px 0",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
+                            fontStyle: "italic",
+                            fontSize: "15px",
+                            color: "#888",
+                            padding: "1rem",
+                            textAlign: "center",
                           }}
                         >
-                          <div>
-                            <div
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: "14px",
-                                color: "#2d3179",
-                              }}
-                            >
-                              {patient.name}
-                            </div>
-                            {/*<div*/}
-                            {/*  style={{*/}
-                            {/*    fontSize: "12px",*/}
-                            {/*    color: "#878787",*/}
-                            {/*  }}*/}
-                            {/*>*/}
-                            {/*  {patient.condition}*/}
-                            {/*</div>*/}
-                          </div>
-                          <div style={getStatusStyle(patient.healthStatus)}>
-                            {patient.healthStatus}
-                          </div>
+                          No alerts found.
                         </div>
-                      ))
-                    ) : (
-                      <div
-                        style={{
-                          fontStyle: "italic",
-                          fontSize: "15px",
-                          color: "#888",
-                          padding: "1rem",
-                          textAlign: "center",
-                        }}
-                      >
-                        No alerts found.
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className={styles.child2}>
@@ -971,264 +1034,279 @@ const DoctorOverview = ({ todayAppointments }) => {
                     <ArrowForwardIosIcon sx={{ fontSize: 18 }} />
                   </span>
                 </div>
-
-                <div style={{ marginTop: "1rem",minHeight:'44vh' }}>
-                  <TableContainer>
-                    <Table
-                      sx={{
-                        borderCollapse: "separate", // Ensure border-spacing works
-                        borderSpacing: "0 8px", // Adds vertical spacing between rows
-                      }}
-                    >
-                      <TableHead>
-                        <TableRow
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                            "& td, & th": { py: 0 }, // Removes padding from all cells
-                          }}
-                        >
-                          <TableCell
+                {loadingAppointment ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "36vh", // or full height you need
+                    }}
+                  >
+                    <CircularProgress sx={{ color: "#25307F" }} size={58} />
+                  </Box>
+                ) : (
+                  <div style={{ marginTop: "1rem", minHeight: "44vh" }}>
+                    <TableContainer>
+                      <Table
+                        sx={{
+                          borderCollapse: "separate", // Ensure border-spacing works
+                          borderSpacing: "0 8px", // Adds vertical spacing between rows
+                        }}
+                      >
+                        <TableHead>
+                          <TableRow
                             sx={{
-                              fontSize: "14px",
-                              color: "#000000",
-                              fontWeight: 500,
-                              border: "none",
-                              px: 2.6,
+                              "&:last-child td, &:last-child th": { border: 0 },
+                              "& td, & th": { py: 0 }, // Removes padding from all cells
                             }}
                           >
-                            Case Id
-                          </TableCell>
-                          <TableCell
-                            align="left"
-                            sx={{
-                              fontSize: "14px",
-                              color: "#000000",
-                              fontWeight: 500,
-                              padding: "0.5 1",
-                              border: "none",
-                              px: 0.6,
-                            }}
-                          >
-                            Name
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              fontSize: "14px",
-                              color: "#000000",
-                              fontWeight: 500,
-                              padding: "0.5 1",
-                              border: "none",
-                              px: 0.6,
-                            }}
-                          >
-                            Appointment With
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              fontSize: "14px",
-                              color: "#000000",
-                              fontWeight: 500,
-                              padding: "0.5 1",
-                              border: "none",
-                              px: 0.6,
-                            }}
-                          >
-                            Type Visit
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              fontSize: "14px",
-                              color: "#000000",
-                              fontWeight: 500,
-                              padding: "0.5 1",
-                              border: "none",
-                              px: 0.6,
-                            }}
-                          >
-                            Branch
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              fontSize: "14px",
-                              color: "#000000",
-                              fontWeight: 500,
-                              padding: "0.5 1",
-                              border: "none",
-                              px: 0.6,
-                            }}
-                          >
-                            Token&nbsp;No.
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              fontSize: "14px",
-                              color: "#000000",
-                              fontWeight: 500,
-                              padding: "0.5 1",
-                              border: "none",
-                              px: 0.6,
-                            }}
-                          >
-                            Status
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {appointmentsFromOngoing.length > 0 ? (
-                          appointmentsFromOngoing
-                            .slice(0, 4)
-                            .map((row, index) => (
-                              <TableRow
-                                key={index}
-                                sx={{
-                                  "&:last-child td, &:last-child th": {
-                                    border: 0,
-                                  },
-                                  backgroundColor:
-                                    row.status === "Ongoing"
-                                      ? "#EEF8F1"
-                                      : "#ffffff",
-                                  "& td, & th": { py: 1.5 }, // Removes padding from all cells
-                                }}
-                              >
-                                <TableCell
-                                  component="th"
-                                  scope="row"
-                                  sx={{
-                                    color: "#25307f",
-                                    border: "none",
-                                    px: 0.6,
-                                    pl: 2,
-                                    fontSize: "12px",
-                                    fontWeight: 600,
-                                    backgroundColor:
-                                      row.status === "Ongoing"
-                                        ? "#EEF8F1"
-                                        : "#ffffff",
-                                  }}
-                                >
-                                  {truncateText(row.caseId, 8)}
-                                </TableCell>
-                                <TableCell
-                                  component="th"
-                                  scope="row"
-                                  sx={{
-                                    color: "#25307f",
-                                    fontSize: "12px",
-                                    fontWeight: 600,
-                                    border: "none",
-                                    px: 0.6,
-                                    backgroundColor:
-                                      row.status === "Ongoing"
-                                        ? "#EEF8F1"
-                                        : "#ffffff",
-                                  }}
-                                >
-                                  {truncateText(row.patient?.name, 13)}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {truncateText(row.doctor?.name, 14)}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {row.typeVisit}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {row.department.name}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {truncateText(row?.tokenNumber || "N/A", 13)}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    px: 0.6,
-                                    pr: 2,
-                                    color: "#747474",
-                                    fontSize: "12px",
-                                  }}
-                                >
-                                  <Chip
-                                    label={row.status}
-                                    size="small"
-                                    sx={{
-                                      bgcolor:
-                                        row.status === "Ongoing"
-                                          ? "#3DB461"
-                                          : row.status === "Scheduled"
-                                          ? "#25307F"
-                                          : row.status === "Waiting"
-                                          ? "#ffffff"
-                                          : "white",
-                                      color:
-                                        row.status === "Ongoing"
-                                          ? "#FFFFFF"
-                                          : row.status === "Completed"
-                                          ? "orange"
-                                          : row.status === "Scheduled"
-                                          ? "white"
-                                          : row.status === "Waiting"
-                                          ? "#878787"
-                                          : "#757575",
-                                      fontWeight: 500,
-                                      px: 0.7,
-                                    }}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            ))
-                        ) : (
-                          <TableRow>
+                            <TableCell
+                              sx={{
+                                fontSize: "14px",
+                                color: "#000000",
+                                fontWeight: 500,
+                                border: "none",
+                                px: 2.6,
+                              }}
+                            >
+                              Case Id
+                            </TableCell>
+                            <TableCell
+                              align="left"
+                              sx={{
+                                fontSize: "14px",
+                                color: "#000000",
+                                fontWeight: 500,
+                                padding: "0.5 1",
+                                border: "none",
+                                px: 0.6,
+                              }}
+                            >
+                              Name
+                            </TableCell>
                             <TableCell
                               align="center"
-                              colSpan={7}
-                              sx={{ backgroundColor: "#EEF8F1"}}
+                              sx={{
+                                fontSize: "14px",
+                                color: "#000000",
+                                fontWeight: 500,
+                                padding: "0.5 1",
+                                border: "none",
+                                px: 0.6,
+                              }}
                             >
-                              No appointments found.
+                              Appointment With
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{
+                                fontSize: "14px",
+                                color: "#000000",
+                                fontWeight: 500,
+                                padding: "0.5 1",
+                                border: "none",
+                                px: 0.6,
+                              }}
+                            >
+                              Type Visit
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{
+                                fontSize: "14px",
+                                color: "#000000",
+                                fontWeight: 500,
+                                padding: "0.5 1",
+                                border: "none",
+                                px: 0.6,
+                              }}
+                            >
+                              Branch
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{
+                                fontSize: "14px",
+                                color: "#000000",
+                                fontWeight: 500,
+                                padding: "0.5 1",
+                                border: "none",
+                                px: 0.6,
+                              }}
+                            >
+                              Token&nbsp;No.
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{
+                                fontSize: "14px",
+                                color: "#000000",
+                                fontWeight: 500,
+                                padding: "0.5 1",
+                                border: "none",
+                                px: 0.6,
+                              }}
+                            >
+                              Status
                             </TableCell>
                           </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </div>
+                        </TableHead>
+                        <TableBody>
+                          {appointmentsFromOngoing.length > 0 ? (
+                            appointmentsFromOngoing
+                              .slice(0, 4)
+                              .map((row, index) => (
+                                <TableRow
+                                  key={index}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
+                                    backgroundColor:
+                                      row.status === "Ongoing"
+                                        ? "#EEF8F1"
+                                        : "#ffffff",
+                                    "& td, & th": { py: 1.5 }, // Removes padding from all cells
+                                  }}
+                                >
+                                  <TableCell
+                                    component="th"
+                                    scope="row"
+                                    sx={{
+                                      color: "#25307f",
+                                      border: "none",
+                                      px: 0.6,
+                                      pl: 2,
+                                      fontSize: "12px",
+                                      fontWeight: 600,
+                                      backgroundColor:
+                                        row.status === "Ongoing"
+                                          ? "#EEF8F1"
+                                          : "#ffffff",
+                                    }}
+                                  >
+                                    {truncateText(row.caseId, 8)}
+                                  </TableCell>
+                                  <TableCell
+                                    component="th"
+                                    scope="row"
+                                    sx={{
+                                      color: "#25307f",
+                                      fontSize: "12px",
+                                      fontWeight: 600,
+                                      border: "none",
+                                      px: 0.6,
+                                      backgroundColor:
+                                        row.status === "Ongoing"
+                                          ? "#EEF8F1"
+                                          : "#ffffff",
+                                    }}
+                                  >
+                                    {truncateText(row.patient?.name, 13)}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {truncateText(row.doctor?.name, 14)}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {row.typeVisit}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {row.department.name}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {truncateText(
+                                      row?.tokenNumber || "N/A",
+                                      13
+                                    )}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      px: 0.6,
+                                      pr: 2,
+                                      color: "#747474",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    <Chip
+                                      label={row.status}
+                                      size="small"
+                                      sx={{
+                                        bgcolor:
+                                          row.status === "Ongoing"
+                                            ? "#3DB461"
+                                            : row.status === "Scheduled"
+                                            ? "#25307F"
+                                            : row.status === "Waiting"
+                                            ? "#ffffff"
+                                            : "white",
+                                        color:
+                                          row.status === "Ongoing"
+                                            ? "#FFFFFF"
+                                            : row.status === "Completed"
+                                            ? "orange"
+                                            : row.status === "Scheduled"
+                                            ? "white"
+                                            : row.status === "Waiting"
+                                            ? "#878787"
+                                            : "#757575",
+                                        fontWeight: 500,
+                                        px: 0.7,
+                                      }}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                          ) : (
+                            <TableRow>
+                              <TableCell
+                                align="center"
+                                colSpan={7}
+                                sx={{ backgroundColor: "#EEF8F1" }}
+                              >
+                                No appointments found.
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                )}
               </div>
               {/*<div className={styles.child3}>*/}
               {/*  <div className={styles.card}>*/}
@@ -1339,9 +1417,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                       className={styles.eventRow}
                       onClick={() => setSelectedEvent(e)}
                     >
-                      <div
-                        className={`${styles.eventTime}`}
-                      >
+                      <div className={`${styles.eventTime}`}>
                         {/*{e.allDay ? "All Day" : e.time}*/}
                         {e.time}
                       </div>
