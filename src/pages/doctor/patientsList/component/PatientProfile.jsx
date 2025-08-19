@@ -320,6 +320,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
               patientId={patientId}
               caseId={caseId}
               isFollowUpStatus={isFollowUpStatus}
+              patientDetails={patientDetails}
             />
           </div>
         </div>
