@@ -19,12 +19,12 @@ import { Box } from "@mui/material";
 
 const Nursing = ({ patientId }) => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    setLoading(true);
-    dispatch(getPatientVitals(patientId)).finally(() => setLoading(false));
+    dispatch(getPatientVitals(patientId));
   }, [dispatch, patientId]);
   const patientVitals = useSelector((store) => store.doctor.patientVitals);
+  const isLoading = useSelector((store) => store.doctor.isLoadingPatientVitals);
 
   const formatDate = (isoString) => {
     const inputDate = new Date(isoString);
@@ -110,7 +110,7 @@ const Nursing = ({ patientId }) => {
         </>
       )}
 
-      {loading ? (
+      {isLoading ? (
         <Box
           sx={{
             display: "flex",

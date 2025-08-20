@@ -114,10 +114,14 @@ const initialState = {
   userConsultationForms: [],
   patientDetails: [],
   progressTracker: [],
+  isLoadingGetProgressTracker: true,
   patientVitals: [],
+  isLoadingPatientVitals: true,
   patientHistory: [],
+  isLoadingPatientHistory: true,
   allDepartments: [],
   patientMedicalRecords: [],
+  isLoadingGetPatientMedicalRecords: true,
   totalAppointmentHistory: null,
   appointmentHistory: [],
   patientBedInfo: [],
@@ -225,7 +229,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientVitals: action.payload,
-        isLoading: false,
+        isLoadingPatientVitals: false,
       };
     case GET_APPROVED_ADMISSIONS:
       return {
@@ -237,7 +241,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         progressTracker: action.payload,
-        isLoading: false,
+        isLoadingGetProgressTracker: false,
       };
     case GET_ADMISSION_REQUESTS:
       return {
@@ -441,9 +445,8 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_PATIENT_HISTORY:
       return {
         ...state,
-
         patientHistory: action.payload,
-        isLoading: false,
+        isLoadingPatientHistory: false,
       };
 
     case GET_ALL_DEPARTMENTS:
@@ -456,6 +459,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientMedicalRecords: action.payload,
+        isLoadingGetPatientMedicalRecords: false,
       };
 
     case GET_APPOINTMENT_HISTORY:

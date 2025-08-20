@@ -20,16 +20,16 @@ const ProgressTracker2 = ({
   const dispatch = useDispatch();
   const [selectedStep, setSelectedStep] = useState(null);
   const [modalType, setModalType] = useState(null); // 'completed' or 'ongoing'
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    dispatch(getProgressTrackerDetails(patientId, caseId)).finally(() =>
-      setLoading(false)
-    );
+    dispatch(getProgressTrackerDetails(patientId, caseId));
   }, [dispatch, patientId, caseId]);
 
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
+  const isLoadingGetProgressTracker = useSelector(
+    (store) => store.doctor.isLoadingGetProgressTracker
+  );
+
   // console.log("progressTracker details: ", progressTracker);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const ProgressTracker2 = ({
         <h4 className={styles.title}>Progress Tracker</h4>
       </div>
 
-      {loading ? (
+      {isLoadingGetProgressTracker ? (
         <Box
           sx={{
             display: "flex",
