@@ -25,16 +25,11 @@ import { Box } from "@mui/material";
 
 const PatientsList = () => {
   const navigate = useNavigate();
-  const [loading1, setLoading1] = useState(null);
-  const [loading2, setLoading2] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading1(true);
-    setLoading2(true);
-
-    dispatch(getAdmissionRequests()).finally(() => setLoading1(false));
-    dispatch(getAdmittedPatients()).finally(() => setLoading2(false));
+    dispatch(getAdmissionRequests());
+    dispatch(getAdmittedPatients());
   }, [dispatch]);
 
   const patientsAdmitted = useSelector(
@@ -47,6 +42,10 @@ const PatientsList = () => {
 
   const isLoadingGetAdmissionRequests = useSelector(
     (store) => store.doctor.isLoadingGetAdmissionRequests
+  );
+
+  const isLoadingGetAdmittedPatients = useSelector(
+    (store) => store.doctor.isLoadingGetAdmittedPatients
   );
   const [filter, setFilter] = useState("Total");
 
@@ -406,7 +405,7 @@ const PatientsList = () => {
           </div>   */}
         </div>
 
-        {loading2 ? (
+        {isLoadingGetAdmittedPatients ? (
           <Box
             sx={{
               display: "flex",
