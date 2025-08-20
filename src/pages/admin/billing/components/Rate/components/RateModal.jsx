@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   MenuItem,
+  Grid,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../../../../../../components/State/Admin/Action.js";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Trash2Icon } from "lucide-react";
 
 const RateModal = ({ open, handleClose }) => {
   const [serviceDetails, setServiceDetails] = useState({
@@ -21,16 +23,24 @@ const RateModal = ({ open, handleClose }) => {
     departmentName: "",
     subCategoryName: "",
     rateType: "",
-    rate: "",
-    effectiveDate: "",
+    rate: "", // default base rate
     amenities: "",
+    effectiveDate: "", // New field for effective date
+    additionalDetails: [], // Array of { key: '', value: 0 }
   });
 
-  const [errors, setErrors] = useState({}); // Added error state
-
+  const [errors, setErrors] = useState({});
   const [lastUpdated, setLastUpdated] = useState(
     new Date().toISOString().split("T")[0]
   );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllDepartments());
+  }, [dispatch]);
+
+  const departments = useSelector((store) => store.admin.departments);
 
   const handleChange = (e) => {
     setServiceDetails({
@@ -39,11 +49,44 @@ const RateModal = ({ open, handleClose }) => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleAdditionalDetailChange = (index, field, value) => {
+    const updatedDetails = [...serviceDetails.additionalDetails];
+    updatedDetails[index][field] =
+      field === "value" ? parseFloat(value) : value;
+    setServiceDetails({
+      ...serviceDetails,
+      additionalDetails: updatedDetails,
+    });
+  };
+
+  const handleAddAdditionalDetail = () => {
+    setServiceDetails({
+      ...serviceDetails,
+      additionalDetails: [
+        ...serviceDetails.additionalDetails,
+        { key: "", value: 0 },
+      ],
+    });
+  };
+
+  const handleRemoveAdditionalDetail = (index) => {
+    const updatedDetails = [...serviceDetails.additionalDetails];
+    updatedDetails.splice(index, 1);
+    setServiceDetails({
+      ...serviceDetails,
+      additionalDetails: updatedDetails,
+    });
+  };
+
+  const handleSubmit = async () => {
     let newErrors = {};
 
     Object.keys(serviceDetails).forEach((key) => {
-      if (!serviceDetails[key]) {
+      if (
+        key !== "additionalDetails" &&
+        (key !== "rate" || serviceDetails.additionalDetails.length === 0) &&
+        !serviceDetails[key]
+      ) {
         newErrors[key] = "This field is required";
       }
     });
@@ -56,29 +99,46 @@ const RateModal = ({ open, handleClose }) => {
       return;
     }
 
-    dispatch(addService(serviceDetails));
+    // Calculate total rate based on additional details
+    const additionalRate = serviceDetails.additionalDetails.reduce(
+      (acc, item) => acc + (item.value || 0),
+      0
+    );
 
-    // Reset the form fields
+    const finalRate = additionalRate;
+
+    const finalServiceDetails = {
+      ...serviceDetails,
+      rate: finalRate,
+      additionalDetails: serviceDetails.additionalDetails.reduce(
+        (acc, item) => ({ ...acc, [item.key]: item.value }),
+        {}
+      ),
+    };
+
+    dispatch(addService(finalServiceDetails));
     setServiceDetails({
       name: "",
       departmentName: "",
       subCategoryName: "",
       rateType: "",
-      rate: "",
-      effectiveDate: "",
+      rate: "", // Reset to empty
       amenities: "",
+      effectiveDate: "", // Reset effective date
+      additionalDetails: [],
     });
     setErrors({});
     handleClose();
   };
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getAllDepartments());
-  }, [dispatch]);
-
-  const departments = useSelector((store) => store.admin.departments);
+  // Calculate the total rate, which is the sum of the additional details
+  const totalRate =
+    serviceDetails.additionalDetails.length > 0
+      ? serviceDetails.additionalDetails.reduce(
+          (acc, item) => acc + item.value,
+          0
+        )
+      : serviceDetails.rate; // Use base rate if no additional details
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -137,18 +197,7 @@ const RateModal = ({ open, handleClose }) => {
           helperText={errors.rateType}
           required
         />
-        <TextField
-          label="Current Rate"
-          fullWidth
-          margin="dense"
-          type="number"
-          name="rate"
-          value={serviceDetails.rate}
-          onChange={handleChange}
-          error={!!errors.rate}
-          helperText={errors.rate}
-          required
-        />
+
         <TextField
           label="Amenities"
           fullWidth
@@ -160,6 +209,74 @@ const RateModal = ({ open, handleClose }) => {
           helperText={errors.amenities}
           required
         />
+
+        {/* Current Rate Section */}
+        <TextField
+          label="Current Rate"
+          fullWidth
+          margin="dense"
+          type="number"
+          name="rate"
+          value={totalRate}
+          onChange={handleChange}
+          error={!!errors.rate}
+          helperText={errors.rate}
+          disabled={serviceDetails.additionalDetails.length > 0} // Disable when additional details are added
+        />
+
+        {/* Additional Details Section */}
+        <div>
+          <Grid container spacing={2} marginTop={1}>
+            {serviceDetails.additionalDetails.map((item, index) => (
+              <Grid item xs={12} container spacing={1} key={index}>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Detail Name"
+                    fullWidth
+                    value={item.key}
+                    onChange={(e) =>
+                      handleAdditionalDetailChange(index, "key", e.target.value)
+                    }
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <TextField
+                    label="Value"
+                    fullWidth
+                    type="number"
+                    value={item.value}
+                    onChange={(e) =>
+                      handleAdditionalDetailChange(
+                        index,
+                        "value",
+                        e.target.value
+                      )
+                    }
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={1}
+                  justifyContent="center"
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Trash2Icon
+                    onClick={() => handleRemoveAdditionalDetail(index)}
+                    style={{ cursor: "pointer", color: "red" }}
+                  />
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+          <Button
+            variant="outlined"
+            onClick={handleAddAdditionalDetail}
+            sx={{ marginTop: 2, marginBottom: 2 }}
+          >
+            Add Custom Charges & Details
+          </Button>
+        </div>
         <TextField
           label="Effective Date"
           fullWidth
@@ -173,7 +290,6 @@ const RateModal = ({ open, handleClose }) => {
           helperText={errors.effectiveDate}
           required
         />
-
         <TextField
           label="Last Updated"
           fullWidth
