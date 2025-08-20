@@ -118,11 +118,13 @@
   background: #25307f;
   color: white;
   border: none;
+  width: 5vw;
   font-size: 0.9vw;
   font-weight: 450;
-  padding: 0.6vh 1vw;
+  padding: 0vh 0vw;
   border-radius: 4px;
   cursor: pointer;
+  height: 3.2vh;
 }
 
 .rejectBtn {
@@ -130,10 +132,11 @@
   color: #dc3545;
   border: none;
   border: 1px solid #dc3545;
-  padding: 0.5vh 1vw;
+  height: 3.2vh;
   border-radius: 4px;
-  padding: 0.6vh 0.5vw;
+  padding: 0vh 0.5vw;
   display: flex;
+  align-items: center;
   cursor: pointer;
   &:hover {
     border: 1px solid #dc3545;

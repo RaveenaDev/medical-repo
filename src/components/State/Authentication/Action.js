@@ -21,7 +21,7 @@ export const login = (data) => async (dispatch) => {
       localStorage.setItem("departmentId", response.data.departmentIds);
       localStorage.setItem("departmentName", response.data.departmentNames);
       localStorage.setItem("username", response.data.username);
-      localStorage.setItem("userId", response.data.userId);
+      // localStorage.setItem("userId", response.data.userId);
     }
     dispatch({ type: LOGIN, payload: response.data });
 

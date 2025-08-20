@@ -1,72 +1,107 @@
 import React, { useState } from "react";
-import { X, Trash2 } from "lucide-react";
+import { X, Trash2, LucideTrash2 } from "lucide-react";
 import styles from "./OngoingProgress.module.scss";
 import { useDispatch } from "react-redux";
 import { updateProgressTrackerPhase } from "../../../../../../../components/State/Doctor/Action";
 
 const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
+  // console.log("OngoingProgress step: ", step);
   const dispatch = useDispatch();
-  const [isFinal, setIsFinal] = useState(false);
-  const [note, setNote] = useState("");
-  const [treatment, setTreatment] = useState("");
-  const [files, setFiles] = useState([]);
-  const [additionalFields, setAdditionalFields] = useState([]);
-  const [showAddField, setShowAddField] = useState(false);
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
+  const [formData, setFormData] = useState({
+    isFinal: step.status === "Final",
+    note: "",
+    treatment: "",
+    files: [],
+    additionalFields: [],
+  });
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
-  };
+
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files).map((file) => ({
       name: file.name,
       file,
       preview: URL.createObjectURL(file),
     }));
-    setFiles((prev) => [...prev, ...newFiles]);
+    setFormData((prev) => ({ ...prev, files: [...prev.files, ...newFiles] }));
   };
 
   const handleRemoveFile = (index) => {
-    URL.revokeObjectURL(files[index].preview);
-    setFiles(files.filter((_, i) => i !== index));
+    URL.revokeObjectURL(formData.files[index].preview);
+    setFormData((prev) => ({
+      ...prev,
+      files: prev.files.filter((_, i) => i !== index),
+    }));
   };
 
   const handleAddField = () => {
-    setAdditionalFields([...additionalFields, { label: "", value: "" }]);
+    setFormData((prev) => ({
+      ...prev,
+      additionalFields: [...prev.additionalFields, { label: "", value: "" }],
+    }));
+  };
+
+  const handleDeleteField = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      additionalFields: prev.additionalFields.filter((_, i) => i !== index),
+    }));
   };
 
   const handleAdditionalChange = (index, key, value) => {
-    const updated = [...additionalFields];
-    updated[index][key] = value;
-    setAdditionalFields(updated);
+    setFormData((prev) => {
+      const updatedFields = [...prev.additionalFields];
+      updatedFields[index][key] = value;
+      return { ...prev, additionalFields: updatedFields };
+    });
   };
+
   const handleSaveClick = async () => {
     const newFiles = await Promise.all(
-      files.map(async (item) => ({
+      formData.files.map(async (item) => ({
         name: item.name,
         content: await fileToBase64(item.file),
         type: item.file.type,
       }))
     );
-    const phaseId = step.sourceId;
 
+    const sourceId = step.sourceId;
+    const sourceType = step.sourceType;
+
+    // Merge additionalFields + treatment + note into a single data object
+    const updatedData = formData.additionalFields.reduce((acc, field) => {
+      if (field.label) acc[field.label] = field.value; // skip empty labels
+      return acc;
+    }, {});
+
+    // Add treatment and note into data
+    updatedData["Treatment"] = formData.treatment;
+    updatedData["Notes"] = formData.note;
+
+    // Unified payload
     const payload = {
-      isFinal,
+      isFinal: formData.isFinal,
       isDone: true,
-      description: note,
       files: newFiles,
-      treatment,
-      additionalFields,
-      date: new Date().toISOString(), // Send updated timestamp
+      data: updatedData, // everything now inside data
     };
-    dispatch(updateProgressTrackerPhase(payload, patientId, caseId, phaseId));
-    onClose(); // Close modal
-  };
 
-  // console.log("Ongoing Progress Step: ", step);
+    dispatch(
+      updateProgressTrackerPhase(
+        payload,
+        patientId,
+        caseId,
+        sourceType,
+        sourceId
+      )
+    );
+    onClose();
+  };
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
@@ -96,12 +131,18 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               </div>
             </div>
           </div>
+
           <div className={styles.checkboxContainer}>
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
-                checked={isFinal}
-                onChange={(e) => setIsFinal(e.target.checked)}
+                checked={formData.isFinal}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    isFinal: e.target.checked,
+                  }))
+                }
               />
               Mark this as the final stage of treatment
             </label>
@@ -113,11 +154,14 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               <textarea
                 className={styles.textarea}
                 placeholder="Enter doctor's note here"
-                value={note}
+                value={formData.note}
                 rows={4}
-                onChange={(e) => setNote(e.target.value)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, note: e.target.value }))
+                }
               />
             </div>
+
             <div className={styles.descriptionContainer}>
               <h6 className={styles.label}>Upload New Files</h6>
               <div className={styles.uploadBox}>
@@ -134,7 +178,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               </div>
 
               <ul className={styles.uploadedFilesWrapper}>
-                {files.map((item, idx) => (
+                {formData.files.map((item, idx) => (
                   <li key={idx} className={styles.fileRow}>
                     <img
                       src="/assets/fileIcon.svg"
@@ -161,34 +205,6 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
                   </li>
                 ))}
               </ul>
-              {/* Show already uploaded backend files */}
-              {step?.data?.files?.length > 0 && (
-                <div className={styles.uploadedFiles}>
-                  <p className={styles.label}>Existing Files</p>
-                  <ul className={styles.uploadedFilesWrapper}>
-                    {step.data.files.map((file, idx) => (
-                      <li key={idx} className={styles.fileRow}>
-                        <img
-                          src="/assets/fileIcon.svg"
-                          alt="File"
-                          className={styles.fileIcon}
-                        />
-                        <div className={styles.fileDetails}>
-                          <a
-                            href={file}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.fileName}
-                          >
-                            {file.split("/").pop()}
-                          </a>
-                          <span className={styles.uploadedText}>Uploaded</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           </div>
 
@@ -197,12 +213,14 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
             <textarea
               className={styles.textarea}
               placeholder="Enter treatment details"
-              value={treatment}
+              value={formData.treatment}
               rows={4}
-              onChange={(e) => setTreatment(e.target.value)}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, treatment: e.target.value }))
+              }
             />
           </div>
-          {/* Add Additional Info */}
+
           <div style={{ marginTop: "2vh" }}>
             <button
               onClick={handleAddField}
@@ -221,33 +239,39 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
               + Add Additional Info
             </button>
 
-            {additionalFields.map((field, index) => (
-              <div key={index} className={styles.row1}>
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Label (e.g. Allergies)"
-                  value={field.label}
-                  onChange={(e) =>
-                    handleAdditionalChange(index, "label", e.target.value)
-                  }
-                  style={{ border: "1px solid #cfcfcf" }}
-                />
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Value"
-                  value={field.value}
-                  onChange={(e) =>
-                    handleAdditionalChange(index, "value", e.target.value)
-                  }
-                  style={{ border: "1px solid #cfcfcf" }}
-                />
+            {formData.additionalFields.map((field, index) => (
+              <div key={index} className={styles.row4}>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type="text"
+                    className={styles.textInput}
+                    placeholder="Label (e.g. Allergies)"
+                    value={field.label}
+                    onChange={(e) =>
+                      handleAdditionalChange(index, "label", e.target.value)
+                    }
+                  />
+                  <textarea
+                    className={styles.textInput}
+                    placeholder="Value"
+                    value={field.value}
+                    onChange={(e) =>
+                      handleAdditionalChange(index, "value", e.target.value)
+                    }
+                  />
+                  <LucideTrash2
+                    size={42}
+                    color="#e74c3c"
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleDeleteField(index)}
+                  />
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Submit Button */}
           <div style={{ marginTop: "2vh", textAlign: "center" }}>
             <button
               style={{
@@ -260,9 +284,7 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
                 fontFamily: "Karla, sans-serif",
                 cursor: "pointer",
               }}
-              onClick={() => {
-                handleSaveClick();
-              }}
+              onClick={handleSaveClick}
             >
               Save & Close
             </button>

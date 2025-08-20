@@ -1,0 +1,206 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 0vh 1vw 2vh 1vw;
+  font-family: "Karla", sans-serif;
+  height: 72vh;
+  overflow-y: auto;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.title {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 550;
+  margin-bottom: 3vh;
+}
+
+.submitContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin-top: 18vh;
+  button {
+    border: none;
+    background: #25307f;
+    color: white;
+    padding: 0.6vh 3vh;
+    border-radius: 4px;
+    font-size: 2vh;
+    font-weight: 400;
+  }
+}
+
+.content {
+  padding: 2vh 1.4vw;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  row-gap: 4vh;
+  column-gap: 4vw; /* space between items */
+}
+
+.data {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  color: #747474; /* gray label */
+  font-size: 2.3vh;
+}
+
+.value {
+  color: #25307f; /* blue value */
+  font-size: 2.3vh;
+  font-weight: 500;
+  word-break: break-word; /* handle long text like email */
+}
+
+.dropdown {
+  position: relative;
+  width: 10vw;
+}
+
+.trigger {
+  width: 100%;
+  padding: 0.7vh 1vw;
+  border-radius: 0.4vw;
+  border: 0.1vw solid #ccc;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1.2vh;
+  background-color: white;
+}
+
+.menu {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 0.1vw solid #ccc;
+  border-radius: 0.4vw;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.option {
+  padding: 0.7vh 1vw;
+  cursor: pointer;
+  font-size: 1.2vh;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+/* Status Colors */
+.completed {
+}
+.ongoing {
+}
+.pending {
+}
+
+// DateRangeDropdown.module.scss
+.dropdown,
+.dropdown2 {
+  position: relative;
+  width: 10vw; // Use a percentage of viewport width for the dropdown
+  min-width: 120px; // Optional: fallback for very small screens
+  font-family: "Inter", sans-serif;
+}
+
+.trigger {
+  width: 100%;
+  background: #fff;
+
+  border-radius: 8px;
+
+  padding: 0vh 0.7vw;
+  cursor: pointer;
+  font-size: 1.8vh;
+  font-family: "Karla", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 5vh;
+}
+
+.arrow {
+  color: #777;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 0.3vh 1vh rgba(60, 64, 67, 0.08);
+  border-radius: 0.7vh;
+  width: 100%;
+  z-index: 10;
+  margin-top: 0.2vh;
+  padding: 0;
+  list-style: none;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.item {
+  padding: 1.7vh 1vw;
+  cursor: pointer;
+  font-size: 1.9vh;
+  color: #222;
+  background: #fff;
+  transition: background 0.15s;
+}
+
+.active {
+  font-weight: 500;
+}
+
+.ongoing {
+  color: #388e3c;
+  background-color: rgba(56, 142, 60, 0.1); // light green tint
+  border: 1px solid #388e3c;
+
+  &:hover {
+    border: 1px solid #388e3c;
+  }
+}
+
+.rejected {
+  color: #25307f;
+  background-color: rgba(37, 48, 127, 0.1); // light blue tint
+  border: 1px solid #25307f;
+  &:hover {
+    border: 1px solid #25307f;
+  }
+}
+
+.pending {
+  color: #e6a700;
+  background-color: rgba(230, 167, 0, 0.1); // light amber tint
+  border: 1px solid #e6a700;
+  &:hover {
+    border: 1px solid #e6a700;
+  }
+}

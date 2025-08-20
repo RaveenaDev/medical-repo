@@ -1,0 +1,117 @@
+import React, { useState } from "react";
+import styles from "./ViewModal.module.scss";
+import { ChevronUp, ChevronDown } from "lucide-react";
+import { X } from "lucide-react";
+import {useDispatch} from "react-redux";
+import {updateStatusOfInsuredPatients} from "../../../../../components/State/Admin/Action.js";
+const ViewModal = ({ onClose, record }) => {
+  const {
+    patient
+  } = record;
+
+  // console.log("Rec: ",record)
+
+  const statusOptions = ["Approved", "Rejected", "Pending"];
+  const [openStatus, setOpenStatus] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(record.admissionDetails.insurance.insuranceApproved.charAt(0).toUpperCase() +
+      record.admissionDetails.insurance.insuranceApproved.slice(1));
+  const dispatch = useDispatch()
+
+  const handleClick = (option) => {
+    setSelectedStatus(option);
+    setOpenStatus(false);
+  }
+
+  const handleSave = () => {
+    // console.log("Sec: ",selectedStatus.toLowerCase())
+    dispatch(updateStatusOfInsuredPatients(record._id,selectedStatus.toLowerCase()))
+    onClose();
+  }
+
+  return (
+    <div>
+      {" "}
+      <div className={styles.crossContainer}>
+        <X size={20} onClick={onClose} />
+      </div>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Record New Vital</h1>
+
+        {/* content */}
+        <div className={styles.content}>
+          <div className={styles.data}>
+            <p className={styles.label}>PAT-ID</p>
+            <p className={styles.value}>{patient?.patId}</p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Name</p>
+            <p className={styles.value}>{patient.name}</p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Email</p>
+            <p className={styles.value}>{patient.email}</p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Phone</p>
+            <p className={styles.value}>{patient.phone}</p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Status</p>
+            <div className={styles.dropdown}>
+              <button
+                className={`${styles.trigger} ${
+                  selectedStatus === "Rejected"
+                    ? styles.rejected
+                    : selectedStatus === "Approved"
+                    ? styles.ongoing
+                    : styles.pending
+                } `}
+                onClick={() => setOpenStatus((prev) => !prev)}
+              >
+                <p>{selectedStatus}</p>
+                <span className={styles.arrow}>
+                  {openStatus ? <ChevronUp /> : <ChevronDown />}
+                </span>
+              </button>
+              {openStatus && (
+                <ul className={styles.menu}>
+                  {statusOptions.map((option) => (
+                    <li
+                      key={option}
+                      className={`${styles.item} ${
+                        selectedStatus === option ? styles.active : ""
+                      }`}
+                      onClick={() => handleClick(option)}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Policy No.</p>
+            <p className={styles.value}>{patient?.insuranceDetails?.policyNumber}</p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Company</p>
+            <p className={styles.value}>{patient?.insuranceDetails?.insuranceCompany}</p>
+          </div>
+        </div>
+
+        <div className={styles.submitContainer} onClick={handleSave}>
+          <button>Save</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ViewModal;

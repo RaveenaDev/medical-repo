@@ -2,9 +2,9 @@ import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
-  ADD_EXPENSE,
+  ADD_EXPENSE, ADD_INSURANCE_COMPANY,
   ADD_ROOM,
-  ADD_SERVICE,
+  ADD_SERVICE, ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -25,7 +25,7 @@ import {
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS,
+  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_INSURANCE_COMPANIES, GET_INSURED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -82,6 +82,8 @@ const initialState = {
   recordsCount: null,
   requestsToApprove: [],
   doctorRequests: [],
+  insuredPatients: [],
+  insuranceCompanies: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -389,6 +391,34 @@ export const adminReducer = (state = initialState, action) => {
             request => request._id !== action.payload
         ),
       }
+
+    case GET_INSURED_PATIENTS:
+      return{
+        ...state,
+        insuredPatients: action.payload.data
+      }
+
+    case GET_INSURANCE_COMPANIES:
+      return{
+        ...state,
+        insuranceCompanies: action.payload.companies
+      }
+
+    case ADD_INSURANCE_COMPANY:
+      return{
+        ...state,
+        insuranceCompanies: [...state.insuranceCompanies,action.payload]
+      }
+
+    case ADD_SERVICE_TO_COMPANY:
+      return {
+        ...state,
+        insuranceCompanies: state.insuranceCompanies.map((company) =>
+            company._id === action.payload._id
+                ? { ...company, services: action.payload.services }
+                : company
+        ),
+      };
 
     default:
       return state;

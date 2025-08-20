@@ -1,25 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import styles from "./Discharge.module.scss";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { dischargePatient } from "../../../../../components/State/Doctor/Action";
 
-const Discharge = ({ onClose, patientId }) => {
+const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
   const dispatch = useDispatch();
 
-  const [patientName, setPatientName] = useState("");
-  const [age, setAge] = useState("");
-  const [sex, setSex] = useState("");
-  const [admissionDate, setAdmissionDate] = useState("");
-  const [onAdmissionNotes, setOnAdmissionNotes] = useState("");
-  const [dischargeDate, setDischargeDate] = useState("");
-  const [onDischargeNotes, setOnDischargeNotes] = useState("");
-  const [diagnosis, setDiagnosis] = useState("");
-  const [followUpDay, setFollowUpDay] = useState("");
-  const [followUpTime, setFollowUpTime] = useState("");
+  // Single state object for all form data
+  const [formData, setFormData] = useState({
+    patientName: "",
+    age: "",
+    sex: "",
+    admissionDate: "",
+    onAdmissionNotes: "",
+    dischargeDate: "",
+    onDischargeNotes: "",
+    diagnosis: "",
+    followUpDate: "",
+  });
 
-  const handleSubmit = async () => {
+  // Prefill from patientDetails
+  useEffect(() => {
+    if (patientDetails) {
+      setFormData({
+        patientName: patientDetails.name || "",
+        age: patientDetails.Age || "",
+        sex: patientDetails.gender || "",
+        admissionDate: patientDetails.admissionDate?.split("T")[0] || "",
+        onAdmissionNotes: patientDetails.onAdmissionNotes || "",
+        dischargeDate: patientDetails.dischargeDate?.split("T")[0] || "",
+        onDischargeNotes: patientDetails.onDischargeNotes || "",
+        diagnosis: patientDetails.diagnosis || "",
+        followUpDate: patientDetails.followUpDate?.split("T")[0] || "",
+      });
+    }
+  }, [patientDetails]);
+  // console.log(patientDetails);
+  const handleChange = (key, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const { admissionDate, dischargeDate, diagnosis } = formData;
     if (!admissionDate || !dischargeDate || !diagnosis) {
       toast.error("Please fill all required fields");
       return;
@@ -27,13 +54,8 @@ const Discharge = ({ onClose, patientId }) => {
 
     const payload = {
       patientId,
-      admissionDate,
-      dischargeDate,
-      onAdmissionNotes,
-      onDischargeNotes,
-      diagnosis,
-      followUpDay,
-      followUpTime,
+      caseId,
+      ...formData,
     };
 
     dispatch(dischargePatient(payload));
@@ -51,7 +73,7 @@ const Discharge = ({ onClose, patientId }) => {
         </div>
 
         <div className={styles.sectionWrapper}>
-          {/* Patient Info */}
+          {/* Patient Info (Read-Only) */}
           <div className={styles.section}>
             <p className={styles.sectionHeading}>Patient Info</p>
             <div className={styles.qna}>
@@ -60,8 +82,8 @@ const Discharge = ({ onClose, patientId }) => {
                 <input
                   type="text"
                   className={styles.input}
-                  value={patientName}
-                  onChange={(e) => setPatientName(e.target.value)}
+                  value={formData.patientName}
+                  onChange={(e) => handleChange("patientName", e.target.value)}
                 />
               </div>
               <div className={styles.questionWrapper}>
@@ -69,8 +91,8 @@ const Discharge = ({ onClose, patientId }) => {
                 <input
                   type="text"
                   className={styles.input}
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
+                  value={formData.age}
+                  onChange={(e) => handleChange("age", e.target.value)}
                 />
               </div>
               <div className={styles.questionWrapper}>
@@ -78,8 +100,8 @@ const Discharge = ({ onClose, patientId }) => {
                 <input
                   type="text"
                   className={styles.input}
-                  value={sex}
-                  onChange={(e) => setSex(e.target.value)}
+                  value={formData.sex}
+                  onChange={(e) => handleChange("sex", e.target.value)}
                 />
               </div>
             </div>
@@ -94,8 +116,10 @@ const Discharge = ({ onClose, patientId }) => {
                 <input
                   type="date"
                   className={styles.inputDate}
-                  value={admissionDate}
-                  onChange={(e) => setAdmissionDate(e.target.value)}
+                  value={formData.admissionDate}
+                  onChange={(e) =>
+                    handleChange("admissionDate", e.target.value)
+                  }
                 />
               </div>
               <div className={styles.questionWrapper}>
@@ -103,8 +127,10 @@ const Discharge = ({ onClose, patientId }) => {
                 <input
                   type="text"
                   className={styles.input}
-                  value={onAdmissionNotes}
-                  onChange={(e) => setOnAdmissionNotes(e.target.value)}
+                  value={formData.onAdmissionNotes}
+                  onChange={(e) =>
+                    handleChange("onAdmissionNotes", e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -119,8 +145,10 @@ const Discharge = ({ onClose, patientId }) => {
                 <input
                   type="date"
                   className={styles.inputDate}
-                  value={dischargeDate}
-                  onChange={(e) => setDischargeDate(e.target.value)}
+                  value={formData.dischargeDate}
+                  onChange={(e) =>
+                    handleChange("dischargeDate", e.target.value)
+                  }
                 />
               </div>
               <div className={styles.questionWrapper}>
@@ -128,8 +156,10 @@ const Discharge = ({ onClose, patientId }) => {
                 <input
                   type="text"
                   className={styles.input}
-                  value={onDischargeNotes}
-                  onChange={(e) => setOnDischargeNotes(e.target.value)}
+                  value={formData.onDischargeNotes}
+                  onChange={(e) =>
+                    handleChange("onDischargeNotes", e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -143,8 +173,8 @@ const Discharge = ({ onClose, patientId }) => {
                 <textarea
                   className={styles.textarea}
                   rows={3}
-                  value={diagnosis}
-                  onChange={(e) => setDiagnosis(e.target.value)}
+                  value={formData.diagnosis}
+                  onChange={(e) => handleChange("diagnosis", e.target.value)}
                 />
               </div>
             </div>
@@ -152,26 +182,13 @@ const Discharge = ({ onClose, patientId }) => {
 
           {/* Follow-up */}
           <div className={styles.section}>
-            <div className={styles.qna2}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.sectionHeading}>To Attend O.P.D on Day</p>
-                <input
-                  type="text"
-                  className={styles.inputDate}
-                  value={followUpDay}
-                  onChange={(e) => setFollowUpDay(e.target.value)}
-                />
-              </div>
-              <div className={styles.questionWrapper}>
-                <p className={styles.sectionHeading}>Time:</p>
-                <input
-                  type="time"
-                  className={styles.inputTime}
-                  value={followUpTime}
-                  onChange={(e) => setFollowUpTime(e.target.value)}
-                />
-              </div>
-            </div>
+            <p className={styles.sectionHeading}>To Attend O.P.D</p>
+            <input
+              type="date"
+              className={styles.inputDate}
+              value={formData.followUpDate}
+              onChange={(e) => handleChange("followUpDate", e.target.value)}
+            />
           </div>
         </div>
 

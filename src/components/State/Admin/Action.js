@@ -4,9 +4,9 @@ import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
-  ADD_EXPENSE,
+  ADD_EXPENSE, ADD_INSURANCE_COMPANY,
   ADD_ROOM,
-  ADD_SERVICE,
+  ADD_SERVICE, ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -22,13 +22,14 @@ import {
   GET_BILL_DETAILS,
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
-  GET_DEPARTMENT_BY_ID, GET_DOCTOR_REQUESTS,
+  GET_DEPARTMENT_BY_ID,
+  GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_EARNINGS,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
-  GET_FILTERED_ROOMS,
+  GET_FILTERED_ROOMS, GET_INSURANCE_COMPANIES, GET_INSURED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -39,7 +40,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
-  UPDATE_SERVICE,
+  UPDATE_SERVICE, UPDATE_STATUS_OF_INSURED_PATIENTS,
 } from "./ActionType.js";
 
 import { toast } from "react-toastify";
@@ -914,7 +915,15 @@ export const approveAdmissionRequestsAdmin =
       dispatch(getAdmissionRequestsToApprove("Pending"));
     } catch (error) {
       console.error("Error approving admission request:", error);
-      toast.error(error?.response?.data?.message || "Approval failed");
+      // Check for specific error code (413)
+      if (error?.response?.status === 413) {
+        toast.error(
+          "The image being sent is too large. Please reduce the size and try again."
+        );
+      } else {
+        // Generic error message for other types of errors
+        toast.error(error?.response?.data?.message || "Approval failed");
+      }
     }
   };
 export const editBill = (payload, id) => async (dispatch) => {
@@ -938,6 +947,7 @@ export const editBill = (payload, id) => async (dispatch) => {
 
     // Optional: dispatch to refresh data
     dispatch(getBillDetails(id));
+    dispatch(getBillingRecords());
   } catch (error) {
     console.error("Error editing bill:", error);
     toast.error(error?.response?.data?.message || "Edit failed");
@@ -960,6 +970,8 @@ export const addToBill = (payload, id) => async (dispatch) => {
 
     // Optional: dispatch to refresh data
     dispatch(getBillDetails(id));
+
+    dispatch(getBillingRecords());
   } catch (error) {
     console.error("Error adding to bill:", error);
     toast.error(error?.response?.data?.message || "Add failed");
@@ -1001,5 +1013,141 @@ export const acceptRequest = (id) => async (dispatch) => {
     dispatch({ type: ACCEPT_REQUEST, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getInsuredPatients = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getAdmissionRequestsWithInsurance`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Data: ",data)
+
+    dispatch({ type: GET_INSURED_PATIENTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateStatusOfInsuredPatients = (admissionId,status) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.put(
+        `${API_URL}/updateInsuranceStatus/${admissionId}`,{
+          insuranceApproved: status
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Updated Data: ",data)
+
+    dispatch({ type: UPDATE_STATUS_OF_INSURED_PATIENTS, payload: data });
+    dispatch(getInsuredPatients())
+
+    toast.success("Patient Status Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error(" Patient Updation Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const getInsuranceCompanies = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getInsuranceCompanies`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Insurance Companies : ",data)
+
+    dispatch({ type: GET_INSURANCE_COMPANIES, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addInsuranceCompany = (formData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+        `${API_URL}/addInsuranceCompany`,formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Insurance Company Added : ",data)
+
+    dispatch({ type: ADD_INSURANCE_COMPANY, payload: data.company });
+    toast.success("Company Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error("Company Addition Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const addServiceToCompany = (id,serviceData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const services = serviceData
+    console.log("Services: ",services)
+
+    const { data } = await axios.post(
+        `${API_URL}/addServiceToCompany/${id}`,
+        {services},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Service Added To Company : ",data)
+
+    dispatch({ type: ADD_SERVICE_TO_COMPANY, payload: data.company });
+    toast.success("Service Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error("Service Addition Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };

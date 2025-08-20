@@ -11,6 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CircularProgress from "@mui/material/CircularProgress";
+
 const formatValue = (value) => {
   if (!value) return "N/A";
   if (typeof value === "string") return value;
@@ -35,9 +37,11 @@ const formatValue = (value) => {
 const PastReportsAndDischarge = ({ patientId }) => {
   const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getPatientHistory(patientId));
+    setLoading(true);
+    dispatch(getPatientHistory(patientId)).finally(() => setLoading(false));
   }, [dispatch, patientId]);
 
   const closeModal = () => setActiveModal(null);
@@ -169,50 +173,65 @@ const PastReportsAndDischarge = ({ patientId }) => {
         </Box>
       </Modal>
       {/* Card List */}
-      <div className={styles.cardWrapper}>
-        {patientHistory?.length > 0 ? (
-          patientHistory.map((entry, index) => (
-            <div
-              key={index}
-              className={styles.card}
-              onClick={() => setActiveModal(entry)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className={styles.top}>
-                <div className={styles.left}>
-                  <img src="/assets/labIcon.svg" alt="icon" />
-                  <div className={styles.meta}>
-                    <h3>
-                      Consultation with {entry.doctor || "Doctor not specified"}
-                    </h3>
-                    <p>
-                      {entry.date
-                        ? dayjs(entry.date).format("DD MMM YYYY, hh:mm A")
-                        : "Date not available"}
-                    </p>
+
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "36vh", // or full height you need
+          }}
+        >
+          <CircularProgress sx={{ color: "#25307F" }} size={58} />
+        </Box>
+      ) : (
+        <div className={styles.cardWrapper}>
+          {patientHistory?.length > 0 ? (
+            patientHistory.map((entry, index) => (
+              <div
+                key={index}
+                className={styles.card}
+                onClick={() => setActiveModal(entry)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className={styles.top}>
+                  <div className={styles.left}>
+                    <img src="/assets/labIcon.svg" alt="icon" />
+                    <div className={styles.meta}>
+                      <h3>
+                        Consultation with{" "}
+                        {entry.doctor || "Doctor not specified"}
+                      </h3>
+                      <p>
+                        {entry.date
+                          ? dayjs(entry.date).format("DD MMM YYYY, hh:mm A")
+                          : "Date not available"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className={styles.details}>
-                <p>
-                  <strong>Department:</strong> {entry.department || "N/A"}
-                </p>
-                <p>
-                  <strong>Diagnosis:</strong>{" "}
-                  {entry.consultationData?.diagnosis || "Not specified"}
-                </p>
-                <p>
-                  <strong>Complaints:</strong>{" "}
-                  {entry.consultationData?.complaints || "Not specified"}
-                </p>
+                <div className={styles.details}>
+                  <p>
+                    <strong>Department:</strong> {entry.department || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Diagnosis:</strong>{" "}
+                    {entry.consultationData?.diagnosis || "Not specified"}
+                  </p>
+                  <p>
+                    <strong>Complaints:</strong>{" "}
+                    {entry.consultationData?.complaints || "Not specified"}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className={styles.noData}>No consultation history found.</p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p className={styles.noData}>No consultation history found.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

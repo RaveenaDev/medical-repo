@@ -6,12 +6,12 @@ import PatientProfile from "./component/PatientProfile";
 import PatientPreviousRecord from "./component/records/PatientPreviousRecord.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import BillingDetails from "./component/components/BillingDetails.jsx";
-import {useDispatch, useSelector} from "react-redux";
-import {getPatientDetailsByID} from "../../../components/State/Doctor/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getPatientDetailsByID } from "../../../components/State/Doctor/Action.js";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const location = useLocation();
   const { patientId, isFollowUpStatus } = location.state || {};
@@ -28,12 +28,14 @@ const SinglePatientDetail = () => {
   };
 
   const [activeModal, setActiveModal] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getPatientDetailsByID(patientId))
-  }, [dispatch]);
+    setLoading(true);
+    dispatch(getPatientDetailsByID(patientId)).finally(() => setLoading(false));
+  }, [dispatch, patientId]);
 
-  const patientDetails = useSelector((store) => store.doctor.patientDetails)
+  const patientDetails = useSelector((store) => store.doctor.patientDetails);
 
   // console.log("GOTCHA: ",patientDetails)
 
@@ -81,13 +83,13 @@ const SinglePatientDetail = () => {
             </div>
           </div>
           <div className={styles.headerRight}>
-            <button
-              onClick={handleUpdateDiagnosis}
-              className={styles.diagnosisBtn}
-            >
-              <Plus className={styles.plusIcon} />
-              Update Diagnosis
-            </button>
+            {/*<button*/}
+            {/*  onClick={handleUpdateDiagnosis}*/}
+            {/*  className={styles.diagnosisBtn}*/}
+            {/*>*/}
+            {/*  <Plus className={styles.plusIcon} />*/}
+            {/*  Update Diagnosis*/}
+            {/*</button>*/}
             <button className={styles.billingBtn} onClick={openBilling}>
               <img src="/assets/payment.svg" alt="" className={styles.icon} />
               Billing Details
@@ -124,7 +126,10 @@ const SinglePatientDetail = () => {
               isFollowUpStatus={isFollowUpStatus}
             />
           ) : (
-            <PatientPreviousRecord patientDetails={patientDetails}/>
+            <PatientPreviousRecord
+              loading={loading}
+              patientDetails={patientDetails}
+            />
           )}
         </section>
       </div>

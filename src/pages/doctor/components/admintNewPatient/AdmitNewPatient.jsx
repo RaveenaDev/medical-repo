@@ -3,18 +3,32 @@ import { ChevronLeft, X, Plus } from "lucide-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import { approveAdmissionRequestWithSignature } from "../../../../components/State/Doctor/Action";
 const AdmitNewPatient = ({ onClose, requests }) => {
   const dispatch = useDispatch();
   const [signature, setSignature] = useState(null);
-  const handleApprove = async (requestId) => {
+  const [loadingBtnId, setLoadingBtnId] = useState(null);
+
+  const handleApprove = (requestId) => {
     if (!signature) {
-      alert("Please upload your signature before approving.");
+      toast.error("Please upload your signature before approving.");
       return;
     }
 
-    dispatch(approveAdmissionRequestWithSignature(requestId, signature));
+    setLoadingBtnId(requestId); // Show loader on button
+    dispatch(approveAdmissionRequestWithSignature(requestId, signature))
+      .then(() => {
+        setLoadingBtnId(null); // Hide loader on success
+      })
+      .catch((e) => {
+        console.error("Error in handleApprove:", e);
+        setLoadingBtnId(null); // Hide loader on failure
+      });
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
@@ -89,8 +103,19 @@ const AdmitNewPatient = ({ onClose, requests }) => {
                     <button
                       onClick={() => handleApprove(req._id)}
                       className={styles.acceptBtn}
+                      disabled={loadingBtnId === req._id}
                     >
-                      Accept
+                      {loadingBtnId === req._id ? (
+                        <CircularProgress
+                          size={10}
+                          thickness={5}
+                          sx={{
+                            color: "white",
+                          }}
+                        />
+                      ) : (
+                        "Accept"
+                      )}
                     </button>
                     <button className={styles.rejectBtn}>
                       <X className={styles.rejectIcon} />
