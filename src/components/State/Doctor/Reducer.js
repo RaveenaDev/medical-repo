@@ -109,6 +109,7 @@ const initialState = {
   approvedAdmissions: [],
   admissionRequests: [],
   admissionRequestsCount: null,
+  isLoadingGetAdmissionRequests: true,
   userConsultationForms: [],
   patientDetails: [],
   progressTracker: [],
@@ -242,7 +243,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         admissionRequests: action.payload.requests,
         admissionRequestsCount: action.payload.count,
-        isLoading: false,
+        isLoadingGetAdmissionRequests: false,
       };
     case GET_ADMISSION_REQUESTS_TO_APPROVE:
       return {
