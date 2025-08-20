@@ -5,12 +5,15 @@ import {
   getAvailableRooms,
 } from "../../../../../components/State/Doctor/Action";
 import { useDispatch, useSelector } from "react-redux";
+import {getInsuranceCompanies} from "../../../../../components/State/Admin/Action.js";
 
 const AddPatientForm = ({ onClose }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAvailableRooms());
-  }, []);
+    dispatch(getInsuranceCompanies())
+  }, [dispatch]);
+
   const [hasInsurance, setHasInsurance] = useState(false);
   const [form, setForm] = useState({
     patientName: "",
@@ -46,6 +49,9 @@ const AddPatientForm = ({ onClose }) => {
   const [bedsAvailable, setBedsAvailable] = useState(true);
 
   const availableRooms = useSelector((state) => state.doctor.roomsAvailable);
+  const insuranceCompanies = useSelector((state) => state.admin.insuranceCompanies);
+
+  // console.log("Insur: ",insuranceCompanies)
   const handleRoomChange = (e) => {
     const roomId = e.target.value;
     setSelectedRoom(roomId);
@@ -116,7 +122,7 @@ const AddPatientForm = ({ onClose }) => {
 
     dispatch(createAdmissionRequest(payload));
 
-    console.log("Pay: ",payload)
+    // console.log("Pay: ",payload)
     onClose();
   };
   const [selectedRoles, setSelectedRoles] = useState([]);
@@ -375,12 +381,12 @@ const AddPatientForm = ({ onClose }) => {
                           required
                       >
                         <option value="">Select Company</option>
-                        <option value="Bajaj Allianz">Bajaj Allianz</option>
-                        <option value="Mediassist TPA">Mediassist TPA</option>
-                        <option value="MD India">MD India</option>
-                        <option value="Health India">Health India</option>
-                        <option value="Navi General Insurance CO. LTD">Navi General Insurance CO. LTD</option>
-                        <option value="Reliance General Insurance">Reliance General Insurance</option>
+
+                        {
+                          insuranceCompanies.map((comp) => (
+                              <option value={comp.name}>{comp.name}</option>
+                          ))
+                        }
                       </select>
                     </div>
                   </div>
