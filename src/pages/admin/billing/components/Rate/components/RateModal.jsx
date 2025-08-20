@@ -26,7 +26,7 @@ const RateModal = ({ open, handleClose }) => {
     rate: "", // default base rate
     amenities: "",
     effectiveDate: "", // New field for effective date
-    additionalDetails: [], // Array of { key: '', value: 0 }
+    additionaldetails: [], // Array of { key: '', value: 0 }
   });
 
   const [errors, setErrors] = useState({});
@@ -50,31 +50,31 @@ const RateModal = ({ open, handleClose }) => {
   };
 
   const handleAdditionalDetailChange = (index, field, value) => {
-    const updatedDetails = [...serviceDetails.additionalDetails];
+    const updatedDetails = [...serviceDetails.additionaldetails];
     updatedDetails[index][field] =
       field === "value" ? parseFloat(value) : value;
     setServiceDetails({
       ...serviceDetails,
-      additionalDetails: updatedDetails,
+      additionaldetails: updatedDetails,
     });
   };
 
   const handleAddAdditionalDetail = () => {
     setServiceDetails({
       ...serviceDetails,
-      additionalDetails: [
-        ...serviceDetails.additionalDetails,
+      additionaldetails: [
+        ...serviceDetails.additionaldetails,
         { key: "", value: 0 },
       ],
     });
   };
 
   const handleRemoveAdditionalDetail = (index) => {
-    const updatedDetails = [...serviceDetails.additionalDetails];
+    const updatedDetails = [...serviceDetails.additionaldetails];
     updatedDetails.splice(index, 1);
     setServiceDetails({
       ...serviceDetails,
-      additionalDetails: updatedDetails,
+      additionaldetails: updatedDetails,
     });
   };
 
@@ -83,8 +83,8 @@ const RateModal = ({ open, handleClose }) => {
 
     Object.keys(serviceDetails).forEach((key) => {
       if (
-        key !== "additionalDetails" &&
-        (key !== "rate" || serviceDetails.additionalDetails.length === 0) &&
+        key !== "additionaldetails" &&
+        (key !== "rate" || serviceDetails.additionaldetails.length === 0) &&
         !serviceDetails[key]
       ) {
         newErrors[key] = "This field is required";
@@ -100,7 +100,7 @@ const RateModal = ({ open, handleClose }) => {
     }
 
     // Calculate total rate based on additional details
-    const additionalRate = serviceDetails.additionalDetails.reduce(
+    const additionalRate = serviceDetails.additionaldetails.reduce(
       (acc, item) => acc + (item.value || 0),
       0
     );
@@ -110,7 +110,7 @@ const RateModal = ({ open, handleClose }) => {
     const finalServiceDetails = {
       ...serviceDetails,
       rate: finalRate,
-      additionalDetails: serviceDetails.additionalDetails.reduce(
+      additionaldetails: serviceDetails.additionaldetails.reduce(
         (acc, item) => ({ ...acc, [item.key]: item.value }),
         {}
       ),
@@ -125,7 +125,7 @@ const RateModal = ({ open, handleClose }) => {
       rate: "", // Reset to empty
       amenities: "",
       effectiveDate: "", // Reset effective date
-      additionalDetails: [],
+      additionaldetails: [],
     });
     setErrors({});
     handleClose();
@@ -133,8 +133,8 @@ const RateModal = ({ open, handleClose }) => {
 
   // Calculate the total rate, which is the sum of the additional details
   const totalRate =
-    serviceDetails.additionalDetails.length > 0
-      ? serviceDetails.additionalDetails.reduce(
+    serviceDetails.additionaldetails.length > 0
+      ? serviceDetails.additionaldetails.reduce(
           (acc, item) => acc + item.value,
           0
         )
@@ -221,13 +221,13 @@ const RateModal = ({ open, handleClose }) => {
           onChange={handleChange}
           error={!!errors.rate}
           helperText={errors.rate}
-          disabled={serviceDetails.additionalDetails.length > 0} // Disable when additional details are added
+          disabled={serviceDetails.additionaldetails.length > 0} // Disable when additional details are added
         />
 
         {/* Additional Details Section */}
         <div>
           <Grid container spacing={2} marginTop={1}>
-            {serviceDetails.additionalDetails.map((item, index) => (
+            {serviceDetails.additionaldetails.map((item, index) => (
               <Grid item xs={12} container spacing={1} key={index}>
                 <Grid item xs={6}>
                   <TextField

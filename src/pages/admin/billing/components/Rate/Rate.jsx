@@ -46,10 +46,12 @@ const Rate = () => {
   const reduxServices = useSelector((store) => store.admin.services);
   const departments = useSelector((store) => store.admin.departments);
 
+  console.log("Redux Services: ", reduxServices);
   const services = reduxServices.map((service) => ({
     serviceId: service._id,
     serviceName: service.name,
     department: service.department.name,
+    lastUpdated: service.lastUpdated,
     categories: service.categories.map((category) => ({
       categoryId: category._id,
       name: category.subCategoryName,
@@ -57,7 +59,6 @@ const Rate = () => {
       currentRate: category.rate,
       amenities: category.amenities || "N/A",
       effectiveDate: category.effectiveDate,
-      lastUpdated: "11-01-2025",
     })),
   }));
 
@@ -354,7 +355,17 @@ const Rate = () => {
                           }
                         )}
                       </span>
-                      <span>{category.lastUpdated}</span>
+                      <span>
+                        {" "}
+                        {new Date(service.lastUpdated).toLocaleDateString(
+                          "en-IN",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
                       <span className="blue">{category.amenities}</span>
                       <IconButton
                         onClick={(event) =>
