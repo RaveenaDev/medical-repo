@@ -95,7 +95,6 @@ const SingleCompanyDetails = (props) => {
     const handleServiceChange = (index, key, value) => {
         const updatedServices = [...formData];
 
-        // if the key belongs to pricingDetails
         if (key in updatedServices[index].pricingDetails) {
             updatedServices[index].pricingDetails[key] = value;
         } else {
@@ -103,7 +102,13 @@ const SingleCompanyDetails = (props) => {
         }
 
         setFormData(updatedServices);
+
+        // Clear error once corrected
+        if (errors[`${key}-${index}`]) {
+            setErrors({ ...errors, [`${key}-${index}`]: "" });
+        }
     };
+
 
     const handleRemoveService = (index) => {
         const updatedServices = [...formData];
@@ -127,18 +132,33 @@ const SingleCompanyDetails = (props) => {
     const handleSubmit = () => {
         let newErrors = {};
 
-        Object.keys(formData).forEach((key) => {
-            if (key !== "beds" && !formData[key]) {
-                newErrors[key] = "This field is required";
+        formData.forEach((service, index) => {
+            if (!service.serviceName.trim()) {
+                newErrors[`serviceName-${index}`] = "Service Name is required";
+            }
+            if (
+                !service.pricingDetails.rate ||
+                isNaN(service.pricingDetails.rate) ||
+                Number(service.pricingDetails.rate) <= 0
+            ) {
+                newErrors[`rate-${index}`] = "Enter a valid cost (> 0)";
+            }
+            if (!service.pricingDetails.description.trim()) {
+                newErrors[`description-${index}`] = "Description is required";
             }
         });
 
-        // console.log("Form Data: ",formData)
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return; // stop submit if validation fails
+        }
 
-        dispatch(addServiceToCompany(company._id,formData))
+        // ✅ If validation passes → dispatch
+        dispatch(addServiceToCompany(company._id, formData));
         setErrors({});
         setAddDialogOpen(false);
     };
+
 
 
     return (
@@ -322,26 +342,26 @@ const SingleCompanyDetails = (props) => {
 
                     {/* Service Table */}
                     <div className={styles.rateTable}>
-                        <div className={styles.rateTableHeader}>
+                        <div className={styles.rateTableHeader} style={{marginLeft:'1rem'}}>
                             <span>Service Name</span>
                             <span>Description</span>
                             <span>Rate</span>
                             <span>Currency</span>
-                            <span>Last Updated</span>
+                            {/*<span>Last Updated</span>*/}
                         </div>
 
                         {services.length > 0 ? (
                             paginatedServices.map((service) => (
                                 <div key={service._id} className={styles.rateTableRow}>
-                                    <span className={styles.blue}>{service.serviceName}</span>
-                                    <span>{service.pricingDetails?.description || "-"}</span>
+                                    <span className={styles.blue}>{service?.serviceName}</span>
+                                    <span>{service?.pricingDetails?.description || "-"}</span>
                                     <span className={styles.blue}>
-                    ₹{service.pricingDetails?.rate || 0}
+                    ₹{service?.pricingDetails?.rate || 0}
                   </span>
-                                    <span>{service.pricingDetails?.currency || "INR"}</span>
-                                    <span>
-                    {new Date(company.updatedAt).toLocaleDateString("en-IN")}
-                  </span>
+                                    <span>{service?.pricingDetails?.currency || "INR"}</span>
+                  {/*                  <span>*/}
+                  {/*  {new Date(company.updatedAt).toLocaleDateString("en-IN")}*/}
+                  {/*</span>*/}
 
                                     <IconButton onClick={(event) => handleOpenMenu(event, service)}>
                                         <MoreVerticalIcon />

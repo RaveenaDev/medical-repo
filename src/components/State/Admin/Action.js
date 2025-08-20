@@ -1107,8 +1107,16 @@ export const addInsuranceCompany = (formData) => async (dispatch) => {
     // console.log("Insurance Company Added : ",data)
 
     dispatch({ type: ADD_INSURANCE_COMPANY, payload: data.company });
+    toast.success("Company Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.log(error);
+    toast.error("Company Addition Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -1131,7 +1139,15 @@ export const addServiceToCompany = (id,serviceData) => async (dispatch) => {
     // console.log("Service Added To Company : ",data)
 
     dispatch({ type: ADD_SERVICE_TO_COMPANY, payload: data.company });
+    toast.success("Service Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   } catch (error) {
     console.log(error);
+    toast.error("Service Addition Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };

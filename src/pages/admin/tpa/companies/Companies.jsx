@@ -44,7 +44,7 @@ const Companies = () => {
 
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const companyCount = companies.length;
 
@@ -93,12 +93,34 @@ const Companies = () => {
     const handleSubmit = () => {
         let newErrors = {};
 
-        Object.keys(formData).forEach((key) => {
-            if (key !== "beds" && !formData[key]) {
-                newErrors[key] = "This field is required";
+        // Company fields
+        if (!formData.companyID.trim()) {
+            newErrors.companyID = "Company ID is required";
+        }
+        if (!formData.companyName.trim()) {
+            newErrors.companyName = "Company Name is required";
+        }
+
+        // Services validation
+        formData.services.forEach((service, index) => {
+            if (!service.serviceName.trim()) {
+                newErrors[`serviceName-${index}`] = "Service Name is required";
+            }
+            if (!service.serviceCost || isNaN(service.serviceCost) || Number(service.serviceCost) <= 0) {
+                newErrors[`serviceCost-${index}`] = "Enter a valid cost (> 0)";
+            }
+            if (!service.serviceDescription.trim()) {
+                newErrors[`serviceDescription-${index}`] = "Description is required";
             }
         });
 
+        // If errors exist, setErrors and stop submit
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        // ✅ If validation passes → prepare finalData
         const finalData = {
             id: formData.companyID,
             name: formData.companyName,
@@ -106,20 +128,19 @@ const Companies = () => {
                 serviceName: service.serviceName,
                 pricingDetails: {
                     rate: service.serviceCost,
-                    currency: service.currency || "INR", // default to INR if not provided
+                    currency: service.currency || "INR",
                     description: service.serviceDescription
                 }
             }))
         };
 
-        // console.log("Testing : ",formData)
-        // console.log("Testing1 : ",finalData)
-        dispatch(addInsuranceCompany(finalData))
+        dispatch(addInsuranceCompany(finalData));
         setErrors({});
         setAddDialogOpen(false);
     };
 
-  return (
+
+    return (
     <div className={styles.billingsContainer}>
       <div className={styles.header}>
           <Button
