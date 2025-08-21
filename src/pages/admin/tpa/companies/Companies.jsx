@@ -13,6 +13,7 @@ import { Plus } from "lucide-react";
 import {useDispatch, useSelector} from "react-redux";
 import {addInsuranceCompany, getInsuranceCompanies} from "../../../../components/State/Admin/Action.js";
 import Grid from "@mui/material/Grid2";
+import CompanyRateModal from "./CompanyRateModal.jsx";
 
 const Companies = () => {
     const [errors, setErrors] = useState({}); // Added error state
@@ -31,6 +32,7 @@ const Companies = () => {
     });
 
     const [addDialogOpen, setAddDialogOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false); // State for modal
 
     const dispatch = useDispatch()
 
@@ -40,7 +42,7 @@ const Companies = () => {
 
     const companies = useSelector((store) => store.admin.insuranceCompanies)
 
-    // console.log("Comp: ",companies)
+    console.log("Comp: ",companies)
 
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
@@ -154,153 +156,153 @@ const Companies = () => {
                   color: "white",
                   "&:hover": { background: "#AEC3FF" },
               }}
-              onClick={handleAddDialogOpen} // Open modal on click
+              onClick={() => setModalOpen(true)}
           >
               <Plus className={styles.plusIcon} />
               ADD COMPANY
           </Button>
       </div>
 
-        <Dialog
-            open={addDialogOpen}
-            onClose={handleAddDialogClose}
-            maxWidth="md"
-            fullWidth
-            sx={{
-                "& .MuiDialog-paper": {
-                    maxWidth: "65%", // This will reduce the max width between md and lg.
-                },
-            }}
-        >
-            <DialogTitle>Add Company</DialogTitle>
-            <DialogContent>
-                <Box sx={{ width: "100%" }}>
-                    {" "}
-                    {/* Fix width issue */}
-                    <Grid container spacing={2}>
-                        <Grid xs={3}>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                label="Company ID"
-                                name="companyID"
-                                value={formData.companyID}
-                                onChange={handleChange}
-                                type="text"
-                                fullWidth
-                                variant="outlined"
-                                error={!!errors.companyID}
-                                helperText={errors.companyID}
-                                required
-                            />
-                        </Grid>
+        {/*<Dialog*/}
+        {/*    open={addDialogOpen}*/}
+        {/*    onClose={handleAddDialogClose}*/}
+        {/*    maxWidth="md"*/}
+        {/*    fullWidth*/}
+        {/*    sx={{*/}
+        {/*        "& .MuiDialog-paper": {*/}
+        {/*            maxWidth: "65%", // This will reduce the max width between md and lg.*/}
+        {/*        },*/}
+        {/*    }}*/}
+        {/*>*/}
+        {/*    <DialogTitle>Add Company</DialogTitle>*/}
+        {/*    <DialogContent>*/}
+        {/*        <Box sx={{ width: "100%" }}>*/}
+        {/*            {" "}*/}
+        {/*            /!* Fix width issue *!/*/}
+        {/*            <Grid container spacing={2}>*/}
+        {/*                <Grid xs={3}>*/}
+        {/*                    <TextField*/}
+        {/*                        autoFocus*/}
+        {/*                        margin="dense"*/}
+        {/*                        label="Company ID"*/}
+        {/*                        name="companyID"*/}
+        {/*                        value={formData.companyID}*/}
+        {/*                        onChange={handleChange}*/}
+        {/*                        type="text"*/}
+        {/*                        fullWidth*/}
+        {/*                        variant="outlined"*/}
+        {/*                        error={!!errors.companyID}*/}
+        {/*                        helperText={errors.companyID}*/}
+        {/*                        required*/}
+        {/*                    />*/}
+        {/*                </Grid>*/}
 
-                        <Grid xs={3}>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                label="Company Name"
-                                name="companyName"
-                                value={formData.companyName}
-                                onChange={handleChange}
-                                type="text"
-                                fullWidth
-                                variant="outlined"
-                                error={!!errors.companyName}
-                                helperText={errors.companyName}
-                                required
-                            />
-                        </Grid>
+        {/*                <Grid xs={3}>*/}
+        {/*                    <TextField*/}
+        {/*                        autoFocus*/}
+        {/*                        margin="dense"*/}
+        {/*                        label="Company Name"*/}
+        {/*                        name="companyName"*/}
+        {/*                        value={formData.companyName}*/}
+        {/*                        onChange={handleChange}*/}
+        {/*                        type="text"*/}
+        {/*                        fullWidth*/}
+        {/*                        variant="outlined"*/}
+        {/*                        error={!!errors.companyName}*/}
+        {/*                        helperText={errors.companyName}*/}
+        {/*                        required*/}
+        {/*                    />*/}
+        {/*                </Grid>*/}
 
-                        {formData.services.map((service, index) => (
-                            <Grid  container sx={{width:'100vw'}} spacing={2} key={index}>
-                                <Grid xs={3}>
-                                    <TextField
-                                        label="Service Name"
-                                        name={`serviceName-${index}`}
-                                        value={service.serviceName}
-                                        onChange={(e) =>
-                                            handleServiceChange(index, "serviceName", e.target.value)
-                                        }
-                                        fullWidth
-                                        margin="dense"
-                                        variant="outlined"
-                                        required
-                                        error={!!errors[`serviceName-${index}`]}
-                                        helperText={errors[`serviceName-${index}`]}
-                                    />
-                                </Grid>
-                                <Grid xs={3}>
-                                    <TextField
-                                        label="Cost"
-                                        name={`serviceCost-${index}`}
-                                        type="number"
-                                        value={service.serviceCost}
-                                        onChange={(e) =>
-                                            handleServiceChange(index, "serviceCost", e.target.value)
-                                        }
-                                        fullWidth
-                                        margin="dense"
-                                        variant="outlined"
-                                        required
-                                        error={!!errors[`serviceCost-${index}`]}
-                                        helperText={errors[`serviceCost-${index}`]}
-                                    />
-                                </Grid>
-                                <Grid xs={3}>
-                                    <TextField
-                                        label="Description"
-                                        name={`serviceDescription-${index}`}
-                                        value={service.serviceDescription}
-                                        onChange={(e) =>
-                                            handleServiceChange(index, "serviceDescription", e.target.value)
-                                        }
-                                        fullWidth
-                                        margin="dense"
-                                        variant="outlined"
-                                        required
-                                        error={!!errors[`serviceDescription-${index}`]}
-                                        helperText={errors[`serviceDescription-${index}`]}
-                                    />
-                                </Grid>
-                                <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>
-                                    {formData.services.length > 1 && (
-                                        <Button
-                                            variant="outlined"
-                                            color="error"
-                                            onClick={() => handleRemoveService(index)}
-                                        >
-                                            Remove
-                                        </Button>
-                                    )}
-                                </Grid>
-                            </Grid>
-                        ))}
-                        <Button
-                            variant="contained"
-                            sx={{ mt: 2, backgroundColor: "#25307F", color: "white" }}
-                            onClick={handleAddService}
-                        >
-                            + Add Service
-                        </Button>
-                    </Grid>
-                </Box>
-            </DialogContent>
+        {/*                {formData.services.map((service, index) => (*/}
+        {/*                    <Grid  container sx={{width:'100vw'}} spacing={2} key={index}>*/}
+        {/*                        <Grid xs={3}>*/}
+        {/*                            <TextField*/}
+        {/*                                label="Service Name"*/}
+        {/*                                name={`serviceName-${index}`}*/}
+        {/*                                value={service.serviceName}*/}
+        {/*                                onChange={(e) =>*/}
+        {/*                                    handleServiceChange(index, "serviceName", e.target.value)*/}
+        {/*                                }*/}
+        {/*                                fullWidth*/}
+        {/*                                margin="dense"*/}
+        {/*                                variant="outlined"*/}
+        {/*                                required*/}
+        {/*                                error={!!errors[`serviceName-${index}`]}*/}
+        {/*                                helperText={errors[`serviceName-${index}`]}*/}
+        {/*                            />*/}
+        {/*                        </Grid>*/}
+        {/*                        <Grid xs={3}>*/}
+        {/*                            <TextField*/}
+        {/*                                label="Cost"*/}
+        {/*                                name={`serviceCost-${index}`}*/}
+        {/*                                type="number"*/}
+        {/*                                value={service.serviceCost}*/}
+        {/*                                onChange={(e) =>*/}
+        {/*                                    handleServiceChange(index, "serviceCost", e.target.value)*/}
+        {/*                                }*/}
+        {/*                                fullWidth*/}
+        {/*                                margin="dense"*/}
+        {/*                                variant="outlined"*/}
+        {/*                                required*/}
+        {/*                                error={!!errors[`serviceCost-${index}`]}*/}
+        {/*                                helperText={errors[`serviceCost-${index}`]}*/}
+        {/*                            />*/}
+        {/*                        </Grid>*/}
+        {/*                        <Grid xs={3}>*/}
+        {/*                            <TextField*/}
+        {/*                                label="Description"*/}
+        {/*                                name={`serviceDescription-${index}`}*/}
+        {/*                                value={service.serviceDescription}*/}
+        {/*                                onChange={(e) =>*/}
+        {/*                                    handleServiceChange(index, "serviceDescription", e.target.value)*/}
+        {/*                                }*/}
+        {/*                                fullWidth*/}
+        {/*                                margin="dense"*/}
+        {/*                                variant="outlined"*/}
+        {/*                                required*/}
+        {/*                                error={!!errors[`serviceDescription-${index}`]}*/}
+        {/*                                helperText={errors[`serviceDescription-${index}`]}*/}
+        {/*                            />*/}
+        {/*                        </Grid>*/}
+        {/*                        <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>*/}
+        {/*                            {formData.services.length > 1 && (*/}
+        {/*                                <Button*/}
+        {/*                                    variant="outlined"*/}
+        {/*                                    color="error"*/}
+        {/*                                    onClick={() => handleRemoveService(index)}*/}
+        {/*                                >*/}
+        {/*                                    Remove*/}
+        {/*                                </Button>*/}
+        {/*                            )}*/}
+        {/*                        </Grid>*/}
+        {/*                    </Grid>*/}
+        {/*                ))}*/}
+        {/*                <Button*/}
+        {/*                    variant="contained"*/}
+        {/*                    sx={{ mt: 2, backgroundColor: "#25307F", color: "white" }}*/}
+        {/*                    onClick={handleAddService}*/}
+        {/*                >*/}
+        {/*                    + Add Service*/}
+        {/*                </Button>*/}
+        {/*            </Grid>*/}
+        {/*        </Box>*/}
+        {/*    </DialogContent>*/}
 
-            <DialogActions sx={{ justifyContent: "center" }}>
-                <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    sx={{
-                        width: "200px",
-                        backgroundColor: "#25307F",
-                        "&:hover": { backgroundColor: "green" },
-                    }}
-                >
-                    Save
-                </Button>
-            </DialogActions>
-        </Dialog>
+        {/*    <DialogActions sx={{ justifyContent: "center" }}>*/}
+        {/*        <Button*/}
+        {/*            onClick={handleSubmit}*/}
+        {/*            variant="contained"*/}
+        {/*            sx={{*/}
+        {/*                width: "200px",*/}
+        {/*                backgroundColor: "#25307F",*/}
+        {/*                "&:hover": { backgroundColor: "green" },*/}
+        {/*            }}*/}
+        {/*        >*/}
+        {/*            Save*/}
+        {/*        </Button>*/}
+        {/*    </DialogActions>*/}
+        {/*</Dialog>*/}
 
       <div className={styles.billingsTable} style={{ position: "relative" }}>
         {/* Table Header */}
@@ -385,6 +387,8 @@ const Companies = () => {
           />
         </Box>
       </div>
+
+        <CompanyRateModal open={modalOpen} handleClose={() => setModalOpen(false)}/>
     </div>
   );
 };
