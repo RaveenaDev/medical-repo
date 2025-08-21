@@ -28,14 +28,16 @@ const SinglePatientDetail = () => {
   };
 
   const [activeModal, setActiveModal] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    dispatch(getPatientDetailsByID(patientId)).finally(() => setLoading(false));
+    dispatch(getPatientDetailsByID(patientId));
   }, [dispatch, patientId]);
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
+
+  const isLoading = useSelector(
+    (store) => store.doctor.isLoadingPatientDetails
+  );
 
   // console.log("GOTCHA: ",patientDetails)
 
@@ -127,7 +129,7 @@ const SinglePatientDetail = () => {
             />
           ) : (
             <PatientPreviousRecord
-              loading={loading}
+              loading={isLoading}
               patientDetails={patientDetails}
             />
           )}

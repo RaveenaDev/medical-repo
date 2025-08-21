@@ -92,6 +92,7 @@ const initialState = {
   events: [],
   monthlyEvents: [],
   patientBills: [],
+  isLoadingPatientBills: true,
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
@@ -113,6 +114,7 @@ const initialState = {
   isLoadingGetAdmissionRequests: true,
   userConsultationForms: [],
   patientDetails: [],
+  isLoadingPatientDetails: true,
   progressTracker: [],
   isLoadingGetProgressTracker: true,
   patientVitals: [],
@@ -223,7 +225,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientDetails: action.payload,
-        isLoading: false,
+        isLoadingPatientDetails: false,
       };
     case GET_PATIENTS_VITALS:
       return {
@@ -490,6 +492,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientBills: action.payload,
+        isLoadingPatientBills: false,
       };
     default:
       return state;
