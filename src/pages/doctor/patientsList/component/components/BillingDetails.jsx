@@ -10,21 +10,18 @@ const BillingDetails = ({ onClose }) => {
   const location = useLocation();
   const patientId = location.state?.patientId;
   const patientName = location.state?.patientName;
-  const [loading, setLoading] = useState(true);
 
   //console.log("Patient Id", patientId);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (location.state?.patientId) {
-      setLoading(true);
-      dispatch(getBillsByPatientId(location.state.patientId)).finally(() =>
-        setLoading(false)
-      );
+      dispatch(getBillsByPatientId(location.state.patientId));
     }
   }, [patientId, location.state, dispatch]);
 
   const patientBills = useSelector((state) => state.doctor.patientBills || []);
+  const loading = useSelector((state) => state.doctor.isLoadingPatientBills);
   // console.log("Patient Bills", patientBills);
   const latestBill =
     Array.isArray(patientBills) && patientBills.length >= 1

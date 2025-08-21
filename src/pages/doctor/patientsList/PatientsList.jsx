@@ -26,6 +26,7 @@ import { Box } from "@mui/material";
 const PatientsList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [admittingPatientId, setAdmittingPatientId] = useState(null);
 
   useEffect(() => {
     dispatch(getAdmissionRequests());
@@ -74,9 +75,20 @@ const PatientsList = () => {
   const handleCloseForm = () => setShowForm(false);
 
   const handleAdmitPatientClick = (patientId) => {
+    setAdmittingPatientId(patientId);
     // console.log(patientId);
-    dispatch(admitPatient(patientId));
+
+    dispatch(admitPatient(patientId))
+      .then(() => {
+        // ✅ success
+        setAdmittingPatientId(null); // stop loader
+      })
+      .catch((error) => {
+        console.error("Failed to admit patient:", error);
+        setAdmittingPatientId(null); // stop loader even if failed
+      });
   };
+
   const filteredAdmissions = admissionRequests
     .filter((req) => req.status !== "Admitted" && req.status !== "discharged") // remove both
     .sort((a, b) => {
@@ -310,8 +322,19 @@ const PatientsList = () => {
                         <button
                           className="admit_btn"
                           onClick={() => handleAdmitPatientClick(patient._id)}
+                          disabled={admittingPatientId === patient._id}
                         >
-                          Admit
+                          {admittingPatientId === patient._id ? (
+                            <CircularProgress
+                              size={10}
+                              thickness={5}
+                              sx={{
+                                color: "white",
+                              }}
+                            />
+                          ) : (
+                            "Admit"
+                          )}
                         </button>
                       ) : (
                         (() => {

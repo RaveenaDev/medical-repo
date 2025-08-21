@@ -235,13 +235,19 @@
           justify-content: center;
           font-family: "Karla", "sans-serif";
           font-weight: 500;
-          font-size: 14px;
+
           line-height: 100%;
           letter-spacing: 0%;
           vertical-align: middle;
 
           .admit_btn {
-            padding: 5px 10px;
+            height: 3.4vh;
+            width: 4.4vw;
+            font-size: 1.9vh;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: #dae4ff;
             color: #333333;
           }
