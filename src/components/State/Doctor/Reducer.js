@@ -74,9 +74,12 @@ const initialState = {
   totalFilteredRooms: null,
   filteredRooms: [],
   criticalPatients: [],
+  isLoadingCriticalPatients: true,
   totalDiagnosis: null,
   diagnosis: [],
+  isLoadingMostCommonDiagnosis: true,
   totalAppointments: [],
+  isLoadingAppointments: true,
   scheduledAppointments: [],
   scheduledCount: null,
   ongoingCount: null,
@@ -90,6 +93,7 @@ const initialState = {
   doctorRequests: [],
   appointmentRequests: [],
   events: [],
+  isLoadingUpcomingEvents: true,
   monthlyEvents: [],
   patientBills: [],
   isLoadingPatientBills: true,
@@ -279,6 +283,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         criticalPatients: action.payload.patients,
+        isLoadingCriticalPatients: false,
       };
 
     case GET_MOST_COMMON_DIAGNOSIS:
@@ -286,7 +291,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalDiagnosis: action.payload.totalDiagnosis,
         diagnosis: action.payload.commonDiagnosis,
-        isLoading: false,
+        isLoadingMostCommonDiagnosis: false,
       };
 
     case GET_MEDICAL_PROCEDURE_STATS:
@@ -300,6 +305,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         totalAppointments: action.payload.appointments,
+        isLoadingAppointments: false,
       };
 
     case GET_SCHEDULED_APPOINTMENTS:
@@ -368,6 +374,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         events: action.payload.events,
+        isLoadingUpcomingEvents: false,
       };
 
     case GET_MONTHLY_EVENTS:
