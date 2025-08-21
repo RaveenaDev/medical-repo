@@ -100,8 +100,11 @@ const initialState = {
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
+  isLoadingMedicalProcedureStats: true,
   doctors: [],
+  isLoadingDoctors: true,
   staff: [],
+  isLoadingStaffs: true,
   inventoryData: [],
   totalInventory: null,
   doctorNotes: [],
@@ -203,13 +206,13 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         doctors: action.payload.doctors,
-        isLoading: false,
+        isLoadingDoctors: false,
       };
     case GET_STAFF:
       return {
         ...state,
         staff: action.payload.staff,
-        isLoading: false,
+        isLoadingStaffs: false,
       };
 
     case GET_INVENTORY_DATA:
@@ -299,7 +302,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         medicalProcedureStats: action.payload,
-        isLoading: false,
+        isLoadingMedicalProcedureStats: false,
       };
 
     case GET_APPOINTMENTS:

@@ -34,6 +34,7 @@ import {
   endOfYear,
 } from "date-fns";
 import AssignOverlay from "./components/AssignOverlay.jsx";
+import { Box, CircularProgress } from "@mui/material";
 
 const getDateRange = (filterType) => {
   const now = new Date();
@@ -188,6 +189,14 @@ const Department = () => {
     dispatch(getStaff());
     dispatch(getInventoryData());
   }, [dispatch, dateRange, filter2]);
+
+  const isLoadingDoctors = useSelector(
+    (state) => state.doctor.isLoadingDoctors
+  );
+  const isLoadingStaffs = useSelector((state) => state.doctor.isLoadingStaffs);
+  const isLoadingMedicalProcedureStats = useSelector(
+    (state) => state.doctor.isLoadingMedicalProcedureStats
+  );
 
   const hospitalStatistics = useSelector(
     (state) => state.doctor.hospitalStatistics
@@ -380,44 +389,60 @@ const Department = () => {
             {/* ───────────── Doctors Section ───────────── */}
             <div className={style.section}>
               <h3 className={style.sectionTitle}>Doctors</h3>
-              <div className={style.scrollableList}>
-                {doctors.map((doc) => {
-                  const isSelected = selectedDoctors.has(doc._id);
-                  return (
-                    <div
-                      key={doc._id}
-                      className={style.listItem}
-                      onClick={() => toggleDoctorSelection(doc._id)}
-                    >
-                      <img
-                        src={
-                          doc.avatar ||
-                          "https://randomuser.me/api/portraits/women/12.jpg"
-                        }
-                        alt={doc.name}
-                        className={style.avatar}
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src =
-                            "https://randomuser.me/api/portraits/women/12.jpg";
-                        }}
-                      />
-                      <div className={style.info}>
-                        <span className={style.name}>{doc.name}</span>
-                        <span className={style.role}>{doc.specialization}</span>
-                      </div>
-                      {isSelected && (
-                        <input
-                          type="checkbox"
-                          className={style.checkbox}
-                          checked
-                          readOnly
+              {isLoadingDoctors ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%", // or full height you need
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#25307F" }} size={40} />
+                </Box>
+              ) : (
+                <div className={style.scrollableList}>
+                  {doctors.map((doc) => {
+                    const isSelected = selectedDoctors.has(doc._id);
+                    return (
+                      <div
+                        key={doc._id}
+                        className={style.listItem}
+                        onClick={() => toggleDoctorSelection(doc._id)}
+                      >
+                        <img
+                          src={
+                            doc.avatar ||
+                            "https://randomuser.me/api/portraits/women/12.jpg"
+                          }
+                          alt={doc.name}
+                          className={style.avatar}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src =
+                              "https://randomuser.me/api/portraits/women/12.jpg";
+                          }}
                         />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                        <div className={style.info}>
+                          <span className={style.name}>{doc.name}</span>
+                          <span className={style.role}>
+                            {doc.specialization}
+                          </span>
+                        </div>
+                        {isSelected && (
+                          <input
+                            type="checkbox"
+                            className={style.checkbox}
+                            checked
+                            readOnly
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
               <button
                 className={`${
                   anyDoctorSelected ? style.assignButton : style.notAssigned
@@ -438,44 +463,59 @@ const Department = () => {
             {/* ───────────── Staff Members Section ───────────── */}
             <div className={style.section}>
               <h3 className={style.sectionTitle}>Staff Members</h3>
-              <div className={style.scrollableList}>
-                {staff.map((staff) => {
-                  const isSelected = selectedStaff.has(staff._id);
-                  return (
-                    <div
-                      key={staff._id}
-                      className={style.listItem}
-                      onClick={() => toggleStaffSelection(staff._id)}
-                    >
-                      <img
-                        src={
-                          staff.avatar ||
-                          "https://randomuser.me/api/portraits/women/12.jpg"
-                        }
-                        alt={staff.name}
-                        className={style.avatar}
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src =
-                            "https://randomuser.me/api/portraits/women/12.jpg";
-                        }}
-                      />
-                      <div className={style.info}>
-                        <span className={style.name}>{staff.name}</span>
-                        <span className={style.role}>{staff.designation}</span>
-                      </div>
-                      {isSelected && (
-                        <input
-                          type="checkbox"
-                          className={style.checkbox}
-                          checked
-                          readOnly
+              {isLoadingStaffs ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%", // or full height you need
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#25307F" }} size={40} />
+                </Box>
+              ) : (
+                <div className={style.scrollableList}>
+                  {staff.map((staff) => {
+                    const isSelected = selectedStaff.has(staff._id);
+                    return (
+                      <div
+                        key={staff._id}
+                        className={style.listItem}
+                        onClick={() => toggleStaffSelection(staff._id)}
+                      >
+                        <img
+                          src={
+                            staff.avatar ||
+                            "https://randomuser.me/api/portraits/women/12.jpg"
+                          }
+                          alt={staff.name}
+                          className={style.avatar}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src =
+                              "https://randomuser.me/api/portraits/women/12.jpg";
+                          }}
                         />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                        <div className={style.info}>
+                          <span className={style.name}>{staff.name}</span>
+                          <span className={style.role}>
+                            {staff.designation}
+                          </span>
+                        </div>
+                        {isSelected && (
+                          <input
+                            type="checkbox"
+                            className={style.checkbox}
+                            checked
+                            readOnly
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <button
                 className={`${
                   anyStaffSelected ? style.assignButton : style.notAssigned
@@ -533,44 +573,57 @@ const Department = () => {
                   </h1>
                 </div>
 
-                <ResponsiveContainer height={200}>
-                  <BarChart
-                    data={medicalData}
-                    margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
+                {isLoadingMedicalProcedureStats ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%", // or full height you need
+                    }}
                   >
-                    {/* ─────────── X Axis ─────────── */}
-                    <XAxis
-                      dataKey="name"
-                      tick={{ fontSize: 12, fill: "#DAE4FF" }}
-                      axisLine={{ stroke: "#475569", strokeWidth: 1 }}
-                      tickLine={false}
-                    />
+                    <CircularProgress sx={{ color: "#ffff" }} size={40} />
+                  </Box>
+                ) : (
+                  <ResponsiveContainer height={200}>
+                    <BarChart
+                      data={medicalData}
+                      margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
+                    >
+                      {/* ─────────── X Axis ─────────── */}
+                      <XAxis
+                        dataKey="name"
+                        tick={{ fontSize: 12, fill: "#DAE4FF" }}
+                        axisLine={{ stroke: "#475569", strokeWidth: 1 }}
+                        tickLine={false}
+                      />
 
-                    {/* ─────────── Y Axis ─────────── */}
-                    <YAxis
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fontSize: 12, fill: "#999999" }}
-                    />
+                      {/* ─────────── Y Axis ─────────── */}
+                      <YAxis
+                        tickLine={false}
+                        axisLine={false}
+                        tick={{ fontSize: 12, fill: "#999999" }}
+                      />
 
-                    {/* ─────────── Horizontal Grid Lines Only (solid) ─────────── */}
-                    <CartesianGrid
-                      horizontal={true}
-                      vertical={false}
-                      stroke="#DAE4FF" /* a light gray color—adjust as needed */
-                      strokeDasharray="" /* empty = solid, not dashed */
-                    />
+                      {/* ─────────── Horizontal Grid Lines Only (solid) ─────────── */}
+                      <CartesianGrid
+                        horizontal={true}
+                        vertical={false}
+                        stroke="#DAE4FF" /* a light gray color—adjust as needed */
+                        strokeDasharray="" /* empty = solid, not dashed */
+                      />
 
-                    <Tooltip />
+                      <Tooltip />
 
-                    {/* ─────────── Bars with rounded tops ─────────── */}
-                    <Bar dataKey="value" barSize={70} radius={[10, 10, 0, 0]}>
-                      {medicalData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                      {/* ─────────── Bars with rounded tops ─────────── */}
+                      <Bar dataKey="value" barSize={70} radius={[10, 10, 0, 0]}>
+                        {medicalData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
 
