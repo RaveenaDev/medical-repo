@@ -5,9 +5,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from "@mui/material";
 
 import { approveAdmissionRequestWithSignature } from "../../../../components/State/Doctor/Action";
-const AdmitNewPatient = ({ onClose, requests }) => {
+const AdmitNewPatient = ({ onClose, requests, loading }) => {
   const dispatch = useDispatch();
   const [signature, setSignature] = useState(null);
   const [loadingBtnId, setLoadingBtnId] = useState(null);
@@ -65,72 +66,86 @@ const AdmitNewPatient = ({ onClose, requests }) => {
           <img src={signature} alt="Signature Preview" />
         </div>
       )}
-      <div className={styles.admissionList}>
-        {requests?.length > 0 ? (
-          requests.map((req, idx) => {
-            const details = req.admissionDetails;
-            const name = details?.name || "Patient";
-            const firstInitial = name.charAt(0).toUpperCase();
 
-            return (
-              <div key={req._id} className={styles.card}>
-                <div className={styles.cardLeft}>
-                  <div className={styles.avatarCircle}>
-                    <span>{firstInitial}</span>
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "36vh", // or full height you need
+          }}
+        >
+          <CircularProgress sx={{ color: "#25307F" }} size={58} />
+        </Box>
+      ) : (
+        <div className={styles.admissionList}>
+          {requests?.length > 0 ? (
+            requests.map((req, idx) => {
+              const details = req.admissionDetails;
+              const name = details?.name || "Patient";
+              const firstInitial = name.charAt(0).toUpperCase();
+
+              return (
+                <div key={req._id} className={styles.card}>
+                  <div className={styles.cardLeft}>
+                    <div className={styles.avatarCircle}>
+                      <span>{firstInitial}</span>
+                    </div>
+                    <div className={styles.patientDetails}>
+                      <p className={styles.name}>{name}</p>
+                      <p className={styles.ageNdGender}>
+                        {details?.age ? `${details.age} Y` : "Age N/A"}
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles.patientDetails}>
-                    <p className={styles.name}>{name}</p>
-                    <p className={styles.ageNdGender}>
-                      {details?.age ? `${details.age} Y` : "Age N/A"}
-                    </p>
+                  <div className={styles.middleLine} />
+                  <div className={styles.cardRight}>
+                    <div className={styles.admitDetails}>
+                      <p>
+                        Admission date:{" "}
+                        <span>{dayjs(details.date).format("DD MMM YYYY")}</span>
+                      </p>
+                      <p>
+                        Reason: <span>{details?.medicalNote || "N/A"}</span>
+                      </p>
+                      <p>
+                        Status: <span>{req.status}</span>
+                      </p>
+                    </div>
+                    <div className={styles.btnContainer}>
+                      <button
+                        onClick={() => handleApprove(req._id)}
+                        className={styles.acceptBtn}
+                        disabled={loadingBtnId === req._id}
+                      >
+                        {loadingBtnId === req._id ? (
+                          <CircularProgress
+                            size={10}
+                            thickness={5}
+                            sx={{
+                              color: "white",
+                            }}
+                          />
+                        ) : (
+                          "Accept"
+                        )}
+                      </button>
+                      <button className={styles.rejectBtn}>
+                        <X className={styles.rejectIcon} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className={styles.middleLine} />
-                <div className={styles.cardRight}>
-                  <div className={styles.admitDetails}>
-                    <p>
-                      Admission date:{" "}
-                      <span>{dayjs(details.date).format("DD MMM YYYY")}</span>
-                    </p>
-                    <p>
-                      Reason: <span>{details?.medicalNote || "N/A"}</span>
-                    </p>
-                    <p>
-                      Status: <span>{req.status}</span>
-                    </p>
-                  </div>
-                  <div className={styles.btnContainer}>
-                    <button
-                      onClick={() => handleApprove(req._id)}
-                      className={styles.acceptBtn}
-                      disabled={loadingBtnId === req._id}
-                    >
-                      {loadingBtnId === req._id ? (
-                        <CircularProgress
-                          size={10}
-                          thickness={5}
-                          sx={{
-                            color: "white",
-                          }}
-                        />
-                      ) : (
-                        "Accept"
-                      )}
-                    </button>
-                    <button className={styles.rejectBtn}>
-                      <X className={styles.rejectIcon} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <div className={styles.noPatient}>
-            <p>No new patients to admit right now</p>
-          </div>
-        )}
-      </div>
+              );
+            })
+          ) : (
+            <div className={styles.noPatient}>
+              <p>No new patients to admit right now</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

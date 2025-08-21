@@ -356,6 +356,9 @@ const DoctorOverview = ({ todayAppointments }) => {
   }, [dispatch, selectedDate, internalSelectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
+  const isLoadingAdmissionRequestToApprove = useSelector(
+    (store) => store.doctor.isLoadingAdmissionRequestToApprove
+  );
   const isLoadingMostCommonDiagnosis = useSelector(
     (store) => store.doctor.isLoadingMostCommonDiagnosis
   );
@@ -835,6 +838,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                   <AdmitNewPatient
                     onClose={closeModal}
                     requests={filteredRequests}
+                    loading={isLoadingAdmissionRequestToApprove}
                   />
                 </div>
               </>

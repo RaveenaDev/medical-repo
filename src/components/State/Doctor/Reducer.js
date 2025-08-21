@@ -132,6 +132,7 @@ const initialState = {
   appointmentHistory: [],
   patientBedInfo: [],
   requestsToApprove: [],
+  isLoadingAdmissionRequestToApprove: true,
   roomsAvailable: [],
   bedsAvailable: [],
 };
@@ -260,7 +261,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         requestsToApprove: action.payload.requests,
-        isLoading: false,
+        isLoadingAdmissionRequestToApprove: false,
       };
     case GET_STATS:
       return {
