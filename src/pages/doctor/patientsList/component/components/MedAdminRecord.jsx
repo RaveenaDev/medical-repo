@@ -30,18 +30,17 @@ export const combineDateAndTime = (dateStr, timeStr) => {
 const MedAdminRecord = ({ patientId, caseId }) => {
   const dispatch = useDispatch();
   const [selectedRecordId, setSelectedRecordId] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getPatientMedicalRecords(patientId)).finally(() =>
-      setLoading(false)
-    );
+    dispatch(getPatientMedicalRecords(patientId));
   }, [dispatch, patientId]);
 
   const medicalRecords = useSelector(
     (store) => store.doctor.patientMedicalRecords
   );
-
+  const isLoading = useSelector(
+    (store) => store.doctor.isLoadingGetPatientMedicalRecords
+  );
   // console.log("PATIENT MEDICAL RECODS", medicalRecords);
 
   // Transform medicalRecords to unified format
@@ -178,7 +177,7 @@ const MedAdminRecord = ({ patientId, caseId }) => {
             </div>
           </div>
           <div className={styles.tbody}>
-            {loading ? (
+            {isLoading ? (
               <Box
                 sx={{
                   display: "flex",

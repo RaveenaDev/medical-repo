@@ -74,9 +74,12 @@ const initialState = {
   totalFilteredRooms: null,
   filteredRooms: [],
   criticalPatients: [],
+  isLoadingCriticalPatients: true,
   totalDiagnosis: null,
   diagnosis: [],
+  isLoadingMostCommonDiagnosis: true,
   totalAppointments: [],
+  isLoadingAppointments: true,
   scheduledAppointments: [],
   scheduledCount: null,
   ongoingCount: null,
@@ -90,8 +93,10 @@ const initialState = {
   doctorRequests: [],
   appointmentRequests: [],
   events: [],
+  isLoadingUpcomingEvents: true,
   monthlyEvents: [],
   patientBills: [],
+  isLoadingPatientBills: true,
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
@@ -104,23 +109,30 @@ const initialState = {
   appointmentsOfToday: [],
   inventory: [],
   generatedPrescriptionsByAI: null,
-  admittedPatients: [],
   allDoctors: [],
   approvedAdmissions: [],
-  admissionRequests: [],
+  admittedPatients: [],
+  isLoadingGetAdmittedPatients: true,
   admissionRequestsCount: null,
+  admissionRequests: [],
   isLoadingGetAdmissionRequests: true,
   userConsultationForms: [],
   patientDetails: [],
+  isLoadingPatientDetails: true,
   progressTracker: [],
+  isLoadingGetProgressTracker: true,
   patientVitals: [],
+  isLoadingPatientVitals: true,
   patientHistory: [],
+  isLoadingPatientHistory: true,
   allDepartments: [],
   patientMedicalRecords: [],
+  isLoadingGetPatientMedicalRecords: true,
   totalAppointmentHistory: null,
   appointmentHistory: [],
   patientBedInfo: [],
   requestsToApprove: [],
+  isLoadingAdmissionRequestToApprove: true,
   roomsAvailable: [],
   bedsAvailable: [],
 };
@@ -218,13 +230,13 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientDetails: action.payload,
-        isLoading: false,
+        isLoadingPatientDetails: false,
       };
     case GET_PATIENTS_VITALS:
       return {
         ...state,
         patientVitals: action.payload,
-        isLoading: false,
+        isLoadingPatientVitals: false,
       };
     case GET_APPROVED_ADMISSIONS:
       return {
@@ -236,7 +248,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         progressTracker: action.payload,
-        isLoading: false,
+        isLoadingGetProgressTracker: false,
       };
     case GET_ADMISSION_REQUESTS:
       return {
@@ -249,7 +261,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         requestsToApprove: action.payload.requests,
-        isLoading: false,
+        isLoadingAdmissionRequestToApprove: false,
       };
     case GET_STATS:
       return {
@@ -272,6 +284,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         criticalPatients: action.payload.patients,
+        isLoadingCriticalPatients: false,
       };
 
     case GET_MOST_COMMON_DIAGNOSIS:
@@ -279,7 +292,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalDiagnosis: action.payload.totalDiagnosis,
         diagnosis: action.payload.commonDiagnosis,
-        isLoading: false,
+        isLoadingMostCommonDiagnosis: false,
       };
 
     case GET_MEDICAL_PROCEDURE_STATS:
@@ -293,6 +306,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         totalAppointments: action.payload.appointments,
+        isLoadingAppointments: false,
       };
 
     case GET_SCHEDULED_APPOINTMENTS:
@@ -361,6 +375,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         events: action.payload.events,
+        isLoadingUpcomingEvents: false,
       };
 
     case GET_MONTHLY_EVENTS:
@@ -416,6 +431,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         admittedPatients: action.payload,
+        isLoadingGetAdmittedPatients: false,
       };
 
     case GET_ALL_DOCTORS:
@@ -439,9 +455,8 @@ export const doctorReducer = (state = initialState, action) => {
     case GET_PATIENT_HISTORY:
       return {
         ...state,
-
         patientHistory: action.payload,
-        isLoading: false,
+        isLoadingPatientHistory: false,
       };
 
     case GET_ALL_DEPARTMENTS:
@@ -454,6 +469,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientMedicalRecords: action.payload,
+        isLoadingGetPatientMedicalRecords: false,
       };
 
     case GET_APPOINTMENT_HISTORY:
@@ -484,6 +500,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         patientBills: action.payload,
+        isLoadingPatientBills: false,
       };
     default:
       return state;

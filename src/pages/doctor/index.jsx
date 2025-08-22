@@ -341,40 +341,39 @@ const DoctorOverview = ({ todayAppointments }) => {
   }, []);
 
   const dispatch = useDispatch();
-  const [loadingMCD, setLoadingMCD] = useState(true);
-  const [loadingCP, setLoadingCP] = useState(true);
-  const [loadingAR, setLoadingAR] = useState(true);
-  const [loadingAppointment, setLoadingAppointment] = useState(true);
-  const [loadingEvents, setLoadingEvents] = useState(true);
 
   useEffect(() => {
     const startDate = dayjs(internalSelectedDate).startOf("day").toISOString();
     const endDate = dayjs(internalSelectedDate).endOf("day").toISOString();
 
-    setLoadingAppointment(true);
-    dispatch(getAppointments(startDate, endDate)).finally(() =>
-      setLoadingAppointment(false)
-    );
-    setLoadingMCD(true);
-    dispatch(getMostCommonDiagnosis()).finally(() => setLoadingMCD(false));
-    setLoadingEvents(true);
-    dispatch(getUpcomingEvents(new Date())).finally(() =>
-      setLoadingEvents(false)
-    );
+    dispatch(getAppointments(startDate, endDate));
+    dispatch(getMostCommonDiagnosis());
+    dispatch(getUpcomingEvents(new Date()));
     dispatch(getDoctorRequests());
-    setLoadingAR(true);
-    dispatch(getAppointmentRequests()).finally(() => setLoadingAR(false));
-    setLoadingCP(true);
-    dispatch(getCriticalPatients()).finally(() => setLoadingCP(false));
+    dispatch(getAppointmentRequests());
+    dispatch(getCriticalPatients());
     dispatch(getAdmissionRequestsToApprove("Pending"));
   }, [dispatch, selectedDate, internalSelectedDate]);
 
   const doctor = useSelector((store) => store.doctor);
-
+  const isLoadingAdmissionRequestToApprove = useSelector(
+    (store) => store.doctor.isLoadingAdmissionRequestToApprove
+  );
+  const isLoadingMostCommonDiagnosis = useSelector(
+    (store) => store.doctor.isLoadingMostCommonDiagnosis
+  );
+  const isLoadingCriticalPatients = useSelector(
+    (store) => store.doctor.isLoadingCriticalPatients
+  );
+  const isLoadingAppointments = useSelector(
+    (store) => store.doctor.isLoadingAppointments
+  );
+  const isLoadingUpcomingEvents = useSelector(
+    (store) => store.doctor.isLoadingUpcomingEvents
+  );
   const [EVENTS, setEVENTS] = useState(() =>
     processEvents(doctor.events || [])
   );
-
   useEffect(() => {
     const processed = processEvents(doctor.events || []);
     setEVENTS(processed);
@@ -839,6 +838,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                   <AdmitNewPatient
                     onClose={closeModal}
                     requests={filteredRequests}
+                    loading={isLoadingAdmissionRequestToApprove}
                   />
                 </div>
               </>
@@ -902,7 +902,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                     </div>
                   </div>
 
-                  {loadingMCD ? (
+                  {isLoadingMostCommonDiagnosis ? (
                     <Box
                       sx={{
                         display: "flex",
@@ -965,7 +965,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                       />
                     </svg>
                   </div>
-                  {loadingCP ? (
+                  {isLoadingCriticalPatients ? (
                     <Box
                       sx={{
                         display: "flex",
@@ -1038,7 +1038,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                     <ArrowForwardIosIcon sx={{ fontSize: 18 }} />
                   </span>
                 </div>
-                {loadingAppointment ? (
+                {isLoadingAppointments ? (
                   <Box
                     sx={{
                       display: "flex",
@@ -1410,7 +1410,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                 ))}
               </div>
 
-              {loadingEvents ? (
+              {isLoadingUpcomingEvents ? (
                 <Box
                   sx={{
                     display: "flex",

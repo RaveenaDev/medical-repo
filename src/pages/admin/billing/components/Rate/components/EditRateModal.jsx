@@ -6,17 +6,17 @@ import {
   TextField,
   Button,
   IconButton,
-  MenuItem,
+  Grid2,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addService,
   getAllDepartments,
   updateService,
 } from "../../../../../../components/State/Admin/Action.js";
-
+import { Trash2Icon } from "lucide-react";
 const EditRateModal = ({ open, handleClose, service }) => {
   const serviceId = service.service.serviceId;
+  // console.log(service);
   const [serviceDetails, setServiceDetails] = useState({
     serviceId: serviceId,
     name: service.service.serviceName,
@@ -26,6 +26,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
     rate: service.category.currentRate,
     effectiveDate: service.category.effectiveDate,
     amenities: service.category.amenities,
+    additionaldetails: service.category.additionaldetails || {},
   });
 
   const [lastUpdated, setLastUpdated] = useState(
@@ -38,7 +39,37 @@ const EditRateModal = ({ open, handleClose, service }) => {
       [e.target.name]: e.target.value,
     });
   };
+  // Handle changes in additional details
+  const handleAdditionalDetailChange = (index, field, value) => {
+    const updatedDetails = [...serviceDetails.additionaldetails];
+    updatedDetails[index][field] =
+      field === "value" ? parseFloat(value) : value;
+    setServiceDetails({
+      ...serviceDetails,
+      additionaldetails: updatedDetails,
+    });
+  };
 
+  // Add a new additional detail
+  const handleAddAdditionalDetail = () => {
+    setServiceDetails({
+      ...serviceDetails,
+      additionaldetails: [
+        ...serviceDetails.additionaldetails,
+        { key: "", value: 0 },
+      ],
+    });
+  };
+
+  // Remove an additional detail by index
+  const handleRemoveAdditionalDetail = (index) => {
+    const updatedDetails = [...serviceDetails.additionaldetails];
+    updatedDetails.splice(index, 1);
+    setServiceDetails({
+      ...serviceDetails,
+      additionaldetails: updatedDetails,
+    });
+  };
   const handleSubmit = () => {
     const pass = {
       serviceId: serviceDetails.serviceId,
@@ -52,6 +83,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
           rate: serviceDetails.rate,
           effectiveDate: serviceDetails.effectiveDate,
           amenities: serviceDetails.amenities,
+          additionaldetails: serviceDetails.additionaldetails,
         },
       ],
     };
@@ -65,6 +97,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
       rate: "",
       effectiveDate: "",
       amenities: "",
+      additionaldetails: {},
     });
     handleClose();
   };
@@ -131,6 +164,65 @@ const EditRateModal = ({ open, handleClose, service }) => {
             value={serviceDetails.amenities}
             onChange={handleChange}
           />
+          {/* Additional Details Section */}
+          <div>
+            <Grid2 container spacing={2} marginTop={1}>
+              {Object.entries(serviceDetails.additionaldetails).map(
+                ([key, value], index) => (
+                  <Grid2 item xs={12} container spacing={1} key={index}>
+                    <Grid2 item xs={6}>
+                      <TextField
+                        label="Detail Name"
+                        fullWidth
+                        value={key}
+                        onChange={(e) =>
+                          handleAdditionalDetailChange(
+                            index,
+                            "key",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </Grid2>
+                    <Grid2 item xs={5}>
+                      <TextField
+                        label="Value"
+                        fullWidth
+                        type="number"
+                        value={value}
+                        onChange={(e) =>
+                          handleAdditionalDetailChange(
+                            index,
+                            "value",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </Grid2>
+                    <Grid2
+                      item
+                      xs={1}
+                      justifyContent="center"
+                      display="flex"
+                      alignItems="center"
+                    >
+                      <Trash2Icon
+                        onClick={() => handleRemoveAdditionalDetail(index)}
+                        style={{ cursor: "pointer", color: "red" }}
+                      />
+                    </Grid2>
+                  </Grid2>
+                )
+              )}
+            </Grid2>
+            <Button
+              variant="outlined"
+              onClick={handleAddAdditionalDetail}
+              sx={{ marginTop: 2, marginBottom: 2 }}
+            >
+              Add Custom Charges & Details
+            </Button>
+          </div>
           <TextField
             label="Effective Date"
             fullWidth

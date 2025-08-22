@@ -3,6 +3,9 @@ import {
   Box,
   Button,
   Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Drawer,
   FormControl,
   FormControlLabel,
@@ -46,10 +49,12 @@ const Rate = () => {
   const reduxServices = useSelector((store) => store.admin.services);
   const departments = useSelector((store) => store.admin.departments);
 
+  // console.log("Redux Services: ", reduxServices);
   const services = reduxServices.map((service) => ({
     serviceId: service._id,
     serviceName: service.name,
     department: service.department.name,
+    lastUpdated: service.lastUpdated,
     categories: service.categories.map((category) => ({
       categoryId: category._id,
       name: category.subCategoryName,
@@ -57,7 +62,7 @@ const Rate = () => {
       currentRate: category.rate,
       amenities: category.amenities || "N/A",
       effectiveDate: category.effectiveDate,
-      lastUpdated: "11-01-2025",
+      additionaldetails: category.additionaldetails || {},
     })),
   }));
 
@@ -73,6 +78,16 @@ const Rate = () => {
 
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
+  const [viewDrawerOpen, setViewDrawerOpen] = useState(false);
+  const [viewData, setViewData] = useState(null);
+  const handleView = (service, category) => {
+    setViewData({ service, category });
+    setViewDrawerOpen(true);
+  };
+  const onViewClose = () => {
+    setViewData(null);
+    setViewDrawerOpen(false);
+  };
   // Handle Sort Change
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
@@ -125,7 +140,7 @@ const Rate = () => {
 
   // Handle Search Results
   const handleSearchResults = () => {
-    console.log("Filter: ", filters);
+    // console.log("Filter: ", filters);
     dispatch(getServices(filters.department));
     setFilterDrawerOpen(false);
   };
@@ -144,7 +159,6 @@ const Rate = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page when rows per page changes
   };
-
   return (
     <div className="rate-container">
       <Box
@@ -316,7 +330,7 @@ const Rate = () => {
           <span>Current Rate</span>
           <span>Effective Date</span>
           <span>Last Updated</span>
-          <span>Amenities</span>
+          <span>More Details</span>
         </div>
         <div>
           {services.length > 0 ? (
@@ -354,8 +368,30 @@ const Rate = () => {
                           }
                         )}
                       </span>
-                      <span>{category.lastUpdated}</span>
-                      <span className="blue">{category.amenities}</span>
+                      <span>
+                        {" "}
+                        {new Date(service.lastUpdated).toLocaleDateString(
+                          "en-IN",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
+                      <button
+                        style={{
+                          border: "1px solid #25307F",
+                          color: "#25307F",
+                          fontSize: "1rem",
+                          backgroundColor: "transparent",
+                          padding: "4px",
+                        }}
+                        onClick={() => handleView(service, category)}
+                      >
+                        View
+                      </button>
+
                       <IconButton
                         onClick={(event) =>
                           handleOpenMenu(event, service, category)
@@ -645,6 +681,97 @@ const Rate = () => {
           </Button>
         </Box>
       </Drawer>
+      {/* View Drawer */}
+      <Dialog
+        open={viewDrawerOpen}
+        onClose={() => onViewClose()}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: { borderRadius: 3, p: 2 },
+        }}
+      >
+        {/* Header */}
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <DialogTitle sx={{ p: 0 }}>Service Details</DialogTitle>
+          <IconButton onClick={() => onViewClose()}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        <DialogContent dividers>
+          {viewData && (
+            <Box>
+              {/* Amenities */}
+              <Box mt={2}>
+                <Typography variant="subtitle2" fontWeight="600">
+                  Amenities
+                </Typography>
+                {viewData.category.amenities ? (
+                  <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+                    {viewData.category.amenities
+                      .split(",")
+                      .map((amenity, idx) => (
+                        <Chip
+                          key={idx}
+                          label={amenity.trim()}
+                          sx={{ background: "#F4F6FA" }}
+                        />
+                      ))}
+                  </Box>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No amenities listed
+                  </Typography>
+                )}
+              </Box>
+
+              {/* Additional Details (object) */}
+              <Box mt={2}>
+                <Typography variant="subtitle2" fontWeight="600" gutterBottom>
+                  Additional Details
+                </Typography>
+
+                {viewData.category.additionaldetails &&
+                typeof viewData.category.additionaldetails === "object" ? (
+                  <Box
+                    component="table"
+                    sx={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      "& td, & th": { border: "1px solid #E0E0E0", p: 1 },
+                      "& th": { backgroundColor: "#F9FAFB" },
+                    }}
+                  >
+                    <thead>
+                      <tr>
+                        <th>Service</th>
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(viewData.category.additionaldetails).map(
+                        ([key, value]) => (
+                          <tr key={key}>
+                            <td style={{ textTransform: "capitalize" }}>
+                              {key}
+                            </td>
+                            <td>{value}</td>
+                          </tr>
+                        )
+                      )}
+                    </tbody>
+                  </Box>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No additional details provided
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
