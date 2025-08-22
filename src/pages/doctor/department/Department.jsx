@@ -35,6 +35,7 @@ import {
 } from "date-fns";
 import AssignOverlay from "./components/AssignOverlay.jsx";
 import { Box, CircularProgress } from "@mui/material";
+import { flex } from "@mui/system";
 
 const getDateRange = (filterType) => {
   const now = new Date();
@@ -199,6 +200,13 @@ const Department = () => {
   );
   const isLoadingInventoryData = useSelector(
     (state) => state.doctor.isLoadingInventoryData
+  );
+
+  const isLoadingHospitalStats = useSelector(
+    (state) => state.doctor.isLoadingHospitalStats
+  );
+  const isLoadingPatientOverview = useSelector(
+    (state) => state.doctor.isLoadingPatientOverview
   );
   const hospitalStatistics = useSelector(
     (state) => state.doctor.hospitalStatistics
@@ -802,209 +810,247 @@ const Department = () => {
                   </select>
                 </div>
               </div>
-              <div className={style.overviewCards}>
-                <div className={style.card}>
-                  {/*<UserIcon className={style.cardIcon}/>*/}
-                  <div className={style.cardInfo}>
-                    <svg
-                      width="31"
-                      height="31"
-                      viewBox="0 0 31 31"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_3883_12012)">
-                        <path
-                          d="M28.1275 14.4338V16.5976H2.88V8.84009H0.5V24.3576H2.88V20.8113H28.1275V24.6538H30.5V14.4313L28.1275 14.4338Z"
-                          fill="#25307F"
-                        />
-                        <path
-                          d="M11.3864 14.4563C11.3864 15.1613 10.8151 15.7338 10.1089 15.7338H5.24137C5.07351 15.7341 4.90724 15.7013 4.7521 15.6372C4.59696 15.5731 4.456 15.479 4.33731 15.3603C4.21861 15.2416 4.12453 15.1007 4.06044 14.9455C3.99636 14.7904 3.96354 14.6241 3.96387 14.4563V14.4538C3.96387 13.7488 4.53512 13.1762 5.24137 13.1762H10.1089C10.8139 13.1762 11.3864 13.7475 11.3864 14.4538V14.4563ZM25.1789 9.455H22.2164V6.5H20.1164V9.45625H17.1601V11.5563H20.1151V14.5125H22.2151V11.5563H25.1776L25.1789 9.455Z"
-                          fill="#25307F"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_3883_12012">
-                          <rect
-                            width="30"
-                            height="30"
-                            fill="white"
-                            transform="translate(0.5 0.5)"
-                          />
-                        </clipPath>
-                      </defs>
-                    </svg>
 
-                    <span className={style.cardNumber}>
-                      {patientOverview?.admitted ?? 0}
-                    </span>
-                    <span className={style.cardLabel}>Admitted</span>
+              {isLoadingPatientOverview ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "12.4vh", // or full height you need
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#25307F" }} size={30} />
+                </Box>
+              ) : (
+                <div className={style.overviewCards}>
+                  <div className={style.card}>
+                    {/*<UserIcon className={style.cardIcon}/>*/}
+
+                    <div className={style.cardInfo}>
+                      <svg
+                        width="31"
+                        height="31"
+                        viewBox="0 0 31 31"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_3883_12012)">
+                          <path
+                            d="M28.1275 14.4338V16.5976H2.88V8.84009H0.5V24.3576H2.88V20.8113H28.1275V24.6538H30.5V14.4313L28.1275 14.4338Z"
+                            fill="#25307F"
+                          />
+                          <path
+                            d="M11.3864 14.4563C11.3864 15.1613 10.8151 15.7338 10.1089 15.7338H5.24137C5.07351 15.7341 4.90724 15.7013 4.7521 15.6372C4.59696 15.5731 4.456 15.479 4.33731 15.3603C4.21861 15.2416 4.12453 15.1007 4.06044 14.9455C3.99636 14.7904 3.96354 14.6241 3.96387 14.4563V14.4538C3.96387 13.7488 4.53512 13.1762 5.24137 13.1762H10.1089C10.8139 13.1762 11.3864 13.7475 11.3864 14.4538V14.4563ZM25.1789 9.455H22.2164V6.5H20.1164V9.45625H17.1601V11.5563H20.1151V14.5125H22.2151V11.5563H25.1776L25.1789 9.455Z"
+                            fill="#25307F"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_3883_12012">
+                            <rect
+                              width="30"
+                              height="30"
+                              fill="white"
+                              transform="translate(0.5 0.5)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
+
+                      <span className={style.cardNumber}>
+                        {patientOverview?.admitted ?? 0}
+                      </span>
+                      <span className={style.cardLabel}>Admitted</span>
+                    </div>
+                  </div>
+                  <div className={style.card}>
+                    {/*<BedIcon className={style.cardIcon}/>*/}
+                    <div className={style.cardInfo}>
+                      <svg
+                        width="31"
+                        height="30"
+                        viewBox="0 0 31 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1.75 26.25V3.75H19.25V26.25H13V20H8V26.25H1.75ZM6.75 16.25H9.25V13.75H6.75V16.25ZM6.75 11.25H9.25V8.75H6.75V11.25ZM11.75 16.25H14.25V13.75H11.75V16.25ZM11.75 11.25H14.25V8.75H11.75V11.25ZM24.875 19.375L23.125 17.625L24.4688 16.25H20.5V13.75H24.4688L23.125 12.375L24.875 10.625L29.25 15L24.875 19.375Z"
+                          fill="#EAA000"
+                        />
+                      </svg>
+                      <span className={style.cardNumber}>
+                        {patientOverview?.discharged ?? 0}
+                      </span>
+                      <span className={style.cardLabel}>Discharged</span>
+                    </div>
+                  </div>
+                  <div className={style.card}>
+                    {/*<CalendarIcon className={style.cardIcon}/>*/}
+                    <div className={style.cardInfo}>
+                      <svg
+                        width="31"
+                        height="30"
+                        viewBox="0 0 31 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.5 17.5C19.4583 17.5 18.5729 17.1354 17.8438 16.4062C17.1146 15.6771 16.75 14.7917 16.75 13.75C16.75 12.7083 17.1146 11.8229 17.8438 11.0938C18.5729 10.3646 19.4583 10 20.5 10C21.5417 10 22.4271 10.3646 23.1562 11.0938C23.8854 11.8229 24.25 12.7083 24.25 13.75C24.25 14.7917 23.8854 15.6771 23.1562 16.4062C22.4271 17.1354 21.5417 17.5 20.5 17.5ZM13 25V22.625C13 22.1875 13.1042 21.7708 13.3125 21.375C13.5208 20.9792 13.8125 20.6667 14.1875 20.4375C15.125 19.875 16.12 19.4533 17.1725 19.1725C18.225 18.8917 19.3342 18.7508 20.5 18.75C21.6658 18.7492 22.7754 18.89 23.8288 19.1725C24.8821 19.455 25.8767 19.8767 26.8125 20.4375C27.1875 20.6667 27.4792 20.9792 27.6875 21.375C27.8958 21.7708 28 22.1875 28 22.625V25H13ZM4.25 17.5V15H14.25V17.5H4.25ZM4.25 7.5V5H19.25V7.5H4.25ZM14.375 12.5H4.25V10H15.5C15.2083 10.3542 14.9742 10.7396 14.7975 11.1562C14.6208 11.5729 14.48 12.0208 14.375 12.5Z"
+                          fill="#2E823B"
+                        />
+                      </svg>
+                      <span className={style.cardNumber}>
+                        {patientOverview?.scheduled ?? 0}
+                      </span>
+                      <span className={style.cardLabel}>Scheduled</span>
+                    </div>
                   </div>
                 </div>
-                <div className={style.card}>
-                  {/*<BedIcon className={style.cardIcon}/>*/}
-                  <div className={style.cardInfo}>
-                    <svg
-                      width="31"
-                      height="30"
-                      viewBox="0 0 31 30"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1.75 26.25V3.75H19.25V26.25H13V20H8V26.25H1.75ZM6.75 16.25H9.25V13.75H6.75V16.25ZM6.75 11.25H9.25V8.75H6.75V11.25ZM11.75 16.25H14.25V13.75H11.75V16.25ZM11.75 11.25H14.25V8.75H11.75V11.25ZM24.875 19.375L23.125 17.625L24.4688 16.25H20.5V13.75H24.4688L23.125 12.375L24.875 10.625L29.25 15L24.875 19.375Z"
-                        fill="#EAA000"
-                      />
-                    </svg>
-                    <span className={style.cardNumber}>
-                      {patientOverview?.discharged ?? 0}
-                    </span>
-                    <span className={style.cardLabel}>Discharged</span>
-                  </div>
-                </div>
-                <div className={style.card}>
-                  {/*<CalendarIcon className={style.cardIcon}/>*/}
-                  <div className={style.cardInfo}>
-                    <svg
-                      width="31"
-                      height="30"
-                      viewBox="0 0 31 30"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M20.5 17.5C19.4583 17.5 18.5729 17.1354 17.8438 16.4062C17.1146 15.6771 16.75 14.7917 16.75 13.75C16.75 12.7083 17.1146 11.8229 17.8438 11.0938C18.5729 10.3646 19.4583 10 20.5 10C21.5417 10 22.4271 10.3646 23.1562 11.0938C23.8854 11.8229 24.25 12.7083 24.25 13.75C24.25 14.7917 23.8854 15.6771 23.1562 16.4062C22.4271 17.1354 21.5417 17.5 20.5 17.5ZM13 25V22.625C13 22.1875 13.1042 21.7708 13.3125 21.375C13.5208 20.9792 13.8125 20.6667 14.1875 20.4375C15.125 19.875 16.12 19.4533 17.1725 19.1725C18.225 18.8917 19.3342 18.7508 20.5 18.75C21.6658 18.7492 22.7754 18.89 23.8288 19.1725C24.8821 19.455 25.8767 19.8767 26.8125 20.4375C27.1875 20.6667 27.4792 20.9792 27.6875 21.375C27.8958 21.7708 28 22.1875 28 22.625V25H13ZM4.25 17.5V15H14.25V17.5H4.25ZM4.25 7.5V5H19.25V7.5H4.25ZM14.375 12.5H4.25V10H15.5C15.2083 10.3542 14.9742 10.7396 14.7975 11.1562C14.6208 11.5729 14.48 12.0208 14.375 12.5Z"
-                        fill="#2E823B"
-                      />
-                    </svg>
-                    <span className={style.cardNumber}>
-                      {patientOverview?.scheduled ?? 0}
-                    </span>
-                    <span className={style.cardLabel}>Scheduled</span>
-                  </div>
-                </div>
-              </div>
+              )}
             </section>
 
             <div className={style.parent2}>
               {/* ===== 2. Statistics Section ===== */}
-              <section className={style.statisticsSection}>
-                <h3 className={style.sectionTitle}>Statistics</h3>
-                <div className={style.statsList}>
-                  <div className={style.statItem}>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "6px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M4 20V17.2C4 16.6333 4.146 16.1127 4.438 15.638C4.73 15.1633 5.11733 14.8007 5.6 14.55C6.63333 14.0333 7.68333 13.646 8.75 13.388C9.81667 13.13 10.9 13.0007 12 13C12.3333 13 12.6667 13.0127 13 13.038C13.3333 13.0633 13.6667 13.1007 14 13.15V20H4ZM12 12C10.9 12 9.95833 11.6083 9.175 10.825C8.39167 10.0417 8 9.1 8 8C8 6.9 8.39167 5.95833 9.175 5.175C9.95833 4.39167 10.9 4 12 4C13.1 4 14.0417 4.39167 14.825 5.175C15.6083 5.95833 16 6.9 16 8C16 9.1 15.6083 10.0417 14.825 10.825C14.0417 11.6083 13.1 12 12 12ZM18 24V19H16V13H22L20 17H22L18 24Z"
-                          fill="#25307F"
-                        />
-                      </svg>
-                      <span className={style.statLabel}>Total Patients:</span>
-                    </div>
-                    <span className={style.statValue}>{totalPatients}</span>
-                  </div>
-                  <div className={style.statItem}>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "6px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M21 18V8.5C21 8.10218 20.842 7.72064 20.5607 7.43934C20.2794 7.15804 19.8978 7 19.5 7H15.5C15.1022 7 14.7206 7.15804 14.4393 7.43934C14.158 7.72064 14 8.10218 14 8.5V18M10 18V12H4C3.73478 12 3.48043 12.1054 3.29289 12.2929C3.10536 12.4804 3 12.7348 3 13V18"
-                          stroke="#25307F"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M4 12H21V14H3V13C3 12.7348 3.10536 12.4804 3.29289 12.2929C3.48043 12.1054 3.73478 12 4 12Z"
-                          stroke="#25307F"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span className={style.statLabel}>
-                        Total Beds Available :
-                      </span>
-                    </div>
-                    <span className={style.statValue}>{totalBeds}</span>
-                  </div>
-                  <div className={style.statItem}>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "6px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M5.00001 20C4.85801 20 4.73934 19.952 4.64401 19.856C4.54867 19.76 4.50067 19.641 4.50001 19.499C4.49934 19.357 4.54734 19.2383 4.64401 19.143C4.74067 19.0477 4.85934 19 5.00001 19H6.50001V4.808C6.50001 4.57934 6.57734 4.38734 6.73201 4.232C6.88667 4.07667 7.07867 3.99934 7.30801 4H13.462C13.6907 4 13.8823 4.07734 14.037 4.232C14.1917 4.38667 14.269 4.57867 14.269 4.808V5H16.692C16.9213 5 17.1133 5.07734 17.268 5.232C17.4227 5.38667 17.5 5.57867 17.5 5.808V19H19C19.1413 19 19.26 19.048 19.356 19.144C19.452 19.24 19.5 19.359 19.5 19.501C19.5 19.643 19.452 19.7617 19.356 19.857C19.26 19.9523 19.1413 20 19 20H17.317C17.079 20 16.8833 19.9227 16.73 19.768C16.5767 19.6133 16.5 19.4213 16.5 19.192V6H14.27V19.192C14.27 19.4213 14.1923 19.6133 14.037 19.768C13.8817 19.9227 13.69 20 13.462 20H5.00001ZM12.27 12C12.27 11.7933 12.1933 11.6133 12.04 11.46C11.8867 11.3067 11.7067 11.23 11.5 11.23C11.2933 11.23 11.1133 11.3067 10.96 11.46C10.8067 11.6133 10.73 11.7933 10.73 12C10.73 12.2067 10.8067 12.3867 10.96 12.54C11.1133 12.6933 11.2933 12.77 11.5 12.77C11.7067 12.77 11.8867 12.6933 12.04 12.54C12.1933 12.3867 12.27 12.2067 12.27 12Z"
-                          fill="#25307F"
-                        />
-                      </svg>
-                      <span className={style.statLabel}>
-                        Total Rooms Available :
-                      </span>
-                    </div>
-                    <span className={style.statValue}>{totalRooms}</span>
-                  </div>
-                </div>
-              </section>
 
-              {/* ===== 3. Cases Bar Section ===== */}
-              <section className={style.casesSection}>
-                <div className={style.casesHeader}>{totalCases} cases</div>
-                <div className={style.casesTop}>
-                  <p className={style.caseLabel}>
-                    <span>{totalInpatientsCount}</span> IPD
-                  </p>
-                  <p className={style.caseLabel}>
-                    <span>{totalOutpatientsCount}</span> OPD
-                  </p>
+              {isLoadingHospitalStats && isLoadingPatientOverview ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "42vh", // or full height you need
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#25307F" }} size={50} />
+                </Box>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1vh",
+                  }}
+                >
+                  <section className={style.statisticsSection}>
+                    <h3 className={style.sectionTitle}>Statistics</h3>
+                    <div className={style.statsList}>
+                      <div className={style.statItem}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "6px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M4 20V17.2C4 16.6333 4.146 16.1127 4.438 15.638C4.73 15.1633 5.11733 14.8007 5.6 14.55C6.63333 14.0333 7.68333 13.646 8.75 13.388C9.81667 13.13 10.9 13.0007 12 13C12.3333 13 12.6667 13.0127 13 13.038C13.3333 13.0633 13.6667 13.1007 14 13.15V20H4ZM12 12C10.9 12 9.95833 11.6083 9.175 10.825C8.39167 10.0417 8 9.1 8 8C8 6.9 8.39167 5.95833 9.175 5.175C9.95833 4.39167 10.9 4 12 4C13.1 4 14.0417 4.39167 14.825 5.175C15.6083 5.95833 16 6.9 16 8C16 9.1 15.6083 10.0417 14.825 10.825C14.0417 11.6083 13.1 12 12 12ZM18 24V19H16V13H22L20 17H22L18 24Z"
+                              fill="#25307F"
+                            />
+                          </svg>
+                          <span className={style.statLabel}>
+                            Total Patients:
+                          </span>
+                        </div>
+                        <span className={style.statValue}>{totalPatients}</span>
+                      </div>
+                      <div className={style.statItem}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "6px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M21 18V8.5C21 8.10218 20.842 7.72064 20.5607 7.43934C20.2794 7.15804 19.8978 7 19.5 7H15.5C15.1022 7 14.7206 7.15804 14.4393 7.43934C14.158 7.72064 14 8.10218 14 8.5V18M10 18V12H4C3.73478 12 3.48043 12.1054 3.29289 12.2929C3.10536 12.4804 3 12.7348 3 13V18"
+                              stroke="#25307F"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M4 12H21V14H3V13C3 12.7348 3.10536 12.4804 3.29289 12.2929C3.48043 12.1054 3.73478 12 4 12Z"
+                              stroke="#25307F"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                          <span className={style.statLabel}>
+                            Total Beds Available :
+                          </span>
+                        </div>
+                        <span className={style.statValue}>{totalBeds}</span>
+                      </div>
+                      <div className={style.statItem}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "6px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.00001 20C4.85801 20 4.73934 19.952 4.64401 19.856C4.54867 19.76 4.50067 19.641 4.50001 19.499C4.49934 19.357 4.54734 19.2383 4.64401 19.143C4.74067 19.0477 4.85934 19 5.00001 19H6.50001V4.808C6.50001 4.57934 6.57734 4.38734 6.73201 4.232C6.88667 4.07667 7.07867 3.99934 7.30801 4H13.462C13.6907 4 13.8823 4.07734 14.037 4.232C14.1917 4.38667 14.269 4.57867 14.269 4.808V5H16.692C16.9213 5 17.1133 5.07734 17.268 5.232C17.4227 5.38667 17.5 5.57867 17.5 5.808V19H19C19.1413 19 19.26 19.048 19.356 19.144C19.452 19.24 19.5 19.359 19.5 19.501C19.5 19.643 19.452 19.7617 19.356 19.857C19.26 19.9523 19.1413 20 19 20H17.317C17.079 20 16.8833 19.9227 16.73 19.768C16.5767 19.6133 16.5 19.4213 16.5 19.192V6H14.27V19.192C14.27 19.4213 14.1923 19.6133 14.037 19.768C13.8817 19.9227 13.69 20 13.462 20H5.00001ZM12.27 12C12.27 11.7933 12.1933 11.6133 12.04 11.46C11.8867 11.3067 11.7067 11.23 11.5 11.23C11.2933 11.23 11.1133 11.3067 10.96 11.46C10.8067 11.6133 10.73 11.7933 10.73 12C10.73 12.2067 10.8067 12.3867 10.96 12.54C11.1133 12.6933 11.2933 12.77 11.5 12.77C11.7067 12.77 11.8867 12.6933 12.04 12.54C12.1933 12.3867 12.27 12.2067 12.27 12Z"
+                              fill="#25307F"
+                            />
+                          </svg>
+                          <span className={style.statLabel}>
+                            Total Rooms Available :
+                          </span>
+                        </div>
+                        <span className={style.statValue}>{totalRooms}</span>
+                      </div>
+                    </div>
+                  </section>
+                  {/*  ===== 3. Cases Bar Section ===== */}
+                  <section className={style.casesSection}>
+                    <div className={style.casesHeader}>{totalCases} cases</div>
+                    <div className={style.casesTop}>
+                      <p className={style.caseLabel}>
+                        <span>{totalInpatientsCount}</span> IPD
+                      </p>
+                      <p className={style.caseLabel}>
+                        <span>{totalOutpatientsCount}</span> OPD
+                      </p>
+                    </div>
+                    <div className={style.casesContent}>
+                      <div className={style.progressBar}>
+                        <div
+                          className={style.progressInner}
+                          style={{
+                            width: `${totalInpatientsCountPercent}%` /* e.g. 122/466 total = 26% */,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </section>
                 </div>
-                <div className={style.casesContent}>
-                  <div className={style.progressBar}>
-                    <div
-                      className={style.progressInner}
-                      style={{
-                        width: `${totalInpatientsCountPercent}%` /* e.g. 122/466 total = 26% */,
-                      }}
-                    />
-                  </div>
-                </div>
-              </section>
+              )}
             </div>
 
             {/* ===== 4. Alerts & Notifs Section ===== */}

@@ -88,8 +88,10 @@ const initialState = {
   ongoingAppointments: [],
   waitingAppointments: [],
   completedAppointments: [],
+  isLoadingHospitalStats: true,
   hospitalStatistics: [],
   patientOverview: [],
+  isLoadingPatientOverview: true,
   doctorRequests: [],
   appointmentRequests: [],
   events: [],
@@ -271,17 +273,15 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         hospitalStatistics: action.payload.stats,
-
-        isLoading: false,
+        isLoadingHospitalStats: false,
       };
     case GET_PATIENT_OVERVIEW:
       return {
         ...state,
         patientOverview: action.payload.overview,
-
         totalInpatientsCount: action.payload.totalInpatients,
         totalOutpatientsCount: action.payload.totalOutpatients,
-        isLoading: false,
+        isLoadingPatientOverview: false,
       };
 
     case GET_CRITICAL_PATIENTS:
