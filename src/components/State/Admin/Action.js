@@ -1123,12 +1123,10 @@ export const addInsuranceCompany = (formData) => async (dispatch) => {
 export const addServiceToCompany = (id,serviceData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    const services = serviceData
-    console.log("Services: ",services)
 
     const { data } = await axios.post(
         `${API_URL}/addServiceToCompany/${id}`,
-        {services},
+        serviceData,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
