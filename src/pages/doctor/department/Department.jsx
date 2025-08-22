@@ -197,7 +197,9 @@ const Department = () => {
   const isLoadingMedicalProcedureStats = useSelector(
     (state) => state.doctor.isLoadingMedicalProcedureStats
   );
-
+  const isLoadingInventoryData = useSelector(
+    (state) => state.doctor.isLoadingInventoryData
+  );
   const hospitalStatistics = useSelector(
     (state) => state.doctor.hospitalStatistics
   );
@@ -665,109 +667,122 @@ const Department = () => {
                 </svg>
               </div>
 
-              <div className={style.cardContent}>
-                {/* Responsive donut/pie chart */}
-                <ResponsiveContainer width="100%" height={270}>
-                  <PieChart>
-                    <Tooltip content={<CustomPieTooltip />} />
-
-                    <Pie
-                      data={finalGraphData}
-                      dataKey="quantity"
-                      nameKey="category"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={70}
-                      outerRadius={105}
-                      paddingAngle={4}
-                      cornerRadius={8}
-                      activeIndex={activeIndex}
-                      activeShape={renderActiveShape}
-                      onMouseEnter={onPieEnter}
-                      onMouseLeave={onPieLeave}
-                    >
-                      {finalGraphData.map((entry, index) => (
-                        <Cell
-                          key={`slice-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-
-                {/* ───── Custom legend below ───── */}
-                <div
-                  style={{
+              {isLoadingInventoryData ? (
+                <Box
+                  sx={{
                     display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    gap: 4,
-                    marginTop: 4,
-                    padding: "1rem",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "36vh", // or full height you need
                   }}
                 >
-                  {finalGraphData.map((entry, index) => {
-                    const displayValue = formatValue(entry.quantity);
-                    const color = COLORS[index % COLORS.length];
+                  <CircularProgress sx={{ color: "#25307F" }} size={50} />
+                </Box>
+              ) : (
+                <div className={style.cardContent}>
+                  {/* Responsive donut/pie chart */}
+                  <ResponsiveContainer width="100%" height={270}>
+                    <PieChart>
+                      <Tooltip content={<CustomPieTooltip />} />
 
-                    return (
-                      <div
-                        key={`legend-item-${index}`}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          fontSize: 14,
-                          color: "#2E3A59",
-                          lineHeight: 1.2,
-                        }}
+                      <Pie
+                        data={finalGraphData}
+                        dataKey="quantity"
+                        nameKey="category"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={70}
+                        outerRadius={105}
+                        paddingAngle={4}
+                        cornerRadius={8}
+                        activeIndex={activeIndex}
+                        activeShape={renderActiveShape}
+                        onMouseEnter={onPieEnter}
+                        onMouseLeave={onPieLeave}
                       >
-                        {/* Colored marker with slight border-radius */}
+                        {finalGraphData.map((entry, index) => (
+                          <Cell
+                            key={`slice-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+
+                  {/* ───── Custom legend below ───── */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      justifyContent: "space-between",
+                      gap: 4,
+                      marginTop: 4,
+                      padding: "1rem",
+                    }}
+                  >
+                    {finalGraphData.map((entry, index) => {
+                      const displayValue = formatValue(entry.quantity);
+                      const color = COLORS[index % COLORS.length];
+
+                      return (
                         <div
-                          style={{
-                            width: 12,
-                            height: 12,
-                            backgroundColor: color,
-                            borderRadius: 3,
-                            marginRight: 6,
-                          }}
-                        />
-                        <div
+                          key={`legend-item-${index}`}
                           style={{
                             display: "flex",
-                            justifyContent: "space-between",
-                            width: "13vw",
+                            alignItems: "center",
+                            fontSize: 14,
+                            color: "#2E3A59",
+                            lineHeight: 1.2,
                           }}
                         >
+                          {/* Colored marker with slight border-radius */}
                           <div
                             style={{
-                              color: "#00000",
-                              fontWeight: 600,
-                              fontSize: "13px",
+                              width: 12,
+                              height: 12,
+                              backgroundColor: color,
+                              borderRadius: 3,
+                              marginRight: 6,
                             }}
-                          >
-                            {entry.category}
-                          </div>
+                          />
                           <div
                             style={{
-                              color: "#00000",
-                              fontWeight: 600,
-                              fontSize: "13px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              width: "13vw",
                             }}
                           >
-                            {displayValue} ({entry.percent})%
+                            <div
+                              style={{
+                                color: "#00000",
+                                fontWeight: 600,
+                                fontSize: "13px",
+                              }}
+                            >
+                              {entry.category}
+                            </div>
+                            <div
+                              style={{
+                                color: "#00000",
+                                fontWeight: 600,
+                                fontSize: "13px",
+                              }}
+                            >
+                              {displayValue} ({entry.percent})%
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
 
-                <div className={style.totalLabel}>
-                  <span>Total</span>
-                  <h2>{totalInventory}</h2>
+                  <div className={style.totalLabel}>
+                    <span>Total</span>
+                    <h2>{totalInventory}</h2>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
           <div className={style.right}>

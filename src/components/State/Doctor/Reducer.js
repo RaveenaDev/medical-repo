@@ -106,6 +106,7 @@ const initialState = {
   staff: [],
   isLoadingStaffs: true,
   inventoryData: [],
+  isLoadingInventoryData: true,
   totalInventory: null,
   doctorNotes: [],
   appointmentsByDate: [],
@@ -220,7 +221,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalInventory: action.payload.total,
         inventoryData: action.payload.breakdown,
-        isLoading: false,
+        isLoadingInventoryData: false,
       };
     case GET_INVENTORY:
       return {
