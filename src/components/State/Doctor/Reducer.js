@@ -114,6 +114,7 @@ const initialState = {
   appointmentsByDate: [],
   appointmentsOfToday: [],
   inventory: [],
+  isLoadingInventory: true,
   generatedPrescriptionsByAI: null,
   allDoctors: [],
   approvedAdmissions: [],
@@ -229,7 +230,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         inventory: action.payload,
-        isLoading: false,
+        isLoadingInventory: false,
       };
 
     case GET_PATIENTS_DEATILS:
