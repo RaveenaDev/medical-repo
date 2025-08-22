@@ -16,13 +16,7 @@ import {
 import { Trash2Icon } from "lucide-react";
 const EditRateModal = ({ open, handleClose, service }) => {
   const serviceId = service.service.serviceId;
-  const calculateTotalRate = () => {
-    const additionalRate = Object.values(
-      serviceDetails.additionaldetails || {}
-    ).reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
 
-    return additionalRate;
-  };
   // console.log(service);
   const [serviceDetails, setServiceDetails] = useState({
     serviceId: serviceId,
@@ -87,7 +81,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
     });
   };
   const handleSubmit = () => {
-    const finalRate = calculateTotalRate();
+    const finalRate = totalRate;
     const pass = {
       serviceId: serviceDetails.serviceId,
       name: serviceDetails.name,
@@ -127,7 +121,13 @@ const EditRateModal = ({ open, handleClose, service }) => {
 
   const departments = useSelector((store) => store.admin.departments);
   // Calculate the total rate dynamically
-  const totalRate = calculateTotalRate();
+  const totalRate =
+    Object.keys(serviceDetails.additionaldetails || {}).length > 0
+      ? Object.values(serviceDetails.additionaldetails || {}).reduce(
+          (acc, val) => acc + (parseFloat(val) || 0),
+          0
+        )
+      : serviceDetails.rate;
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">

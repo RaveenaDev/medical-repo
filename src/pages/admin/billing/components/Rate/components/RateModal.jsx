@@ -99,13 +99,7 @@ const RateModal = ({ open, handleClose }) => {
       return;
     }
 
-    // Calculate total rate based on additional details
-    const additionalRate = serviceDetails.additionaldetails.reduce(
-      (acc, item) => acc + (item.value || 0),
-      0
-    );
-
-    const finalRate = additionalRate;
+    const finalRate = totalRate;
 
     const finalServiceDetails = {
       ...serviceDetails,
