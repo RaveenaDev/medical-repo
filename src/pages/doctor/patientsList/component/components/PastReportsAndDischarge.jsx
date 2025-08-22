@@ -37,15 +37,16 @@ const formatValue = (value) => {
 const PastReportsAndDischarge = ({ patientId }) => {
   const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    dispatch(getPatientHistory(patientId)).finally(() => setLoading(false));
+    dispatch(getPatientHistory(patientId));
   }, [dispatch, patientId]);
 
   const closeModal = () => setActiveModal(null);
   const patientHistory = useSelector((store) => store.doctor.patientHistory);
+  const isLoadingPatientHistory = useSelector(
+    (store) => store.doctor.isLoadingPatientHistory
+  );
   const capitalize = (str) =>
     typeof str === "string" ? str.charAt(0).toUpperCase() + str.slice(1) : str;
 
@@ -174,7 +175,7 @@ const PastReportsAndDischarge = ({ patientId }) => {
       </Modal>
       {/* Card List */}
 
-      {loading ? (
+      {isLoadingPatientHistory ? (
         <Box
           sx={{
             display: "flex",
