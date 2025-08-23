@@ -16,6 +16,7 @@ import {
 import { Trash2Icon } from "lucide-react";
 const EditRateModal = ({ open, handleClose, service }) => {
   const serviceId = service.service.serviceId;
+
   // console.log(service);
   const [serviceDetails, setServiceDetails] = useState({
     serviceId: serviceId,
@@ -39,38 +40,48 @@ const EditRateModal = ({ open, handleClose, service }) => {
       [e.target.name]: e.target.value,
     });
   };
-  // Handle changes in additional details
-  const handleAdditionalDetailChange = (index, field, value) => {
-    const updatedDetails = [...serviceDetails.additionaldetails];
-    updatedDetails[index][field] =
-      field === "value" ? parseFloat(value) : value;
+  // Handle changes in additional details (object)
+  const handleAdditionalDetailChange = (key, newKey, newValue) => {
+    const updatedDetails = { ...serviceDetails.additionaldetails };
+
+    // If user is changing the key name
+    if (newKey !== undefined && key !== newKey) {
+      updatedDetails[newKey] = newValue ?? updatedDetails[key];
+      delete updatedDetails[key];
+    } else {
+      updatedDetails[key] = newValue;
+    }
+
     setServiceDetails({
       ...serviceDetails,
       additionaldetails: updatedDetails,
     });
   };
 
-  // Add a new additional detail
+  // Add a new additional detail (object entry)
   const handleAddAdditionalDetail = () => {
     setServiceDetails({
       ...serviceDetails,
-      additionaldetails: [
+      additionaldetails: {
         ...serviceDetails.additionaldetails,
-        { key: "", value: 0 },
-      ],
+        [`Detail_${
+          Object.keys(serviceDetails.additionaldetails).length + 1
+        }`]: 0,
+      },
     });
   };
 
-  // Remove an additional detail by index
-  const handleRemoveAdditionalDetail = (index) => {
-    const updatedDetails = [...serviceDetails.additionaldetails];
-    updatedDetails.splice(index, 1);
+  // Remove a detail by key
+  const handleRemoveAdditionalDetail = (key) => {
+    const updatedDetails = { ...serviceDetails.additionaldetails };
+    delete updatedDetails[key];
     setServiceDetails({
       ...serviceDetails,
       additionaldetails: updatedDetails,
     });
   };
   const handleSubmit = () => {
+    const finalRate = totalRate;
     const pass = {
       serviceId: serviceDetails.serviceId,
       name: serviceDetails.name,
@@ -80,14 +91,14 @@ const EditRateModal = ({ open, handleClose, service }) => {
           _id: service.category.categoryId,
           subCategoryName: serviceDetails.subCategoryName,
           rateType: serviceDetails.rateType,
-          rate: serviceDetails.rate,
+          rate: finalRate,
           effectiveDate: serviceDetails.effectiveDate,
           amenities: serviceDetails.amenities,
           additionaldetails: serviceDetails.additionaldetails,
         },
       ],
     };
-    dispatch(updateService(pass));
+    dispatch(updateService(pass, serviceId));
     // Reset the form fields
     setServiceDetails({
       name: "",
@@ -109,10 +120,18 @@ const EditRateModal = ({ open, handleClose, service }) => {
   }, [dispatch]);
 
   const departments = useSelector((store) => store.admin.departments);
+  // Calculate the total rate dynamically
+  const totalRate =
+    Object.keys(serviceDetails.additionaldetails || {}).length > 0
+      ? Object.values(serviceDetails.additionaldetails || {}).reduce(
+          (acc, val) => acc + (parseFloat(val) || 0),
+          0
+        )
+      : serviceDetails.rate;
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add Service</DialogTitle>
+      <DialogTitle>Edit Service</DialogTitle>
       <DialogContent>
         <TextField
           label="Service Name"
@@ -147,14 +166,18 @@ const EditRateModal = ({ open, handleClose, service }) => {
             value={serviceDetails.rateType}
             onChange={handleChange}
           />
+
           <TextField
             label="Current Rate"
             fullWidth
             margin="dense"
             type="number"
             name="rate"
-            value={serviceDetails.rate}
+            value={totalRate}
             onChange={handleChange}
+            disabled={
+              Object.keys(serviceDetails.additionaldetails || {}).length > 0
+            }
           />
           <TextField
             label="Amenities"
@@ -177,9 +200,9 @@ const EditRateModal = ({ open, handleClose, service }) => {
                         value={key}
                         onChange={(e) =>
                           handleAdditionalDetailChange(
-                            index,
-                            "key",
-                            e.target.value
+                            key,
+                            e.target.value,
+                            value
                           )
                         }
                       />
@@ -192,9 +215,9 @@ const EditRateModal = ({ open, handleClose, service }) => {
                         value={value}
                         onChange={(e) =>
                           handleAdditionalDetailChange(
-                            index,
-                            "value",
-                            e.target.value
+                            key,
+                            key,
+                            parseFloat(e.target.value)
                           )
                         }
                       />
@@ -207,7 +230,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
                       alignItems="center"
                     >
                       <Trash2Icon
-                        onClick={() => handleRemoveAdditionalDetail(index)}
+                        onClick={() => handleRemoveAdditionalDetail(key)}
                         style={{ cursor: "pointer", color: "red" }}
                       />
                     </Grid2>

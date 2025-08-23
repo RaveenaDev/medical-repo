@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import inventoryStyles from "./Inventory.module.scss";
 import CommonPanelMini from "../components/CommonPanelMini.jsx";
 import AddItemModal from "./components/addItem/AddItemModal.jsx";
-
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -23,6 +22,8 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from "@mui/material";
 const Inventory = () => {
   const [showModal, setShowModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -32,9 +33,12 @@ const Inventory = () => {
 
   useEffect(() => {
     dispatch(getInventoryByDepartment());
-  }, []);
+  }, [dispatch]);
 
   const rawInventoryData = useSelector((state) => state.doctor.inventory.data);
+  const isLoadingInventory = useSelector(
+    (state) => state.doctor.isLoadingInventory
+  );
   const inventoryData = useMemo(
     () => rawInventoryData || [],
     [rawInventoryData]
@@ -131,133 +135,145 @@ const Inventory = () => {
             <Plus size={20} /> Add New Category
           </button>
         </div>
-
-        <Slider
-          slidesToShow={3.8}
-          swipeToSlide={true}
-          touchThreshold={4}
-          speed={400}
-          infinite={false}
-          arrows={true}
-          className={inventoryStyles.slickSlider}
-          responsive={[
-            {
-              breakpoint: 1024,
-              settings: {
-                slidesToShow: 3,
-                slidesToScroll: 3,
+        {isLoadingInventory ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "22.4vh", // or full height you need
+            }}
+          >
+            <CircularProgress sx={{ color: "#25307F" }} size={45} />
+          </Box>
+        ) : (
+          <Slider
+            slidesToShow={3.8}
+            swipeToSlide={true}
+            touchThreshold={4}
+            speed={400}
+            infinite={false}
+            arrows={true}
+            className={inventoryStyles.slickSlider}
+            responsive={[
+              {
+                breakpoint: 1024,
+                settings: {
+                  slidesToShow: 3,
+                  slidesToScroll: 3,
+                },
               },
-            },
-            {
-              breakpoint: 768,
-              settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2,
+              {
+                breakpoint: 768,
+                settings: {
+                  slidesToShow: 2,
+                  slidesToScroll: 2,
+                },
               },
-            },
-            {
-              breakpoint: 480,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
+              {
+                breakpoint: 480,
+                settings: {
+                  slidesToShow: 1,
+                  slidesToScroll: 1,
+                },
               },
-            },
-          ]}
-        >
-          {inventoryData.map(({ category, items }, idx) => {
-            const name = category.name;
+            ]}
+          >
+            {inventoryData.map(({ category, items }, idx) => {
+              const name = category.name;
 
-            const totalQuantity = items.reduce(
-              (sum, item) => sum + (item.quantity || 0),
-              0
-            );
-            const avgUsage =
-              items.length > 0
-                ? items.reduce(
-                    (sum, item) => sum + (parseFloat(item.usage) || 0),
-                    0
-                  ) / items.length
-                : 0;
+              const totalQuantity = items.reduce(
+                (sum, item) => sum + (item.quantity || 0),
+                0
+              );
+              const avgUsage =
+                items.length > 0
+                  ? items.reduce(
+                      (sum, item) => sum + (parseFloat(item.usage) || 0),
+                      0
+                    ) / items.length
+                  : 0;
 
-            const statusCounts = items.reduce((acc, item) => {
-              const status = item.status || "Sufficient";
-              acc[status] = (acc[status] || 0) + 1;
-              return acc;
-            }, {});
+              const statusCounts = items.reduce((acc, item) => {
+                const status = item.status || "Sufficient";
+                acc[status] = (acc[status] || 0) + 1;
+                return acc;
+              }, {});
 
-            const finalStatus = statusCounts["Low Stock"]
-              ? "low"
-              : statusCounts["Moderate"]
-              ? "moderate"
-              : "sufficient";
+              const finalStatus = statusCounts["Low Stock"]
+                ? "low"
+                : statusCounts["Moderate"]
+                ? "moderate"
+                : "sufficient";
 
-            const headerBg = bgColors[idx % bgColors.length];
+              const headerBg = bgColors[idx % bgColors.length];
 
-            const formatIndianNumber = (num) => {
-              if (num >= 1e7)
-                return (num / 1e7).toFixed(1).replace(/\.0$/, "") + "Cr";
-              if (num >= 1e5)
-                return (num / 1e5).toFixed(1).replace(/\.0$/, "") + "L";
-              if (num >= 1e3)
-                return (num / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
-              return num.toString();
-            };
+              const formatIndianNumber = (num) => {
+                if (num >= 1e7)
+                  return (num / 1e7).toFixed(1).replace(/\.0$/, "") + "Cr";
+                if (num >= 1e5)
+                  return (num / 1e5).toFixed(1).replace(/\.0$/, "") + "L";
+                if (num >= 1e3)
+                  return (num / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
+                return num.toString();
+              };
 
-            const lastUpdated =
-              items[0]?.lastRestockedDate?.split("T")[0] ||
-              items[0]?.date || // fallback if you temporarily use mock data
-              "-";
+              const lastUpdated =
+                items[0]?.lastRestockedDate?.split("T")[0] ||
+                items[0]?.date || // fallback if you temporarily use mock data
+                "-";
 
-            return (
-              <div
-                className={inventoryStyles.slideWrapper}
-                key={category._id}
-                onClick={() => {
-                  setSelectedCategory(name);
-                  setSelectedCategoryId(category._id);
-                }}
-              >
+              return (
                 <div
-                  className={` ${
-                    selectedCategory === name
-                      ? inventoryStyles.selectedCard
-                      : inventoryStyles.card
-                  }`}
+                  className={inventoryStyles.slideWrapper}
+                  key={category._id}
+                  onClick={() => {
+                    setSelectedCategory(name);
+                    setSelectedCategoryId(category._id);
+                  }}
                 >
                   <div
-                    className={inventoryStyles.cardHeader}
-                    style={{ backgroundColor: headerBg }}
+                    className={` ${
+                      selectedCategory === name
+                        ? inventoryStyles.selectedCard
+                        : inventoryStyles.card
+                    }`}
                   >
-                    <div className={inventoryStyles.cardHeading}>{name}</div>
-                  </div>
-                  <div className={inventoryStyles.cardBody}>
-                    <div className={inventoryStyles.cardSummary}>
-                      {formatIndianNumber(totalQuantity)} (
-                      {Math.round(avgUsage)}%)
+                    <div
+                      className={inventoryStyles.cardHeader}
+                      style={{ backgroundColor: headerBg }}
+                    >
+                      <div className={inventoryStyles.cardHeading}>{name}</div>
                     </div>
+                    <div className={inventoryStyles.cardBody}>
+                      <div className={inventoryStyles.cardSummary}>
+                        {formatIndianNumber(totalQuantity)} (
+                        {Math.round(avgUsage)}%)
+                      </div>
 
-                    <div className={inventoryStyles.cardDetails}>
-                      <p>Quantity: {totalQuantity} units</p>
-                      <p>Usage: {Math.round(avgUsage)}%</p>
+                      <div className={inventoryStyles.cardDetails}>
+                        <p>Quantity: {totalQuantity} units</p>
+                        <p>Usage: {Math.round(avgUsage)}%</p>
 
-                      <p>
-                        Status:{" "}
-                        <span className={inventoryStyles[`${finalStatus}`]}>
-                          {finalStatus}
-                        </span>
+                        <p>
+                          Status:{" "}
+                          <span className={inventoryStyles[`${finalStatus}`]}>
+                            {finalStatus}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className={inventoryStyles.cardFooter}>
+                      <p className={inventoryStyles.updated}>
+                        Last restocked: {lastUpdated}
                       </p>
                     </div>
                   </div>
-                  <div className={inventoryStyles.cardFooter}>
-                    <p className={inventoryStyles.updated}>
-                      Last restocked: {lastUpdated}
-                    </p>
-                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </Slider>
+              );
+            })}
+          </Slider>
+        )}
       </div>
 
       <div className={inventoryStyles.headerRow}>
@@ -305,59 +321,74 @@ const Inventory = () => {
           <span>Last Updated</span>
         </div>
 
-        <div className={inventoryStyles.tableBody}>
-          {(
-            inventoryData.find((cat) => cat.category.name === selectedCategory)
-              ?.items || []
-          )
-            .filter((item) => {
-              const lower = searchTerm.toLowerCase();
-              return (
-                item.name.toLowerCase().includes(lower) ||
-                (item.status || "").toLowerCase().includes(lower) ||
-                (item.lastRestockedDate || "").toLowerCase().includes(lower)
-              );
-            })
-            .map((item, i) => (
-              <div key={i} className={inventoryStyles.tableRow}>
-                <span>{item.name}</span>
-                <span>{item.quantity}</span>
-                <span>{item.usagePercent || "0"}%</span>
-                <span
-                  className={
-                    inventoryStyles[
-                      (item.status || "sufficient")
-                        .replace(/\s/g, "")
-                        .toLowerCase()
-                    ]
-                  }
-                >
-                  {item.status || "Sufficient"}
-                </span>
-                <span>{item.minimumStockThreshold}</span>
-                <span>{item.lastRestockedDate?.split("T")[0] || "-"}</span>
-                <IconButton
-                  onClick={(e) => handleMenuOpen(e, item)}
-                  size="small"
-                  style={{ marginLeft: "auto" }}
-                >
-                  <MoreVertical size={18} />
-                </IconButton>
-              </div>
-            ))}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
+        {isLoadingInventory ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "38vh", // or full height you need
+            }}
           >
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem style={{ color: "red" }} onClick={handleDelete}>
-              Delete
-            </MenuItem>
-          </Menu>
-        </div>
+            <CircularProgress sx={{ color: "#25307F" }} size={50} />
+          </Box>
+        ) : (
+          <div className={inventoryStyles.tableBody}>
+            {(
+              inventoryData.find(
+                (cat) => cat.category.name === selectedCategory
+              )?.items || []
+            )
+              .filter((item) => {
+                const lower = searchTerm.toLowerCase();
+                return (
+                  item.name.toLowerCase().includes(lower) ||
+                  (item.status || "").toLowerCase().includes(lower) ||
+                  (item.lastRestockedDate || "").toLowerCase().includes(lower)
+                );
+              })
+              .map((item, i) => (
+                <div key={i} className={inventoryStyles.tableRow}>
+                  <span>{item.name}</span>
+                  <span>{item.quantity}</span>
+                  <span>{item.usagePercent || "0"}%</span>
+                  <span
+                    className={
+                      inventoryStyles[
+                        (item.status || "sufficient")
+                          .replace(/\s/g, "")
+                          .toLowerCase()
+                      ]
+                    }
+                  >
+                    {item.status || "Sufficient"}
+                  </span>
+                  <span>{item.minimumStockThreshold}</span>
+                  <span>{item.lastRestockedDate?.split("T")[0] || "-"}</span>
+                  <IconButton
+                    onClick={(e) => handleMenuOpen(e, item)}
+                    size="small"
+                    style={{ marginLeft: "auto" }}
+                  >
+                    <MoreVertical size={18} />
+                  </IconButton>
+                </div>
+              ))}
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <MenuItem onClick={handleEdit}>Edit</MenuItem>
+              <MenuItem style={{ color: "red" }} onClick={handleDelete}>
+                Delete
+              </MenuItem>
+            </Menu>
+          </div>
+        )}
+
         <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>

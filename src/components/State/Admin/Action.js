@@ -4,16 +4,18 @@ import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
-  ADD_EXPENSE, ADD_INSURANCE_COMPANY,
+  ADD_EXPENSE,
+  ADD_INSURANCE_COMPANY,
   ADD_ROOM,
-  ADD_SERVICE, ADD_SERVICE_TO_COMPANY,
+  ADD_SERVICE,
+  ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_SERVICE,
   DELETE_SERVICE_CATEGORY,
-  DELETE_STAFFS,
+  DELETE_STAFFS, DELETE_TPA_SERVICE, DELETE_TPA_SERVICE_CATEGORY, EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -29,7 +31,9 @@ import {
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
-  GET_FILTERED_ROOMS, GET_INSURANCE_COMPANIES, GET_INSURED_PATIENTS,
+  GET_FILTERED_ROOMS,
+  GET_INSURANCE_COMPANIES,
+  GET_INSURED_PATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
@@ -40,7 +44,8 @@ import {
   GET_WAITING_APPOINTMENTS,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
-  UPDATE_SERVICE, UPDATE_STATUS_OF_INSURED_PATIENTS,
+  UPDATE_SERVICE,
+  UPDATE_STATUS_OF_INSURED_PATIENTS,
 } from "./ActionType.js";
 
 import { toast } from "react-toastify";
@@ -745,11 +750,11 @@ export const addService = (serviceData) => async (dispatch) => {
   }
 };
 
-export const updateService = (updatedData) => async (dispatch) => {
+export const updateService = (updatedData, serviceId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-    const { data } = await axios.put(
-      `${API_URL}/editService/edit`,
+    const { data } = await axios.patch(
+      `${API_URL}/editService/edit/${serviceId}`,
       updatedData,
       {
         headers: {
@@ -1021,12 +1026,12 @@ export const getInsuredPatients = () => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(
-        `${API_URL}/getAdmissionRequestsWithInsurance`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
+      `${API_URL}/getAdmissionRequestsWithInsurance`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
     );
 
     // console.log("Data: ",data)
@@ -1037,51 +1042,50 @@ export const getInsuredPatients = () => async (dispatch) => {
   }
 };
 
-export const updateStatusOfInsuredPatients = (admissionId,status) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const updateStatusOfInsuredPatients =
+  (admissionId, status) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.put(
-        `${API_URL}/updateInsuranceStatus/${admissionId}`,{
-          insuranceApproved: status
+      const { data } = await axios.put(
+        `${API_URL}/updateInsuranceStatus/${admissionId}`,
+        {
+          insuranceApproved: status,
         },
         {
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
         }
-    );
+      );
 
-    // console.log("Updated Data: ",data)
+      // console.log("Updated Data: ",data)
 
-    dispatch({ type: UPDATE_STATUS_OF_INSURED_PATIENTS, payload: data });
-    dispatch(getInsuredPatients())
+      dispatch({ type: UPDATE_STATUS_OF_INSURED_PATIENTS, payload: data });
+      dispatch(getInsuredPatients());
 
-    toast.success("Patient Status Updated Successfully!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.log(error);
-    toast.error(" Patient Updation Error!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  }
-};
+      toast.success("Patient Status Updated Successfully!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error(" Patient Updation Error!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    }
+  };
 
 export const getInsuranceCompanies = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-        `${API_URL}/getInsuranceCompanies`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
-    );
+    const { data } = await axios.get(`${API_URL}/getInsuranceCompanies`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
     // console.log("Insurance Companies : ",data)
 
@@ -1096,12 +1100,13 @@ export const addInsuranceCompany = (formData) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.post(
-        `${API_URL}/addInsuranceCompany`,formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
+      `${API_URL}/addInsuranceCompany`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
     );
 
     // console.log("Insurance Company Added : ",data)
@@ -1120,18 +1125,18 @@ export const addInsuranceCompany = (formData) => async (dispatch) => {
   }
 };
 
-export const addServiceToCompany = (id,serviceData) => async (dispatch) => {
+export const addServiceToCompany = (id, serviceData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.post(
-        `${API_URL}/addServiceToCompany/${id}`,
-        serviceData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
+      `${API_URL}/addServiceToCompany/${id}`,
+      serviceData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
     );
 
     // console.log("Service Added To Company : ",data)
@@ -1144,6 +1149,88 @@ export const addServiceToCompany = (id,serviceData) => async (dispatch) => {
   } catch (error) {
     console.log(error);
     toast.error("Service Addition Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const deleteTPAServiceCategory =
+    (companyId, serviceId, categoryId) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+        const { data } = await axios.delete(
+            `${API_URL}/deleteCategory/${companyId}/${serviceId}/${categoryId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+              },
+            }
+        );
+        dispatch({
+          type: DELETE_TPA_SERVICE_CATEGORY,
+          payload: { companyId, serviceId, categoryId },
+        });
+        toast.success("Service Category Deleted Successfully!", {
+          position: "bottom-right", // Use string for position
+          autoClose: 2000,
+        });
+      } catch (error) {
+        console.error("Error deleting category service:", error);
+        toast.error("Service Category Deletion Error!", {
+          position: "bottom-right", // Use string for position
+          autoClose: 2000,
+        });
+      }
+    };
+
+export const deleteTPAService = (companyId, serviceId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.delete(
+        `${API_URL}/deleteAllCategories/${companyId}/${serviceId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+    dispatch({ type: DELETE_TPA_SERVICE, payload: {companyId,serviceId} });
+    toast.success("Service Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error deleting service:", error);
+    toast.error("Service Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const editTPAService = (companyId, serviceId, categoryId,pass) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.patch(
+        `${API_URL}/editCategory/${companyId}/${serviceId}/${categoryId}`,
+        pass,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    console.log("Edited Data: ",data)
+    dispatch({ type: EDIT_TPA_SERVICE, payload: data });
+    toast.success("Service Edited Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error editing service:", error);
+    toast.error("Service Deletion Error!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });

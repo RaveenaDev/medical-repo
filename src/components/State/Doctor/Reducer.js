@@ -88,8 +88,10 @@ const initialState = {
   ongoingAppointments: [],
   waitingAppointments: [],
   completedAppointments: [],
+  isLoadingHospitalStats: true,
   hospitalStatistics: [],
   patientOverview: [],
+  isLoadingPatientOverview: true,
   doctorRequests: [],
   appointmentRequests: [],
   events: [],
@@ -100,14 +102,20 @@ const initialState = {
   totalInpatientsCount: null,
   totalOutpatientsCount: null,
   medicalProcedureStats: [],
+  isLoadingMedicalProcedureStats: true,
   doctors: [],
+  isLoadingDoctors: true,
   staff: [],
+  isLoadingStaffs: true,
   inventoryData: [],
+  isLoadingInventoryData: true,
   totalInventory: null,
   doctorNotes: [],
   appointmentsByDate: [],
+  isLoadingAppointmentsByDate: true,
   appointmentsOfToday: [],
   inventory: [],
+  isLoadingInventory: true,
   generatedPrescriptionsByAI: null,
   allDoctors: [],
   approvedAdmissions: [],
@@ -203,13 +211,13 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         doctors: action.payload.doctors,
-        isLoading: false,
+        isLoadingDoctors: false,
       };
     case GET_STAFF:
       return {
         ...state,
         staff: action.payload.staff,
-        isLoading: false,
+        isLoadingStaffs: false,
       };
 
     case GET_INVENTORY_DATA:
@@ -217,13 +225,13 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalInventory: action.payload.total,
         inventoryData: action.payload.breakdown,
-        isLoading: false,
+        isLoadingInventoryData: false,
       };
     case GET_INVENTORY:
       return {
         ...state,
         inventory: action.payload,
-        isLoading: false,
+        isLoadingInventory: false,
       };
 
     case GET_PATIENTS_DEATILS:
@@ -267,17 +275,15 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         hospitalStatistics: action.payload.stats,
-
-        isLoading: false,
+        isLoadingHospitalStats: false,
       };
     case GET_PATIENT_OVERVIEW:
       return {
         ...state,
         patientOverview: action.payload.overview,
-
         totalInpatientsCount: action.payload.totalInpatients,
         totalOutpatientsCount: action.payload.totalOutpatients,
-        isLoading: false,
+        isLoadingPatientOverview: false,
       };
 
     case GET_CRITICAL_PATIENTS:
@@ -299,7 +305,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         medicalProcedureStats: action.payload,
-        isLoading: false,
+        isLoadingMedicalProcedureStats: false,
       };
 
     case GET_APPOINTMENTS:
@@ -407,6 +413,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentsByDate: action.payload.appointments,
+        isLoadingAppointmentsByDate: false,
       };
 
     case GET_APPOINTMENTS_OF_TODAY:
