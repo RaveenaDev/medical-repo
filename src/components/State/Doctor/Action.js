@@ -1125,6 +1125,9 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
       ...requestData,
       doctor, // add doctor into body
     };
+
+    // console.log("Req: ",requestDataWithDoctor)
+
     const { data } = await axios.post(
       `${API_URL}/createAdmissionRequest`,
       requestDataWithDoctor,

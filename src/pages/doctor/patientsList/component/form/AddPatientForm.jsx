@@ -93,7 +93,6 @@ const AddPatientForm = ({ onClose }) => {
       sendTo: sendToValue,
       mobileNumber: form.contactNo,
       name: form.patientName,
-      insurance: {
         hasInsurance: form.hasInsurance,
         employerName: form.employerName,
         insuranceIdNumber: form.insuranceIdNumber,
@@ -101,8 +100,7 @@ const AddPatientForm = ({ onClose }) => {
         insuranceCompany: form.insuranceCompany,
         employeeCode: form.employeeCode,
         insuranceStartDate: new Date(form.insuranceStartDate),
-        insuranceExpiryDate: new Date(form.insuranceExpiryDate)
-      },
+        insuranceExpiryDate: new Date(form.insuranceExpiryDate),
       admissionDetails: {
         name: form.patientName,
         contact: form.contactNo,
