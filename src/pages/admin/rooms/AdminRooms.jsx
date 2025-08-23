@@ -18,7 +18,8 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead, TablePagination,
+  TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -37,7 +38,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addRoom,
-  deleteRoom, getFilteredRooms,
+  deleteRoom,
+  getFilteredRooms,
   updateRoom,
 } from "../../../components/State/Admin/Action.js";
 import { toast } from "react-toastify";
@@ -56,7 +58,8 @@ const AdminRooms = (props) => {
   const [addDialogOpen1, setAddDialogOpen1] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const roomTypes = ["Available", "Occupied", "Under Maintenance"];
+  const roomTypes = ["Private", "Deluxe", "General Ward", "ICU"];
+  const wingTypes = ["North", "South", "East", "West", "Central"];
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -148,32 +151,32 @@ const AdminRooms = (props) => {
       }
     });
 
-// // Validate each bed
-//     formData.beds.forEach((bed, i) => {
-//       if (!bed.bedId) newErrors[`bedId-${i}`] = "Bed ID is required";
-//       if (!bed.status) newErrors[`status-${i}`] = "Status is required";
-//       if (!bed.cost) newErrors[`cost-${i}`] = "Cost is required";
-//     });
-//
-//     if (Object.keys(newErrors).length > 0) {
-//       setErrors(newErrors);
-//       toast.error("Please fill all required fields!", {
-//         position: "bottom-right",
-//       });
-//       return;
-//     }
+    // // Validate each bed
+    //     formData.beds.forEach((bed, i) => {
+    //       if (!bed.bedId) newErrors[`bedId-${i}`] = "Bed ID is required";
+    //       if (!bed.status) newErrors[`status-${i}`] = "Status is required";
+    //       if (!bed.cost) newErrors[`cost-${i}`] = "Cost is required";
+    //     });
+    //
+    //     if (Object.keys(newErrors).length > 0) {
+    //       setErrors(newErrors);
+    //       toast.error("Please fill all required fields!", {
+    //         position: "bottom-right",
+    //       });
+    //       return;
+    //     }
 
     // Convert customRoomType into roomType before sending
     const finalData = {
       ...formData,
       roomType:
-          formData.roomType === "custom"
-              ? formData.customRoomType
-              : formData.roomType,
+        formData.roomType === "custom"
+          ? formData.customRoomType
+          : formData.roomType,
     };
     delete finalData.customRoomType;
 
-    // console.log("To: ",finalData)
+    // console.log("To: ", finalData);
     dispatch(addRoom(finalData));
     setErrors({});
     setAddDialogOpen(false);
@@ -182,15 +185,17 @@ const AdminRooms = (props) => {
   const [formData, setFormData] = useState({
     roomID: "",
     name: "",
-    roomType: "",
+    roomTypeName: "",
     doctorId: "",
+    floor: "",
+    wing: "",
     beds: [
       {
-        bedId: "",
+        bedNumber: "",
         status: "",
-        cost: ""
-      }
-    ]
+        features: {},
+      },
+    ],
   });
 
   const handleChange = (e) => {
@@ -206,7 +211,7 @@ const AdminRooms = (props) => {
   const handleAddBed = () => {
     setFormData({
       ...formData,
-      beds: [...formData.beds, { bedId: "", status: "", cost: "" }],
+      beds: [...formData.beds, { bedNumber: "", status: "", cost: "" }],
     });
   };
 
@@ -216,12 +221,10 @@ const AdminRooms = (props) => {
     setFormData({ ...formData, beds: updatedBeds });
   };
 
-
-
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getFilteredRooms(page, rowsPerPage))
+    dispatch(getFilteredRooms(page, rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
 
   const navigate = useNavigate();
@@ -240,7 +243,7 @@ const AdminRooms = (props) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page when rows per page changes
   };
-
+  // console.log("Current Form Data: ", rooms);
 
   return (
     <div
@@ -385,7 +388,7 @@ const AdminRooms = (props) => {
                   fullWidth
                   sx={{
                     "& .MuiDialog-paper": {
-                      maxWidth: "65%", // This will reduce the max width between md and lg.
+                      maxWidth: "90%", // This will reduce the max width between md and lg.
                     },
                   }}
                 >
@@ -394,8 +397,8 @@ const AdminRooms = (props) => {
                     <Box sx={{ width: "100%" }}>
                       {" "}
                       {/* Fix width issue */}
-                      <Grid container spacing={2}>
-                        <Grid xs={3}>
+                      <Grid container spacing={1}>
+                        <Grid xs={1}>
                           <TextField
                             autoFocus
                             margin="dense"
@@ -411,210 +414,276 @@ const AdminRooms = (props) => {
                             required
                           />
                         </Grid>
-
-                        <Grid xs={3}>
+                        <Grid xs={1}>
                           <TextField
-                              autoFocus
-                              margin="dense"
-                              label="Room Name"
-                              name="name"
-                              value={formData.name}
-                              onChange={handleChange}
-                              type="text"
-                              fullWidth
-                              variant="outlined"
-                              error={!!errors.name}
-                              helperText={errors.name}
-                              required
+                            autoFocus
+                            margin="dense"
+                            label="Room Name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            error={!!errors.name}
+                            helperText={errors.name}
+                            required
                           />
                         </Grid>
-
-                        <Grid xs={3} sx={{ padding: 0, width: "22%" }}>
+                        <Grid xs={1}>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Floor"
+                            name="floor"
+                            value={formData.floor}
+                            onChange={handleChange}
+                            type="Number"
+                            fullWidth
+                            variant="outlined"
+                            error={!!errors.floor}
+                            helperText={errors.floor}
+                            required
+                          />
+                        </Grid>{" "}
+                        <Grid xs={1}>
                           <FormControl
+                            fullWidth
+                            sx={{ minWidth: 150 }}
+                            margin="dense"
+                            error={!!errors.wing}
+                          >
+                            <InputLabel id="wing-select-label">Wing</InputLabel>
+                            <Select
                               fullWidth
-                              margin="dense"
-                              error={!!errors.doctorId}
+                              labelId="wing-select-label"
+                              id="wing-select"
+                              name="wing"
+                              value={formData.wing || ""}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  wing: value,
+                                });
+                              }}
+                              label="Wing"
+                              variant="outlined"
+                              required
+                            >
+                              {wingTypes.map((type) => (
+                                <MenuItem key={type} value={type}>
+                                  {type}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            {errors.wing && (
+                              <Typography variant="caption" color="error">
+                                {errors.wing}
+                              </Typography>
+                            )}
+                          </FormControl>
+                        </Grid>
+                        <Grid xs={2} sx={{ padding: 0, width: "20%" }}>
+                          <FormControl
+                            fullWidth
+                            margin="dense"
+                            error={!!errors.doctorId}
                           >
                             <InputLabel id="doctor-select-label">
                               Doctor Assigned
                             </InputLabel>
                             <Select
-                                labelId="doctor-select-label"
-                                id="doctor-select"
-                                name="doctorId"
-                                value={formData.doctorId}
-                                onChange={handleChange}
-                                label="Doctor Assigned"
-                                variant="outlined"
-                                required
-                                MenuProps={{
-                                  PaperProps: {
-                                    sx: {
-                                      maxHeight: 200, // Fixed dropdown height
-                                      overflowY: "auto",
-                                      "&::-webkit-scrollbar": {
-                                        display: "none",
-                                      },
-                                      "-ms-overflow-style": "none", // IE and Edge
-                                      "scrollbar-width": "none",    // Firefox
+                              labelId="doctor-select-label"
+                              id="doctor-select"
+                              name="doctorId"
+                              value={formData.doctorId}
+                              onChange={handleChange}
+                              label="Doctor Assigned"
+                              variant="outlined"
+                              required
+                              MenuProps={{
+                                PaperProps: {
+                                  sx: {
+                                    maxHeight: 200, // Fixed dropdown height
+                                    overflowY: "auto",
+                                    "&::-webkit-scrollbar": {
+                                      display: "none",
                                     },
+                                    "-ms-overflow-style": "none", // IE and Edge
+                                    "scrollbar-width": "none", // Firefox
                                   },
-                                }}
+                                },
+                              }}
                             >
                               {doctors?.map((doctor) => (
-                                  <MenuItem key={doctor._id} value={doctor._id}>
-                                    {doctor.name}
-                                  </MenuItem>
+                                <MenuItem key={doctor._id} value={doctor._id}>
+                                  {doctor.name}
+                                </MenuItem>
                               ))}
                             </Select>
                             {errors.doctorId && (
-                                <Typography variant="caption" color="error">
-                                  {errors.doctorId}
-                                </Typography>
+                              <Typography variant="caption" color="error">
+                                {errors.doctorId}
+                              </Typography>
                             )}
                           </FormControl>
                         </Grid>
                         <Grid container spacing={2} xs={6} alignItems="center">
-                          <Grid item xs={formData.roomType === "custom" ? 6 : 12}>
+                          <Grid
+                            item
+                            xs={formData.roomType === "custom" ? 6 : 12}
+                          >
                             <FormControl
-                                fullWidth
-                                sx={{ minWidth: 150 }}
-                                margin="dense"
-                                error={!!errors.roomType}
+                              fullWidth
+                              sx={{ minWidth: 150 }}
+                              margin="dense"
+                              error={!!errors.roomTypeName}
                             >
-                              <InputLabel id="roomType-select-label">Room Type</InputLabel>
+                              <InputLabel id="roomType-select-label">
+                                Room Type
+                              </InputLabel>
                               <Select
-                                  fullWidth
-                                  labelId="roomType-select-label"
-                                  id="roomType-select"
-                                  name="roomType"
-                                  value={formData.roomType || ""}
-                                  onChange={(e) => {
-                                    const value = e.target.value;
-                                    setFormData({
-                                      ...formData,
-                                      roomType: value,
-                                      customRoomType: value === "custom" ? "" : "", // optional reset
-                                    });
-                                  }}
-                                  label="Room Type"
-                                  variant="outlined"
-                                  required
+                                fullWidth
+                                labelId="roomType-select-label"
+                                id="roomType-select"
+                                name="roomType"
+                                value={formData.roomTypeName || ""}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  setFormData({
+                                    ...formData,
+                                    roomTypeName: value,
+                                    customRoomType:
+                                      value === "custom" ? "" : "", // optional reset
+                                  });
+                                }}
+                                label="Room Type"
+                                variant="outlined"
+                                required
                               >
                                 {roomTypes.map((type) => (
-                                    <MenuItem key={type} value={type}>
-                                      {type}
-                                    </MenuItem>
+                                  <MenuItem key={type} value={type}>
+                                    {type}
+                                  </MenuItem>
                                 ))}
                                 <MenuItem value="custom">Custom</MenuItem>
                               </Select>
-                              {errors.roomType && (
-                                  <Typography variant="caption" color="error">
-                                    {errors.roomType}
-                                  </Typography>
+                              {errors.roomTypeName && (
+                                <Typography variant="caption" color="error">
+                                  {errors.roomTypeName}
+                                </Typography>
                               )}
                             </FormControl>
                           </Grid>
 
-                          {formData.roomType === "custom" && (
-                              <Grid item xs={6}>
-                                <TextField
-                                    name="customRoomType"
-                                    value={formData.customRoomType || ""}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, customRoomType: e.target.value })
-                                    }
-                                    label="Custom Room Type"
-                                    margin="dense"
-                                    variant="outlined"
-                                    required
-                                    error={!!errors.roomType}
-                                    helperText={errors.roomType}
-                                    fullWidth
-                                />
-                              </Grid>
+                          {formData.roomTypeName === "custom" && (
+                            <Grid item xs={6}>
+                              <TextField
+                                name="customRoomType"
+                                value={formData.customRoomType || ""}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    customRoomType: e.target.value,
+                                  })
+                                }
+                                label="Custom Room Type"
+                                margin="dense"
+                                variant="outlined"
+                                required
+                                error={!!errors.roomTypeName}
+                                helperText={errors.roomTypeName}
+                                fullWidth
+                              />
+                            </Grid>
                           )}
                         </Grid>
-
                         {formData.beds.map((bed, index) => (
-                            <Grid  container sx={{width:'100vw'}} spacing={2} key={index}>
-                              <Grid xs={3}>
-                                <TextField
-                                    label="Bed ID"
-                                    name={`bedId-${index}`}
-                                    value={bed.bedId}
-                                    onChange={(e) =>
-                                        handleBedChange(index, "bedId", e.target.value)
-                                    }
-                                    fullWidth
-                                    margin="dense"
-                                    variant="outlined"
-                                    required
-                                    error={!!errors[`bedId-${index}`]}
-                                    helperText={errors[`bedId-${index}`]}
-                                />
-                              </Grid>
-                              <Grid xs={3}>
-                                <TextField
-                                    label="Cost"
-                                    name={`cost-${index}`}
-                                    type="number"
-                                    value={bed.cost}
-                                    onChange={(e) =>
-                                        handleBedChange(index, "cost", e.target.value)
-                                    }
-                                    fullWidth
-                                    margin="dense"
-                                    variant="outlined"
-                                    required
-                                    error={!!errors[`cost-${index}`]}
-                                    helperText={errors[`cost-${index}`]}
-                                />
-                              </Grid>
-                              <Grid xs={3} sx={{width:'22%'}}>
-                                <FormControl
-                                    fullWidth
-                                    margin="dense"
-                                    error={!!errors[`status-${index}`]}
-                                >
-                                  <InputLabel>Status</InputLabel>
-                                  <Select
-                                      value={bed.status}
-                                      onChange={(e) =>
-                                          handleBedChange(index, "status", e.target.value)
-                                      }
-                                      label="Status"
-                                  >
-                                    <MenuItem value="Available">Available</MenuItem>
-                                    <MenuItem value="Occupied">Occupied</MenuItem>
-                                    <MenuItem value="Under Maintenance">
-                                      Under Maintenance
-                                    </MenuItem>
-                                  </Select>
-                                  {errors[`status-${index}`] && (
-                                      <Typography variant="caption" color="error">
-                                        {errors[`status-${index}`]}
-                                      </Typography>
-                                  )}
-                                </FormControl>
-                              </Grid>
-                              <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>
-                                {formData.beds.length > 1 && (
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        onClick={() => handleRemoveBed(index)}
-                                    >
-                                      Remove
-                                    </Button>
-                                )}
-                              </Grid>
+                          <Grid
+                            container
+                            sx={{ width: "100vw" }}
+                            spacing={2}
+                            key={index}
+                          >
+                            <Grid xs={3}>
+                              <TextField
+                                label="Bed ID"
+                                name={`bedId-${index}`}
+                                value={bed.bedNumber}
+                                onChange={(e) =>
+                                  handleBedChange(
+                                    index,
+                                    "bedNumber",
+                                    e.target.value
+                                  )
+                                }
+                                fullWidth
+                                margin="dense"
+                                variant="outlined"
+                                required
+                                error={!!errors[`bedNumber-${index}`]}
+                                helperText={errors[`bedNumber-${index}`]}
+                              />
                             </Grid>
+
+                            <Grid xs={3} sx={{ width: "22%" }}>
+                              <FormControl
+                                fullWidth
+                                margin="dense"
+                                error={!!errors[`status-${index}`]}
+                              >
+                                <InputLabel>Status</InputLabel>
+                                <Select
+                                  value={bed.status}
+                                  onChange={(e) =>
+                                    handleBedChange(
+                                      index,
+                                      "status",
+                                      e.target.value
+                                    )
+                                  }
+                                  label="Status"
+                                >
+                                  <MenuItem value="Available">
+                                    Available
+                                  </MenuItem>
+                                  <MenuItem value="Occupied">Occupied</MenuItem>
+                                  <MenuItem value="Under Maintenance">
+                                    Under Maintenance
+                                  </MenuItem>
+                                </Select>
+                                {errors[`status-${index}`] && (
+                                  <Typography variant="caption" color="error">
+                                    {errors[`status-${index}`]}
+                                  </Typography>
+                                )}
+                              </FormControl>
+                            </Grid>
+                            <Grid
+                              xs={3}
+                              sx={{ display: "flex", alignItems: "center" }}
+                            >
+                              {formData.beds.length > 1 && (
+                                <Button
+                                  variant="outlined"
+                                  color="error"
+                                  onClick={() => handleRemoveBed(index)}
+                                >
+                                  Remove
+                                </Button>
+                              )}
+                            </Grid>
+                          </Grid>
                         ))}
                         <Button
-                            variant="contained"
-                            sx={{ mt: 2, backgroundColor: "#25307F", color: "white" }}
-                            onClick={handleAddBed}
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            backgroundColor: "#25307F",
+                            color: "white",
+                          }}
+                          onClick={handleAddBed}
                         >
                           + Add Bed
                         </Button>
@@ -637,42 +706,51 @@ const AdminRooms = (props) => {
                   </DialogActions>
                 </Dialog>
 
-                <Dialog open={addDialogOpen1}
-                        onClose={() => setAddDialogOpen1(false)}
-                        maxWidth="md"
-                        fullWidth
-                        sx={{
-                          "& .MuiDialog-paper": {
-                            maxWidth: "65%", // This will reduce the max width between md and lg.
-                          },
-                        }}
-                >
-                  <DialogTitle sx={{ fontWeight: "600"}}>Room ({currentRoom?.roomID})</DialogTitle>
-                  <DialogContent sx={{
-                    maxHeight: "500px", // Fixed height
-                    overflowY: "auto",  // Enable vertical scrolling
-                    paddingRight: "8px", // Optional: prevent clipping
-                    // Hides scrollbar (for WebKit browsers)
-                    '&::-webkit-scrollbar': {
-                      width: 0,
-                      display: 'none',
+                <Dialog
+                  open={addDialogOpen1}
+                  onClose={() => setAddDialogOpen1(false)}
+                  maxWidth="md"
+                  fullWidth
+                  sx={{
+                    "& .MuiDialog-paper": {
+                      maxWidth: "65%", // This will reduce the max width between md and lg.
                     },
-                    // Hides scrollbar for Firefox
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none', // IE and Edge
-                  }}>
-                    <Table sx={{
-                      borderCollapse: "separate",
-                      borderSpacing: "0 10px",
-                      width: "100%",
-                      marginBottom: "30px",
-                    }}>
-                      <TableHead sx={{
-                        position: "sticky",
-                        backgroundColor: "#f1f1f1",
-                        top: 0,
-                        zIndex: 10, // Keep it above other elements
-                      }}>
+                  }}
+                >
+                  <DialogTitle sx={{ fontWeight: "600" }}>
+                    Room ({currentRoom?.roomID})
+                  </DialogTitle>
+                  <DialogContent
+                    sx={{
+                      maxHeight: "500px", // Fixed height
+                      overflowY: "auto", // Enable vertical scrolling
+                      paddingRight: "8px", // Optional: prevent clipping
+                      // Hides scrollbar (for WebKit browsers)
+                      "&::-webkit-scrollbar": {
+                        width: 0,
+                        display: "none",
+                      },
+                      // Hides scrollbar for Firefox
+                      scrollbarWidth: "none",
+                      msOverflowStyle: "none", // IE and Edge
+                    }}
+                  >
+                    <Table
+                      sx={{
+                        borderCollapse: "separate",
+                        borderSpacing: "0 10px",
+                        width: "100%",
+                        marginBottom: "30px",
+                      }}
+                    >
+                      <TableHead
+                        sx={{
+                          position: "sticky",
+                          backgroundColor: "#f1f1f1",
+                          top: 0,
+                          zIndex: 10, // Keep it above other elements
+                        }}
+                      >
                         <TableRow>
                           <TableCell sx={{ fontWeight: "600", width: "30%" }}>
                             Bed ID
@@ -687,42 +765,35 @@ const AdminRooms = (props) => {
                       </TableHead>
 
                       <TableBody>
-                        {
-                          currentRoom?.beds.length > 0 ? (
-                              currentRoom?.beds.map((bed,index) => (
-                                  <TableRow key={index}>
-                                    <TableCell>
-                                      {bed?.bedNumber || "N/A"}
-                                    </TableCell>
-                                    <TableCell>
-                                      {bed?.cost || "N/A"}
-                                    </TableCell>
-                                    <TableCell>
-                                      {bed?.status || "N/A"}
-                                    </TableCell>
-                                  </TableRow>
-                              ))
-                          ) :
-                              <TableRow>
-                                <TableCell
-                                    align="center"
-                                    colSpan={7}
-                                    sx={{
-                                      background: "#fff",
-                                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                                      borderRadius: "8px",
-                                      "&:hover": {
-                                        backgroundColor: "#f9f9f9",
-                                      },
-                                      "& > *": {
-                                        borderBottom: "unset",
-                                      },
-                                    }}
-                                >
-                                  No data found!
-                                </TableCell>
-                              </TableRow>
-                        }
+                        {currentRoom?.beds.length > 0 ? (
+                          currentRoom?.beds.map((bed, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{bed?.bedNumber || "N/A"}</TableCell>
+                              <TableCell>{bed?.cost || "N/A"}</TableCell>
+                              <TableCell>{bed?.status || "N/A"}</TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell
+                              align="center"
+                              colSpan={7}
+                              sx={{
+                                background: "#fff",
+                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                                borderRadius: "8px",
+                                "&:hover": {
+                                  backgroundColor: "#f9f9f9",
+                                },
+                                "& > *": {
+                                  borderBottom: "unset",
+                                },
+                              }}
+                            >
+                              No data found!
+                            </TableCell>
+                          </TableRow>
+                        )}
                       </TableBody>
                     </Table>
                   </DialogContent>
@@ -770,48 +841,48 @@ const AdminRooms = (props) => {
                       Doctor Assigned
                     </TableCell>
                     <TableCell
-                        sx={{
-                          fontWeight: "600",
-                          width: "auto",
-                          textAlign: "right",
-                        }}
+                      sx={{
+                        fontWeight: "600",
+                        width: "auto",
+                        textAlign: "right",
+                      }}
                     ></TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody >
+                <TableBody>
                   {rooms.length > 0 ? (
                     rooms.map((room) => (
-                        <TableRow
-                            key={room._id}
-                            sx={{
-                              background: "#fff",
-                              cursor:'pointer',
-                              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                              borderRadius: "8px",
-                              "&:hover": {
-                                backgroundColor: "#f9f9f9",
-                              },
-                            }}
-                            onClick={() => handleAddDialogOpen1(room)}
-                        >
+                      <TableRow
+                        key={room._id}
+                        sx={{
+                          background: "#fff",
+                          cursor: "pointer",
+                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                          borderRadius: "8px",
+                          "&:hover": {
+                            backgroundColor: "#f9f9f9",
+                          },
+                        }}
+                        onClick={() => handleAddDialogOpen1(room)}
+                      >
                         <TableCell
-                            sx={{
-                              color: "#25307F",
-                              fontWeight: "bold",
-                              width: "25%",
-                            }}
+                          sx={{
+                            color: "#25307F",
+                            fontWeight: "bold",
+                            width: "25%",
+                          }}
                         >
                           {room.roomID}
                         </TableCell>
-                          <TableCell
-                              sx={{
-                                color: "#25307F",
-                                fontWeight: "bold",
-                                width: "25%",
-                              }}
-                          >
-                            {room?.roomType}
-                          </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "#25307F",
+                            fontWeight: "bold",
+                            width: "25%",
+                          }}
+                        >
+                          {room?.roomType}
+                        </TableCell>
                         <TableCell sx={{ width: "25%" }}>
                           <Typography
                             variant="body1"
@@ -830,11 +901,7 @@ const AdminRooms = (props) => {
                         <TableCell sx={{ width: "25%" }}>
                           {" "}
                           {/* Increase 'pl' value for more spacing */}
-                          <Box
-                            display="flex"
-                            alignItems="center"
-                            gap={1}
-                          >
+                          <Box display="flex" alignItems="center" gap={1}>
                             <Box
                               sx={{
                                 width: 10,
@@ -889,21 +956,20 @@ const AdminRooms = (props) => {
               </Table>
 
               <TablePagination
-                  component="div"
-                  count={totalRooms}
-                  page={page} // current page
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage} // items per page
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-                  sx={{
-                    width: '100%',
-                    backgroundColor: "#fff",
-                    borderTop: "2px solid #ddd",
-                    zIndex: 11,
-                  }}
+                component="div"
+                count={totalRooms}
+                page={page} // current page
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage} // items per page
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                sx={{
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  borderTop: "2px solid #ddd",
+                  zIndex: 11,
+                }}
               />
-
             </TableContainer>
 
             {/* Actions Menu */}
