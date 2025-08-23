@@ -2,42 +2,33 @@ import React, { useEffect, useState } from "react";
 import styles from "./SingleCompanyDetails.module.scss";
 import Searchbar from "../../../../../components/Searchbar";
 import Notifications from "../../../../../components/NotificationFunc/Notification";
-import {ChevronLeft, MoreVerticalIcon, Plus} from "lucide-react";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import {ChevronLeft, Plus} from "lucide-react";
 import {
     Box,
-    Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle,
+    Button, Chip, Dialog, DialogContent, DialogTitle,
     IconButton,
     Menu,
     MenuItem,
-    TablePagination, TextField,
+    TablePagination,
     Typography,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid2";
-import {addInsuranceCompany, addServiceToCompany} from "../../../../../components/State/Admin/Action.js";
 import {useDispatch, useSelector} from "react-redux";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CloseIcon from "@mui/icons-material/Close";
 import RateModal from "./RateModal.jsx";
+import {deleteTPAService, deleteTPAServiceCategory} from "../../../../../components/State/Admin/Action.js";
+import EditRateModal from "./EditRateModal.jsx";
 
 const SingleCompanyDetails = (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [anchorE2, setAnchorE2] = useState(null);
     const [selectedService, setSelectedService] = useState(null);
-    const [addDialogOpen, setAddDialogOpen] = useState(false);
-    const [formData, setFormData] = useState([{
-        serviceName: "",
-        pricingDetails:
-            {
-                rate: "",
-                description: ""
-            }
-    }]);
     const [viewDrawerOpen, setViewDrawerOpen] = useState(false);
     const [viewData, setViewData] = useState(null);
     const [modalOpen, setModalOpen] = useState(false); // State for modal
+    const [editModalOpen, setEditModalOpen] = useState(false); // State for modal
 
     const dispatch = useDispatch()
 
@@ -50,8 +41,6 @@ const SingleCompanyDetails = (props) => {
     const company = useSelector(
         (state) => state.admin.insuranceCompanies.find((c) => c._id === companyId)
     ) || companyFromNav;
-
-    const [errors, setErrors] = useState({}); // Added error state
 
     useEffect(() => {
         props?.setIsSignUpOrLogin(false);
@@ -95,85 +84,24 @@ const SingleCompanyDetails = (props) => {
     };
 
     const handleDelete = () => {
-        console.log("Delete service:", selectedService?._id);
+        // console.log("Delete Category: ", selectedService);
+        dispatch(deleteTPAServiceCategory(companyId,selectedService.service._id,selectedService.category._id))
         handleCloseMenu();
     };
 
+    const handleDeleteService = () => {
+        // console.log("Delete Service: ",selectedService)
+        dispatch(deleteTPAService(companyId,selectedService.service._id));
+        handleCloseMenu();
+    }
+
+    const handleEdit = () => {
+        // handleCloseMenu();
+        setEditModalOpen(true)
+    }
+
     const handleBackBtn = () => {
         navigate("/admin/tpa");
-    };
-
-    const handleAddDialogOpen = () => setAddDialogOpen(true);
-
-    const handleAddDialogClose = () => {
-        setAddDialogOpen(false);
-    };
-
-    const handleServiceChange = (index, key, value) => {
-        const updatedServices = [...formData];
-
-        if (key in updatedServices[index].pricingDetails) {
-            updatedServices[index].pricingDetails[key] = value;
-        } else {
-            updatedServices[index][key] = value;
-        }
-
-        setFormData(updatedServices);
-
-        // Clear error once corrected
-        if (errors[`${key}-${index}`]) {
-            setErrors({ ...errors, [`${key}-${index}`]: "" });
-        }
-    };
-
-
-    const handleRemoveService = (index) => {
-        const updatedServices = [...formData];
-        updatedServices.splice(index, 1);
-        setFormData(updatedServices);
-    };
-
-    const handleAddService = () => {
-        setFormData([
-            ...formData,
-            {
-                serviceName: "",
-                pricingDetails: {
-                    rate: "",
-                    description: ""
-                }
-            }
-        ]);
-    };
-
-    const handleSubmit = () => {
-        let newErrors = {};
-
-        formData.forEach((service, index) => {
-            if (!service.serviceName.trim()) {
-                newErrors[`serviceName-${index}`] = "Service Name is required";
-            }
-            if (
-                !service.pricingDetails.rate ||
-                isNaN(service.pricingDetails.rate) ||
-                Number(service.pricingDetails.rate) <= 0
-            ) {
-                newErrors[`rate-${index}`] = "Enter a valid cost (> 0)";
-            }
-            if (!service.pricingDetails.description.trim()) {
-                newErrors[`description-${index}`] = "Description is required";
-            }
-        });
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return; // stop submit if validation fails
-        }
-
-        // ✅ If validation passes → dispatch
-        dispatch(addServiceToCompany(company._id, formData));
-        setErrors({});
-        setAddDialogOpen(false);
     };
 
     const truncateText = (text, maxLength) => {
@@ -236,127 +164,8 @@ const SingleCompanyDetails = (props) => {
                                  ADD SERVICE
                             </Button>
 
-                            {/*<Button*/}
-                            {/*    startIcon={<FilterAltIcon sx={{ color: "#878787" }} />}*/}
-                            {/*    sx={{*/}
-                            {/*        textTransform: "none",*/}
-                            {/*        backgroundColor: "white",*/}
-                            {/*        color: "#4A4A4A",*/}
-                            {/*        borderRadius: "5px",*/}
-                            {/*    }}*/}
-                            {/*    onClick={() => console.log("Open Filter Drawer")}*/}
-                            {/*>*/}
-                            {/*    Filter*/}
-                            {/*</Button>*/}
                         </Box>
 
-                        {/*<Dialog*/}
-                        {/*    open={addDialogOpen}*/}
-                        {/*    onClose={handleAddDialogClose}*/}
-                        {/*    maxWidth="md"*/}
-                        {/*    fullWidth*/}
-                        {/*    sx={{*/}
-                        {/*        "& .MuiDialog-paper": {*/}
-                        {/*            minWidth: "55%", // This will reduce the max width between md and lg.*/}
-                        {/*            pl: 6*/}
-                        {/*        },*/}
-                        {/*    }}*/}
-                        {/*>*/}
-                        {/*    <DialogTitle>Add Service</DialogTitle>*/}
-                        {/*    <DialogContent>*/}
-                        {/*        <Box sx={{ width: "100%" }}>*/}
-                        {/*            {" "}*/}
-                        {/*            /!* Fix width issue *!/*/}
-                        {/*            <Grid container spacing={2}>*/}
-                        {/*                {formData.map((service, index) => (*/}
-                        {/*                    <Grid  container sx={{width:'100vw'}} spacing={2} key={index}>*/}
-                        {/*                        <Grid xs={3}>*/}
-                        {/*                            <TextField*/}
-                        {/*                                label="Service Name"*/}
-                        {/*                                name={`serviceName-${index}`}*/}
-                        {/*                                value={service.serviceName}*/}
-                        {/*                                onChange={(e) =>*/}
-                        {/*                                    handleServiceChange(index, "serviceName", e.target.value)*/}
-                        {/*                                }*/}
-                        {/*                                fullWidth*/}
-                        {/*                                margin="dense"*/}
-                        {/*                                variant="outlined"*/}
-                        {/*                                required*/}
-                        {/*                                error={!!errors[`serviceName-${index}`]}*/}
-                        {/*                                helperText={errors[`serviceName-${index}`]}*/}
-                        {/*                            />*/}
-                        {/*                        </Grid>*/}
-                        {/*                        <Grid xs={3}>*/}
-                        {/*                            <TextField*/}
-                        {/*                                label="Cost"*/}
-                        {/*                                name={`rate-${index}`}*/}
-                        {/*                                type="number"*/}
-                        {/*                                value={service.pricingDetails.rate}*/}
-                        {/*                                onChange={(e) =>*/}
-                        {/*                                    handleServiceChange(index, "rate", e.target.value)*/}
-                        {/*                                }*/}
-                        {/*                                fullWidth*/}
-                        {/*                                margin="dense"*/}
-                        {/*                                variant="outlined"*/}
-                        {/*                                required*/}
-                        {/*                                error={!!errors[`rate-${index}`]}*/}
-                        {/*                                helperText={errors[`rate-${index}`]}*/}
-                        {/*                            />*/}
-                        {/*                        </Grid>*/}
-                        {/*                        <Grid xs={3}>*/}
-                        {/*                            <TextField*/}
-                        {/*                                label="Description"*/}
-                        {/*                                name={`description-${index}`}*/}
-                        {/*                                value={service.pricingDetails.description}*/}
-                        {/*                                onChange={(e) =>*/}
-                        {/*                                    handleServiceChange(index, "description", e.target.value)*/}
-                        {/*                                }*/}
-                        {/*                                fullWidth*/}
-                        {/*                                margin="dense"*/}
-                        {/*                                variant="outlined"*/}
-                        {/*                                required*/}
-                        {/*                                error={!!errors[`description-${index}`]}*/}
-                        {/*                                helperText={errors[`description-${index}`]}*/}
-                        {/*                            />*/}
-                        {/*                        </Grid>*/}
-                        {/*                        <Grid xs={3} sx={{ display: "flex", alignItems: "center" }}>*/}
-                        {/*                            {formData.length > 1 && (*/}
-                        {/*                                <Button*/}
-                        {/*                                    variant="outlined"*/}
-                        {/*                                    color="error"*/}
-                        {/*                                    onClick={() => handleRemoveService(index)}*/}
-                        {/*                                >*/}
-                        {/*                                    Remove*/}
-                        {/*                                </Button>*/}
-                        {/*                            )}*/}
-                        {/*                        </Grid>*/}
-                        {/*                    </Grid>*/}
-                        {/*                ))}*/}
-                        {/*                <Button*/}
-                        {/*                    variant="contained"*/}
-                        {/*                    sx={{ mt: 2, backgroundColor: "#25307F", color: "white" }}*/}
-                        {/*                    onClick={handleAddService}*/}
-                        {/*                >*/}
-                        {/*                    + Add Service*/}
-                        {/*                </Button>*/}
-                        {/*            </Grid>*/}
-                        {/*        </Box>*/}
-                        {/*    </DialogContent>*/}
-
-                        {/*    <DialogActions sx={{ justifyContent: "center" }}>*/}
-                        {/*        <Button*/}
-                        {/*            onClick={handleSubmit}*/}
-                        {/*            variant="contained"*/}
-                        {/*            sx={{*/}
-                        {/*                width: "200px",*/}
-                        {/*                backgroundColor: "#25307F",*/}
-                        {/*                "&:hover": { backgroundColor: "green" },*/}
-                        {/*            }}*/}
-                        {/*        >*/}
-                        {/*            Save*/}
-                        {/*        </Button>*/}
-                        {/*    </DialogActions>*/}
-                        {/*</Dialog>*/}
                     </Box>
 
                     {/* Service Table */}
@@ -447,7 +256,7 @@ const SingleCompanyDetails = (props) => {
                                                         <MenuItem
                                                             value="edit"
                                                             sx={{display: "flex", gap: "4px"}}
-                                                            onClick={() => setEditModalOpen(true)}
+                                                            onClick={() => handleEdit()}
                                                         >
                                                             <svg
                                                                 width="20"
@@ -477,38 +286,42 @@ const SingleCompanyDetails = (props) => {
                                                             Edit
                                                         </MenuItem>
 
-                                                        <MenuItem
-                                                            value="delete"
-                                                            sx={{display: "flex", gap: "4px"}}
-                                                            onClick={() => handleDelete()}
-                                                        >
-                                                            <svg
-                                                                width="20"
-                                                                height="20"
-                                                                viewBox="0 0 20 20"
-                                                                fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                            >
-                                                                <mask
-                                                                    id="mask0_1313_1069"
-                                                                    mask-type="alpha"
-                                                                    maskUnits="userSpaceOnUse"
-                                                                    x="0"
-                                                                    y="0"
-                                                                    width="20"
-                                                                    height="20"
+                                                        {
+                                                            service.categories.length > 1 && (
+                                                                <MenuItem
+                                                                    value="delete"
+                                                                    sx={{display: "flex", gap: "4px"}}
+                                                                    onClick={() => handleDelete()}
                                                                 >
-                                                                    <rect width="20" height="20" fill="#D9D9D9"/>
-                                                                </mask>
-                                                                <g mask="url(#mask0_1313_1069)">
-                                                                    <path
-                                                                        d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
-                                                                        fill="#FF4800"
-                                                                    />
-                                                                </g>
-                                                            </svg>
-                                                            Delete
-                                                        </MenuItem>
+                                                                    <svg
+                                                                        width="20"
+                                                                        height="20"
+                                                                        viewBox="0 0 20 20"
+                                                                        fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <mask
+                                                                            id="mask0_1313_1069"
+                                                                            mask-type="alpha"
+                                                                            maskUnits="userSpaceOnUse"
+                                                                            x="0"
+                                                                            y="0"
+                                                                            width="20"
+                                                                            height="20"
+                                                                        >
+                                                                            <rect width="20" height="20" fill="#D9D9D9"/>
+                                                                        </mask>
+                                                                        <g mask="url(#mask0_1313_1069)">
+                                                                            <path
+                                                                                d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
+                                                                                fill="#FF4800"
+                                                                            />
+                                                                        </g>
+                                                                    </svg>
+                                                                    Delete
+                                                                </MenuItem>
+                                                            )
+                                                        }
 
                                                         {index === 0 && (
                                                             <MenuItem
@@ -591,6 +404,17 @@ const SingleCompanyDetails = (props) => {
             </div>
 
             <RateModal companyId={company._id} open={modalOpen} handleClose={() => setModalOpen(false)}/>
+
+            {
+                selectedService && (
+                    <EditRateModal
+                        companyId={companyId}
+                    open={editModalOpen}
+                    handleClose={() => setEditModalOpen(false)}
+                    service={selectedService}
+                    />
+                )
+            }
 
             {/* View Drawer */}
             <Dialog

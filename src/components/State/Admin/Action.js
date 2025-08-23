@@ -15,7 +15,7 @@ import {
   DELETE_ROOM,
   DELETE_SERVICE,
   DELETE_SERVICE_CATEGORY,
-  DELETE_STAFFS,
+  DELETE_STAFFS, DELETE_TPA_SERVICE, DELETE_TPA_SERVICE_CATEGORY, EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -1149,6 +1149,88 @@ export const addServiceToCompany = (id, serviceData) => async (dispatch) => {
   } catch (error) {
     console.log(error);
     toast.error("Service Addition Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const deleteTPAServiceCategory =
+    (companyId, serviceId, categoryId) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+        const { data } = await axios.delete(
+            `${API_URL}/deleteCategory/${companyId}/${serviceId}/${categoryId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+              },
+            }
+        );
+        dispatch({
+          type: DELETE_TPA_SERVICE_CATEGORY,
+          payload: { companyId, serviceId, categoryId },
+        });
+        toast.success("Service Category Deleted Successfully!", {
+          position: "bottom-right", // Use string for position
+          autoClose: 2000,
+        });
+      } catch (error) {
+        console.error("Error deleting category service:", error);
+        toast.error("Service Category Deletion Error!", {
+          position: "bottom-right", // Use string for position
+          autoClose: 2000,
+        });
+      }
+    };
+
+export const deleteTPAService = (companyId, serviceId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.delete(
+        `${API_URL}/deleteAllCategories/${companyId}/${serviceId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+    dispatch({ type: DELETE_TPA_SERVICE, payload: {companyId,serviceId} });
+    toast.success("Service Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error deleting service:", error);
+    toast.error("Service Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const editTPAService = (companyId, serviceId, categoryId,pass) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.patch(
+        `${API_URL}/editCategory/${companyId}/${serviceId}/${categoryId}`,
+        pass,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    console.log("Edited Data: ",data)
+    dispatch({ type: EDIT_TPA_SERVICE, payload: data });
+    toast.success("Service Edited Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error editing service:", error);
+    toast.error("Service Deletion Error!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
