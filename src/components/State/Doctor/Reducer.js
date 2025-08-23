@@ -112,6 +112,7 @@ const initialState = {
   totalInventory: null,
   doctorNotes: [],
   appointmentsByDate: [],
+  isLoadingAppointmentsByDate: true,
   appointmentsOfToday: [],
   inventory: [],
   isLoadingInventory: true,
@@ -412,6 +413,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentsByDate: action.payload.appointments,
+        isLoadingAppointmentsByDate: false,
       };
 
     case GET_APPOINTMENTS_OF_TODAY:

@@ -13,7 +13,7 @@ import { getAppointmentByDate } from "../../../components/State/Doctor/Action.js
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import CircularProgress from "@mui/material/CircularProgress";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 export const Consultation = () => {
   const [activeModal, setActiveModal] = useState(null);
 
@@ -58,8 +58,7 @@ export const Consultation = () => {
         setShouldRefetch1(false);
       });
     }
-
-  }, [dispatch, selectedDate,shouldRefetch1]);
+  }, [dispatch, selectedDate, shouldRefetch1]);
 
   useEffect(() => {
     const startDate = dayjs(selectedDate).startOf("day").toISOString();
@@ -70,15 +69,17 @@ export const Consultation = () => {
       dispatch(getAppointmentByDate(startDate, endDate));
       if (shouldRefetch) setShouldRefetch(false);
     }
-
   }, [shouldRefetch]);
 
   const appointments = useSelector((store) => store.doctor.appointmentsByDate);
+  const isLoadingAppointmentsByDate = useSelector(
+    (store) => store.doctor.isLoadingAppointmentsByDate
+  );
 
   // console.log("Appointments: ",appointments)
 
   const ongoingAppointment = appointments.find(
-      (app) => app.status === "Ongoing"
+    (app) => app.status === "Ongoing"
   );
 
   const handleApplyForm = (form) => {
@@ -126,28 +127,28 @@ export const Consultation = () => {
                   onClick={closeModal}
                 />
                 <div className={styles["library-modal"]}>
-                  <Library onClose={closeModal} onApply={handleApplyForm}
-                           setCompleteData={setCompleteData}
-                           setSelectedComponent={setSelectedComponent}
-                           setConfirmedSections={setConfirmedSections}
-                           setCustomSections={setCustomSections}
+                  <Library
+                    onClose={closeModal}
+                    onApply={handleApplyForm}
+                    setCompleteData={setCompleteData}
+                    setSelectedComponent={setSelectedComponent}
+                    setConfirmedSections={setConfirmedSections}
+                    setCustomSections={setCustomSections}
                   />
                 </div>
               </>
             )}
           </div>
           <div className={styles["header-right"]}>
-            {
-              (ongoingAppointment) && (
-                    <button className={styles["from-library"]} onClick={openLibrary}>
-                      <LibraryBig/>
-                      <p>Form Library</p>
-                    </button>
-                )
-            }
+            {ongoingAppointment && (
+              <button className={styles["from-library"]} onClick={openLibrary}>
+                <LibraryBig />
+                <p>Form Library</p>
+              </button>
+            )}
             <button
-                className={styles["appointment-container"]}
-                onClick={() => setActiveView("appointmentHistory")}
+              className={styles["appointment-container"]}
+              onClick={() => setActiveView("appointmentHistory")}
             >
               <ClockFading className={styles["clock-icon"]} size={16} />
               <p>Appointment History</p>
@@ -170,35 +171,34 @@ export const Consultation = () => {
             <PatientNewForm onBack={() => setActiveView("consult")} />
           </DndProvider>
         )}
-        {activeView === "consult" && (
-            loading ? (
-                <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "50vh", // or full height you need
-                    }}
-                >
-                  <CircularProgress sx={{ color: "#25307F" }} size={58} />
-                </Box>
-            ) : (
-                <ConsultBody
-                    selectedForm={selectedForm}
-                    selectedComponent={selectedComponent}
-                    setSelectedComponent={setSelectedComponent}
-                    completeData={completeData}
-                    setCompleteData={setCompleteData}
-                    confirmedSections={confirmedSections}
-                    setConfirmedSections={setConfirmedSections}
-                    customSections={customSections}
-                    setCustomSections={setCustomSections}
-                    appointments={appointments}
-                    onSuccess={() => setShouldRefetch(true)}
-                    onStart = {() => setShouldRefetch1(true)}
-                />
-            )
-        )}
+        {activeView === "consult" &&
+          (isLoadingAppointmentsByDate ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "50vh", // or full height you need
+              }}
+            >
+              <CircularProgress sx={{ color: "#25307F" }} size={58} />
+            </Box>
+          ) : (
+            <ConsultBody
+              selectedForm={selectedForm}
+              selectedComponent={selectedComponent}
+              setSelectedComponent={setSelectedComponent}
+              completeData={completeData}
+              setCompleteData={setCompleteData}
+              confirmedSections={confirmedSections}
+              setConfirmedSections={setConfirmedSections}
+              customSections={customSections}
+              setCustomSections={setCustomSections}
+              appointments={appointments}
+              onSuccess={() => setShouldRefetch(true)}
+              onStart={() => setShouldRefetch1(true)}
+            />
+          ))}
       </div>
     </div>
   );

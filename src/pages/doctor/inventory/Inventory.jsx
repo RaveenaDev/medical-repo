@@ -321,59 +321,74 @@ const Inventory = () => {
           <span>Last Updated</span>
         </div>
 
-        <div className={inventoryStyles.tableBody}>
-          {(
-            inventoryData.find((cat) => cat.category.name === selectedCategory)
-              ?.items || []
-          )
-            .filter((item) => {
-              const lower = searchTerm.toLowerCase();
-              return (
-                item.name.toLowerCase().includes(lower) ||
-                (item.status || "").toLowerCase().includes(lower) ||
-                (item.lastRestockedDate || "").toLowerCase().includes(lower)
-              );
-            })
-            .map((item, i) => (
-              <div key={i} className={inventoryStyles.tableRow}>
-                <span>{item.name}</span>
-                <span>{item.quantity}</span>
-                <span>{item.usagePercent || "0"}%</span>
-                <span
-                  className={
-                    inventoryStyles[
-                      (item.status || "sufficient")
-                        .replace(/\s/g, "")
-                        .toLowerCase()
-                    ]
-                  }
-                >
-                  {item.status || "Sufficient"}
-                </span>
-                <span>{item.minimumStockThreshold}</span>
-                <span>{item.lastRestockedDate?.split("T")[0] || "-"}</span>
-                <IconButton
-                  onClick={(e) => handleMenuOpen(e, item)}
-                  size="small"
-                  style={{ marginLeft: "auto" }}
-                >
-                  <MoreVertical size={18} />
-                </IconButton>
-              </div>
-            ))}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
+        {isLoadingInventory ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "38vh", // or full height you need
+            }}
           >
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem style={{ color: "red" }} onClick={handleDelete}>
-              Delete
-            </MenuItem>
-          </Menu>
-        </div>
+            <CircularProgress sx={{ color: "#25307F" }} size={50} />
+          </Box>
+        ) : (
+          <div className={inventoryStyles.tableBody}>
+            {(
+              inventoryData.find(
+                (cat) => cat.category.name === selectedCategory
+              )?.items || []
+            )
+              .filter((item) => {
+                const lower = searchTerm.toLowerCase();
+                return (
+                  item.name.toLowerCase().includes(lower) ||
+                  (item.status || "").toLowerCase().includes(lower) ||
+                  (item.lastRestockedDate || "").toLowerCase().includes(lower)
+                );
+              })
+              .map((item, i) => (
+                <div key={i} className={inventoryStyles.tableRow}>
+                  <span>{item.name}</span>
+                  <span>{item.quantity}</span>
+                  <span>{item.usagePercent || "0"}%</span>
+                  <span
+                    className={
+                      inventoryStyles[
+                        (item.status || "sufficient")
+                          .replace(/\s/g, "")
+                          .toLowerCase()
+                      ]
+                    }
+                  >
+                    {item.status || "Sufficient"}
+                  </span>
+                  <span>{item.minimumStockThreshold}</span>
+                  <span>{item.lastRestockedDate?.split("T")[0] || "-"}</span>
+                  <IconButton
+                    onClick={(e) => handleMenuOpen(e, item)}
+                    size="small"
+                    style={{ marginLeft: "auto" }}
+                  >
+                    <MoreVertical size={18} />
+                  </IconButton>
+                </div>
+              ))}
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <MenuItem onClick={handleEdit}>Edit</MenuItem>
+              <MenuItem style={{ color: "red" }} onClick={handleDelete}>
+                Delete
+              </MenuItem>
+            </Menu>
+          </div>
+        )}
+
         <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
