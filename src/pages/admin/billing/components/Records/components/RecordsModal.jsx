@@ -154,6 +154,7 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
       details: r.details || undefined, // preserved if present
     }));
 
+    console.log("servicesPayload", servicesPayload);
     const payload = {
       services: servicesPayload,
       paidAmount: Number(editableBill?.paidAmount ?? bill?.paidAmount ?? 0),
@@ -165,7 +166,6 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
 
     setIsEditing(false);
   };
-
   return (
     <>
       <div
@@ -274,11 +274,35 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                       ? +row.quantity
                       : 0;
                     const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
-
+                    // console.log("service", row);
                     return (
                       <div key={i} className="billing-category">
                         <div className="billing-description">
-                          <div>{desc}</div>
+                          {isEditing ? (
+                            <input
+                              className="inputDescription"
+                              type="text"
+                              inputMode="text"
+                              value={desc}
+                              onChange={(e) => {
+                                const updated = JSON.parse(
+                                  JSON.stringify(editableBill)
+                                );
+                                updated.services[i].category = e.target.value;
+                                setEditableBill(updated);
+                              }}
+                              onBlur={() => {
+                                const updated = JSON.parse(
+                                  JSON.stringify(editableBill)
+                                );
+                                updated.services[i].category =
+                                  updated.services[i].category || "";
+                                setEditableBill(updated);
+                              }}
+                            />
+                          ) : (
+                            <div>{desc}</div>
+                          )}
                         </div>
 
                         <div className="billing-quantity">
