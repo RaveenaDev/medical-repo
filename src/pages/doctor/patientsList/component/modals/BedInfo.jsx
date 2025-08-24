@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import {
   getAvailableRooms,
   getPatientBedInfo,
+  transferPatientToBed,
 } from "../../../../../components/State/Doctor/Action";
 
 const BedInfo = ({ onClose, patientId }) => {
@@ -29,9 +30,6 @@ const BedInfo = ({ onClose, patientId }) => {
 
   const [activeTab, setActiveTab] = useState("bedInfo");
   const [selectedAmenities, setSelectedAmenities] = useState([]);
-  const selectedBed1 = ["option 1", "option 2", "optioon 3"];
-  const [openSelectedBed1, setOpenSelectedBed1] = useState(false);
-  const [selectedSelectedBed1, setSelectedSelectedBed1] = useState("");
 
   const selectedBed2 = ["option 1", "option 2", "optioon 3"];
   const [openSelectedBed2, setOpenSelectedBed2] = useState(false);
@@ -72,6 +70,15 @@ const BedInfo = ({ onClose, patientId }) => {
 
   const handleRoomAndBedChange = () => {
     // logic for handling room and bed change
+
+    // console.log("prev Bed:", bed);
+    // console.log("new Bed:", selectedBed);
+    const payload = {
+      currentBedId: bed?.bedNumber, // change to bed ID when backend updates
+      targetBedId: selectedBed,
+    };
+
+    dispatch(transferPatientToBed(payload, patientId));
   };
   return (
     <div>
@@ -305,7 +312,7 @@ const BedInfo = ({ onClose, patientId }) => {
                           <option value="">Select a bed</option>
                           {bedsAvailable ? (
                             availableBeds.map((bed) => (
-                              <option key={bed._id} value={bed.bedNumber}>
+                              <option key={bed._id} value={bed._id}>
                                 {bed.bedNumber}
                               </option>
                             ))

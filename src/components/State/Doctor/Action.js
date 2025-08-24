@@ -62,6 +62,7 @@ import {
   SET_ONGOING,
   SET_RESCHEDULE,
   SUBMIT_CONSULTATION,
+  TRANSFER_PATIENT_TO_BED,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
 
@@ -1747,5 +1748,37 @@ export const updateProgressTrackerPhase =
       console.error("Update progress phase POST error:", error);
 
       throw error;
+    }
+  };
+
+export const transferPatientToBed =
+  (payload, patientId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.patch(
+        `${API_URL}/beds/transfer-patient`,
+        { payload },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Patient transferred to bed:", data);
+
+      dispatch(getPatientBedInfo(patientId));
+      toast.success("Patient transferred to bed successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Transfer patient to bed error:", error);
+      toast.error("Failed to transfer patient to bed.", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     }
   };
