@@ -10,13 +10,17 @@ import styles from "./BedInfo.module.scss";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getPatientBedInfo } from "../../../../../components/State/Doctor/Action";
+import {
+  getAvailableRooms,
+  getPatientBedInfo,
+} from "../../../../../components/State/Doctor/Action";
 
 const BedInfo = ({ onClose, patientId }) => {
   const dispatch = useDispatch();
   const comingSoon = true;
   useEffect(() => {
     dispatch(getPatientBedInfo(patientId));
+    dispatch(getAvailableRooms());
   }, []);
 
   const bedInfo = useSelector((store) => store.doctor.patientBedInfo);
@@ -39,7 +43,36 @@ const BedInfo = ({ onClose, patientId }) => {
         : [...prev, amenity]
     );
   };
+  const availableRooms = useSelector((state) => state.doctor.roomsAvailable);
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [selectedBed, setSelectedBed] = useState("");
+  const [availableBeds, setAvailableBeds] = useState([]);
+  const [bedsAvailable, setBedsAvailable] = useState(true);
+  const handleRoomChange = (e) => {
+    const roomId = e.target.value;
+    setSelectedRoom(roomId);
 
+    // If "Select a room" is chosen, clear bed selection and re-enable the bed dropdown
+    if (roomId === "") {
+      setAvailableBeds([]); // Clear the available beds
+      setBedsAvailable(true); // Re-enable the bed dropdown
+      setForm((prevForm) => ({ ...prevForm, bedNo: "" })); // Clear selected bed
+    } else {
+      // Find the selected room and its available beds
+      const room = availableRooms.find((room) => room.roomID === roomId);
+      if (room && room.beds.length > 0) {
+        setBedsAvailable(true); // There are available beds
+        setAvailableBeds(room.beds); // Set available beds
+      } else {
+        setBedsAvailable(false); // No available beds
+        setAvailableBeds([]); // Clear available beds
+      }
+    }
+  };
+
+  const handleRoomAndBedChange = () => {
+    // logic for handling room and bed change
+  };
   return (
     <div>
       {" "}
@@ -110,70 +143,57 @@ const BedInfo = ({ onClose, patientId }) => {
                     </div>
                   </div>
                 </div>
-                {comingSoon ? (
-                  <div className={styles.comingSoonContainer}>
-                    <h1 className={styles.comingSoonHeading}>Coming Soon</h1>
+
+                <div>
+                  {/* Amenities */}
+                  <div className={styles.amenities}>
+                    <p className={styles.sectionHeading}>Amenities</p>
+                    <div className={styles.amenitiesBtnWrapper}>
+                      {[
+                        {
+                          label: "Private Bed",
+                          icon: "/assets/inpatient/bed.svg",
+                        },
+                        {
+                          label: "Attached Bathroom",
+                          icon: "/assets/inpatient/bathroom.svg",
+                        },
+                        { label: "AC", icon: "/assets/inpatient/ac.svg" },
+                        {
+                          label: "Meals Included",
+                          icon: "/assets/inpatient/meal.svg",
+                        },
+                      ].map(({ label, icon }) => (
+                        <button
+                          key={label}
+                          onClick={() => toggleAmenity(label)}
+                          className={`${styles.amenitiesBtn} ${
+                            selectedAmenities.includes(label)
+                              ? styles.activeAmenity
+                              : ""
+                          }`}
+                        >
+                          {label} <img src={icon} alt="" />
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                ) : (
-                  <div>
-                    {/* Amenities */}
-                    <div className={styles.amenities}>
-                      <p className={styles.sectionHeading}>Amenities</p>
-                      <div className={styles.amenitiesBtnWrapper}>
-                        {[
-                          {
-                            label: "Private Bed",
-                            icon: "/assets/inpatient/bed.svg",
-                          },
-                          {
-                            label: "Attached Bathroom",
-                            icon: "/assets/inpatient/bathroom.svg",
-                          },
-                          { label: "AC", icon: "/assets/inpatient/ac.svg" },
-                          {
-                            label: "Meals Included",
-                            icon: "/assets/inpatient/meal.svg",
-                          },
-                        ].map(({ label, icon }) => (
-                          <button
-                            key={label}
-                            onClick={() => toggleAmenity(label)}
-                            className={`${styles.amenitiesBtn} ${
-                              selectedAmenities.includes(label)
-                                ? styles.activeAmenity
-                                : ""
-                            }`}
-                          >
-                            {label} <img src={icon} alt="" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
 
-                    {/* Actions */}
-                    <div className={styles.actions}>
-                      <p className={styles.sectionHeading}>Actions</p>
-                      <div className={styles.actionBtns}>
-                        <button onClick={() => setActiveTab("transfer")}>
-                          Room Transfer Request{" "}
-                          <img src="/assets/transfer-line.svg" alt="" />
-                        </button>
-                        <button onClick={() => setActiveTab("attendent")}>
-                          Request Attendent Bed
-                          <img src="/assets/man.svg" alt="" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className={styles.submitBtnContainer1}>
-                      <button className={styles.blueBtn}>
-                        Confirm and Apply Changes
+                  {/* Actions */}
+                  <div className={styles.actions}>
+                    <p className={styles.sectionHeading}>Actions</p>
+                    <div className={styles.actionBtns}>
+                      <button onClick={() => setActiveTab("transfer")}>
+                        Room Transfer Request{" "}
+                        <img src="/assets/transfer-line.svg" alt="" />
                       </button>
-                      <button className={styles.whiteBtn}>Cancel</button>
+                      <button onClick={() => setActiveTab("attendent")}>
+                        Request Attendent Bed
+                        <img src="/assets/man.svg" alt="" />
+                      </button>
                     </div>
                   </div>
-                )}{" "}
+                </div>
               </div>
             </div>
           </div>
@@ -252,36 +272,47 @@ const BedInfo = ({ onClose, patientId }) => {
                         Select New Bed{" "}
                         <img src="/assets/inpatient/bed2.svg" alt="" />
                       </p>
-                      <div className={styles.dropdown}>
-                        <button
+                      <div
+                        className={styles.dropdown}
+                        style={{ marginTop: "1vh" }}
+                      >
+                        <select
                           className={styles.trigger}
-                          onClick={() => setOpenSelectedBed1((prev) => !prev)}
+                          value={selectedRoom}
+                          onChange={handleRoomChange}
+                          required
                         >
-                          <p>{selectedSelectedBed1 || "Select"}</p>
-                          <span className={styles.arrow}>
-                            {openSelectedBed1 ? <ChevronUp /> : <ChevronDown />}
-                          </span>
-                        </button>
-                        {openSelectedBed1 && (
-                          <ul className={styles.menu}>
-                            {selectedBed1.map((option) => (
-                              <li
-                                key={option}
-                                className={`${styles.item} ${
-                                  selectedSelectedBed1 === option
-                                    ? styles.active
-                                    : ""
-                                }`}
-                                onClick={() => {
-                                  setSelectedSelectedBed1(option);
-                                  setOpenSelectedBed1(false);
-                                }}
-                              >
-                                {option}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
+                          <option value="">Select a room</option>
+                          {availableRooms.map((room) => (
+                            <option key={room._id} value={room.roomID}>
+                              {room.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div
+                        className={styles.dropdown}
+                        style={{ marginTop: "2vh" }}
+                      >
+                        <select
+                          className={styles.trigger}
+                          value={selectedBed}
+                          onChange={(e) => setSelectedBed(e.target.value)}
+                          disabled={!selectedRoom || !bedsAvailable}
+                          required
+                        >
+                          <option value="">Select a bed</option>
+                          {bedsAvailable ? (
+                            availableBeds.map((bed) => (
+                              <option key={bed._id} value={bed.bedNumber}>
+                                {bed.bedNumber}
+                              </option>
+                            ))
+                          ) : (
+                            <option>No beds available</option>
+                          )}
+                        </select>
                       </div>
                     </div>
 
@@ -298,13 +329,32 @@ const BedInfo = ({ onClose, patientId }) => {
               <div className={styles.submitBtnContainer2}>
                 <button
                   className={styles.blueBtn}
-                  onClick={() => setActiveTab("bedInfo")}
+                  onClick={() => {
+                    handleRoomAndBedChange();
+                    setActiveTab("bedInfo");
+                  }}
                 >
                   Confirm Room Transfer
                 </button>
                 <button className={styles.whiteBtn}>Cancel</button>
               </div>
             </div>
+          </div>
+        ) : comingSoon ? (
+          <div className={styles.comingSoonContainer}>
+            <h1
+              className={styles.comingSoonHeading}
+              style={{ fontSize: "4vh" }}
+            >
+              Coming Soon
+            </h1>
+
+            <button
+              className={styles.whiteBtn}
+              onClick={() => setActiveTab("bedInfo")}
+            >
+              Back
+            </button>
           </div>
         ) : (
           <div>
