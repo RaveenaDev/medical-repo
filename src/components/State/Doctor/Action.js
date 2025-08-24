@@ -62,7 +62,6 @@ import {
   SET_ONGOING,
   SET_RESCHEDULE,
   SUBMIT_CONSULTATION,
-  TRANSFER_PATIENT_TO_BED,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
 
