@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./EstimateBill.module.scss";
-import { ChevronDown, ChevronUp, SquarePen, X } from "lucide-react";
+import { ChevronDown, ChevronUp, SquarePen, X, Trash2 } from "lucide-react";
 
 const emptyRow = () => ({
   id: crypto.randomUUID(),
@@ -17,28 +17,62 @@ const EstimateBill = ({ onClose }) => {
   // Table state: categories -> [{ id, name, rows: [{...}] }]
   const [categories, setCategories] = useState([]);
 
-  // Draft state while creating a category
+  // Draft state while creating/editing a category
   const [draftCategory, setDraftCategory] = useState({
+    id: null, // null for new category, actual id for editing
     name: "",
     rows: [emptyRow()],
   });
+
+  // Warning text state
+  const [warningText, setWarningText] = useState("");
 
   // Package dropdown (per draft row, optional; here one global dropdown)
   const packageOptions = ["option1", "option2", "option3"];
   const [openPackageRowId, setOpenPackageRowId] = useState(null);
 
   const openCreate = () => {
-    setDraftCategory({ name: "", rows: [emptyRow()] });
+    setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+    setWarningText(""); // Clear warning when opening
     setActiveModal("createCategory");
+  };
+
+  const openEdit = (categoryId) => {
+    const categoryToEdit = categories.find((cat) => cat.id === categoryId);
+    if (categoryToEdit) {
+      // Remove from categories array
+      setCategories((prev) => prev.filter((cat) => cat.id !== categoryId));
+
+      // Set as draft with existing data
+      setDraftCategory({
+        id: categoryToEdit.id,
+        name: categoryToEdit.name,
+        rows: categoryToEdit.rows.map((row) => ({
+          ...row,
+          id: row.id || crypto.randomUUID(), // Ensure each row has an ID
+        })),
+      });
+      setWarningText(""); // Clear warning when opening edit
+      setActiveModal("createCategory");
+    }
+  };
+
+  const deleteCategory = (categoryId) => {
+    setCategories((prev) => prev.filter((cat) => cat.id !== categoryId));
   };
 
   const closeCreate = () => {
     setActiveModal(null);
     setOpenPackageRowId(null);
+    setWarningText(""); // Clear warning when closing
   };
 
   const handleDraftName = (e) => {
     setDraftCategory((prev) => ({ ...prev, name: e.target.value }));
+    // Clear warning when user starts typing
+    if (warningText === "Please enter a category name.") {
+      setWarningText("");
+    }
   };
 
   const addDraftRow = () => {
@@ -46,13 +80,19 @@ const EstimateBill = ({ onClose }) => {
       ...prev,
       rows: [...prev.rows, emptyRow()],
     }));
+    setWarningText(""); // Clear warning when adding row
   };
 
   const removeDraftRow = (rowId) => {
-    setDraftCategory((prev) => ({
-      ...prev,
-      rows: prev.rows.filter((r) => r.id !== rowId),
-    }));
+    if (draftCategory.rows.length > 1) {
+      setDraftCategory((prev) => ({
+        ...prev,
+        rows: prev.rows.filter((r) => r.id !== rowId),
+      }));
+      setWarningText(""); // Clear warning when successfully removing
+    } else {
+      setWarningText("Category must have at least one row.");
+    }
   };
 
   const updateDraftRow = (rowId, key, value) => {
@@ -60,6 +100,10 @@ const EstimateBill = ({ onClose }) => {
       ...prev,
       rows: prev.rows.map((r) => (r.id === rowId ? { ...r, [key]: value } : r)),
     }));
+    // Clear warning when user starts editing rows
+    if (warningText === "Please fill at least one row.") {
+      setWarningText("");
+    }
   };
 
   const handleSelectPackage = (rowId, value) => {
@@ -78,11 +122,11 @@ const EstimateBill = ({ onClose }) => {
   const handleDone = () => {
     const name = draftCategory.name.trim();
     if (!name) {
-      alert("Please enter a category name.");
+      setWarningText("Please enter a category name.");
       return;
     }
     if (draftCategory.rows.length === 0) {
-      alert("Please add at least one row.");
+      setWarningText("Please add at least one row.");
       return;
     }
 
@@ -97,21 +141,40 @@ const EstimateBill = ({ onClose }) => {
       .filter((r) => r.description || r.ward || r.package || r.rate || r.unit);
 
     if (cleanRows.length === 0) {
-      alert("Please fill at least one row.");
+      setWarningText("Please fill at least one row.");
       return;
     }
 
-    const newCategory = {
-      id: crypto.randomUUID(),
+    const categoryData = {
+      id: draftCategory.id || crypto.randomUUID(), // Use existing ID if editing, or create new
       name,
       rows: cleanRows,
     };
-    setCategories((prev) => [...prev, newCategory]);
+
+    if (draftCategory.id) {
+      // Editing existing category - replace it
+      setCategories((prev) => [
+        ...prev.filter((cat) => cat.id !== draftCategory.id),
+        categoryData,
+      ]);
+    } else {
+      // Creating new category - add it
+      setCategories((prev) => [...prev, categoryData]);
+    }
 
     // Reset and close modal
-    setDraftCategory({ name: "", rows: [emptyRow()] });
+    setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
     setActiveModal(null);
     setOpenPackageRowId(null);
+    setWarningText(""); // Clear warning on success
+  };
+
+  const handleDeleteCurrentDraft = () => {
+    // Reset and close modal without saving
+    setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+    setActiveModal(null);
+    setOpenPackageRowId(null);
+    setWarningText(""); // Clear warning when deleting
   };
 
   // Grand total
@@ -136,10 +199,7 @@ const EstimateBill = ({ onClose }) => {
               Create Category
             </button>
             {activeModal === "createCategory" && (
-              <button
-                onClick={() => setActiveModal(null)}
-                className={styles.createBtn}
-              >
+              <button onClick={closeCreate} className={styles.createBtn}>
                 Cancel
               </button>
             )}
@@ -262,10 +322,22 @@ const EstimateBill = ({ onClose }) => {
                 </div>
               ))}
 
+              {/* Warning Text */}
+              <div className={styles.warningText}>
+                <p style={{ color: "#c44545", fontSize: "14px" }}>
+                  {warningText}
+                </p>
+              </div>
+
               <div className={styles.addMoreAndDoneBtns}>
-                <button className={styles.deleteCategoryBtn}>
-                  Delete Category
-                </button>
+                {draftCategory.id && (
+                  <button
+                    className={styles.deleteCategoryBtn}
+                    onClick={handleDeleteCurrentDraft}
+                  >
+                    Delete Category
+                  </button>
+                )}
                 <button
                   className={styles.addMoreBtn}
                   onClick={addDraftRow}
@@ -278,7 +350,7 @@ const EstimateBill = ({ onClose }) => {
                   onClick={handleDone}
                   type="button"
                 >
-                  Done
+                  {draftCategory.id ? "Update" : "Done"}
                 </button>
               </div>
             </div>
@@ -319,7 +391,7 @@ const EstimateBill = ({ onClose }) => {
                   fontStyle: "italic",
                 }}
               >
-                No categories added yet. Click “Create Category”.
+                No categories added yet. Click "Create Category".
               </div>
             </div>
           ) : (
@@ -329,7 +401,18 @@ const EstimateBill = ({ onClose }) => {
                 <div key={cat.id} className={styles.categoryBlock}>
                   <div className={styles.categoryHeader}>
                     <p className={styles.categoryName}>{cat.name}</p>
-                    <SquarePen className={styles.editIcon} />
+                    <div className={styles.categoryActions}>
+                      <SquarePen
+                        className={styles.editIcon}
+                        onClick={() => openEdit(cat.id)}
+                        title="Edit Category"
+                      />
+                      <Trash2
+                        className={styles.deleteIcon}
+                        onClick={() => deleteCategory(cat.id)}
+                        title="Delete Category"
+                      />
+                    </div>
                   </div>
 
                   {cat.rows.map((r) => (
@@ -356,12 +439,7 @@ const EstimateBill = ({ onClose }) => {
                   ))}
 
                   <div className={styles.subtotalRow}>
-                    <div
-                      style={{
-                        gridColumn: "1 / 6",
-                        textAlign: "left",
-                      }}
-                    >
+                    <div style={{ gridColumn: "1 / 6", textAlign: "left" }}>
                       <p>Subtotal:</p>
                     </div>
                     <div>

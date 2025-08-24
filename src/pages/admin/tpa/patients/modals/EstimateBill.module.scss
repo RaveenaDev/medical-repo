@@ -228,6 +228,13 @@
   height: 3.2vh;
   width: 3.2vh;
 }
+
+.deleteIcon {
+  color: #ed4301;
+  cursor: pointer;
+  height: 3.2vh;
+  width: 3.2vh;
+}
 .categoryName {
   font-size: 2.4vh;
   color: #25307f;
@@ -267,4 +274,9 @@
     font-size: 2vh;
     height: 4vh;
   }
+}
+
+.categoryActions {
+  display: flex;
+  gap: 3vw;
 }
