@@ -310,14 +310,14 @@ const Patients = () => {
 
   const insuredPatients = useSelector((store) => store.admin.insuredPatients)
 
-  // console.log("Ins: ",insuredPatients)
+  console.log("Ins: ",insuredPatients)
 
   return (
     <div className={styles.billingsContainer}>
       <div className={styles.billingsTable} style={{ position: "relative" }}>
         {/* Table Header */}
         <div className={styles.tableHeader}>
-          <span>PAT ID</span>
+          <span>Insurance ID</span>
           <span>Name</span>
           <span>Phone No.</span>
           <span>Policy No.</span>
@@ -346,7 +346,7 @@ const Patients = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item) => (
                 <div className={styles.tableRow} key={item._id}>
-                  <span className={styles.blue}>{item.patient.patId}</span>
+                  <span className={styles.blue}>{item.patient?.insuranceDetails?.insuranceIdNumber}</span>
                   <span
                     className={styles.blue}
                     style={{ display: "flex", flexDirection: "column" }}

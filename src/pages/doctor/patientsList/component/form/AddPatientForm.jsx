@@ -340,7 +340,6 @@ const AddPatientForm = ({ onClose }) => {
                           onChange={(e) =>
                               setForm({...form, employerName: e.target.value})
                           }
-                          required
                       />
                     </div>
                     <div className="form-field">
@@ -351,7 +350,6 @@ const AddPatientForm = ({ onClose }) => {
                           onChange={(e) =>
                               setForm({...form, insuranceIdNumber: e.target.value})
                           }
-                          required
                       />
                     </div>
                   </div>
@@ -381,8 +379,8 @@ const AddPatientForm = ({ onClose }) => {
                         <option value="">Select Company</option>
 
                         {
-                          insuranceCompanies.map((comp) => (
-                              <option value={comp.name}>{comp.name}</option>
+                          insuranceCompanies.map((comp,index) => (
+                              <option key={index} value={comp.name}>{comp.name}</option>
                           ))
                         }
                       </select>
@@ -398,7 +396,6 @@ const AddPatientForm = ({ onClose }) => {
                           onChange={(e) =>
                               setForm({...form, employeeCode: e.target.value})
                           }
-                          required
                       />
                     </div>
                     <div className="form-field">
