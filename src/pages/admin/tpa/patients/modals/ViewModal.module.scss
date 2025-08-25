@@ -11,10 +11,10 @@
 }
 
 .container {
-  padding: 0vh 1vw 2vh 1vw;
+  padding: 1rem;
   font-family: "Karla", sans-serif;
-  height: 72vh;
   overflow-y: auto;
+  height: 68vh;
   /* Hide scrollbar for Chrome, Safari, Opera */
   &::-webkit-scrollbar {
     width: 0;
@@ -37,14 +37,14 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  margin-top: 18vh;
+  margin-top: 4rem;
   button {
     border: none;
     background: #25307f;
     color: white;
-    padding: 0.6vh 3vh;
+    padding: 0.5rem 3rem;
     border-radius: 4px;
-    font-size: 2vh;
+    font-size: 1.1rem;
     font-weight: 400;
   }
 }
@@ -52,9 +52,9 @@
 .content {
   padding: 2vh 1.4vw;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  grid-template-columns: repeat(3, 1fr); /* 2 columns */
   row-gap: 4vh;
-  column-gap: 4vw; /* space between items */
+  column-gap: 2vw; /* space between items */
 }
 
 .data {
@@ -72,6 +72,29 @@
   font-size: 2.3vh;
   font-weight: 500;
   word-break: break-word; /* handle long text like email */
+}
+
+.input {
+  width: 100%;
+  max-width: 200px;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #d1d5db; // light gray border
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  background-color: #fff;
+  color: #333;
+
+  &:focus {
+    border-color: #25307f; // green focus border
+    //box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); // subtle green glow
+  }
+
+  &::placeholder {
+    color: #9ca3af; // muted gray placeholder
+    font-size: 0.9rem;
+  }
 }
 
 .dropdown {
@@ -203,4 +226,42 @@
   &:hover {
     border: 1px solid #e6a700;
   }
+}
+
+.openBill,
+.viewBill {
+  display: flex;
+  align-items: center;
+}
+
+.openBillBtn,
+.viewBillBtn {
+  background: #fff;
+  color: #25307f;
+  border: 1px solid #25307f;
+}
+.backdropOverlay2 {
+  position: fixed;
+  top: -25%;
+  left: -50%;
+  width: 100vw;
+  height: 200vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 5;
+}
+.billModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  // height: 80vh;
+  width: 70vw;
+  background: #fff;
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  //padding: 0vh 0vw 3vh 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }

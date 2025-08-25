@@ -1152,6 +1152,10 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
       "Error creating admission request:",
       error.response?.data || error.message
     );
+    toast.error("Failed to create admission request", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
 
     throw error;
   }
@@ -1377,7 +1381,7 @@ export const getPatientHistory = (patientId) => async (dispatch) => {
     dispatch({ type: GET_PATIENT_HISTORY, payload: data.history });
   } catch (error) {
     console.error("patient History not available:", error);
-
+    dispatch({ type: GET_PATIENT_HISTORY, payload: [] });
     throw error;
   }
 };
@@ -1720,7 +1724,7 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
     dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
   } catch (error) {
     console.error("patient Bill Info not available:", error);
-
+    dispatch({ type: GET_PATIENT_BILLS, payload: [] });
     throw error;
   }
 };
@@ -1747,5 +1751,37 @@ export const updateProgressTrackerPhase =
       console.error("Update progress phase POST error:", error);
 
       throw error;
+    }
+  };
+
+export const transferPatientToBed =
+  (payload, patientId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.patch(
+        `${API_URL}/beds/transfer-patient`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // console.log("Patient transferred to bed:", data);
+
+      dispatch(getPatientBedInfo(patientId));
+      toast.success("Patient transferred to bed successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Transfer patient to bed error:", error);
+      toast.error("Failed to transfer patient to bed.", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     }
   };

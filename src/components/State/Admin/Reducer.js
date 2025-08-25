@@ -1,7 +1,7 @@
 import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
-  ADD_DOCTORS,
+  ADD_DOCTORS, ADD_ESTIMATED_BILL,
   ADD_EXPENSE, ADD_INSURANCE_COMPANY,
   ADD_ROOM,
   ADD_SERVICE, ADD_SERVICE_TO_COMPANY,
@@ -11,7 +11,7 @@ import {
   DELETE_ROOM,
   DELETE_SERVICE,
   DELETE_SERVICE_CATEGORY,
-  DELETE_STAFFS, DELETE_TPA_SERVICE, DELETE_TPA_SERVICE_CATEGORY,
+  DELETE_STAFFS, DELETE_TPA_SERVICE, DELETE_TPA_SERVICE_CATEGORY, EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -22,18 +22,18 @@ import {
   GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID, GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
-  GET_EARNINGS,
+  GET_EARNINGS, GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_INSURANCE_COMPANIES, GET_INSURED_PATIENTS,
-  GET_ONGOING_APPOINTMENTS,
+  GET_ONGOING_APPOINTMENTS, GET_PACKAGES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
   GET_STAFFS,
-  GET_WAITING_APPOINTMENTS,
+  GET_WAITING_APPOINTMENTS, NULL_ESTIMATED_BILL,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
 } from "./ActionType.js";
@@ -84,6 +84,8 @@ const initialState = {
   doctorRequests: [],
   insuredPatients: [],
   insuranceCompanies: [],
+  estimatedBill: null,
+  packages: []
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -457,10 +459,40 @@ export const adminReducer = (state = initialState, action) => {
         ),
       };
 
-    // case EDIT_TPA_SERVICE:
-    //   return{
-    //
-    //   }
+    case EDIT_TPA_SERVICE:
+      return {
+        ...state,
+        insuranceCompanies: state.insuranceCompanies.map((company) =>
+            company._id === action.payload.company._id
+                ? {
+                  ...company,
+                  services: company.services.map((service) =>
+                      service._id === action.payload.updatedService._id
+                          ? action.payload.updatedService // replace with updated service from backend
+                          : service
+                  ),
+                }
+                : company
+        ),
+      };
+
+    case GET_PACKAGES:
+      return{
+        ...state,
+        packages: action.payload.categories
+      }
+
+    case GET_ESTIMATED_BILL:
+      return{
+        ...state,
+        estimatedBill: action.payload.estimates[0]
+      }
+
+    case NULL_ESTIMATED_BILL:
+      return{
+        ...state,
+        estimatedBill: null
+      }
 
     default:
       return state;

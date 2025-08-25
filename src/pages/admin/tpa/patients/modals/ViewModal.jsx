@@ -2,32 +2,66 @@ import React, { useState } from "react";
 import styles from "./ViewModal.module.scss";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { X } from "lucide-react";
-import {useDispatch} from "react-redux";
-import {updateStatusOfInsuredPatients} from "../../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getEstimatedBill,
+  updateStatusOfInsuredPatients,
+} from "../../../../../components/State/Admin/Action.js";
+import EstimateBill from "./EstimateBill.jsx";
+import ViewBill from "./viewBillModal/viewBill.jsx";
+import { useEffect } from "react";
 const ViewModal = ({ onClose, record }) => {
-  const {
-    patient
-  } = record;
+  const { patient } = record;
 
   // console.log("Rec: ",record)
 
+  // console.log("Rec: ",record)
+  const [activeModal, setActiveModal] = useState(null);
   const statusOptions = ["Approved", "Rejected", "Pending"];
   const [openStatus, setOpenStatus] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(record.admissionDetails.insurance.insuranceApproved.charAt(0).toUpperCase() +
-      record.admissionDetails.insurance.insuranceApproved.slice(1));
-  const dispatch = useDispatch()
+  const [isEstimateBillExist, setIsEstimateBillExist] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState(
+    record.admissionDetails.insurance.insuranceApproved
+      .charAt(0)
+      .toUpperCase() +
+      record.admissionDetails.insurance.insuranceApproved.slice(1)
+  );
 
+  const [approvedAmount, setApprovedAmount] = useState(
+    record.admissionDetails.insurance.amountApproved || "" // if you already store it in backend
+  );
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getEstimatedBill(record._id));
+  }, [dispatch, record._id]);
+
+  const estimatedBill = useSelector((store) => store.admin.estimatedBill);
   const handleClick = (option) => {
     setSelectedStatus(option);
     setOpenStatus(false);
-  }
+  };
 
   const handleSave = () => {
-    // console.log("Sec: ",selectedStatus.toLowerCase())
-    dispatch(updateStatusOfInsuredPatients(record._id,selectedStatus.toLowerCase()))
-    onClose();
-  }
+    const payload = {
+      status: selectedStatus.toLowerCase(),
+    };
 
+    // if status = approved, add approvedAmount
+    if (selectedStatus === "Approved") {
+      payload.approvedAmount = approvedAmount;
+    }
+
+    // console.log("Sec: ",selectedStatus.toLowerCase())
+    dispatch(updateStatusOfInsuredPatients(record._id, payload));
+    onClose();
+  };
+  const closeBill = () => {
+    setActiveModal(null);
+  };
+  const handleBillClick = (record) => {
+    setActiveModal("bill");
+  };
   return (
     <div>
       {" "}
@@ -35,7 +69,24 @@ const ViewModal = ({ onClose, record }) => {
         <X size={20} onClick={onClose} />
       </div>
       <div className={styles.container}>
-        <h1 className={styles.title}>Record New Vital</h1>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <h1 className={styles.title}>Patient Insurance Details</h1>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <div className={styles.viewBill}>
+              <button
+                className={styles.viewBillBtn}
+                onClick={() => setActiveModal("viewBill")}
+              >
+                View Estimate Bill
+              </button>
+            </div>
+            <div className={styles.openBill}>
+              <button onClick={handleBillClick} className={styles.openBillBtn}>
+                {estimatedBill ? "Edit" : "Create"} Estimate Bill
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* content */}
         <div className={styles.content}>
@@ -57,6 +108,47 @@ const ViewModal = ({ onClose, record }) => {
           <div className={styles.data}>
             <p className={styles.label}>Phone</p>
             <p className={styles.value}>{patient.phone}</p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Employee Code</p>
+            <p className={styles.value}>
+              {patient?.insuranceDetails?.employeeCode}
+            </p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Policy No.</p>
+            <p className={styles.value}>
+              {patient?.insuranceDetails?.policyNumber}
+            </p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Start Date</p>
+            <p className={styles.value}>
+              {patient?.insuranceDetails?.insuranceStartDate &&
+                new Date(
+                  patient.insuranceDetails.insuranceStartDate
+                ).toLocaleDateString()}
+            </p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Expiry Date</p>
+            <p className={styles.value}>
+              {patient?.insuranceDetails?.insuranceExpiryDate &&
+                new Date(
+                  patient.insuranceDetails.insuranceExpiryDate
+                ).toLocaleDateString()}
+            </p>
+          </div>
+
+          <div className={styles.data}>
+            <p className={styles.label}>Company</p>
+            <p className={styles.value}>
+              {patient?.insuranceDetails?.insuranceCompany}
+            </p>
           </div>
 
           <div className={styles.data}>
@@ -95,20 +187,53 @@ const ViewModal = ({ onClose, record }) => {
             </div>
           </div>
 
-          <div className={styles.data}>
-            <p className={styles.label}>Policy No.</p>
-            <p className={styles.value}>{patient?.insuranceDetails?.policyNumber}</p>
-          </div>
-
-          <div className={styles.data}>
-            <p className={styles.label}>Company</p>
-            <p className={styles.value}>{patient?.insuranceDetails?.insuranceCompany}</p>
-          </div>
+          {/* Approved Amount input (only when status = Approved) */}
+          {selectedStatus === "Approved" && (
+            <div className={styles.data}>
+              <p className={styles.label}>Approved Amount</p>
+              <input
+                type="number"
+                className={styles.input}
+                value={approvedAmount}
+                onChange={(e) => setApprovedAmount(e.target.value)}
+                placeholder="Enter approved amount"
+              />
+            </div>
+          )}
         </div>
 
         <div className={styles.submitContainer} onClick={handleSave}>
           <button>Save</button>
         </div>
+        {/* Modal */}
+        {activeModal === "bill" && (
+          <>
+            <div className={styles.backdropOverlay2} />
+            <div className={styles.billModal}>
+              <EstimateBill
+                record={record}
+                onClose={onClose}
+                closeBill={closeBill}
+                estimateOld={estimatedBill || undefined}
+              />
+            </div>
+          </>
+        )}
+        {activeModal === "viewBill" && (
+          <>
+            <div
+              className={styles.backdropOverlay2}
+              onClick={() => setActiveModal(null)}
+            />
+            <div className={styles.billModal}>
+              <ViewBill
+                record={record}
+                onClose={closeBill}
+                estimatedBill={estimatedBill}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
