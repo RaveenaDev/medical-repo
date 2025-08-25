@@ -84,6 +84,10 @@ const AddPatientForm = ({ onClose }) => {
       alert("Please select at least one approval role (Doctor or Admin).");
       return;
     }
+    if (!form.gender) {
+      alert("Please select a gender");
+      return;
+    }
     const sendToValue =
       selectedRoles.includes("Doctor") && selectedRoles.includes("Admin")
         ? "Both"
@@ -266,6 +270,9 @@ const AddPatientForm = ({ onClose }) => {
                     }
                     required
                   >
+                    <option value="" disabled>
+                      Select Gender
+                    </option>
                     {genders.map((gender, index) => (
                       <option key={index} value={gender}>
                         {gender}
