@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import styles from "./ViewBill.module.scss";
 const ViewBill = ({ onClose }) => {
   return (
@@ -9,9 +9,17 @@ const ViewBill = ({ onClose }) => {
         <X size={20} onClick={onClose} />
       </div>
       <div className={styles.container}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h1 className={styles.title}>Patient Insurance Details</h1>
-        </div>
+          <div style={{display: "flex", justifyContent: "space-between"}}>
+              <h1 className={styles.title}>Patient Estimated Bill</h1>
+
+              <div className={styles.viewBill}>
+                  <button
+                      className={styles.viewBillBtn}
+                  >
+                      Print
+                  </button>
+              </div>
+          </div>
       </div>
     </div>
   );

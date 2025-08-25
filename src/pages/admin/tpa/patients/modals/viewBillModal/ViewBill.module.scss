@@ -1,0 +1,48 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 1rem;
+  font-family: "Karla", sans-serif;
+  overflow-y: auto;
+  height: 68vh;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.title {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 550;
+  margin-bottom: 3vh;
+}
+
+
+.openBill,
+.viewBill {
+  display: flex;
+  align-items: center;
+}
+
+.openBillBtn,
+.viewBillBtn {
+  background: #fff;
+  color: #25307f;
+  border: 1px solid #25307f;
+}

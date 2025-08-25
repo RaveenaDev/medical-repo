@@ -60,18 +60,20 @@ const ViewModal = ({ onClose, record }) => {
       <div className={styles.container}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 className={styles.title}>Patient Insurance Details</h1>
-          <div className={styles.viewBill}>
-            <button
-              className={styles.viewBillBtn}
-              onClick={() => setActiveModal("viewBill")}
-            >
-              View Estimate Bill
-            </button>
-          </div>
-          <div className={styles.openBill}>
-            <button onClick={handleBillClick} className={styles.openBillBtn}>
-              Create Estimate Bill
-            </button>
+          <div style={{display:'flex',gap:'1rem'}}>
+            <div className={styles.viewBill}>
+              <button
+                  className={styles.viewBillBtn}
+                  onClick={() => setActiveModal("viewBill")}
+              >
+                View Estimate Bill
+              </button>
+            </div>
+            <div className={styles.openBill}>
+              <button onClick={handleBillClick} className={styles.openBillBtn}>
+                Create Estimate Bill
+              </button>
+            </div>
           </div>
         </div>
 
