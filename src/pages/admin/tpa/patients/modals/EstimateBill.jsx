@@ -3,7 +3,7 @@ import styles from "./EstimateBill.module.scss";
 import { ChevronDown, ChevronUp, SquarePen, X, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addEstimatedBill,
+  addEstimatedBill, editEstimatedBill,
   getPackage,
 } from "../../../../../components/State/Admin/Action.js";
 
@@ -16,8 +16,26 @@ const emptyRow = () => ({
   unit: "",
 });
 
+const mapOldEstimateToState = (estimateOld) => {
+  if (!estimateOld || !Array.isArray(estimateOld.categories)) return [];
+  return estimateOld.categories.map((cat) => ({
+    id: crypto.randomUUID(),
+    name: cat?.categoryName ?? "",
+    rows: Array.isArray(cat?.items)
+        ? cat.items.map((item) => ({
+          id: crypto.randomUUID(),
+          description: item?.description ?? "",
+          ward: item?.ward ?? "",
+          package: item?.package ?? "",
+          rate: item?.rate ?? "",
+          unit: item?.unit ?? "",
+        }))
+        : [emptyRow()],
+  }));
+};
+
 const EstimateBill = ({ record, onClose, estimateOld }) => {
-  console.log(estimateOld);
+  // console.log("Old",estimateOld);
 
   const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState(null);
@@ -46,6 +64,26 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
   const packages = useSelector((store) => store.admin.packages);
 
   // console.log("pac:",packages)
+
+  // ✅ Prefill from estimateOld if provided, else keep empty
+  useEffect(() => {
+    if (estimateOld && Array.isArray(estimateOld.categories) && estimateOld.categories.length > 0) {
+      setCategories(mapOldEstimateToState(estimateOld));
+      // ensure modal/draft are reset when loading old bill
+      setActiveModal(null);
+      setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+      setWarningText("");
+      setOpenPackageRowId(null);
+    } else {
+      // new bill: start clean
+      setCategories([]);
+      setActiveModal(null);
+      setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+      setWarningText("");
+      setOpenPackageRowId(null);
+    }
+  }, [estimateOld]);
+
   const openCreate = () => {
     setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
     setWarningText(""); // Clear warning when opening
@@ -226,7 +264,16 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
     console.log("=== ESTIMATE BILL OBJECT ===");
     console.log(estimateBill);
 
-    dispatch(addEstimatedBill(estimateBill));
+    if (estimateOld && estimateOld._id) {
+      // ✅ Editing an existing estimate
+      // console.log("Esti: ",estimateBill)
+      dispatch(editEstimatedBill(estimateOld._id, estimateBill));
+      onClose();
+    } else {
+      // ✅ Creating new estimate
+      dispatch(addEstimatedBill(estimateBill));
+      onClose();
+    }
   };
 
   return (

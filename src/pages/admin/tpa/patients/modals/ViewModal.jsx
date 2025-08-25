@@ -212,7 +212,8 @@ const ViewModal = ({ onClose, record }) => {
             <div className={styles.billModal}>
               <EstimateBill
                 record={record}
-                onClose={closeBill}
+                onClose={onClose}
+                closeBill={closeBill}
                 estimateOld={estimatedBill || undefined}
               />
             </div>

@@ -1276,8 +1276,8 @@ export const editEstimatedBill = (id, serviceData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(
-        `${API_URL}/addServiceToCompany/${id}`,
+    const { data } = await axios.put(
+        `${API_URL}/editEstimatedBill/${id}`,
         serviceData,
         {
           headers: {
@@ -1288,7 +1288,7 @@ export const editEstimatedBill = (id, serviceData) => async (dispatch) => {
 
     // console.log("Service Added To Company : ",data)
 
-    dispatch({ type: EDIT_ESTIMATED_BILL, payload: data.company });
+    dispatch({ type: EDIT_ESTIMATED_BILL, payload: data });
     toast.success("Bill Edited Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
