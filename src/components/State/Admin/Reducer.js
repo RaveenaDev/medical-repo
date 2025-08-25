@@ -11,7 +11,7 @@ import {
   DELETE_ROOM,
   DELETE_SERVICE,
   DELETE_SERVICE_CATEGORY,
-  DELETE_STAFFS, DELETE_TPA_SERVICE, DELETE_TPA_SERVICE_CATEGORY,
+  DELETE_STAFFS, DELETE_TPA_SERVICE, DELETE_TPA_SERVICE_CATEGORY, EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -457,10 +457,24 @@ export const adminReducer = (state = initialState, action) => {
         ),
       };
 
-    // case EDIT_TPA_SERVICE:
-    //   return{
-    //
-    //   }
+    case EDIT_TPA_SERVICE:
+      return {
+        ...state,
+        insuranceCompanies: state.insuranceCompanies.map((company) =>
+            company._id === action.payload.company._id
+                ? {
+                  ...company,
+                  services: company.services.map((service) =>
+                      service._id === action.payload.updatedService._id
+                          ? action.payload.updatedService // replace with updated service from backend
+                          : service
+                  ),
+                }
+                : company
+        ),
+      };
+
+
 
     default:
       return state;

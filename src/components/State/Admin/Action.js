@@ -1046,14 +1046,15 @@ export const getInsuredPatients = () => async (dispatch) => {
 };
 
 export const updateStatusOfInsuredPatients =
-  (admissionId, status) => async (dispatch) => {
+  (admissionId, payload) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.put(
         `${API_URL}/updateInsuranceStatus/${admissionId}`,
         {
-          insuranceApproved: status,
+          insuranceApproved: payload.status,
+          amountApproved: payload.approvedAmount
         },
         {
           headers: {

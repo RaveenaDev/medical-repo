@@ -32,6 +32,20 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
         additionaldetails: service.category.additionaldetails || {},
     });
 
+    // NEW: hold in-progress edits for keys so we don't rename on each keystroke
+    const [draftKeys, setDraftKeys] = useState({});
+
+    useEffect(() => {
+        // initialize draft keys when the modal opens / service changes
+        setDraftKeys(() => {
+            const map = {};
+            Object.keys(serviceDetails.additionaldetails || {}).forEach((k) => {
+                map[k] = k;
+            });
+            return map;
+        });
+    }, [open]); // or [serviceId] if you prefer
+
     const [lastUpdated, setLastUpdated] = useState(
         new Date().toISOString().split("T")[0]
     );
@@ -43,39 +57,78 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
         });
     };
 
-    // Handle changes in additional details (object)
-    const handleAdditionalDetailChange = (key, newKey, newValue) => {
-        const updatedDetails = { ...serviceDetails.additionaldetails };
+    // Helper: rename a key but keep the same order in the object
+    const renameKeyPreserveOrder = (obj, oldKey, newKey) => {
+        if (!newKey || newKey === oldKey) return obj;
+        if (Object.prototype.hasOwnProperty.call(obj, newKey)) return obj; // avoid overwrite
 
-        if (newKey !== undefined && key !== newKey) {
-            updatedDetails[newKey] = newValue ?? updatedDetails[key];
-            delete updatedDetails[key];
-        } else {
-            updatedDetails[key] = newValue;
+        const entries = Object.entries(obj);
+        const out = {};
+        for (const [k, v] of entries) {
+            if (k === oldKey) {
+                out[newKey] = v; // insert new key in the same position
+            } else {
+                out[k] = v;
+            }
         }
+        return out;
+    };
 
-        setServiceDetails({
-            ...serviceDetails,
-            additionaldetails: updatedDetails,
+    // Commit rename only on blur/Enter
+    const commitKeyRename = (originalKey) => {
+        const newKey = (draftKeys[originalKey] || "").trim();
+        if (!newKey || newKey === originalKey) return;
+
+        setServiceDetails((prev) => {
+            const updated = renameKeyPreserveOrder(
+                prev.additionaldetails,
+                originalKey,
+                newKey
+            );
+            return { ...prev, additionaldetails: updated };
+        });
+
+        // also fix the draft map to reflect the new canonical key
+        setDraftKeys((prev) => {
+            const { [originalKey]: _, ...rest } = prev;
+            return { ...rest, [newKey]: newKey };
         });
     };
 
-    const handleAddAdditionalDetail = () => {
-        setServiceDetails({
-            ...serviceDetails,
+    // Value changes (numbers) stay instant as before
+    const handleAdditionalValueChange = (key, newValue) => {
+        setServiceDetails((prev) => ({
+            ...prev,
             additionaldetails: {
-                ...serviceDetails.additionaldetails,
-                [`Detail_${Object.keys(serviceDetails.additionaldetails).length + 1}`]: 0,
+                ...prev.additionaldetails,
+                [key]: newValue,
             },
+        }));
+    };
+
+    const handleAddAdditionalDetail = () => {
+        setServiceDetails((prev) => {
+            const count = Object.keys(prev.additionaldetails || {}).length + 1;
+            const newKey = `Detail_${count}`;
+            const additionaldetails = { ...prev.additionaldetails, [newKey]: 0 };
+            return { ...prev, additionaldetails };
+        });
+        setDraftKeys((prev) => {
+            const count = Object.keys(prev).length + 1;
+            const newKey = `Detail_${count}`;
+            return { ...prev, [newKey]: newKey };
         });
     };
 
     const handleRemoveAdditionalDetail = (key) => {
-        const updatedDetails = { ...serviceDetails.additionaldetails };
-        delete updatedDetails[key];
-        setServiceDetails({
-            ...serviceDetails,
-            additionaldetails: updatedDetails,
+        setServiceDetails((prev) => {
+            const updated = { ...prev.additionaldetails };
+            delete updated[key];
+            return { ...prev, additionaldetails: updated };
+        });
+        setDraftKeys((prev) => {
+            const { [key]: _, ...rest } = prev;
+            return rest;
         });
     };
 
@@ -92,24 +145,23 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
     const handleSubmit = () => {
         const finalRate = totalRate;
         const pass = {
-            serviceId: serviceDetails.serviceId,
-            serviceName: serviceDetails.name,
-            categories: [
-                {
-                    _id: service.category._id,
-                    subCategoryName: serviceDetails.subCategoryName,
-                    rateType: serviceDetails.rateType,
-                    rate: finalRate,
-                    effectiveDate: serviceDetails.effectiveDate,
-                    amenities: serviceDetails.amenities,
-                    additionaldetails: serviceDetails.additionaldetails,
-                },
-            ],
+            service: {
+                serviceName: serviceDetails.name,   // matches serviceFields
+            },
+            category: {
+                subCategoryName: serviceDetails.subCategoryName,
+                rateType: serviceDetails.rateType,
+                rate: finalRate,
+                effectiveDate: serviceDetails.effectiveDate,
+                amenities: serviceDetails.amenities,
+                additionaldetails: serviceDetails.additionaldetails,
+            },
         };
+
 
         dispatch(editTPAService(companyId,serviceId,categoryId,pass))
 
-        console.log("Edited: ", pass);
+        // console.log("Edited: ", pass);
 
         setServiceDetails({
             name: "",
@@ -190,57 +242,65 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
                     <div>
                         <Grid2 container spacing={2} marginTop={1}>
                             {Object.entries(serviceDetails.additionaldetails).map(
-                                ([key, value], index) => (
-                                    <Grid2 item xs={12} container spacing={1} key={index}>
-                                        <Grid2 item xs={6}>
-                                            <TextField
-                                                label="Detail Name"
-                                                fullWidth
-                                                value={key}
-                                                onChange={(e) =>
-                                                    handleAdditionalDetailChange(
-                                                        key,
-                                                        e.target.value,
-                                                        value
-                                                    )
-                                                }
-                                            />
+                                ([key, value]) => {
+                                    const draftName = draftKeys[key] ?? key; // show draft while typing
+                                    return (
+                                        <Grid2 item xs={12} container spacing={1} key={`add-${key}`}>
+                                            <Grid2 item xs={6}>
+                                                <TextField
+                                                    label="Detail Name"
+                                                    fullWidth
+                                                    value={draftName}
+                                                    onChange={(e) =>
+                                                        setDraftKeys((prev) => ({
+                                                            ...prev,
+                                                            [key]: e.target.value,
+                                                        }))
+                                                    }
+                                                    onBlur={() => commitKeyRename(key)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === "Enter") {
+                                                            e.currentTarget.blur();
+                                                        }
+                                                    }}
+                                                />
+                                            </Grid2>
+                                            <Grid2 item xs={5}>
+                                                <TextField
+                                                    label="Value"
+                                                    fullWidth
+                                                    type="number"
+                                                    value={value}
+                                                    onChange={(e) =>
+                                                        handleAdditionalValueChange(
+                                                            key,
+                                                            parseFloat(e.target.value)
+                                                        )
+                                                    }
+                                                />
+                                            </Grid2>
+                                            <Grid2
+                                                item
+                                                xs={1}
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                            >
+                                                <Trash2Icon
+                                                    onClick={() => handleRemoveAdditionalDetail(key)}
+                                                    style={{cursor: "pointer", color: "red"}}
+                                                />
+                                            </Grid2>
                                         </Grid2>
-                                        <Grid2 item xs={5}>
-                                            <TextField
-                                                label="Value"
-                                                fullWidth
-                                                type="number"
-                                                value={value}
-                                                onChange={(e) =>
-                                                    handleAdditionalDetailChange(
-                                                        key,
-                                                        key,
-                                                        parseFloat(e.target.value)
-                                                    )
-                                                }
-                                            />
-                                        </Grid2>
-                                        <Grid2
-                                            item
-                                            xs={1}
-                                            justifyContent="center"
-                                            display="flex"
-                                            alignItems="center"
-                                        >
-                                            <Trash2Icon
-                                                onClick={() => handleRemoveAdditionalDetail(key)}
-                                                style={{ cursor: "pointer", color: "red" }}
-                                            />
-                                        </Grid2>
-                                    </Grid2>
-                                )
+                                    );
+                                }
                             )}
                         </Grid2>
+
                         <Button
                             variant="outlined"
                             onClick={handleAddAdditionalDetail}
-                            sx={{ marginTop: 2, marginBottom: 2 }}
+                            sx={{marginTop: 2, marginBottom: 2}}
                         >
                             Add Custom Charges & Details
                         </Button>
@@ -250,7 +310,7 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
                         label="Effective Date"
                         fullWidth
                         margin="dense"
-                        InputLabelProps={{ shrink: true }}
+                        InputLabelProps={{shrink: true}}
                         type="date"
                         name="effectiveDate"
                         value={serviceDetails.effectiveDate} // ✅ now shows correctly
@@ -269,7 +329,7 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
                 <Button
                     onClick={handleSubmit}
                     variant="contained"
-                    sx={{ marginTop: 2, background: "#25307F" }}
+                    sx={{marginTop: 2, background: "#25307F"}}
                 >
                     Done
                 </Button>
