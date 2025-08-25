@@ -8,8 +8,8 @@ import {
   updateStatusOfInsuredPatients,
 } from "../../../../../components/State/Admin/Action.js";
 import EstimateBill from "./EstimateBill.jsx";
-import ViewBill from "./viewBillModal/viewBill.jsx";
 import { useEffect } from "react";
+import ViewBill from "./viewBillModal/ViewBill.jsx";
 const ViewModal = ({ onClose, record }) => {
   const { patient } = record;
 
