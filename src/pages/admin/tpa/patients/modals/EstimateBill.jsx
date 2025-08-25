@@ -1,6 +1,8 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import styles from "./EstimateBill.module.scss";
 import { ChevronDown, ChevronUp, SquarePen, X, Trash2 } from "lucide-react";
+import {useDispatch, useSelector} from "react-redux";
+import {addEstimatedBill, getPackage} from "../../../../../components/State/Admin/Action.js";
 
 const emptyRow = () => ({
   id: crypto.randomUUID(),
@@ -11,7 +13,9 @@ const emptyRow = () => ({
   unit: "",
 });
 
-const EstimateBill = ({ onClose }) => {
+const EstimateBill = ({ record, onClose }) => {
+
+  const dispatch = useDispatch()
   const [activeModal, setActiveModal] = useState(null);
 
   // Table state: categories -> [{ id, name, rows: [{...}] }]
@@ -31,6 +35,13 @@ const EstimateBill = ({ onClose }) => {
   const packageOptions = ["option1", "option2", "option3"];
   const [openPackageRowId, setOpenPackageRowId] = useState(null);
 
+  useEffect(() => {
+    dispatch(getPackage())
+  }, [dispatch]);
+
+  const packages = useSelector((store) => store.admin.packages)
+
+  // console.log("pac:",packages)
   const openCreate = () => {
     setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
     setWarningText(""); // Clear warning when opening
@@ -184,6 +195,7 @@ const EstimateBill = ({ onClose }) => {
   }, 0);
 
   let estimateBill = {
+    admissionRequestId: record._id,
     grandTotal: grandTotal,
     categories: categories.map((cat) => ({
       categoryName: cat.name,
@@ -209,6 +221,8 @@ const EstimateBill = ({ onClose }) => {
     console.log(JSON.stringify(estimateBill, null, 2));
     console.log("=== ESTIMATE BILL OBJECT ===");
     console.log(estimateBill);
+
+    dispatch(addEstimatedBill(estimateBill))
   };
 
   return (
@@ -295,17 +309,17 @@ const EstimateBill = ({ onClose }) => {
                       </button>
                       {openPackageRowId === row.id && (
                         <ul className={styles.menu}>
-                          {packageOptions.map((option) => (
+                          {packages.map((option) => (
                             <li
                               key={option}
                               className={`${styles.item} ${
                                 row.package === option ? styles.active : ""
                               }`}
                               onClick={() =>
-                                handleSelectPackage(row.id, option)
+                                handleSelectPackage(row.id, option.subCategoryName)
                               }
                             >
-                              {option}
+                              {option.subCategoryName}
                             </li>
                           ))}
                         </ul>

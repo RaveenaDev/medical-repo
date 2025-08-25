@@ -10,6 +10,8 @@ const ViewModal = ({ onClose, record }) => {
   const { patient } = record;
 
   // console.log("Rec: ",record)
+
+  // console.log("Rec: ",record)
   const [activeModal, setActiveModal] = useState(null);
   const statusOptions = ["Approved", "Rejected", "Pending"];
   const [openStatus, setOpenStatus] = useState(false);
@@ -199,7 +201,7 @@ const ViewModal = ({ onClose, record }) => {
           <>
             <div className={styles.backdropOverlay2} />
             <div className={styles.billModal}>
-              <EstimateBill onClose={closeBill} />
+              <EstimateBill record={record} onClose={closeBill} />
             </div>
           </>
         )}
@@ -210,7 +212,7 @@ const ViewModal = ({ onClose, record }) => {
               onClick={() => setActiveModal(null)}
             />
             <div className={styles.billModal}>
-              <ViewBill onClose={closeBill} />
+              <ViewBill record={record} onClose={closeBill} />
             </div>
           </>
         )}
