@@ -186,6 +186,17 @@ const PastReportsAndDischarge = ({ patientId }) => {
         >
           <CircularProgress sx={{ color: "#25307F" }} size={58} />
         </Box>
+      ) : patientHistory.length === 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "36vh", // or full height you need
+          }}
+        >
+          <p className={styles.noHistory}>No History Found</p>
+        </Box>
       ) : (
         <div className={styles.cardWrapper}>
           {patientHistory?.length > 0 ? (

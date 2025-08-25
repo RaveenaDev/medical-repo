@@ -1381,7 +1381,7 @@ export const getPatientHistory = (patientId) => async (dispatch) => {
     dispatch({ type: GET_PATIENT_HISTORY, payload: data.history });
   } catch (error) {
     console.error("patient History not available:", error);
-
+    dispatch({ type: GET_PATIENT_HISTORY, payload: [] });
     throw error;
   }
 };
