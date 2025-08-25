@@ -183,6 +183,34 @@ const EstimateBill = ({ onClose }) => {
     return acc + sub;
   }, 0);
 
+  let estimateBill = {
+    grandTotal: grandTotal,
+    categories: categories.map((cat) => ({
+      categoryName: cat.name,
+      subtotal: cat.rows.reduce((s, r) => s + rowTotal(r), 0),
+      items: cat.rows.map((row) => ({
+        description: row.description,
+        ward: row.ward,
+        package: row.package,
+        rate: Number(row.rate || 0),
+        unit: Number(row.unit || 0),
+        total: rowTotal(row),
+      })),
+    })),
+  };
+  const handleSave = () => {
+    if (categories.length === 0) {
+      setWarningText("Please add at least one category before saving.");
+      return;
+    }
+
+    // Prepare simplified data structure for backend
+    console.log("=== ESTIMATE BILL DATA FOR BACKEND ===");
+    console.log(JSON.stringify(estimateBill, null, 2));
+    console.log("=== ESTIMATE BILL OBJECT ===");
+    console.log(estimateBill);
+  };
+
   return (
     <div>
       <div className={styles.crossContainer}>
@@ -465,7 +493,7 @@ const EstimateBill = ({ onClose }) => {
         </div>
 
         <div className={styles.saveContainer}>
-          <button>Save</button>
+          <button onClick={handleSave}>Save</button>
         </div>
       </div>
     </div>
