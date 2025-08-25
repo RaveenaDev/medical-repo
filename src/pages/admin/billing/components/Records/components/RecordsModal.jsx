@@ -12,6 +12,11 @@ import {
   Grid,
   InputAdornment,
   CircularProgress,
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
 } from "@mui/material";
 import "./RecordModal.scss";
 import arrowBack from "/arrow_back.svg";
@@ -22,6 +27,8 @@ import {
   editBill,
 } from "../../../../../../components/State/Admin/Action";
 import { useDispatch } from "react-redux";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import BillingDetailsDialog from "./modals/BillingDetailsDialog";
 
 const RecordModal = ({ open, bill, onClose, billId }) => {
   useEffect(() => {
@@ -65,7 +72,18 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
   };
 
   const lineTotal = parseIntSafe(addForm.quantity) * parseIntSafe(addForm.rate);
+  const [openView, setOpenView] = useState(false);
+  const [selectedDetails, setSelectedDetails] = useState(null);
 
+  const handleOpenDialog = (details) => {
+    setSelectedDetails(details);
+    setOpenView(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenView(false);
+    setSelectedDetails(null);
+  };
   const openAddDialog = () => setAddOpen(true);
   const closeAddDialog = () => {
     setAddOpen(false);
@@ -166,6 +184,7 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
 
     setIsEditing(false);
   };
+
   return (
     <>
       <div
@@ -238,6 +257,9 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                     <div className="billing-price">
                       <p className="bold">Price</p>
                     </div>
+                    <div>
+                      <p className="bold">Actions</p>
+                    </div>
                     {isEditing && (
                       <div className="billing-clearAll">
                         <button
@@ -274,7 +296,7 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                       ? +row.quantity
                       : 0;
                     const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
-                    // console.log("service", row);
+                    console.log("service", row);
                     return (
                       <div key={i} className="billing-category">
                         <div className="billing-description">
@@ -364,6 +386,19 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                             />
                           ) : (
                             <div>₹{rate}</div>
+                          )}
+                        </div>
+                        <div className="billing-actions">
+                          {row?.details &&
+                          Object.keys(row.details).length > 0 ? (
+                            <button
+                              className="view-details-btn"
+                              onClick={() => handleOpenDialog(row.details)}
+                            >
+                              View
+                            </button>
+                          ) : (
+                            <span className="empty-placeholder">—</span>
                           )}
                         </div>
                       </div>
@@ -645,31 +680,99 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
           </Button>
         </DialogActions>
       </Dialog>
-
+      {/*View details*/}
+      <BillingDetailsDialog
+        open={open}
+        onClose={handleCloseDialog}
+        details={selectedDetails}
+      />
       {/* Hidden Printable Section */}
       <div style={{ display: "none" }}>
         <div id="printable-bill" className="print-container" ref={printRef}>
-          <h2>Invoice</h2>
-          <p>
-            <b>Invoice Number:</b> {bill.invoiceNumber}
-          </p>
-          <p>
-            <b>Invoice Date:</b>{" "}
-            {new Date(bill.invoiceDate).toLocaleDateString("en-IN", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })}
-          </p>
-          <hr />
+          {/* Header */}
+          <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <h1 style={{ margin: 0 }}> Hospital Name</h1>
+            <p style={{ margin: 0 }}>123 Street, City, State</p>
+            <p style={{ margin: 0 }}>Phone: +91-1234567890</p>
+            <hr style={{ marginTop: "10px" }} />
+          </div>
+
+          {/* Invoice Metadata */}
+          <table style={{ width: "100%", marginBottom: "20px" }}>
+            <tbody>
+              <tr>
+                <td>
+                  <b>Invoice Number:</b> {bill.invoiceNumber || "N/A"}
+                </td>
+                <td>
+                  <b>Date:</b>{" "}
+                  {bill.invoiceDate
+                    ? new Date(bill.invoiceDate).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })
+                    : "—"}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b>Patient:</b> {bill.patient.name || "—"}
+                </td>
+                <td>
+                  <b>Doctor:</b> {bill.doctorName || "—"}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Services Table */}
           <h3>Services</h3>
-          <table>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              marginBottom: "20px",
+            }}
+          >
             <thead>
               <tr>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Total</th>
+                <th
+                  style={{
+                    border: "1px solid #000",
+                    padding: "6px",
+                    textAlign: "left",
+                  }}
+                >
+                  Description
+                </th>
+                <th
+                  style={{
+                    border: "1px solid #000",
+                    padding: "6px",
+                    textAlign: "center",
+                  }}
+                >
+                  Qty
+                </th>
+                <th
+                  style={{
+                    border: "1px solid #000",
+                    padding: "6px",
+                    textAlign: "right",
+                  }}
+                >
+                  Price
+                </th>
+                <th
+                  style={{
+                    border: "1px solid #000",
+                    padding: "6px",
+                    textAlign: "right",
+                  }}
+                >
+                  Total
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -682,19 +785,139 @@ const RecordModal = ({ open, bill, onClose, billId }) => {
                 const qty = Number.isFinite(+row.quantity) ? +row.quantity : 0;
                 const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
                 const total = qty * rate;
+
                 return (
                   <tr key={idx}>
-                    <td>{desc}</td>
-                    <td>{qty}</td>
-                    <td>₹{rate}</td>
-                    <td>₹{total}</td>
+                    <td>
+                      <div>{desc}</div>
+
+                      {/* Extra Details */}
+                      {row.details && Object.keys(row.details).length > 0 && (
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            marginTop: "6px",
+                            lineHeight: "1.4",
+                          }}
+                        >
+                          <strong>Details:</strong>
+                          <ul style={{ margin: "4px 0 0 14px", padding: 0 }}>
+                            {row.details.bedNumber && (
+                              <li>
+                                Bed: {row.details.bedType || "N/A"} (
+                                {row.details.bedNumber})
+                              </li>
+                            )}
+                            {row.details.daysOccupied && (
+                              <li>Days Occupied: {row.details.daysOccupied}</li>
+                            )}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Room Details */}
+                      {row.details?.roomDetails &&
+                        Object.keys(row.details.roomDetails).length > 0 && (
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              marginTop: "6px",
+                              lineHeight: "1.4",
+                            }}
+                          >
+                            <strong>Room Charges:</strong>
+                            <ul style={{ margin: "4px 0 0 14px", padding: 0 }}>
+                              {row.details.roomDetails.admissionFee && (
+                                <li>
+                                  Admission Fee: ₹
+                                  {row.details.roomDetails.admissionFee}
+                                </li>
+                              )}
+                              {row.details.roomDetails.doctorVisitPerDay && (
+                                <li>
+                                  Doctor Visit / Day: ₹
+                                  {row.details.roomDetails.doctorVisitPerDay}
+                                </li>
+                              )}
+                              {row.details.roomDetails.nursingPerDay && (
+                                <li>
+                                  Nursing / Day: ₹
+                                  {row.details.roomDetails.nursingPerDay}
+                                </li>
+                              )}
+                              {row.details.roomDetails.monitoringPerDay && (
+                                <li>
+                                  Monitoring / Day: ₹
+                                  {row.details.roomDetails.monitoringPerDay}
+                                </li>
+                              )}
+                              {row.details.roomDetails.stayCharges && (
+                                <li>
+                                  Stay Charges: ₹
+                                  {row.details.roomDetails.stayCharges}
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #000",
+                        padding: "6px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {qty}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #000",
+                        padding: "6px",
+                        textAlign: "right",
+                      }}
+                    >
+                      ₹{rate}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #000",
+                        padding: "6px",
+                        textAlign: "right",
+                      }}
+                    >
+                      ₹{total}
+                    </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          <hr />
-          <h3 className="total">Total Amount: ₹{printGrand}</h3>
+
+          {/* Totals */}
+          <div style={{ textAlign: "right", marginTop: "10px" }}>
+            <p>
+              <b>Subtotal:</b> ₹{printGrand}
+            </p>
+            {/* Add if you want discount/tax */}
+            {/* <p><b>Discount:</b> ₹500</p> */}
+            {/* <p><b>Tax (18%):</b> ₹{(printGrand * 0.18).toFixed(2)}</p> */}
+            <h3>Total Amount: ₹{printGrand}</h3>
+          </div>
+
+          {/* Footer */}
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "30px",
+              fontSize: "12px",
+              color: "#555",
+            }}
+          >
+            <p>
+              Thank you for choosing <b>Our Hospital</b>. Get well soon!
+            </p>
+          </div>
         </div>
       </div>
     </>

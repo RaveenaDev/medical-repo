@@ -327,3 +327,34 @@
     border-radius: 4px;
   }
 }
+.billing-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 40px;
+}
+.view-details-btn {
+  background-color: white;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #25307f;
+  color: #25307f;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #25307f;
+  color: white;
+}
+
+.view-details-btn:active {
+  transform: scale(0.95);
+}
+
+.empty-placeholder {
+  color: #25307f;
+  font-size: 16px;
+}
