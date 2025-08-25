@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { updateStatusOfInsuredPatients } from "../../../../../components/State/Admin/Action.js";
 import EstimateBill from "./EstimateBill.jsx";
+import ViewBill from "./viewBillModal/viewBill.jsx";
 const ViewModal = ({ onClose, record }) => {
   const { patient } = record;
 
@@ -57,12 +58,19 @@ const ViewModal = ({ onClose, record }) => {
         <X size={20} onClick={onClose} />
       </div>
       <div className={styles.container}>
-        <div style={{display:'flex',justifyContent:'space-between'}}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 className={styles.title}>Patient Insurance Details</h1>
-
+          <div className={styles.viewBill}>
+            <button
+              className={styles.viewBillBtn}
+              onClick={() => setActiveModal("viewBill")}
+            >
+              View Estimate Bill
+            </button>
+          </div>
           <div className={styles.openBill}>
             <button onClick={handleBillClick} className={styles.openBillBtn}>
-              Open Estimate Bill
+              Create Estimate Bill
             </button>
           </div>
         </div>
@@ -107,9 +115,9 @@ const ViewModal = ({ onClose, record }) => {
             <p className={styles.label}>Start Date</p>
             <p className={styles.value}>
               {patient?.insuranceDetails?.insuranceStartDate &&
-                  new Date(
-                      patient.insuranceDetails.insuranceStartDate
-                  ).toLocaleDateString()}
+                new Date(
+                  patient.insuranceDetails.insuranceStartDate
+                ).toLocaleDateString()}
             </p>
           </div>
 
@@ -117,9 +125,9 @@ const ViewModal = ({ onClose, record }) => {
             <p className={styles.label}>Expiry Date</p>
             <p className={styles.value}>
               {patient?.insuranceDetails?.insuranceExpiryDate &&
-                  new Date(
-                      patient.insuranceDetails.insuranceExpiryDate
-                  ).toLocaleDateString()}
+                new Date(
+                  patient.insuranceDetails.insuranceExpiryDate
+                ).toLocaleDateString()}
             </p>
           </div>
 
@@ -134,50 +142,50 @@ const ViewModal = ({ onClose, record }) => {
             <p className={styles.label}>Status</p>
             <div className={styles.dropdown}>
               <button
-                  className={`${styles.trigger} ${
-                      selectedStatus === "Rejected"
-                          ? styles.rejected
-                          : selectedStatus === "Approved"
-                              ? styles.ongoing
-                              : styles.pending
-                  } `}
-                  onClick={() => setOpenStatus((prev) => !prev)}
+                className={`${styles.trigger} ${
+                  selectedStatus === "Rejected"
+                    ? styles.rejected
+                    : selectedStatus === "Approved"
+                    ? styles.ongoing
+                    : styles.pending
+                } `}
+                onClick={() => setOpenStatus((prev) => !prev)}
               >
                 <p>{selectedStatus}</p>
                 <span className={styles.arrow}>
-                  {openStatus ? <ChevronUp/> : <ChevronDown/>}
+                  {openStatus ? <ChevronUp /> : <ChevronDown />}
                 </span>
               </button>
               {openStatus && (
-                  <ul className={styles.menu}>
-                    {statusOptions.map((option) => (
-                        <li
-                            key={option}
-                            className={`${styles.item} ${
-                                selectedStatus === option ? styles.active : ""
-                            }`}
-                            onClick={() => handleClick(option)}
-                        >
-                          {option}
-                        </li>
-                    ))}
-                  </ul>
+                <ul className={styles.menu}>
+                  {statusOptions.map((option) => (
+                    <li
+                      key={option}
+                      className={`${styles.item} ${
+                        selectedStatus === option ? styles.active : ""
+                      }`}
+                      onClick={() => handleClick(option)}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
           </div>
 
           {/* Approved Amount input (only when status = Approved) */}
           {selectedStatus === "Approved" && (
-              <div className={styles.data}>
-                <p className={styles.label}>Approved Amount</p>
-                <input
-                    type="number"
-                    className={styles.input}
-                    value={approvedAmount}
-                    onChange={(e) => setApprovedAmount(e.target.value)}
-                    placeholder="Enter approved amount"
-                />
-              </div>
+            <div className={styles.data}>
+              <p className={styles.label}>Approved Amount</p>
+              <input
+                type="number"
+                className={styles.input}
+                value={approvedAmount}
+                onChange={(e) => setApprovedAmount(e.target.value)}
+                placeholder="Enter approved amount"
+              />
+            </div>
           )}
         </div>
 
@@ -186,12 +194,23 @@ const ViewModal = ({ onClose, record }) => {
         </div>
         {/* Modal */}
         {activeModal === "bill" && (
-            <>
-              <div className={styles.backdropOverlay2}/>
-              <div className={styles.billModal}>
-                <EstimateBill onClose={closeBill}/>
-              </div>
-            </>
+          <>
+            <div className={styles.backdropOverlay2} />
+            <div className={styles.billModal}>
+              <EstimateBill onClose={closeBill} />
+            </div>
+          </>
+        )}
+        {activeModal === "viewBill" && (
+          <>
+            <div
+              className={styles.backdropOverlay2}
+              onClick={() => setActiveModal(null)}
+            />
+            <div className={styles.billModal}>
+              <ViewBill onClose={closeBill} />
+            </div>
+          </>
         )}
       </div>
     </div>

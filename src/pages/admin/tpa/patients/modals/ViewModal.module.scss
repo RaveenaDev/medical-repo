@@ -228,12 +228,14 @@
   }
 }
 
-.openBill {
+.openBill,
+.viewBill {
   display: flex;
   align-items: center;
 }
 
-.openBillBtn {
+.openBillBtn,
+.viewBillBtn {
   background: #fff;
   color: #25307f;
   border: 1px solid #25307f;
