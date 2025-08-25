@@ -1,8 +1,12 @@
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./ViewBill.module.scss";
+import {useDispatch, useSelector} from "react-redux";
+import {getEstimatedBill} from "../../../../../../components/State/Admin/Action.js";
 
-const ViewBill = ({ onClose }) => {
+const ViewBill = ({ record,onClose }) => {
+
+  const dispatch = useDispatch()
   const dummyData = {
     grandTotal: 8000,
     categories: [
@@ -53,6 +57,13 @@ const ViewBill = ({ onClose }) => {
     ],
   };
 
+  useEffect(() => {
+    dispatch(getEstimatedBill(record._id))
+  }, [dispatch]);
+
+  const estimatedBill = useSelector((store) => store.admin.estimatedBill)
+
+  console.log("ES",estimatedBill)
   return (
     <div>
       <div className={styles.crossContainer}>
@@ -95,7 +106,7 @@ const ViewBill = ({ onClose }) => {
           </div>
 
           {/* Render categories and rows */}
-          {dummyData.categories.length === 0 ? (
+          {estimatedBill === null ? (
             <div className={styles.tableRow}>
               <div
                 style={{
@@ -108,7 +119,7 @@ const ViewBill = ({ onClose }) => {
               </div>
             </div>
           ) : (
-            dummyData.categories.map((cat, catIndex) => (
+            estimatedBill?.categories.map((cat, catIndex) => (
               <div key={catIndex} className={styles.categoryBlock}>
                 <div className={styles.categoryHeader}>
                   <p className={styles.categoryName}>{cat.categoryName}</p>
@@ -150,13 +161,13 @@ const ViewBill = ({ onClose }) => {
           )}
 
           {/* Grand total */}
-          {dummyData.categories.length > 0 && (
+          {estimatedBill?.categories.length > 0 && (
             <div className={styles.grandTotalRow}>
               <div style={{ gridColumn: "1 / 6", textAlign: "left" }}>
                 <p>Grand Total:</p>
               </div>
               <div>
-                <p>{dummyData.grandTotal}</p>
+                <p>{estimatedBill.grandTotal}</p>
               </div>
             </div>
           )}
