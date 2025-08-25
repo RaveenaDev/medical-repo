@@ -1,8 +1,11 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import styles from "./EstimateBill.module.scss";
 import { ChevronDown, ChevronUp, SquarePen, X, Trash2 } from "lucide-react";
-import {useDispatch, useSelector} from "react-redux";
-import {addEstimatedBill, getPackage} from "../../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addEstimatedBill,
+  getPackage,
+} from "../../../../../components/State/Admin/Action.js";
 
 const emptyRow = () => ({
   id: crypto.randomUUID(),
@@ -13,9 +16,10 @@ const emptyRow = () => ({
   unit: "",
 });
 
-const EstimateBill = ({ record, onClose }) => {
+const EstimateBill = ({ record, onClose, estimateOld }) => {
+  console.log(estimateOld);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [activeModal, setActiveModal] = useState(null);
 
   // Table state: categories -> [{ id, name, rows: [{...}] }]
@@ -36,10 +40,10 @@ const EstimateBill = ({ record, onClose }) => {
   const [openPackageRowId, setOpenPackageRowId] = useState(null);
 
   useEffect(() => {
-    dispatch(getPackage())
+    dispatch(getPackage());
   }, [dispatch]);
 
-  const packages = useSelector((store) => store.admin.packages)
+  const packages = useSelector((store) => store.admin.packages);
 
   // console.log("pac:",packages)
   const openCreate = () => {
@@ -222,7 +226,7 @@ const EstimateBill = ({ record, onClose }) => {
     console.log("=== ESTIMATE BILL OBJECT ===");
     console.log(estimateBill);
 
-    dispatch(addEstimatedBill(estimateBill))
+    dispatch(addEstimatedBill(estimateBill));
   };
 
   return (
@@ -316,7 +320,10 @@ const EstimateBill = ({ record, onClose }) => {
                                 row.package === option ? styles.active : ""
                               }`}
                               onClick={() =>
-                                handleSelectPackage(row.id, option.subCategoryName)
+                                handleSelectPackage(
+                                  row.id,
+                                  option.subCategoryName
+                                )
                               }
                             >
                               {option.subCategoryName}

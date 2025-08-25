@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import styles from "./ViewModal.module.scss";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { X } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { updateStatusOfInsuredPatients } from "../../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getEstimatedBill,
+  updateStatusOfInsuredPatients,
+} from "../../../../../components/State/Admin/Action.js";
 import EstimateBill from "./EstimateBill.jsx";
 import ViewBill from "./viewBillModal/viewBill.jsx";
+import { useEffect } from "react";
 const ViewModal = ({ onClose, record }) => {
   const { patient } = record;
 
@@ -15,6 +19,7 @@ const ViewModal = ({ onClose, record }) => {
   const [activeModal, setActiveModal] = useState(null);
   const statusOptions = ["Approved", "Rejected", "Pending"];
   const [openStatus, setOpenStatus] = useState(false);
+  const [isEstimateBillExist, setIsEstimateBillExist] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(
     record.admissionDetails.insurance.insuranceApproved
       .charAt(0)
@@ -27,7 +32,11 @@ const ViewModal = ({ onClose, record }) => {
   );
 
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getEstimatedBill(record._id));
+  }, [dispatch, record._id]);
 
+  const estimatedBill = useSelector((store) => store.admin.estimatedBill);
   const handleClick = (option) => {
     setSelectedStatus(option);
     setOpenStatus(false);
@@ -62,18 +71,18 @@ const ViewModal = ({ onClose, record }) => {
       <div className={styles.container}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 className={styles.title}>Patient Insurance Details</h1>
-          <div style={{display:'flex',gap:'1rem'}}>
+          <div style={{ display: "flex", gap: "1rem" }}>
             <div className={styles.viewBill}>
               <button
-                  className={styles.viewBillBtn}
-                  onClick={() => setActiveModal("viewBill")}
+                className={styles.viewBillBtn}
+                onClick={() => setActiveModal("viewBill")}
               >
                 View Estimate Bill
               </button>
             </div>
             <div className={styles.openBill}>
               <button onClick={handleBillClick} className={styles.openBillBtn}>
-                Create Estimate Bill
+                {estimatedBill ? "Edit" : "Create"} Estimate Bill
               </button>
             </div>
           </div>
@@ -201,7 +210,11 @@ const ViewModal = ({ onClose, record }) => {
           <>
             <div className={styles.backdropOverlay2} />
             <div className={styles.billModal}>
-              <EstimateBill record={record} onClose={closeBill} />
+              <EstimateBill
+                record={record}
+                onClose={closeBill}
+                estimateOld={estimatedBill || undefined}
+              />
             </div>
           </>
         )}
@@ -212,7 +225,11 @@ const ViewModal = ({ onClose, record }) => {
               onClick={() => setActiveModal(null)}
             />
             <div className={styles.billModal}>
-              <ViewBill record={record} onClose={closeBill} />
+              <ViewBill
+                record={record}
+                onClose={closeBill}
+                estimatedBill={estimatedBill}
+              />
             </div>
           </>
         )}
