@@ -78,6 +78,8 @@ const BedInfo = ({ onClose, patientId }) => {
       targetBedId: selectedBed,
     };
 
+    // console.log("Transfer Payload:", payload);
+
     dispatch(transferPatientToBed(payload, patientId));
   };
   return (
