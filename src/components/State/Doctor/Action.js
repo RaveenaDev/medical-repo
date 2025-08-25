@@ -1761,7 +1761,7 @@ export const transferPatientToBed =
 
       const { data } = await axios.patch(
         `${API_URL}/beds/transfer-patient`,
-        { payload },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1770,7 +1770,7 @@ export const transferPatientToBed =
         }
       );
 
-      console.log("Patient transferred to bed:", data);
+      // console.log("Patient transferred to bed:", data);
 
       dispatch(getPatientBedInfo(patientId));
       toast.success("Patient transferred to bed successfully!", {
