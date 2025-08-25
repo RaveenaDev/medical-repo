@@ -74,7 +74,7 @@ const BedInfo = ({ onClose, patientId }) => {
     // console.log("prev Bed:", bed);
     // console.log("new Bed:", selectedBed);
     const payload = {
-      currentBedId: bed?.bedNumber, // change to bed ID when backend updates
+      currentBedId: bed?.bedId, // change to bed ID when backend updates
       targetBedId: selectedBed,
     };
 

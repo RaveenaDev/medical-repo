@@ -1152,6 +1152,10 @@ export const createAdmissionRequest = (requestData) => async (dispatch) => {
       "Error creating admission request:",
       error.response?.data || error.message
     );
+    toast.error("Failed to create admission request", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
 
     throw error;
   }
