@@ -62,6 +62,10 @@ const BillingDetails = ({ onClose }) => {
         >
           <CircularProgress sx={{ color: "#25307F" }} size={58} />
         </Box>
+      ) : patientBills.length === 0 ? (
+        <div className={styles.noBill}>
+          <p>No Bill Found</p>
+        </div>
       ) : (
         <div>
           {/* Section 1 */}
