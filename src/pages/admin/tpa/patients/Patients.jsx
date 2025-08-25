@@ -310,7 +310,7 @@ const Patients = () => {
 
   const insuredPatients = useSelector((store) => store.admin.insuredPatients)
 
-  console.log("Ins: ",insuredPatients)
+  // console.log("Ins: ",insuredPatients)
 
   return (
     <div className={styles.billingsContainer}>
