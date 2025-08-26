@@ -23,6 +23,7 @@ import {
 } from "../../components/State/Admin/Action.js";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AdmissionRequests from "./Components/admissionRequests/AdmissionRequests.jsx";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Admin(props) {
   const [selectedFilter, setSelectedFilter] = useState("Monthly"); // Keep track of selected option
@@ -48,7 +49,10 @@ function Admin(props) {
   const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
   const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
   const weeklyData = appointmentData?.Weekly?.daily || {}; // Ensure it's an object
-
+  // console.log("DATA:", appointmentData);
+  const isLoadingAppointmentCount = useSelector(
+    (state) => state.admin.isLoadingAppointmentCount
+  );
   const [newData, setNewData] = useState([]);
 
   useEffect(() => {
@@ -464,72 +468,88 @@ function Admin(props) {
                 </div>
               </Box>
 
-              {/* Content for the top grid */}
-              <ResponsiveContainer width="100%" height={290}>
-                <BarChart
-                  barGap={5} // Adjust space between bars
-                  width={500}
-                  height={300}
-                  data={newData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
+              {isLoadingAppointmentCount ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "44vh", // or full height you need
+                    marginTop: "-3vh",
                   }}
                 >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="name"
-                    tick={{ fill: "#fff", fontSize: 14 }}
-                    tickLine={false} // Removes the dash/tick marks from Y-axis
-                    tickMargin={10}
-                    axisLine={{ stroke: "#fff" }}
-                  />
-                  <YAxis
-                    tick={{ fill: "#fff", fontSize: 12 }}
-                    axisLine={false} // Removes the Y-axis line
-                    tickMargin={10} // Adds spacing between the Y-axis ticks and bars
-                    dx={-5} // Moves the Y-axis labels slightly to the left for more spacing
-                    tickLine={false} // Removes the dash/tick marks from Y-axis
-                  />
-                  {/* Customize the Tooltip */}
-                  <Tooltip
-                    cursor={{ fill: "transparent" }}
-                    contentStyle={{
-                      color: "#000",
-                      borderRadius: "5px", // Optional: for rounded corners
-                      padding: "10px", // Optional: for more spacing inside the tooltip
-                    }}
-                  />
-                  {/* Remove the Legend for clarity */}
-                  {/* Conditionally render bars based on state */}
-                  {visibleBars.appointments && (
-                    <Bar
-                      dataKey="total"
-                      fill="#ACDDE7"
-                      radius={[10, 10, 0, 0]}
-                      barSize={10}
-                    />
-                  )}
-                  {visibleBars.completed && (
-                    <Bar
-                      dataKey="completed"
-                      fill="#3DB461"
-                      radius={[10, 10, 0, 0]}
-                      barSize={10}
-                    />
-                  )}
-                  {visibleBars.canceled && (
-                    <Bar
-                      dataKey="cancelled"
-                      fill="#EAA000"
-                      radius={[10, 10, 0, 0]}
-                      barSize={10}
-                    />
-                  )}
-                </BarChart>
-              </ResponsiveContainer>
+                  <CircularProgress sx={{ color: "#ffff" }} size={50} />
+                </Box>
+              ) : (
+                <Box>
+                  {/* Content for the top grid */}
+                  <ResponsiveContainer width="100%" height={290}>
+                    <BarChart
+                      barGap={5} // Adjust space between bars
+                      width={500}
+                      height={300}
+                      data={newData}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid vertical={false} />
+                      <XAxis
+                        dataKey="name"
+                        tick={{ fill: "#fff", fontSize: 14 }}
+                        tickLine={false} // Removes the dash/tick marks from Y-axis
+                        tickMargin={10}
+                        axisLine={{ stroke: "#fff" }}
+                      />
+                      <YAxis
+                        tick={{ fill: "#fff", fontSize: 12 }}
+                        axisLine={false} // Removes the Y-axis line
+                        tickMargin={10} // Adds spacing between the Y-axis ticks and bars
+                        dx={-5} // Moves the Y-axis labels slightly to the left for more spacing
+                        tickLine={false} // Removes the dash/tick marks from Y-axis
+                      />
+                      {/* Customize the Tooltip */}
+                      <Tooltip
+                        cursor={{ fill: "transparent" }}
+                        contentStyle={{
+                          color: "#000",
+                          borderRadius: "5px", // Optional: for rounded corners
+                          padding: "10px", // Optional: for more spacing inside the tooltip
+                        }}
+                      />
+                      {/* Remove the Legend for clarity */}
+                      {/* Conditionally render bars based on state */}
+                      {visibleBars.appointments && (
+                        <Bar
+                          dataKey="total"
+                          fill="#ACDDE7"
+                          radius={[10, 10, 0, 0]}
+                          barSize={10}
+                        />
+                      )}
+                      {visibleBars.completed && (
+                        <Bar
+                          dataKey="completed"
+                          fill="#3DB461"
+                          radius={[10, 10, 0, 0]}
+                          barSize={10}
+                        />
+                      )}
+                      {visibleBars.canceled && (
+                        <Bar
+                          dataKey="cancelled"
+                          fill="#EAA000"
+                          radius={[10, 10, 0, 0]}
+                          barSize={10}
+                        />
+                      )}
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Box>
+              )}
             </Box>
           </Grid>
 

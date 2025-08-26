@@ -1,17 +1,23 @@
 import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
-  ADD_DOCTORS, ADD_ESTIMATED_BILL,
-  ADD_EXPENSE, ADD_INSURANCE_COMPANY,
+  ADD_DOCTORS,
+  ADD_ESTIMATED_BILL,
+  ADD_EXPENSE,
+  ADD_INSURANCE_COMPANY,
   ADD_ROOM,
-  ADD_SERVICE, ADD_SERVICE_TO_COMPANY,
+  ADD_SERVICE,
+  ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
   DELETE_SERVICE,
   DELETE_SERVICE_CATEGORY,
-  DELETE_STAFFS, DELETE_TPA_SERVICE, DELETE_TPA_SERVICE_CATEGORY, EDIT_TPA_SERVICE,
+  DELETE_STAFFS,
+  DELETE_TPA_SERVICE,
+  DELETE_TPA_SERVICE_CATEGORY,
+  EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -20,20 +26,27 @@ import {
   GET_BILL_DETAILS,
   GET_BILLING_RECORDS,
   GET_COMPLETED_APPOINTMENTS,
-  GET_DEPARTMENT_BY_ID, GET_DOCTOR_REQUESTS,
+  GET_DEPARTMENT_BY_ID,
+  GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
-  GET_EARNINGS, GET_ESTIMATED_BILL,
+  GET_EARNINGS,
+  GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
-  GET_FILTERED_PATIENTS, GET_FILTERED_ROOMS, GET_INSURANCE_COMPANIES, GET_INSURED_PATIENTS,
-  GET_ONGOING_APPOINTMENTS, GET_PACKAGES,
+  GET_FILTERED_PATIENTS,
+  GET_FILTERED_ROOMS,
+  GET_INSURANCE_COMPANIES,
+  GET_INSURED_PATIENTS,
+  GET_ONGOING_APPOINTMENTS,
+  GET_PACKAGES,
   GET_PATIENTS,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
   GET_STAFFS,
-  GET_WAITING_APPOINTMENTS, NULL_ESTIMATED_BILL,
+  GET_WAITING_APPOINTMENTS,
+  NULL_ESTIMATED_BILL,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
 } from "./ActionType.js";
@@ -51,12 +64,13 @@ const initialState = {
   totalFilteredRooms: null,
   patient: null,
   appointmentCount: null,
+  isLoadingAppointmentCount: true,
   patients: [],
   filteredPatients: [],
   doctors: [],
   staffs: [],
   rooms: [],
-  filteredRooms:[],
+  filteredRooms: [],
   departments: [],
   department: null,
   expenses: [],
@@ -85,7 +99,7 @@ const initialState = {
   insuredPatients: [],
   insuranceCompanies: [],
   estimatedBill: null,
-  packages: []
+  packages: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -100,6 +114,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentCount: action.payload,
+        isLoadingAppointmentCount: false,
       };
     case GET_DOCTORS:
       return {
@@ -245,11 +260,11 @@ export const adminReducer = (state = initialState, action) => {
       };
 
     case GET_FILTERED_ROOMS:
-      return{
+      return {
         ...state,
         totalFilteredRooms: action.payload.totalRooms,
-        filteredRooms: action.payload.rooms
-      }
+        filteredRooms: action.payload.rooms,
+      };
     case GET_APPOINTMENT_REQUESTS:
       return {
         ...state,
@@ -381,44 +396,44 @@ export const adminReducer = (state = initialState, action) => {
       };
 
     case GET_DOCTOR_REQUESTS:
-      return{
+      return {
         ...state,
         doctorRequests: action.payload.data,
-      }
+      };
 
     case ACCEPT_REQUEST:
-      return{
+      return {
         ...state,
         doctorRequests: state.doctorRequests.filter(
-            request => request._id !== action.payload
+          (request) => request._id !== action.payload
         ),
-      }
+      };
 
     case GET_INSURED_PATIENTS:
-      return{
+      return {
         ...state,
-        insuredPatients: action.payload.data
-      }
+        insuredPatients: action.payload.data,
+      };
 
     case GET_INSURANCE_COMPANIES:
-      return{
+      return {
         ...state,
-        insuranceCompanies: action.payload.companies
-      }
+        insuranceCompanies: action.payload.companies,
+      };
 
     case ADD_INSURANCE_COMPANY:
-      return{
+      return {
         ...state,
-        insuranceCompanies: [...state.insuranceCompanies,action.payload]
-      }
+        insuranceCompanies: [...state.insuranceCompanies, action.payload],
+      };
 
     case ADD_SERVICE_TO_COMPANY:
       return {
         ...state,
         insuranceCompanies: state.insuranceCompanies.map((company) =>
-            company._id === action.payload._id
-                ? { ...company, services: action.payload.services }
-                : company
+          company._id === action.payload._id
+            ? { ...company, services: action.payload.services }
+            : company
         ),
       };
 
@@ -426,21 +441,21 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         insuranceCompanies: state.insuranceCompanies.map((company) =>
-            company._id === action.payload.companyId
-                ? {
-                  ...company,
-                  services: company.services.map((service) =>
-                      service._id === action.payload.serviceId
-                          ? {
-                            ...service,
-                            categories: service.categories.filter(
-                                (cat) => cat._id !== action.payload.categoryId
-                            ),
-                          }
-                          : service
-                  ),
-                }
-                : company
+          company._id === action.payload.companyId
+            ? {
+                ...company,
+                services: company.services.map((service) =>
+                  service._id === action.payload.serviceId
+                    ? {
+                        ...service,
+                        categories: service.categories.filter(
+                          (cat) => cat._id !== action.payload.categoryId
+                        ),
+                      }
+                    : service
+                ),
+              }
+            : company
         ),
       };
 
@@ -448,14 +463,14 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         insuranceCompanies: state.insuranceCompanies.map((company) =>
-            company._id === action.payload.companyId
-                ? {
-                  ...company,
-                  services: company.services.filter(
-                      (service) => service._id !== action.payload.serviceId
-                  ),
-                }
-                : company
+          company._id === action.payload.companyId
+            ? {
+                ...company,
+                services: company.services.filter(
+                  (service) => service._id !== action.payload.serviceId
+                ),
+              }
+            : company
         ),
       };
 
@@ -463,36 +478,36 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         insuranceCompanies: state.insuranceCompanies.map((company) =>
-            company._id === action.payload.company._id
-                ? {
-                  ...company,
-                  services: company.services.map((service) =>
-                      service._id === action.payload.updatedService._id
-                          ? action.payload.updatedService // replace with updated service from backend
-                          : service
-                  ),
-                }
-                : company
+          company._id === action.payload.company._id
+            ? {
+                ...company,
+                services: company.services.map((service) =>
+                  service._id === action.payload.updatedService._id
+                    ? action.payload.updatedService // replace with updated service from backend
+                    : service
+                ),
+              }
+            : company
         ),
       };
 
     case GET_PACKAGES:
-      return{
+      return {
         ...state,
-        packages: action.payload.categories
-      }
+        packages: action.payload.categories,
+      };
 
     case GET_ESTIMATED_BILL:
-      return{
+      return {
         ...state,
-        estimatedBill: action.payload.estimates[0]
-      }
+        estimatedBill: action.payload.estimates[0],
+      };
 
     case NULL_ESTIMATED_BILL:
-      return{
+      return {
         ...state,
-        estimatedBill: null
-      }
+        estimatedBill: null,
+      };
 
     default:
       return state;
