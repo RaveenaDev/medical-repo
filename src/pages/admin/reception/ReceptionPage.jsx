@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import {
+  Box,
   Chip,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -52,7 +54,9 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
   }, [dispatch, selectedDate]);
 
   const admin = useSelector((store) => store.admin);
-
+  const isLoadingTotalAppointments = useSelector(
+    (store) => store.admin.isLoadingTotalAppointments
+  );
   const totalAppointments = admin.totalAppointments;
   const totalPatients = admin.patients;
   const totalAppointmentRequests = admin.appointmentRequests;
@@ -183,110 +187,127 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    {totalAppointments.length > 0 ? (
-                      totalAppointments.slice(0, 5).map((row, index) => (
-                        <TableRow
-                          key={index}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                            backgroundColor: "#EEF8F1",
-                            "& td, & th": { py: 1.5 }, // Removes padding from all cells
-                          }}
-                        >
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            sx={{
-                              color: "#25307f",
-                              border: "none",
-                              px: 0.6,
-                              pl: 2,
-                            }}
-                          >
-                            {truncateText(row.caseId, 13)}
-                          </TableCell>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            sx={{ color: "#25307f", border: "none", px: 0.6 }}
-                          >
-                            {truncateText(row.patient?.name, 13)}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{ border: "none", px: 0.6, color: "#747474" }}
-                          >
-                            {truncateText(row.doctor?.name, 14)}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{ border: "none", px: 0.6, color: "#747474" }}
-                          >
-                            {row.typeVisit}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{ border: "none", px: 0.6, color: "#747474" }}
-                          >
-                            {row.department.name}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{ border: "none", px: 0.6, color: "#747474" }}
-                          >
-                            {truncateText(row?.tokenNumber || "N/A", 13)}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              border: "none",
-                              px: 0.6,
-                              pr: 2,
-                              color: "#747474",
-                            }}
-                          >
-                            <Chip
-                              label={row.status}
-                              size="small"
-                              sx={{
-                                bgcolor:
-                                  row.status === "Ongoing"
-                                    ? "#3DB461"
-                                    : row.status === "Scheduled"
-                                    ? "#25307F"
-                                    : row.status === "Waiting"
-                                    ? "#ffffff"
-                                    : "white",
-                                color:
-                                  row.status === "Ongoing"
-                                    ? "#FFFFFF"
-                                    : row.status === "Completed"
-                                    ? "orange"
-                                    : row.status === "Scheduled"
-                                    ? "white"
-                                    : row.status === "Waiting"
-                                    ? "#878787"
-                                    : "#757575",
-                                fontWeight: "bold",
-                                px: 0.7,
-                              }}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
+
+                  {isLoadingTotalAppointments ? (
+                    <TableBody>
                       <TableRow>
                         <TableCell
-                          align="center"
                           colSpan={7}
-                          sx={{ backgroundColor: "#EEF8F1" }}
+                          sx={{ border: "none", textAlign: "center", py: 8 }}
                         >
-                          No appointments found.
+                          <CircularProgress
+                            sx={{ color: "#25307F" }}
+                            size={45}
+                          />
                         </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
+                    </TableBody>
+                  ) : (
+                    <TableBody>
+                      {totalAppointments.length > 0 ? (
+                        totalAppointments.slice(0, 5).map((row, index) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                              backgroundColor: "#EEF8F1",
+                              "& td, & th": { py: 1.5 }, // Removes padding from all cells
+                            }}
+                          >
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{
+                                color: "#25307f",
+                                border: "none",
+                                px: 0.6,
+                                pl: 2,
+                              }}
+                            >
+                              {truncateText(row.caseId, 13)}
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{ color: "#25307f", border: "none", px: 0.6 }}
+                            >
+                              {truncateText(row.patient?.name, 13)}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ border: "none", px: 0.6, color: "#747474" }}
+                            >
+                              {truncateText(row.doctor?.name, 14)}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ border: "none", px: 0.6, color: "#747474" }}
+                            >
+                              {row.typeVisit}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ border: "none", px: 0.6, color: "#747474" }}
+                            >
+                              {row.department.name}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ border: "none", px: 0.6, color: "#747474" }}
+                            >
+                              {truncateText(row?.tokenNumber || "N/A", 13)}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{
+                                border: "none",
+                                px: 0.6,
+                                pr: 2,
+                                color: "#747474",
+                              }}
+                            >
+                              <Chip
+                                label={row.status}
+                                size="small"
+                                sx={{
+                                  bgcolor:
+                                    row.status === "Ongoing"
+                                      ? "#3DB461"
+                                      : row.status === "Scheduled"
+                                      ? "#25307F"
+                                      : row.status === "Waiting"
+                                      ? "#ffffff"
+                                      : "white",
+                                  color:
+                                    row.status === "Ongoing"
+                                      ? "#FFFFFF"
+                                      : row.status === "Completed"
+                                      ? "orange"
+                                      : row.status === "Scheduled"
+                                      ? "white"
+                                      : row.status === "Waiting"
+                                      ? "#878787"
+                                      : "#757575",
+                                  fontWeight: "bold",
+                                  px: 0.7,
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            align="center"
+                            colSpan={7}
+                            sx={{ backgroundColor: "#EEF8F1" }}
+                          >
+                            No appointments found.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  )}
                 </Table>
               </TableContainer>
             </div>

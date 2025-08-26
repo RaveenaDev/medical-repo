@@ -76,6 +76,7 @@ const initialState = {
   expenses: [],
   totalExpenses: null,
   totalAppointments: [],
+  isLoadingTotalAppointments: true,
   scheduledAppointments: [],
   scheduledCount: null,
   ongoingCount: null,
@@ -175,6 +176,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         totalAppointments: action.payload.appointments,
+        isLoadingTotalAppointments: false,
       };
 
     case GET_SCHEDULED_APPOINTMENTS:
