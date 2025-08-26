@@ -57,6 +57,17 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
   const isLoadingTotalAppointments = useSelector(
     (store) => store.admin.isLoadingTotalAppointments
   );
+  const isLoadingGetPatients = useSelector(
+    (store) => store.admin.isLoadingGetPatients
+  );
+  const isLoadingAppointmentRequests = useSelector(
+    (store) => store.admin.isLoadingAppointmentRequests
+  );
+  //console.log(isLoadingAppointmentRequests);
+
+  const isLoadingRejectedAppointments = useSelector(
+    (store) => store.admin.isLoadingRejectedAppointments
+  );
   const totalAppointments = admin.totalAppointments;
   const totalPatients = admin.patients;
   const totalAppointmentRequests = admin.appointmentRequests;
@@ -396,99 +407,116 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    {totalPatients.length > 0 ? (
-                      totalPatients.slice(0, 5).map((row, index) => (
-                        <TableRow
-                          key={index}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                            "& td, & th": { py: 1.2 }, // Removes padding from all cells
-                            backgroundColor:
-                              row.status === "active" ? "#edf8f1" : "#fff",
-                          }}
-                        >
-                          <TableCell
-                            component="td"
-                            scope="row"
-                            sx={{
-                              color: "#25307f",
-                              border: "none",
-                              padding: "14px 24px",
-                            }}
-                          >
-                            {row.name}
-                          </TableCell>
-                          <TableCell
-                            component="td"
-                            scope="row"
-                            sx={{
-                              border: "none",
-                              padding: "14px 14px",
-                              color: "#747474",
-                              fontWeight: 500,
-                            }}
-                          >
-                            {truncateText(
-                              row.doctors[0]?.name || "Not Assigned",
-                              12
-                            )}
-                          </TableCell>
-                          <TableCell
-                            align="left"
-                            sx={{
-                              border: "none",
-                              padding: "14px 14px",
-                              color: "#747474",
-                            }}
-                          >
-                            {truncateText(row.role, 14)}
-                          </TableCell>
-                          <TableCell
-                            align="left"
-                            sx={{
-                              border: "none",
-                              padding: "14px 14px",
-                              color: "#747474",
-                            }}
-                          >
-                            {row.appointments.length > 0
-                              ? row.appointments[row.appointments.length - 1]
-                                  ?.branch || "Not Assigned"
-                              : "Not Assigned"}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{ border: "none", padding: "14px 14px" }}
-                          >
-                            <span
-                              style={{
-                                color: "#4b9758",
-                                backgroundColor: "#c6e1cb", // Replace with your desired color
-                                padding: "6px 14px", // Add padding for spacing
-                                borderRadius: "16px", // Add rounded corners
-                                display: "inline-block", // Ensures the span wraps only the text
-                                fontSize: "12px",
-                                border: "1px solid #4b9758",
-                              }}
-                            >
-                              Active
-                            </span>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
+
+                  {isLoadingGetPatients ? (
+                    <TableBody>
                       <TableRow>
                         <TableCell
-                          align="center"
-                          colSpan={5}
-                          sx={{ backgroundColor: "#EEF8F1" }}
+                          colSpan={7}
+                          sx={{ border: "none", textAlign: "center", py: 8 }}
                         >
-                          No patients found.
+                          <CircularProgress
+                            sx={{ color: "#25307F" }}
+                            size={45}
+                          />
                         </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
+                    </TableBody>
+                  ) : (
+                    <TableBody>
+                      {totalPatients.length > 0 ? (
+                        totalPatients.slice(0, 5).map((row, index) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                              "& td, & th": { py: 1.2 }, // Removes padding from all cells
+                              backgroundColor:
+                                row.status === "active" ? "#edf8f1" : "#fff",
+                            }}
+                          >
+                            <TableCell
+                              component="td"
+                              scope="row"
+                              sx={{
+                                color: "#25307f",
+                                border: "none",
+                                padding: "14px 24px",
+                              }}
+                            >
+                              {row.name}
+                            </TableCell>
+                            <TableCell
+                              component="td"
+                              scope="row"
+                              sx={{
+                                border: "none",
+                                padding: "14px 14px",
+                                color: "#747474",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {truncateText(
+                                row.doctors[0]?.name || "Not Assigned",
+                                12
+                              )}
+                            </TableCell>
+                            <TableCell
+                              align="left"
+                              sx={{
+                                border: "none",
+                                padding: "14px 14px",
+                                color: "#747474",
+                              }}
+                            >
+                              {truncateText(row.role, 14)}
+                            </TableCell>
+                            <TableCell
+                              align="left"
+                              sx={{
+                                border: "none",
+                                padding: "14px 14px",
+                                color: "#747474",
+                              }}
+                            >
+                              {row.appointments.length > 0
+                                ? row.appointments[row.appointments.length - 1]
+                                    ?.branch || "Not Assigned"
+                                : "Not Assigned"}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{ border: "none", padding: "14px 14px" }}
+                            >
+                              <span
+                                style={{
+                                  color: "#4b9758",
+                                  backgroundColor: "#c6e1cb", // Replace with your desired color
+                                  padding: "6px 14px", // Add padding for spacing
+                                  borderRadius: "16px", // Add rounded corners
+                                  display: "inline-block", // Ensures the span wraps only the text
+                                  fontSize: "12px",
+                                  border: "1px solid #4b9758",
+                                }}
+                              >
+                                Active
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            align="center"
+                            colSpan={5}
+                            sx={{ backgroundColor: "#EEF8F1" }}
+                          >
+                            No patients found.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  )}
                 </Table>
               </TableContainer>
             </div>

@@ -66,6 +66,7 @@ const initialState = {
   appointmentCount: null,
   isLoadingAppointmentCount: true,
   patients: [],
+  isLoadingGetPatients: true,
   filteredPatients: [],
   doctors: [],
   staffs: [],
@@ -86,7 +87,9 @@ const initialState = {
   waitingAppointments: [],
   completedAppointments: [],
   appointmentRequests: [],
+  isLoadingAppointmentRequests: true,
   rejectedAppointments: [],
+  isLoadingRejectedAppointments: true,
   billingRecord: null,
   billingRecords: [],
   services: [],
@@ -211,6 +214,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         patients: action.payload.patients,
+        isLoadingGetPatients: false,
       };
 
     case GET_FILTERED_PATIENTS:
@@ -271,6 +275,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentRequests: action.payload.appointments,
+        isLoadingAppointmentRequests: false,
       };
     case ADD_ROOM:
       return {
@@ -300,6 +305,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         rejectedAppointments: action.payload.rejectedAppointments,
+        isLoadingRejectedAppointments: false,
       };
 
     case GET_EXPENSES:
