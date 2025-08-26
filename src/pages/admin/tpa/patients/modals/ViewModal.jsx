@@ -62,6 +62,51 @@ const ViewModal = ({ onClose, record }) => {
   const handleBillClick = (record) => {
     setActiveModal("bill");
   };
+
+  // Add these after your existing state declarations
+  const [formattedAmount, setFormattedAmount] = useState("");
+
+  // Helper function to format number with commas
+  const formatIndianCurrency = (value) => {
+    if (!value) return "";
+
+    const s = value.toString().split("").reverse().join("");
+    const parts = [];
+
+    parts.push(s.substring(0, 3)); // Last 3 digits
+
+    let remaining = s.substring(3);
+    while (remaining.length > 0) {
+      parts.push(remaining.substring(0, 2)); // Every 2 digits after
+      remaining = remaining.substring(2);
+    }
+
+    return parts.join(",").split("").reverse().join("");
+  };
+
+  // Helper function to remove commas from formatted string
+  const removeCommasFromNumber = (value) => {
+    return value.replace(/,/g, "");
+  };
+
+  // Replace your existing onChange handler with this
+  const handleApprovedAmountChange = (e) => {
+    const inputValue = e.target.value;
+    const digitsOnly = inputValue.replace(/[^0-9]/g, "");
+
+    setApprovedAmount(digitsOnly);
+    setFormattedAmount(formatIndianCurrency(digitsOnly));
+  };
+
+  // Initialize formatted amount
+  useEffect(() => {
+    if (record.admissionDetails.insurance.amountApproved) {
+      const amount = record.admissionDetails.insurance.amountApproved;
+      setApprovedAmount(amount);
+      setFormattedAmount(formatIndianCurrency(amount));
+    }
+  }, [record]);
+
   return (
     <div>
       {" "}
@@ -192,10 +237,10 @@ const ViewModal = ({ onClose, record }) => {
             <div className={styles.data}>
               <p className={styles.label}>Approved Amount</p>
               <input
-                type="number"
+                type="text"
                 className={styles.input}
-                value={approvedAmount}
-                onChange={(e) => setApprovedAmount(e.target.value)}
+                value={formattedAmount}
+                onChange={handleApprovedAmountChange}
                 placeholder="Enter approved amount"
               />
             </div>

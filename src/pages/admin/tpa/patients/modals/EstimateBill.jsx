@@ -3,7 +3,8 @@ import styles from "./EstimateBill.module.scss";
 import { ChevronDown, ChevronUp, SquarePen, X, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addEstimatedBill, editEstimatedBill,
+  addEstimatedBill,
+  editEstimatedBill,
   getPackage,
 } from "../../../../../components/State/Admin/Action.js";
 
@@ -22,7 +23,7 @@ const mapOldEstimateToState = (estimateOld) => {
     id: crypto.randomUUID(),
     name: cat?.categoryName ?? "",
     rows: Array.isArray(cat?.items)
-        ? cat.items.map((item) => ({
+      ? cat.items.map((item) => ({
           id: crypto.randomUUID(),
           description: item?.description ?? "",
           ward: item?.ward ?? "",
@@ -30,7 +31,7 @@ const mapOldEstimateToState = (estimateOld) => {
           rate: item?.rate ?? "",
           unit: item?.unit ?? "",
         }))
-        : [emptyRow()],
+      : [emptyRow()],
   }));
 };
 
@@ -53,9 +54,16 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
   // Warning text state
   const [warningText, setWarningText] = useState("");
 
-  // Package dropdown (per draft row, optional; here one global dropdown)
-  const packageOptions = ["option1", "option2", "option3"];
   const [openPackageRowId, setOpenPackageRowId] = useState(null);
+  // Package dropdown (per draft row, optional; here one global dropdown)
+  const wardOptions = ["option1", "option2", "option3"];
+  const [openWardRowId, setOpenWardRowId] = useState(null);
+
+  // Add this handler after handleSelectPackage
+  const handleSelectWard = (rowId, value) => {
+    updateDraftRow(rowId, "ward", value);
+    setOpenWardRowId(null);
+  };
 
   useEffect(() => {
     dispatch(getPackage());
@@ -67,7 +75,11 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
 
   // ✅ Prefill from estimateOld if provided, else keep empty
   useEffect(() => {
-    if (estimateOld && Array.isArray(estimateOld.categories) && estimateOld.categories.length > 0) {
+    if (
+      estimateOld &&
+      Array.isArray(estimateOld.categories) &&
+      estimateOld.categories.length > 0
+    ) {
       setCategories(mapOldEstimateToState(estimateOld));
       // ensure modal/draft are reset when loading old bill
       setActiveModal(null);
@@ -327,14 +339,43 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
 
                   <div>
                     <p>Ward</p>
-                    <input
-                      type="text"
-                      value={row.ward}
-                      onChange={(e) =>
-                        updateDraftRow(row.id, "ward", e.target.value)
-                      }
-                      placeholder=""
-                    />
+                    <div className={styles.dropdown}>
+                      <button
+                        className={styles.trigger}
+                        onClick={() =>
+                          setOpenWardRowId((prev) =>
+                            prev === row.id ? null : row.id
+                          )
+                        }
+                        type="button"
+                      >
+                        <p>{row.ward || "Select Ward"}</p>
+
+                        <span className={styles.arrow}>
+                          {openWardRowId === row.id ? (
+                            <ChevronUp />
+                          ) : (
+                            <ChevronDown />
+                          )}
+                        </span>
+                      </button>
+
+                      {openWardRowId === row.id && (
+                        <ul className={styles.menu}>
+                          {wardOptions.map((option) => (
+                            <li
+                              key={option}
+                              className={`${styles.item} ${
+                                row.ward === option ? styles.active : ""
+                              }`}
+                              onClick={() => handleSelectWard(row.id, option)}
+                            >
+                              {option}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   </div>
 
                   <div>
