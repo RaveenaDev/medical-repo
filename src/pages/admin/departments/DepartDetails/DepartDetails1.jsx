@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.scss";
-import { Box, Button, Tooltip } from "@mui/material";
+import { Box, Button, CircularProgress, Tooltip } from "@mui/material";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ayu from "../departments.module.scss";
 import avi from "./departDetails.module.scss";
@@ -86,524 +86,552 @@ const DepartDetails1 = (props) => {
             {/*/!* Horizontal line *!/*/}
             {/*<hr style={{border: '1px solid #d3d3d3', margin: '20px 0'}} />*/}
 
-            <Box className={avi.boxContainer}>
-              <div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
+            {!department ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "90vh", // or full height you need
+                }}
+              >
+                <CircularProgress sx={{ color: "#25307F" }} size={58} />
+              </Box>
+            ) : (
+              <>
+                <Box className={avi.boxContainer}>
                   <div>
-                    <h3 className={avi.heading}>Specific Branch Name</h3>
-                    <div className={avi.pro}>
-                      <img
-                        className={avi.img}
-                        src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
-                        alt=""
-                      />
-                      <p className={avi.name}>
-                        {department?.departmentHead.name}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className={avi.icons}>
-                    <Button
-                      className={avi.message}
-                      sx={{
-                        outline: "none",
-                        boxShadow: "none",
-                        "&:focus": { outline: "none" },
-                        borderRadius: "12px",
-                        padding: "8px 2px",
-                      }}
-                    >
-                      <Tooltip
-                        title={
-                          department?.departmentHead?.email ||
-                          "No email available"
-                        }
-                        arrow
-                        componentsProps={{
-                          tooltip: {
-                            sx: {
-                              backgroundColor: "#25307F",
-                              color: "white",
-                              fontSize: "12px",
-                              padding: "8px",
-                              borderRadius: "8px",
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: "#25307F",
-                            },
-                          },
-                        }}
-                      >
-                        <EmailIcon />
-                      </Tooltip>
-                    </Button>
-                    <Button
-                      className={avi.phone}
-                      sx={{
-                        outline: "none",
-                        boxShadow: "none",
-                        "&:focus": { outline: "none" },
-                        borderRadius: "12px",
-                        padding: "8px 2px",
-                      }}
-                    >
-                      <Tooltip
-                        title={
-                          department?.departmentHead?.phone ||
-                          "No phone available"
-                        }
-                        arrow
-                        componentsProps={{
-                          tooltip: {
-                            sx: {
-                              backgroundColor: " #2E823B",
-                              color: "white",
-                              fontSize: "12px",
-                              padding: "8px",
-                              borderRadius: "8px",
-                            },
-                          },
-                          arrow: {
-                            sx: {
-                              color: " #2E823B",
-                            },
-                          },
-                        }}
-                      >
-                        <PhoneIcon />
-                      </Tooltip>
-                    </Button>
-                  </div>
-                </div>
-
-                <div className={avi.section1}>
-                  <Grid
-                    container
-                    sx={{ width: "100%", justifyContent: "space-between" }}
-                  >
-                    {/* Section 1 */}
-                    <Grid
-                      md={4}
-                      sx={{
+                    <div
+                      style={{
                         display: "flex",
-                        justifyContent: "center",
-                        width: "45%",
-                        padding: "10px 25px",
-                        border: "1px solid rgba(116, 116, 116, 0.3)",
-                        borderRadius: "4px",
-                        boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <div style={{ width: "100%", padding: "0 10px" }}>
-                        <h4 className={avi.heading}>Staff Details</h4>
-                        <Box>
-                          <Stack spacing={1}>
-                            {" "}
-                            <FormControl sx={{ padding: "0" }}>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={age}
-                                onChange={handleChange}
-                                IconComponent={KeyboardArrowDownIcon}
-                                displayEmpty // Ensures label remains visible
-                                renderValue={() => (
-                                  <span>
-                                    <span style={{ color: "#3C3C3C" }}>
-                                      Total Doctors:{" "}
-                                    </span>
-                                    <span
-                                      style={{
-                                        color: "#3C3C3C",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {department?.totalDoctors.length}
-                                    </span>
-                                  </span>
-                                )}
-                                sx={{
-                                  "& .MuiSelect-select": {
-                                    padding: 1.5, // Removes padding inside Select field
-                                  },
-                                  "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
-                                }}
-                                MenuProps={{
-                                  PaperProps: {
-                                    sx: {
-                                      maxHeight: 200, // Set fixed height for the dropdown
-                                      overflowY: "auto", // Enable scrolling when content overflows
-                                    },
-                                  },
-                                }}
-                              >
-                                {department?.totalDoctors.map(
-                                  (doctor, index) => (
-                                    <MenuItem
-                                      key={index}
-                                      value={doctor}
-                                      sx={{
-                                        color: "#000",
-                                        opacity: 1,
-                                        pointerEvents: "none",
-                                      }}
-                                    >
-                                      {doctor?.name}
-                                    </MenuItem>
-                                  )
-                                )}
-                              </Select>
-                            </FormControl>
-                            <FormControl>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={age}
-                                onChange={handleChange}
-                                IconComponent={KeyboardArrowDownIcon}
-                                displayEmpty // Ensures label remains visible
-                                renderValue={() => (
-                                  <span>
-                                    <span style={{ color: "#3C3C3C" }}>
-                                      Total Nurses/Support Staff:{" "}
-                                    </span>
-                                    <span
-                                      style={{
-                                        color: "#3C3C3C",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {department?.totalStaffs.length}
-                                    </span>
-                                  </span>
-                                )}
-                                sx={{
-                                  "& .MuiSelect-select": {
-                                    padding: 1.5, // Removes padding inside Select field
-                                  },
-                                  "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
-                                }}
-                                MenuProps={{
-                                  PaperProps: {
-                                    sx: {
-                                      maxHeight: 200, // Set fixed height for the dropdown
-                                      overflowY: "auto", // Enable scrolling when content overflows
-                                    },
-                                  },
-                                }}
-                              >
-                                {department?.totalStaffs.map((staff, index) => (
-                                  <MenuItem
-                                    key={index}
-                                    value="NURSE1"
+                      <div>
+                        <h3 className={avi.heading}>Specific Branch Name</h3>
+                        <div className={avi.pro}>
+                          <img
+                            className={avi.img}
+                            src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
+                            alt=""
+                          />
+                          <p className={avi.name}>
+                            {department?.departmentHead.name}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className={avi.icons}>
+                        <Button
+                          className={avi.message}
+                          sx={{
+                            outline: "none",
+                            boxShadow: "none",
+                            "&:focus": { outline: "none" },
+                            borderRadius: "12px",
+                            padding: "8px 2px",
+                          }}
+                        >
+                          <Tooltip
+                            title={
+                              department?.departmentHead?.email ||
+                              "No email available"
+                            }
+                            arrow
+                            componentsProps={{
+                              tooltip: {
+                                sx: {
+                                  backgroundColor: "#25307F",
+                                  color: "white",
+                                  fontSize: "12px",
+                                  padding: "8px",
+                                  borderRadius: "8px",
+                                },
+                              },
+                              arrow: {
+                                sx: {
+                                  color: "#25307F",
+                                },
+                              },
+                            }}
+                          >
+                            <EmailIcon />
+                          </Tooltip>
+                        </Button>
+                        <Button
+                          className={avi.phone}
+                          sx={{
+                            outline: "none",
+                            boxShadow: "none",
+                            "&:focus": { outline: "none" },
+                            borderRadius: "12px",
+                            padding: "8px 2px",
+                          }}
+                        >
+                          <Tooltip
+                            title={
+                              department?.departmentHead?.phone ||
+                              "No phone available"
+                            }
+                            arrow
+                            componentsProps={{
+                              tooltip: {
+                                sx: {
+                                  backgroundColor: " #2E823B",
+                                  color: "white",
+                                  fontSize: "12px",
+                                  padding: "8px",
+                                  borderRadius: "8px",
+                                },
+                              },
+                              arrow: {
+                                sx: {
+                                  color: " #2E823B",
+                                },
+                              },
+                            }}
+                          >
+                            <PhoneIcon />
+                          </Tooltip>
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className={avi.section1}>
+                      <Grid
+                        container
+                        sx={{ width: "100%", justifyContent: "space-between" }}
+                      >
+                        {/* Section 1 */}
+                        <Grid
+                          md={4}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            width: "45%",
+                            padding: "10px 25px",
+                            border: "1px solid rgba(116, 116, 116, 0.3)",
+                            borderRadius: "4px",
+                            boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                          }}
+                        >
+                          <div style={{ width: "100%", padding: "0 10px" }}>
+                            <h4 className={avi.heading}>Staff Details</h4>
+                            <Box>
+                              <Stack spacing={1}>
+                                {" "}
+                                <FormControl sx={{ padding: "0" }}>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={age}
+                                    onChange={handleChange}
+                                    IconComponent={KeyboardArrowDownIcon}
+                                    displayEmpty // Ensures label remains visible
+                                    renderValue={() => (
+                                      <span>
+                                        <span style={{ color: "#3C3C3C" }}>
+                                          Total Doctors:{" "}
+                                        </span>
+                                        <span
+                                          style={{
+                                            color: "#3C3C3C",
+                                            fontWeight: "bold",
+                                          }}
+                                        >
+                                          {department?.totalDoctors.length}
+                                        </span>
+                                      </span>
+                                    )}
                                     sx={{
-                                      color: "#000",
-                                      opacity: 1,
-                                      pointerEvents: "none",
+                                      "& .MuiSelect-select": {
+                                        padding: 1.5, // Removes padding inside Select field
+                                      },
+                                      "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
+                                    }}
+                                    MenuProps={{
+                                      PaperProps: {
+                                        sx: {
+                                          maxHeight: 200, // Set fixed height for the dropdown
+                                          overflowY: "auto", // Enable scrolling when content overflows
+                                        },
+                                      },
                                     }}
                                   >
-                                    {staff?.name}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                            <div className={avi.details}>
-                              <h3 style={{ color: "#3C3C3C" }}>
-                                Specialist Doctors:
-                              </h3>
-                              {department?.specialistDoctors.length > 0 ? (
-                                department.specialistDoctors.map(
-                                  (doc, index) => (
+                                    {department?.totalDoctors.map(
+                                      (doctor, index) => (
+                                        <MenuItem
+                                          key={index}
+                                          value={doctor}
+                                          sx={{
+                                            color: "#000",
+                                            opacity: 1,
+                                            pointerEvents: "none",
+                                          }}
+                                        >
+                                          {doctor?.name}
+                                        </MenuItem>
+                                      )
+                                    )}
+                                  </Select>
+                                </FormControl>
+                                <FormControl>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={age}
+                                    onChange={handleChange}
+                                    IconComponent={KeyboardArrowDownIcon}
+                                    displayEmpty // Ensures label remains visible
+                                    renderValue={() => (
+                                      <span>
+                                        <span style={{ color: "#3C3C3C" }}>
+                                          Total Nurses/Support Staff:{" "}
+                                        </span>
+                                        <span
+                                          style={{
+                                            color: "#3C3C3C",
+                                            fontWeight: "bold",
+                                          }}
+                                        >
+                                          {department?.totalStaffs.length}
+                                        </span>
+                                      </span>
+                                    )}
+                                    sx={{
+                                      "& .MuiSelect-select": {
+                                        padding: 1.5, // Removes padding inside Select field
+                                      },
+                                      "& .MuiSelect-icon": { color: "#25307f" }, // Change dropdown icon color
+                                    }}
+                                    MenuProps={{
+                                      PaperProps: {
+                                        sx: {
+                                          maxHeight: 200, // Set fixed height for the dropdown
+                                          overflowY: "auto", // Enable scrolling when content overflows
+                                        },
+                                      },
+                                    }}
+                                  >
+                                    {department?.totalStaffs.map(
+                                      (staff, index) => (
+                                        <MenuItem
+                                          key={index}
+                                          value="NURSE1"
+                                          sx={{
+                                            color: "#000",
+                                            opacity: 1,
+                                            pointerEvents: "none",
+                                          }}
+                                        >
+                                          {staff?.name}
+                                        </MenuItem>
+                                      )
+                                    )}
+                                  </Select>
+                                </FormControl>
+                                <div className={avi.details}>
+                                  <h3 style={{ color: "#3C3C3C" }}>
+                                    Specialist Doctors:
+                                  </h3>
+                                  {department?.specialistDoctors.length > 0 ? (
+                                    department.specialistDoctors.map(
+                                      (doc, index) => (
+                                        <ul
+                                          key={index}
+                                          style={{
+                                            listStyleType: "disc",
+                                            paddingLeft: "10px",
+                                            color: "black",
+                                          }}
+                                        >
+                                          <li
+                                            style={{
+                                              color: "black",
+                                              listStyle: "none",
+                                            }}
+                                          >
+                                            <span style={{ color: "black" }}>
+                                              •{" "}
+                                            </span>
+                                            {doc}
+                                          </li>
+                                        </ul>
+                                      )
+                                    )
+                                  ) : (
+                                    <p style={{ color: "black" }}>
+                                      No specialist found.
+                                    </p>
+                                  )}
+                                </div>
+                              </Stack>
+                            </Box>
+                          </div>
+                        </Grid>
+
+                        {/* Section 2 */}
+                        <Grid
+                          xs={12}
+                          sm={6}
+                          sx={{ display: "flex", justifyContent: "center" }}
+                          className={avi.section2}
+                        >
+                          <div
+                            style={{
+                              width: "100%",
+                              boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                              padding: "8px 10px 0 20px",
+                              borderRadius: "4px",
+                              border: "1px solid rgba(116, 116, 116, 0.3)",
+                            }}
+                          >
+                            <h4
+                              className={avi.heading}
+                              style={{ fontSize: "15px", color: "#3C3C3C" }}
+                            >
+                              Facilities
+                            </h4>
+                            <ul
+                              style={{
+                                listStyleType: "none", // Remove default list style
+                                paddingLeft: "10px",
+                                color: "black",
+                              }}
+                            >
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    color: "#747474",
+                                    marginRight: "10px",
+                                    fontSize: "1.2em",
+                                    position: "relative",
+                                    top: "-3px", // Adjust this value to control the upward shift
+                                  }}
+                                >
+                                  •
+                                </span>
+                                <div>
+                                  <p className={avi.text1}>Number of Beds:</p>
+                                  <p className={avi.text2}>
+                                    10 (Include ICU/Cardiac Care Units if
+                                    applicable)
+                                  </p>
+                                </div>
+                              </li>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    color: "#747474",
+                                    marginRight: "10px",
+                                    fontSize: "1.2em",
+                                    position: "relative",
+                                    top: "-3px", // Adjust this value to control the upward shift
+                                  }}
+                                >
+                                  •
+                                </span>
+                                <div>
+                                  <p className={avi.text1}>
+                                    Specialized Rooms:
+                                  </p>
+                                  <p className={avi.text2}>
+                                    3 Cath Labs, 2 Operating Theaters for
+                                    Cardiovascular Surgeries
+                                  </p>
+                                </div>
+                              </li>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    color: "#747474",
+                                    marginRight: "10px",
+                                    fontSize: "1.2em",
+                                    position: "relative",
+                                    top: "-3px", // Adjust this value to control the upward shift
+                                  }}
+                                >
+                                  •
+                                </span>
+                                <div>
+                                  <p className={avi.text1}>
+                                    Emergency Care Availability:
+                                  </p>
+                                  <p className={avi.text2}>24/7</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </Grid>
+                      </Grid>
+                    </div>
+
+                    <div>
+                      <div className={avi.section3}>
+                        <Grid
+                          container
+                          sx={{
+                            width: "100%",
+                            justifyContent: "flex-start",
+                            paddingBottom: 2,
+                          }}
+                          spacing={2}
+                        >
+                          {/* First Grid Item */}
+                          <Grid xs={12} sm={6} md={5} sx={{ width: "43%" }}>
+                            <div
+                              className={avi.box3}
+                              style={{ padding: "14px" }}
+                            >
+                              <div style={{ marginBottom: "14px" }}>
+                                <h4 style={{ color: "#3C3C3C" }}>
+                                  Available services
+                                </h4>
+                                {department?.availableServices.map(
+                                  (serv, index) => (
                                     <ul
                                       key={index}
                                       style={{
-                                        listStyleType: "disc",
+                                        listStyleType: "none",
                                         paddingLeft: "10px",
-                                        color: "black",
+                                        color: "#727272",
                                       }}
                                     >
-                                      <li
-                                        style={{
-                                          color: "black",
-                                          listStyle: "none",
-                                        }}
-                                      >
-                                        <span style={{ color: "black" }}>
+                                      <li style={{ color: "#747474" }}>
+                                        <span
+                                          style={{
+                                            color: "#727272",
+                                            marginRight: "2px",
+                                          }}
+                                        >
                                           •{" "}
                                         </span>
-                                        {doc}
+                                        {serv}
                                       </li>
                                     </ul>
                                   )
-                                )
-                              ) : (
-                                <p style={{ color: "black" }}>
-                                  No specialist found.
-                                </p>
-                              )}
+                                )}
+                              </div>
+
+                              <div>
+                                <h4 style={{ color: "#3C3C3C" }}>
+                                  Specialized Procedures
+                                </h4>
+                                {department?.specializedProcedures.map(
+                                  (spec, index) => (
+                                    <ul
+                                      key={index}
+                                      style={{
+                                        listStyleType: "none",
+                                        paddingLeft: "10px",
+                                        color: "#727272",
+                                      }}
+                                    >
+                                      <li style={{ color: "#747474" }}>
+                                        <span
+                                          style={{
+                                            color: "#727272",
+                                            marginRight: "2px",
+                                          }}
+                                        >
+                                          •{" "}
+                                        </span>
+                                        {spec}
+                                      </li>
+                                    </ul>
+                                  )
+                                )}
+                              </div>
                             </div>
-                          </Stack>
-                        </Box>
+                          </Grid>
+
+                          {/* Second Grid Item */}
+                          <Grid xs={12} sm={6} md={7}>
+                            <div
+                              className={avi.box4}
+                              style={{ padding: "14px" }}
+                            >
+                              <div style={{ marginBottom: "14px" }}>
+                                <h4>Critical Equipment</h4>
+                                {department?.criticalEquipment.map(
+                                  (cric, index) => (
+                                    <ul
+                                      key={index}
+                                      style={{
+                                        listStyleType: "none",
+                                        paddingLeft: "10px",
+                                        color: "#727272",
+                                      }}
+                                    >
+                                      <li style={{ color: "#747474" }}>
+                                        <span
+                                          style={{
+                                            color: "#727272",
+                                            marginRight: "2px",
+                                          }}
+                                        >
+                                          •{" "}
+                                        </span>
+                                        {cric}
+                                      </li>
+                                    </ul>
+                                  )
+                                )}
+                              </div>
+
+                              <div>
+                                <h4 style={{ color: "#3C3C3C" }}>
+                                  Equipment Maintenance
+                                </h4>
+                                {department?.equipmentMaintenance.map(
+                                  (eq, index) => (
+                                    <ul
+                                      key={index}
+                                      style={{
+                                        listStyleType: "none",
+                                        paddingLeft: "10px",
+                                        color: "#727272",
+                                      }}
+                                    >
+                                      <li style={{ color: "#747474" }}>
+                                        <span
+                                          style={{
+                                            color: "#727272",
+                                            marginRight: "2px",
+                                          }}
+                                        >
+                                          •{" "}
+                                        </span>
+                                        {eq}
+                                      </li>
+                                    </ul>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          </Grid>
+                        </Grid>
                       </div>
-                    </Grid>
-
-                    {/* Section 2 */}
-                    <Grid
-                      xs={12}
-                      sm={6}
-                      sx={{ display: "flex", justifyContent: "center" }}
-                      className={avi.section2}
-                    >
-                      <div
-                        style={{
-                          width: "100%",
-                          boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                          padding: "8px 10px 0 20px",
-                          borderRadius: "4px",
-                          border: "1px solid rgba(116, 116, 116, 0.3)",
-                        }}
-                      >
-                        <h4
-                          className={avi.heading}
-                          style={{ fontSize: "15px", color: "#3C3C3C" }}
-                        >
-                          Facilities
-                        </h4>
-                        <ul
-                          style={{
-                            listStyleType: "none", // Remove default list style
-                            paddingLeft: "10px",
-                            color: "black",
-                          }}
-                        >
-                          <li
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                            }}
-                          >
-                            <span
-                              style={{
-                                color: "#747474",
-                                marginRight: "10px",
-                                fontSize: "1.2em",
-                                position: "relative",
-                                top: "-3px", // Adjust this value to control the upward shift
-                              }}
-                            >
-                              •
-                            </span>
-                            <div>
-                              <p className={avi.text1}>Number of Beds:</p>
-                              <p className={avi.text2}>
-                                10 (Include ICU/Cardiac Care Units if
-                                applicable)
-                              </p>
-                            </div>
-                          </li>
-                          <li
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                            }}
-                          >
-                            <span
-                              style={{
-                                color: "#747474",
-                                marginRight: "10px",
-                                fontSize: "1.2em",
-                                position: "relative",
-                                top: "-3px", // Adjust this value to control the upward shift
-                              }}
-                            >
-                              •
-                            </span>
-                            <div>
-                              <p className={avi.text1}>Specialized Rooms:</p>
-                              <p className={avi.text2}>
-                                3 Cath Labs, 2 Operating Theaters for
-                                Cardiovascular Surgeries
-                              </p>
-                            </div>
-                          </li>
-                          <li
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                            }}
-                          >
-                            <span
-                              style={{
-                                color: "#747474",
-                                marginRight: "10px",
-                                fontSize: "1.2em",
-                                position: "relative",
-                                top: "-3px", // Adjust this value to control the upward shift
-                              }}
-                            >
-                              •
-                            </span>
-                            <div>
-                              <p className={avi.text1}>
-                                Emergency Care Availability:
-                              </p>
-                              <p className={avi.text2}>24/7</p>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </div>
-
-                <div>
-                  <div className={avi.section3}>
-                    <Grid
-                      container
-                      sx={{
-                        width: "100%",
-                        justifyContent: "flex-start",
-                        paddingBottom: 2,
-                      }}
-                      spacing={2}
-                    >
-                      {/* First Grid Item */}
-                      <Grid xs={12} sm={6} md={5} sx={{ width: "43%" }}>
-                        <div className={avi.box3} style={{ padding: "14px" }}>
-                          <div style={{ marginBottom: "14px" }}>
-                            <h4 style={{ color: "#3C3C3C" }}>
-                              Available services
-                            </h4>
-                            {department?.availableServices.map(
-                              (serv, index) => (
-                                <ul
-                                  key={index}
-                                  style={{
-                                    listStyleType: "none",
-                                    paddingLeft: "10px",
-                                    color: "#727272",
-                                  }}
-                                >
-                                  <li style={{ color: "#747474" }}>
-                                    <span
-                                      style={{
-                                        color: "#727272",
-                                        marginRight: "2px",
-                                      }}
-                                    >
-                                      •{" "}
-                                    </span>
-                                    {serv}
-                                  </li>
-                                </ul>
-                              )
-                            )}
-                          </div>
-
-                          <div>
-                            <h4 style={{ color: "#3C3C3C" }}>
-                              Specialized Procedures
-                            </h4>
-                            {department?.specializedProcedures.map(
-                              (spec, index) => (
-                                <ul
-                                  key={index}
-                                  style={{
-                                    listStyleType: "none",
-                                    paddingLeft: "10px",
-                                    color: "#727272",
-                                  }}
-                                >
-                                  <li style={{ color: "#747474" }}>
-                                    <span
-                                      style={{
-                                        color: "#727272",
-                                        marginRight: "2px",
-                                      }}
-                                    >
-                                      •{" "}
-                                    </span>
-                                    {spec}
-                                  </li>
-                                </ul>
-                              )
-                            )}
-                          </div>
-                        </div>
-                      </Grid>
-
-                      {/* Second Grid Item */}
-                      <Grid xs={12} sm={6} md={7}>
-                        <div className={avi.box4} style={{ padding: "14px" }}>
-                          <div style={{ marginBottom: "14px" }}>
-                            <h4>Critical Equipment</h4>
-                            {department?.criticalEquipment.map(
-                              (cric, index) => (
-                                <ul
-                                  key={index}
-                                  style={{
-                                    listStyleType: "none",
-                                    paddingLeft: "10px",
-                                    color: "#727272",
-                                  }}
-                                >
-                                  <li style={{ color: "#747474" }}>
-                                    <span
-                                      style={{
-                                        color: "#727272",
-                                        marginRight: "2px",
-                                      }}
-                                    >
-                                      •{" "}
-                                    </span>
-                                    {cric}
-                                  </li>
-                                </ul>
-                              )
-                            )}
-                          </div>
-
-                          <div>
-                            <h4 style={{ color: "#3C3C3C" }}>
-                              Equipment Maintenance
-                            </h4>
-                            {department?.equipmentMaintenance.map(
-                              (eq, index) => (
-                                <ul
-                                  key={index}
-                                  style={{
-                                    listStyleType: "none",
-                                    paddingLeft: "10px",
-                                    color: "#727272",
-                                  }}
-                                >
-                                  <li style={{ color: "#747474" }}>
-                                    <span
-                                      style={{
-                                        color: "#727272",
-                                        marginRight: "2px",
-                                      }}
-                                    >
-                                      •{" "}
-                                    </span>
-                                    {eq}
-                                  </li>
-                                </ul>
-                              )
-                            )}
-                          </div>
-                        </div>
-                      </Grid>
-                    </Grid>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </Box>
+                </Box>
+              </>
+            )}
           </>
         ) : (
           <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
