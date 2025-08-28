@@ -7,6 +7,7 @@ import PersonalInfo from "./PersonalInfo";
 import MedicalInfo from "./MedicalInfo";
 import ProgressTracker from "./ProgressTracker";
 import {
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -79,7 +80,11 @@ const PatientDetails = (props) => {
       <div>
         <>
           <PatientHeader patient={patient} />
-          <Grid container spacing={2} sx={{ marginBottom: "1rem", marginTop: "60px" }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ marginBottom: "1rem", marginTop: "60px" }}
+          >
             <div
               style={{
                 display: "flex",
@@ -89,196 +94,214 @@ const PatientDetails = (props) => {
                 width: "77.5vw",
               }}
             >
-              {/* Box 1 - Profile Card */}
+              {/* ----------------- Box 1 - Profile Card ------------------ */}
               <div
-                  style={{
-                      width: "25%",
-                      padding: "20px 0",
-                      backgroundColor: "#FFFFFF",
-                      height: "auto",
+                style={{
+                  width: "25%",
+                  padding: "20px 0",
+                  backgroundColor: "#FFFFFF",
+                  height: "auto",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "2px",
+                  boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
+                  textAlign: "center",
+                  color: "black",
+                }}
+              >
+                {!patient ? (
+                  <Box
+                    sx={{
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      borderRadius: "2px",
-                      boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
-                      textAlign: "center",
-                      color: "black",
-                  }}
-              >
-                <div
-                  style={{
-                    width: "80%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar
-                    src=""
-                    alt="Profile Image"
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: "50%",
-                      marginBottom: "2px",
-                    }}
-                  />
-                  <h4
-                    style={{
-                      margin: "2px 0",
-                      fontSize: "20px",
-                      fontWeight: 500,
-                        color: "#25307F"
+                      height: "36vh", // or full height you need
                     }}
                   >
-                    {patient.name}
-                  </h4>
-                  <p style={{
-                      fontSize: "14px",
-                      color: "#878787",
-                      marginBottom: "24px",
-                  }}>
-                    {patient.email}
-                  </p>
-
+                    <CircularProgress sx={{ color: "#25307F" }} size={40} />
+                  </Box>
+                ) : (
                   <div
                     style={{
+                      width: "80%",
                       display: "flex",
-                      justifyContent: "space-around",
-                      width: "100%",
-                      marginTop: "10px",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    <div>
-                      <h5 style={{ color: "#25307F", fontSize: "24px" }}>{completed}</h5>
-                      <p style={{ fontSize: "14px", color: "#878787" }}>
-                        Past Visits
-                      </p>
-                    </div>
-                    <div>
-                      <h5 style={{ fontSize: "24px", color: "#25307F" }}>{upcoming}</h5>
-                      <p style={{ fontSize: "14px", color: "#878787" }}>
-                        Upcoming
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    style={{
-                      marginTop: "16px",
-                      padding: "12px 10px",
-                      width: "100%",
-                      border: "2px solid #25307F",
-                      backgroundColor: "transparent",
-                      color: "#25307F",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                        outline: 'none',
-                        boxShadow:'none',
-                      transition: "all 0.3s ease",
-                        "&:focus,&:active": {
-                          outline: "none",
-                            boxShadow: "none"
-                        }
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.backgroundColor = "#25307F";
-                      e.target.style.color = "#ffffff";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.backgroundColor = "transparent";
-                      e.target.style.color = "#25307F";
-                    }}
-                    onClick={() => setShowModal(true)}
-                  >
-                    Send Message
-                  </button>
-                  {/* Modal UI */}
-
-                  <Dialog
-                    open={showModal}
-                    onClose={() => setShowModal(false)}
-                    sx={{
-                      "& .MuiPaper-root": {
-                        borderRadius: "10px",
-                        padding: "10px",
-                        width: "400px", // Increased width
-                        maxWidth: "90%", // Ensures responsiveness
-                      },
-                    }}
-                  >
-                    <DialogTitle
+                    <Avatar
+                      src=""
+                      alt="Profile Image"
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        width: 80,
+                        height: 80,
+                        borderRadius: "50%",
+                        marginBottom: "2px",
+                      }}
+                    />
+                    <h4
+                      style={{
+                        margin: "2px 0",
+                        fontSize: "20px",
+                        fontWeight: 500,
+                        color: "#25307F",
                       }}
                     >
-                      Send Message Via
-                    </DialogTitle>
-
-                    <DialogContent
-                      sx={{ textAlign: "center", padding: "20px" }}
+                      {patient.name}
+                    </h4>
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: "#878787",
+                        marginBottom: "24px",
+                      }}
                     >
-                      <Button
-                        fullWidth
-                        startIcon={<WhatsApp />}
-                        sx={{
-                          backgroundColor: "#fff",
-                          color: "#25D366",
-                          border: "1px solid #25D366",
-                          marginBottom: "10px",
-                          "&:hover": {
-                            backgroundColor: "#25D366",
-                            color: "#fff",
-                          },
-                        }}
-                        onClick={handleSendWhatsApp}
-                      >
-                        WhatsApp
-                      </Button>
+                      {patient.email}
+                    </p>
 
-                      <Button
-                        fullWidth
-                        startIcon={<Email />}
-                        sx={{
-                          backgroundColor: "#fff",
-                          color: "#007bff",
-                          border: "1px solid #007bff",
-                          "&:hover": {
-                            backgroundColor: "#007bff",
-                            color: "#fff",
-                          },
-                        }}
-                        onClick={handleSendEmail}
-                      >
-                        Email
-                      </Button>
-                    </DialogContent>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        width: "100%",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <div>
+                        <h5 style={{ color: "#25307F", fontSize: "24px" }}>
+                          {completed}
+                        </h5>
+                        <p style={{ fontSize: "14px", color: "#878787" }}>
+                          Past Visits
+                        </p>
+                      </div>
+                      <div>
+                        <h5 style={{ fontSize: "24px", color: "#25307F" }}>
+                          {upcoming}
+                        </h5>
+                        <p style={{ fontSize: "14px", color: "#878787" }}>
+                          Upcoming
+                        </p>
+                      </div>
+                    </div>
 
-                    <DialogActions sx={{ justifyContent: "center" }}>
-                      <Button
-                        onClick={() => setShowModal(false)}
+                    <button
+                      style={{
+                        marginTop: "16px",
+                        padding: "12px 10px",
+                        width: "100%",
+                        border: "2px solid #25307F",
+                        backgroundColor: "transparent",
+                        color: "#25307F",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        outline: "none",
+                        boxShadow: "none",
+                        transition: "all 0.3s ease",
+                        "&:focus,&:active": {
+                          outline: "none",
+                          boxShadow: "none",
+                        },
+                      }}
+                      onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#25307F";
+                        e.target.style.color = "#ffffff";
+                      }}
+                      onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "#25307F";
+                      }}
+                      onClick={() => setShowModal(true)}
+                    >
+                      Send Message
+                    </button>
+                    {/* Modal UI */}
+
+                    <Dialog
+                      open={showModal}
+                      onClose={() => setShowModal(false)}
+                      sx={{
+                        "& .MuiPaper-root": {
+                          borderRadius: "10px",
+                          padding: "10px",
+                          width: "400px", // Increased width
+                          maxWidth: "90%", // Ensures responsiveness
+                        },
+                      }}
+                    >
+                      <DialogTitle
                         sx={{
-                          color: "#25307F",
-                          border: "1px solid #25307F",
-                          boxShadow: "0px 4px 4px 0px #C2C2C240",
-                          "&:hover": {
-                            backgroundColor: "#25307F",
-                            color: "#fff",
-                          },
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
                         }}
                       >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
+                        Send Message Via
+                      </DialogTitle>
+
+                      <DialogContent
+                        sx={{ textAlign: "center", padding: "20px" }}
+                      >
+                        <Button
+                          fullWidth
+                          startIcon={<WhatsApp />}
+                          sx={{
+                            backgroundColor: "#fff",
+                            color: "#25D366",
+                            border: "1px solid #25D366",
+                            marginBottom: "10px",
+                            "&:hover": {
+                              backgroundColor: "#25D366",
+                              color: "#fff",
+                            },
+                          }}
+                          onClick={handleSendWhatsApp}
+                        >
+                          WhatsApp
+                        </Button>
+
+                        <Button
+                          fullWidth
+                          startIcon={<Email />}
+                          sx={{
+                            backgroundColor: "#fff",
+                            color: "#007bff",
+                            border: "1px solid #007bff",
+                            "&:hover": {
+                              backgroundColor: "#007bff",
+                              color: "#fff",
+                            },
+                          }}
+                          onClick={handleSendEmail}
+                        >
+                          Email
+                        </Button>
+                      </DialogContent>
+
+                      <DialogActions sx={{ justifyContent: "center" }}>
+                        <Button
+                          onClick={() => setShowModal(false)}
+                          sx={{
+                            color: "#25307F",
+                            border: "1px solid #25307F",
+                            boxShadow: "0px 4px 4px 0px #C2C2C240",
+                            "&:hover": {
+                              backgroundColor: "#25307F",
+                              color: "#fff",
+                            },
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+                )}
               </div>
-
               {/* Box 2 - Personal Info (Middle Section) */}
               <div
                 style={{
@@ -292,7 +315,6 @@ const PatientDetails = (props) => {
               >
                 <PersonalInfo patient={patient} />
               </div>
-
               {/* Box 3 - Medical Info */}
               <div
                 style={{
@@ -324,20 +346,20 @@ const PatientDetails = (props) => {
                 }}
               >
                 <div style={{ paddingLeft: "38px" }}>
-                    <Typography
-                        variant="h3"
-                        sx={{ color: "#4A4A4A", fontSize: "20px" }}
-                    >
-                        Progress Tracker
-                    </Typography>
+                  <Typography
+                    variant="h3"
+                    sx={{ color: "#4A4A4A", fontSize: "20px" }}
+                  >
+                    Progress Tracker
+                  </Typography>
 
-                    <Box
-                        sx={{
-                            height: "1px",
-                            backgroundColor: "#8787877A",
-                            my: 2, // Adds top and bottom margin (equivalent to padding)
-                        }}
-                    />
+                  <Box
+                    sx={{
+                      height: "1px",
+                      backgroundColor: "#8787877A",
+                      my: 2, // Adds top and bottom margin (equivalent to padding)
+                    }}
+                  />
                 </div>
 
                 <ProgressTracker patient={patient} />
