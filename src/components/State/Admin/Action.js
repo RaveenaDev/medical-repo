@@ -19,7 +19,7 @@ import {
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
-  EDIT_ESTIMATED_BILL,
+  EDIT_ESTIMATED_BILL, EDIT_INSURED_PATIENT,
   EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
@@ -1086,6 +1086,41 @@ export const updateStatusOfInsuredPatients =
       });
     }
   };
+
+export const editInsuredPatients =
+    (admissionId, payload) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+
+        const { data } = await axios.patch(
+            `${API_URL}/updateAdmissionInsuranceDetails/${admissionId}`,
+            {
+              ...payload
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+              },
+            }
+        );
+
+        // console.log("Updated Data: ",data)
+
+        dispatch({ type: EDIT_INSURED_PATIENT, payload: data });
+        dispatch(getInsuredPatients());
+
+        toast.success("Patient Edited Successfully!", {
+          position: "bottom-right", // Use string for position
+          autoClose: 2000,
+        });
+      } catch (error) {
+        console.log(error);
+        toast.error(" Patient Edit Error!", {
+          position: "bottom-right", // Use string for position
+          autoClose: 2000,
+        });
+      }
+    };
 
 export const getInsuranceCompanies = () => async (dispatch) => {
   try {
