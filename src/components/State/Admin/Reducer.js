@@ -40,6 +40,7 @@ import {
   GET_ONGOING_APPOINTMENTS,
   GET_PACKAGES,
   GET_PATIENTS,
+  GET_PROGRESS_TRACKER,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
@@ -104,6 +105,8 @@ const initialState = {
   insuranceCompanies: [],
   estimatedBill: null,
   packages: [],
+  progressTracker: [],
+  isLoadingGetProgressTracker: true,
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -515,6 +518,13 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         estimatedBill: null,
+      };
+
+    case GET_PROGRESS_TRACKER:
+      return {
+        ...state,
+        progressTracker: action.payload,
+        isLoadingGetProgressTracker: false,
       };
 
     default:
