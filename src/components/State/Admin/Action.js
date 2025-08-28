@@ -3,7 +3,8 @@ import { API_URL } from "../../Config/api.js";
 import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
-  ADD_DOCTORS, ADD_ESTIMATED_BILL,
+  ADD_DOCTORS,
+  ADD_ESTIMATED_BILL,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
   ADD_ROOM,
@@ -17,7 +18,8 @@ import {
   DELETE_SERVICE_CATEGORY,
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
-  DELETE_TPA_SERVICE_CATEGORY, EDIT_ESTIMATED_BILL,
+  DELETE_TPA_SERVICE_CATEGORY,
+  EDIT_ESTIMATED_BILL,
   EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
@@ -30,21 +32,25 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
-  GET_EARNINGS, GET_ESTIMATED_BILL,
+  GET_EARNINGS,
+  GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_INSURANCE_COMPANIES,
   GET_INSURED_PATIENTS,
-  GET_ONGOING_APPOINTMENTS, GET_PACKAGES,
+  GET_ONGOING_APPOINTMENTS,
+  GET_PACKAGES,
   GET_PATIENTS,
+  GET_PROGRESS_TRACKER,
   GET_REJECTED_APPOINTMENTS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
   GET_STAFFS,
-  GET_WAITING_APPOINTMENTS, NULL_ESTIMATED_BILL,
+  GET_WAITING_APPOINTMENTS,
+  NULL_ESTIMATED_BILL,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
   UPDATE_SERVICE,
@@ -1054,7 +1060,7 @@ export const updateStatusOfInsuredPatients =
         `${API_URL}/updateInsuranceStatus/${admissionId}`,
         {
           insuranceApproved: payload.status,
-          amountApproved: payload.approvedAmount
+          amountApproved: payload.approvedAmount,
         },
         {
           headers: {
@@ -1247,13 +1253,13 @@ export const addEstimatedBill = (serviceData) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.post(
-        `${API_URL}/createEstimatedBill`,
-        serviceData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
+      `${API_URL}/createEstimatedBill`,
+      serviceData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
     );
 
     // console.log("Backend : ",data)
@@ -1277,13 +1283,13 @@ export const editEstimatedBill = (id, serviceData) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.put(
-        `${API_URL}/editEstimatedBill/${id}`,
-        serviceData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
+      `${API_URL}/editEstimatedBill/${id}`,
+      serviceData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
     );
 
     // console.log("Service Added To Company : ",data)
@@ -1306,20 +1312,17 @@ export const getEstimatedBill = (id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-        `${API_URL}/getEstimatedBills/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
-    );
+    const { data } = await axios.get(`${API_URL}/getEstimatedBills/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
     // console.log("Estimated Bill : ",data)
     dispatch({ type: GET_ESTIMATED_BILL, payload: data });
   } catch (error) {
     console.log(error);
-    dispatch({type:NULL_ESTIMATED_BILL})
+    dispatch({ type: NULL_ESTIMATED_BILL });
   }
 };
 
@@ -1327,14 +1330,11 @@ export const getPackage = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-        `${API_URL}/getPackages`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
-    );
+    const { data } = await axios.get(`${API_URL}/getPackages`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
 
     // console.log("Packages : ",data[0])
 
@@ -1343,3 +1343,27 @@ export const getPackage = () => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const getProgressTrackerDetails =
+  (patientId, caseId) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(
+        `${API_URL}/getProgressTracker/${patientId}/${caseId}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      //  console.log("Progress Tracker: ", data);
+
+      dispatch({ type: GET_PROGRESS_TRACKER, payload: data.progress });
+    } catch (error) {
+      console.error("Error getting progress details:", error);
+    }
+  };

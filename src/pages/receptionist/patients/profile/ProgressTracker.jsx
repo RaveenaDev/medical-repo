@@ -1,23 +1,4 @@
-import React, { useEffect } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-  Box,
-} from "@mui/material";
-import {
-  Timeline,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineConnector,
-  TimelineDot,
-  TimelineContent,
-} from "@mui/lab";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProgressTrackerDetails } from "../../../../components/State/Receptionist/Action";
@@ -25,36 +6,7 @@ import styles from "./ProgressTracker.module.scss";
 const ProgressTracker = ({ patient }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const steps = [
-    {
-      phase: "Post-Surgery Follow-up",
-      date: "June 27th, 2024",
-      responsible: "Dr. Minhesh",
-      progress: "Healing progress",
-      status: "Ongoing",
-    },
-    {
-      phase: "Surgery",
-      date: "June 26th, 2024",
-      responsible: "Dr. Minhesh",
-      progress: "Heart Surgery",
-      status: "Completed",
-    },
-    {
-      phase: "Lab Tests",
-      date: "June 25th, 2024",
-      responsible: "Dr. Arunita",
-      progress: "Blood test",
-      status: "Completed",
-    },
-    {
-      phase: "Initial Consultation",
-      date: "June 24th, 2024",
-      responsible: "Dr. Arunita",
-      progress: "",
-      status: "Completed",
-    },
-  ];
+
   const handleClick = () => {
     navigate("/receptionist/patients/profile/progressReport", {
       state: { patient },
