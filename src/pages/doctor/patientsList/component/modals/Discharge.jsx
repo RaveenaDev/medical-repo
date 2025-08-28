@@ -4,9 +4,11 @@ import styles from "./Discharge.module.scss";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { dischargePatient } from "../../../../../components/State/Doctor/Action";
+import { useNavigate } from "react-router-dom";
 
 const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Single state object for all form data
   const [formData, setFormData] = useState({

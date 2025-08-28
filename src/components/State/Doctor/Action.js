@@ -1519,6 +1519,8 @@ export const dischargePatient = (payload) => async (dispatch) => {
       position: "bottom-right",
       autoClose: 2000,
     });
+    //temporary fix
+    navigate("/doctor/patientList");
   } catch (error) {
     console.error("Patient discharge error:", error);
     toast.error(error.message || "Something went wrong");
