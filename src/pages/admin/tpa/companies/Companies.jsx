@@ -42,7 +42,7 @@ const Companies = () => {
 
     const companies = useSelector((store) => store.admin.insuranceCompanies)
 
-    console.log("Comp: ",companies)
+    // console.log("Comp: ",companies)
 
   const navigate = useNavigate();
   const [page, setPage] = useState(0);

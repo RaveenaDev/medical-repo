@@ -957,7 +957,7 @@ const AdminRooms = (props) => {
 
               <TablePagination
                 component="div"
-                count={totalRooms}
+                count={totalRooms || 0}
                 page={page} // current page
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage} // items per page

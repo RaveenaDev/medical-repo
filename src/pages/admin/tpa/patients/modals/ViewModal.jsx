@@ -12,7 +12,7 @@ import ViewBill from "./viewBillModal/ViewBill.jsx";
 
 const ViewModal = ({ onClose, record }) => {
   const { patient } = record;
-  console.log("rex", record);
+  // console.log("rex", record);
 
   const [activeModal, setActiveModal] = useState(null);
   const statusOptions = ["Approved", "Rejected", "Pending"];
@@ -208,9 +208,8 @@ const ViewModal = ({ onClose, record }) => {
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                position: "absolute",
-                top: "5.4rem",
-                right: "1.5rem",
+                justifyContent:'flex-end',
+                marginTop:'0.4rem'
               }}
               onClick={handleToggleEdit}
               title={editMode ? "Exit Edit Mode" : "Edit Patient Profile"}
@@ -246,7 +245,7 @@ const ViewModal = ({ onClose, record }) => {
           </div>
 
           {/* content */}
-          <div className={styles.content} style={{ marginTop: "0.6rem" }}>
+          <div className={styles.content} style={{ marginTop: "-0.6rem" }}>
             {/* Name (kept read-only) */}
             <div className={styles.data}>
               <p className={styles.label}>Name</p>
