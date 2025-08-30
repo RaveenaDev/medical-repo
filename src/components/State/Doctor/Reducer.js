@@ -509,6 +509,7 @@ export const doctorReducer = (state = initialState, action) => {
         patientBills: action.payload,
         isLoadingPatientBills: false,
       };
+
     default:
       return state;
   }

@@ -1,21 +1,28 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, Drawer,
-  FormControl, FormControlLabel, FormLabel, IconButton,
+  DialogTitle,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
-  MenuItem, Radio, RadioGroup,
+  MenuItem,
+  Radio,
+  RadioGroup,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead, TablePagination,
+  TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -39,8 +46,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from "@mui/material/CircularProgress";
 import CommonPanel from "../components/CommonPanel.jsx";
-import {getFilteredPatients, getFilteredRooms} from "../../../components/State/Doctor/Action.js";
-import {FiFilter} from "react-icons/fi";
+import {
+  getFilteredPatients,
+  getFilteredRooms,
+} from "../../../components/State/Doctor/Action.js";
+import { FiFilter } from "react-icons/fi";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Rooms = () => {
@@ -80,9 +90,9 @@ const Rooms = () => {
     dispatch(getFilteredRooms(filters, page, rowsPerPage));
   }, [dispatch, sortOrder, page, rowsPerPage]);
 
-  const doctor = useSelector((store) => store.doctor)
-  const totalFilteredRooms = doctor.totalFilteredRooms
-  const filteredRooms = doctor.filteredRooms
+  const doctor = useSelector((store) => store.doctor);
+  const totalFilteredRooms = doctor.totalFilteredRooms;
+  const filteredRooms = doctor.filteredRooms;
 
   const handleSortChange = (event) => {
     // admin = null;
@@ -251,105 +261,117 @@ const Rooms = () => {
                     <ArrowBackIosIcon sx={{ height: 21, width: 21 }} />
                   </span>
                   <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-                  <h2 className={ayu.departmentTitleDetails}>{totalFilteredRooms}</h2>
+                  <h2 className={ayu.departmentTitleDetails}>
+                    {totalFilteredRooms}
+                  </h2>
                 </div>
                 <div style={{ display: "flex", gap: "1rem" }}>
-                  <Box sx={{display: "flex", gap: 3}}>
+                  <Box sx={{ display: "flex", gap: 3 }}>
                     {/* Adjust gap for spacing */}
                     <Box
-                        display="flex"
-                        alignItems="center"
-                        gap={1}
-                        sx={{color: "black", fontWeight: 500, fontSize: 15}}
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      sx={{ color: "black", fontWeight: 500, fontSize: 15 }}
                     >
                       <Box
-                          sx={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: "50%",
-                            backgroundColor: "#3DB461",
-                          }}
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: "50%",
+                          backgroundColor: "#3DB461",
+                        }}
                       />
                       Available
                     </Box>
                     <Box
-                        display="flex"
-                        alignItems="center"
-                        gap={1}
-                        sx={{color: "black", fontWeight: 500, fontSize: 15}}
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      sx={{ color: "black", fontWeight: 500, fontSize: 15 }}
                     >
                       <Box
-                          sx={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: "50%",
-                            backgroundColor: "#FFA412",
-                          }}
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: "50%",
+                          backgroundColor: "#FFA412",
+                        }}
                       />
                       Occupied
                     </Box>
                     <Box
-                        display="flex"
-                        alignItems="center"
-                        gap={1}
-                        sx={{color: "black", fontWeight: 500, fontSize: 15}}
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      sx={{ color: "black", fontWeight: 500, fontSize: 15 }}
                     >
                       <Box
-                          sx={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: "50%",
-                            backgroundColor: "#AEC3FF",
-                          }}
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: "50%",
+                          backgroundColor: "#AEC3FF",
+                        }}
                       />
                       Under Maintenance
                     </Box>
 
                     <div
-                        onClick={() => setFilterDrawerOpen(true)}
-                        className={`${styles.filter} ${styles.boxStyle}`}>
-                      <FiFilter fill="#25307f"/>
+                      onClick={() => setFilterDrawerOpen(true)}
+                      className={`${styles.filter} ${styles.boxStyle}`}
+                    >
+                      <FiFilter fill="#25307f" />
                       <p>Filter</p>
                     </div>
                   </Box>
                 </div>
 
-                <Dialog open={addDialogOpen1}
-                        onClose={() => setAddDialogOpen1(false)}
-                        maxWidth="md"
-                        fullWidth
-                        sx={{
-                          "& .MuiDialog-paper": {
-                            maxWidth: "65%", // This will reduce the max width between md and lg.
-                          },
-                        }}
-                >
-                  <DialogTitle sx={{ fontWeight: "600"}}>Room ({currentRoom?.roomID})</DialogTitle>
-                  <DialogContent sx={{
-                    maxHeight: "500px", // Fixed height
-                    overflowY: "auto",  // Enable vertical scrolling
-                    paddingRight: "8px", // Optional: prevent clipping
-                    // Hides scrollbar (for WebKit browsers)
-                    '&::-webkit-scrollbar': {
-                      width: 0,
-                      display: 'none',
+                <Dialog
+                  open={addDialogOpen1}
+                  onClose={() => setAddDialogOpen1(false)}
+                  maxWidth="md"
+                  fullWidth
+                  sx={{
+                    "& .MuiDialog-paper": {
+                      maxWidth: "65%", // This will reduce the max width between md and lg.
                     },
-                    // Hides scrollbar for Firefox
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none', // IE and Edge
-                  }}>
-                    <Table sx={{
-                      borderCollapse: "separate",
-                      borderSpacing: "0 10px",
-                      width: "100%",
-                      marginBottom: "30px",
-                    }}>
-                      <TableHead sx={{
-                        position: "sticky",
-                        backgroundColor: "#f1f1f1",
-                        top: 0,
-                        zIndex: 10, // Keep it above other elements
-                      }}>
+                  }}
+                >
+                  <DialogTitle sx={{ fontWeight: "600" }}>
+                    Room ({currentRoom?.roomID})
+                  </DialogTitle>
+                  <DialogContent
+                    sx={{
+                      maxHeight: "500px", // Fixed height
+                      overflowY: "auto", // Enable vertical scrolling
+                      paddingRight: "8px", // Optional: prevent clipping
+                      // Hides scrollbar (for WebKit browsers)
+                      "&::-webkit-scrollbar": {
+                        width: 0,
+                        display: "none",
+                      },
+                      // Hides scrollbar for Firefox
+                      scrollbarWidth: "none",
+                      msOverflowStyle: "none", // IE and Edge
+                    }}
+                  >
+                    <Table
+                      sx={{
+                        borderCollapse: "separate",
+                        borderSpacing: "0 10px",
+                        width: "100%",
+                        marginBottom: "30px",
+                      }}
+                    >
+                      <TableHead
+                        sx={{
+                          position: "sticky",
+                          backgroundColor: "#f1f1f1",
+                          top: 0,
+                          zIndex: 10, // Keep it above other elements
+                        }}
+                      >
                         <TableRow>
                           <TableCell sx={{ fontWeight: "600", width: "30%" }}>
                             Bed ID
@@ -364,42 +386,35 @@ const Rooms = () => {
                       </TableHead>
 
                       <TableBody>
-                        {
-                          currentRoom?.beds.length > 0 ? (
-                                  currentRoom?.beds.map((bed,index) => (
-                                      <TableRow key={index}>
-                                        <TableCell>
-                                          {bed?.bedNumber || "N/A"}
-                                        </TableCell>
-                                        <TableCell>
-                                          {bed?.cost || "N/A"}
-                                        </TableCell>
-                                        <TableCell>
-                                          {bed?.status || "N/A"}
-                                        </TableCell>
-                                      </TableRow>
-                                  ))
-                              ) :
-                              <TableRow>
-                                <TableCell
-                                    align="center"
-                                    colSpan={7}
-                                    sx={{
-                                      background: "#fff",
-                                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                                      borderRadius: "8px",
-                                      "&:hover": {
-                                        backgroundColor: "#f9f9f9",
-                                      },
-                                      "& > *": {
-                                        borderBottom: "unset",
-                                      },
-                                    }}
-                                >
-                                  No data found!
-                                </TableCell>
-                              </TableRow>
-                        }
+                        {currentRoom?.beds.length > 0 ? (
+                          currentRoom?.beds.map((bed, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{bed?.bedNumber || "N/A"}</TableCell>
+                              <TableCell>{bed?.cost || "N/A"}</TableCell>
+                              <TableCell>{bed?.status || "N/A"}</TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell
+                              align="center"
+                              colSpan={7}
+                              sx={{
+                                background: "#fff",
+                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                                borderRadius: "8px",
+                                "&:hover": {
+                                  backgroundColor: "#f9f9f9",
+                                },
+                                "& > *": {
+                                  borderBottom: "unset",
+                                },
+                              }}
+                            >
+                              No data found!
+                            </TableCell>
+                          </TableRow>
+                        )}
                       </TableBody>
                     </Table>
                   </DialogContent>
@@ -409,9 +424,9 @@ const Rooms = () => {
 
             {/* Table Section */}
             <TableContainer
-                sx={{
-                  maxHeight: "65vh", // Adjust this to fit your layout needs
-                  overflowY: "auto",
+              sx={{
+                maxHeight: "65vh", // Adjust this to fit your layout needs
+                overflowY: "auto",
               }}
             >
               <Table
@@ -457,7 +472,7 @@ const Rooms = () => {
                         key={index}
                         sx={{
                           background: "#fff",
-                          cursor:'pointer',
+                          cursor: "pointer",
                           boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
                           borderRadius: "8px",
                           "&:hover": {
@@ -470,20 +485,20 @@ const Rooms = () => {
                         onClick={() => handleAddDialogOpen1(room)}
                       >
                         <TableCell
-                            sx={{
-                              color: "#25307F",
-                              fontWeight: "bold",
-                              width: "25%",
-                            }}
+                          sx={{
+                            color: "#25307F",
+                            fontWeight: "bold",
+                            width: "25%",
+                          }}
                         >
                           {room.roomID}
                         </TableCell>
                         <TableCell
-                            sx={{
-                              color: "#25307F",
-                              fontWeight: "bold",
-                              width: "25%",
-                            }}
+                          sx={{
+                            color: "#25307F",
+                            fontWeight: "bold",
+                            width: "25%",
+                          }}
                         >
                           {room?.roomType}
                         </TableCell>
@@ -502,11 +517,7 @@ const Rooms = () => {
                         <TableCell sx={{ width: "25%" }}>
                           {" "}
                           {/* Increase 'pl' value for more spacing */}
-                          <Box
-                            display="flex"
-                            alignItems="center"
-                            gap={1}
-                          >
+                          <Box display="flex" alignItems="center" gap={1}>
                             <Box
                               sx={{
                                 width: 10,
@@ -523,9 +534,7 @@ const Rooms = () => {
                             {room.status}
                           </Box>
                         </TableCell>
-                        <TableCell
-                          sx={{ width:'25%' }}
-                        >
+                        <TableCell sx={{ width: "25%" }}>
                           {room.assignedDoctor?.name || "Not Assigned"}
                         </TableCell>
 
@@ -562,21 +571,20 @@ const Rooms = () => {
                 </TableBody>
               </Table>
 
-
               <TablePagination
-                  component="div"
-                  count={totalFilteredRooms}
-                  page={page} // current page
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage} // items per page
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-                  sx={{
-                    width: '100%',
-                    backgroundColor: "#fff",
-                    borderTop: "2px solid #ddd",
-                    zIndex: 11,
-                  }}
+                component="div"
+                count={totalFilteredRooms}
+                page={page} // current page
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage} // items per page
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                sx={{
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  borderTop: "2px solid #ddd",
+                  zIndex: 11,
+                }}
               />
             </TableContainer>
 
@@ -733,151 +741,151 @@ const Rooms = () => {
             </Dialog>
 
             <Drawer
-                anchor="right"
-                open={filterDrawerOpen}
-                onClose={() => setFilterDrawerOpen(false)}
-                sx={{
-                  "& .MuiDrawer-paper": {
-                    height: "58vh", // Adjust height as needed
-                    top: "18vh", // Center it vertically
-                    borderRadius: "10px 0 0 10px", // Optional rounded corners
-                  },
-                }}
+              anchor="right"
+              open={filterDrawerOpen}
+              onClose={() => setFilterDrawerOpen(false)}
+              sx={{
+                "& .MuiDrawer-paper": {
+                  height: "58vh", // Adjust height as needed
+                  top: "18vh", // Center it vertically
+                  borderRadius: "10px 0 0 10px", // Optional rounded corners
+                },
+              }}
             >
-              <Box sx={{width: 200, padding: 2, paddingLeft: 4}}>
+              <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
                 <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: 2,
-                    }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 2,
+                  }}
                 >
-                  <Typography variant="h6" sx={{color: "#0B0B0B"}}>
+                  <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
                     Filter By
                   </Typography>
                   <IconButton
-                      sx={{
-                        "&:focus": {
-                          outline: "none",
-                          boxShadow: "none",
-                        },
-                        color: "black",
-                      }}
-                      onClick={() => setFilterDrawerOpen(false)}
+                    sx={{
+                      "&:focus": {
+                        outline: "none",
+                        boxShadow: "none",
+                      },
+                      color: "black",
+                    }}
+                    onClick={() => setFilterDrawerOpen(false)}
                   >
-                    <CloseIcon/>
+                    <CloseIcon />
                   </IconButton>
                 </Box>
 
                 {/* Filter Options */}
                 <FormControl
-                    sx={{marginBottom: 6, marginTop: 2, width: "100%"}}
-                    component="fieldset"
+                  sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}
+                  component="fieldset"
                 >
                   <FormLabel
-                      component="legend"
-                      sx={{
-                        marginBottom: 1,
-                        color: "#000000",
-                        "&.Mui-focused": {color: "#000000"}, // Prevents blue color on focus
-                      }}
+                    component="legend"
+                    sx={{
+                      marginBottom: 1,
+                      color: "#000000",
+                      "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                    }}
                   >
                     Status
                   </FormLabel>
                   <RadioGroup
-                      name="status"
-                      value={filters.status}
-                      onChange={handleFilterChange}
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
                   >
                     <FormControlLabel
-                        value="Available"
-                        control={
-                          <Radio
-                              sx={{
-                                color: "#878787", // Default color
-                                "&.Mui-checked": {
-                                  color: "#25307F", // Selected dot color
-                                },
-                              }}
-                          />
-                        }
-                        label="Available"
-                        sx={{ height: "34px", color: "#878787" }}
+                      value="Available"
+                      control={
+                        <Radio
+                          sx={{
+                            color: "#878787", // Default color
+                            "&.Mui-checked": {
+                              color: "#25307F", // Selected dot color
+                            },
+                          }}
+                        />
+                      }
+                      label="Available"
+                      sx={{ height: "34px", color: "#878787" }}
                     />
                     <FormControlLabel
-                        value="Occupied"
-                        control={
-                          <Radio
-                              sx={{
-                                color: "#878787", // Default color
-                                "&.Mui-checked": {
-                                  color: "#25307F", // Selected dot color
-                                },
-                              }}
-                          />
-                        }
-                        label="Occupied"
-                        sx={{ height: "34px", color: "#878787" }}
+                      value="Occupied"
+                      control={
+                        <Radio
+                          sx={{
+                            color: "#878787", // Default color
+                            "&.Mui-checked": {
+                              color: "#25307F", // Selected dot color
+                            },
+                          }}
+                        />
+                      }
+                      label="Occupied"
+                      sx={{ height: "34px", color: "#878787" }}
                     />
                     <FormControlLabel
-                        value="Under Maintenance"
-                        control={
-                          <Radio
-                              sx={{
-                                color: "#878787", // Default color
-                                "&.Mui-checked": {
-                                  color: "#25307F", // Selected dot color
-                                },
-                              }}
-                          />
-                        }
-                        label="Under Maintenance"
-                        sx={{ height: "34px", color: "#878787" }}
+                      value="Under Maintenance"
+                      control={
+                        <Radio
+                          sx={{
+                            color: "#878787", // Default color
+                            "&.Mui-checked": {
+                              color: "#25307F", // Selected dot color
+                            },
+                          }}
+                        />
+                      }
+                      label="Under Maintenance"
+                      sx={{ height: "34px", color: "#878787" }}
                     />
                     <FormControlLabel
-                        value="Full"
-                        control={
-                          <Radio
-                              sx={{
-                                color: "#878787", // Default color
-                                "&.Mui-checked": {
-                                  color: "#25307F", // Selected dot color
-                                },
-                              }}
-                          />
-                        }
-                        label="Full"
-                        sx={{ height: "34px", color: "#878787" }}
+                      value="Full"
+                      control={
+                        <Radio
+                          sx={{
+                            color: "#878787", // Default color
+                            "&.Mui-checked": {
+                              color: "#25307F", // Selected dot color
+                            },
+                          }}
+                        />
+                      }
+                      label="Full"
+                      sx={{ height: "34px", color: "#878787" }}
                     />
                     <FormControlLabel
-                        value=""
-                        control={
-                          <Radio
-                              sx={{
-                                color: "#878787", // Default color
-                                "&.Mui-checked": {
-                                  color: "#25307F", // Selected dot color
-                                },
-                              }}
-                          />
-                        }
-                        label="All"
-                        sx={{ height: "34px", color: "#878787" }}
+                      value=""
+                      control={
+                        <Radio
+                          sx={{
+                            color: "#878787", // Default color
+                            "&.Mui-checked": {
+                              color: "#25307F", // Selected dot color
+                            },
+                          }}
+                        />
+                      }
+                      label="All"
+                      sx={{ height: "34px", color: "#878787" }}
                     />
                   </RadioGroup>
                 </FormControl>
 
                 <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "#25307F",
-                      textTransform: "none", // Prevents uppercase transformation
-                      borderRadius: "16px",
-                      padding: "6px 35px",
-                      marginLeft: "4px",
-                    }}
-                    onClick={handleSearchResults}
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#25307F",
+                    textTransform: "none", // Prevents uppercase transformation
+                    borderRadius: "16px",
+                    padding: "6px 35px",
+                    marginLeft: "4px",
+                  }}
+                  onClick={handleSearchResults}
                 >
                   Search Results
                 </Button>
