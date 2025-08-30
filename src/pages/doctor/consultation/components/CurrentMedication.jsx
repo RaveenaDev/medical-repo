@@ -327,123 +327,131 @@ const CurrentMedication = ({ onConfirm,selectedComponent,existingData }) => {
         </div>
 
         {/* row2 */}
+        {/* row2 */}
         <div className={styles.row2}>
           <p className={styles.question}>
             Are you currently taking any medications?
           </p>
-          <input
-              type="text"
+          <select
               name="currentMedication"
               className={styles.input}
               value={formData.currentMedication}
               onChange={handleInputChange}
-              placeholder="If yes, Please specify"
-          />
-        </div>
-
-        {/* row3 */}
-        {formData.currentMedications.map((med, index) => (
-            <div key={index} className={styles.row3}>
-              <div>
-                <p className={styles.question}>Name:</p>
-                <input
-                    type="text"
-                    className={styles.inputSmall}
-                    value={med.name}
-                    onChange={(e) =>
-                        handleMedicationChange(index, "name", e.target.value)
-                    }
-                />
-              </div>
-              <div>
-                <p className={styles.question}>Dosage:</p>
-                <input
-                    type="text"
-                    className={styles.inputSmall}
-                    value={med.dosage}
-                    onChange={(e) =>
-                        handleMedicationChange(index, "dosage", e.target.value)
-                    }
-                    placeholder="ex. 25.00"
-                />
-              </div>
-              <div className={styles.freq}>
-                <p className={styles.question}>Frequency:</p>
-                <div className={styles.customRadios}>
-                  <label>
-                    <input
-                        type="radio"
-                        name={`frequency-${index}`}
-                        value="weekly"
-                        checked={med.frequency === "weekly"}
-                        onChange={() =>
-                            handleMedicationChange(index, "frequency", "weekly")
-                        }
-                    />
-                    <span
-                        className={`${styles.circle} ${
-                            med.frequency === "weekly" ? styles.checked : ""
-                        }`}
-                    >
-            {med.frequency === "weekly" && (
-                <img
-                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                    alt="Checked Icon"
-                    width={24}
-                    height={24}
-                />
-            )}
-          </span>
-                    Weekly
-                  </label>
-                  <label>
-                    <input
-                        type="radio"
-                        name={`frequency-${index}`}
-                        value="daily"
-                        checked={med.frequency === "daily"}
-                        onChange={() =>
-                            handleMedicationChange(index, "frequency", "daily")
-                        }
-                    />
-                    <span
-                        className={`${styles.circle} ${
-                            med.frequency === "daily" ? styles.checked : ""
-                        }`}
-                    >
-            {med.frequency === "daily" && (
-                <img
-                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                    alt="Checked Icon"
-                    width={24}
-                    height={24}
-                />
-            )}
-          </span>
-                    Daily
-                  </label>
-                </div>
-              </div>
-            </div>
-        ))}
-
-        <div className={styles.addRowButtonWrapper}>
-          <button
-              type="button"
-              className={styles.addRowButton}
-              onClick={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    currentMedications: [
-                      ...prev.currentMedications,
-                      {name: "", dosage: "", frequency: ""},
-                    ],
-                  }))
-              }
           >
-            + Add
-          </button>
+            <option value="">Please Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
         </div>
+
+        {/* Show medication fields only when "yes" is selected */}
+        {formData.currentMedication === "yes" && (
+            <>
+              {formData.currentMedications.map((med, index) => (
+                  <div key={index} className={styles.row3}>
+                    <div>
+                      <p className={styles.question}>Name:</p>
+                      <input
+                          type="text"
+                          className={styles.inputSmall}
+                          value={med.name}
+                          onChange={(e) =>
+                              handleMedicationChange(index, "name", e.target.value)
+                          }
+                      />
+                    </div>
+                    <div>
+                      <p className={styles.question}>Dosage:</p>
+                      <input
+                          type="text"
+                          className={styles.inputSmall}
+                          value={med.dosage}
+                          onChange={(e) =>
+                              handleMedicationChange(index, "dosage", e.target.value)
+                          }
+                          placeholder="ex. 25.00"
+                      />
+                    </div>
+                    <div className={styles.freq}>
+                      <p className={styles.question}>Frequency:</p>
+                      <div className={styles.customRadios}>
+                        <label>
+                          <input
+                              type="radio"
+                              name={`frequency-${index}`}
+                              value="weekly"
+                              checked={med.frequency === "weekly"}
+                              onChange={() =>
+                                  handleMedicationChange(index, "frequency", "weekly")
+                              }
+                          />
+                          <span
+                              className={`${styles.circle} ${
+                                  med.frequency === "weekly" ? styles.checked : ""
+                              }`}
+                          >
+                {med.frequency === "weekly" && (
+                    <img
+                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                        alt="Checked Icon"
+                        width={24}
+                        height={24}
+                    />
+                )}
+              </span>
+                          Weekly
+                        </label>
+                        <label>
+                          <input
+                              type="radio"
+                              name={`frequency-${index}`}
+                              value="daily"
+                              checked={med.frequency === "daily"}
+                              onChange={() =>
+                                  handleMedicationChange(index, "frequency", "daily")
+                              }
+                          />
+                          <span
+                              className={`${styles.circle} ${
+                                  med.frequency === "daily" ? styles.checked : ""
+                              }`}
+                          >
+                {med.frequency === "daily" && (
+                    <img
+                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                        alt="Checked Icon"
+                        width={24}
+                        height={24}
+                    />
+                )}
+              </span>
+                          Daily
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+              ))}
+
+              <div className={styles.addRowButtonWrapper}>
+                <button
+                    type="button"
+                    className={styles.addRowButton}
+                    onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          currentMedications: [
+                            ...prev.currentMedications,
+                            { name: "", dosage: "", frequency: "" },
+                          ],
+                        }))
+                    }
+                >
+                  + Add
+                </button>
+              </div>
+            </>
+        )}
+
 
         {/* row7 */}
         <div className={styles.row7}>
