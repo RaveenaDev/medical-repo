@@ -42,6 +42,7 @@ import {
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_REJECTED_APPOINTMENTS,
+  GET_ROOM_TYPES,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
@@ -107,6 +108,8 @@ const initialState = {
   packages: [],
   progressTracker: [],
   isLoadingGetProgressTracker: true,
+  roomTypes: [],
+  isLoadingRoomTypes: false,
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -526,7 +529,12 @@ export const adminReducer = (state = initialState, action) => {
         progressTracker: action.payload,
         isLoadingGetProgressTracker: false,
       };
-
+    case GET_ROOM_TYPES:
+      return {
+        ...state,
+        roomTypes: action.payload.subcategories,
+        isLoadingRoomTypes: false,
+      };
     default:
       return state;
   }

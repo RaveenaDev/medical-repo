@@ -40,6 +40,7 @@ import {
   addRoom,
   deleteRoom,
   getFilteredRooms,
+  getRoomTypes,
   updateRoom,
 } from "../../../components/State/Admin/Action.js";
 import { toast } from "react-toastify";
@@ -226,7 +227,9 @@ const AdminRooms = (props) => {
   useEffect(() => {
     dispatch(getFilteredRooms(page, rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
-
+  useEffect(() => {
+    dispatch(getRoomTypes());
+  }, [dispatch]);
   const navigate = useNavigate();
 
   const rooms = useSelector((state) => state.admin.filteredRooms);
@@ -244,6 +247,8 @@ const AdminRooms = (props) => {
     setPage(0); // Reset to first page when rows per page changes
   };
   // console.log("Current Form Data: ", rooms);
+
+  const roomTypesInState = useSelector((state) => state.admin.roomTypes);
 
   return (
     <div
@@ -562,12 +567,20 @@ const AdminRooms = (props) => {
                                 variant="outlined"
                                 required
                               >
-                                {roomTypes.map((type) => (
-                                  <MenuItem key={type} value={type}>
-                                    {type}
-                                  </MenuItem>
-                                ))}
-                                <MenuItem value="custom">Custom</MenuItem>
+                                {roomTypesInState && roomTypesInState.length > 0
+                                  ? roomTypesInState.map((item) => (
+                                      <MenuItem
+                                        key={item.subCategoryName}
+                                        value={item.subCategoryName}
+                                      >
+                                        {item.subCategoryName}
+                                      </MenuItem>
+                                    ))
+                                  : roomTypes.map((type) => (
+                                      <MenuItem key={type} value={type}>
+                                        {type}
+                                      </MenuItem>
+                                    ))}
                               </Select>
                               {errors.roomTypeName && (
                                 <Typography variant="caption" color="error">
@@ -576,28 +589,6 @@ const AdminRooms = (props) => {
                               )}
                             </FormControl>
                           </Grid>
-
-                          {formData.roomTypeName === "custom" && (
-                            <Grid item xs={6}>
-                              <TextField
-                                name="customRoomType"
-                                value={formData.customRoomType || ""}
-                                onChange={(e) =>
-                                  setFormData({
-                                    ...formData,
-                                    customRoomType: e.target.value,
-                                  })
-                                }
-                                label="Custom Room Type"
-                                margin="dense"
-                                variant="outlined"
-                                required
-                                error={!!errors.roomTypeName}
-                                helperText={errors.roomTypeName}
-                                fullWidth
-                              />
-                            </Grid>
-                          )}
                         </Grid>
                         {formData.beds.map((bed, index) => (
                           <Grid

@@ -352,7 +352,7 @@ const Patients = () => {
                     className={styles.blue}
                     style={{ display: "flex", flexDirection: "column" }}
                   >
-                    <span>{item.patient.name}</span>
+                    <span>{item.patient?.name}</span>
                     <span
                       style={{
                         fontSize: "0.85rem",
@@ -368,8 +368,8 @@ const Patients = () => {
                     </span>
                   </span>
                   <span className={styles.grey}>{item.patient.phone}</span>
-                  <span className={styles.grey}>{item.admissionDetails.insurance.policyNumber}</span>
-                  <span className={styles.grey}>{item.admissionDetails.insurance.insuranceCompany}</span>
+                  <span className={styles.grey}>{item.admissionDetails.insurance?.policyNumber}</span>
+                  <span className={styles.grey}>{item.admissionDetails.insurance?.insuranceCompany}</span>
 
                   <span
                     className={`${styles.status} ${
