@@ -18,7 +18,8 @@ import {
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
-  EDIT_ESTIMATED_BILL, EDIT_INSURED_PATIENT,
+  EDIT_ESTIMATED_BILL,
+  EDIT_INSURED_PATIENT,
   EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
@@ -44,6 +45,7 @@ import {
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_REJECTED_APPOINTMENTS,
+  GET_ROOM_TYPES,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
@@ -1087,39 +1089,39 @@ export const updateStatusOfInsuredPatients =
   };
 
 export const editInsuredPatients =
-    (admissionId, payload) => async (dispatch) => {
-      try {
-        const token = localStorage.getItem("jwt");
+  (admissionId, payload) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-        const { data } = await axios.patch(
-            `${API_URL}/updateAdmissionInsuranceDetails/${admissionId}`,
-            {
-              ...payload
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-              },
-            }
-        );
+      const { data } = await axios.patch(
+        `${API_URL}/updateAdmissionInsuranceDetails/${admissionId}`,
+        {
+          ...payload,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+      );
 
-        // console.log("Updated Data: ",data)
+      // console.log("Updated Data: ",data)
 
-        dispatch({ type: EDIT_INSURED_PATIENT, payload: data });
-        dispatch(getInsuredPatients());
+      dispatch({ type: EDIT_INSURED_PATIENT, payload: data });
+      dispatch(getInsuredPatients());
 
-        toast.success("Patient Edited Successfully!", {
-          position: "bottom-right", // Use string for position
-          autoClose: 2000,
-        });
-      } catch (error) {
-        console.log(error);
-        toast.error(" Patient Edit Error!", {
-          position: "bottom-right", // Use string for position
-          autoClose: 2000,
-        });
-      }
-    };
+      toast.success("Patient Edited Successfully!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error(" Patient Edit Error!", {
+        position: "bottom-right", // Use string for position
+        autoClose: 2000,
+      });
+    }
+  };
 
 export const getInsuranceCompanies = () => async (dispatch) => {
   try {
@@ -1401,3 +1403,21 @@ export const getProgressTrackerDetails =
       console.error("Error getting progress details:", error);
     }
   };
+
+export const getRoomTypes = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getRoomSubcategories`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // console.log("Room types fetched successfully:", data);
+    dispatch({ type: GET_ROOM_TYPES, payload: data });
+  } catch (error) {
+    console.error("Error fetching room types:", error);
+    dispatch({ type: GET_ROOM_TYPES, payload: [] });
+  }
+};
