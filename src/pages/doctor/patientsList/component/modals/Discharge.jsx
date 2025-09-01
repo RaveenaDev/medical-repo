@@ -47,7 +47,7 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { admissionDate, dischargeDate, diagnosis } = formData;
     if (!admissionDate || !dischargeDate || !diagnosis) {
       toast.error("Please fill all required fields");
@@ -60,7 +60,14 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
       ...formData,
     };
 
-    dispatch(dischargePatient(payload));
+    try {
+      const res = await dispatch(dischargePatient(payload));
+      if (res) {
+        navigate("/doctor/patientList");
+      }
+    } catch (error) {
+      console.log(error);
+    }
     onClose();
   };
 
