@@ -315,7 +315,7 @@ export const getDoctorRequests = (status) => async (dispatch) => {
       },
     });
 
-    console.log("REQ : ", data);
+    // console.log("REQ : ", data);
 
     localStorage.setItem("doctorRequestsCount", data.data?.length);
 
@@ -484,7 +484,7 @@ export const getUpcomingEvents = (date) => async (dispatch) => {
       },
     });
 
-    console.log("Upcoming Events: ", data);
+    // console.log("Upcoming Events: ", data);
     dispatch({ type: GET_UPCOMING_EVENTS, payload: data });
   } catch (error) {
     console.log(error);
