@@ -365,6 +365,7 @@ const AddPatientForm = ({ onClose }) => {
                       onChange={(e) =>
                         setForm({ ...form, insuranceIdNumber: e.target.value })
                       }
+                      required
                     />
                   </div>
                 </div>
