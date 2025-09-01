@@ -1421,3 +1421,33 @@ export const getRoomTypes = () => async (dispatch) => {
     dispatch({ type: GET_ROOM_TYPES, payload: [] });
   }
 };
+
+export const addBedsToRoom = (payload) => async () => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/beds`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // console.log("Bed Added To Room : ", data);
+
+    toast.success("Bed Added Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    return data; // return so UI can use it
+  } catch (error) {
+    console.error(error);
+
+    toast.error("Bed Addition Error!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    throw error; //  throw so UI can catch it
+  }
+};
