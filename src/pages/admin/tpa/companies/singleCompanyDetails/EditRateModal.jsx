@@ -162,16 +162,6 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
         dispatch(editTPAService(companyId,serviceId,categoryId,pass))
 
         // console.log("Edited: ", pass);
-
-        setServiceDetails({
-            name: "",
-            subCategoryName: "",
-            rateType: "",
-            rate: "",
-            effectiveDate: "",
-            amenities: "",
-            additionaldetails: {},
-        });
         handleClose();
     };
 

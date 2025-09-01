@@ -70,7 +70,7 @@ const SingleCompanyDetails = (props) => {
 
     const handleCloseMenu = () => {
         setAnchorE2(null);
-        setSelectedService(null);
+        // setSelectedService(null);
     };
 
     const handleView = (service, category) => {
@@ -96,8 +96,8 @@ const SingleCompanyDetails = (props) => {
     }
 
     const handleEdit = () => {
-        // handleCloseMenu();
         setEditModalOpen(true)
+        handleCloseMenu();
     }
 
     const handleBackBtn = () => {
@@ -248,8 +248,8 @@ const SingleCompanyDetails = (props) => {
                                                         anchorEl={anchorE2}
                                                         open={Boolean(
                                                             anchorE2 &&
-                                                            selectedService?.category?._id ===
-                                                            category._id
+                                                            selectedService?.service?._id === service._id &&
+                                                            selectedService?.category?._id === category._id
                                                         )}
                                                         onClose={handleCloseMenu}
                                                     >
@@ -408,10 +408,11 @@ const SingleCompanyDetails = (props) => {
             {
                 selectedService && (
                     <EditRateModal
+                        key={`${selectedService.service._id}-${selectedService.category._id}`}
                         companyId={companyId}
-                    open={editModalOpen}
-                    handleClose={() => setEditModalOpen(false)}
-                    service={selectedService}
+                        open={editModalOpen}
+                        handleClose={() => setEditModalOpen(false)}
+                        service={selectedService}
                     />
                 )
             }
