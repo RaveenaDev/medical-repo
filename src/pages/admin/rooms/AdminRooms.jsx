@@ -37,6 +37,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addBedsToRoom,
   addRoom,
   deleteRoom,
   getFilteredRooms,
@@ -46,6 +47,8 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from "@mui/material/CircularProgress";
+
+import { Check, Trash2, X } from "lucide-react";
 
 const AdminRooms = (props) => {
   useEffect(() => {
@@ -249,7 +252,43 @@ const AdminRooms = (props) => {
   // console.log("Current Form Data: ", rooms);
 
   const roomTypesInState = useSelector((state) => state.admin.roomTypes);
+  const [newBeds, setNewBeds] = useState([]);
 
+  const handleAddRow = () => {
+    setNewBeds((prev) => [...prev, { bedNumber: "", status: "Available" }]);
+  };
+
+  const handleChangeRow = (index, field, value) => {
+    setNewBeds((prev) =>
+      prev.map((bed, i) => (i === index ? { ...bed, [field]: value } : bed))
+    );
+  };
+
+  const handleSaveBed = async (index) => {
+    const bed = newBeds[index];
+    const payload = {
+      roomId: currentRoom?._id,
+      beds: [bed],
+    };
+
+    try {
+      const res = await dispatch(addBedsToRoom(payload));
+
+      if (res) {
+        setCurrentRoom((prev) => ({
+          ...prev,
+          beds: [...(prev?.beds || []), ...res.beds],
+        }));
+
+        setNewBeds((prev) => prev.filter((_, i) => i !== index));
+      }
+    } catch (err) {
+      console.error("Error adding bed:", err);
+    }
+  };
+  const handleCancelRow = (index) => {
+    setNewBeds((prev) => prev.filter((_, i) => i !== index));
+  };
   return (
     <div
       style={{
@@ -703,27 +742,36 @@ const AdminRooms = (props) => {
                   maxWidth="md"
                   fullWidth
                   sx={{
-                    "& .MuiDialog-paper": {
-                      maxWidth: "65%", // This will reduce the max width between md and lg.
-                    },
+                    "& .MuiDialog-paper": { maxWidth: "65%" },
                   }}
                 >
-                  <DialogTitle sx={{ fontWeight: "600" }}>
+                  <DialogTitle
+                    sx={{
+                      fontWeight: "600",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
                     Room ({currentRoom?.roomID})
+                    <Button
+                      variant="contained"
+                      sx={{ backgroundColor: "#25307F", color: "white" }}
+                      size="small"
+                      onClick={handleAddRow}
+                    >
+                      + Add Bed
+                    </Button>
                   </DialogTitle>
+
                   <DialogContent
                     sx={{
-                      maxHeight: "500px", // Fixed height
-                      overflowY: "auto", // Enable vertical scrolling
-                      paddingRight: "8px", // Optional: prevent clipping
-                      // Hides scrollbar (for WebKit browsers)
-                      "&::-webkit-scrollbar": {
-                        width: 0,
-                        display: "none",
-                      },
-                      // Hides scrollbar for Firefox
+                      maxHeight: "500px",
+                      overflowY: "auto",
+                      paddingRight: "8px",
+                      "&::-webkit-scrollbar": { width: 0, display: "none" },
                       scrollbarWidth: "none",
-                      msOverflowStyle: "none", // IE and Edge
+                      msOverflowStyle: "none",
                     }}
                   >
                     <Table
@@ -739,52 +787,114 @@ const AdminRooms = (props) => {
                           position: "sticky",
                           backgroundColor: "#f1f1f1",
                           top: 0,
-                          zIndex: 10, // Keep it above other elements
+                          zIndex: 10,
                         }}
                       >
                         <TableRow>
                           <TableCell sx={{ fontWeight: "600", width: "30%" }}>
                             Bed ID
                           </TableCell>
-                          {/* <TableCell sx={{ fontWeight: "600", width: "30%" }}>
-                            Cost
-                          </TableCell> */}
                           <TableCell sx={{ fontWeight: "600", width: "30%" }}>
                             Status
+                          </TableCell>
+                          <TableCell
+                            sx={{ fontWeight: "600", width: "30%", pl: 5 }}
+                          >
+                            Action
                           </TableCell>
                         </TableRow>
                       </TableHead>
 
                       <TableBody>
-                        {currentRoom?.beds.length > 0 ? (
-                          currentRoom?.beds.map((bed, index) => (
-                            <TableRow key={index}>
+                        {/* Existing beds */}
+                        {currentRoom?.beds?.length > 0 &&
+                          currentRoom.beds.map((bed, index) => (
+                            <TableRow key={`existing-${index}`}>
                               <TableCell>{bed?.bedNumber || "N/A"}</TableCell>
-                              {/* <TableCell>{bed?.cost || "N/A"}</TableCell> */}
                               <TableCell>{bed?.status || "N/A"}</TableCell>
+                              <TableCell></TableCell>
                             </TableRow>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell
-                              align="center"
-                              colSpan={7}
-                              sx={{
-                                background: "#fff",
-                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                                borderRadius: "8px",
-                                "&:hover": {
-                                  backgroundColor: "#f9f9f9",
-                                },
-                                "& > *": {
-                                  borderBottom: "unset",
-                                },
-                              }}
-                            >
-                              No data found!
+                          ))}
+
+                        {/* New inline rows */}
+                        {newBeds.map((bed, index) => (
+                          <TableRow key={`new-${index}`}>
+                            <TableCell>
+                              <TextField
+                                size="small"
+                                value={bed.bedNumber}
+                                onChange={(e) =>
+                                  handleChangeRow(
+                                    index,
+                                    "bedNumber",
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Enter Bed ID"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Select
+                                size="small"
+                                value={bed.status}
+                                onChange={(e) =>
+                                  handleChangeRow(
+                                    index,
+                                    "status",
+                                    e.target.value
+                                  )
+                                }
+                              >
+                                <MenuItem value="Available">Available</MenuItem>
+                                <MenuItem value="Occupied">Occupied</MenuItem>
+                                <MenuItem value="Under Maintenance">
+                                  Under Maintenance
+                                </MenuItem>
+                              </Select>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="contained"
+                                sx={{
+                                  backgroundColor: "rgb(46, 130, 59)",
+                                  color: "white",
+                                }}
+                                size="small"
+                                onClick={() => handleSaveBed(index)}
+                              >
+                                Save
+                              </Button>
+
+                              <IconButton
+                                color="error"
+                                onClick={() => handleCancelRow(index)}
+                              >
+                                <Trash2 />
+                              </IconButton>
                             </TableCell>
                           </TableRow>
-                        )}
+                        ))}
+
+                        {/* No data message */}
+                        {(!currentRoom?.beds ||
+                          currentRoom?.beds.length === 0) &&
+                          newBeds.length === 0 && (
+                            <TableRow>
+                              <TableCell
+                                align="center"
+                                colSpan={3}
+                                sx={{
+                                  background: "#fff",
+                                  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                                  borderRadius: "8px",
+                                  "&:hover": { backgroundColor: "#f9f9f9" },
+                                  "& > *": { borderBottom: "unset" },
+                                }}
+                              >
+                                No data found!
+                              </TableCell>
+                            </TableRow>
+                          )}
                       </TableBody>
                     </Table>
                   </DialogContent>
