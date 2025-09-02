@@ -22,6 +22,7 @@ const EditRoomDialog = ({
   setEditedRoom,
   errors,
   doctors,
+  wingTypes,
 }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -63,6 +64,57 @@ const EditRoomDialog = ({
                 helperText={errors.name}
                 required
               />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                margin="dense"
+                label="Floor"
+                name="floor"
+                value={editedRoom.floor}
+                onChange={(e) =>
+                  setEditedRoom({ ...editedRoom, floor: e.target.value })
+                }
+                fullWidth
+                variant="outlined"
+                error={!!errors.floor}
+                helperText={errors.floor}
+                required
+              />
+            </Grid>
+
+            {/* Wing */}
+            <Grid item xs={2}>
+              <FormControl
+                fullWidth
+                sx={{ minWidth: 150 }}
+                margin="dense"
+                error={!!errors.wing}
+              >
+                <InputLabel id="wing-select-label">Wing</InputLabel>
+                <Select
+                  labelId="wing-select-label"
+                  id="wing-select"
+                  name="wing"
+                  value={editedRoom.wing || ""}
+                  onChange={(e) =>
+                    setEditedRoom({ ...editedRoom, wing: e.target.value })
+                  }
+                  label="Wing"
+                  variant="outlined"
+                  required
+                >
+                  {wingTypes.map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {type}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.wing && (
+                  <Typography variant="caption" color="error">
+                    {errors.wing}
+                  </Typography>
+                )}
+              </FormControl>
             </Grid>
 
             <Grid item xs={3}>

@@ -456,6 +456,7 @@ export const addRoom = (roomData) => async (dispatch) => {
     });
 
     dispatch({ type: ADD_ROOM, payload: data });
+
     toast.success("Room Added Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
@@ -478,7 +479,9 @@ export const updateRoom = (roomId, updatedData) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch(getRooms());
+
+    // console.log("Updated room:", data);
+    dispatch(getFilteredRooms());
     toast.success("Room Updated Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
