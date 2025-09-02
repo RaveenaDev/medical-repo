@@ -118,30 +118,6 @@ const EditRoomDialog = ({
             </Grid>
 
             <Grid item xs={3}>
-              <FormControl fullWidth margin="dense" error={!!errors.status}>
-                <InputLabel id="status-select-label">Status</InputLabel>
-                <Select
-                  labelId="status-select-label"
-                  value={editedRoom.status}
-                  onChange={(e) =>
-                    setEditedRoom({ ...editedRoom, status: e.target.value })
-                  }
-                >
-                  <MenuItem value="Available">Available</MenuItem>
-                  <MenuItem value="Occupied">Occupied</MenuItem>
-                  <MenuItem value="Under Maintenance">
-                    Under Maintenance
-                  </MenuItem>
-                </Select>
-                {errors.status && (
-                  <Typography variant="caption" color="error">
-                    {errors.status}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={3}>
               <FormControl fullWidth margin="dense" error={!!errors.doctorId}>
                 <InputLabel id="doctor-select-label">
                   Doctor Assigned
