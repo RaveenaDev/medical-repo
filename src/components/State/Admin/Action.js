@@ -237,7 +237,7 @@ export const getRooms = () => async (dispatch) => {
       },
     });
 
-    // console.log("Rooms: ",data)
+    // console.log("Rooms: ", data);
     dispatch({ type: GET_ROOMS, payload: data });
   } catch (error) {
     console.log(error);
@@ -258,7 +258,7 @@ export const getFilteredRooms = (page, rowsPerPage) => async (dispatch) => {
       },
     });
 
-    // console.log("Rooms: ",data)
+    // console.log("Rooms: ", data);
     dispatch({ type: GET_FILTERED_ROOMS, payload: data });
   } catch (error) {
     console.log(error);
