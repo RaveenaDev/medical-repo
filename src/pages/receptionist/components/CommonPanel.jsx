@@ -259,7 +259,7 @@ const CommonPanel = ({
               </LocalizationProvider>
             </Grid>
             <Grid size={9} sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
+              {/* <Button
                 variant="contained"
                 sx={{
                   fontSize: "16px",
@@ -291,15 +291,15 @@ const CommonPanel = ({
                   className={styles.appointmentBlock__accountIcon}
                 />
                 Appointment Requests
-              </Button>
+              </Button> */}
               {/* Modal Component */}
-              <AppointmentRequestModal
+              {/* <AppointmentRequestModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 appointmentRequests={appointmentRequests}
               >
                 <p>This is where appointment requests will appear.</p>
-              </AppointmentRequestModal>
+              </AppointmentRequestModal> */}
               <Button
                 variant="contained"
                 sx={{
@@ -307,15 +307,16 @@ const CommonPanel = ({
                   color: "#878787",
                   textTransform: "capitalize",
                   padding: {
-                    md: "0px 10px",
-                  }, // Adjust padding
+                    xs: "0px 8px",
+                    sm: "0px 10px",
+                    md: "6px 12px",
+                  },
                   backgroundColor: "#fff",
-                  marginRight: { md: "20px" }, // Reduce margin for small screens
                   display: "flex",
                   alignItems: "center",
-                  gap: { md: "8px" }, // Adjust spacing between icon and text
+                  marginRight: { xs: "10px", sm: "15px", md: "20px" }, // Reduce margin for small screens
+                  gap: { xs: "4px", sm: "6px", md: "8px" }, // Adjust spacing between icon and text
                   fontWeight: "500",
-
                   lineHeight: "100%",
                   letterSpacing: "0%",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
