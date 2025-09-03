@@ -17,13 +17,43 @@ import {
     getAllDepartments,
 } from "../../../../../components/State/Admin/Action.js";
 
+/* ------- Helpers: Indian-format display + raw parsing (no commas in state) ------- */
+const formatIndian = (val) => {
+    if (val === "" || val == null) return "";
+    const s = String(val);
+    const [rawInt = "", rawDec = ""] = s.split(".");
+    const intOnly = rawInt.replace(/\D/g, "");
+    const decOnly = rawDec.replace(/\D/g, "");
+    if (!intOnly) return decOnly ? `0.${decOnly}` : "";
+
+    const last3 = intOnly.slice(-3);
+    const head = intOnly.slice(0, -3);
+    const headWithCommas = head.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+    const withCommas = (head ? headWithCommas + "," : "") + last3;
+    return decOnly ? `${withCommas}.${decOnly}` : withCommas;
+};
+
+// keep only digits and a single dot; normalize leading '.' → '0.'
+const parseToRaw = (input) => {
+    const stripped = String(input).replace(/,/g, "").replace(/[^\d.]/g, "");
+    if (!stripped) return "";
+    const parts = stripped.split(".");
+    const intPart = parts[0].replace(/^0+(?=\d)/, "");
+    const decPart = parts.slice(1).join("");
+    let raw = intPart || "0";
+    if (decPart.length) raw += "." + decPart;
+    if (stripped.startsWith(".")) raw = "0." + decPart;
+    return raw;
+};
+/* ---------------------------------------------------------------------- */
+
 const RateModal = ({ companyId, open, handleClose }) => {
     const [serviceDetails, setServiceDetails] = useState({
         name: "",
         departmentName: "",
         subCategoryName: "",
         rateType: "",
-        rate: "",
+        rate: "", // RAW numeric string (no commas)
         amenities: "",
         effectiveDate: "",
         additionaldetails: [],
@@ -44,6 +74,11 @@ const RateModal = ({ companyId, open, handleClose }) => {
             ...serviceDetails,
             [e.target.name]: e.target.value,
         });
+    };
+
+    // Current Rate change handler (keeps RAW in state)
+    const handleRateChange = (e) => {
+        setServiceDetails((prev) => ({ ...prev, rate: parseToRaw(e.target.value) }));
     };
 
     const handleAdditionalDetailChange = (index, field, value) => {
@@ -145,13 +180,15 @@ const RateModal = ({ companyId, open, handleClose }) => {
         handleClose();
     };
 
-    const totalRate =
-        serviceDetails.additionaldetails.length > 0
-            ? serviceDetails.additionaldetails.reduce(
-                (acc, item) => acc + (item.value || 0),
-                0
-            )
-            : serviceDetails.rate;
+    // Display value (formatted) for Current Rate
+    const additionalSum = serviceDetails.additionaldetails.reduce(
+        (acc, item) => acc + (item.value || 0),
+        0
+    );
+    const isAutoRate = serviceDetails.additionaldetails.length > 0;
+    const displayRate = isAutoRate
+        ? formatIndian(additionalSum)
+        : formatIndian(serviceDetails.rate);
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
@@ -238,17 +275,22 @@ const RateModal = ({ companyId, open, handleClose }) => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
+                        {/* Current Rate with Indian commas */}
                         <TextField
                             label="Current Rate"
                             fullWidth
                             margin="dense"
-                            type="number"
+                            type="text"            // allow commas in display
+                            inputMode="decimal"    // numeric keypad on mobile
                             name="rate"
-                            value={totalRate}
-                            onChange={handleChange}
+                            value={displayRate}
+                            onChange={(e) => {
+                                if (isAutoRate) return;     // ignore edits if auto-calculated
+                                handleRateChange(e);
+                            }}
                             error={!!errors.rate}
                             helperText={errors.rate}
-                            disabled={serviceDetails.additionaldetails.length > 0}
+                            disabled={isAutoRate}
                         />
                     </Grid>
                 </Grid>

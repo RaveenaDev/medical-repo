@@ -17,6 +17,36 @@ import {
     getAllDepartments,
 } from "../../../../components/State/Admin/Action.js";
 
+/* ------- Helpers: Indian-format display + raw parsing (no commas kept in state) ------- */
+const formatIndian = (val) => {
+    if (val === "" || val == null) return "";
+    const s = String(val);
+    const [rawInt = "", rawDec = ""] = s.split(".");
+    const intOnly = rawInt.replace(/\D/g, "");
+    const decOnly = rawDec.replace(/\D/g, "");
+    if (!intOnly) return decOnly ? `0.${decOnly}` : "";
+
+    const last3 = intOnly.slice(-3);
+    const head = intOnly.slice(0, -3);
+    const headWithCommas = head.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+    const withCommas = (head ? headWithCommas + "," : "") + last3;
+    return decOnly ? `${withCommas}.${decOnly}` : withCommas;
+};
+
+// keep only digits and a single dot; normalize leading '.' → '0.'
+const parseToRaw = (input) => {
+    const stripped = String(input).replace(/,/g, "").replace(/[^\d.]/g, "");
+    if (!stripped) return "";
+    const parts = stripped.split(".");
+    const intPart = parts[0].replace(/^0+(?=\d)/, "");
+    const decPart = parts.slice(1).join("");
+    let raw = intPart || "0";
+    if (decPart.length) raw += "." + decPart;
+    if (stripped.startsWith(".")) raw = "0." + decPart;
+    return raw;
+};
+/* ---------------------------------------------------------------------- */
+
 const CompanyRateModal = ({ open, handleClose }) => {
     const [companyData, setCompanyData] = useState({
         id: "",
@@ -29,7 +59,7 @@ const CompanyRateModal = ({ open, handleClose }) => {
         departmentName: "",
         subCategoryName: "",
         rateType: "",
-        rate: "",
+        rate: "", // keep RAW numeric string (no commas)
         amenities: "",
         effectiveDate: "",
         additionaldetails: [],
@@ -47,6 +77,10 @@ const CompanyRateModal = ({ open, handleClose }) => {
 
     const handleChange = (e) => {
         setServiceDetails({ ...serviceDetails, [e.target.name]: e.target.value });
+    };
+
+    const handleRateChange = (e) => {
+        setServiceDetails((prev) => ({ ...prev, rate: parseToRaw(e.target.value) }));
     };
 
     const handleAdditionalDetailChange = (index, field, value) => {
@@ -147,14 +181,21 @@ const CompanyRateModal = ({ open, handleClose }) => {
         handleClose();
     };
 
-    const totalRate =
-        serviceDetails.additionaldetails.length > 0
-            ? serviceDetails.additionaldetails.reduce((acc, item) => acc + (item.value || 0), 0)
-            : serviceDetails.rate;
+    // compute value to DISPLAY (formatted), but keep RAW in state
+    const additionalSum = serviceDetails.additionaldetails.reduce(
+        (acc, item) => acc + (item.value || 0),
+        0
+    );
+    const isAutoRate = serviceDetails.additionaldetails.length > 0;
+    const displayRate = isAutoRate
+        ? formatIndian(additionalSum)                // show formatted sum when auto
+        : formatIndian(serviceDetails.rate);         // show formatted manual rate
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-            <DialogTitle style={{fontWeight:600,color:'#25307F'}}>Add Company</DialogTitle>
+            <DialogTitle style={{ fontWeight: 600, color: "#25307F" }}>
+                Add Company
+            </DialogTitle>
             <DialogContent>
 
                 {/* Company Info (2 columns) */}
@@ -185,9 +226,12 @@ const CompanyRateModal = ({ open, handleClose }) => {
                     </Grid>
                 </Grid>
 
-                <p style={{fontWeight:500,color:'#25307F',marginTop:'1rem'}}>Service</p>
+                <p style={{ fontWeight: 500, color: "#25307F", marginTop: "1rem" }}>
+                    Service
+                </p>
+
                 {/* Service Fields (2 columns per row) */}
-                <Grid container spacing={1} sx={{mb:-1}}>
+                <Grid container spacing={1} sx={{ mb: -1 }}>
                     <Grid item xs={12} md={6}>
                         <TextField
                             label="Service Name"
@@ -263,15 +307,20 @@ const CompanyRateModal = ({ open, handleClose }) => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
+                        {/* Current Rate with Indian commas */}
                         <TextField
                             label="Current Rate"
                             fullWidth
                             margin="dense"
-                            type="number"
+                            type="text"            // allow commas
+                            inputMode="decimal"    // mobile numeric keypad
                             name="rate"
-                            value={totalRate}
-                            onChange={handleChange}
-                            disabled={serviceDetails.additionaldetails.length > 0}
+                            value={displayRate}
+                            onChange={(e) => {
+                                if (isAutoRate) return;     // ignore edits if auto-calculated
+                                handleRateChange(e);
+                            }}
+                            disabled={isAutoRate}
                         />
                     </Grid>
                 </Grid>
@@ -328,7 +377,7 @@ const CompanyRateModal = ({ open, handleClose }) => {
                     Add Custom Charges & Details
                 </Button>
 
-                <Grid container spacing={1} sx={{mb: 1 }}>
+                <Grid container spacing={1} sx={{ mb: 1 }}>
                     <Grid item xs={12} md={6}>
                         <TextField
                             label="Effective Date"
@@ -383,8 +432,7 @@ const CompanyRateModal = ({ open, handleClose }) => {
                         <ul>
                             {companyData.services.map((s, i) => (
                                 <li key={i}>
-                                    {s.serviceName} — {s.categories[0].rateType} (
-                                    {s.categories[0].rate})
+                                    {s.serviceName} — {s.categories[0].rateType} ({s.categories[0].rate})
                                 </li>
                             ))}
                         </ul>

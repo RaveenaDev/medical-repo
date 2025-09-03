@@ -5,17 +5,46 @@ import {
     DialogContent,
     TextField,
     Button,
-    Grid2,
+    Grid,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { Trash2Icon } from "lucide-react";
-import {editTPAService, getAllDepartments} from "../../../../../components/State/Admin/Action.js";
+import { editTPAService, getAllDepartments } from "../../../../../components/State/Admin/Action.js";
 
-const EditRateModal = ({companyId, open, handleClose, service }) => {
+/* ------- Helper Functions: Indian-format display + raw parsing (no commas in state) ------- */
+const formatIndian = (val) => {
+    if (val === "" || val == null) return "";
+    const s = String(val);
+    const [rawInt = "", rawDec = ""] = s.split(".");
+    const intOnly = rawInt.replace(/\D/g, "");
+    const decOnly = rawDec.replace(/\D/g, "");
+    if (!intOnly) return decOnly ? `0.${decOnly}` : "";
+
+    const last3 = intOnly.slice(-3);
+    const head = intOnly.slice(0, -3);
+    const headWithCommas = head.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+    const withCommas = (head ? headWithCommas + "," : "") + last3;
+    return decOnly ? `${withCommas}.${decOnly}` : withCommas;
+};
+
+// Parse to RAW number (without commas or non-numeric characters)
+const parseToRaw = (input) => {
+    const stripped = String(input).replace(/,/g, "").replace(/[^\d.]/g, "");
+    if (!stripped) return "";
+    const parts = stripped.split(".");
+    const intPart = parts[0].replace(/^0+(?=\d)/, ""); // remove leading zeros
+    const decPart = parts.slice(1).join(""); // concatenate decimals
+    let raw = intPart || "0";
+    if (decPart.length) raw += "." + decPart;
+    if (stripped.startsWith(".")) raw = "0." + decPart; // for inputs like ".5"
+    return raw;
+};
+/* ---------------------------------------------------------------------- */
+
+const EditRateModal = ({ companyId, open, handleClose, service }) => {
     const serviceId = service.service._id;
     const categoryId = service.category._id;
 
-    // console.log("Service: ",service)
     // ✅ Format effectiveDate into YYYY-MM-DD
     const formattedDate = service.category.effectiveDate
         ? new Date(service.category.effectiveDate).toISOString().split("T")[0]
@@ -36,7 +65,7 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
     const [draftKeys, setDraftKeys] = useState({});
 
     useEffect(() => {
-        // initialize draft keys when the modal opens / service changes
+        // Initialize draft keys when the modal opens / service changes
         setDraftKeys(() => {
             const map = {};
             Object.keys(serviceDetails.additionaldetails || {}).forEach((k) => {
@@ -44,7 +73,24 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
             });
             return map;
         });
-    }, [open]); // or [serviceId] if you prefer
+    }, [open]); // Run only when `open` changes (i.e., modal opens or closes)
+
+    // Reset form when modal is closed
+    useEffect(() => {
+        if (!open) {
+            // Reset the form data when modal is closed
+            setServiceDetails({
+                serviceId: serviceId,
+                name: service.service.serviceName,
+                subCategoryName: service.category.subCategoryName,
+                rateType: service.category.rateType,
+                rate: service.category.rate,
+                effectiveDate: formattedDate, // formatted here
+                amenities: service.category.amenities,
+                additionaldetails: service.category.additionaldetails || {},
+            });
+        }
+    }, [open, serviceId, service, formattedDate]); // When `open`, `serviceId`, or `service` change
 
     const [lastUpdated, setLastUpdated] = useState(
         new Date().toISOString().split("T")[0]
@@ -55,6 +101,11 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
             ...serviceDetails,
             [e.target.name]: e.target.value,
         });
+    };
+
+    // Current Rate change handler (keeps RAW in state)
+    const handleRateChange = (e) => {
+        setServiceDetails((prev) => ({ ...prev, rate: parseToRaw(e.target.value) }));
     };
 
     // Helper: rename a key but keep the same order in the object
@@ -140,13 +191,11 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
             )
             : serviceDetails.rate;
 
-    // console.log("Rate: ",totalRate)
-
     const handleSubmit = () => {
         const finalRate = totalRate;
         const pass = {
             service: {
-                serviceName: serviceDetails.name,   // matches serviceFields
+                serviceName: serviceDetails.name, // matches serviceFields
             },
             category: {
                 subCategoryName: serviceDetails.subCategoryName,
@@ -158,168 +207,171 @@ const EditRateModal = ({companyId, open, handleClose, service }) => {
             },
         };
 
+        dispatch(editTPAService(companyId, serviceId, categoryId, pass));
 
-        dispatch(editTPAService(companyId,serviceId,categoryId,pass))
-
-        // console.log("Edited: ", pass);
         handleClose();
     };
 
-    const dispatch = useDispatch();
-
-
-
     return (
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
             <DialogTitle>Edit Service</DialogTitle>
             <DialogContent>
-                <TextField
-                    label="Service Name"
-                    fullWidth
-                    margin="dense"
-                    name="name"
-                    value={serviceDetails.name}
-                    onChange={handleChange}
-                />
+                {/* Service fields (2 columns) */}
+                <Grid container spacing={1}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Service Name"
+                            fullWidth
+                            margin="dense"
+                            name="name"
+                            value={serviceDetails.name}
+                            onChange={handleChange}
+                        />
+                    </Grid>
 
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "8px",
-                        marginBottom: "16px",
-                    }}
-                >
-                    <TextField
-                        label="Category Name"
-                        fullWidth
-                        margin="dense"
-                        name="subCategoryName"
-                        value={serviceDetails.subCategoryName}
-                        onChange={handleChange}
-                    />
-                    <TextField
-                        label="Rate Type"
-                        fullWidth
-                        margin="dense"
-                        name="rateType"
-                        value={serviceDetails.rateType}
-                        onChange={handleChange}
-                    />
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Category Name"
+                            fullWidth
+                            margin="dense"
+                            name="subCategoryName"
+                            value={serviceDetails.subCategoryName}
+                            onChange={handleChange}
+                        />
+                    </Grid>
 
-                    <TextField
-                        label="Current Rate"
-                        fullWidth
-                        margin="dense"
-                        type="number"
-                        name="rate"
-                        value={totalRate}
-                        onChange={handleChange}
-                        disabled={
-                            Object.keys(serviceDetails.additionaldetails || {}).length > 0
-                        }
-                    />
-                    <TextField
-                        label="Amenities"
-                        fullWidth
-                        margin="dense"
-                        name="amenities"
-                        value={serviceDetails.amenities}
-                        onChange={handleChange}
-                    />
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Rate Type"
+                            fullWidth
+                            margin="dense"
+                            name="rateType"
+                            value={serviceDetails.rateType}
+                            onChange={handleChange}
+                        />
+                    </Grid>
 
-                    {/* Additional Details Section */}
-                    <div>
-                        <Grid2 container spacing={2} marginTop={1}>
-                            {Object.entries(serviceDetails.additionaldetails).map(
-                                ([key, value]) => {
-                                    const draftName = draftKeys[key] ?? key; // show draft while typing
-                                    return (
-                                        <Grid2 item xs={12} container spacing={1} key={`add-${key}`}>
-                                            <Grid2 item xs={6}>
-                                                <TextField
-                                                    label="Detail Name"
-                                                    fullWidth
-                                                    value={draftName}
-                                                    onChange={(e) =>
-                                                        setDraftKeys((prev) => ({
-                                                            ...prev,
-                                                            [key]: e.target.value,
-                                                        }))
-                                                    }
-                                                    onBlur={() => commitKeyRename(key)}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === "Enter") {
-                                                            e.currentTarget.blur();
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Amenities"
+                            fullWidth
+                            margin="dense"
+                            name="amenities"
+                            value={serviceDetails.amenities}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        {/* Current Rate with Indian commas */}
+                        <TextField
+                            label="Current Rate"
+                            fullWidth
+                            margin="dense"
+                            type="text"            // allow commas in display
+                            inputMode="decimal"    // numeric keypad on mobile
+                            name="rate"
+                            value={formatIndian(totalRate)}  // display formatted rate
+                            onChange={handleRateChange}
+                            disabled={Object.keys(serviceDetails.additionaldetails || {}).length > 0}
+                        />
+                    </Grid>
+
+                    {/* Additional Details */}
+                    <Grid item xs={12}>
+                        <div>
+                            <Grid container spacing={2} marginTop={1}>
+                                {Object.entries(serviceDetails.additionaldetails).map(
+                                    ([key, value]) => {
+                                        const draftName = draftKeys[key] ?? key; // show draft while typing
+                                        return (
+                                            <Grid item xs={12} container spacing={1} key={`add-${key}`}>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        label="Detail Name"
+                                                        fullWidth
+                                                        value={draftName}
+                                                        onChange={(e) =>
+                                                            setDraftKeys((prev) => ({
+                                                                ...prev,
+                                                                [key]: e.target.value,
+                                                            }))
                                                         }
-                                                    }}
-                                                />
-                                            </Grid2>
-                                            <Grid2 item xs={5}>
-                                                <TextField
-                                                    label="Value"
-                                                    fullWidth
-                                                    type="number"
-                                                    value={value}
-                                                    onChange={(e) =>
-                                                        handleAdditionalValueChange(
-                                                            key,
-                                                            parseFloat(e.target.value)
-                                                        )
-                                                    }
-                                                />
-                                            </Grid2>
-                                            <Grid2
-                                                item
-                                                xs={1}
-                                                display="flex"
-                                                alignItems="center"
-                                                justifyContent="center"
-                                            >
-                                                <Trash2Icon
-                                                    onClick={() => handleRemoveAdditionalDetail(key)}
-                                                    style={{cursor: "pointer", color: "red"}}
-                                                />
-                                            </Grid2>
-                                        </Grid2>
-                                    );
-                                }
-                            )}
-                        </Grid2>
+                                                        onBlur={() => commitKeyRename(key)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === "Enter") {
+                                                                e.currentTarget.blur();
+                                                            }
+                                                        }}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={5}>
+                                                    <TextField
+                                                        label="Value"
+                                                        fullWidth
+                                                        type="number"
+                                                        value={value}
+                                                        onChange={(e) =>
+                                                            handleAdditionalValueChange(key, parseFloat(e.target.value))
+                                                        }
+                                                    />
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={1}
+                                                    display="flex"
+                                                    alignItems="center"
+                                                    justifyContent="center"
+                                                >
+                                                    <Trash2Icon
+                                                        onClick={() => handleRemoveAdditionalDetail(key)}
+                                                        style={{ cursor: "pointer", color: "red" }}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    }
+                                )}
+                            </Grid>
+                            <Button
+                                variant="outlined"
+                                onClick={handleAddAdditionalDetail}
+                                sx={{ mt: 2, mb: 2 }}
+                            >
+                                Add Custom Charges & Details
+                            </Button>
+                        </div>
+                    </Grid>
 
-                        <Button
-                            variant="outlined"
-                            onClick={handleAddAdditionalDetail}
-                            sx={{marginTop: 2, marginBottom: 2}}
-                        >
-                            Add Custom Charges & Details
-                        </Button>
-                    </div>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Effective Date"
+                            fullWidth
+                            margin="dense"
+                            InputLabelProps={{ shrink: true }}
+                            type="date"
+                            name="effectiveDate"
+                            value={serviceDetails.effectiveDate}
+                            onChange={handleChange}
+                        />
+                    </Grid>
 
-                    <TextField
-                        label="Effective Date"
-                        fullWidth
-                        margin="dense"
-                        InputLabelProps={{shrink: true}}
-                        type="date"
-                        name="effectiveDate"
-                        value={serviceDetails.effectiveDate} // ✅ now shows correctly
-                        onChange={handleChange}
-                    />
-                </div>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Last Updated"
+                            fullWidth
+                            margin="dense"
+                            type="date"
+                            value={lastUpdated}
+                            disabled
+                        />
+                    </Grid>
+                </Grid>
 
-                <TextField
-                    label="Last Updated"
-                    fullWidth
-                    margin="dense"
-                    type="date"
-                    value={lastUpdated}
-                    disabled
-                />
                 <Button
                     onClick={handleSubmit}
                     variant="contained"
-                    sx={{marginTop: 2, background: "#25307F"}}
+                    sx={{ mt: 2, background: "#25307F" }}
                 >
                     Done
                 </Button>
