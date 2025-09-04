@@ -1,23 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./PatientHeader.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import RecordModal from "./components/RecordsModal.jsx";
+import { getBillsByPatientId } from "../../../../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const PatientHeader = ({ showEditPatients = true, patient }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [selectedBill, setSelectedBill] = useState(null);
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedBill(null);
-  };
-  const handleViewClick = (bill) => {
-    setSelectedBill(bill);
-    setOpenModal(true);
-  };
+
   const navigate = useNavigate();
   // console.log("Pat : ",patient)
+  const [activeModal, setActiveModal] = useState(null);
+  const openBilling = () => setActiveModal("billing");
+  const closeModal = () => setActiveModal(null);
 
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
   return (
     <div className="patient-header">
       <div className="patient-info">
@@ -105,20 +108,7 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
         <div
           className="box"
           style={{ cursor: "pointer" }}
-          onClick={() =>
-            handleViewClick({
-              id: patient?._id,
-              name: patient?.name,
-              phone: patient?.phone,
-              invoiceDate: patient?.bills[patient.bills.length - 1].invoiceDate,
-              status: patient?.bills[patient.bills.length - 1].status,
-              invoiceNo: patient?.bills[patient.bills.length - 1].invoiceNumber,
-              mode: patient?.bills[patient.bills.length - 1].mode,
-              outstanding: patient?.bills[patient.bills.length - 1].outstanding,
-              paidAmount: patient?.bills[patient.bills.length - 1].paidAmount,
-              totalAmount: patient?.bills[patient.bills.length - 1].totalAmount,
-            })
-          }
+          onClick={openBilling}
         >
           <svg
             width="24"
@@ -150,12 +140,14 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
         </div>
       </div>
       {/* Use the separate BillingModal Component */}
-      <RecordModal
-        open={openModal}
-        bill={selectedBill}
-        onClose={handleCloseModal}
-        patient={patient}
-      />
+
+      <div
+        className={`billing-modal ${
+          activeModal === "billing" ? "billing-modalOpen" : ""
+        }`}
+      >
+        <RecordModal onClose={closeModal} patient={patient} />
+      </div>
     </div>
   );
 };

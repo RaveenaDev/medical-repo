@@ -16,6 +16,7 @@ import {
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_BILLS,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
@@ -69,6 +70,8 @@ const initialState = {
   success: null,
   bookAppointment: null,
   refreshAppointments: false,
+  patientBills: [],
+  isLoadingPatientBills: true,
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -273,6 +276,13 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         progressTracker: action.payload,
         isLoading: false,
+      };
+
+    case GET_PATIENT_BILLS:
+      return {
+        ...state,
+        patientBills: action.payload,
+        isLoadingPatientBills: false,
       };
 
     default:

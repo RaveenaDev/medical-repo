@@ -56,7 +56,7 @@ const ProgressTracker = ({ patient }) => {
               </div>
             ))
           ) : (
-            <div className={styles.noData}>No progress steps available.</div>
+            <div className={styles.noData}></div>
           )}
         </div>
       </div>

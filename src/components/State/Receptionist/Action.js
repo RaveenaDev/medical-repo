@@ -17,6 +17,7 @@ import {
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_BILLS,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
@@ -561,3 +562,25 @@ export const getProgressTrackerDetails =
       console.error("Error getting progress details:", error);
     }
   };
+
+export const getBillsByPatientId = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/getBillsByPatient/${patientId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Bill INFO", data);
+    dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
+  } catch (error) {
+    console.error("patient Bill Info not available:", error);
+    dispatch({ type: GET_PATIENT_BILLS, payload: [] });
+    throw error;
+  }
+};
