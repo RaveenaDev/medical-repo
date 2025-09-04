@@ -42,6 +42,7 @@ const parseToRaw = (input) => {
 /* ---------------------------------------------------------------------- */
 
 const EditRateModal = ({ companyId, open, handleClose, service }) => {
+    const dispatch = useDispatch();
     const serviceId = service.service._id;
     const categoryId = service.category._id;
 

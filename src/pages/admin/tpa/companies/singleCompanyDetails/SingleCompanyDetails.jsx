@@ -176,7 +176,7 @@ const SingleCompanyDetails = (props) => {
                             <span>Rate Type</span>
                             <span>Current Rate</span>
                             <span>Effective Date</span>
-                            <span>Last Updated</span>
+                            {/*<span>Last Updated</span>*/}
                             <span>More Details</span>
                         </div>
 
@@ -202,18 +202,7 @@ const SingleCompanyDetails = (props) => {
                                                     <span>{category.rateType}</span>
                                                     <span className={styles.blue}>₹{category.rate}</span>
                                                     <span>
-                        {new Date(category.effectiveDate).toLocaleDateString(
-                            "en-IN",
-                            {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "numeric",
-                            }
-                        )}
-                      </span>
-                                                    <span>
-                        {" "}
-                                                        {new Date(service.updatedAt).toLocaleDateString(
+                                                        {new Date(category.effectiveDate).toLocaleDateString(
                                                             "en-IN",
                                                             {
                                                                 day: "2-digit",
@@ -221,7 +210,18 @@ const SingleCompanyDetails = (props) => {
                                                                 year: "numeric",
                                                             }
                                                         )}
-                      </span>
+                                                      </span>
+                                                      {/*<span>*/}
+                                                      {/*  {" "}*/}
+                                                      {/*  {new Date(service.updatedAt).toLocaleDateString(*/}
+                                                      {/*      "en-IN",*/}
+                                                      {/*      {*/}
+                                                      {/*          day: "2-digit",*/}
+                                                      {/*          month: "2-digit",*/}
+                                                      {/*          year: "numeric",*/}
+                                                      {/*      }*/}
+                                                      {/*  )}*/}
+                                                      {/*</span>*/}
                                                     <button
                                                         style={{
                                                             border: "1px solid #25307F",

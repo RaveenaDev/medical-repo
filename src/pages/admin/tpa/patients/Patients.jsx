@@ -270,7 +270,7 @@ const Patients = () => {
 
   const [billingRecords, setBillingRecords] = useState(dummyBillingRecords);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [activeModal, setActiveModal] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const dispatch = useDispatch();
