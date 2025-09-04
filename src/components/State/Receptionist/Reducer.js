@@ -50,8 +50,10 @@ const initialState = {
   patients: [],
   filteredPatients: [],
   doctors: [],
+  isLoadingDoctors: true,
   doctorsByDepartment: [],
   staffs: [],
+  isLoadingStaffs: true,
   rooms: [],
   filteredRooms: [],
   departments: [],
@@ -103,6 +105,7 @@ export const receptionistReducer = (state = initialState, action) => {
         totalDoctors: action.payload.count,
         doctors: action.payload.doctors,
         doctorCount: action.payload.totalDoctors,
+        isLoadingDoctors: false,
       };
 
     case GET_FILTERED_DOCTORS:
@@ -123,6 +126,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalStaffs: action.payload.totalStaff,
         staffs: action.payload.staff,
+        isLoadingStaffs: false,
       };
 
     case GET_ROOMS:

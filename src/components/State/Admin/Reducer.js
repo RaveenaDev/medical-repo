@@ -266,7 +266,7 @@ export const adminReducer = (state = initialState, action) => {
     case GET_ROOMS:
       return {
         ...state,
-        totalRooms: action.payload.rooms.length,
+        totalRooms: action.payload.totalRooms,
         rooms: action.payload.rooms,
         isLoading: false,
       };

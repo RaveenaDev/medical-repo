@@ -12,8 +12,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Trash2Icon } from "lucide-react";
-import {addInsuranceCompany, getAllDepartments} from "../../../../components/State/Admin/Action.js";
-// import { addCompany } from "../../../../components/State/Admin/Action.js";
+import {
+    addInsuranceCompany,
+    getAllDepartments,
+} from "../../../../components/State/Admin/Action.js";
+
+/* ------- Helpers: Indian-format display + raw parsing (no commas kept in state) ------- */
+const formatIndian = (val) => {
+    if (val === "" || val == null) return "";
+    const s = String(val);
+    const [rawInt = "", rawDec = ""] = s.split(".");
+    const intOnly = rawInt.replace(/\D/g, "");
+    const decOnly = rawDec.replace(/\D/g, "");
+    if (!intOnly) return decOnly ? `0.${decOnly}` : "";
+
+    const last3 = intOnly.slice(-3);
+    const head = intOnly.slice(0, -3);
+    const headWithCommas = head.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+    const withCommas = (head ? headWithCommas + "," : "") + last3;
+    return decOnly ? `${withCommas}.${decOnly}` : withCommas;
+};
+
+// keep only digits and a single dot; normalize leading '.' → '0.'
+const parseToRaw = (input) => {
+    const stripped = String(input).replace(/,/g, "").replace(/[^\d.]/g, "");
+    if (!stripped) return "";
+    const parts = stripped.split(".");
+    const intPart = parts[0].replace(/^0+(?=\d)/, "");
+    const decPart = parts.slice(1).join("");
+    let raw = intPart || "0";
+    if (decPart.length) raw += "." + decPart;
+    if (stripped.startsWith(".")) raw = "0." + decPart;
+    return raw;
+};
+/* ---------------------------------------------------------------------- */
 
 const CompanyRateModal = ({ open, handleClose }) => {
     const [companyData, setCompanyData] = useState({
@@ -27,7 +59,7 @@ const CompanyRateModal = ({ open, handleClose }) => {
         departmentName: "",
         subCategoryName: "",
         rateType: "",
-        rate: "",
+        rate: "", // keep RAW numeric string (no commas)
         amenities: "",
         effectiveDate: "",
         additionaldetails: [],
@@ -37,7 +69,7 @@ const CompanyRateModal = ({ open, handleClose }) => {
     const [lastUpdated] = useState(new Date().toISOString().split("T")[0]);
 
     const dispatch = useDispatch();
-    const departments = useSelector((store) => store.admin.departments);
+    const departments = useSelector((store) => store.admin.departments) || [];
 
     useEffect(() => {
         dispatch(getAllDepartments());
@@ -47,17 +79,21 @@ const CompanyRateModal = ({ open, handleClose }) => {
         setServiceDetails({ ...serviceDetails, [e.target.name]: e.target.value });
     };
 
+    const handleRateChange = (e) => {
+        setServiceDetails((prev) => ({ ...prev, rate: parseToRaw(e.target.value) }));
+    };
+
     const handleAdditionalDetailChange = (index, field, value) => {
         const updated = [...serviceDetails.additionaldetails];
-        updated[index][field] = field === "value" ? parseFloat(value) : value;
+        updated[index][field] = field === "value" ? parseFloat(value) || 0 : value;
         setServiceDetails({ ...serviceDetails, additionaldetails: updated });
     };
 
     const handleAddAdditionalDetail = () => {
-        setServiceDetails({
-            ...serviceDetails,
-            additionaldetails: [...serviceDetails.additionaldetails, { key: "", value: 0 }],
-        });
+        setServiceDetails((prev) => ({
+            ...prev,
+            additionaldetails: [...prev.additionaldetails, { key: "", value: 0 }],
+        }));
     };
 
     const handleRemoveAdditionalDetail = (index) => {
@@ -69,14 +105,19 @@ const CompanyRateModal = ({ open, handleClose }) => {
     const handleAddService = () => {
         let newErrors = {};
         if (!serviceDetails.name) newErrors.name = "This field is required";
-        if (!serviceDetails.subCategoryName) newErrors.subCategoryName = "This field is required";
+        if (!serviceDetails.subCategoryName)
+            newErrors.subCategoryName = "This field is required";
         if (!serviceDetails.rateType) newErrors.rateType = "This field is required";
-        if (!serviceDetails.effectiveDate) newErrors.effectiveDate = "This field is required";
-        if (!serviceDetails.amenities) newErrors.amenities = "This field is required";
+        if (!serviceDetails.effectiveDate)
+            newErrors.effectiveDate = "This field is required";
+        if (!serviceDetails.amenities)
+            newErrors.amenities = "This field is required";
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            toast.error("Please fill all required fields!", { position: "bottom-right" });
+            toast.error("Please fill all required fields!", {
+                position: "bottom-right",
+            });
             return;
         }
 
@@ -90,10 +131,13 @@ const CompanyRateModal = ({ open, handleClose }) => {
                 ? additionalRate
                 : parseFloat(serviceDetails.rate) || 0;
 
-        const additionalDetailsObj = serviceDetails.additionaldetails.reduce((acc, item) => {
-            if (item.key) acc[item.key] = item.value;
-            return acc;
-        }, {});
+        const additionalDetailsObj = serviceDetails.additionaldetails.reduce(
+            (acc, item) => {
+                if (item.key) acc[item.key] = item.value;
+                return acc;
+            },
+            {}
+        );
 
         const newService = {
             serviceName: serviceDetails.name,
@@ -131,184 +175,250 @@ const CompanyRateModal = ({ open, handleClose }) => {
             services: companyData.services,
         };
 
-        // console.log("Final Payload: ", payload);
         dispatch(addInsuranceCompany(payload));
 
-        setCompanyData({id: "", name: "", services: [] });
+        setCompanyData({ id: "", name: "", services: [] });
         handleClose();
     };
 
-    const totalRate =
-        serviceDetails.additionaldetails.length > 0
-            ? serviceDetails.additionaldetails.reduce((acc, item) => acc + item.value, 0)
-            : serviceDetails.rate;
+    // compute value to DISPLAY (formatted), but keep RAW in state
+    const additionalSum = serviceDetails.additionaldetails.reduce(
+        (acc, item) => acc + (item.value || 0),
+        0
+    );
+    const isAutoRate = serviceDetails.additionaldetails.length > 0;
+    const displayRate = isAutoRate
+        ? formatIndian(additionalSum)                // show formatted sum when auto
+        : formatIndian(serviceDetails.rate);         // show formatted manual rate
 
     return (
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-            <DialogTitle>Add Company</DialogTitle>
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+            <DialogTitle style={{ fontWeight: 600, color: "#25307F" }}>
+                Add Company
+            </DialogTitle>
             <DialogContent>
-                <TextField
-                    label="Company ID"
-                    fullWidth
-                    margin="dense"
-                    name="id"
-                    value={companyData.id}
-                    onChange={(e) => setCompanyData({ ...companyData, id: e.target.value })}
-                />
 
-                <TextField
-                    label="Company Name"
-                    fullWidth
-                    margin="dense"
-                    name="name"
-                    value={companyData.name}
-                    onChange={(e) => setCompanyData({ ...companyData, name: e.target.value })}
-                />
+                {/* Company Info (2 columns) */}
+                <Grid container spacing={1}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Company ID"
+                            fullWidth
+                            margin="dense"
+                            name="id"
+                            value={companyData.id}
+                            onChange={(e) =>
+                                setCompanyData({ ...companyData, id: e.target.value })
+                            }
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Company Name"
+                            fullWidth
+                            margin="dense"
+                            name="name"
+                            value={companyData.name}
+                            onChange={(e) =>
+                                setCompanyData({ ...companyData, name: e.target.value })
+                            }
+                        />
+                    </Grid>
+                </Grid>
 
-                {/* Service Fields */}
-                <TextField
-                    label="Service Name"
-                    fullWidth
-                    margin="dense"
-                    name="name"
-                    value={serviceDetails.name}
-                    onChange={handleChange}
-                    error={!!errors.name}
-                    helperText={errors.name}
-                    required
-                />
+                <p style={{ fontWeight: 500, color: "#25307F", marginTop: "1rem" }}>
+                    Service
+                </p>
 
-                <TextField
-                    select
-                    label="Department Name"
-                    fullWidth
-                    margin="dense"
-                    name="departmentName"
-                    value={serviceDetails.departmentName}
-                    onChange={handleChange}
-                >
-                    {departments.map((d, i) => (
-                        <MenuItem key={i} value={d.departmentName}>
-                            {d.departmentName}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                {/* Service Fields (2 columns per row) */}
+                <Grid container spacing={1} sx={{ mb: -1 }}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Service Name"
+                            fullWidth
+                            margin="dense"
+                            name="name"
+                            value={serviceDetails.name}
+                            onChange={handleChange}
+                            error={!!errors.name}
+                            helperText={errors.name}
+                            required
+                        />
+                    </Grid>
 
-                <TextField
-                    label="Category Name"
-                    fullWidth
-                    margin="dense"
-                    name="subCategoryName"
-                    value={serviceDetails.subCategoryName}
-                    onChange={handleChange}
-                    error={!!errors.subCategoryName}
-                    helperText={errors.subCategoryName}
-                    required
-                />
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            select
+                            label="Department Name"
+                            fullWidth
+                            margin="dense"
+                            name="departmentName"
+                            value={serviceDetails.departmentName}
+                            onChange={handleChange}
+                        >
+                            {departments.map((d, i) => (
+                                <MenuItem key={i} value={d.departmentName}>
+                                    {d.departmentName}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
 
-                <TextField
-                    label="Rate Type"
-                    fullWidth
-                    margin="dense"
-                    name="rateType"
-                    value={serviceDetails.rateType}
-                    onChange={handleChange}
-                    error={!!errors.rateType}
-                    helperText={errors.rateType}
-                    required
-                />
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Category Name"
+                            fullWidth
+                            margin="dense"
+                            name="subCategoryName"
+                            value={serviceDetails.subCategoryName}
+                            onChange={handleChange}
+                            error={!!errors.subCategoryName}
+                            helperText={errors.subCategoryName}
+                            required
+                        />
+                    </Grid>
 
-                <TextField
-                    label="Amenities"
-                    fullWidth
-                    margin="dense"
-                    name="amenities"
-                    value={serviceDetails.amenities}
-                    onChange={handleChange}
-                    error={!!errors.amenities}
-                    helperText={errors.amenities}
-                    required
-                />
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Rate Type"
+                            fullWidth
+                            margin="dense"
+                            name="rateType"
+                            value={serviceDetails.rateType}
+                            onChange={handleChange}
+                            error={!!errors.rateType}
+                            helperText={errors.rateType}
+                            required
+                        />
+                    </Grid>
 
-                <TextField
-                    label="Current Rate"
-                    fullWidth
-                    margin="dense"
-                    type="number"
-                    name="rate"
-                    value={totalRate}
-                    onChange={handleChange}
-                    disabled={serviceDetails.additionaldetails.length > 0}
-                />
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Amenities"
+                            fullWidth
+                            margin="dense"
+                            name="amenities"
+                            value={serviceDetails.amenities}
+                            onChange={handleChange}
+                            error={!!errors.amenities}
+                            helperText={errors.amenities}
+                            required
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        {/* Current Rate with Indian commas */}
+                        <TextField
+                            label="Current Rate"
+                            fullWidth
+                            margin="dense"
+                            type="text"            // allow commas
+                            inputMode="decimal"    // mobile numeric keypad
+                            name="rate"
+                            value={displayRate}
+                            onChange={(e) => {
+                                if (isAutoRate) return;     // ignore edits if auto-calculated
+                                handleRateChange(e);
+                            }}
+                            disabled={isAutoRate}
+                        />
+                    </Grid>
+                </Grid>
 
                 {/* Additional Details */}
-                <Grid container spacing={2} marginTop={1}>
+                <Grid container spacing={2} sx={{ mt: 1 }}>
                     {serviceDetails.additionaldetails.map((item, index) => (
-                        <Grid item xs={12} container spacing={1} key={index}>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Detail Name"
-                                    fullWidth
-                                    value={item.key}
-                                    onChange={(e) => handleAdditionalDetailChange(index, "key", e.target.value)}
-                                />
-                            </Grid>
-                            <Grid item xs={5}>
-                                <TextField
-                                    label="Value"
-                                    fullWidth
-                                    type="number"
-                                    value={item.value}
-                                    onChange={(e) => handleAdditionalDetailChange(index, "value", e.target.value)}
-                                />
-                            </Grid>
-                            <Grid item xs={1} display="flex" alignItems="center">
-                                <Trash2Icon
-                                    onClick={() => handleRemoveAdditionalDetail(index)}
-                                    style={{ cursor: "pointer", color: "red" }}
-                                />
+                        <Grid item xs={12} key={index}>
+                            <Grid container spacing={2} alignItems="center">
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="Detail Name"
+                                        fullWidth
+                                        value={item.key}
+                                        onChange={(e) =>
+                                            handleAdditionalDetailChange(index, "key", e.target.value)
+                                        }
+                                    />
+                                </Grid>
+                                <Grid item xs={10} md={5}>
+                                    <TextField
+                                        label="Value"
+                                        fullWidth
+                                        type="number"
+                                        value={item.value}
+                                        onChange={(e) =>
+                                            handleAdditionalDetailChange(index, "value", e.target.value)
+                                        }
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={2}
+                                    md={1}
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <Trash2Icon
+                                        onClick={() => handleRemoveAdditionalDetail(index)}
+                                        style={{ cursor: "pointer", color: "red" }}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grid>
                     ))}
                 </Grid>
 
-                <Button variant="outlined" onClick={handleAddAdditionalDetail} sx={{ mt: 2, mb: 2 }}>
+                <Button
+                    variant="outlined"
+                    onClick={handleAddAdditionalDetail}
+                    sx={{ mt: 2, mb: 1 }}
+                >
                     Add Custom Charges & Details
                 </Button>
 
-                <TextField
-                    label="Effective Date"
-                    fullWidth
-                    margin="dense"
-                    InputLabelProps={{ shrink: true }}
-                    type="date"
-                    name="effectiveDate"
-                    value={serviceDetails.effectiveDate}
-                    onChange={handleChange}
-                    error={!!errors.effectiveDate}
-                    helperText={errors.effectiveDate}
-                    required
-                />
+                <Grid container spacing={1} sx={{ mb: 1 }}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Effective Date"
+                            fullWidth
+                            margin="dense"
+                            InputLabelProps={{ shrink: true }}
+                            type="date"
+                            name="effectiveDate"
+                            value={serviceDetails.effectiveDate}
+                            onChange={handleChange}
+                            error={!!errors.effectiveDate}
+                            helperText={errors.effectiveDate}
+                            required
+                        />
+                    </Grid>
 
-                <TextField
-                    label="Last Updated"
-                    fullWidth
-                    margin="dense"
-                    type="date"
-                    value={lastUpdated}
-                    disabled
-                />
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Last Updated"
+                            fullWidth
+                            margin="dense"
+                            type="date"
+                            value={lastUpdated}
+                            disabled
+                        />
+                    </Grid>
+                </Grid>
 
                 {/* Buttons */}
-                <Grid container spacing={2} mt={2}>
+                <Grid container spacing={2}>
                     <Grid item>
                         <Button onClick={handleAddService} variant="outlined">
                             Add Service
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button onClick={handleSaveCompany} variant="contained" sx={{ background: "#25307F" }}
-                                disabled={companyData.services.length === 0}
+                        <Button
+                            onClick={handleSaveCompany}
+                            variant="contained"
+                            sx={{ background: "#25307F" }}
+                            disabled={companyData.services.length === 0}
                         >
                             Save Company
                         </Button>

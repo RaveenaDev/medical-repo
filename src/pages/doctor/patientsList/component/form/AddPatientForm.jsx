@@ -7,12 +7,45 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getInsuranceCompanies } from "../../../../../components/State/Admin/Action.js";
 
+/* ---------- Helpers: Indian-format display + raw-state parsing (no commas) ---------- */
+const formatIndian = (val) => {
+  if (val === "" || val == null) return "";
+  const s = String(val);
+  const [rawInt = "", rawDec = ""] = s.split(".");
+  const intOnly = rawInt.replace(/\D/g, "");
+  const decOnly = rawDec.replace(/\D/g, "");
+  if (!intOnly) return decOnly ? `0.${decOnly}` : "";
+
+  const last3 = intOnly.slice(-3);
+  const head = intOnly.slice(0, -3);
+  const headWithCommas = head.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+  const withCommas = (head ? headWithCommas + "," : "") + last3;
+  return decOnly ? `${withCommas}.${decOnly}` : withCommas;
+};
+
+// Keep only digits + single dot, normalize leading zeros/dots
+const parseToRaw = (input) => {
+  const stripped = String(input)
+    .replace(/,/g, "")
+    .replace(/[^\d.]/g, "");
+  if (!stripped) return "";
+  const parts = stripped.split(".");
+  const intPart = parts[0].replace(/^0+(?=\d)/, ""); // keep one 0 only if followed by digit
+  const decPart = parts.slice(1).join(""); // collapse multiple dots into one
+  let raw = intPart || "0";
+  if (decPart.length) raw += "." + decPart;
+  if (stripped.startsWith(".")) raw = "0." + decPart; // ".5" -> "0.5"
+  return raw;
+};
+/* ------------------------------------------------------------------------------- */
+
 const AddPatientForm = ({ onClose }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAvailableRooms());
     dispatch(getInsuranceCompanies());
   }, [dispatch]);
+  const [errors, setErrors] = useState({});
 
   const genders = ["Male", "Female", "Other"];
   const [hasInsurance, setHasInsurance] = useState(false);
@@ -32,7 +65,7 @@ const AddPatientForm = ({ onClose }) => {
     date: "",
     roomNo: "",
     bedNo: "",
-    deposit: "",
+    deposit: "", // RAW number as string (no commas)
     medicalNote: "",
     hasInsurance: false,
     employerName: "",
@@ -54,32 +87,132 @@ const AddPatientForm = ({ onClose }) => {
     (state) => state.admin.insuranceCompanies
   );
 
-  // console.log("Insur: ",insuranceCompanies)
   const handleRoomChange = (e) => {
     const roomId = e.target.value;
     setSelectedRoom(roomId);
 
-    // If "Select a room" is chosen, clear bed selection and re-enable the bed dropdown
     if (roomId === "") {
-      setAvailableBeds([]); // Clear the available beds
-      setBedsAvailable(true); // Re-enable the bed dropdown
-      setForm((prevForm) => ({ ...prevForm, bedNo: "" })); // Clear selected bed
+      setAvailableBeds([]);
+      setBedsAvailable(true);
+      setForm((prevForm) => ({ ...prevForm, bedNo: "" }));
     } else {
-      // Find the selected room and its available beds
       const room = availableRooms.find((room) => room.roomID === roomId);
       if (room && room.beds.length > 0) {
-        setBedsAvailable(true); // There are available beds
-        setAvailableBeds(room.beds); // Set available beds
+        setBedsAvailable(true);
+        setAvailableBeds(room.beds);
       } else {
-        setBedsAvailable(false); // No available beds
-        setAvailableBeds([]); // Clear available beds
+        setBedsAvailable(false);
+        setAvailableBeds([]);
       }
     }
   };
 
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const handleCheckboxChange = (role) => {
+    if (selectedRoles.includes(role)) {
+      setSelectedRoles(selectedRoles.filter((r) => r !== role));
+    } else {
+      setSelectedRoles([...selectedRoles, role]);
+    }
+  };
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name
+    if (!form.patientName.trim()) {
+      newErrors.patientName = "Patient name is required";
+    }
+
+    // Patient ID or Email (depending on type)
+    if (isExistingPatient) {
+      if (!form.patientId.trim()) {
+        newErrors.patientId = "Patient ID is required";
+      }
+    } else {
+      if (!form.email.trim()) {
+        newErrors.email = "Email is required";
+      } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+        newErrors.email = "Invalid email format";
+      }
+    }
+
+    // Contact
+    if (!form.contactNo) {
+      newErrors.contactNo = "Contact number is required";
+    } else if (!/^\d{10}$/.test(form.contactNo)) {
+      newErrors.contactNo = "Contact number must be 10 digits";
+    }
+
+    // Age
+    if (!form.age) {
+      newErrors.age = "Age is required";
+    } else if (isNaN(form.age) || form.age <= 0 || form.age > 120) {
+      newErrors.age = "Enter a valid age";
+    }
+
+    // Emergency Contact
+    if (!form.emergencyContact) {
+      newErrors.emergencyContact = "Emergency contact is required";
+    } else if (!/^\d{10}$/.test(form.emergencyContact)) {
+      newErrors.emergencyContact = "Must be 10 digits";
+    }
+
+    if (!form.emergencyContactName.trim()) {
+      newErrors.emergencyContactName = "Emergency contact name is required";
+    }
+
+    // Insurance (only if yes)
+    if (hasInsurance) {
+      if (!form.insuranceIdNumber.trim()) {
+        newErrors.insuranceIdNumber = "Insurance ID is required";
+      }
+      if (!form.policyNumber.trim()) {
+        newErrors.policyNumber = "Policy number is required";
+      }
+      if (!form.insuranceCompany.trim()) {
+        newErrors.insuranceCompany = "Insurance company is required";
+      }
+      if (!form.insuranceStartDate) {
+        newErrors.insuranceStartDate = "Start date is required";
+      }
+      if (!form.insuranceExpiryDate) {
+        newErrors.insuranceExpiryDate = "Expiry date is required";
+      } else if (
+        form.insuranceStartDate &&
+        new Date(form.insuranceExpiryDate) <= new Date(form.insuranceStartDate)
+      ) {
+        newErrors.insuranceExpiryDate = "Expiry must be after start date";
+      }
+    }
+
+    // Room & Bed
+    if (!selectedRoom) newErrors.roomNo = "Room is required";
+    if (!form.bedNo) newErrors.bedNo = "Bed is required";
+
+    // Deposit
+    if (form.deposit && parseFloat(form.deposit) < 0) {
+      newErrors.deposit = "Deposit cannot be negative";
+    }
+
+    // Medical note
+    if (!form.medicalNote.trim()) {
+      newErrors.medicalNote = "Reason is required";
+    }
+
+    // Date
+    if (!form.date) {
+      newErrors.date = "Admission date is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Handle form submission logic
+
+    if (!validateForm()) return; // stop if invalid
+
     if (selectedRoles.length === 0) {
       alert("Please select at least one approval role (Doctor or Admin).");
       return;
@@ -120,26 +253,16 @@ const AddPatientForm = ({ onClose }) => {
         date: new Date(form.date),
         room: selectedRoom,
         bed: form.bedNo,
-        deposit: parseFloat(form.deposit),
+        deposit: parseFloat(form.deposit || 0), // use RAW value
         medicalNote: form.medicalNote,
       },
     };
 
-    dispatch(createAdmissionRequest(payload));
-
     // console.log("Pay: ",payload)
+    dispatch(createAdmissionRequest(payload));
     onClose();
   };
-  const [selectedRoles, setSelectedRoles] = useState([]);
 
-  const handleCheckboxChange = (role) => {
-    if (selectedRoles.includes(role)) {
-      setSelectedRoles(selectedRoles.filter((r) => r !== role));
-    } else {
-      setSelectedRoles([...selectedRoles, role]);
-    }
-  };
-  // console.log("Available Rooms:", availableRooms);
   return (
     <div className="add-patient-modal">
       <div className="modal-overlay" onClick={onClose}></div>
@@ -197,8 +320,11 @@ const AddPatientForm = ({ onClose }) => {
                     onChange={(e) =>
                       setForm({ ...form, patientName: e.target.value })
                     }
-                    required
+                    className={errors.patientName ? "input-error" : ""}
                   />
+                  {errors.patientName && (
+                    <span className="error">{errors.patientName}</span>
+                  )}
                 </div>
                 {isExistingPatient ? (
                   <div className="form-field">
@@ -210,7 +336,11 @@ const AddPatientForm = ({ onClose }) => {
                         setForm({ ...form, patientId: e.target.value })
                       }
                       required
+                      className={errors.patientId ? "input-error" : ""}
                     />
+                    {errors.patientId && (
+                      <span className="error">{errors.patientId}</span>
+                    )}
                   </div>
                 ) : (
                   <div className="form-field">
@@ -222,7 +352,11 @@ const AddPatientForm = ({ onClose }) => {
                         setForm({ ...form, email: e.target.value })
                       }
                       required
+                      className={errors.email ? "input-error" : ""}
                     />
+                    {errors.email && (
+                      <span className="error">{errors.email}</span>
+                    )}
                   </div>
                 )}
               </div>
@@ -230,13 +364,17 @@ const AddPatientForm = ({ onClose }) => {
                 <div className="form-field">
                   <label>Contact No.</label>
                   <input
-                    type="Number"
+                    type="number"
                     value={form.contactNo}
                     onChange={(e) =>
                       setForm({ ...form, contactNo: e.target.value })
                     }
                     required
+                    className={errors.contactNo ? "input-error" : ""}
                   />
+                  {errors.contactNo && (
+                    <span className="error">{errors.contactNo}</span>
+                  )}
                 </div>
                 <div className="form-field">
                   <label>Address</label>
@@ -258,7 +396,9 @@ const AddPatientForm = ({ onClose }) => {
                     required
                     value={form.age}
                     onChange={(e) => setForm({ ...form, age: e.target.value })}
+                    className={errors.age ? "input-error" : ""}
                   />
+                  {errors.age && <span className="error">{errors.age}</span>}
                 </div>
                 <div className="form-field">
                   <label>Gender</label>
@@ -291,7 +431,11 @@ const AddPatientForm = ({ onClose }) => {
                       setForm({ ...form, emergencyContact: e.target.value })
                     }
                     required
+                    className={errors.emergencyContact ? "input-error" : ""}
                   />
+                  {errors.emergencyContact && (
+                    <span className="error">{errors.emergencyContact}</span>
+                  )}
                 </div>
                 <div className="form-field">
                   <label>Emergency Contact Name</label>
@@ -302,7 +446,11 @@ const AddPatientForm = ({ onClose }) => {
                       setForm({ ...form, emergencyContactName: e.target.value })
                     }
                     required
+                    className={errors.emergencyContactName ? "input-error" : ""}
                   />
+                  {errors.emergencyContactName && (
+                    <span className="error">{errors.emergencyContactName}</span>
+                  )}
                 </div>
               </div>
 
@@ -366,7 +514,11 @@ const AddPatientForm = ({ onClose }) => {
                         setForm({ ...form, insuranceIdNumber: e.target.value })
                       }
                       required
+                      className={errors.insuranceIdNumber ? "input-error" : ""}
                     />
+                    {errors.insuranceIdNumber && (
+                      <span className="error">{errors.insuranceIdNumber}</span>
+                    )}
                   </div>
                 </div>
 
@@ -380,7 +532,11 @@ const AddPatientForm = ({ onClose }) => {
                         setForm({ ...form, policyNumber: e.target.value })
                       }
                       required
+                      className={errors.policyNumber ? "input-error" : ""}
                     />
+                    {errors.policyNumber && (
+                      <span className="error">{errors.policyNumber}</span>
+                    )}
                   </div>
                   <div className="form-field">
                     <label>Company</label>
@@ -423,7 +579,11 @@ const AddPatientForm = ({ onClose }) => {
                         setForm({ ...form, insuranceStartDate: e.target.value })
                       }
                       required
+                      className={errors.insuranceStartDate ? "input-error" : ""}
                     />
+                    {errors.insuranceStartDate && (
+                      <span className="error">{errors.insuranceStartDate}</span>
+                    )}
                   </div>
                   <div className="form-field">
                     <label>Expiry Date</label>
@@ -437,7 +597,15 @@ const AddPatientForm = ({ onClose }) => {
                         })
                       }
                       required
+                      className={
+                        errors.insuranceExpiryDate ? "input-error" : ""
+                      }
                     />
+                    {errors.insuranceExpiryDate && (
+                      <span className="error">
+                        {errors.insuranceExpiryDate}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -457,7 +625,11 @@ const AddPatientForm = ({ onClose }) => {
                       setForm({ ...form, medicalNote: e.target.value })
                     }
                     required
+                    className={errors.medicalNote ? "input-error" : ""}
                   />
+                  {errors.medicalNote && (
+                    <span className="error">{errors.medicalNote}</span>
+                  )}
                 </div>
               </div>
               <div className="form-group">
@@ -468,7 +640,9 @@ const AddPatientForm = ({ onClose }) => {
                     value={form.date}
                     onChange={(e) => setForm({ ...form, date: e.target.value })}
                     required
+                    className={errors.date ? "input-error" : ""}
                   />
+                  {errors.date && <span className="error">{errors.date}</span>}
                 </div>
 
                 {/* Room Dropdown */}
@@ -511,15 +685,26 @@ const AddPatientForm = ({ onClose }) => {
                   </select>
                 </div>
 
+                {/* Deposit with Indian formatting (no libs) */}
                 <div className="form-field">
                   <label>Deposit Given Rs.</label>
                   <input
-                    type="text"
-                    value={form.deposit}
+                    type="text" // keep as text to allow commas
+                    inputMode="decimal" // mobile numeric keypad
+                    value={formatIndian(form.deposit)}
                     onChange={(e) =>
-                      setForm({ ...form, deposit: e.target.value })
+                      setForm({
+                        ...form,
+                        deposit: parseToRaw(e.target.value),
+                      })
                     }
+                    // If you prefer: format only on blur to keep caret position stable
+                    // onBlur={(e) => setForm({ ...form, deposit: parseToRaw(e.target.value) })}
+                    className={errors.deposit ? "input-error" : ""}
                   />
+                  {errors.deposit && (
+                    <span className="error">{errors.deposit}</span>
+                  )}
                 </div>
               </div>
 
