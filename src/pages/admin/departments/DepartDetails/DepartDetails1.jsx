@@ -49,7 +49,7 @@ const DepartDetails1 = (props) => {
 
   const department = useSelector((store) => store.admin.department);
 
-  // console.log("Dep: ",department)
+  console.log("Dep: ",department)
 
   return (
     <>

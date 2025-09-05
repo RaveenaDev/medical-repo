@@ -310,13 +310,14 @@ export const addDepartment = (department) => async (dispatch) => {
       },
     });
 
-    console.log("Response: ", data);
+    // console.log("Response: ", data);
     toast.success("Department Added Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
 
-    dispatch({ type: ADD_DEPARTMENT, payload: data.department });
+    dispatch(getAllDepartments());
+    // dispatch({ type: ADD_DEPARTMENT, payload: data.department });
   } catch (error) {
     console.log(error);
     toast.error("Error while adding Department!", {

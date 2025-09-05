@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addDepartment,
   getAllDepartments,
-  getDoctors,
+  getDoctors, getStaffs,
 } from "../../../components/State/Admin/Action.js";
 import CommonPanel from "../Components/CommonPanel.jsx";
 import addAppointments from "../../../assets/plus.svg";
@@ -98,6 +98,7 @@ const Departments1 = (props) => {
   useEffect(() => {
     dispatch(getAllDepartments());
     dispatch(getDoctors());
+    dispatch(getStaffs());
   }, [dispatch]);
 
   const admin = useSelector((store) => store.admin);
@@ -105,11 +106,20 @@ const Departments1 = (props) => {
   const allDepartments = admin.departments;
   const doctors = admin.doctors;
 
-  // console.log(doctors)
+  const staffs = admin.staffs;
+
+  // console.log(allDepartments)
 
   const handleAdd = () => {
-    console.log("Adding new Dep... : ", department);
+    // console.log("Adding new Dep... : ", department);
     dispatch(addDepartment(department));
+    setDepartment({
+      name: "",
+      head: "",
+      doctors: [],
+      nurses: [],
+    });
+    handleClose();
   };
 
   const loading = useSelector((state) => state.admin.isLoading);
@@ -330,6 +340,7 @@ const Departments1 = (props) => {
                               value={JSON.stringify({
                                 id: doctor._id,
                                 name: doctor.name,
+                                email: doctor?.email
                               })}
                             >
                               {doctor.name}
@@ -339,75 +350,80 @@ const Departments1 = (props) => {
                       </FormControl>
 
                       <FormControl
-                        size="small"
-                        sx={{ m: 1, width: "30rem", marginTop: 2.4 }}
+                          size="small"
+                          sx={{ m: 1, width: "30rem", marginTop: 2.4 }}
                       >
                         <InputLabel
-                          id="demo-multiple-name-label"
-                          sx={{
-                            "&.Mui-focused": {
-                              color: "#747474", // Keep the color same when focused
-                            },
-                          }}
+                            id="demo-multiple-name-label"
+                            sx={{
+                              "&.Mui-focused": {
+                                color: "#747474", // Keep the color same when focused
+                              },
+                            }}
                         >
                           Select Doctors
                         </InputLabel>
                         <Select
-                          labelId="demo-multiple-name-label"
-                          id="demo-multiple-name"
-                          name="doctors"
-                          multiple
-                          value={department.doctors}
-                          onChange={handleMultipleChange}
-                          input={<OutlinedInput label="Select Doctors" />}
-                          // MenuProps={MenuProps}
-                          MenuProps={{
-                            PaperProps: {
-                              style: {
-                                maxHeight: 200, // Fixed height
-                                overflowY: "auto",
+                            labelId="demo-multiple-name-label"
+                            id="demo-multiple-name"
+                            name="doctors"
+                            multiple
+                            value={department.doctors}
+                            onChange={handleMultipleChange}
+                            input={<OutlinedInput label="Select Doctors" />}
+                            MenuProps={{
+                              PaperProps: {
+                                style: {
+                                  maxHeight: 200, // Fixed height
+                                  overflowY: "auto",
+                                },
+                                sx: {
+                                  "&::-webkit-scrollbar": {
+                                    width: "4px",
+                                  },
+                                  "&::-webkit-scrollbar-track": {
+                                    backgroundColor: "#f1f1f1",
+                                  },
+                                  "&::-webkit-scrollbar-thumb": {
+                                    backgroundColor: "#25307F",
+                                    borderRadius: "4px",
+                                  },
+                                },
                               },
-                              sx: {
-                                "&::-webkit-scrollbar": {
-                                  width: "4px",
-                                },
-                                "&::-webkit-scrollbar-track": {
-                                  backgroundColor: "#f1f1f1",
-                                },
-                                "&::-webkit-scrollbar-thumb": {
-                                  backgroundColor: "#25307F",
-                                  borderRadius: "4px",
-                                },
+                            }}
+                            IconComponent={KeyboardArrowDownIcon}
+                            sx={{
+                              backgroundColor: "#F7F7F7",
+                              borderRadius: 0,
+                              "& .MuiSelect-icon": {
+                                color: "#25307F", // Change the color of the arrow icon
                               },
-                            },
-                          }}
-                          IconComponent={KeyboardArrowDownIcon}
-                          sx={{
-                            backgroundColor: "#F7F7F7",
-                            borderRadius: 0,
-                            "& .MuiSelect-icon": {
-                              color: "#25307F", // Change the color of the arrow icon
-                            },
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              border: "none", // Remove border
-                            },
-                          }}
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none", // Remove border
+                              },
+                            }}
                         >
-                          {doctors.map((doctor, index) => (
-                            <MenuItem
-                              key={index}
-                              value={doctor._id}
-                              style={getStyles(
-                                doctor.name,
-                                department.doctors,
-                                theme
-                              )}
-                            >
-                              {doctor.name}
-                            </MenuItem>
-                          ))}
+                          {doctors
+                              .filter((doctor) => {
+                                // Only filter out the department head if it's set as an object
+                                if (department.head && department.head.id) {
+                                  return doctor._id !== department.head.id; // Filter out the department head from the doctor list
+                                }
+                                return true; // If no valid head, don't filter out any doctors
+                              })
+                              .map((doctor, index) => (
+                                  <MenuItem
+                                      key={index}
+                                      value={doctor._id}
+                                      style={getStyles(doctor.name, department.doctors, theme)}
+                                  >
+                                    {doctor.name}
+                                  </MenuItem>
+                              ))}
                         </Select>
                       </FormControl>
+
+
 
                       <FormControl
                         size="small"
@@ -466,13 +482,13 @@ const Departments1 = (props) => {
                             },
                           }}
                         >
-                          {names.map((name) => (
+                          {staffs.map((name) => (
                             <MenuItem
-                              key={name}
-                              value={name}
-                              style={getStyles(name, department.doctors, theme)}
+                              key={name._id}
+                              value={name.name}
+                              style={getStyles(name.name, department.doctors, theme)}
                             >
-                              {name}
+                              {name.name}
                             </MenuItem>
                           ))}
                         </Select>
