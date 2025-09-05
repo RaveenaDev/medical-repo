@@ -19,12 +19,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import accountCircle from "../../../assets/account_circle.svg";
 import billingDetails from "../../../assets/payments.svg";
 import addAppointments from "../../../assets/plus.svg";
-
+import shreyStyles from "./CommonPanel.module.scss";
 import styles from "../styles.module.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, Button } from "@mui/material";
 import dayjs from "dayjs";
 import { borderBottom } from "@mui/system";
+// ADD to existing imports:
+import { CalendarToday } from "@mui/icons-material";
+
 const CommonPanel = ({
   setIsBookAppointment,
   setSelectedDate,
@@ -38,12 +41,20 @@ const CommonPanel = ({
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
 
-  const handleDateChange = (newValue) => {
+  // ADD after existing state declarations:
+  const currentSelectedDate = selectedDate || internalSelectedDate;
+
+  const handleDateChange = (event) => {
+    const newDate = dayjs(event.target.value);
+
     if (setSelectedDate) {
-      setSelectedDate(newValue);
+      setSelectedDate(newDate);
     } else {
-      setInternalSelectedDate(newValue);
+      setInternalSelectedDate(newDate);
     }
+
+    // Optional: Trigger API calls
+    // dispatch(getDataByDate(newDate.format("YYYY-MM-DD")));
   };
 
   useEffect(() => {
@@ -205,58 +216,31 @@ const CommonPanel = ({
             sx={{ margin: "0 0 20px 0" }}
           >
             <Grid size={3}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Box
-                  sx={{
-                    backgroundColor: "white",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    borderRadius: 1,
-                    width: 180,
-                    textAlign: "center",
-                  }}
-                >
-                  <DatePicker
-                    value={selectedDate || internalSelectedDate}
+              <div className={shreyStyles.todayRow}>
+                <div className={shreyStyles.text}>
+                  <span className={shreyStyles.label}>
+                    {currentSelectedDate.format("YYYY-MM-DD") ===
+                    dayjs().format("YYYY-MM-DD")
+                      ? "Today"
+                      : "Selected Date"}
+                  </span>
+                  <span className={shreyStyles.date}>
+                    {currentSelectedDate.format("DD-MM-YYYY")}
+                  </span>
+                </div>
+
+                <div className={shreyStyles.calendarWrapperIn}>
+                  <label htmlFor="commonPanelDatePicker">
+                    <CalendarToday className={shreyStyles.calendarIcon} />
+                  </label>
+                  <input
+                    type="date"
+                    id="commonPanelDatePicker"
+                    value={currentSelectedDate.format("YYYY-MM-DD")}
                     onChange={handleDateChange}
-                    format="DD/MM/YYYY" // Set the date format
-                    slotProps={{
-                      textField: {
-                        sx: {
-                          "& .MuiOutlinedInput-root": {
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                            },
-                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                            },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                              boxShadow: "none !important",
-                            },
-                          },
-                          "& .MuiInputBase-input": {
-                            fontSize: "14px",
-                            padding: "10px",
-                            "&:focus": {
-                              outline: "none !important",
-                            },
-                          },
-                          "& .MuiIconButton-root": {
-                            color: "#666", // Adjust icon color if needed
-                            "&:hover": {
-                              backgroundColor: "transparent !important",
-                            },
-                            "&:focus": {
-                              outline: "none !important",
-                              boxShadow: "none !important",
-                            },
-                          },
-                        },
-                      },
-                    }}
                   />
-                </Box>
-              </LocalizationProvider>
+                </div>
+              </div>
             </Grid>
             <Grid size={9} sx={{ display: "flex", justifyContent: "flex-end" }}>
               {/* <Button
