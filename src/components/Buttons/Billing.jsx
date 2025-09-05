@@ -13,15 +13,19 @@ const StyledButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.grey[200],
   },
   "&:focus": {
-    outline: "none", 
+    outline: "none",
   },
 }));
 
 const BillingButton = () => {
-  const theme = useTheme(); 
+  const theme = useTheme();
 
   return (
-    <StyledButton startIcon={<ReceiptIcon style={{ color: theme.palette.text.secondary }} />}>
+    <StyledButton
+      startIcon={
+        <ReceiptIcon style={{ color: theme.palette.text.secondary }} />
+      }
+    >
       Billing
       <br />
     </StyledButton>
