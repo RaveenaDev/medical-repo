@@ -987,7 +987,7 @@ export const getAppointmentHistory =
         },
       });
 
-      console.log("Appointments History: ", data);
+      // console.log("Appointments History: ", data);
 
       dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data });
     } catch (error) {
@@ -1702,6 +1702,10 @@ export const setReschedule = (appointmentId) => async (dispatch) => {
     // console.log("Rescheduled app. successful : ", data);
 
     dispatch({ type: SET_RESCHEDULE, payload: data });
+    toast.success("Appointment Rescheduled Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
     return Promise.resolve(data); // 🔑 return promise
   } catch (error) {
     console.log(error);
