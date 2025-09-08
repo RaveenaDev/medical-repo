@@ -17,7 +17,7 @@ import {
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
-  GET_PATIENT_BILLS,
+  GET_PATIENT_BILLS, GET_PATIENT_DETAILS,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
@@ -124,6 +124,24 @@ export const getFilteredPatients =
       console.log(error);
     }
   };
+
+export const getPatientDetailsById = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/${patientId}/details`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Patient Data: ",data)
+
+    dispatch({ type: GET_PATIENT_DETAILS, payload: data.data });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {

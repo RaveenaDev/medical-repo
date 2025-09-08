@@ -16,7 +16,7 @@ import {
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_ONGOING_APPOINTMENTS,
-  GET_PATIENT_BILLS,
+  GET_PATIENT_BILLS, GET_PATIENT_DETAILS,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
@@ -33,6 +33,7 @@ import {
 const initialState = {
   totalPatients: null,
   totalFilteredPatients: null,
+  patientDetails: [],
   totalDoctors: null,
   doctorCount: null,
   totalStaffs: null,
@@ -100,6 +101,13 @@ export const receptionistReducer = (state = initialState, action) => {
         isLoading: false,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
+      };
+
+    case GET_PATIENT_DETAILS:
+      return {
+        ...state,
+        patientDetails: action.payload,
+        isLoadingPatientDetails: false,
       };
 
     case GET_DOCTORS:

@@ -15,15 +15,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { WhatsApp, Email, Close } from "@mui/icons-material";
+import {getPatientDetailsById} from "../../../../components/State/Receptionist/Action.js";
+import {useDispatch, useSelector} from "react-redux";
 
 const Profile = (props) => {
   // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
   const location = useLocation();
   const patient = location.state?.patient;
+  const dispatch = useDispatch();
 
-  if (!patient) {
-    return <p>No patient data found!</p>;
-  }
+  // console.log("Pat: ",patient)
 
   const [medicalHistory, setMedicalHistory] = useState([]);
   const [currentMedications, setCurrentMedications] = useState([]);
@@ -67,6 +68,14 @@ const Profile = (props) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    dispatch(getPatientDetailsById(patient?._id))
+  }, [dispatch, patient]);
+
+  const patDetails = useSelector((store) => store.receptionist.patientDetails)
+
+  // console.log("Det: ",patDetails)
+
   const upcoming = patient.appointments?.filter(
     (app) => app.status === "Scheduled"
   ).length;
@@ -80,6 +89,11 @@ const Profile = (props) => {
       setShowModal(false);
     }
   };
+
+  if (!patient) {
+    return <p>No patient data found!</p>;
+  }
+
   return (
     <>
       <div>
@@ -319,6 +333,7 @@ const Profile = (props) => {
                     patient={patient}
                     medicalHistory={medicalHistory}
                     currentMedications={currentMedications}
+                    patDetails={patDetails}
                     showSymptoms={false} // Hide Symptoms section
                     showHistory={false} // Hide Social History section
                   />
