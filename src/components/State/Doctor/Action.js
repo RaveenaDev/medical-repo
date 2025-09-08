@@ -1116,50 +1116,52 @@ export const getAllDepartments = () => async (dispatch) => {
   }
 };
 
-export const createAdmissionRequest = (requestData) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const doctor = localStorage.getItem("userId");
+export const createAdmissionRequest =
+  (requestData, onClose) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const doctor = localStorage.getItem("userId");
 
-    const requestDataWithDoctor = {
-      ...requestData,
-      doctor, // add doctor into body
-    };
+      const requestDataWithDoctor = {
+        ...requestData,
+        doctor, // add doctor into body
+      };
 
-    // console.log("Req: ",requestDataWithDoctor)
+      // console.log("Req: ",requestDataWithDoctor)
 
-    const { data } = await axios.post(
-      `${API_URL}/createAdmissionRequest`,
-      requestDataWithDoctor,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      const { data } = await axios.post(
+        `${API_URL}/createAdmissionRequest`,
+        requestDataWithDoctor,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
-    // return data.request;
-    dispatch(getAdmissionRequests()); // Refresh the list of requests
-    dispatch(getAdmittedPatients());
-    toast.success("Admission Request Created successfully!", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.error(
-      "Error creating admission request:",
-      error.response?.data || error.message
-    );
-    toast.error("Failed to create admission request", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
+      // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
+      // return data.request;
+      dispatch(getAdmissionRequests()); // Refresh the list of requests
+      dispatch(getAdmittedPatients());
+      toast.success("Admission Request Created successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      onClose();
+    } catch (error) {
+      console.error(
+        "Error creating admission request:",
+        error.response?.data || error.message
+      );
+      toast.error("Failed to create admission request", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };
 
 export const getApprovedAdmissions = () => async (dispatch) => {
   try {

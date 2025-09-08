@@ -252,9 +252,7 @@ const AddPatientForm = ({ onClose }) => {
 
     // console.log("Pay: ",payload)
 
-    dispatch(createAdmissionRequest(payload));
-
-    // onClose();
+    dispatch(createAdmissionRequest(payload, onClose));
   };
 
   return (
