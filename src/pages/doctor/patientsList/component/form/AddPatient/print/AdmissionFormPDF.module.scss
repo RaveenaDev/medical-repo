@@ -1,0 +1,48 @@
+.admissionPdf {
+  font-family: "Times New Roman", serif;
+  padding: 20px;
+  color: #000;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    text-align: center;
+    margin: 15px 0;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  &__sectionTitle {
+    margin: 12px 0 6px;
+    border-bottom: 1px solid #666;
+    font-size: 16px;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+
+    td {
+      border: 1px solid #444;
+      padding: 6px 8px;
+      font-size: 14px;
+    }
+  }
+
+  &__signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+  }
+
+  &__sigBox {
+    min-height: 40px;
+    border-bottom: 1px dotted #000;
+    margin-top: 10px;
+  }
+}

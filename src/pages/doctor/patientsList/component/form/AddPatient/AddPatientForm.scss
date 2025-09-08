@@ -266,3 +266,14 @@
   border: 1px solid red !important;
   outline: none;
 }
+@media screen {
+  .printable {
+    display: none;
+  }
+}
+
+@media print {
+  .printable {
+    display: block;
+  }
+}

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import PatientCard from "../doctor/patientsList/component/modals/PatientCard.jsx";
 import { useState } from "react";
-import AddPatientForm from "../doctor/patientsList/component/form/AddPatientForm.jsx";
+import AddPatientForm from "../doctor/patientsList/component/form/AddPatient/AddPatientForm.jsx";
 
 const IpdOverview = () => {
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import PatientCard from "./component/modals/PatientCard.jsx";
 import { useEffect, useState } from "react";
-import AddPatientForm from "./component/form/AddPatientForm.jsx";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   admitPatient,
@@ -22,6 +22,7 @@ import dayjs from "dayjs";
 import { TablePagination, Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import AddPatientForm from "./component/form/AddPatient/AddPatientForm.jsx";
 
 const PatientsList = () => {
   const navigate = useNavigate();
