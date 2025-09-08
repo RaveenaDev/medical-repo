@@ -86,6 +86,7 @@ function Receptionist(props) {
     const startDate = selectedDate.startOf("day").toISOString();
     const endDate = selectedDate.endOf("day").toISOString();
 
+    // console.log("Fetching for date range:", selectedDate, startDate, endDate);
     dispatch(getAllDepartments());
 
     ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {

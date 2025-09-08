@@ -251,8 +251,9 @@ const AddPatientForm = ({ onClose }) => {
     };
 
     // console.log("Pay: ",payload)
+
     dispatch(createAdmissionRequest(payload));
-    setSubmitted(true);
+
     // onClose();
   };
 
@@ -780,6 +781,13 @@ const AddPatientForm = ({ onClose }) => {
           </section>
 
           <div className="modal-actions">
+            <button
+              type="button"
+              onClick={() => setSubmitted(true)}
+              className="submit-btn"
+            >
+              Print & Preview
+            </button>
             <button type="submit" className="submit-btn">
               Send
             </button>
@@ -792,7 +800,7 @@ const AddPatientForm = ({ onClose }) => {
           form={form}
           selectedRoom={selectedRoom}
           selectedRoles={selectedRoles}
-          onClose={onClose} // pass down close callback
+          onClose={() => setSubmitted(false)}
         />
       )}
     </div>

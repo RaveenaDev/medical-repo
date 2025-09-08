@@ -1,48 +1,92 @@
 .admissionPdf {
-  font-family: "Times New Roman", serif;
-  padding: 20px;
-  color: #000;
+  font-family: "Helvetica", Arial, sans-serif;
+  color: #222;
+  padding: 30px;
+  background: #fff;
+  line-height: 1.5;
+}
 
-  &__header {
-    text-align: center;
-    margin-bottom: 10px;
-  }
+.header {
+  text-align: center;
+  margin-bottom: 15px;
 
-  &__title {
-    text-align: center;
-    margin: 15px 0;
-    text-transform: uppercase;
-    font-size: 20px;
+  h2 {
+    margin: 0;
+    font-size: 22px;
     font-weight: bold;
+    text-transform: uppercase;
   }
 
-  &__sectionTitle {
-    margin: 12px 0 6px;
-    border-bottom: 1px solid #666;
-    font-size: 16px;
+  p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: #555;
+  }
+}
+
+.formTitle {
+  text-align: center;
+  margin: 15px 0 25px;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.section {
+  margin-bottom: 20px;
+
+  h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 10px;
+    background: #f4f6f8;
+    border-left: 4px solid #444;
+  }
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 6px 12px;
+  font-size: 13px;
+
+  span:first-child {
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.consent {
+  font-size: 12px;
+  text-align: justify;
+  color: #444;
+  border: 1px dashed #aaa;
+  padding: 12px;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+.signatures {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  text-align: center;
+
+  div {
+    flex: 1;
+    margin: 0 15px;
   }
 
-  &__table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-
-    td {
-      border: 1px solid #444;
-      padding: 6px 8px;
-      font-size: 14px;
-    }
+  .sigLine {
+    border-top: 1px dotted #555;
+    margin-bottom: 6px;
+    height: 35px;
   }
 
-  &__signatures {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-  }
-
-  &__sigBox {
-    min-height: 40px;
-    border-bottom: 1px dotted #000;
-    margin-top: 10px;
+  p {
+    font-size: 12px;
+    margin: 0;
+    color: #333;
   }
 }

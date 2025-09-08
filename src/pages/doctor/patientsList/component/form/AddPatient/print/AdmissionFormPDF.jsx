@@ -1,194 +1,139 @@
 import React, { forwardRef } from "react";
 import styles from "./AdmissionFormPDF.module.scss";
 
-const AdmissionFormPDF = forwardRef(
-  ({ form, selectedRoom, selectedRoles }, ref) => {
-    return (
-      <div ref={ref} className={styles.admissionPdf}>
-        {/* Header */}
-        <div className={styles.admissionPdf__header}>
-          <h2>Sai Asha Hospital</h2>
-          <p>123 Health Street, Wellness City, India</p>
-          <p>Contact: +91-9*********</p>
+const AdmissionFormPDF = forwardRef(({ form, selectedRoom }, ref) => {
+  return (
+    <div ref={ref} className={styles.admissionPdf}>
+      {/* Header */}
+      <header className={styles.header}>
+        <h2>SAI ASHA HOSPITAL</h2>
+        <p>
+          05, 1st Floor, Laxcon Plaza, Plot No. 20 & 21, Sector-29, Nerul (E),
+          Navi Mumbai - 400 706
+        </p>
+        <p>Tel: 022 3501 0702 / 022 3503 1026 | Mob: 892 888 9390</p>
+      </header>
+
+      <h3 className={styles.formTitle}>Admission Form</h3>
+
+      {/* Patient Details */}
+      <section className={styles.section}>
+        <h4>Patient Details</h4>
+        <div className={styles.detailGrid}>
+          {form.patientName && (
+            <>
+              <span>Name of Patient</span>
+              <span>{form.patientName}</span>
+            </>
+          )}
+          {form.gender && (
+            <>
+              <span>Sex</span>
+              <span>{form.gender}</span>
+            </>
+          )}
+          {form.age && (
+            <>
+              <span>Age</span>
+              <span>{form.age}</span>
+            </>
+          )}
+          {form.contactNo && (
+            <>
+              <span>Contact No.</span>
+              <span>{form.contactNo}</span>
+            </>
+          )}
+          {form.address && (
+            <>
+              <span>Address</span>
+              <span>{form.address}</span>
+            </>
+          )}
+          {form.emergencyContactName && (
+            <>
+              <span>Relative / Friend</span>
+              <span>
+                {form.emergencyContactName} ({form.emergencyContact})
+              </span>
+            </>
+          )}
+          {form.medicalNote && (
+            <>
+              <span>Diagnosis</span>
+              <span>{form.medicalNote}</span>
+            </>
+          )}
+          {form.date && (
+            <>
+              <span>Admitted On</span>
+              <span>
+                {form.date} {form.time}
+              </span>
+              <span>Discharge On</span>
+              <span>{form.dischargeDate || "-"}</span>
+            </>
+          )}
         </div>
+      </section>
 
-        <hr />
+      {/* Admission Details */}
+      <section className={styles.section}>
+        <h4>Admission Details</h4>
+        <div className={styles.detailGrid}>
+          {selectedRoom && (
+            <>
+              <span>Room No.</span>
+              <span>{selectedRoom}</span>
+            </>
+          )}
+          {form.bedNo && (
+            <>
+              <span>Bed No.</span>
+              <span>{form.bedNo}</span>
+            </>
+          )}
+          {form.deposit && (
+            <>
+              <span>Deposit Given</span>
+              <span>₹ {form.deposit}</span>
+            </>
+          )}
+        </div>
+      </section>
 
-        {/* Title */}
-        <h3 className={styles.admissionPdf__title}>Admission Form</h3>
+      {/* Consent */}
+      <section className={styles.section}>
+        <h4>Consent</h4>
+        <p className={styles.consent}>
+          I hereby agree and give consent to the performance of such operation
+          as may be found necessary to be performed upon myself and also to the
+          administration of any consequences that may arise out of and in the
+          course of such operations. I shall not hold the hospital responsible
+          for any consequences that may arise out of and in the course of such
+          operations and/or administrations of any drugs and/or infusion
+          diagnostic procedures, biopsies, blood transfusion, cardiac
+          defibrillation, and pacing.
+        </p>
+      </section>
 
-        {/* Patient Details */}
-        <section>
-          <h4 className={styles.admissionPdf__sectionTitle}>Patient Details</h4>
-          <table className={styles.admissionPdf__table}>
-            <tbody>
-              <tr>
-                <td>
-                  <strong>Name:</strong>
-                </td>
-                <td>{form.patientName}</td>
-                <td>
-                  <strong>Patient ID / Email:</strong>
-                </td>
-                <td>{form.patientId || form.email}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Age:</strong>
-                </td>
-                <td>{form.age}</td>
-                <td>
-                  <strong>Gender:</strong>
-                </td>
-                <td>{form.gender}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Contact No.:</strong>
-                </td>
-                <td>{form.contactNo}</td>
-                <td>
-                  <strong>Address:</strong>
-                </td>
-                <td>{form.address}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Emergency Contact:</strong>
-                </td>
-                <td>
-                  {form.emergencyContact} ({form.emergencyContactName})
-                </td>
-                <td>
-                  <strong>Admission Date & Time:</strong>
-                </td>
-                <td>
-                  {form.date} {form.time}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        {/* Room & Deposit */}
-        <section>
-          <h4 className={styles.admissionPdf__sectionTitle}>
-            Admission Details
-          </h4>
-          <table className={styles.admissionPdf__table}>
-            <tbody>
-              <tr>
-                <td>
-                  <strong>Room No.:</strong>
-                </td>
-                <td>{selectedRoom}</td>
-                <td>
-                  <strong>Bed No.:</strong>
-                </td>
-                <td>{form.bedNo}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Deposit:</strong>
-                </td>
-                <td>₹ {form.deposit}</td>
-                <td>
-                  <strong>Diagnosis:</strong>
-                </td>
-                <td>{form.medicalNote}</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        {/* Insurance */}
-        {form.hasInsurance && (
-          <section>
-            <h4 className={styles.admissionPdf__sectionTitle}>
-              Insurance Details
-            </h4>
-            <table className={styles.admissionPdf__table}>
-              <tbody>
-                <tr>
-                  <td>
-                    <strong>Company:</strong>
-                  </td>
-                  <td>{form.insuranceCompany}</td>
-                  <td>
-                    <strong>Policy No.:</strong>
-                  </td>
-                  <td>{form.policyNumber}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong>Insurance ID:</strong>
-                  </td>
-                  <td>{form.insuranceIdNumber}</td>
-                  <td>
-                    <strong>Employer:</strong>
-                  </td>
-                  <td>{form.employerName}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong>Employee Code:</strong>
-                  </td>
-                  <td>{form.employeeCode}</td>
-                  <td>
-                    <strong>Validity:</strong>
-                  </td>
-                  <td>
-                    {form.insuranceStartDate} to {form.insuranceExpiryDate}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-        )}
-
-        {/* Consent */}
-        <section>
-          <h4 className={styles.admissionPdf__sectionTitle}>Consent</h4>
-          <p>
-            I hereby consent to any necessary medical procedures, including
-            surgeries, medications, diagnostic tests, biopsies, blood
-            transfusions, cardiac defibrillation, and pacing. I understand and
-            accept the potential risks involved and will not hold the hospital
-            responsible for any outcomes arising during or after these
-            procedures.
-          </p>
-        </section>
-
-        {/* Approval */}
-        <section>
-          <h4 className={styles.admissionPdf__sectionTitle}>
-            Approval Sent To
-          </h4>
-          <p>{selectedRoles.join(", ")}</p>
-        </section>
-
-        {/* Signatures */}
-        <section className={styles.admissionPdf__signatures}>
-          <div>
-            <p>Doctor Signature:</p>
-            <div className={styles.admissionPdf__sigBox}>
-              {form.doctorSignature}
-            </div>
-          </div>
-          <div>
-            <p>Witness:</p>
-            <div className={styles.admissionPdf__sigBox}>{form.witness}</div>
-          </div>
-          <div>
-            <p>Patient Signature:</p>
-            <div className={styles.admissionPdf__sigBox}>
-              {form.patientSignature}
-            </div>
-          </div>
-        </section>
-      </div>
-    );
-  }
-);
+      {/* Signatures */}
+      <footer className={styles.signatures}>
+        <div>
+          <div className={styles.sigLine}></div>
+          <p>Witness</p>
+        </div>
+        <div>
+          <div className={styles.sigLine}></div>
+          <p>Patient / Guardian</p>
+        </div>
+        <div>
+          <div className={styles.sigLine}></div>
+          <p>Doctor</p>
+        </div>
+      </footer>
+    </div>
+  );
+});
 
 export default AdmissionFormPDF;
