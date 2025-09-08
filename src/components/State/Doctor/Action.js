@@ -277,7 +277,7 @@ export const getAppointments = (startDate, endDate) => async (dispatch) => {
 
     const { data } = await axios.get(`${API_URL}/getAppointments`, {
       params: {
-        // status: 'Ongoing',
+        // status: "Scheduled",
         start: startDate,
         end: endDate,
         departmentId: departmentId,
