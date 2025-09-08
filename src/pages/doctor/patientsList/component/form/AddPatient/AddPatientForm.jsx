@@ -3,9 +3,10 @@ import "./AddPatientForm.scss";
 import {
   createAdmissionRequest,
   getAvailableRooms,
-} from "../../../../../components/State/Doctor/Action";
+} from "../../../../../../components/State/Doctor/Action.js";
 import { useDispatch, useSelector } from "react-redux";
-import { getInsuranceCompanies } from "../../../../../components/State/Admin/Action.js";
+import { getInsuranceCompanies } from "../../../../../../components/State/Admin/Action.js";
+import AdmissionFormPrintWrapper from "./print/AdmissionFormPrintWrapper.jsx";
 
 /* ---------- Helpers: Indian-format display + raw-state parsing (no commas) ---------- */
 const formatIndian = (val) => {
@@ -63,6 +64,7 @@ const AddPatientForm = ({ onClose }) => {
     witness: "",
     patientSignature: "",
     date: "",
+    time: "",
     roomNo: "",
     bedNo: "",
     deposit: "", // RAW number as string (no commas)
@@ -81,6 +83,8 @@ const AddPatientForm = ({ onClose }) => {
   const [selectedRoom, setSelectedRoom] = useState("");
   const [availableBeds, setAvailableBeds] = useState([]);
   const [bedsAvailable, setBedsAvailable] = useState(true);
+
+  const [submitted, setSubmitted] = useState(false);
 
   const availableRooms = useSelector((state) => state.doctor.roomsAvailable);
   const insuranceCompanies = useSelector(
@@ -107,12 +111,28 @@ const AddPatientForm = ({ onClose }) => {
     }
   };
 
-  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState(["None"]);
   const handleCheckboxChange = (role) => {
-    if (selectedRoles.includes(role)) {
-      setSelectedRoles(selectedRoles.filter((r) => r !== role));
+    if (role === "None") {
+      // If "None" is selected, clear all others and keep only "None"
+      setSelectedRoles(["None"]);
     } else {
-      setSelectedRoles([...selectedRoles, role]);
+      let updatedRoles = [...selectedRoles];
+
+      if (updatedRoles.includes(role)) {
+        // Remove role if already selected
+        updatedRoles = updatedRoles.filter((r) => r !== role);
+      } else {
+        // Add role
+        updatedRoles = [...updatedRoles.filter((r) => r !== "None"), role];
+      }
+
+      // If no roles left, default back to "None"
+      if (updatedRoles.length === 0) {
+        updatedRoles = ["None"];
+      }
+
+      setSelectedRoles(updatedRoles);
     }
   };
   const validateForm = () => {
@@ -161,30 +181,6 @@ const AddPatientForm = ({ onClose }) => {
       newErrors.emergencyContactName = "Emergency contact name is required";
     }
 
-    // Insurance (only if yes)
-    if (hasInsurance) {
-      if (!form.insuranceIdNumber.trim()) {
-        newErrors.insuranceIdNumber = "Insurance ID is required";
-      }
-      if (!form.policyNumber.trim()) {
-        newErrors.policyNumber = "Policy number is required";
-      }
-      if (!form.insuranceCompany.trim()) {
-        newErrors.insuranceCompany = "Insurance company is required";
-      }
-      if (!form.insuranceStartDate) {
-        newErrors.insuranceStartDate = "Start date is required";
-      }
-      if (!form.insuranceExpiryDate) {
-        newErrors.insuranceExpiryDate = "Expiry date is required";
-      } else if (
-        form.insuranceStartDate &&
-        new Date(form.insuranceExpiryDate) <= new Date(form.insuranceStartDate)
-      ) {
-        newErrors.insuranceExpiryDate = "Expiry must be after start date";
-      }
-    }
-
     // Room & Bed
     if (!selectedRoom) newErrors.roomNo = "Room is required";
     if (!form.bedNo) newErrors.bedNo = "Bed is required";
@@ -203,7 +199,10 @@ const AddPatientForm = ({ onClose }) => {
     if (!form.date) {
       newErrors.date = "Admission date is required";
     }
-
+    // Time
+    if (!form.time) {
+      newErrors.time = "Admission time is required";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -213,14 +212,6 @@ const AddPatientForm = ({ onClose }) => {
 
     if (!validateForm()) return; // stop if invalid
 
-    if (selectedRoles.length === 0) {
-      alert("Please select at least one approval role (Doctor or Admin).");
-      return;
-    }
-    if (!form.gender) {
-      alert("Please select a gender");
-      return;
-    }
     const sendToValue =
       selectedRoles.includes("Doctor") && selectedRoles.includes("Admin")
         ? "Both"
@@ -250,6 +241,7 @@ const AddPatientForm = ({ onClose }) => {
         emergencyContact: form.emergencyContact,
         emergencyName: form.emergencyContactName,
         admissionDate: form.date,
+        admissionTime: form.time,
         date: new Date(form.date),
         room: selectedRoom,
         bed: form.bedNo,
@@ -260,7 +252,8 @@ const AddPatientForm = ({ onClose }) => {
 
     // console.log("Pay: ",payload)
     dispatch(createAdmissionRequest(payload));
-    onClose();
+    setSubmitted(true);
+    // onClose();
   };
 
   return (
@@ -513,7 +506,6 @@ const AddPatientForm = ({ onClose }) => {
                       onChange={(e) =>
                         setForm({ ...form, insuranceIdNumber: e.target.value })
                       }
-                      required
                       className={errors.insuranceIdNumber ? "input-error" : ""}
                     />
                     {errors.insuranceIdNumber && (
@@ -531,7 +523,6 @@ const AddPatientForm = ({ onClose }) => {
                       onChange={(e) =>
                         setForm({ ...form, policyNumber: e.target.value })
                       }
-                      required
                       className={errors.policyNumber ? "input-error" : ""}
                     />
                     {errors.policyNumber && (
@@ -546,7 +537,6 @@ const AddPatientForm = ({ onClose }) => {
                         setForm({ ...form, insuranceCompany: e.target.value })
                       }
                       className="styled-select"
-                      required
                     >
                       <option value="">Select Company</option>
 
@@ -578,7 +568,6 @@ const AddPatientForm = ({ onClose }) => {
                       onChange={(e) =>
                         setForm({ ...form, insuranceStartDate: e.target.value })
                       }
-                      required
                       className={errors.insuranceStartDate ? "input-error" : ""}
                     />
                     {errors.insuranceStartDate && (
@@ -596,7 +585,6 @@ const AddPatientForm = ({ onClose }) => {
                           insuranceExpiryDate: e.target.value,
                         })
                       }
-                      required
                       className={
                         errors.insuranceExpiryDate ? "input-error" : ""
                       }
@@ -617,7 +605,7 @@ const AddPatientForm = ({ onClose }) => {
             <div className="form-section">
               <div className="form-group">
                 <div className="form-field">
-                  <label>Reason</label>
+                  <label>Diagnosis</label>
                   <input
                     type="text"
                     value={form.medicalNote}
@@ -634,7 +622,7 @@ const AddPatientForm = ({ onClose }) => {
               </div>
               <div className="form-group">
                 <div className="form-field">
-                  <label>Date</label>
+                  <label>Admission Date</label>
                   <input
                     type="date"
                     value={form.date}
@@ -644,7 +632,17 @@ const AddPatientForm = ({ onClose }) => {
                   />
                   {errors.date && <span className="error">{errors.date}</span>}
                 </div>
-
+                <div className="form-field">
+                  <label>Admission Time</label>
+                  <input
+                    type="time"
+                    value={form.time}
+                    onChange={(e) => setForm({ ...form, time: e.target.value })}
+                    required
+                    className={errors.time ? "input-error" : ""}
+                  />
+                  {errors.time && <span className="error">{errors.time}</span>}
+                </div>
                 {/* Room Dropdown */}
                 <div className="form-field">
                   <label>Room No.</label>
@@ -708,15 +706,6 @@ const AddPatientForm = ({ onClose }) => {
                 </div>
               </div>
 
-              <div className="form-consent">
-                I hereby consent to any necessary medical procedures, including
-                surgeries, medications, diagnostic tests, biopsies, blood
-                transfusions, cardiac defibrillation, and pacing. I understand
-                and accept the potential risks involved and will not hold the
-                hospital responsible for any outcomes arising during or after
-                these procedures.
-              </div>
-
               <div className="form-approval">
                 <p>Send For Approval</p>
 
@@ -737,8 +726,24 @@ const AddPatientForm = ({ onClose }) => {
                   />
                   <span className="custom-circle" /> Admin
                 </label>
-              </div>
 
+                <label className="circle-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedRoles.includes("None")}
+                    onChange={() => handleCheckboxChange("None")}
+                  />
+                  <span className="custom-circle" /> None
+                </label>
+              </div>
+              <div className="form-consent">
+                I hereby consent to any necessary medical procedures, including
+                surgeries, medications, diagnostic tests, biopsies, blood
+                transfusions, cardiac defibrillation, and pacing. I understand
+                and accept the potential risks involved and will not hold the
+                hospital responsible for any outcomes arising during or after
+                these procedures.
+              </div>
               <div className="form-group">
                 <div className="form-field">
                   <label>Doctor Signature</label>
@@ -781,6 +786,15 @@ const AddPatientForm = ({ onClose }) => {
           </div>
         </form>
       </div>
+
+      {submitted && (
+        <AdmissionFormPrintWrapper
+          form={form}
+          selectedRoom={selectedRoom}
+          selectedRoles={selectedRoles}
+          onClose={onClose} // pass down close callback
+        />
+      )}
     </div>
   );
 };
