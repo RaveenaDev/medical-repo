@@ -1,6 +1,8 @@
 import styles from "./TreatmentAndTest.module.scss";
-import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Plus, Printer } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
+import TreatmentAndTestPrint from "./print/TreatmentAndTestPrint";
 const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
   const [treatment, setTreatment] = useState({
     name: "",
@@ -17,7 +19,13 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
   });
   const [tests, setTests] = useState([]);
 
-  // ✅ Prefill from existing data
+  const printRef = useRef();
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: "Treatment & Tests",
+  });
+
+  //  Prefill from existing data
   useEffect(() => {
     //console.log("Ex: ",existingData)
     //console.log("Sel: ",selectedComponent)
@@ -27,7 +35,6 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
       if (sectionData.tests) setTests(sectionData.tests);
     }
   }, [existingData, selectedComponent]);
-
   const handleAddTreatment = () => {
     if (
       treatment.name &&
@@ -70,6 +77,9 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
         {/* row 1 */}
         <div className={styles.row1}>
           <p>Treatment And Tests</p>
+          <button onClick={handlePrint} className={styles.printBtn}>
+            <Printer size={18} /> Print
+          </button>
         </div>
 
         {/* row 2 */}
@@ -210,6 +220,11 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
           </button>
         </div>
       </div>
+      <TreatmentAndTestPrint
+        ref={printRef}
+        treatments={treatments}
+        tests={tests}
+      />
     </div>
   );
 };
