@@ -64,9 +64,7 @@ const ProgressTracker = ({ patient }) => {
                   </div>
                 ))
               ) : (
-                <div className={styles.noData}>
-                  No progress steps available.
-                </div>
+                <div className={styles.noData}></div>
               )}
             </div>
           </div>
@@ -143,7 +141,11 @@ const ProgressTracker = ({ patient }) => {
             ) : (
               <div
                 className={styles.noData}
-                style={{ textAlign: "center", color: "#888" }}
+                style={{
+                  textAlign: "center",
+                  color: "#888",
+                  marginTop: "60px",
+                }}
               >
                 No progress steps available.
               </div>
