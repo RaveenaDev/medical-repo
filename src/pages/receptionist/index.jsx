@@ -560,7 +560,7 @@ function Receptionist(props) {
                                                         />
 
                                                         {/* Menu trigger (show for all except already completed) */}
-                                                        {appointment.status !== "Completed" && (
+                                                        {appointment.status !== "completed" && (
                                                             <Box sx={{ ml: "auto" }}>
                                                               <IconButton
                                                                   size="small"
