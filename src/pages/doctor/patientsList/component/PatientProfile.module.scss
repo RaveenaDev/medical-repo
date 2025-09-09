@@ -25,9 +25,6 @@
   gap: 1.8vh;
   // justify-content: space-between;
   padding: 1vh 0vw 1vh 1vw;
-  img {
-    border-radius: 50%;
-  }
 
   p {
     font-size: 1.85vh;
@@ -41,13 +38,13 @@
     }
   }
 }
-
+.avatar {
+  border-radius: 50%;
+  width: 8vw;
+}
 .imgWrapper {
   display: flex;
   align-items: center;
-  img {
-    width: 4vw;
-  }
 }
 
 .criticalImg {

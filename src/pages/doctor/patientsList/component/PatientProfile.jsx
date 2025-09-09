@@ -26,6 +26,8 @@ import BedInfo from "./modals/BedInfo.jsx";
 import Discharge from "./modals/Discharge.jsx";
 import IsFollowUp from "./components/isFollowUp/IsFollowUp.jsx";
 import { useLocation } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+
 const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   const location = useLocation();
   const [caseId, setCaseId] = useState(location.state?.caseId);
@@ -82,6 +84,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
 
     dispatch(updatePatientStatus(patientId, status));
   };
+
   return (
     <div>
       <div className={styles.section1}>
@@ -151,13 +154,27 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
             }`}
           >
             <div className={`${styles.imgWrapper} `}>
-              <img
-                className={` ${
+              <Avatar
+                sx={{
+                  bgcolor: "#e3e3e3",
+                  color: "#25307F",
+                  fontWeight: 500,
+                  width: "4vw",
+                  height: "4vw",
+                  fontSize: "2vw",
+                  // fontSize: {
+                  //   xs: "0.75rem", // 12px on mobile
+                  //   sm: "1rem", // 16px on small screens
+                  //   md: "1.25rem", // 20px on medium screens
+                  //   lg: "1.5rem", // 24px on large screens
+                  // },
+                }}
+                className={`${styles.avatar} ${
                   selectedStatus === "Critical" ? styles.criticalImg : ""
                 } `}
-                src="https://randomuser.me/api/portraits/women/17.jpg"
-                alt=""
-              />
+              >
+                {patientDetails?.name[0].toUpperCase() || ""}
+              </Avatar>
             </div>
             <div className={styles.patientCardInfo}>
               <div className={styles.detailRow}>

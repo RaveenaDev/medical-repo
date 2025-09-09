@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { X, Calendar, ChevronRight, Plus, Dot } from "lucide-react";
 import "./EventDetails.scss";
 import dayjs from "dayjs";
+import Avatar from "@mui/material/Avatar";
 
 const EventDetails = ({ event, onClose }) => {
   const dummyEvent = {
@@ -72,7 +73,7 @@ const EventDetails = ({ event, onClose }) => {
             <p>{event.date},</p>
           </span>
           <span className="event-time">
-            {event.allDay? 'All Day' : event.duration}
+            {event.allDay ? "All Day" : event.duration}
           </span>
         </div>
         <div className="event-buttons">
@@ -98,19 +99,32 @@ const EventDetails = ({ event, onClose }) => {
                 <Dot className="participant-dot" size={14} />
               </span>
               <p>
-                {participant.name} ({participant.role || 'No role found'})
+                {participant.name} ({participant.role || "No role found"})
               </p>
             </p>
           ))}
 
           <div className="participants-row">
             {dummyEvent.participants.map((participant, index) => (
-              <img
-                key={index}
-                src={participant.profileUrl}
-                alt={`${participant.name}'s profile`}
-                className="participant-avatar"
-              />
+              <>
+                {/* // <img
+              //   key={index}
+              //   src={participant.profileUrl}
+              //   alt={`${participant.name}'s profile`}
+              //   className="participant-avatar"
+              // /> */}
+
+                <Avatar
+                  sx={{
+                    bgcolor: "#e3e3e3",
+                    color: "#25307F",
+                    fontWeight: 500,
+                  }}
+                  className="patientAvatar"
+                >
+                  {participant?.name[0].toUpperCase() || ""}
+                </Avatar>
+              </>
             ))}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import styles from "./PatientInfo.module.scss";
-import Avatar from '@mui/material/Avatar';
+import Avatar from "@mui/material/Avatar";
 const patientPropType = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
@@ -19,7 +19,6 @@ const patientPropType = PropTypes.shape({
 });
 
 const PatientInfo = ({ ongoingAppointment, onConfirm }) => {
-
   const patient = ongoingAppointment.patient;
   return (
     <form
@@ -32,12 +31,18 @@ const PatientInfo = ({ ongoingAppointment, onConfirm }) => {
       {/* Row1 */}
       <div className={styles.row1}>
         {/* Avatar to show the initial letter */}
-        <Avatar className={styles.avatar} sx={{
-          width: 50, // Adjust the width
-          height: 50, // Adjust the height
-          fontSize: 26, // Size of the letter inside the Avatar
-          // backgroundColor: '#3db461',
-        }}>
+        <Avatar
+          className={styles.avatar}
+          sx={{
+            width: 50, // Adjust the width
+            height: 50, // Adjust the height
+            fontSize: 26, // Size of the letter inside the Avatar
+            // backgroundColor: '#3db461',
+            bgcolor: "#e3e3e3",
+            color: "#25307F",
+            fontWeight: 400,
+          }}
+        >
           {patient.name[0].toUpperCase()}
         </Avatar>
 
@@ -90,7 +95,9 @@ const PatientInfo = ({ ongoingAppointment, onConfirm }) => {
         </div>
         <div className={styles.lv}>
           <p className={styles.label}>Register Date</p>
-          <p className={styles.value}>{patient.registrationDate.split("T")[0]}</p>
+          <p className={styles.value}>
+            {patient.registrationDate.split("T")[0]}
+          </p>
         </div>
         <div className={styles.lv}>
           <p className={styles.label}>Email</p>

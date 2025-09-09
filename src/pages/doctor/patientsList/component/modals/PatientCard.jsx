@@ -1,6 +1,7 @@
 import React from "react";
 import "./PatientCard.scss"; // Assuming you have a CSS file for styling
 import { useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
 
 import { Tooltip } from "@mui/material";
 const PatientCard = ({ patient }) => {
@@ -30,11 +31,16 @@ const PatientCard = ({ patient }) => {
       <div className="patientInfo">
         <div className="patientHeader">
           <div className="patientDetailsContainer">
-            <img
-              src="https://randomuser.me/api/portraits/women/12.jpg"
-              alt={`${patient.name} Avatar`}
+            <Avatar
+              sx={{
+                bgcolor: "#e3e3e3",
+                color: "#25307F",
+                fontWeight: 500,
+              }}
               className="patientAvatar"
-            />
+            >
+              {patient.name[0].toUpperCase()}
+            </Avatar>
             <div>
               <h5 className="patientName">{patient.name}</h5>
               <p className="patientAge">
