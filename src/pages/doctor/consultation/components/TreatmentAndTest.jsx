@@ -3,7 +3,12 @@ import { Plus, Printer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import TreatmentAndTestPrint from "./print/TreatmentAndTestPrint";
-const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
+const TreatmentAndTest = ({
+  patient,
+  onConfirm,
+  existingData,
+  selectedComponent,
+}) => {
   const [treatment, setTreatment] = useState({
     name: "",
     dosage: "",
@@ -224,6 +229,7 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
         ref={printRef}
         treatments={treatments}
         tests={tests}
+        patient={patient}
       />
     </div>
   );
