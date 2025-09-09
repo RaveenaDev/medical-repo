@@ -118,7 +118,6 @@
     border-collapse: separate;
     border-spacing: 0 12px;
     background-color: transparent;
-
     thead {
       background-color: transparent;
 
@@ -366,4 +365,19 @@
   background: #e6edfd !important;
   color: #25307f;
   font-weight: 500;
+}
+
+.tableWrapper {
+  height: 60vh;
+  overflow-y: auto;
+
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
