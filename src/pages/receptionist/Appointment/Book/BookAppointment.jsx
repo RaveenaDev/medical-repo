@@ -18,7 +18,8 @@ import {
   getAllDepartments,
   getDoctors,
   getDoctorsByDepartment,
-  getPatients, removeBookAppointmentData,
+  getPatients,
+  removeBookAppointmentData,
 } from "../../../../components/State/Receptionist/Action.js";
 
 const BookAppointment = ({
@@ -34,10 +35,9 @@ const BookAppointment = ({
 
   let dep = "";
 
-  if(department){
+  if (department) {
     dep = department[0]?.name;
   }
-
 
   const [formData, setFormData] = useState({
     patientName: "",
@@ -112,7 +112,6 @@ const BookAppointment = ({
       "appointmentType",
       "departmentName",
       "doctorEmail",
-      "email",
     ];
     requiredFields.forEach((field) => {
       if (!formData[field] || formData[field].trim() === "") {
@@ -140,7 +139,7 @@ const BookAppointment = ({
 
   const handleClick = () => {
     if (validateForm()) {
-      console.log("Data",formData)
+      // console.log("Data",formData)
       dispatch(bookAppointment(formData, onClose));
     }
   };
@@ -341,7 +340,7 @@ const BookAppointment = ({
                 error={!!errors.mobileNumber}
                 helperText={errors.mobileNumber}
               />
-              <p>{renderRequiredLabel("Email")}</p>
+              <p>Email</p>
               <TextField
                 label="Email"
                 name="email"
