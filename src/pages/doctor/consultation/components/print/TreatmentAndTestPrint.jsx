@@ -1,8 +1,26 @@
 import React, { forwardRef } from "react";
 import styles from "./TreatmentAndTestPrint.module.scss";
 
+const frequencyMap = {
+  OD: "Once daily",
+  BD: "Twice daily",
+  TDS: "Thrice daily",
+  QID: "Four times daily",
+  SOS: "As needed",
+};
+
+const priorityMap = {
+  Routine: "Normal",
+  Urgent: "High priority",
+  Stat: "Immediate",
+};
+
 const TreatmentAndTestPrint = forwardRef(
   ({ treatments, tests, patient }, ref) => {
+    // Check if treatments/tests have any notes
+    const hasTreatmentNotes = treatments.some((t) => t.notes && t.notes.trim());
+    const hasTestNotes = tests.some((t) => t.notes && t.notes.trim());
+
     return (
       <div ref={ref} className={`${styles.printLayout} ${styles.printOnly}`}>
         {/* Letterhead-style Header */}
@@ -56,17 +74,25 @@ const TreatmentAndTestPrint = forwardRef(
                   <th>Dosage</th>
                   <th>Frequency</th>
                   <th>Duration</th>
+                  {hasTreatmentNotes && <th>Notes</th>}
                 </tr>
               </thead>
               <tbody>
-                {treatments.map((t, i) => (
-                  <tr key={i}>
-                    <td>{t.name}</td>
-                    <td>{t.dosage}</td>
-                    <td>{t.frequency}</td>
-                    <td>{t.duration}</td>
-                  </tr>
-                ))}
+                {treatments.map((t, i) => {
+                  const freqText = frequencyMap[t.frequency];
+                  return (
+                    <tr key={i}>
+                      <td>{t.name}</td>
+                      <td>{t.dosage}</td>
+                      <td>
+                        {t.frequency}
+                        {freqText ? ` (${freqText})` : ""}
+                      </td>
+                      <td>{t.duration}</td>
+                      {hasTreatmentNotes && <td>{t.notes || "-"}</td>}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </section>
@@ -82,16 +108,24 @@ const TreatmentAndTestPrint = forwardRef(
                   <th>Test</th>
                   <th>Type</th>
                   <th>Priority</th>
+                  {hasTestNotes && <th>Notes</th>}
                 </tr>
               </thead>
               <tbody>
-                {tests.map((t, i) => (
-                  <tr key={i}>
-                    <td>{t.name}</td>
-                    <td>{t.type}</td>
-                    <td>{t.priority}</td>
-                  </tr>
-                ))}
+                {tests.map((t, i) => {
+                  const priText = priorityMap[t.priority];
+                  return (
+                    <tr key={i}>
+                      <td>{t.name}</td>
+                      <td>{t.type}</td>
+                      <td>
+                        {t.priority}
+                        {priText ? ` (${priText})` : ""}
+                      </td>
+                      {hasTestNotes && <td>{t.notes || "-"}</td>}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </section>
