@@ -3,6 +3,7 @@ import styles from "./NextAppointment.module.scss";
 import { X } from "lucide-react";
 import {useDispatch} from "react-redux";
 import {setOngoing, setReschedule} from "../../../../components/State/Doctor/Action.js";
+import Avatar from '@mui/material/Avatar';
 
 const NextAppointment = ({ onClose,nextAppointment,allowance,onStart }) => {
     const dispatch = useDispatch()
@@ -73,29 +74,39 @@ const NextAppointment = ({ onClose,nextAppointment,allowance,onStart }) => {
                 </div>
 
                 {/* Patient Info */}
-                <div className={styles.patientInfoContainer}>
-                  <div className={styles.img}>
-                    <img src="https://i.pravatar.cc/40?img=43" alt=""/>
+                  <div className={styles.patientInfoContainer}>
+                      <div className={styles.img}>
+                          {/* Avatar component to show the first letter of the patient's name */}
+                          <Avatar sx={{
+                              width: 64, // Adjust the width
+                              height: 64, // Adjust the height
+                              fontSize: 26, // Size of the letter inside the Avatar
+                              fontWeight: 'bold', // Make the letter bold
+                              // backgroundColor: '#3db461',
+                          }}
+                                  className={styles.avatar}>
+                              {nextAppointment?.patient.name[0].toUpperCase()}
+                          </Avatar>
+                      </div>
+                      <div className={styles.patientInfo}>
+                          <p className={styles.name}>{nextAppointment?.patient.name}</p>
+                          <p>Age: 39&nbsp; |&nbsp; Male</p>
+                          <p>Patient ID: {nextAppointment.patient._id}</p>
+                      </div>
                   </div>
-                  <div className={styles.patientInfo}>
-                    <p className={styles.name}>{nextAppointment?.patient.name}</p>
-                    <p>Age: 39&nbsp; |&nbsp; Male</p>
-                    <p>Patient ID: {nextAppointment.patient._id}</p>
-                  </div>
-                </div>
 
-                {/* Content */}
-                <div className={styles.content}>
-                  <div className={styles.row1}>
-                    <p className={styles.leftRow}>
-                      Date <br/>
-                      <span>May 13th, 2025</span>
-                    </p>
-                    <p className={styles.rightRow}>
-                      Token No. <br/>
-                      <span>{nextAppointment.tokenNumber}</span>
-                    </p>
-                  </div>
+                  {/* Content */}
+                  <div className={styles.content}>
+                      <div className={styles.row1}>
+                          <p className={styles.leftRow}>
+                              Date <br/>
+                              <span>May 13th, 2025</span>
+                          </p>
+                          <p className={styles.rightRow}>
+                              Token No. <br/>
+                              <span>{nextAppointment.tokenNumber}</span>
+                          </p>
+                      </div>
                   <div className={styles.row1}>
                     <p className={styles.leftRow}>
                       Consultation Doctor <br/>

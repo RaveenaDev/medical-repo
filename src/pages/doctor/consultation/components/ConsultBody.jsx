@@ -12,6 +12,7 @@ import Refer from "./Refer";
 import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
+import Avatar from '@mui/material/Avatar';
 import {
   generatePrescriptionsWithAI, removePrescriptionsWithAI,
   submitConsultation,
@@ -47,76 +48,6 @@ const ConsultBody = ({
   // console.log("App: ",appointments)
 
   const [modalData, setModalData] = useState(null);
-
-  const dummyPatient = [
-    {
-      id: 1,
-      name: "Anil Kumar",
-      profileURL: "https://i.pravatar.cc/30?img=17",
-      Gender: "Male (55yrs)",
-      Birthday: "Jan 20th, 1969",
-      Phone: "(+91) 9123456780",
-      Address:
-        "302, Maple Residency, Banjara Hills, Hyderabad, Telangana, 500034",
-      caseId: 45678,
-      AssessedBy: "Dr. Ravi Gupta",
-      MemberStatus: "Active Member",
-      RegisterDate: "May 18th, 2021",
-      email: "anil.kumar69@gmail.com",
-      token: 100,
-      consultStatus: "Done",
-    },
-    {
-      id: 2,
-      name: "Jaismine Kaur",
-      profileURL: "https://randomuser.me/api/portraits/women/17.jpg",
-      Gender: "Female (28yrs)",
-      Birthday: "Feb 24th, 1997",
-      Phone: "(+91) 1234567890",
-      Address:
-        "904, A Wing, ABC Apartment,Sector 12,Borivali West,Mumbai, Maharashtra, 400092",
-      caseId: 1234567,
-      AssessedBy: "Dr.Arunita Chatterjee",
-      MemberStatus: "Active Member",
-      RegisterDate: "June 24th,2024",
-      email: "jasmeet89@gmail.com",
-      token: 101,
-      consultStatus: "Ongoing",
-    },
-    {
-      id: 3,
-      name: "Rahul Sharma",
-      profileURL: "https://i.pravatar.cc/30?img=15",
-      Gender: "Male (34yrs)",
-      Birthday: "May 12th, 1990",
-      Phone: "(+91) 9876543210",
-      Address:
-        "504, B Wing, Sunrise Tower, Andheri East, Mumbai, Maharashtra, 400069",
-      caseId: 23456,
-      AssessedBy: "Dr. Sameer Mehta",
-      MemberStatus: "Inactive",
-      RegisterDate: "July 15th, 2023",
-      email: "rahul.sharma90@gmail.com",
-      token: 102,
-      consultStatus: "Remaining",
-    },
-    {
-      id: 4,
-      name: "Priya Desai",
-      profileURL: "https://i.pravatar.cc/30?img=16",
-      Gender: "Female (41yrs)",
-      Birthday: "Sep 2nd, 1983",
-      Phone: "(+91) 9988776655",
-      Address: "601, Garden View, Koregaon Park, Pune, Maharashtra, 411001",
-      caseId: 34567,
-      AssessedBy: "Dr. Sunita Rao",
-      MemberStatus: "Active Member",
-      RegisterDate: "August 3rd, 2022",
-      email: "priya.desai83@gmail.com",
-      token: 103,
-      consultStatus: "Remaining",
-    },
-  ];
 
   const [activeModal, setActiveModal] = useState(null);
 
@@ -241,10 +172,6 @@ const ConsultBody = ({
 
   const openAddQuestion = () => setActiveModal("addQuestion");
 
-  const ongoingPatients = dummyPatient.filter(
-      (patient) => patient.consultStatus === "Ongoing"
-  );
-
   // Step 2: Find the next appointment with a token number greater than ongoing
   let nextAppointment = null;
   if (ongoingAppointment) {
@@ -366,16 +293,16 @@ const ConsultBody = ({
         {/* Left Panel */}
         <div className={styles["left-panel"]}>
           <div
-            className={`${styles["lp-1"]} ${
-              selectedComponent === "PatientInfo" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("PatientInfo")}
+              className={`${styles["lp-1"]} ${
+                  selectedComponent === "PatientInfo" ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent("PatientInfo")}
           >
-            <img
-              src={ongoingPatients[0].profileURL}
-              alt=""
-              className={styles["lp-1-avatar"]}
-            />
+            {/* MUI Avatar to show the initial letter */}
+            <Avatar className={styles["lp-1-avatar"]}>
+              {ongoingAppointment.patient.name[0].toUpperCase()}
+            </Avatar>
+
             <div className={styles["lp-1-info"]}>
               <p className={styles["lp-1-name"]}>
                 {ongoingAppointment.patient.name}
@@ -387,19 +314,19 @@ const ConsultBody = ({
           </div>
 
           {!selectedForm ? (
-            <>
-              <div
-                className={`${styles["lp-2"]} ${
-                  selectedComponent === "MedicalHistory" ? styles.active : ""}
+              <>
+                <div
+                    className={`${styles["lp-2"]} ${
+                        selectedComponent === "MedicalHistory" ? styles.active : ""}
                 ${confirmedSections.includes("MedicalHistory") ? styles.confirmed : ""}
                 `}
-                onClick={() => setSelectedComponent("MedicalHistory")}
-              >
-                <p>Medical History</p>
-              </div>
-              <div
-                className={`${styles["lp-3"]} ${
-                  selectedComponent === "CurrentMedication" ? styles.active : ""
+                    onClick={() => setSelectedComponent("MedicalHistory")}
+                >
+                  <p>Medical History</p>
+                </div>
+                <div
+                    className={`${styles["lp-3"]} ${
+                        selectedComponent === "CurrentMedication" ? styles.active : ""
                 }
                 ${confirmedSections.includes("CurrentMedication") ? styles.confirmed : ""}
                 `}
@@ -596,7 +523,7 @@ const ConsultBody = ({
                 ) {
                   return (
                     <MedicalHistory
-                      patient={ongoingPatients[0]}
+                      patient={ongoingAppointment?.patient}
                       existingData={completeData}
                       selectedComponent="medicalHistory"
                       onConfirm={(medicalData) => {
@@ -682,7 +609,6 @@ const ConsultBody = ({
             {selectedComponent === "PatientInfo" && (
               <PatientInfo
                 ongoingAppointment={ongoingAppointment}
-                patient1={ongoingPatients[0]}
                 onConfirm={() => {
                   if (!selectedForm) {
                     setSelectedComponent("MedicalHistory");
@@ -694,7 +620,7 @@ const ConsultBody = ({
             )}
             {selectedComponent === "MedicalHistory" && (
               <MedicalHistory
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="medicalHistory"
                 onConfirm={(medicalData) => {
@@ -709,7 +635,7 @@ const ConsultBody = ({
             )}
             {selectedComponent === "CurrentMedication" && (
               <CurrentMedication
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="currentMedications"
                 onConfirm={(currentMedicationData) => {
@@ -724,7 +650,7 @@ const ConsultBody = ({
             )}
             {selectedComponent === "DiagnosisAndVital" && (
               <DiagnosisAndVital
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="diagnosisVitals"
                 onConfirm={(diagnosisAndVital) => {
@@ -757,7 +683,7 @@ const ConsultBody = ({
             )}
             {selectedComponent === "TreatmentAndTest" && (
               <TreatmentAndTest
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="treatmentAndTests"
                 onConfirm={(treatmentAndTestsData) => {
