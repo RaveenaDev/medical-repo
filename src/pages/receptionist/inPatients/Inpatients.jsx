@@ -1,29 +1,33 @@
 import CommonPanel from "../components/CommonPanel";
 import { FiFilter } from "react-icons/fi";
-import { ChevronLeft} from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import styles from "./InPatient.module.scss";
-import React, {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppointmentRequestModal from "../../doctor/components/appointmentRequests/AppointmentRequest.jsx";
 import {
   Box,
-  Button, Drawer,
+  Button,
+  Drawer,
   FormControl,
   FormControlLabel,
   FormLabel,
-  IconButton, MenuItem,
+  IconButton,
+  MenuItem,
   Radio,
-  RadioGroup, Select, TablePagination,
-  Typography
+  RadioGroup,
+  Select,
+  TablePagination,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {useDispatch, useSelector} from "react-redux";
-import {getFilteredInpatients} from "../../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getFilteredInpatients } from "../../../components/State/Receptionist/Action.js";
 
 const InPatients = (props) => {
-    useEffect(() => {
-        props?.setIsSignUpOrLogin(false);
-    }, []);
+  useEffect(() => {
+    props?.setIsSignUpOrLogin(false);
+  }, []);
   const dispatch = useDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -40,9 +44,9 @@ const InPatients = (props) => {
     dispatch(getFilteredInpatients(filters, page, rowsPerPage));
   }, [dispatch, sortOrder, page, rowsPerPage]);
 
-  const doctor = useSelector((store) => store.doctor)
-  const totalFilteredInPatients = doctor.totalFilteredInpatients
-  const filteredInPatients = doctor.filteredInPatients
+  const doctor = useSelector((store) => store.doctor);
+  const totalFilteredInPatients = doctor.totalFilteredInpatients;
+  const filteredInPatients = doctor.filteredInPatients;
 
   // console.log("Total: ",totalFilteredInPatients)
   // console.log("Fil: ",filteredInPatients)
@@ -147,343 +151,359 @@ const InPatients = (props) => {
   const shapeCircleStyles = { borderRadius: "50%" };
 
   const circle = (
-      <Box
-          component="span"
-          sx={{
-            ...shapeStyles,
-            ...shapeCircleStyles,
-            color: "#ffffff",
-            marginTop: "2px",
-            paddingTop: "2px",
-            paddingBottom: "2px",
-            fontSize: "15px",
-            paddingLeft: "1px",
-          }}
-      >
-        {localStorage.getItem('doctorRequestsCount')}
-      </Box>
+    <Box
+      component="span"
+      sx={{
+        ...shapeStyles,
+        ...shapeCircleStyles,
+        color: "#ffffff",
+        marginTop: "2px",
+        paddingTop: "2px",
+        paddingBottom: "2px",
+        fontSize: "15px",
+        paddingLeft: "1px",
+      }}
+    >
+      {localStorage.getItem("doctorRequestsCount")}
+    </Box>
   );
 
   return (
-      <>
-        <div style={{ position: "relative" }}>
-          <CommonPanel />
-        </div>
-        <div className={styles.patientsHeader}>
-          <div className={styles.headerTop}>
-            <div className={styles.headerLeft}>
-              <ChevronLeft size={28} strokeWidth={1.7} style={{cursor:'pointer'}} onClick={() => navigate(-1)}/>
-              <span className={styles.backText}>Inpatient List</span>
-            </div>
-            <div className={styles.headerRight}>
-              <Button
-                  variant="contained"
-                  onClick={handleAppointmentRequests}
-                  sx={{
-                    fontSize: "14px",
-                    color: "#878787",
-                    textTransform: "capitalize",
-                    padding: "6px 6px",
-                    backgroundColor: "#fff",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    "&:focus": {
-                      outline: "none",
-                      boxShadow: "none",
-                    },
-                  }}
-              >
-                <div
-                    style={{
-                      height: "9px",
-                      width: "9px",
-                      borderRadius: "50%",
-                      backgroundColor: "#F14400",
-                      position: "absolute",
-                      left: "25px",
-                      top: "6px",
-                    }}
-                ></div>
-                <svg
-                    width="27"
-                    height="26"
-                    viewBox="0 0 27 26"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                      d="M5.55592 19.5877C6.65384 18.7481 7.88092 18.0861 9.23717 17.6017C10.5934 17.1173 12.0143 16.8752 13.4997 16.8752C14.9851 16.8752 16.4059 17.1173 17.7622 17.6017C19.1184 18.0861 20.3455 18.7481 21.4434 19.5877C22.1969 18.705 22.7835 17.704 23.2033 16.5845C23.6231 15.4651 23.833 14.2703 23.833 13.0002C23.833 10.137 22.8266 7.69895 20.8137 5.6861C18.8009 3.67325 16.3629 2.66683 13.4997 2.66683C10.6365 2.66683 8.19846 3.67325 6.18561 5.6861C4.17277 7.69895 3.16634 10.137 3.16634 13.0002C3.16634 14.2703 3.37624 15.4651 3.79603 16.5845C4.21582 17.704 4.80245 18.705 5.55592 19.5877ZM13.4997 14.2918C12.2295 14.2918 11.1585 13.8559 10.2867 12.984C9.41478 12.1121 8.97884 11.0411 8.97884 9.771C8.97884 8.50086 9.41478 7.42985 10.2867 6.55798C11.1585 5.6861 12.2295 5.25016 13.4997 5.25016C14.7698 5.25016 15.8408 5.6861 16.7127 6.55798C17.5846 7.42985 18.0205 8.50086 18.0205 9.771C18.0205 11.0411 17.5846 12.1121 16.7127 12.984C15.8408 13.8559 14.7698 14.2918 13.4997 14.2918ZM13.4997 25.9168C11.7129 25.9168 10.0337 25.5778 8.46217 24.8996C6.89065 24.2215 5.52363 23.3012 4.36113 22.1387C3.19863 20.9762 2.27832 19.6092 1.6002 18.0377C0.92207 16.4661 0.583008 14.787 0.583008 13.0002C0.583008 11.2134 0.92207 9.53419 1.6002 7.96266C2.27832 6.39113 3.19863 5.02412 4.36113 3.86162C5.52363 2.69912 6.89065 1.77881 8.46217 1.10068C10.0337 0.422559 11.7129 0.0834961 13.4997 0.0834961C15.2865 0.0834961 16.9656 0.422559 18.5372 1.10068C20.1087 1.77881 21.4757 2.69912 22.6382 3.86162C23.8007 5.02412 24.721 6.39113 25.3992 7.96266C26.0773 9.53419 26.4163 11.2134 26.4163 13.0002C26.4163 14.787 26.0773 16.4661 25.3992 18.0377C24.721 19.6092 23.8007 20.9762 22.6382 22.1387C21.4757 23.3012 20.1087 24.2215 18.5372 24.8996C16.9656 25.5778 15.2865 25.9168 13.4997 25.9168Z"
-                      fill="#25307F"
-                  />
-                </svg>
-                <span
-                    style={{
-                      marginLeft: "16px",
-                      marginRight: "8px",
-                      marginTop: "2px",
-                    }}
-                >
-                  Appointment Requests
-                </span>
-              </Button>
-            </div>
+    <>
+      <div style={{ position: "relative" }}>
+        <CommonPanel />
+      </div>
+      <div className={styles.patientsHeader}>
+        <div className={styles.headerTop}>
+          <div className={styles.headerLeft}>
+            <ChevronLeft
+              size={28}
+              strokeWidth={1.7}
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(-1)}
+            />
+            <span className={styles.backText}>Inpatient List</span>
           </div>
-          <hr />
-          <div className={styles.headerBottom}>
+          <div className={styles.headerRight}>
+            <Button
+              variant="contained"
+              onClick={handleAppointmentRequests}
+              sx={{
+                fontSize: "14px",
+                color: "#878787",
+                textTransform: "capitalize",
+                padding: "6px 6px",
+                backgroundColor: "#fff",
+                boxShadow: "0px 4px 4px 0px #C2C2C240",
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              <div
+                style={{
+                  height: "9px",
+                  width: "9px",
+                  borderRadius: "50%",
+                  backgroundColor: "#F14400",
+                  position: "absolute",
+                  left: "25px",
+                  top: "6px",
+                }}
+              ></div>
+              <svg
+                width="27"
+                height="26"
+                viewBox="0 0 27 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.55592 19.5877C6.65384 18.7481 7.88092 18.0861 9.23717 17.6017C10.5934 17.1173 12.0143 16.8752 13.4997 16.8752C14.9851 16.8752 16.4059 17.1173 17.7622 17.6017C19.1184 18.0861 20.3455 18.7481 21.4434 19.5877C22.1969 18.705 22.7835 17.704 23.2033 16.5845C23.6231 15.4651 23.833 14.2703 23.833 13.0002C23.833 10.137 22.8266 7.69895 20.8137 5.6861C18.8009 3.67325 16.3629 2.66683 13.4997 2.66683C10.6365 2.66683 8.19846 3.67325 6.18561 5.6861C4.17277 7.69895 3.16634 10.137 3.16634 13.0002C3.16634 14.2703 3.37624 15.4651 3.79603 16.5845C4.21582 17.704 4.80245 18.705 5.55592 19.5877ZM13.4997 14.2918C12.2295 14.2918 11.1585 13.8559 10.2867 12.984C9.41478 12.1121 8.97884 11.0411 8.97884 9.771C8.97884 8.50086 9.41478 7.42985 10.2867 6.55798C11.1585 5.6861 12.2295 5.25016 13.4997 5.25016C14.7698 5.25016 15.8408 5.6861 16.7127 6.55798C17.5846 7.42985 18.0205 8.50086 18.0205 9.771C18.0205 11.0411 17.5846 12.1121 16.7127 12.984C15.8408 13.8559 14.7698 14.2918 13.4997 14.2918ZM13.4997 25.9168C11.7129 25.9168 10.0337 25.5778 8.46217 24.8996C6.89065 24.2215 5.52363 23.3012 4.36113 22.1387C3.19863 20.9762 2.27832 19.6092 1.6002 18.0377C0.92207 16.4661 0.583008 14.787 0.583008 13.0002C0.583008 11.2134 0.92207 9.53419 1.6002 7.96266C2.27832 6.39113 3.19863 5.02412 4.36113 3.86162C5.52363 2.69912 6.89065 1.77881 8.46217 1.10068C10.0337 0.422559 11.7129 0.0834961 13.4997 0.0834961C15.2865 0.0834961 16.9656 0.422559 18.5372 1.10068C20.1087 1.77881 21.4757 2.69912 22.6382 3.86162C23.8007 5.02412 24.721 6.39113 25.3992 7.96266C26.0773 9.53419 26.4163 11.2134 26.4163 13.0002C26.4163 14.787 26.0773 16.4661 25.3992 18.0377C24.721 19.6092 23.8007 20.9762 22.6382 22.1387C21.4757 23.3012 20.1087 24.2215 18.5372 24.8996C16.9656 25.5778 15.2865 25.9168 13.4997 25.9168Z"
+                  fill="#25307F"
+                />
+              </svg>
+              <span
+                style={{
+                  marginLeft: "16px",
+                  marginRight: "8px",
+                  marginTop: "2px",
+                }}
+              >
+                Appointment Requests
+              </span>
+            </Button>
+          </div>
+        </div>
+        <hr />
+        <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
             {totalFilteredInPatients} <span>Inpatients</span>
           </span>
-            <div className={styles.verticalDivider}></div>
-            <div className={styles.sortFilterSection}>
-              <div className={styles.sortBy}>
-                <span>Sort by:</span>
-                <Select
-                    value={sortOrder}
-                    onChange={handleSortChange}
-                    size="small"
-                    sx={{
-                      minWidth: 180,
-                      background: "#fff",
-                      color: "#4A4A4A",
-                      boxShadow: "0px 4px 4px 0px #BDBDBD1C",
-                      border: "1px solid transparent",
-                      outline: "none",
-                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "inherit", // Removes hover effect
-                      },
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "transparent", // Hides the border
-                      },
-                    }}
-                >
-                  <MenuItem value="desc">Newest to Oldest</MenuItem>
-                  <MenuItem value="asc">Oldest to Newest</MenuItem>
-                </Select>
-              </div>
-              <div
-                  onClick={() => setFilterDrawerOpen(true)}
-                  className={`${styles.filter} ${styles.boxStyle}`}>
-                <FiFilter fill="#25307f" />
-                <span>Filter</span>
-              </div>
+          <div className={styles.verticalDivider}></div>
+          <div className={styles.sortFilterSection}>
+            <div className={styles.sortBy}>
+              <span>Sort by:</span>
+              <Select
+                value={sortOrder}
+                onChange={handleSortChange}
+                size="small"
+                sx={{
+                  minWidth: 180,
+                  background: "#fff",
+                  color: "#4A4A4A",
+                  boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                  border: "1px solid transparent",
+                  outline: "none",
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "inherit", // Removes hover effect
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent", // Hides the border
+                  },
+                }}
+              >
+                <MenuItem value="desc">Newest to Oldest</MenuItem>
+                <MenuItem value="asc">Oldest to Newest</MenuItem>
+              </Select>
+            </div>
+            <div
+              onClick={() => setFilterDrawerOpen(true)}
+              className={`${styles.filter} ${styles.boxStyle}`}
+            >
+              <FiFilter fill="#25307f" />
+              <span>Filter</span>
             </div>
           </div>
-          <hr />
         </div>
+        <hr />
+      </div>
 
-        {/* Modal Component */}
-        <AppointmentRequestModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            appointmentRequests={appointmentRequests}
-        >
-          <p>This is where appointment requests will appear.</p>
-        </AppointmentRequestModal>
+      {/* Modal Component */}
+      <AppointmentRequestModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        appointmentRequests={appointmentRequests}
+      >
+        <p>This is where appointment requests will appear.</p>
+      </AppointmentRequestModal>
 
-        <div className={styles.patientsTableContainer}>
-          {filteredInPatients && filteredInPatients.length > 0 ? (
-              <>
-                <table className={styles.patientsTable}>
-                  <thead>
-                  <tr>
-                    <th style={{ backgroundColor: '#F1F1F1' }}>Patient ID</th>
-                    <th style={{ backgroundColor: '#F1F1F1' }}>Patient</th>
-                    <th style={{ backgroundColor: '#F1F1F1' }}>Bed</th>
-                    <th style={{ backgroundColor: '#F1F1F1' }}>Condition</th>
-                    <th style={{ backgroundColor: '#F1F1F1' }}>Doctor</th>
-                    <th style={{ backgroundColor: '#F1F1F1' }}>Status</th>
-                    {/*<th></th>*/}
+      <div className={styles.patientsTableContainer}>
+        {filteredInPatients && filteredInPatients.length > 0 ? (
+          <div className={styles.tableWrapper}>
+            <table className={styles.patientsTable}>
+              <thead>
+                <tr>
+                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient ID</th>
+                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient</th>
+                  <th style={{ backgroundColor: "#F1F1F1" }}>Bed</th>
+                  <th style={{ backgroundColor: "#F1F1F1" }}>Condition</th>
+                  <th style={{ backgroundColor: "#F1F1F1" }}>Doctor</th>
+                  <th style={{ backgroundColor: "#F1F1F1" }}>Status</th>
+                  {/*<th></th>*/}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredInPatients.map((patient, index) => (
+                  <tr key={index}>
+                    <td className={styles.patientId}>
+                      {truncateText(patient?.patId || "Not Assigned", 12)}
+                    </td>
+                    <td className={styles.patientInfo}>
+                      <div>
+                        <div className={styles.patientName}>
+                          {truncateText(patient?.name || "Not Assigned", 15)}
+                        </div>
+                        <div className={styles.patientEmail}>
+                          {truncateText(patient?.email || "Not Assigned", 15)}
+                        </div>
+                      </div>
+                    </td>
+                    <td className={styles.bedNumber}>
+                      {patient?.bedType || "Not Assigned"}
+                    </td>
+                    <td className={styles.condition}>
+                      {patient?.admissionStatus || "Not Assigned"}
+                    </td>
+                    <td className={styles.doctor}>
+                      {patient?.doctor?.name || "Not Assigned"}
+                    </td>
+                    <td className={styles.status}>
+                      <span
+                        className={`${styles.statusBadge} ${
+                          styles[patient.status.toLowerCase()]
+                        }`}
+                      >
+                        {patient?.status}
+                      </span>
+                    </td>
+                    {/*<td className={styles.actions}>*/}
+                    {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
+                    {/*</td>*/}
                   </tr>
-                  </thead>
-                  <tbody>
-                  {filteredInPatients.map((patient, index) => (
-                      <tr key={index}>
-                        <td className={styles.patientId}>
-                          {truncateText(patient?.patId || "Not Assigned", 12)}
-                        </td>
-                        <td className={styles.patientInfo}>
-                          <div>
-                            <div className={styles.patientName}>{truncateText(patient?.name || "Not Assigned",15)}</div>
-                            <div className={styles.patientEmail}>{truncateText(patient?.email || "Not Assigned",15)}</div>
-                          </div>
-                        </td>
-                        <td className={styles.bedNumber}>{patient?.bedType || "Not Assigned"}</td>
-                        <td className={styles.condition}>{patient?.admissionStatus || "Not Assigned"}</td>
-                        <td className={styles.doctor}>{patient?.doctor?.name || "Not Assigned"}</td>
-                        <td className={styles.status}>
-              <span
-                  className={`${styles.statusBadge} ${
-                      styles[patient.status.toLowerCase()]
-                  }`}
-              >
-                {patient?.status}
-              </span>
-                        </td>
-                        {/*<td className={styles.actions}>*/}
-                        {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
-                        {/*</td>*/}
-                      </tr>
-                  ))}
-                  </tbody>
-                </table>
-                <TablePagination
-                    component="div"
-                    count={totalFilteredInPatients}
-                    page={page} // current page
-                    onPageChange={handleChangePage}
-                    rowsPerPage={rowsPerPage} // items per page
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-                    sx={{
-                      width: '100%',
-                      backgroundColor: "#fff",
-                      borderTop: "2px solid #ddd",
-                      zIndex: 11,
-                    }}
-                />
-              </>
-          ) : (
-              <div className={styles.noDataMessage}>No inpatients found.</div>
-          )}
-
-          <Drawer
-              anchor="right"
-              open={filterDrawerOpen}
-              onClose={() => setFilterDrawerOpen(false)}
+                ))}
+              </tbody>
+            </table>
+            <TablePagination
+              component="div"
+              count={totalFilteredInPatients}
+              page={page} // current page
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage} // items per page
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
               sx={{
-                "& .MuiDrawer-paper": {
-                  height: "58vh", // Adjust height as needed
-                  top: "18vh", // Center it vertically
-                  borderRadius: "10px 0 0 10px", // Optional rounded corners
-                },
+                width: "100%",
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 11,
               }}
-          >
-            <Box sx={{width: 200, padding: 2, paddingLeft: 4}}>
-              <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 2,
-                  }}
-              >
-                <Typography variant="h6" sx={{color: "#0B0B0B"}}>
-                  Filter By
-                </Typography>
-                <IconButton
-                    sx={{
-                      "&:focus": {
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                      color: "black",
-                    }}
-                    onClick={() => setFilterDrawerOpen(false)}
-                >
-                  <CloseIcon/>
-                </IconButton>
-              </Box>
+            />
+          </div>
+        ) : (
+          <div className={styles.noDataMessage}>No inpatients found.</div>
+        )}
 
-              {/* Filter Options */}
-              <FormControl
-                  sx={{marginBottom: 6, marginTop: 2, width: "100%"}}
-                  component="fieldset"
+        <Drawer
+          anchor="right"
+          open={filterDrawerOpen}
+          onClose={() => setFilterDrawerOpen(false)}
+          sx={{
+            "& .MuiDrawer-paper": {
+              height: "58vh", // Adjust height as needed
+              top: "18vh", // Center it vertically
+              borderRadius: "10px 0 0 10px", // Optional rounded corners
+            },
+          }}
+        >
+          <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 2,
+              }}
+            >
+              <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
+                Filter By
+              </Typography>
+              <IconButton
+                sx={{
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                  },
+                  color: "black",
+                }}
+                onClick={() => setFilterDrawerOpen(false)}
               >
-                <FormLabel
-                    component="legend"
-                    sx={{
-                      marginBottom: 1,
-                      color: "#000000",
-                      "&.Mui-focused": {color: "#000000"}, // Prevents blue color on focus
-                    }}
-                >
-                  Status
-                </FormLabel>
-                <RadioGroup
-                    name="status"
-                    value={filters.status}
-                    onChange={handleFilterChange}
-                >
-                  <FormControlLabel
-                      value="Stable"
-                      control={
-                        <Radio
-                            sx={{
-                              color: "#878787", // Default color
-                              "&.Mui-checked": {
-                                color: "#25307F", // Selected dot color
-                              },
-                            }}
-                        />
-                      }
-                      label="Stable"
-                      sx={{ height: "34px", color: "#878787" }}
-                  />
-                  <FormControlLabel
-                      value="Critical"
-                      control={
-                        <Radio
-                            sx={{
-                              color: "#878787", // Default color
-                              "&.Mui-checked": {
-                                color: "#25307F", // Selected dot color
-                              },
-                            }}
-                        />
-                      }
-                      label="Critical"
-                      sx={{ height: "34px", color: "#878787" }}
-                  />
-
-                  <FormControlLabel
-                      value="Moderate"
-                      control={
-                        <Radio
-                            sx={{
-                              color: "#878787", // Default color
-                              "&.Mui-checked": {
-                                color: "#25307F", // Selected dot color
-                              },
-                            }}
-                        />
-                      }
-                      label="Moderate"
-                      sx={{ height: "34px", color: "#878787" }}
-                  />
-                  <FormControlLabel
-                      value=""
-                      control={
-                        <Radio
-                            sx={{
-                              color: "#878787", // Default color
-                              "&.Mui-checked": {
-                                color: "#25307F", // Selected dot color
-                              },
-                            }}
-                        />
-                      }
-                      label="All"
-                      sx={{ height: "34px", color: "#878787" }}
-                  />
-                </RadioGroup>
-              </FormControl>
-
-              <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#25307F",
-                    textTransform: "none", // Prevents uppercase transformation
-                    borderRadius: "16px",
-                    padding: "6px 35px",
-                    marginLeft: "4px",
-                  }}
-                  onClick={handleSearchResults}
-              >
-                Search Results
-              </Button>
+                <CloseIcon />
+              </IconButton>
             </Box>
-          </Drawer>
-        </div>
-      </>
+
+            {/* Filter Options */}
+            <FormControl
+              sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}
+              component="fieldset"
+            >
+              <FormLabel
+                component="legend"
+                sx={{
+                  marginBottom: 1,
+                  color: "#000000",
+                  "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                }}
+              >
+                Status
+              </FormLabel>
+              <RadioGroup
+                name="status"
+                value={filters.status}
+                onChange={handleFilterChange}
+              >
+                <FormControlLabel
+                  value="Stable"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#878787", // Default color
+                        "&.Mui-checked": {
+                          color: "#25307F", // Selected dot color
+                        },
+                      }}
+                    />
+                  }
+                  label="Stable"
+                  sx={{ height: "34px", color: "#878787" }}
+                />
+                <FormControlLabel
+                  value="Critical"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#878787", // Default color
+                        "&.Mui-checked": {
+                          color: "#25307F", // Selected dot color
+                        },
+                      }}
+                    />
+                  }
+                  label="Critical"
+                  sx={{ height: "34px", color: "#878787" }}
+                />
+
+                <FormControlLabel
+                  value="Moderate"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#878787", // Default color
+                        "&.Mui-checked": {
+                          color: "#25307F", // Selected dot color
+                        },
+                      }}
+                    />
+                  }
+                  label="Moderate"
+                  sx={{ height: "34px", color: "#878787" }}
+                />
+                <FormControlLabel
+                  value=""
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#878787", // Default color
+                        "&.Mui-checked": {
+                          color: "#25307F", // Selected dot color
+                        },
+                      }}
+                    />
+                  }
+                  label="All"
+                  sx={{ height: "34px", color: "#878787" }}
+                />
+              </RadioGroup>
+            </FormControl>
+
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#25307F",
+                textTransform: "none", // Prevents uppercase transformation
+                borderRadius: "16px",
+                padding: "6px 35px",
+                marginLeft: "4px",
+              }}
+              onClick={handleSearchResults}
+            >
+              Search Results
+            </Button>
+          </Box>
+        </Drawer>
+      </div>
+    </>
   );
 };
 

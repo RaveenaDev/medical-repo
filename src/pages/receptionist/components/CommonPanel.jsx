@@ -6,7 +6,8 @@ import Card from "../../../components/Card/index.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getDoctors, getInpatients,
+  getDoctors,
+  getInpatients,
   getPatients,
   getRooms,
 } from "../../../components/State/Receptionist/Action.js";
@@ -137,22 +138,20 @@ const CommonPanel = ({
             />
           </Grid>
           <Grid
-              size={3}
-              sx={{
-                borderBottom: isActive("/receptionist/staffs")
-                    ? "3px solid #25307F"
-                    : "none",
-              }}
+            size={3}
+            sx={{
+              borderBottom: isActive("/receptionist/inPatients")
+                ? "3px solid #25307F"
+                : "none",
+            }}
           >
             <Card
-                customStyle={{
-                  backgroundColor: "#EAA000",
-                }}
-                title="Total Inpatients"
-                subtitle={noOfInpatients ?? 0}
-                handleClickCb={() =>
-                    navigate(`/receptionist/inPatients`)
-                }
+              customStyle={{
+                backgroundColor: "#EAA000",
+              }}
+              title="Total Inpatients"
+              subtitle={noOfInpatients ?? 0}
+              handleClickCb={() => navigate(`/receptionist/inPatients`)}
             />
           </Grid>
           <Grid
