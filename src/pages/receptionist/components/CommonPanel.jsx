@@ -9,7 +9,6 @@ import {
   getDoctors, getInpatients,
   getPatients,
   getRooms,
-  getStaffs,
 } from "../../../components/State/Receptionist/Action.js";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
 import billingDetails from "../../../assets/payments.svg";
@@ -59,7 +58,7 @@ const CommonPanel = ({
   // Define the routes where you want to hide the div
   const excludedRoutes = [
     "/receptionist/doctors",
-    "/receptionist/staffs",
+    "/receptionist/inPatients",
     "/receptionist/rooms",
     "/receptionist/patients",
     "/receptionist/requests",
