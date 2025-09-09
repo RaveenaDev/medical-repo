@@ -6,26 +6,18 @@ import Card from "../../../components/Card/index.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getDoctors,
+  getDoctors, getInpatients,
   getPatients,
   getRooms,
   getStaffs,
 } from "../../../components/State/Receptionist/Action.js";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
-import AppointmentRequestModal from "../Appointment/Requests/AppointmentRequest.jsx";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import accountCircle from "../../../assets/account_circle.svg";
 import billingDetails from "../../../assets/payments.svg";
 import addAppointments from "../../../assets/plus.svg";
 import shreyStyles from "./CommonPanel.module.scss";
 import styles from "../styles.module.scss";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, Button } from "@mui/material";
 import dayjs from "dayjs";
-import { borderBottom } from "@mui/system";
-// ADD to existing imports:
 import { CalendarToday } from "@mui/icons-material";
 
 const CommonPanel = ({
@@ -59,6 +51,7 @@ const CommonPanel = ({
 
   useEffect(() => {
     dispatch(getPatients());
+    dispatch(getInpatients());
     dispatch(getDoctors());
     dispatch(getStaffs());
     dispatch(getRooms());
@@ -80,7 +73,8 @@ const CommonPanel = ({
   const receptionist = useSelector((store) => store.receptionist);
 
   const noOfPatients = receptionist.totalPatients;
-  const patients = receptionist.patients;
+
+  const noOfInpatients = receptionist.totalInpatients;
 
   const noOfDoctors = receptionist.totalDoctors;
   const doctors = receptionist.doctors;
@@ -144,6 +138,25 @@ const CommonPanel = ({
             />
           </Grid>
           <Grid
+              size={3}
+              sx={{
+                borderBottom: isActive("/receptionist/staffs")
+                    ? "3px solid #25307F"
+                    : "none",
+              }}
+          >
+            <Card
+                customStyle={{
+                  backgroundColor: "#EAA000",
+                }}
+                title="Total Inpatients"
+                subtitle={noOfInpatients ?? 0}
+                handleClickCb={() =>
+                    navigate(`/receptionist/inPatients`)
+                }
+            />
+          </Grid>
+          <Grid
             size={3}
             sx={{
               borderBottom: isActive("/receptionist/doctors")
@@ -153,31 +166,12 @@ const CommonPanel = ({
           >
             <Card
               customStyle={{
-                backgroundColor: "#EAA000",
+                backgroundColor: "#2E823B",
               }}
               title="Total Doctors"
               subtitle={noOfDoctors ?? 0}
               handleClickCb={() =>
                 navigate(`/receptionist/doctors`, { state: { doctors } })
-              }
-            />
-          </Grid>
-          <Grid
-            size={3}
-            sx={{
-              borderBottom: isActive("/receptionist/staffs")
-                ? "3px solid #25307F"
-                : "none",
-            }}
-          >
-            <Card
-              customStyle={{
-                backgroundColor: "#2E823B",
-              }}
-              title="Total Staffs"
-              subtitle={noOfStaffs ?? 0}
-              handleClickCb={() =>
-                navigate(`/receptionist/staffs`, { state: { staffs } })
               }
             />
           </Grid>

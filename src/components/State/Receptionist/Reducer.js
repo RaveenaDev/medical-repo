@@ -12,9 +12,9 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_DOCTORS_BY_DEPARTMENT,
-  GET_FILTERED_DOCTORS,
+  GET_FILTERED_DOCTORS, GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
-  GET_FILTERED_ROOMS,
+  GET_FILTERED_ROOMS, GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BILLS, GET_PATIENT_DETAILS,
   GET_PATIENTS,
@@ -33,6 +33,10 @@ import {
 const initialState = {
   totalPatients: null,
   totalFilteredPatients: null,
+  totalInpatients: null,
+  inPatients: [],
+  totalFilteredInpatients: null,
+  filteredInPatients: [],
   patientDetails: [],
   totalDoctors: null,
   doctorCount: null,
@@ -101,6 +105,22 @@ export const receptionistReducer = (state = initialState, action) => {
         isLoading: false,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
+      };
+
+    case GET_INPATIENTS:
+      return {
+        ...state,
+        totalInpatients: action.payload.totalInpatients,
+        inPatients: action.payload.inpatients,
+        isLoading: false,
+      };
+
+    case GET_FILTERED_INPATIENTS:
+      return {
+        ...state,
+        totalFilteredInpatients: action.payload.totalInpatients,
+        filteredInPatients: action.payload.inpatients,
+        isLoading: false,
       };
 
     case GET_PATIENT_DETAILS:
