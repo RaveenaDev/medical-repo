@@ -1666,7 +1666,7 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
 };
 
 export const setOngoing = (patientId) => async (dispatch) => {
-  console.log("Pat: ", patientId);
+  // console.log("Pat: ", patientId);
   try {
     const token = localStorage.getItem("jwt");
 

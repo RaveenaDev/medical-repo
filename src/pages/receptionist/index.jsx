@@ -30,7 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllDepartments,
   getAppointments,
-  getRequestedAppointments,
+  getRequestedAppointments, startConsultation,
   // markAppointmentCompleted, // <- If you already have an action for completion, import it and use in handleComplete below.
 } from "../../components/State/Receptionist/Action.js";
 import dayjs from "dayjs";
@@ -184,6 +184,7 @@ function Receptionist(props) {
       appointments = [];
   }
 
+  // console.log("App: ",appointments)
   // === Menu handlers ===
   const openRowMenu = (event, appointment) => {
     setRowMenuAnchor(event.currentTarget);
@@ -198,18 +199,44 @@ function Receptionist(props) {
     setCompleteOpen(true);
   };
 
+  // const handleClickMarkOngoing = async () => {
+  //   closeRowMenu();
+  //
+  //   await dispatch(startConsultation(menuAppointment?.patient?._id))
+  // };
+
   const handleClickMarkOngoing = async () => {
     closeRowMenu();
 
-    // TODO: wire this to your Redux action or API call
-    // Example (uncomment/replace with your real action):
-    // await dispatch(updateAppointmentStatus({ id: menuAppointment._id, status: "Ongoing" }));
+    // Fetch the patientId from menuAppointment
+    const patientId = menuAppointment?.patient?._id;
 
-    console.log("Marking as Ongoing:", { id: menuAppointment?._id });
+    if (patientId) {
+      // Dispatch startConsultation with the patientId
+      await dispatch(startConsultation(patientId));
 
-    // Optionally refresh lists if your backend moves it between buckets:
-    // dispatch(getRequestedAppointments());
+      // After the consultation has started, fetch the updated appointments
+      const startDate = selectedDate.startOf("day").toISOString();
+      const endDate = selectedDate.endOf("day").toISOString();
+
+      // Fetch appointments again to update the list (you can choose to call this for specific status like 'Ongoing')
+      ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+        dispatch(
+            getAppointments(
+                status,
+                startDate,
+                endDate,
+                selectedBranch,
+                page,
+                rowsPerPage
+            )
+        );
+      });
+    } else {
+      console.error("Patient ID not found for the appointment.");
+    }
   };
+
 
 
   // === Completion handler ===

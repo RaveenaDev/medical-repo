@@ -25,11 +25,12 @@ import {
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
-  REMOVE_BOOK_APPOINTMENT_DATA,
+  REMOVE_BOOK_APPOINTMENT_DATA, START_CONSULTATION,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import { toast } from "react-toastify";
+import {SET_ONGOING} from "../Doctor/ActionType.js";
 
 // Action to update a room
 export const updateRoom = (roomId, updatedData) => async (dispatch) => {
@@ -642,5 +643,26 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
     console.error("patient Bill Info not available:", error);
     dispatch({ type: GET_PATIENT_BILLS, payload: [] });
     throw error;
+  }
+};
+
+export const startConsultation = (patientId) => async (dispatch) => {
+  // console.log("Pat: ", patientId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/setOngoing`, {patientId}, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Ongoing app. successful : ", data);
+
+    dispatch({ type: START_CONSULTATION, payload: data });
+    return Promise.resolve(data); // 🔑 return promise
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error); // 🔑 return promise
   }
 };
