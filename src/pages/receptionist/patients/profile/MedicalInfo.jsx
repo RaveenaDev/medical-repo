@@ -26,7 +26,12 @@ const MedicalInfo = ({
     const navigate = useNavigate();
 
     if (!patDetails?.consultations || patDetails.consultations.length === 0) {
-        return <p>No data</p>;
+        return <>
+            <h3 style={{color:'#25307F',fontWeight:500}}>Medical Info</h3>
+            <div style={{width:'100%',height:'60%',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <p style={{fontStyle:'italic',color:"gray"}}>No medical record found</p>
+            </div>
+        </>;
     }
 
     // Your dynamic consultation data (may vary in shape)
