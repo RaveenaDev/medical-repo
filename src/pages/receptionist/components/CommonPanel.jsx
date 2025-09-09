@@ -53,7 +53,7 @@ const CommonPanel = ({
     dispatch(getPatients());
     dispatch(getInpatients());
     dispatch(getDoctors());
-    dispatch(getStaffs());
+    // dispatch(getStaffs());
     dispatch(getRooms());
   }, [dispatch]);
   // Define the routes where you want to hide the div
@@ -78,9 +78,9 @@ const CommonPanel = ({
 
   const noOfDoctors = receptionist.totalDoctors;
   const doctors = receptionist.doctors;
-
-  const noOfStaffs = receptionist.totalStaffs;
-  const staffs = receptionist.staffs;
+  //
+  // const noOfStaffs = receptionist.totalStaffs;
+  // const staffs = receptionist.staffs;
 
   const noOfRooms = receptionist.totalRooms;
   const rooms = receptionist.rooms;

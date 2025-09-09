@@ -137,7 +137,7 @@ const Doctors = (props) => {
             <CircularProgress sx={{ color: "#25307F" }} size={50} />
           </Box>
         ) : (
-          <div style={{ marginTop: "160px" }}>
+          <div style={{ marginTop: "22.3vh" }}>
             {isBookAppointment ? (
               <BookAppointment
                 isOpen={isBookAppointment}
@@ -167,7 +167,7 @@ const Doctors = (props) => {
                       className={ayu.departmentTitleDetails}
                       style={{ color: "#878787" }}
                     >
-                      {doctors?.length}
+                      {noOfDoctors}
                     </h2>
 
                     <div style={{ marginLeft: "25px" }}>

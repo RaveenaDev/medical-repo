@@ -133,7 +133,7 @@ export const receptionistReducer = (state = initialState, action) => {
     case GET_DOCTORS:
       return {
         ...state,
-        totalDoctors: action.payload.count,
+        totalDoctors: action.payload.totalDoctors,
         doctors: action.payload.doctors,
         doctorCount: action.payload.totalDoctors,
         isLoadingDoctors: false,
@@ -163,7 +163,7 @@ export const receptionistReducer = (state = initialState, action) => {
     case GET_ROOMS:
       return {
         ...state,
-        totalRooms: action.payload.rooms.length,
+        totalRooms: action.payload.totalRooms,
         rooms: action.payload.rooms,
         isLoading: false,
       };
