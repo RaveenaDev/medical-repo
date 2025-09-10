@@ -78,7 +78,7 @@ function Receptionist(props) {
     // console.log("Fetching for date range:", selectedDate, startDate, endDate);
     dispatch(getAllDepartments());
 
-    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+    ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
       dispatch(
           getAppointments(
               status,
@@ -220,7 +220,7 @@ function Receptionist(props) {
       const endDate = selectedDate.endOf("day").toISOString();
 
       // Fetch appointments again to update the list (you can choose to call this for specific status like 'Ongoing')
-      ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
         dispatch(
             getAppointments(
                 status,
@@ -265,7 +265,7 @@ function Receptionist(props) {
     const endDate = selectedDate.endOf("day").toISOString();
 
     // Fetch appointments again to update the list (you can choose to call this for specific status like 'Ongoing')
-    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+    ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
       dispatch(
           getAppointments(
               status,

@@ -380,15 +380,23 @@ export const getAppointments =
 
       if (data.message === "Scheduled appointments retrieved successfully") {
         dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
-      } else if (
+      }
+
+      else if (
         data.message === "Ongoing appointments retrieved successfully"
       ) {
         dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
-      } else if (
+      }
+
+      else if (
         data.message === "Waiting appointments retrieved successfully"
       ) {
         dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
-      } else {
+      }
+
+      else if(
+          data.message === "completed appointments retrieved successfully"
+      ) {
         dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
       }
     } catch (error) {

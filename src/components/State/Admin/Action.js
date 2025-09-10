@@ -310,6 +310,7 @@ export const addDepartment = (department) => async (dispatch) => {
       },
     });
 
+    // console.log("Payload: ",department)
     // console.log("Response: ", data);
     toast.success("Department Added Successfully!", {
       position: "bottom-right", // Use string for position
