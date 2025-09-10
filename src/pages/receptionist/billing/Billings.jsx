@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from "react";
-import "./billingsReception.scss";
+import styles from "./billingsReception.module.scss"; // updated import
 import Searchbar from "../../../components/Searchbar";
 import NotificationIcon from "../../../components/Notification";
 import { Box, Button, IconButton, TablePagination } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
-
-import arrowBack from "../../../assets/arrow_back.svg"; // Import the SVG
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import arrowBack from "../../../assets/arrow_back.svg";
 import BillingModal from "./modal/BillingModal";
 import { useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification";
 import { useDispatch, useSelector } from "react-redux";
 import { getBills } from "../../../components/State/Receptionist/Action.js";
+import { Search } from "lucide-react";
 
 const Billings = (props) => {
   const [selectedBill, setSelectedBill] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
-  const [page, setPage] = useState(0); // page number
-  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page when rows per page changes
+    setPage(0);
   };
 
   useEffect(() => {
@@ -39,6 +41,7 @@ const Billings = (props) => {
     setOpenModal(false);
     setSelectedBill(null);
   };
+
   const navigate = useNavigate();
   const handleClose = () => {
     navigate("/receptionist");
@@ -52,34 +55,50 @@ const Billings = (props) => {
 
   const allBills = useSelector((store) => store.receptionist.allBills);
   const billsCount = useSelector((store) => store.receptionist.allBillsCount);
+
   return (
-    <div className="billingsReception-container">
+    <div className={styles["billingsReception-container"]}>
       <div
         style={{
           position: "fixed",
           top: "0px",
-          padding: "20px 10px 0 0",
+          padding: "15px 10px 0 0",
           width: "75%",
           background: " #F1F1F1",
           zIndex: 100,
         }}
       >
-        <div className="header-Reception">
-          <Searchbar />
+        <div className={styles["header-Reception"]}>
+          {/* <Searchbar /> */}
           <Notifications />
         </div>
 
-        <div className="billings-header">
-          <button onClick={() => handleClose()} className="back-btn">
+        <div className={styles["billings-header"]}>
+          <button onClick={() => handleClose()} className={styles["back-btn"]}>
             <img src={arrowBack} alt="Back" />
           </button>
           <h2>Billings</h2>
+
+          <div className={styles["search-wrapper"]}>
+            <Search size={18} className={styles["search-icon"]} />
+            <input
+              type="text"
+              placeholder="Search bills..."
+              // value={searchQuery}
+              // onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles["search-input"]}
+            />
+          </div>
         </div>
 
-        <div className="divider"></div>
+        <div className={styles["divider"]}></div>
       </div>
-      <div className="billings-table" style={{ position: "relative" }}>
-        <div className="table-header">
+
+      <div
+        className={styles["billings-table"]}
+        style={{ position: "relative" }}
+      >
+        <div className={styles["table-header"]}>
           <span>Case ID</span>
           <span>Name</span>
           <span>Phone Number</span>
@@ -88,34 +107,39 @@ const Billings = (props) => {
           <span>Status</span>
           <span>Actions</span>
         </div>
+
         <div style={{ paddingBottom: "2rem" }}>
           {allBills.length > 0 ? (
             allBills.map((item) => (
-              <div className="table-row" key={item._id}>
-                <span className="blue">{item.caseId}</span>
-                <span className="blue">{item.patient.name}</span>
-                <span className="grey">{item.patient.phone}</span>
-                <span className="grey">
+              <div className={styles["table-row"]} key={item._id}>
+                <span className={styles["blue"]}>{item.caseId}</span>
+                <span className={styles["blue"]}>{item.patient.name}</span>
+                <span className={styles["grey"]}>{item.patient.phone}</span>
+                <span className={styles["grey"]}>
                   {new Date(item.updatedAt).toLocaleDateString("en-IN", {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
                   })}
                 </span>
-                <span className="grey"> {item.totalAmount}</span>
-                <span className={`status ${item.status.toLowerCase()}`}>
+                <span className={styles["grey"]}> {item.totalAmount}</span>
+                <span
+                  className={`${styles["status"]} ${
+                    styles[item.status.toLowerCase()]
+                  }`}
+                >
                   {item.status}
                 </span>
                 <Button
                   onClick={() => handleViewClick(item)}
-                  className="view-btn"
+                  className={styles["view-btn"]}
                 >
                   View
                 </Button>
 
                 <IconButton
                   disableRipple
-                  className="menu-btn"
+                  className={styles["menu-btn"]}
                   sx={{
                     height: "42px",
                     width: "42px",
@@ -131,7 +155,7 @@ const Billings = (props) => {
             ))
           ) : (
             <div
-              className="table-row blue"
+              className={`${styles["table-row"]} ${styles["blue"]}`}
               style={{
                 gridTemplateColumns: "1fr",
                 textAlign: "center",
@@ -143,10 +167,10 @@ const Billings = (props) => {
             </div>
           )}
         </div>
+
         <Box
           sx={{
             width: "100%",
-
             position: "sticky",
             bottom: 0,
             backgroundColor: "#fff",
@@ -162,15 +186,15 @@ const Billings = (props) => {
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
-            sx={{}}
           />
         </Box>
       </div>
-      {/* Use the separate BillingModal Component */}
+
       <BillingModal
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
+        billId={selectedBill?._id}
       />
     </div>
   );

@@ -13,11 +13,14 @@ import {
   GET_DOCTORS,
   GET_DOCTORS_BY_DEPARTMENT,
   GET_FILTERED_APPOINTMENTS,
-  GET_FILTERED_DOCTORS, GET_FILTERED_INPATIENTS,
+  GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
-  GET_FILTERED_ROOMS, GET_INPATIENTS,
+  GET_FILTERED_ROOMS,
+  GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
-  GET_PATIENT_BILLS, GET_PATIENT_DETAILS,
+  GET_PATIENT_BILLS,
+  GET_PATIENT_DETAILS,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
@@ -25,7 +28,9 @@ import {
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
-  REMOVE_BOOK_APPOINTMENT_DATA, START_CONSULTATION, SUBMIT_CONSULTATION,
+  REMOVE_BOOK_APPOINTMENT_DATA,
+  START_CONSULTATION,
+  SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -181,29 +186,29 @@ export const getInpatients = () => async (dispatch) => {
 };
 
 export const getFilteredInpatients =
-    (filteredData, page, rowsPerPage) => async (dispatch) => {
-      // console.log("Fil:",filteredData)
-      try {
-        const token = localStorage.getItem("jwt");
+  (filteredData, page, rowsPerPage) => async (dispatch) => {
+    // console.log("Fil:",filteredData)
+    try {
+      const token = localStorage.getItem("jwt");
 
-        const { data } = await axios.get(`${API_URL}/getInPatients`, {
-          params: {
-            status: filteredData.status,
-            sort: filteredData.sort,
-            page: page + 1,
-            limit: rowsPerPage,
-          }, // Sending status as a query parameter
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        });
+      const { data } = await axios.get(`${API_URL}/getInPatients`, {
+        params: {
+          status: filteredData.status,
+          sort: filteredData.sort,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
 
-        // console.log("InPatt Filtered: ",data)
-        dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      // console.log("InPatt Filtered: ",data)
+      dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
   try {
@@ -380,22 +385,16 @@ export const getAppointments =
 
       if (data.message === "Scheduled appointments retrieved successfully") {
         dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
-      }
-
-      else if (
+      } else if (
         data.message === "Ongoing appointments retrieved successfully"
       ) {
         dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
-      }
-
-      else if (
+      } else if (
         data.message === "Waiting appointments retrieved successfully"
       ) {
         dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
-      }
-
-      else if(
-          data.message === "completed appointments retrieved successfully"
+      } else if (
+        data.message === "completed appointments retrieved successfully"
       ) {
         dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
       }
@@ -658,11 +657,15 @@ export const startConsultation = (patientId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/setOngoing`, {patientId}, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/setOngoing`,
+      { patientId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
 
     console.log("Ongoing app. successful : ", data);
 
@@ -674,56 +677,113 @@ export const startConsultation = (patientId) => async (dispatch) => {
   }
 };
 
-export const submitConsultation =
-    (consultationData) => async (dispatch) => {
-      try {
-        const token = localStorage.getItem("jwt");
-        const formData = new FormData();
+export const submitConsultation = (consultationData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const formData = new FormData();
 
-        const isPrimitive = (v) =>
-            v === null
-                ? false
-                : ["string", "number", "boolean"].includes(typeof v);
+    const isPrimitive = (v) =>
+      v === null ? false : ["string", "number", "boolean"].includes(typeof v);
 
-        // Append all fields; treat only `files` specially
-        Object.entries(consultationData || {}).forEach(([key, value]) => {
-          if (key === "files" && Array.isArray(value)) {
-            // append up to 5 images as `files`
-            value.slice(0, 5).forEach((file, idx) => {
-              if (file) formData.append("files", file, file.name || `file_${idx + 1}`);
-            });
-            return;
-          }
-
-          if (value === undefined || value === null) return;
-
-          if (value instanceof Date) {
-            formData.append(key, value.toISOString());
-          } else if (isPrimitive(value)) {
-            formData.append(key, String(value));
-          } else {
-            // objects/arrays → stringify so backend can JSON.parse
-            formData.append(key, JSON.stringify(value));
-          }
+    // Append all fields; treat only `files` specially
+    Object.entries(consultationData || {}).forEach(([key, value]) => {
+      if (key === "files" && Array.isArray(value)) {
+        // append up to 5 images as `files`
+        value.slice(0, 5).forEach((file, idx) => {
+          if (file)
+            formData.append("files", file, file.name || `file_${idx + 1}`);
         });
-
-        const { data } = await axios.post(`${API_URL}/submitConsultation`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // Don't set Content-Type; browser will set multipart boundary.
-          },
-        });
-
-        dispatch({ type: SUBMIT_CONSULTATION, payload: data });
-
-        toast.success("Submitted Successfully!", { position: "bottom-right", autoClose: 2000 });
-        return data;
-      } catch (error) {
-        const msg =
-            error?.response?.data?.message ||
-            error?.response?.data?.error ||
-            "Please confirm all the fields!";
-        toast.error(msg, { position: "bottom-right", autoClose: 2000 });
-        throw error;
+        return;
       }
-    };
+
+      if (value === undefined || value === null) return;
+
+      if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (isPrimitive(value)) {
+        formData.append(key, String(value));
+      } else {
+        // objects/arrays → stringify so backend can JSON.parse
+        formData.append(key, JSON.stringify(value));
+      }
+    });
+
+    const { data } = await axios.post(
+      `${API_URL}/submitConsultation`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Don't set Content-Type; browser will set multipart boundary.
+        },
+      }
+    );
+
+    dispatch({ type: SUBMIT_CONSULTATION, payload: data });
+
+    toast.success("Submitted Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    return data;
+  } catch (error) {
+    const msg =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      "Please confirm all the fields!";
+    toast.error(msg, { position: "bottom-right", autoClose: 2000 });
+    throw error;
+  }
+};
+export const addToBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addToBill/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log("Edit Bill Response:", data);
+    toast.success("Added to bill successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    // Optional: dispatch to refresh data
+    dispatch(getBillById(id));
+
+    dispatch(getBills());
+  } catch (error) {
+    console.error("Error adding to bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
+export const editBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.patch(
+      `${API_URL}/editBillDetails/${id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    // console.log("Edit Bill Response:", data);
+    toast.success("Bill edited successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    // Optional: dispatch to refresh data
+    dispatch(getBillById(id));
+
+    dispatch(getBills());
+  } catch (error) {
+    console.error("Error editing bill:", error);
+    toast.error(error?.response?.data?.message || "Edit failed");
+  }
+};
