@@ -42,7 +42,7 @@
   font-size: 2.2vh;
   border: 1px solid #cfcfcf;
   outline: none;
-  width: 21.5%;
+  width: 22%;
   padding: 1.2vh 0.5vw;
   border-radius: 5px;
   margin-top: 2vh;
@@ -51,6 +51,7 @@
 .row2 {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .row3 {
@@ -152,7 +153,7 @@
   }
 
   .in1 {
-    width: 45%;
+    width: 25%;
   }
 }
 

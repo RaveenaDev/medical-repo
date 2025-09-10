@@ -3,13 +3,41 @@ import { Plus, Printer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import TreatmentAndTestPrint from "./print/TreatmentAndTestPrint";
-const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
+import { Autocomplete, TextField } from "@mui/material";
+
+const commonTests = [
+  "CBC (Complete Blood Count)",
+  "LFT (Liver Function Test)",
+  "KFT (Kidney Function Test)",
+  "Blood Sugar (Fasting)",
+  "Blood Sugar (PP)",
+  "HbA1c",
+  "Lipid Profile",
+  "Thyroid Profile (T3, T4, TSH)",
+  "Urine Routine",
+  "Urine Culture",
+  "Chest X-Ray PA View",
+  "ECG",
+  "Echocardiography",
+  "Ultrasound Abdomen",
+  "CT Scan Brain",
+  "MRI Spine",
+];
+
+const TreatmentAndTest = ({
+  patient,
+  onConfirm,
+  existingData,
+  selectedComponent,
+}) => {
   const [treatment, setTreatment] = useState({
     name: "",
     dosage: "",
     frequency: "",
     duration: "",
+    notes: "",
   });
+
   const [treatments, setTreatments] = useState([]);
 
   const [test, setTest] = useState({
@@ -43,7 +71,13 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
       treatment.duration
     ) {
       setTreatments((prev) => [...prev, treatment]);
-      setTreatment({ name: "", dosage: "", frequency: "", duration: "" });
+      setTreatment({
+        name: "",
+        dosage: "",
+        frequency: "",
+        duration: "",
+        notes: "",
+      });
     }
   };
 
@@ -96,28 +130,42 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
           <input
             type="text"
             className={styles.input1}
-            placeholder="Dosage"
+            placeholder="Dosage "
             value={treatment.dosage}
             onChange={(e) =>
               setTreatment({ ...treatment, dosage: e.target.value })
             }
           />
-          <input
-            type="text"
+          <select
             className={styles.input1}
-            placeholder="Frequency"
             value={treatment.frequency}
             onChange={(e) =>
               setTreatment({ ...treatment, frequency: e.target.value })
+            }
+          >
+            <option value="">Select Frequency</option>
+            <option value="OD">OD (once daily)</option>
+            <option value="BD">BD (twice daily)</option>
+            <option value="TDS">TDS (thrice daily)</option>
+            <option value="QID">QID (four times daily)</option>
+            <option value="SOS">SOS (as needed)</option>
+          </select>
+          <input
+            type="text"
+            className={styles.input1}
+            placeholder="Duration "
+            value={treatment.duration}
+            onChange={(e) =>
+              setTreatment({ ...treatment, duration: e.target.value })
             }
           />
           <input
             type="text"
             className={styles.input1}
-            placeholder="Duration"
-            value={treatment.duration}
+            placeholder="Notes (optional)"
+            value={treatment.notes}
             onChange={(e) =>
-              setTreatment({ ...treatment, duration: e.target.value })
+              setTreatment({ ...treatment, notes: e.target.value })
             }
           />
         </div>
@@ -141,8 +189,10 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
                 <div key={index} className={styles.r4RightContent}>
                   <p>
                     <span>&#8226;&nbsp;</span>
-                    {t.name} {t.dosage} - {t.frequency} x {t.duration}
+                    {t.name} {t.dosage} – {t.frequency} x {t.duration}
+                    {t.notes && ` (${t.notes})`}
                   </p>
+
                   <button
                     type="button"
                     onClick={() => handleRemoveTreatment(index)}
@@ -162,24 +212,52 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
 
         {/* row6 - Test input */}
         <div className={styles.row6}>
+          {/* Test Name with autocomplete */}
           <input
             type="text"
             className={styles.in1}
-            placeholder="Search Test"
+            placeholder="Test name"
+            list="commonTests"
             value={test.name}
             onChange={(e) => setTest({ ...test, name: e.target.value })}
           />
-          <input
-            type="text"
-            placeholder="Blood"
+          <datalist id="commonTests">
+            {commonTests.map((t, i) => (
+              <option key={i} value={t} />
+            ))}
+          </datalist>
+          {/* Type */}
+          <select
+            className={styles.input1}
             value={test.type}
             onChange={(e) => setTest({ ...test, type: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Routine"
+          >
+            <option value="">Select Type</option>
+            <option value="Blood">Blood</option>
+            <option value="Urine">Urine</option>
+            <option value="Imaging">Imaging</option>
+            <option value="ECG">ECG</option>
+            <option value="Other">Other</option>
+          </select>
+          {/* Priority */}
+          <select
+            className={styles.input1}
             value={test.priority}
             onChange={(e) => setTest({ ...test, priority: e.target.value })}
+          >
+            <option value="">Select Priority</option>
+            <option value="Routine">Routine</option>
+            <option value="Urgent">Urgent</option>
+            <option value="Stat">Stat (Immediate)</option>
+          </select>
+
+          {/* Notes */}
+          <input
+            type="text"
+            className={styles.input1}
+            placeholder="Notes (optional)"
+            value={test.notes}
+            onChange={(e) => setTest({ ...test, notes: e.target.value })}
           />
         </div>
 
@@ -202,8 +280,10 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
                 <div key={index} className={styles.r4RightContent}>
                   <p>
                     <span>&#8226;&nbsp;</span>
-                    {t.name} - {t.priority} ({t.type})
+                    {t.name} – {t.type} ({t.priority})
+                    {t.notes && ` (${t.notes})`}
                   </p>
+
                   <button type="button" onClick={() => handleRemoveTest(index)}>
                     Remove
                   </button>
@@ -224,6 +304,7 @@ const TreatmentAndTest = ({ onConfirm, existingData, selectedComponent }) => {
         ref={printRef}
         treatments={treatments}
         tests={tests}
+        patient={patient}
       />
     </div>
   );
