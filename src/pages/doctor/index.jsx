@@ -410,7 +410,7 @@ const DoctorOverview = ({ todayAppointments }) => {
 
   const totalAppointments = doctor.totalAppointments;
 
-  // console.log("Total : ",totalAppointments)
+  // console.log("Total : ", totalAppointments);
 
   const appointmentRequests = doctor.appointmentRequests;
 
@@ -960,7 +960,10 @@ const DoctorOverview = ({ todayAppointments }) => {
                 </div>
               </div>
               <div className={styles.child2}>
-                <div className={styles.heading}>
+                <div
+                  className={styles.heading}
+                  onClick={() => navigate("/doctor/appointments")}
+                >
                   <h3>Appointments</h3>
                   <span>
                     <ArrowForwardIosIcon sx={{ fontSize: 18 }} />
@@ -1086,138 +1089,159 @@ const DoctorOverview = ({ todayAppointments }) => {
                         </TableHead>
                         <TableBody>
                           {totalAppointments.length > 0 ? (
-                            totalAppointments.map((row, index) => (
-                              <TableRow
-                                key={index}
-                                sx={{
-                                  "&:last-child td, &:last-child th": {
-                                    border: 0,
-                                  },
-                                  backgroundColor:
-                                    row.status === "Ongoing"
-                                      ? "#EEF8F1"
-                                      : "#ffffff",
-                                  "& td, & th": { py: 1.5 }, // Removes padding from all cells
-                                }}
-                              >
-                                <TableCell
-                                  component="th"
-                                  scope="row"
+                            [...totalAppointments]
+                              .sort((a, b) => {
+                                if (
+                                  a.status === "Ongoing" &&
+                                  b.status !== "Ongoing"
+                                )
+                                  return -1;
+                                if (
+                                  a.status !== "Ongoing" &&
+                                  b.status === "Ongoing"
+                                )
+                                  return 1;
+                                return 0; // keep original order for others
+                              })
+                              .map((row, index) => (
+                                <TableRow
+                                  key={index}
                                   sx={{
-                                    color: "#25307f",
-                                    border: "none",
-                                    px: 0.6,
-                                    pl: 2,
-                                    fontSize: "12px",
-                                    fontWeight: 600,
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
                                     backgroundColor:
                                       row.status === "Ongoing"
                                         ? "#EEF8F1"
                                         : "#ffffff",
+
+                                    "& td, & th": { py: 1.5 }, // Removes padding from all cells
                                   }}
                                 >
-                                  {truncateText(row.caseId, 8)}
-                                </TableCell>
-                                <TableCell
-                                  component="th"
-                                  scope="row"
-                                  sx={{
-                                    color: "#25307f",
-                                    fontSize: "12px",
-                                    fontWeight: 600,
-                                    border: "none",
-                                    px: 0.6,
-                                    backgroundColor:
-                                      row.status === "Ongoing"
-                                        ? "#EEF8F1"
-                                        : "#ffffff",
-                                  }}
-                                >
-                                  {truncateText(row.patient?.name, 13)}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {truncateText(row.doctor?.name, 14)}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {row.typeVisit}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {row.department.name}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    fontSize: "12px",
-                                    px: 0.6,
-                                    color: "#747474",
-                                  }}
-                                >
-                                  {truncateText(row?.tokenNumber || "N/A", 13)}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  sx={{
-                                    border: "none",
-                                    px: 0.6,
-                                    pr: 2,
-                                    color: "#747474",
-                                    fontSize: "12px",
-                                  }}
-                                >
-                                  <Chip
-                                    label={row.status}
-                                    size="small"
+                                  <TableCell
+                                    component="th"
+                                    scope="row"
                                     sx={{
-                                      bgcolor:
+                                      color: "#25307f",
+                                      border: "none",
+                                      px: 0.6,
+                                      pl: 2,
+                                      fontSize: "12px",
+                                      fontWeight: 600,
+                                      backgroundColor:
                                         row.status === "Ongoing"
-                                          ? "#3DB461"
-                                          : row.status === "Scheduled"
-                                          ? "#25307F"
-                                          : row.status === "Waiting"
-                                          ? "#ffffff"
-                                          : "white",
-                                      color:
-                                        row.status === "Ongoing"
-                                          ? "#FFFFFF"
-                                          : row.status === "Completed"
-                                          ? "orange"
-                                          : row.status === "Scheduled"
-                                          ? "white"
-                                          : row.status === "Waiting"
-                                          ? "#878787"
-                                          : "#757575",
-                                      fontWeight: 500,
-                                      px: 0.7,
+                                          ? "#EEF8F1"
+                                          : "#ffffff",
                                     }}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            ))
+                                  >
+                                    {truncateText(row.caseId, 8)}
+                                  </TableCell>
+                                  <TableCell
+                                    component="th"
+                                    scope="row"
+                                    sx={{
+                                      color: "#25307f",
+                                      fontSize: "12px",
+                                      fontWeight: 600,
+                                      border: "none",
+                                      px: 0.6,
+                                      backgroundColor:
+                                        row.status === "Ongoing"
+                                          ? "#EEF8F1"
+                                          : "#ffffff",
+                                    }}
+                                  >
+                                    {truncateText(row.patient?.name, 13)}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {truncateText(row.doctor?.name, 14)}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {row.typeVisit}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {row.department.name}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      fontSize: "12px",
+                                      px: 0.6,
+                                      color: "#747474",
+                                    }}
+                                  >
+                                    {truncateText(
+                                      row?.tokenNumber || "N/A",
+                                      13
+                                    )}
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    sx={{
+                                      border: "none",
+                                      px: 0.6,
+                                      pr: 2,
+                                      color: "#747474",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    <Chip
+                                      label={row.status}
+                                      size="small"
+                                      sx={{
+                                        textTransform: "capitalize",
+                                        bgcolor:
+                                          row.status === "Ongoing"
+                                            ? "#3DB461"
+                                            : row.status === "Scheduled"
+                                            ? "#25307F"
+                                            : row.status === "Waiting"
+                                            ? "#FFF7E0"
+                                            : row.status === "completed"
+                                            ? "#E6F4EA"
+                                            : "white",
+                                        color:
+                                          row.status === "Ongoing"
+                                            ? "#FFFFFF"
+                                            : row.status === "Scheduled"
+                                            ? "white"
+                                            : row.status === "Waiting"
+                                            ? "#B58900"
+                                            : row.status === "completed"
+                                            ? "#1E7D36"
+                                            : "#757575",
+                                        fontWeight: 500,
+                                        px: 0.7,
+                                      }}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ))
                           ) : (
                             <TableRow>
                               <TableCell
