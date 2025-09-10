@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import {
   Box,
@@ -14,11 +14,36 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CommonPanel from "../components/CommonPanel";
+import { getAllAppointments } from "../../../components/State/Doctor/Action";
+import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+import styles from "./Appointments.module.scss";
+import CalendarToday from "@mui/icons-material/CalendarToday";
 
 const Appointments = () => {
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [activeBox, setActiveBox] = useState(1);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const startDate = selectedDate.startOf("day").toISOString();
+    const endDate = selectedDate.endOf("day").toISOString();
+
+    // console.log("Fetching for date range:", selectedDate, startDate, endDate);
+
+    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+      dispatch(
+        getAllAppointments(status, startDate, endDate, page, rowsPerPage)
+      );
+    });
+  }, [dispatch, selectedDate, page, rowsPerPage]);
+
+  const handleDateChange = (e) => {
+    setSelectedDate(dayjs(e.target.value));
+  };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) => {
@@ -26,32 +51,69 @@ const Appointments = () => {
     setPage(0);
   };
 
+  const scheduledAppointments = useSelector(
+    (store) => store.doctor.scheduledAppointments
+  );
+  const ongoingAppointments = useSelector(
+    (store) => store.doctor.ongoingAppointments
+  );
+  const waitingAppointments = useSelector(
+    (store) => store.doctor.waitingAppointments
+  );
+  const completedAppointments = useSelector(
+    (store) => store.doctor.completedAppointments
+  );
+
+  const scheduledCount = useSelector((store) => store.doctor.scheduledCount);
+  const ongoingCount = useSelector((store) => store.doctor.ongoingCount);
+  const waitingCount = useSelector((store) => store.doctor.waitingCount);
+  const completedCount = useSelector((store) => store.doctor.completedCount);
   const boxData = [
-    { id: 1, label: "Box 1", count: 15 },
-    { id: 2, label: "Box 2", count: 8 },
-    { id: 3, label: "Box 3", count: 20 },
-    { id: 4, label: "Box 4", count: 12 },
+    { id: 1, label: "Scheduled", count: scheduledCount },
+    { id: 2, label: "Ongoing", count: ongoingCount },
+    { id: 3, label: "Waiting", count: waitingCount },
+    { id: 4, label: "Completed", count: completedCount },
   ];
 
   const handleBoxClick = (id) => setActiveBox(id);
+  const navigate = useNavigate();
 
-  const sampleData = Array.from({ length: 25 }, (_, i) => ({
-    caseId: `C-${i + 1}`,
-    name: `Patient ${i + 1}`,
-    doctor: `Dr. XYZ`,
-    typeVisit: "General",
-    branch: "Main",
-    tokenNumber: i + 1,
-    status: i % 2 === 0 ? "Active" : "Inactive",
-  }));
+  const handleBack = () => {
+    navigate("/doctor");
+  };
 
-  const displayedData = sampleData.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+  const truncateText = (text, maxLength) =>
+    text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+  let appointments = [];
+
+  let totalAppointmentsCount = 0;
+
+  const activeLabel = useMemo(
+    () => boxData.find((box) => box.id === activeBox)?.label,
+    [activeBox]
   );
 
-  const handleBack = () => console.log("Go back");
-
+  switch (activeLabel) {
+    case "Scheduled":
+      appointments = scheduledAppointments;
+      totalAppointmentsCount = scheduledCount;
+      break;
+    case "Ongoing":
+      appointments = ongoingAppointments;
+      totalAppointmentsCount = ongoingCount;
+      break;
+    case "Waiting":
+      appointments = waitingAppointments;
+      totalAppointmentsCount = waitingCount;
+      break;
+    case "Completed":
+      appointments = completedAppointments;
+      totalAppointmentsCount = completedCount;
+      break;
+    default:
+      appointments = [];
+  }
   return (
     <div style={{ height: "99dvh", overflow: "hidden", background: "#F1F1F1" }}>
       <div
@@ -68,7 +130,37 @@ const Appointments = () => {
       </div>
 
       <div style={{ marginTop: "200px" }}>
-        <div style={{ backgroundColor: "white", position: "relative" }}>
+        <div className={styles.todayRow}>
+          <div className={styles.text}>
+            <span className={styles.label}>
+              {selectedDate.format("YYYY-MM-DD") ===
+              dayjs().format("YYYY-MM-DD")
+                ? "Today"
+                : "Selected Date"}
+            </span>
+            <span className={styles.date}>
+              {selectedDate.format("DD-MM-YYYY")}
+            </span>
+          </div>
+
+          <div className={styles.calendarWrapperIn}>
+            <label htmlFor="appointmentDatePicker">
+              <CalendarToday className={styles.calendarIcon} />
+            </label>
+            <input
+              type="date"
+              id="appointmentDatePicker"
+              value={selectedDate.format("YYYY-MM-DD")}
+              onChange={handleDateChange}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            backgroundColor: "white",
+            position: "relative",
+          }}
+        >
           {/* Sticky Header */}
           <div
             style={{
@@ -96,8 +188,8 @@ const Appointments = () => {
                   }}
                   onClick={handleBack}
                 >
-                  <ArrowBackIosIcon sx={{ verticalAlign: "middle" }} /> New
-                  Panel
+                  <ArrowBackIosIcon sx={{ verticalAlign: "middle" }} />{" "}
+                  Appointments
                 </h3>
               </Grid>
             </Grid>
@@ -117,11 +209,12 @@ const Appointments = () => {
                   sx={{
                     backgroundColor:
                       activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
-                    px: { sm: 3, md: 3, lg: 7 },
+                    px: { sm: 3, md: 5, lg: 7 },
+                    mx: "auto",
                     height: 55,
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     borderRadius: 1,
                     cursor: "pointer",
                     borderBottom:
@@ -193,57 +286,133 @@ const Appointments = () => {
                   <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {displayedData.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      background: "#fff",
-                      "&:hover": { backgroundColor: "#f9f9f9" },
-                      "& > *": { borderBottom: "unset" },
-                    }}
-                  >
-                    <TableCell>{row.caseId}</TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{row.name}</Typography>
-                    </TableCell>
-                    <TableCell>{row.doctor}</TableCell>
-                    <TableCell>{row.typeVisit}</TableCell>
-                    <TableCell>{row.branch}</TableCell>
-                    <TableCell align="center">{row.tokenNumber}</TableCell>
-                    <TableCell>
-                      <Chip
-                        label={row.status}
-                        size="small"
+              <TableBody sx={{ marginBottom: "50px" }}>
+                {appointments.length > 0 ? (
+                  [...appointments]
+                    .sort((a, b) => {
+                      if (a.status === "Ongoing" && b.status !== "Ongoing")
+                        return -1;
+                      if (a.status !== "Ongoing" && b.status === "Ongoing")
+                        return 1;
+                      return 0;
+                    })
+                    .map((appointment) => (
+                      <TableRow
+                        key={appointment._id}
                         sx={{
                           bgcolor:
-                            row.status === "Active" ? "#3DB461" : "#F1F1F1",
-                          color: row.status === "Active" ? "#FFF" : "#878787",
-                          fontWeight: "bold",
+                            appointment.status === "Ongoing"
+                              ? "#3DB46117"
+                              : "white",
+                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                          borderRadius: "8px",
+                          "&:hover": { backgroundColor: "#f9f9f9" },
+                          "& > *": { borderBottom: "unset" },
                         }}
-                      />
+                      >
+                        <TableCell>
+                          <Typography
+                            sx={{
+                              fontWeight: "bold",
+                              cursor: "pointer",
+                              color: "#25307F",
+                            }}
+                          >
+                            {truncateText(appointment.caseId, 12)}
+                          </Typography>
+                        </TableCell>
+
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              fontWeight: "bold",
+                              cursor: "pointer",
+                              color: "#25307F",
+                            }}
+                          >
+                            {appointment.patient.name}
+                          </Typography>
+                        </TableCell>
+
+                        <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
+                          {appointment.doctor?.name}
+                        </TableCell>
+
+                        <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
+                          {appointment.typeVisit}
+                        </TableCell>
+
+                        <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
+                          {appointment.department.name}
+                        </TableCell>
+
+                        <TableCell
+                          sx={{ color: "#747474", fontWeight: 600 }}
+                          align="center"
+                        >
+                          {appointment?.tokenNumber || "N/A"}
+                        </TableCell>
+
+                        <TableCell align="right">
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              width: "100%",
+                            }}
+                          >
+                            <Chip
+                              label={appointment.status}
+                              size="small"
+                              sx={{
+                                bgcolor:
+                                  appointment.status === "Ongoing"
+                                    ? "#3DB461"
+                                    : "white",
+                                color:
+                                  appointment.status === "Ongoing"
+                                    ? "white"
+                                    : appointment.status === "Completed"
+                                    ? "#EAA000"
+                                    : appointment.status === "Scheduled"
+                                    ? "#25307F"
+                                    : "#757575",
+                                fontWeight: "600",
+                                px: 0.7,
+                              }}
+                            />
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colSpan={7}>
+                      No data found!
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
-            <TablePagination
-              component="div"
-              count={sampleData.length}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[5, 10, 20, 50, 100]}
-              sx={{
-                position: "sticky",
-                bottom: 0,
-                backgroundColor: "#fff",
-                borderTop: "2px solid #ddd",
-                zIndex: 11,
-              }}
-            />
           </TableContainer>
+          <TablePagination
+            component="div"
+            count={totalAppointmentsCount}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 20, 50, 100]}
+            sx={{
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 11,
+            }}
+          />
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   Modal,
   Box,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -140,7 +141,10 @@ const BookAppointment = ({
   const handleClick = () => {
     if (validateForm()) {
       // console.log("Data",formData)
-      dispatch(bookAppointment(formData, onClose));
+      setLoadingBtn(true);
+      dispatch(bookAppointment(formData, onClose)).finally(() => {
+        setLoadingBtn(false);
+      });
     }
   };
 
@@ -160,6 +164,9 @@ const BookAppointment = ({
       date: date,
     }));
   };
+
+  const [loadingBtn, setLoadingBtn] = useState(false);
+
   return (
     <>
       <Modal
@@ -363,7 +370,17 @@ const BookAppointment = ({
                   },
                 }}
               >
-                Confirm
+                {loadingBtn ? (
+                  <CircularProgress
+                    size={28}
+                    thickness={5}
+                    sx={{
+                      color: "white",
+                    }}
+                  />
+                ) : (
+                  "Confirm"
+                )}
               </Button>
             </div>
           </div>

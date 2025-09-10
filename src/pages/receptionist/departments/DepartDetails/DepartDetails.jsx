@@ -17,6 +17,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getDepartmentById } from "../../../../components/State/Receptionist/Action.js";
 import { useDispatch, useSelector } from "react-redux";
+import Avatar from "@mui/material/Avatar";
 
 const DepartDetails = (props) => {
   const navigate = useNavigate();
@@ -89,11 +90,25 @@ const DepartDetails = (props) => {
                 <div>
                   <h4 className={avi.heading}>Specific Branch Name</h4>
                   <div className={avi.pro}>
-                    <img
+                    {/* <img
                       className={avi.img}
                       src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
                       alt=""
-                    />
+                    /> */}
+
+                    <Avatar
+                      src=""
+                      sx={{
+                        bgcolor: "#e3e3e3",
+                        color: "#25307F",
+                        fontWeight: 500,
+                      }}
+                      className="patientAvatar"
+                    >
+                      {
+                        // department?.departmentHead.name[4].toUpperCase()
+                      }
+                    </Avatar>
                     <p className={avi.name}>
                       {department?.departmentHead.name}
                     </p>

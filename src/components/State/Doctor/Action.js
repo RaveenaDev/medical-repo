@@ -304,7 +304,48 @@ export const getAppointments = (startDate, endDate) => async (dispatch) => {
     console.log(error);
   }
 };
+export const getAllAppointments =
+  (status, startDate, endDate, page, rowsPerPage) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
+      const departmentId = localStorage.getItem("departmentId");
+
+      const { data } = await axios.get(`${API_URL}/getAppointments`, {
+        params: {
+          status: status,
+          start: startDate,
+          end: endDate,
+          departmentId: departmentId,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      // console.log("Getting Appointments : ", data);
+
+      // dispatch({ type: GET_APPOINTMENTS, payload: data });
+
+      if (data.message === "Scheduled appointments retrieved successfully") {
+        dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Ongoing appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Waiting appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+      } else {
+        dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 export const getDoctorRequests = (status) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
