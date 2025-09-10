@@ -15,8 +15,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { WhatsApp, Email, Close } from "@mui/icons-material";
-import {getPatientDetailsById} from "../../../../components/State/Receptionist/Action.js";
-import {useDispatch, useSelector} from "react-redux";
+import { getPatientDetailsById } from "../../../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = (props) => {
   // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
@@ -69,10 +69,10 @@ const Profile = (props) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getPatientDetailsById(patient?._id))
+    dispatch(getPatientDetailsById(patient?._id));
   }, [dispatch, patient]);
 
-  const patDetails = useSelector((store) => store.receptionist.patientDetails)
+  const patDetails = useSelector((store) => store.receptionist.patientDetails);
 
   // console.log("Det: ",patDetails)
 
@@ -147,8 +147,13 @@ const Profile = (props) => {
                         height: 80,
                         borderRadius: "50%",
                         marginBottom: "2px",
+                        fontSize: "2rem",
+                        color: "#25307F",
+                        bgcolor: "#e3e3e3",
                       }}
-                    />
+                    >
+                      {patient.name[0].toUpperCase()}
+                    </Avatar>
                     <h4
                       style={{
                         margin: "2px 0",
