@@ -30,7 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllDepartments,
   getAppointments,
-  getRequestedAppointments, startConsultation,
+  getRequestedAppointments, startConsultation, submitConsultation,
   // markAppointmentCompleted, // <- If you already have an action for completion, import it and use in handleComplete below.
 } from "../../components/State/Receptionist/Action.js";
 import dayjs from "dayjs";
@@ -243,26 +243,42 @@ function Receptionist(props) {
   // Wire this to your Redux action or API call.
   // Receives { file, note, appointment } from the modal.
   const handleComplete = async ({ file, note, appointment }) => {
-    // Example: create FormData for file upload
-    // const form = new FormData();
-    // form.append("file", file);
-    // form.append("note", note);
-    // form.append("appointmentId", appointment._id);
+      // Prepare consultationData object based on what your backend expects
+      const consultationData = {
+        doctor: appointment?.doctor?._id, // Ensure doctor ID is passed
+        patient: appointment?.patient?._id, // Ensure patient ID is passed
+        appointment: appointment?._id, // Ensure appointment ID is passed
+        department: appointment?.department?._id, // Ensure department ID is passed
+        action: "complete", // Action is 'complete' when finalizing the consultation
+        consultationData: {
+          notes: note || "", // Append notes from modal
+          // Add any other consultation data here (e.g., symptoms, diagnosis)
+        },
+        files: file ? [file] : [], // Attach files if present
+      };
 
-    // If you have an action like markAppointmentCompleted, use it:
-    // await dispatch(markAppointmentCompleted(form));
+      // Call the submitConsultation action (dispatching the action)
+      await dispatch(submitConsultation(consultationData));
 
-    // For now, just log (replace this with your integration).
-    console.log("Completing appointment:", {
-      id: appointment?._id,
-      note,
-      fileName: file?.name,
+    // After the consultation has started, fetch the updated appointments
+    const startDate = selectedDate.startOf("day").toISOString();
+    const endDate = selectedDate.endOf("day").toISOString();
+
+    // Fetch appointments again to update the list (you can choose to call this for specific status like 'Ongoing')
+    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+      dispatch(
+          getAppointments(
+              status,
+              startDate,
+              endDate,
+              selectedBranch,
+              page,
+              rowsPerPage
+          )
+      );
     });
-
-    // You might refresh lists after completion:
-    // dispatch(getRequestedAppointments());
-    // (Or refetch specific status lists if your backend moves it to Completed.)
   };
+
 
   return (
       <div

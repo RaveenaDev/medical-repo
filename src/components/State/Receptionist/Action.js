@@ -25,12 +25,11 @@ import {
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
-  REMOVE_BOOK_APPOINTMENT_DATA, START_CONSULTATION,
+  REMOVE_BOOK_APPOINTMENT_DATA, START_CONSULTATION, SUBMIT_CONSULTATION,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import { toast } from "react-toastify";
-import {SET_ONGOING} from "../Doctor/ActionType.js";
 
 // Action to update a room
 export const updateRoom = (roomId, updatedData) => async (dispatch) => {
@@ -666,3 +665,57 @@ export const startConsultation = (patientId) => async (dispatch) => {
     return Promise.reject(error); // 🔑 return promise
   }
 };
+
+export const submitConsultation =
+    (consultationData) => async (dispatch) => {
+      try {
+        const token = localStorage.getItem("jwt");
+        const formData = new FormData();
+
+        const isPrimitive = (v) =>
+            v === null
+                ? false
+                : ["string", "number", "boolean"].includes(typeof v);
+
+        // Append all fields; treat only `files` specially
+        Object.entries(consultationData || {}).forEach(([key, value]) => {
+          if (key === "files" && Array.isArray(value)) {
+            // append up to 5 images as `files`
+            value.slice(0, 5).forEach((file, idx) => {
+              if (file) formData.append("files", file, file.name || `file_${idx + 1}`);
+            });
+            return;
+          }
+
+          if (value === undefined || value === null) return;
+
+          if (value instanceof Date) {
+            formData.append(key, value.toISOString());
+          } else if (isPrimitive(value)) {
+            formData.append(key, String(value));
+          } else {
+            // objects/arrays → stringify so backend can JSON.parse
+            formData.append(key, JSON.stringify(value));
+          }
+        });
+
+        const { data } = await axios.post(`${API_URL}/submitConsultation`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Don't set Content-Type; browser will set multipart boundary.
+          },
+        });
+
+        dispatch({ type: SUBMIT_CONSULTATION, payload: data });
+
+        toast.success("Submitted Successfully!", { position: "bottom-right", autoClose: 2000 });
+        return data;
+      } catch (error) {
+        const msg =
+            error?.response?.data?.message ||
+            error?.response?.data?.error ||
+            "Please confirm all the fields!";
+        toast.error(msg, { position: "bottom-right", autoClose: 2000 });
+        throw error;
+      }
+    };
