@@ -47,12 +47,23 @@ const TreatmentAndTest = ({
   });
   const [tests, setTests] = useState([]);
 
+  const [errors, setErrors] = useState({});
+
   const printRef = useRef();
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: "Treatment & Tests",
   });
-
+  const frequencyOptions = [
+    "1-0-0 (Morning only)",
+    "0-1-0 (Afternoon only)",
+    "0-0-1 (Evening only)",
+    "1-1-0 (Morning & Afternoon)",
+    "1-0-1 (Morning & Evening)",
+    "0-1-1 (Afternoon & Evening)",
+    "1-1-1 (Morning, Afternoon & Evening)",
+    "SOS (As needed)",
+  ];
   //  Prefill from existing data
   useEffect(() => {
     //console.log("Ex: ",existingData)
@@ -64,25 +75,29 @@ const TreatmentAndTest = ({
     }
   }, [existingData, selectedComponent]);
   const handleAddTreatment = () => {
-    if (
-      treatment.name &&
-      treatment.dosage &&
-      treatment.frequency &&
-      treatment.duration
-    ) {
-      setTreatments((prev) => [...prev, treatment]);
-      setTreatment({
-        name: "",
-        dosage: "",
-        frequency: "",
-        duration: "",
-        notes: "",
-      });
+    let newErrors = {};
+    if (!treatment.name) newErrors.name = true;
+    if (!treatment.dosage) newErrors.dosage = true;
+    if (!treatment.frequency) newErrors.frequency = true;
+    if (!treatment.duration) newErrors.duration = true;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return; // stop if errors
     }
+    setTreatments((prev) => [...prev, treatment]);
+    setTreatment({
+      name: "",
+      dosage: "",
+      frequency: "",
+      duration: "",
+      notes: "",
+    });
+    setErrors({}); // clear errors
   };
 
   const handleAddTest = () => {
-    if (test.name && test.type && test.priority) {
+    if (test.name) {
       setTests((prev) => [...prev, test]);
       setTest({ name: "", type: "", priority: "" });
     }
@@ -104,7 +119,16 @@ const TreatmentAndTest = ({
     // console.log("Treatment & Test Submitted:", finalData);
     onConfirm(finalData); // ⬅️ Send to parent
   };
+  const handleFrequencyChange = (e) => {
+    let value = e.target.value.toUpperCase(); // so "sos" → "SOS"
 
+    // Auto-format only if it's numeric without dashes
+    if (/^\d+$/.test(value)) {
+      value = value.split("").join("-"); // "202" → "2-0-2"
+    }
+
+    setTreatment({ ...treatment, frequency: value });
+  };
   return (
     <div>
       <div className={styles.container1}>
@@ -120,7 +144,7 @@ const TreatmentAndTest = ({
         <div className={styles.row2}>
           <input
             type="text"
-            className={styles.input1}
+            className={`${styles.input1} ${errors.name ? styles.error : ""}`}
             placeholder="Medicine name"
             value={treatment.name}
             onChange={(e) =>
@@ -129,31 +153,41 @@ const TreatmentAndTest = ({
           />
           <input
             type="text"
-            className={styles.input1}
+            className={`${styles.input1} ${errors.dosage ? styles.error : ""}`}
             placeholder="Dosage "
             value={treatment.dosage}
             onChange={(e) =>
               setTreatment({ ...treatment, dosage: e.target.value })
             }
           />
-          <select
-            className={styles.input1}
-            value={treatment.frequency}
-            onChange={(e) =>
-              setTreatment({ ...treatment, frequency: e.target.value })
-            }
-          >
-            <option value="">Select Frequency</option>
-            <option value="OD">OD (once daily)</option>
-            <option value="BD">BD (twice daily)</option>
-            <option value="TDS">TDS (thrice daily)</option>
-            <option value="QID">QID (four times daily)</option>
-            <option value="SOS">SOS (as needed)</option>
-          </select>
           <input
             type="text"
-            className={styles.input1}
-            placeholder="Duration "
+            list="frequencyOptions"
+            placeholder="Times per Day"
+            className={`${styles.input1} ${
+              errors.frequency ? styles.error : ""
+            }`}
+            value={treatment.frequency}
+            onChange={handleFrequencyChange}
+          />
+
+          <datalist id="frequencyOptions">
+            <option value="1-0-0">Morning only</option>
+            <option value="0-1-0">Afternoon only</option>
+            <option value="0-0-1">Evening only</option>
+            <option value="1-1-0">Morning & Afternoon</option>
+            <option value="1-0-1">Morning & Evening</option>
+            <option value="0-1-1">Afternoon & Evening</option>
+            <option value="1-1-1">Morning, Afternoon & Evening</option>
+            <option value="SOS">As needed</option>
+          </datalist>
+
+          <input
+            type="text"
+            className={`${styles.input1} ${
+              errors.duration ? styles.error : ""
+            }`}
+            placeholder="Days / Duration"
             value={treatment.duration}
             onChange={(e) =>
               setTreatment({ ...treatment, duration: e.target.value })
@@ -189,7 +223,7 @@ const TreatmentAndTest = ({
                 <div key={index} className={styles.r4RightContent}>
                   <p>
                     <span>&#8226;&nbsp;</span>
-                    {t.name} {t.dosage} – {t.frequency} x {t.duration}
+                    {t.name} {t.dosage} – ({t.frequency}) x {t.duration}
                     {t.notes && ` (${t.notes})`}
                   </p>
 
@@ -280,7 +314,7 @@ const TreatmentAndTest = ({
                 <div key={index} className={styles.r4RightContent}>
                   <p>
                     <span>&#8226;&nbsp;</span>
-                    {t.name} – {t.type} ({t.priority})
+                    {t.name} {t.type} {t.priority && `(${t.priority})`}
                     {t.notes && ` (${t.notes})`}
                   </p>
 
