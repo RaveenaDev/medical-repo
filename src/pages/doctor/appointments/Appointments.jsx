@@ -18,6 +18,8 @@ import { getAllAppointments } from "../../../components/State/Doctor/Action";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import styles from "./Appointments.module.scss";
+import CalendarToday from "@mui/icons-material/CalendarToday";
 
 const Appointments = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -38,6 +40,10 @@ const Appointments = () => {
       );
     });
   }, [dispatch, selectedDate, page, rowsPerPage]);
+
+  const handleDateChange = (e) => {
+    setSelectedDate(dayjs(e.target.value));
+  };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) => {
@@ -124,7 +130,37 @@ const Appointments = () => {
       </div>
 
       <div style={{ marginTop: "200px" }}>
-        <div style={{ backgroundColor: "white", position: "relative" }}>
+        <div className={styles.todayRow}>
+          <div className={styles.text}>
+            <span className={styles.label}>
+              {selectedDate.format("YYYY-MM-DD") ===
+              dayjs().format("YYYY-MM-DD")
+                ? "Today"
+                : "Selected Date"}
+            </span>
+            <span className={styles.date}>
+              {selectedDate.format("DD-MM-YYYY")}
+            </span>
+          </div>
+
+          <div className={styles.calendarWrapperIn}>
+            <label htmlFor="appointmentDatePicker">
+              <CalendarToday className={styles.calendarIcon} />
+            </label>
+            <input
+              type="date"
+              id="appointmentDatePicker"
+              value={selectedDate.format("YYYY-MM-DD")}
+              onChange={handleDateChange}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            backgroundColor: "white",
+            position: "relative",
+          }}
+        >
           {/* Sticky Header */}
           <div
             style={{
@@ -360,23 +396,23 @@ const Appointments = () => {
                 )}
               </TableBody>
             </Table>
-            <TablePagination
-              component="div"
-              count={totalAppointmentsCount}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[5, 10, 20, 50, 100]}
-              sx={{
-                position: "sticky",
-                bottom: 0,
-                backgroundColor: "#fff",
-                borderTop: "2px solid #ddd",
-                zIndex: 11,
-              }}
-            />
           </TableContainer>
+          <TablePagination
+            component="div"
+            count={totalAppointmentsCount}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 20, 50, 100]}
+            sx={{
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 11,
+            }}
+          />
         </div>
       </div>
     </div>
