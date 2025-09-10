@@ -50,6 +50,9 @@ const BookAppointment = ({
     typeVisit: "Walk in",
     note: "",
     date: new Date(),
+    age: "",
+    gender: "",
+    address: "",
   });
   useEffect(() => {
     if (doctorEmail) {
@@ -61,8 +64,21 @@ const BookAppointment = ({
   }, [doctorEmail]);
   const [errors, setErrors] = useState({});
 
+  // sanitize inputs
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+
+    // Basic sanitization
+    if (typeof value === "string") {
+      value = value.trimStart(); // prevent leading spaces
+    }
+
+    // Allow only numbers for age
+    if (name === "age") {
+      value = value.replace(/\D/g, ""); // remove non-digits
+    }
+
+    setFormData({ ...formData, [name]: value });
   };
 
   const renderRequiredLabel = (label) => (
@@ -113,6 +129,8 @@ const BookAppointment = ({
       "appointmentType",
       "departmentName",
       "doctorEmail",
+      "age",
+      "gender",
     ];
     requiredFields.forEach((field) => {
       if (!formData[field] || formData[field].trim() === "") {
@@ -127,7 +145,10 @@ const BookAppointment = ({
     ) {
       newErrors.mobileNumber = "Enter a valid 10-digit phone number";
     }
-
+    // Age validation (must be between 0–120)
+    if (formData.age && (formData.age < 0 || formData.age > 120)) {
+      newErrors.age = "Enter a valid age (0-120)";
+    }
     // Email validation (optional but should be valid if provided)
     if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email.trim())) {
       newErrors.email = "Enter a valid email address";
@@ -268,6 +289,44 @@ const BookAppointment = ({
                 error={!!errors.patientName}
                 helperText={errors.patientName}
               />
+              <p>{renderRequiredLabel("Age")}</p>
+              <TextField
+                label="Age"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                fullWidth
+                error={!!errors.age}
+                helperText={errors.age}
+              />
+
+              <p>{renderRequiredLabel("Gender")}</p>
+              <TextField
+                select
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                fullWidth
+                error={!!errors.gender}
+                helperText={errors.gender}
+              >
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </TextField>
+
+              <p>Address</p>
+              <TextField
+                label="Address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                fullWidth
+                multiline
+                rows={2}
+              />
+
               <p>{renderRequiredLabel("Select Appointment Type")}</p>
               <TextField
                 select
