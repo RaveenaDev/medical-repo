@@ -62,7 +62,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   };
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-
+  // console.log("patientDetails: ", patientDetails);
   // Check if there's a stored value in localStorage on initial load
   const savedStatus = localStorage.getItem(`status-${patientId}`);
 
@@ -162,6 +162,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                   width: "4vw",
                   height: "4vw",
                   fontSize: "2vw",
+                  textTransform: "uppercase",
                   // fontSize: {
                   //   xs: "0.75rem", // 12px on mobile
                   //   sm: "1rem", // 16px on small screens
@@ -173,7 +174,9 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
                   selectedStatus === "Critical" ? styles.criticalImg : ""
                 } `}
               >
-                {patientDetails?.name[0].toUpperCase() || ""}
+                {patientDetails?.name
+                  ? patientDetails?.name[0].toUpperCase()
+                  : "N/A"}
               </Avatar>
             </div>
             <div className={styles.patientCardInfo}>
