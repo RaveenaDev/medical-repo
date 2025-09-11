@@ -181,43 +181,6 @@ const PatientsList = () => {
     setPage(0); // Reset to first page
   };
 
-  const avatarColors = [
-    "#1a73e8", // Blue
-    "#137333", // Green
-    "#b80672", // Pink/Magenta
-    "#e37400", // Orange
-    "#aa5cdb", // Purple
-    "#0d652d", // Dark Green
-    "#c5221f", // Red
-    "#e8710a", // Dark Orange
-    "#5f6368", // Gray
-    "#174ea6", // Dark Blue
-    "#9334e6", // Bright Purple
-    "#ea4335", // Bright Red
-    "#fbbc04", // Yellow
-    "#34a853", // Bright Green
-    "#4285f4", // Light Blue
-    "#ff6d01", // Bright Orange
-    "#9e9e9e", // Light Gray
-    "#795548", // Brown
-    "#607d8b", // Blue Gray
-    "#f44336", // Material Red
-    "#2196f3", // Material Blue
-  ];
-
-  const getAvatarColor = (name) => {
-    // Create a hash from the name (similar to Gmail's algorithm)
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      const char = name.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-
-    // Use absolute value and modulo to get color index
-    const index = Math.abs(hash) % avatarColors.length;
-    return avatarColors[index];
-  };
   return (
     <div className="patientsListDoctorContainer">
       <div className="listHeader">

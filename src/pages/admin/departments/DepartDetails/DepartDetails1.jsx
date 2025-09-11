@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.scss";
-import { Box, Button, CircularProgress, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, CircularProgress, Tooltip } from "@mui/material";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ayu from "../departments.module.scss";
 import avi from "./departDetails.module.scss";
@@ -49,7 +49,7 @@ const DepartDetails1 = (props) => {
 
   const department = useSelector((store) => store.admin.department);
 
-  console.log("Dep: ",department)
+  //console.log("Dep: ", department);
 
   return (
     <>
@@ -110,10 +110,24 @@ const DepartDetails1 = (props) => {
                       <div>
                         <h3 className={avi.heading}>Specific Branch Name</h3>
                         <div className={avi.pro}>
-                          <img
+                          {/* <img
                             className={avi.img}
                             src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
                             alt=""
+                          /> */}
+
+                          <Avatar
+                            src=""
+                            alt="Profile Image"
+                            className={avi.img}
+                            sx={{
+                              width: 80,
+                              height: 80,
+                              borderRadius: "50%",
+                              marginBottom: "2px",
+                              bgcolor: "#e3e3e3",
+                              color: "#25307F",
+                            }}
                           />
                           <p className={avi.name}>
                             {department?.departmentHead.name}
