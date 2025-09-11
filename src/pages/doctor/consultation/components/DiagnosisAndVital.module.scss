@@ -171,7 +171,7 @@ h4 {
 }
 
 .row2 {
-  margin-top: 5vh;
+  margin-top: 3vh;
 }
 
 .input {
@@ -227,6 +227,91 @@ h4 {
     border-radius: 5px;
   }
 }
+
+/* Main container for the question */
+.row3a {
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Left container for the question */
+.row3aLeftContainer {
+  flex: 1;
+}
+
+/* Question text styling */
+.question {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+/* Right container for the radio buttons */
+.row3aRightContainer {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Right section where radio buttons are aligned */
+.row3aRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Radio button labels */
+.row3a label {
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Style for radio button input */
+.row3a input[type="radio"] {
+  margin-right: 8px;
+  transform: scale(1.2);
+}
+
+/* Input field for pain location */
+.row3input {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Container for the severity input and unit */
+.row3aRight div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Severity number input */
+.input2 {
+  width: 50px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Unit text next to severity */
+.row4Unit {
+  font-size: 14px;
+  color: #333;
+}
+
+
 
 .row4 {
   display: flex;

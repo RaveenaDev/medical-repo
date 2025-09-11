@@ -59,8 +59,8 @@ const PatientInfo = ({ ongoingAppointment, onConfirm }) => {
           <p className={styles.value}>{patient.gender}</p>
         </div>
         <div className={styles.lv}>
-          <p className={styles.label}>Birthday</p>
-          <p className={styles.value}>{patient.birthday}</p>
+          <p className={styles.label}>Age</p>
+          <p className={styles.value} style={{marginLeft:'2px'}}>{patient.age}</p>
         </div>
         <div className={styles.lv}>
           <p className={styles.label}>Phone Number</p>
