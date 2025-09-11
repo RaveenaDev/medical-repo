@@ -124,7 +124,9 @@ function Appointments(props) {
     (store) => store.admin.scheduledAppointments
   );
   const scheduledCount = useSelector((store) => store.admin.scheduledCount);
-
+  const isLoadingTotalAppointments = useSelector(
+    (store) => store.admin.isLoadingTotalAppointments
+  );
   // let scheduledAppointments = null;
 
   // IF PROBLEM OCCURS THEN YE HTA DENA ..........................
@@ -243,7 +245,7 @@ function Appointments(props) {
       </div>
 
       <div style={{ marginTop: "200px" }}>
-        {!scheduledAppointments ? (
+        {isLoadingTotalAppointments ? (
           <Box
             sx={{
               display: "flex",
