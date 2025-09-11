@@ -22,6 +22,7 @@ import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
 import { toast } from "react-toastify";
+import AddPatient from "../../patientsList/component/form/AddPatient/AddPatientForm.jsx";
 
 const ConsultBody = ({
   selectedForm,
@@ -57,6 +58,10 @@ const ConsultBody = ({
   const dispatch = useDispatch();
 
   const closeModal = () => setActiveModal(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const handleAddPatientClick = () => setShowForm(true);
+  const handleCloseForm = () => setShowForm(false);
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
@@ -487,6 +492,13 @@ const ConsultBody = ({
             <CalendarCheck className={styles["calendar-icon2"]} />
             <p>Schedule Treatment</p>
           </button>
+          <button
+            type="button"
+            className={styles["btn"]}
+            onClick={handleAddPatientClick}
+          >
+            ADMIT PATIENT
+          </button>
         </div>
         {activeModal === "complete" && (
           <>
@@ -788,6 +800,8 @@ const ConsultBody = ({
           </div>
         </div>
       </div>
+      {/* Conditionally Render Form */}
+      {showForm && <AddPatient onClose={handleCloseForm} />}
     </div>
   );
 };
