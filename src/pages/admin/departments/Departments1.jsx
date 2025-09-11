@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addDepartment,
   getAllDepartments,
-  getDoctors, getStaffs,
+  getDoctors,
+  getStaffs,
 } from "../../../components/State/Admin/Action.js";
 import CommonPanel from "../Components/CommonPanel.jsx";
 import addAppointments from "../../../assets/plus.svg";
@@ -28,7 +29,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { TablePagination } from "@mui/material";
 const names = [
   "Oliver Hansen",
   "Van Henry",
@@ -124,12 +125,28 @@ const Departments1 = (props) => {
 
   const loading = useSelector((state) => state.admin.isLoading);
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(6); // Show 6 cards per page (adjust as you want)
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const paginatedDepartments = allDepartments.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   return (
     <div
       style={{
         background: "#f1f1f1",
-        height: "99dvh", // Make the entire div take up the full viewport height
-        overflow: "hidden", // Prevent scrolling on the rest of the page
+        height: "110vh", // Make the entire div take up the full viewport height
+        overflow: "auto", // Prevent scrolling on the rest of the page
       }}
     >
       <div
@@ -340,7 +357,7 @@ const Departments1 = (props) => {
                               value={JSON.stringify({
                                 id: doctor._id,
                                 name: doctor.name,
-                                email: doctor?.email
+                                email: doctor?.email,
                               })}
                             >
                               {doctor.name}
@@ -350,80 +367,82 @@ const Departments1 = (props) => {
                       </FormControl>
 
                       <FormControl
-                          size="small"
-                          sx={{ m: 1, width: "30rem", marginTop: 2.4 }}
+                        size="small"
+                        sx={{ m: 1, width: "30rem", marginTop: 2.4 }}
                       >
                         <InputLabel
-                            id="demo-multiple-name-label"
-                            sx={{
-                              "&.Mui-focused": {
-                                color: "#747474", // Keep the color same when focused
-                              },
-                            }}
+                          id="demo-multiple-name-label"
+                          sx={{
+                            "&.Mui-focused": {
+                              color: "#747474", // Keep the color same when focused
+                            },
+                          }}
                         >
                           Select Doctors
                         </InputLabel>
                         <Select
-                            labelId="demo-multiple-name-label"
-                            id="demo-multiple-name"
-                            name="doctors"
-                            multiple
-                            value={department.doctors}
-                            onChange={handleMultipleChange}
-                            input={<OutlinedInput label="Select Doctors" />}
-                            MenuProps={{
-                              PaperProps: {
-                                style: {
-                                  maxHeight: 200, // Fixed height
-                                  overflowY: "auto",
+                          labelId="demo-multiple-name-label"
+                          id="demo-multiple-name"
+                          name="doctors"
+                          multiple
+                          value={department.doctors}
+                          onChange={handleMultipleChange}
+                          input={<OutlinedInput label="Select Doctors" />}
+                          MenuProps={{
+                            PaperProps: {
+                              style: {
+                                maxHeight: 200, // Fixed height
+                                overflowY: "auto",
+                              },
+                              sx: {
+                                "&::-webkit-scrollbar": {
+                                  width: "4px",
                                 },
-                                sx: {
-                                  "&::-webkit-scrollbar": {
-                                    width: "4px",
-                                  },
-                                  "&::-webkit-scrollbar-track": {
-                                    backgroundColor: "#f1f1f1",
-                                  },
-                                  "&::-webkit-scrollbar-thumb": {
-                                    backgroundColor: "#25307F",
-                                    borderRadius: "4px",
-                                  },
+                                "&::-webkit-scrollbar-track": {
+                                  backgroundColor: "#f1f1f1",
+                                },
+                                "&::-webkit-scrollbar-thumb": {
+                                  backgroundColor: "#25307F",
+                                  borderRadius: "4px",
                                 },
                               },
-                            }}
-                            IconComponent={KeyboardArrowDownIcon}
-                            sx={{
-                              backgroundColor: "#F7F7F7",
-                              borderRadius: 0,
-                              "& .MuiSelect-icon": {
-                                color: "#25307F", // Change the color of the arrow icon
-                              },
-                              "& .MuiOutlinedInput-notchedOutline": {
-                                border: "none", // Remove border
-                              },
-                            }}
+                            },
+                          }}
+                          IconComponent={KeyboardArrowDownIcon}
+                          sx={{
+                            backgroundColor: "#F7F7F7",
+                            borderRadius: 0,
+                            "& .MuiSelect-icon": {
+                              color: "#25307F", // Change the color of the arrow icon
+                            },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              border: "none", // Remove border
+                            },
+                          }}
                         >
                           {doctors
-                              .filter((doctor) => {
-                                // Only filter out the department head if it's set as an object
-                                if (department.head && department.head.id) {
-                                  return doctor._id !== department.head.id; // Filter out the department head from the doctor list
-                                }
-                                return true; // If no valid head, don't filter out any doctors
-                              })
-                              .map((doctor, index) => (
-                                  <MenuItem
-                                      key={index}
-                                      value={doctor._id}
-                                      style={getStyles(doctor.name, department.doctors, theme)}
-                                  >
-                                    {doctor.name}
-                                  </MenuItem>
-                              ))}
+                            .filter((doctor) => {
+                              // Only filter out the department head if it's set as an object
+                              if (department.head && department.head.id) {
+                                return doctor._id !== department.head.id; // Filter out the department head from the doctor list
+                              }
+                              return true; // If no valid head, don't filter out any doctors
+                            })
+                            .map((doctor, index) => (
+                              <MenuItem
+                                key={index}
+                                value={doctor._id}
+                                style={getStyles(
+                                  doctor.name,
+                                  department.doctors,
+                                  theme
+                                )}
+                              >
+                                {doctor.name}
+                              </MenuItem>
+                            ))}
                         </Select>
                       </FormControl>
-
-
 
                       <FormControl
                         size="small"
@@ -486,7 +505,11 @@ const Departments1 = (props) => {
                             <MenuItem
                               key={name._id}
                               value={name.name}
-                              style={getStyles(name.name, department.doctors, theme)}
+                              style={getStyles(
+                                name.name,
+                                department.doctors,
+                                theme
+                              )}
                             >
                               {name.name}
                             </MenuItem>
@@ -527,10 +550,26 @@ const Departments1 = (props) => {
             {/* Cards */}
 
             <div className={ayu.superCardContainer}>
-              {allDepartments.map((department, index) => (
+              {paginatedDepartments.map((department, index) => (
                 <DepartCard key={index} department={department} index={index} />
               ))}
             </div>
+            <TablePagination
+              component="div"
+              count={allDepartments.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[6, 12, 24, 60, 120]}
+              sx={{
+                width: "100%",
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 11,
+                marginTop: 2,
+              }}
+            />
           </>
         )}
       </div>

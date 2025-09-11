@@ -572,13 +572,11 @@ const MoreInfo = (props) => {
 
     const location = useLocation();
     const {
-        medicalHistory,
-        currentMedications,
-        symptoms,
-        history,
         patient,
         consultationData,
     } = location.state || {};
+
+    // console.log("Pat: ",patient)
 
     return (
         <div style={{ height: "88vh" }}>
@@ -629,7 +627,7 @@ const MoreInfo = (props) => {
                                 borderRadius: "8px",
                             }}
                         >
-                            <FileDocuments />
+                            <FileDocuments patientId={patient._id}/>
                         </div>
                     </div>
                 </>

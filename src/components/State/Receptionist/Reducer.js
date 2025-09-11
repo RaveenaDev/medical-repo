@@ -16,7 +16,7 @@ import {
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS, GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
-  GET_PATIENT_BILLS, GET_PATIENT_DETAILS,
+  GET_PATIENT_BILLS, GET_PATIENT_DETAILS, GET_PATIENT_FILES,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
@@ -27,7 +27,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
-  UPDATE_ROOM,
+  UPDATE_ROOM, UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
 
 const initialState = {
@@ -77,6 +77,7 @@ const initialState = {
   refreshAppointments: false,
   patientBills: [],
   isLoadingPatientBills: true,
+  patientFiles: []
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -312,6 +313,18 @@ export const receptionistReducer = (state = initialState, action) => {
         patientBills: action.payload,
         isLoadingPatientBills: false,
       };
+
+    case UPLOAD_PATIENT_FILE:
+      return{
+        ...state,
+        patientFiles: [...state.patientFiles,action.payload]
+      }
+
+    case GET_PATIENT_FILES:
+      return{
+        ...state,
+        patientFiles: action.payload
+      }
 
     default:
       return state;

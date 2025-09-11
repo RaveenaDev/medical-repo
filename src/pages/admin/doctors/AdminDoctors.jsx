@@ -307,9 +307,24 @@ const AdminDoctors = (props) => {
                           border: "1px solid #9797978F",
                           width: "100%",
                         }}
+                        MenuProps={{
+                          PaperProps: {
+                            sx: {
+                              maxHeight: 250, // Set max dropdown height (scrollable if too many options)
+                            },
+                          },
+                        }}
                       >
                         {departmentOptions.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            sx={{
+                              height: 40,
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
                             {option.label}
                           </MenuItem>
                         ))}
@@ -343,7 +358,6 @@ const AdminDoctors = (props) => {
                 </div>
               </div>
             </Box>
-
             <Dialog
               open={addDialogOpen}
               onClose={() => setAddDialogOpen(false)}
@@ -666,7 +680,6 @@ const AdminDoctors = (props) => {
                 }}
               />
             </TableContainer>
-
             {/* Actions Menu */}
             <Menu
               anchorEl={anchorEl}
@@ -690,7 +703,6 @@ const AdminDoctors = (props) => {
                 <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
               </MenuItem>
             </Menu>
-
             {/* Edit Doctor Dialog */}
             <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
               <DialogTitle>Edit Doctor</DialogTitle>

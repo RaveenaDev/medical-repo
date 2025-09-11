@@ -20,7 +20,7 @@ import {
   GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BILLS,
-  GET_PATIENT_DETAILS,
+  GET_PATIENT_DETAILS, GET_PATIENT_FILES,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
@@ -30,7 +30,7 @@ import {
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
   START_CONSULTATION,
-  SUBMIT_CONSULTATION,
+  SUBMIT_CONSULTATION, UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -785,5 +785,52 @@ export const editBill = (payload, id) => async (dispatch) => {
   } catch (error) {
     console.error("Error editing bill:", error);
     toast.error(error?.response?.data?.message || "Edit failed");
+  }
+};
+
+export const uploadPatientFile = (formData) => async (dispatch) => {
+  // console.log("Pat: ", patientId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+        `${API_URL}/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            "Content-Type": "multipart/form-data", // Ensure this is set
+          },
+        }
+    );
+
+    // console.log("File Send Successfully : ", data.data);
+
+    // dispatch({ type: UPLOAD_PATIENT_FILE, payload: data.data[0] });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPatientFiles = (patientId) => async (dispatch) => {
+  // console.log("Pat: ", patientId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/files/patient/${patientId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+            "Content-Type": "multipart/form-data", // Ensure this is set
+          },
+        }
+    );
+
+    // console.log("Files Got : ", data.data);
+
+    dispatch({ type: GET_PATIENT_FILES, payload: data.data });
+  } catch (error) {
+    console.log(error);
   }
 };
