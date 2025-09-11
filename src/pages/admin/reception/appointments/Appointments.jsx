@@ -549,7 +549,6 @@ function Appointments(props) {
                   }}
                 />
               </TableContainer>
-
               {/* Actions Menu */}
               <Menu
                 anchorEl={anchorEl}
@@ -575,7 +574,6 @@ function Appointments(props) {
                   </ListItemText>
                 </MenuItem>
               </Menu>
-
               {/* Edit Patient Dialog */}
               <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
                 <DialogTitle>Edit Patient</DialogTitle>
