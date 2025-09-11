@@ -40,7 +40,7 @@ const parseToRaw = (input) => {
 };
 /* ------------------------------------------------------------------------------- */
 
-const AddPatientForm = ({ onClose }) => {
+const AddPatientForm = ({ onClose, patientDetails }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAvailableRooms());
@@ -78,7 +78,23 @@ const AddPatientForm = ({ onClose }) => {
     insuranceStartDate: "",
     insuranceExpiryDate: "",
   });
-  const [isExistingPatient, setIsExistingPatient] = useState(true);
+
+  useEffect(() => {
+    if (patientDetails) {
+      setForm((prev) => ({
+        ...prev,
+        patientName: patientDetails.name || "",
+        patientId: patientDetails.patId || "",
+        email: patientDetails.email || "",
+        contactNo: patientDetails.phone || "",
+        address: patientDetails.address || "",
+        age: patientDetails.age || "",
+        gender: patientDetails.gender || "",
+        emergencyContact: patientDetails.emergencyContact || "",
+        emergencyContactName: patientDetails.emergencyContactName || "",
+      }));
+    }
+  }, [patientDetails]);
 
   const [selectedRoom, setSelectedRoom] = useState("");
   const [availableBeds, setAvailableBeds] = useState([]);
@@ -144,16 +160,9 @@ const AddPatientForm = ({ onClose }) => {
     }
 
     // Patient ID or Email (depending on type)
-    if (isExistingPatient) {
-      if (!form.patientId.trim()) {
-        newErrors.patientId = "Patient ID is required";
-      }
-    } else {
-      if (!form.email.trim()) {
-        newErrors.email = "Email is required";
-      } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-        newErrors.email = "Invalid email format";
-      }
+
+    if (!form.patientId.trim()) {
+      newErrors.patientId = "Patient ID is required";
     }
 
     // Contact
@@ -218,9 +227,7 @@ const AddPatientForm = ({ onClose }) => {
         : selectedRoles[0] || "";
 
     const payload = {
-      ...(isExistingPatient
-        ? { patId: form.patientId }
-        : { email: form.email }),
+      patId: form.patientId,
       sendTo: sendToValue,
       mobileNumber: form.contactNo,
       name: form.patientName,
@@ -255,6 +262,7 @@ const AddPatientForm = ({ onClose }) => {
     dispatch(createAdmissionRequest(payload, onClose));
   };
 
+  console.log("Patient Details: ", patientDetails);
   return (
     <div className="add-patient-modal">
       <div className="modal-overlay" onClick={onClose}></div>
@@ -279,7 +287,7 @@ const AddPatientForm = ({ onClose }) => {
 
         <h3>Admission Form</h3>
         <form onSubmit={handleSubmit}>
-          <div className="radio-group patient-type-toggle">
+          {/* <div className="radio-group patient-type-toggle">
             <label>
               <input
                 type="radio"
@@ -298,7 +306,7 @@ const AddPatientForm = ({ onClose }) => {
               />
               New Patient
             </label>
-          </div>
+          </div> */}
 
           <section>
             <h4>Personal Details</h4>
@@ -318,39 +326,22 @@ const AddPatientForm = ({ onClose }) => {
                     <span className="error">{errors.patientName}</span>
                   )}
                 </div>
-                {isExistingPatient ? (
-                  <div className="form-field">
-                    <label>Patient ID</label>
-                    <input
-                      type="text"
-                      value={form.patientId}
-                      onChange={(e) =>
-                        setForm({ ...form, patientId: e.target.value })
-                      }
-                      required
-                      className={errors.patientId ? "input-error" : ""}
-                    />
-                    {errors.patientId && (
-                      <span className="error">{errors.patientId}</span>
-                    )}
-                  </div>
-                ) : (
-                  <div className="form-field">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      value={form.email}
-                      onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                      }
-                      required
-                      className={errors.email ? "input-error" : ""}
-                    />
-                    {errors.email && (
-                      <span className="error">{errors.email}</span>
-                    )}
-                  </div>
-                )}
+
+                <div className="form-field">
+                  <label>Patient ID</label>
+                  <input
+                    type="text"
+                    value={form.patientId}
+                    onChange={(e) =>
+                      setForm({ ...form, patientId: e.target.value })
+                    }
+                    required
+                    className={errors.patientId ? "input-error" : ""}
+                  />
+                  {errors.patientId && (
+                    <span className="error">{errors.patientId}</span>
+                  )}
+                </div>
               </div>
               <div className="form-group">
                 <div className="form-field">

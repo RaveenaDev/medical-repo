@@ -473,7 +473,13 @@ const ConsultBody = ({
             <Plus className={styles["lp-7-icon"]} size={38} />
             <p>Add Section</p>
           </div>
-
+          <button
+            type="button"
+            className={styles["btn"]}
+            onClick={handleAddPatientClick}
+          >
+            Admit Patient
+          </button>
           <div className={styles["lp-8"]}>
             <button onClick={handleCompleteBtn}>
               <CircleCheck size={15} />
@@ -491,13 +497,6 @@ const ConsultBody = ({
           >
             <CalendarCheck className={styles["calendar-icon2"]} />
             <p>Schedule Treatment</p>
-          </button>
-          <button
-            type="button"
-            className={styles["btn"]}
-            onClick={handleAddPatientClick}
-          >
-            ADMIT PATIENT
           </button>
         </div>
         {activeModal === "complete" && (
@@ -801,7 +800,12 @@ const ConsultBody = ({
         </div>
       </div>
       {/* Conditionally Render Form */}
-      {showForm && <AddPatient onClose={handleCloseForm} />}
+      {showForm && (
+        <AddPatient
+          onClose={handleCloseForm}
+          patientDetails={ongoingAppointment.patient}
+        />
+      )}
     </div>
   );
 };
