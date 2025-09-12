@@ -1,48 +1,52 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
-    Box,
-    Button, Dialog, DialogActions,
-    DialogContent,
-    DialogTitle,
-    TablePagination,
-    TextField,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TablePagination,
+  TextField,
 } from "@mui/material";
 import styles from "./Companies.module.scss";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-import {useDispatch, useSelector} from "react-redux";
-import {addInsuranceCompany, getInsuranceCompanies} from "../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addInsuranceCompany,
+  getInsuranceCompanies,
+} from "../../../../components/State/Admin/Action.js";
 import Grid from "@mui/material/Grid2";
 import CompanyRateModal from "./CompanyRateModal.jsx";
 
 const Companies = () => {
-    const [errors, setErrors] = useState({}); // Added error state
+  const [errors, setErrors] = useState({}); // Added error state
 
+  const [formData, setFormData] = useState({
+    companyID: "",
+    companyName: "",
+    services: [
+      {
+        serviceName: "",
+        serviceCost: "",
+        serviceDescription: "",
+      },
+    ],
+  });
 
-    const [formData, setFormData] = useState({
-        companyID: "",
-        companyName: "",
-        services: [
-            {
-                serviceName: "",
-                serviceCost: "",
-                serviceDescription: ""
-            }
-        ]
-    });
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); // State for modal
 
-    const [addDialogOpen, setAddDialogOpen] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false); // State for modal
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getInsuranceCompanies());
+  }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(getInsuranceCompanies())
-    }, [dispatch]);
+  const companies = useSelector((store) => store.admin.insuranceCompanies);
 
-    const companies = useSelector((store) => store.admin.insuranceCompanies)
-
-    // console.log("Comp: ",companies)
+  // console.log("Comp: ",companies)
 
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
@@ -51,7 +55,7 @@ const Companies = () => {
   const companyCount = companies.length;
 
   const handleViewClick = (company) => {
-    navigate("/admin/tpa/single-company-details",{state: company});
+    navigate("/admin/tpa/single-company-details", { state: company });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -63,25 +67,25 @@ const Companies = () => {
     setPage(0);
   };
 
-    return (
+  return (
     <div className={styles.billingsContainer}>
       <div className={styles.header}>
-          <Button
-              style={{marginTop:'8px'}}
-              variant="contained"
-              sx={{
-                  display:'flex',
-                  gap:1.5,
-                  textTransform: "none",
-                  backgroundColor: "#25307F",
-                  color: "white",
-                  "&:hover": { background: "#AEC3FF" },
-              }}
-              onClick={() => setModalOpen(true)}
-          >
-              <Plus className={styles.plusIcon} />
-              ADD COMPANY
-          </Button>
+        <Button
+          style={{ marginTop: "8px" }}
+          variant="contained"
+          sx={{
+            display: "flex",
+            gap: 1.5,
+            textTransform: "none",
+            backgroundColor: "#25307F",
+            color: "white",
+            "&:hover": { background: "#AEC3FF" },
+          }}
+          onClick={() => setModalOpen(true)}
+        >
+          <Plus className={styles.plusIcon} />
+          ADD COMPANY
+        </Button>
       </div>
 
       <div className={styles.billingsTable} style={{ position: "relative" }}>
@@ -101,7 +105,7 @@ const Companies = () => {
             flexDirection: "column",
             gap: "1.4vh",
             background: "#f1f1f1",
-            height: "70vh",
+            height: "63vh",
             overflowY: "auto",
           }}
         >
@@ -144,13 +148,12 @@ const Companies = () => {
             </div>
           )}
         </div>
-
         {/* Pagination */}
         <Box
           sx={{
             width: "100%",
             position: "sticky",
-            bottom: 0,
+            bottom: 10,
             backgroundColor: "#fff",
             borderTop: "2px solid #ddd",
             zIndex: 11,
@@ -168,7 +171,10 @@ const Companies = () => {
         </Box>
       </div>
 
-        <CompanyRateModal open={modalOpen} handleClose={() => setModalOpen(false)}/>
+      <CompanyRateModal
+        open={modalOpen}
+        handleClose={() => setModalOpen(false)}
+      />
     </div>
   );
 };

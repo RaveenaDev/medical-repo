@@ -1,6 +1,5 @@
 .patientsHeader {
   padding-top: 1vh;
-
   .headerTop {
     display: flex;
     justify-content: space-between;
@@ -104,7 +103,9 @@
 
 .patientsTableContainer {
   padding: 0;
-
+  height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 2vh;
   .noDataMessage {
     text-align: center;
     color: #999;

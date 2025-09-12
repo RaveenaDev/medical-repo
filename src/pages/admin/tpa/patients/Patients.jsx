@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Box, TablePagination } from "@mui/material";
 import styles from "./Patients.module.scss";
 import ViewModal from "./modals/ViewModal";
-import {useDispatch, useSelector} from "react-redux";
-import {getInsuredPatients} from "../../../../components/State/Admin/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getInsuredPatients } from "../../../../components/State/Admin/Action.js";
 const Patients = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -42,7 +42,7 @@ const Patients = () => {
     dispatch(getInsuredPatients());
   }, [dispatch]);
 
-  const insuredPatients = useSelector((store) => store.admin.insuredPatients)
+  const insuredPatients = useSelector((store) => store.admin.insuredPatients);
 
   // console.log("Ins: ",insuredPatients)
 
@@ -73,7 +73,7 @@ const Patients = () => {
             gap: "1.4vh",
             background: "#f1f1f1",
 
-            height: "70vh",
+            height: "69vh",
             overflowY: "auto",
           }}
         >
@@ -104,20 +104,30 @@ const Patients = () => {
                     </span>
                   </span>
                   <span className={styles.grey}>{item.patient.phone}</span>
-                  <span className={styles.grey}>{item.admissionDetails.insurance?.policyNumber}</span>
-                  <span className={styles.grey}>{item.admissionDetails.insurance?.insuranceCompany}</span>
+                  <span className={styles.grey}>
+                    {item.admissionDetails.insurance?.policyNumber}
+                  </span>
+                  <span className={styles.grey}>
+                    {item.admissionDetails.insurance?.insuranceCompany}
+                  </span>
 
                   <span
                     className={`${styles.status} ${
-                        item.admissionDetails.insurance.insuranceApproved.toLowerCase() === "approved"
+                      item.admissionDetails.insurance.insuranceApproved.toLowerCase() ===
+                      "approved"
                         ? styles.ongoing
-                        : item.admissionDetails.insurance.insuranceApproved.toLowerCase() === "pending"
+                        : item.admissionDetails.insurance.insuranceApproved.toLowerCase() ===
+                          "pending"
                         ? styles.pending
                         : styles.rejected
                     }`}
                   >
-                    {item.admissionDetails.insurance.insuranceApproved.charAt(0).toUpperCase() +
-                        item.admissionDetails.insurance.insuranceApproved.slice(1)}
+                    {item.admissionDetails.insurance.insuranceApproved
+                      .charAt(0)
+                      .toUpperCase() +
+                      item.admissionDetails.insurance.insuranceApproved.slice(
+                        1
+                      )}
                   </span>
                   <div
                     style={{
