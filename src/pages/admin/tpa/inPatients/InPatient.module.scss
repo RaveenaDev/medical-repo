@@ -1,30 +1,12 @@
+.inpatientcontainer {
+  padding: 2vh 2vw;
+  background-color: #f1f1f1;
+
+  font-family: "Inter", sans-serif;
+}
+
 .patientsHeader {
-  padding-top: 1vh;
-
-  .headerTop {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .backText {
-      font-weight: 500;
-      color: #333;
-      font-size: 20px;
-    }
-
-    .appointmentSection {
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-      color: #555;
-      height: 5.2vh;
-      .userIcon {
-        font-size: 20px;
-        margin-right: 8px;
-        color: #0c1b72;
-      }
-    }
-  }
+  padding-top: 2vh;
 
   hr {
     margin: 12px 0;
@@ -128,7 +110,7 @@
         font-size: 14px;
         color: #131212;
         border-bottom: none;
-        background-color: transparent;
+        background-color: #f1f1f1;
 
         &:first-child {
           padding-left: 20px;
@@ -224,20 +206,7 @@
 
           &.actions {
             text-align: center;
-
-            .menuIcon {
-              color: #999;
-              cursor: pointer;
-              font-size: 16px;
-              padding: 4px;
-              border-radius: 4px;
-              transition: all 0.2s ease;
-
-              &:hover {
-                background-color: #f0f0f0;
-                color: #666;
-              }
-            }
+            cursor: pointer;
           }
         }
       }
@@ -368,7 +337,7 @@
 }
 
 .tableWrapper {
-  height: 60vh;
+  height: 62vh;
   overflow-y: auto;
 
   /* Hide scrollbar for Chrome, Safari, Opera */
@@ -380,4 +349,31 @@
   /* Hide scrollbar for Firefox */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.search-wrapper {
+  display: flex;
+  align-items: center;
+
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 20px;
+
+  .search-icon {
+    color: #666;
+    margin-right: 6px;
+  }
+
+  .search-input {
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    background: transparent;
+  }
+}
+
+.filterSearch {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
 }

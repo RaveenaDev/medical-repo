@@ -1,8 +1,6 @@
-import { FiFilter } from "react-icons/fi";
-import { ChevronLeft } from "lucide-react";
-import styles from "./InPatient.module.scss";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { FiFilter } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -21,115 +19,85 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import { getFilteredInpatients } from "../../../../components/State/Admin/Action";
+import styles from "./InPatient.module.scss";
+import ActionMenu from "./components/ActionMenu"; // Custom menu component for actions
+import { Search } from "lucide-react";
 
-const InPatients = (props) => {
+const InPatients = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Filters (status, type, sort order)
   const [filters, setFilters] = useState({
     status: "",
     type: "",
     sort: "desc",
   });
   const [sortOrder, setSortOrder] = useState("desc");
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    // dispatch(getPatients());
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
-  }, [dispatch, sortOrder, page, rowsPerPage]);
+  // Drawer for filters
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
+  // Redux store: inpatients
   const doctor = useSelector((store) => store.doctor);
   const totalFilteredInPatients = doctor.totalFilteredInpatients;
   const filteredInPatients = doctor.filteredInPatients;
 
-  // console.log("Total: ",totalFilteredInPatients)
-  // console.log("Fil: ",filteredInPatients)
+  // Fetch patients whenever filters/pagination change
+  useEffect(() => {
+    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
+  }, [dispatch, sortOrder, page, rowsPerPage]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  // Helper: truncate long strings (ID, name, email)
+  const truncateText = (text, maxLength) =>
+    text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 
-  // const location = useLocation();
-  // const inPatients = location.state?.inPatients || [];
-
-  // console.log("Tranferred: ",inPatients)
-
-  const truncateText = (text, maxLength) => {
-    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-  };
-
+  // Handle filter changes inside drawer
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Apply filters (trigger search)
   const handleSearchResults = () => {
-    // admin = null;
     dispatch(getFilteredInpatients(filters, page, rowsPerPage));
     setFilterDrawerOpen(false);
   };
 
+  // Sort dropdown change
   const handleSortChange = (event) => {
-    // admin = null;
     setSortOrder(event.target.value);
-    setFilters({
-      ...filters,
-      sort: event.target.value,
-    });
-    // console.log(event.target.value)
+    setFilters({ ...filters, sort: event.target.value });
   };
 
+  // Pagination: page change
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  // Pagination: rows per page change
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page when rows per page changes
   };
 
-  const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
-  const shapeCircleStyles = { borderRadius: "50%" };
-
-  const circle = (
-    <Box
-      component="span"
-      sx={{
-        ...shapeStyles,
-        ...shapeCircleStyles,
-        color: "#ffffff",
-        marginTop: "2px",
-        paddingTop: "2px",
-        paddingBottom: "2px",
-        fontSize: "15px",
-        paddingLeft: "1px",
-      }}
-    >
-      {localStorage.getItem("doctorRequestsCount")}
-    </Box>
-  );
-
   return (
-    <>
+    <div className={styles.inpatientcontainer}>
+      {/* Header Section */}
       <div className={styles.patientsHeader}>
-        <div className={styles.headerTop}>
-          <div className={styles.headerLeft}>
-            <ChevronLeft
-              size={28}
-              strokeWidth={1.7}
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate(-1)}
-            />
-            <span className={styles.backText}>Inpatient List</span>
-          </div>
-        </div>
-        <hr />
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
             {totalFilteredInPatients} <span>Inpatients</span>
           </span>
           <div className={styles.verticalDivider}></div>
+
+          {/* Sort + Filter Controls */}
           <div className={styles.sortFilterSection}>
+            {/* Sort dropdown */}
             <div className={styles.sortBy}>
               <span>Sort by:</span>
               <Select
@@ -142,12 +110,8 @@ const InPatients = (props) => {
                   color: "#4A4A4A",
                   boxShadow: "0px 4px 4px 0px #BDBDBD1C",
                   border: "1px solid transparent",
-                  outline: "none",
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "inherit", // Removes hover effect
-                  },
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent", // Hides the border
+                    borderColor: "transparent",
                   },
                 }}
               >
@@ -155,31 +119,45 @@ const InPatients = (props) => {
                 <MenuItem value="asc">Oldest to Newest</MenuItem>
               </Select>
             </div>
-            <div
-              onClick={() => setFilterDrawerOpen(true)}
-              className={`${styles.filter} ${styles.boxStyle}`}
-            >
-              <FiFilter fill="#25307f" />
-              <span>Filter</span>
+            <div className={styles.filterSearch}>
+              <div className={styles["search-wrapper"]}>
+                <Search size={18} className={styles["search-icon"]} />
+                <input
+                  type="text"
+                  placeholder="Search inpatients..."
+                  // value={searchQuery}
+                  // onChange={(e) => setSearchQuery(e.target.value)}
+                  className={styles["search-input"]}
+                />
+              </div>
+              {/* Filter button */}
+              <div
+                onClick={() => setFilterDrawerOpen(true)}
+                className={`${styles.filter} ${styles.boxStyle}`}
+              >
+                <FiFilter fill="#25307f" />
+                <span>Filter</span>
+              </div>
             </div>
           </div>
         </div>
         <hr />
       </div>
 
+      {/* Patients Table */}
       <div className={styles.patientsTableContainer}>
         {filteredInPatients && filteredInPatients.length > 0 ? (
           <div className={styles.tableWrapper}>
             <table className={styles.patientsTable}>
               <thead>
                 <tr>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient ID</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Bed</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Condition</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Doctor</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Status</th>
-                  {/*<th></th>*/}
+                  <th>Patient ID</th>
+                  <th>Patient</th>
+                  <th>Bed</th>
+                  <th>Condition</th>
+                  <th>Doctor</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -210,52 +188,40 @@ const InPatients = (props) => {
                     <td className={styles.status}>
                       <span
                         className={`${styles.statusBadge} ${
-                          styles[patient.status.toLowerCase()]
+                          styles[patient.status?.toLowerCase()]
                         }`}
                       >
                         {patient?.status}
                       </span>
                     </td>
-                    {/*<td className={styles.actions}>*/}
-                    {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
-                    {/*</td>*/}
+                    <td className={styles.actions}>
+                      {/* Menu with options like Add Insurance */}
+                      <ActionMenu patient={patient} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <TablePagination
-              component="div"
-              count={totalFilteredInPatients}
-              page={page} // current page
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage} // items per page
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-              sx={{
-                width: "100%",
-                backgroundColor: "#fff",
-                borderTop: "2px solid #ddd",
-                zIndex: 11,
-              }}
-            />
           </div>
         ) : (
           <div className={styles.noDataMessage}>No inpatients found.</div>
         )}
 
+        {/* Filter Drawer (right side) */}
         <Drawer
           anchor="right"
           open={filterDrawerOpen}
           onClose={() => setFilterDrawerOpen(false)}
           sx={{
             "& .MuiDrawer-paper": {
-              height: "58vh", // Adjust height as needed
-              top: "18vh", // Center it vertically
-              borderRadius: "10px 0 0 10px", // Optional rounded corners
+              height: "58vh",
+              top: "18vh",
+              borderRadius: "10px 0 0 10px",
             },
           }}
         >
           <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
+            {/* Drawer Header */}
             <Box
               sx={{
                 display: "flex",
@@ -268,13 +234,7 @@ const InPatients = (props) => {
                 Filter By
               </Typography>
               <IconButton
-                sx={{
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                  color: "black",
-                }}
+                sx={{ color: "black" }}
                 onClick={() => setFilterDrawerOpen(false)}
               >
                 <CloseIcon />
@@ -282,16 +242,12 @@ const InPatients = (props) => {
             </Box>
 
             {/* Filter Options */}
-            <FormControl
-              sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}
-              component="fieldset"
-            >
+            <FormControl sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}>
               <FormLabel
-                component="legend"
                 sx={{
                   marginBottom: 1,
                   color: "#000000",
-                  "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                  "&.Mui-focused": { color: "#000000" },
                 }}
               >
                 Status
@@ -301,61 +257,29 @@ const InPatients = (props) => {
                 value={filters.status}
                 onChange={handleFilterChange}
               >
-                <FormControlLabel
-                  value="Stable"
-                  control={
-                    <Radio
-                      sx={{
-                        color: "#878787", // Default color
-                        "&.Mui-checked": {
-                          color: "#25307F", // Selected dot color
-                        },
-                      }}
-                    />
-                  }
-                  label="Stable"
-                  sx={{ height: "34px", color: "#878787" }}
-                />
-                <FormControlLabel
-                  value="Critical"
-                  control={
-                    <Radio
-                      sx={{
-                        color: "#878787", // Default color
-                        "&.Mui-checked": {
-                          color: "#25307F", // Selected dot color
-                        },
-                      }}
-                    />
-                  }
-                  label="Critical"
-                  sx={{ height: "34px", color: "#878787" }}
-                />
-
-                <FormControlLabel
-                  value="Moderate"
-                  control={
-                    <Radio
-                      sx={{
-                        color: "#878787", // Default color
-                        "&.Mui-checked": {
-                          color: "#25307F", // Selected dot color
-                        },
-                      }}
-                    />
-                  }
-                  label="Moderate"
-                  sx={{ height: "34px", color: "#878787" }}
-                />
+                {["Stable", "Critical", "Moderate"].map((status) => (
+                  <FormControlLabel
+                    key={status}
+                    value={status}
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787",
+                          "&.Mui-checked": { color: "#25307F" },
+                        }}
+                      />
+                    }
+                    label={status}
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                ))}
                 <FormControlLabel
                   value=""
                   control={
                     <Radio
                       sx={{
-                        color: "#878787", // Default color
-                        "&.Mui-checked": {
-                          color: "#25307F", // Selected dot color
-                        },
+                        color: "#878787",
+                        "&.Mui-checked": { color: "#25307F" },
                       }}
                     />
                   }
@@ -365,14 +289,14 @@ const InPatients = (props) => {
               </RadioGroup>
             </FormControl>
 
+            {/* Search Button */}
             <Button
               variant="contained"
               sx={{
                 backgroundColor: "#25307F",
-                textTransform: "none", // Prevents uppercase transformation
+                textTransform: "none",
                 borderRadius: "16px",
                 padding: "6px 35px",
-                marginLeft: "4px",
               }}
               onClick={handleSearchResults}
             >
@@ -381,7 +305,29 @@ const InPatients = (props) => {
           </Box>
         </Drawer>
       </div>
-    </>
+
+      {/* Pagination Section */}
+      <Box
+        sx={{
+          width: "100%",
+          position: "sticky",
+          bottom: 0,
+          backgroundColor: "#fff",
+          borderTop: "2px solid #ddd",
+          zIndex: 2,
+        }}
+      >
+        <TablePagination
+          component="div"
+          count={totalFilteredInPatients}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 20, 50, 100]}
+        />
+      </Box>
+    </div>
   );
 };
 
