@@ -109,6 +109,7 @@ const Sidebar = ({ role }) => {
   });
 
   const hospitalName = localStorage.getItem("hospitalName");
+  const hospitalImage = localStorage.getItem("hospitalImage")
   // console.log(hospitalName)
 
   return (
@@ -284,7 +285,7 @@ const Sidebar = ({ role }) => {
           <div style={{ display: "flex", gap: 12, marginLeft: "25px" }}>
             <img
               style={{ width: "3.8rem", height: "3.8rem" }}
-              src={SaiAsha}
+              src={hospitalImage}
               alt="Sai Asha"
             />
             <div style={{ paddingTop: "9px" }}>
