@@ -313,7 +313,7 @@ const DepartDetails1 = (props) => {
                                             fontWeight: "bold",
                                           }}
                                         >
-                                          {department?.totalStaffs.length}
+                                          {department?.nurses.length}
                                         </span>
                                       </span>
                                     )}
@@ -332,7 +332,7 @@ const DepartDetails1 = (props) => {
                                       },
                                     }}
                                   >
-                                    {department?.totalStaffs.map(
+                                    {department?.nurses.map(
                                       (staff, index) => (
                                         <MenuItem
                                           key={index}
@@ -343,7 +343,7 @@ const DepartDetails1 = (props) => {
                                             pointerEvents: "none",
                                           }}
                                         >
-                                          {staff?.name}
+                                          {staff}
                                         </MenuItem>
                                       )
                                     )}
