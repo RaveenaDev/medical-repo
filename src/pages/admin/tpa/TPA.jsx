@@ -4,18 +4,24 @@ import Searchbar from "../../../components/Searchbar";
 import Notifications from "../../../components/NotificationFunc/Notification";
 import Companies from "./companies/Companies";
 import Patients from "./patients/Patients";
-
+import InPatients from "./inPatients/Inpatients";
 const TPA = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
+
   const [selectedTab, setSelectedTab] = useState("companies");
+
   const handleCompanies = () => {
     setSelectedTab("companies");
   };
 
   const handlePatients = () => {
     setSelectedTab("patients");
+  };
+
+  const handleInPatients = () => {
+    setSelectedTab("inpatients");
   };
 
   return (
@@ -26,24 +32,38 @@ const TPA = (props) => {
       <div className={styles.content}>
         <div className={styles.selection}>
           <div
-            onClick={() => handleCompanies()}
+            onClick={handleCompanies}
             className={`${styles.selectionDiv} ${
               selectedTab === "companies" ? styles.selectedTab : ""
             }`}
           >
             <span>Companies</span>
           </div>
+
           <div
-            onClick={() => handlePatients()}
+            onClick={handlePatients}
             className={`${styles.selectionDiv} ${
               selectedTab === "patients" ? styles.selectedTab : ""
             }`}
             style={{ cursor: "pointer" }}
           >
-            <span>Patients</span>
+            <span>TPA Patients</span>
+          </div>
+
+          <div
+            onClick={handleInPatients}
+            className={`${styles.selectionDiv} ${
+              selectedTab === "inpatients" ? styles.selectedTab : ""
+            }`}
+            style={{ cursor: "pointer" }}
+          >
+            <span>Inpatients</span>
           </div>
         </div>
-        {selectedTab === "companies" ? <Companies /> : <Patients />}
+
+        {selectedTab === "companies" && <Companies />}
+        {selectedTab === "patients" && <Patients />}
+        {selectedTab === "inpatients" && <InPatients />}
       </div>
     </div>
   );

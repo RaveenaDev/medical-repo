@@ -32,6 +32,7 @@ import {
   GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_INSURANCE_COMPANIES,
@@ -44,7 +45,8 @@ import {
   GET_ROOM_TYPES,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
-  GET_SERVICES, GET_SERVICES_BY_DEPARTMENT_ID,
+  GET_SERVICES,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
@@ -61,6 +63,8 @@ const initialState = {
   doctorCount: null,
   totalStaffs: null,
   staffCount: null,
+  totalFilteredInpatients: null,
+  filteredInPatients: [],
   totalRooms: null,
   totalFilteredRooms: null,
   patient: null,
@@ -176,10 +180,10 @@ export const adminReducer = (state = initialState, action) => {
       };
 
     case GET_SERVICES_BY_DEPARTMENT_ID:
-      return{
+      return {
         ...state,
-        servicesByDepartment: action.payload.services
-      }
+        servicesByDepartment: action.payload.services,
+      };
 
     case ADD_DEPARTMENT:
       return {
@@ -540,6 +544,13 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         roomTypes: action.payload.subcategories,
         isLoadingRoomTypes: false,
+      };
+    case GET_FILTERED_INPATIENTS:
+      return {
+        ...state,
+        totalFilteredInpatients: action.payload.totalInpatients,
+        filteredInPatients: action.payload.inpatients,
+        isLoading: false,
       };
     default:
       return state;

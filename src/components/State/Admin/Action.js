@@ -35,6 +35,7 @@ import {
   GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_INSURANCE_COMPANIES,
@@ -47,7 +48,8 @@ import {
   GET_ROOM_TYPES,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
-  GET_SERVICES, GET_SERVICES_BY_DEPARTMENT_ID,
+  GET_SERVICES,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
@@ -304,12 +306,12 @@ export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(
-        `${API_URL}/getservicesbydep/${departmentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
+      `${API_URL}/getservicesbydep/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
     );
 
     // console.log("Services: ",data)
@@ -1475,3 +1477,27 @@ export const addBedsToRoom = (payload) => async () => {
     throw error; //  throw so UI can catch it
   }
 };
+export const getFilteredInpatients =
+  (filteredData, page, rowsPerPage) => async (dispatch) => {
+    // console.log("Fil:",filteredData)
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getInPatients`, {
+        params: {
+          status: filteredData.status,
+          sort: filteredData.sort,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      // console.log("InPatt Filtered: ",data)
+      dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
