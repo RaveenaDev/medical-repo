@@ -16,38 +16,43 @@ import FolderIcon from "@mui/icons-material/Folder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import DownloadIcon from "@mui/icons-material/Download"; // ⬅️ NEW
 import { useDispatch, useSelector } from "react-redux";
-import { getPatientFiles, uploadPatientFile } from "../../../../components/State/Receptionist/Action.js";
+import {
+    deletePatientFile,
+    getPatientFiles,
+    uploadPatientFile,
+} from "../../../../components/State/Receptionist/Action.js";
 
 const FileDocuments = ({ patientId }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [viewDialogOpen, setViewDialogOpen] = useState(false);
     const dispatch = useDispatch();
 
-    // Fetch files from Redux state
     useEffect(() => {
-        dispatch(getPatientFiles(patientId)); // Fetch files on mount
+        dispatch(getPatientFiles(patientId));
     }, [dispatch, patientId]);
 
-    const patientFiles = useSelector((store) => store.receptionist.patientFiles);
-
-    console.log("Files: ", patientFiles);
+    const patientFiles = useSelector(
+        (store) => store.receptionist.patientFiles
+    ) || [];
 
     const handleAddFile = async (event) => {
-        const newFile = event.target.files[0];
+        const newFile = event.target.files?.[0];
         if (newFile) {
             const formData = new FormData();
             formData.append("files", newFile);
             formData.append("patientId", patientId);
-
             await dispatch(uploadPatientFile(formData));
+            // allow selecting same file again next time
+            event.target.value = "";
         }
-
-        dispatch(getPatientFiles(patientId))
+        dispatch(getPatientFiles(patientId));
     };
 
-    const handleDelete = (id) => {
-        console.log("Delete")
+    const handleDelete = async (id) => {
+        await dispatch(deletePatientFile(id));
+        dispatch(getPatientFiles(patientId));
     };
 
     const handleView = (file) => {
@@ -58,6 +63,37 @@ const FileDocuments = ({ patientId }) => {
     const handleCloseDialog = () => {
         setViewDialogOpen(false);
         setSelectedFile(null);
+    };
+
+    // Robust downloader: tries Blob (best for cross-origin w/CORS), falls back to plain link
+    const handleDownload = async (file) => {
+        const url = file.url;
+        const filename = file.originalName || "download";
+
+        try {
+            const res = await fetch(url, { mode: "cors" });
+            if (!res.ok) throw new Error("Network response was not ok");
+            const blob = await res.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (err) {
+            // Fallback: direct link (may open in new tab if server forces inline)
+            const a = document.createElement("a");
+            a.href = url;
+            a.setAttribute("download", filename);
+            a.target = "_blank";
+            a.rel = "noopener";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
     };
 
     return (
@@ -101,58 +137,75 @@ const FileDocuments = ({ patientId }) => {
             >
                 <Typography variant="body2">
                     {patientFiles.filter((file) => file.status === "Pending").length} file
-                    Uploaded
+                    {patientFiles.filter((file) => file.status === "Pending").length === 1 ? "" : "s"} Uploaded
                 </Typography>
             </Box>
 
             {/* File List */}
-            {patientFiles.map((file) => (
-                <Card
-                    key={file._id} // Use the file's unique _id for the key
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mb: 1,
-                        padding: 1,
-                        boxShadow: 1,
-                    }}
-                >
-                    <FolderIcon color="primary" sx={{ fontSize: 40, mr: 2 }} />
-                    <CardContent sx={{ flex: 1, padding: "8px 0" }}>
-                        <Typography variant="body1">{file.originalName}</Typography>
-                        {file.status === "Seen" ? (
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    color: "green",
-                                    display: "flex",
-                                    alignItems: "center",
-                                }}
-                            >
-                                Seen
+            {patientFiles.map((file) => {
+                const isImage = file?.fileType?.startsWith("image/");
+                return (
+                    <Card
+                        key={file._id}
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            mb: 1,
+                            padding: 1,
+                            boxShadow: 1,
+                        }}
+                    >
+                        <FolderIcon color="primary" sx={{ fontSize: 40, mr: 2 }} />
+                        <CardContent sx={{ flex: 1, padding: "8px 0" }}>
+                            <Typography variant="body1" noWrap title={file.originalName}>
+                                {file.originalName}
                             </Typography>
-                        ) : null}
-                    </CardContent>
-                    <Stack direction="row" spacing={1}>
-                        <IconButton
-                            aria-label="view"
-                            onClick={() => handleView(file)}
-                            color="primary"
-                        >
-                            <VisibilityIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="delete"
-                            onClick={() => handleDelete(file._id)}
-                            color="error"
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Stack>
-                </Card>
-            ))}
+                            {file.status === "Seen" ? (
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        color: "green",
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    Seen
+                                </Typography>
+                            ) : null}
+                        </CardContent>
 
-            {/* Dialog for Viewing File */}
+                        <Stack direction="row" spacing={1}>
+                            {isImage ? (
+                                <IconButton
+                                    aria-label="view"
+                                    onClick={() => handleView(file)}
+                                    color="primary"
+                                >
+                                    <VisibilityIcon />
+                                </IconButton>
+                            ) : (
+                                <IconButton
+                                    aria-label="download"
+                                    onClick={() => handleDownload(file)}
+                                    color="primary"
+                                >
+                                    <DownloadIcon />
+                                </IconButton>
+                            )}
+
+                            <IconButton
+                                aria-label="delete"
+                                onClick={() => handleDelete(file._id)}
+                                color="error"
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </Stack>
+                    </Card>
+                );
+            })}
+
+            {/* Image Preview Dialog (images only) */}
             {selectedFile && (
                 <Dialog
                     open={viewDialogOpen}
@@ -162,16 +215,14 @@ const FileDocuments = ({ patientId }) => {
                 >
                     <DialogTitle>{selectedFile.originalName}</DialogTitle>
                     <DialogContent>
-                        {selectedFile.fileType.startsWith("image/") ? (
+                        {selectedFile.fileType?.startsWith("image/") ? (
                             <img
                                 src={selectedFile.url}
                                 alt={selectedFile.originalName}
                                 style={{ width: "100%" }}
                             />
                         ) : (
-                            <Typography>
-                                File type not previewable. Download to view.
-                            </Typography>
+                            <Typography>File type not previewable.</Typography>
                         )}
                     </DialogContent>
                 </Dialog>

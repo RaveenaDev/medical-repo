@@ -824,11 +824,19 @@ export const uploadPatientFile = (formData) => async (dispatch) => {
         }
     );
 
+    toast.success("File Uploaded Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 1500,
+    });
     // console.log("File Send Successfully : ", data.data);
 
     // dispatch({ type: UPLOAD_PATIENT_FILE, payload: data.data[0] });
   } catch (error) {
     console.log(error);
+    toast.error("File Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
 
@@ -852,5 +860,31 @@ export const getPatientFiles = (patientId) => async (dispatch) => {
     dispatch({ type: GET_PATIENT_FILES, payload: data.data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const deletePatientFile = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.delete(
+        `${API_URL}/files/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+    toast.success("File Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 1500,
+    });
+    // console.log("File Deleted Successfully : ", data);
+  } catch (error) {
+    console.log(error);
+    toast.error("File Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
   }
 };
