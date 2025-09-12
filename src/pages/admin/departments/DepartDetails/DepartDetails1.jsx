@@ -54,7 +54,7 @@ const DepartDetails1 = (props) => {
   const department = admin.department;
   const services = admin.servicesByDepartment;
 
-  console.log("Dep: ", department);
+  // console.log("Dep: ", department);
 
   return (
     <>

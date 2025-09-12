@@ -37,6 +37,8 @@ const FileDocuments = ({ patientId }) => {
         (store) => store.receptionist.patientFiles
     ) || [];
 
+    // console.log(patientFiles)
+
     const handleAddFile = async (event) => {
         const newFile = event.target.files?.[0];
         if (newFile) {
@@ -136,8 +138,7 @@ const FileDocuments = ({ patientId }) => {
                 }}
             >
                 <Typography variant="body2">
-                    {patientFiles.filter((file) => file.status === "Pending").length} file
-                    {patientFiles.filter((file) => file.status === "Pending").length === 1 ? "" : "s"} Uploaded
+                    {patientFiles?.length} Files Uploaded
                 </Typography>
             </Box>
 
