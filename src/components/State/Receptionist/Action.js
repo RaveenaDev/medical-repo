@@ -24,7 +24,7 @@ import {
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
-  GET_SCHEDULED_APPOINTMENTS,
+  GET_SCHEDULED_APPOINTMENTS, GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
@@ -325,6 +325,26 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
     );
 
     dispatch({ type: GET_DEPARTMENT_BY_ID, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getservicesbydep/${departmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Services: ",data)
+    dispatch({ type: GET_SERVICES_BY_DEPARTMENT_ID, payload: data });
   } catch (error) {
     console.log(error);
   }

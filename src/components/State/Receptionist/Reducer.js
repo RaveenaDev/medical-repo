@@ -22,7 +22,7 @@ import {
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS,
-  GET_SCHEDULED_APPOINTMENTS,
+  GET_SCHEDULED_APPOINTMENTS, GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
@@ -77,7 +77,8 @@ const initialState = {
   refreshAppointments: false,
   patientBills: [],
   isLoadingPatientBills: true,
-  patientFiles: []
+  patientFiles: [],
+  servicesByDepartment: []
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -211,6 +212,12 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         department: action.payload,
       };
+
+    case GET_SERVICES_BY_DEPARTMENT_ID:
+      return{
+        ...state,
+        servicesByDepartment: action.payload.services
+      }
 
     case GET_APPOINTMENTS:
       return {

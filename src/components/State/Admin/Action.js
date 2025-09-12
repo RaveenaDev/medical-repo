@@ -2,7 +2,6 @@ import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
   ACCEPT_REQUEST,
-  ADD_DEPARTMENT,
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
@@ -48,7 +47,7 @@ import {
   GET_ROOM_TYPES,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
-  GET_SERVICES,
+  GET_SERVICES, GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
@@ -295,6 +294,26 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
     );
 
     dispatch({ type: GET_DEPARTMENT_BY_ID, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+        `${API_URL}/getservicesbydep/${departmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+          },
+        }
+    );
+
+    // console.log("Services: ",data)
+    dispatch({ type: GET_SERVICES_BY_DEPARTMENT_ID, payload: data });
   } catch (error) {
     console.log(error);
   }

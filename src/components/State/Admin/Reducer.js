@@ -2,7 +2,6 @@ import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
-  ADD_ESTIMATED_BILL,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
   ADD_ROOM,
@@ -45,7 +44,7 @@ import {
   GET_ROOM_TYPES,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
-  GET_SERVICES,
+  GET_SERVICES, GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
@@ -109,6 +108,7 @@ const initialState = {
   progressTracker: [],
   isLoadingGetProgressTracker: true,
   roomTypes: [],
+  servicesByDepartment: [],
   isLoadingRoomTypes: false,
 };
 
@@ -174,6 +174,12 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         department: action.payload,
       };
+
+    case GET_SERVICES_BY_DEPARTMENT_ID:
+      return{
+        ...state,
+        servicesByDepartment: action.payload.services
+      }
 
     case ADD_DEPARTMENT:
       return {
