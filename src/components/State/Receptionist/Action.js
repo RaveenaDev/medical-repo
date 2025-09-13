@@ -20,17 +20,20 @@ import {
   GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BILLS,
-  GET_PATIENT_DETAILS, GET_PATIENT_FILES,
+  GET_PATIENT_DETAILS,
+  GET_PATIENT_FILES,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
-  GET_SCHEDULED_APPOINTMENTS, GET_SERVICES_BY_DEPARTMENT_ID,
+  GET_SCHEDULED_APPOINTMENTS,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
   START_CONSULTATION,
-  SUBMIT_CONSULTATION, UPLOAD_PATIENT_FILE,
+  SUBMIT_CONSULTATION,
+  UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -335,12 +338,12 @@ export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(
-        `${API_URL}/getservicesbydep/${departmentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
+      `${API_URL}/getservicesbydep/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
     );
 
     // console.log("Services: ",data)
@@ -515,7 +518,7 @@ export const rejectAppointmentRequests = (id) => async (dispatch) => {
   }
 };
 
-export const getBills = (page, rowsPerPage) => async (dispatch) => {
+export const getBills = (page, rowsPerPage, search) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
@@ -526,6 +529,7 @@ export const getBills = (page, rowsPerPage) => async (dispatch) => {
       params: {
         page: page + 1, // Incrementing page by 1 to match the API requirement
         limit: rowsPerPage,
+        search: search || "",
       },
     });
 
@@ -813,16 +817,12 @@ export const uploadPatientFile = (formData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(
-        `${API_URL}/upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            "Content-Type": "multipart/form-data", // Ensure this is set
-          },
-        }
-    );
+    const { data } = await axios.post(`${API_URL}/upload`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        "Content-Type": "multipart/form-data", // Ensure this is set
+      },
+    });
 
     toast.success("File Uploaded Successfully!", {
       position: "bottom-right", // Use string for position
@@ -845,15 +845,12 @@ export const getPatientFiles = (patientId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(
-        `${API_URL}/files/patient/${patientId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-            "Content-Type": "multipart/form-data", // Ensure this is set
-          },
-        }
-    );
+    const { data } = await axios.get(`${API_URL}/files/patient/${patientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        "Content-Type": "multipart/form-data", // Ensure this is set
+      },
+    });
 
     // console.log("Files Got : ", data.data);
 
@@ -867,14 +864,11 @@ export const deletePatientFile = (id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.delete(
-        `${API_URL}/files/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-          },
-        }
-    );
+    const { data } = await axios.delete(`${API_URL}/files/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
     toast.success("File Deleted Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 1500,

@@ -96,3 +96,24 @@
     border-color: inherit !important;
   }
 }
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 24px;
+
+  .search-icon {
+    color: #666;
+    margin-right: 6px;
+  }
+
+  .search-input {
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    background: transparent;
+  }
+}

@@ -706,25 +706,28 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
 };
 
 // BILLING
-export const getBillingRecords = (page, rowsPerPage) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getBillingRecords =
+  (page, rowsPerPage, search) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getAllBills`, {
-      params: {
-        page: page + 1, // Incrementing page by 1 to match the API requirement
-        limit: rowsPerPage,
-      },
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getAllBills`, {
+        params: {
+          page: page + 1, // Incrementing page by 1 to match the API requirement
+          limit: rowsPerPage,
+          search: search || "", // Default to empty string if search is undefined
+        },
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+      // console.log("Billing Records: ", data);
 
-    dispatch({ type: GET_BILLING_RECORDS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({ type: GET_BILLING_RECORDS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 // BILLING
 export const getBillDetails = (billId) => async (dispatch) => {
