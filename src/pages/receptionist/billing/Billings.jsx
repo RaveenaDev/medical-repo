@@ -11,6 +11,7 @@ import Notifications from "../../../components/NotificationFunc/Notification";
 import { useDispatch, useSelector } from "react-redux";
 import { getBills } from "../../../components/State/Receptionist/Action.js";
 import { Search } from "lucide-react";
+import useDebounce from "../../../hooks/useDebounce.js";
 
 const Billings = (props) => {
   const [selectedBill, setSelectedBill] = useState(null);
@@ -19,6 +20,8 @@ const Billings = (props) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 500);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -50,8 +53,8 @@ const Billings = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBills(page, rowsPerPage));
-  }, [dispatch, page, rowsPerPage]);
+    dispatch(getBills(page, rowsPerPage, debouncedSearch));
+  }, [dispatch, page, rowsPerPage, debouncedSearch]);
 
   const allBills = useSelector((store) => store.receptionist.allBills);
   const billsCount = useSelector((store) => store.receptionist.allBillsCount);
@@ -84,8 +87,11 @@ const Billings = (props) => {
             <input
               type="text"
               placeholder="Search bills..."
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setPage(0);
+              }}
               className={styles["search-input"]}
             />
           </div>
