@@ -64,6 +64,7 @@ const CommonPanel = ({
     "/receptionist/patients",
     "/receptionist/requests",
     "/receptionist/billings",
+    "/receptionist/departments",
   ];
 
   const location = useLocation(); // Get the current route

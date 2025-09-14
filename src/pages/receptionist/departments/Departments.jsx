@@ -14,12 +14,13 @@ import { useNavigate } from "react-router-dom";
 import BookAppointment from "../Appointment/Book/BookAppointment.jsx";
 import dayjs from "dayjs";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Box } from "@mui/material";
+import { Box, TablePagination } from "@mui/material";
 
 const Departments = (props) => {
   const [tableIndex, setTableIndex] = useState(null);
   const [selectedDate, setSelectedDate] = useState(dayjs());
-
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(6); // Default per page
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBookAppointment, setIsBookAppointment] = useState(false); // State to toggle between components
   const navigate = useNavigate();
@@ -40,14 +41,22 @@ const Departments = (props) => {
 
   const allDepartments = receptionist.departments;
 
+  const paginatedDepartments = allDepartments.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to first page when changing rows per page
+  };
+
   return (
-    <div
-      style={{
-        background: "#f1f1f1",
-        height: "99dvh", // Make the entire div take up the full viewport height
-        overflowY: "hidden", // Enable vertical scrolling
-      }}
-    >
+    <div className={styles.container}>
       <div className={styles.receptionist}>
         <div
           style={{
@@ -61,7 +70,7 @@ const Departments = (props) => {
         >
           <CommonPanel setIsBookAppointment={setIsBookAppointment} />
         </div>
-        <div style={{ marginTop: "210px" }}>
+        <div style={{ marginTop: "150px" }}>
           {loading ? (
             <Box
               sx={{
@@ -105,14 +114,33 @@ const Departments = (props) => {
                       {/* Cards */}
 
                       <div className={ayu.superCardContainer}>
-                        {allDepartments.map((department, index) => (
-                          <DepartCard
-                            key={index}
-                            department={department}
-                            index={index}
-                          />
-                        ))}
+                        {paginatedDepartments.length ? (
+                          paginatedDepartments.map((department, index) => (
+                            <DepartCard
+                              key={index}
+                              department={department}
+                              index={index}
+                            />
+                          ))
+                        ) : (
+                          <div>No departments found.</div>
+                        )}
                       </div>
+                      <TablePagination
+                        component="div"
+                        count={allDepartments.length}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[6, 12, 24, 60, 120]}
+                        sx={{
+                          width: "100%",
+                          backgroundColor: "#fff",
+                          borderTop: "2px solid #ddd",
+                          marginTop: 2,
+                        }}
+                      />
                     </div>
                   )}
                 </>
