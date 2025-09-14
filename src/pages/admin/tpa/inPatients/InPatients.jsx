@@ -22,6 +22,7 @@ import { getFilteredInpatients } from "../../../../components/State/Admin/Action
 import styles from "./InPatient.module.scss";
 import ActionMenu from "./components/ActionMenu"; // Custom menu component for actions
 import { Search } from "lucide-react";
+import useDebounce from "../../../../hooks/useDebounce.js";
 
 const InPatients = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const InPatients = () => {
   // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [searchQuery, setSearchQuery] = useState("");
 
   // Filters (status, type, sort order)
   const [filters, setFilters] = useState({
@@ -47,10 +49,16 @@ const InPatients = () => {
   const totalFilteredInPatients = doctor.totalFilteredInpatients;
   const filteredInPatients = doctor.filteredInPatients;
 
+    const debouncedSearch = useDebounce(searchQuery, 500);
+
   // Fetch patients whenever filters/pagination change
   useEffect(() => {
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
-  }, [dispatch, sortOrder, page, rowsPerPage]);
+    dispatch(getFilteredInpatients(filters, page, rowsPerPage,debouncedSearch));
+  }, [dispatch, sortOrder, page, rowsPerPage,filters,debouncedSearch]);
+
+    useEffect(() => {
+        setPage(0);
+    }, [debouncedSearch, filters.status, sortOrder]);
 
   // Helper: truncate long strings (ID, name, email)
   const truncateText = (text, maxLength) =>
@@ -125,8 +133,8 @@ const InPatients = () => {
                 <input
                   type="text"
                   placeholder="Search inpatients..."
-                  // value={searchQuery}
-                  // onChange={(e) => setSearchQuery(e.target.value)}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className={styles["search-input"]}
                 />
               </div>

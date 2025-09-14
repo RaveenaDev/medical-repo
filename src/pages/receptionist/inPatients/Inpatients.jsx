@@ -1,6 +1,6 @@
 import CommonPanel from "../components/CommonPanel";
 import { FiFilter } from "react-icons/fi";
-import { ChevronLeft } from "lucide-react";
+import {ChevronLeft, Search} from "lucide-react";
 import styles from "./InPatient.module.scss";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -23,6 +23,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import { getFilteredInpatients } from "../../../components/State/Receptionist/Action.js";
+import useDebounce from "../../../hooks/useDebounce.js";
 
 const InPatients = (props) => {
   useEffect(() => {
@@ -31,6 +32,7 @@ const InPatients = (props) => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     status: "",
     type: "",
@@ -39,17 +41,23 @@ const InPatients = (props) => {
   const [sortOrder, setSortOrder] = useState("desc");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // dispatch(getPatients());
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
-  }, [dispatch, sortOrder, page, rowsPerPage]);
-
   const doctor = useSelector((store) => store.doctor);
   const totalFilteredInPatients = doctor.totalFilteredInpatients;
   const filteredInPatients = doctor.filteredInPatients;
 
+    const debouncedSearch = useDebounce(searchQuery, 500);
+
   // console.log("Total: ",totalFilteredInPatients)
   // console.log("Fil: ",filteredInPatients)
+
+    useEffect(() => {
+        // dispatch(getPatients());
+        dispatch(getFilteredInpatients(filters, page, rowsPerPage,debouncedSearch));
+    }, [dispatch, sortOrder, page, rowsPerPage,filters,debouncedSearch]);
+
+    useEffect(() => {
+        setPage(0);
+    }, [debouncedSearch, filters.status, sortOrder]);
 
   const handleRequestBtn = () => {
     navigate("/doctor/doctor-request");
@@ -111,7 +119,7 @@ const InPatients = (props) => {
   // const location = useLocation();
   // const inPatients = location.state?.inPatients || [];
 
-  // console.log("Tranferred: ",inPatients)
+  // console.log("Transferred: ",inPatients)
 
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -124,7 +132,7 @@ const InPatients = (props) => {
 
   const handleSearchResults = () => {
     // admin = null;
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
+    dispatch(getFilteredInpatients(filters, page, rowsPerPage,debouncedSearch));
     setFilterDrawerOpen(false);
   };
 
@@ -242,61 +250,74 @@ const InPatients = (props) => {
             {totalFilteredInPatients} <span>Inpatients</span>
           </span>
           <div className={styles.verticalDivider}></div>
-          <div className={styles.sortFilterSection}>
-            <div className={styles.sortBy}>
-              <span>Sort by:</span>
-              <Select
-                value={sortOrder}
-                onChange={handleSortChange}
-                size="small"
-                sx={{
-                  minWidth: 180,
-                  background: "#fff",
-                  color: "#4A4A4A",
-                  boxShadow: "0px 4px 4px 0px #BDBDBD1C",
-                  border: "1px solid transparent",
-                  outline: "none",
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "inherit", // Removes hover effect
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent", // Hides the border
-                  },
-                }}
-              >
-                <MenuItem value="desc">Newest to Oldest</MenuItem>
-                <MenuItem value="asc">Oldest to Newest</MenuItem>
-              </Select>
+            <div className={styles.sortFilterSection}>
+                <div className={styles.sortBy}>
+                    <span>Sort by:</span>
+                    <Select
+                        value={sortOrder}
+                        onChange={handleSortChange}
+                        size="small"
+                        sx={{
+                            minWidth: 180,
+                            background: "#fff",
+                            color: "#4A4A4A",
+                            boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                            border: "1px solid transparent",
+                            outline: "none",
+                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "inherit", // Removes hover effect
+                            },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "transparent", // Hides the border
+                            },
+                        }}
+                    >
+                        <MenuItem value="desc">Newest to Oldest</MenuItem>
+                        <MenuItem value="asc">Oldest to Newest</MenuItem>
+                    </Select>
+                </div>
+
+                <div className={styles.filterSearch}>
+                    <div className={styles["search-wrapper"]}>
+                        <Search size={18} className={styles["search-icon"]}/>
+                        <input
+                            type="text"
+                            placeholder="Search inpatients..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className={styles["search-input"]}
+                        />
+                    </div>
+                    <div
+                        onClick={() => setFilterDrawerOpen(true)}
+                        className={`${styles.filter} ${styles.boxStyle}`}
+                    >
+                        <FiFilter fill="#25307f"/>
+                        <span>Filter</span>
+                    </div>
+                </div>
             </div>
-            <div
-              onClick={() => setFilterDrawerOpen(true)}
-              className={`${styles.filter} ${styles.boxStyle}`}
-            >
-              <FiFilter fill="#25307f" />
-              <span>Filter</span>
-            </div>
-          </div>
         </div>
-        <hr />
+          <hr/>
       </div>
 
-      {/* Modal Component */}
-      <AppointmentRequestModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        appointmentRequests={appointmentRequests}
-      >
-        <p>This is where appointment requests will appear.</p>
-      </AppointmentRequestModal>
+        {/* Modal Component */}
+        <AppointmentRequestModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            appointmentRequests={appointmentRequests}
+        >
+            <p>This is where appointment requests will appear.</p>
+        </AppointmentRequestModal>
 
-      <div className={styles.patientsTableContainer}>
-        {filteredInPatients && filteredInPatients.length > 0 ? (
-          <div className={styles.tableWrapper}>
-            <table className={styles.patientsTable}>
-              <thead>
-                <tr>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient ID</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient</th>
+        <div className={styles.patientsTableContainer}>
+            {filteredInPatients && filteredInPatients.length > 0 ? (
+                <div className={styles.tableWrapper}>
+                    <table className={styles.patientsTable}>
+                        <thead>
+                        <tr>
+                            <th style={{backgroundColor: "#F1F1F1"}}>Patient ID</th>
+                            <th style={{ backgroundColor: "#F1F1F1" }}>Patient</th>
                   <th style={{ backgroundColor: "#F1F1F1" }}>Bed</th>
                   <th style={{ backgroundColor: "#F1F1F1" }}>Condition</th>
                   <th style={{ backgroundColor: "#F1F1F1" }}>Doctor</th>
