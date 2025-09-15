@@ -222,18 +222,34 @@ const ConsultBody = ({
     };
 
     // console.log("Updated Final: ",updatedFinal)
-    dispatch(submitConsultation(updatedFinal))
-      .then(() => {
-        setCompleteData({});
-        onSuccess(); // ✅ Will only run after dispatch finishes
-        setConfirmedSections([]);
-        setSelectedComponent("PatientInfo");
-      })
-      .catch((err) => {
-        console.error("Submission failed:", err);
-      });
-    dispatch(removePrescriptionsWithAI());
-    openNextAppointment(true);
+    // dispatch(submitConsultation(updatedFinal))
+    //   .then(() => {
+    //     setCompleteData({});
+    //     onSuccess(); // ✅ Will only run after dispatch finishes
+    //     setConfirmedSections([]);
+    //     setSelectedComponent("PatientInfo");
+    //   })
+    //   .catch((err) => {
+    //     console.error("Submission failed:", err);
+    //   });
+    // dispatch(removePrescriptionsWithAI());
+    // openNextAppointment(true);
+
+    return dispatch(submitConsultation(updatedFinal))
+        .then(() => {
+          dispatch(removePrescriptionsWithAI());
+          openNextAppointment(true);
+          setCompleteData({});
+          onSuccess();
+          setConfirmedSections([]);
+          setSelectedComponent("PatientInfo");
+        })
+        .catch((err) => {
+          console.error("Submission failed:", err);
+          // rethrow so child knows it failed (optional but recommended)
+          throw err;
+        });
+
   };
 
   const handleRefer = () => {

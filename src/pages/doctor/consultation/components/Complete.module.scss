@@ -30,3 +30,24 @@
     font-weight: 350;
   }
 }
+
+.primaryBtn { position: relative; }
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+
+  /* key changes */
+  border: 2px solid transparent;   /* hide all sides */
+  border-top-color: currentColor;   /* visible wedge = text color */
+  border-right-color: currentColor; /* optional: thicker wedge */
+
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: -4px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+

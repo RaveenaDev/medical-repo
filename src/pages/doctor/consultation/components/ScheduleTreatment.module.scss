@@ -248,15 +248,32 @@
   }
 }
 
-@keyframes blinkScale {
-  0% {
-    border: 2px solid #25307f;
-  }
-  50% {
-    border: 0px solid #25307f;
-    border-radius: 0px;
-  }
-  100% {
-    border: 2px solid #25307f;
-  }
+
+.primaryBtn {
+  position: relative;
+  /* make sure text is visible on your button background */
+  color: #fff;
+  background: #25307f;
+  border: none;
 }
+
+.primaryBtn[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border: 2px solid transparent;   /* hide sides */
+  border-top-color: currentColor;   /* visible wedge = text color */
+  border-right-color: currentColor; /* optional: thicker wedge */
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: -4px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+

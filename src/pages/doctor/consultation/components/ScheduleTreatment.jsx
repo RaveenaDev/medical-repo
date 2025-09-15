@@ -23,6 +23,7 @@ const ScheduleTreatment = ({
   ];
 
   const [openDoctorDropdown, setOpenDoctorDropdown] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [treatment, setTreatment] = useState({
     patientName: "",
@@ -47,17 +48,29 @@ const ScheduleTreatment = ({
 
   const doctors = useSelector((store) => store.doctor.allDoctors);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const finalData = {
       ...modalData,
       treatment: treatment,
     };
     // console.log("Final Schedule Treatment Data: ", finalData);
-    dispatch(submitConsultation(finalData, onSuccess, onClose));
-    setConfirmedSections([]);
-    setSelectedComponent("PatientInfo")
-    dispatch(removePrescriptionsWithAI());
-    setCompleteData({});
+    try{
+      setIsSubmitting(true);
+      await dispatch(submitConsultation(finalData, onSuccess, onClose));
+      // await new Promise(r => setTimeout(r, 3000));
+
+      // await new Promise(() => {});
+      setConfirmedSections([]);
+      setSelectedComponent("PatientInfo")
+      dispatch(removePrescriptionsWithAI());
+      setCompleteData({});
+    }
+
+    catch (err) {
+      console.error("Submission failed:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formatTo12Hour = (time24) => {
@@ -292,7 +305,21 @@ const ScheduleTreatment = ({
 
         {/* Submit Container */}
         <div className={styles.submitContainer}>
-          <button onClick={handleSubmit}>Confirm</button>
+          <button
+              onClick={handleSubmit}
+              className={styles.primaryBtn}
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+          >
+            {isSubmitting ? (
+                <>
+                  <span className={styles.spinner} aria-hidden="true"/>
+                  Processing…
+                </>
+            ) : (
+                "Confirm"
+            )}
+          </button>
         </div>
       </div>
     </div>
