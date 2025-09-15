@@ -42,7 +42,9 @@ const Rooms = (props) => {
   const totalRooms = useSelector(
     (state) => state.receptionist.totalFilteredRooms
   );
-  const loading = useSelector((state) => state.receptionist.isLoading);
+  const loading = useSelector(
+    (state) => state.receptionist.isLoadingFilteredRooms
+  );
 
   useEffect(() => {
     dispatch(getFilteredRooms(page, rowsPerPage));

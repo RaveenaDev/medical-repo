@@ -22,7 +22,7 @@ import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
 import { toast } from "react-toastify";
-import AddPatient from "../../patientsList/component/form/AddPatient/AddPatientForm.jsx";
+import AddPatient from "./modals/AddPatient/AddPatient.jsx";
 
 const ConsultBody = ({
   selectedForm,
