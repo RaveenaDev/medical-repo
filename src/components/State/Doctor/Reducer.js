@@ -61,10 +61,12 @@ const initialState = {
   patients: [],
   totalFilteredPatients: null,
   filteredPatients: [],
+  isLoadingFilteredPatients: true,
   totalInpatients: null,
   inPatients: [],
   totalFilteredInpatients: null,
   filteredInPatients: [],
+  isLoadingFilteredInPatients: true,
   totalSurgeries: null,
   surgeries: [],
   totalFilteredSurgeries: null,
@@ -138,6 +140,7 @@ const initialState = {
   isLoadingGetPatientMedicalRecords: true,
   totalAppointmentHistory: null,
   appointmentHistory: [],
+  isLoadingAppointmentHistory: true,
   patientBedInfo: [],
   requestsToApprove: [],
   isLoadingAdmissionRequestToApprove: true,
@@ -158,7 +161,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
-        isLoading: false,
+        isLoadingFilteredPatients: false,
       };
 
     case GET_INPATIENTS:
@@ -174,7 +177,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredInpatients: action.payload.totalInpatients,
         filteredInPatients: action.payload.inpatients,
-        isLoading: false,
+        isLoadingFilteredInPatients: false,
       };
 
     case GET_SURGERIES:
@@ -484,6 +487,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalAppointmentHistory: action.payload.totalAppointments,
         appointmentHistory: action.payload.appointments,
+        isLoadingAppointmentHistory: false,
       };
 
     case GET_PATIENT_BED_INFO:
