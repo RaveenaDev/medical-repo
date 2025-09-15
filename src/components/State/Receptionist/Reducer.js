@@ -12,22 +12,28 @@ import {
   GET_DEPARTMENT_BY_ID,
   GET_DOCTORS,
   GET_DOCTORS_BY_DEPARTMENT,
-  GET_FILTERED_DOCTORS, GET_FILTERED_INPATIENTS,
+  GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
-  GET_FILTERED_ROOMS, GET_INPATIENTS,
+  GET_FILTERED_ROOMS,
+  GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
-  GET_PATIENT_BILLS, GET_PATIENT_DETAILS, GET_PATIENT_FILES,
+  GET_PATIENT_BILLS,
+  GET_PATIENT_DETAILS,
+  GET_PATIENT_FILES,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS,
-  GET_SCHEDULED_APPOINTMENTS, GET_SERVICES_BY_DEPARTMENT_ID,
+  GET_SCHEDULED_APPOINTMENTS,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
-  UPDATE_ROOM, UPLOAD_PATIENT_FILE,
+  UPDATE_ROOM,
+  UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
 
 const initialState = {
@@ -37,6 +43,7 @@ const initialState = {
   inPatients: [],
   totalFilteredInpatients: null,
   filteredInPatients: [],
+  isLoadingFilteredInPatients: true,
   patientDetails: [],
   totalDoctors: null,
   doctorCount: null,
@@ -55,6 +62,7 @@ const initialState = {
   patient: null,
   patients: [],
   filteredPatients: [],
+  isLoadingFilteredPatients: true,
   doctors: [],
   isLoadingDoctors: true,
   doctorsByDepartment: [],
@@ -62,6 +70,7 @@ const initialState = {
   isLoadingStaffs: true,
   rooms: [],
   filteredRooms: [],
+  isLoadingFilteredRooms: true,
   departments: [],
   department: null,
   progressTracker: [],
@@ -78,7 +87,7 @@ const initialState = {
   patientBills: [],
   isLoadingPatientBills: true,
   patientFiles: [],
-  servicesByDepartment: []
+  servicesByDepartment: [],
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -104,7 +113,7 @@ export const receptionistReducer = (state = initialState, action) => {
     case GET_FILTERED_PATIENTS:
       return {
         ...state,
-        isLoading: false,
+        isLoadingFilteredPatients: false,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
       };
@@ -122,7 +131,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalFilteredInpatients: action.payload.totalInpatients,
         filteredInPatients: action.payload.inpatients,
-        isLoading: false,
+        isLoadingFilteredInPatients: false,
       };
 
     case GET_PATIENT_DETAILS:
@@ -175,6 +184,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalFilteredRooms: action.payload.totalRooms,
         filteredRooms: action.payload.rooms,
+        isLoadingFilteredRooms: false,
       };
 
     case ADD_ROOM:
@@ -214,10 +224,10 @@ export const receptionistReducer = (state = initialState, action) => {
       };
 
     case GET_SERVICES_BY_DEPARTMENT_ID:
-      return{
+      return {
         ...state,
-        servicesByDepartment: action.payload.services
-      }
+        servicesByDepartment: action.payload.services,
+      };
 
     case GET_APPOINTMENTS:
       return {
@@ -322,16 +332,16 @@ export const receptionistReducer = (state = initialState, action) => {
       };
 
     case UPLOAD_PATIENT_FILE:
-      return{
+      return {
         ...state,
-        patientFiles: [...state.patientFiles,action.payload]
-      }
+        patientFiles: [...state.patientFiles, action.payload],
+      };
 
     case GET_PATIENT_FILES:
-      return{
+      return {
         ...state,
-        patientFiles: action.payload
-      }
+        patientFiles: action.payload,
+      };
 
     default:
       return state;

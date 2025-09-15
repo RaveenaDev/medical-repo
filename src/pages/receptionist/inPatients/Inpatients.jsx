@@ -8,6 +8,7 @@ import AppointmentRequestModal from "../../doctor/components/appointmentRequests
 import {
   Box,
   Button,
+  CircularProgress,
   Drawer,
   FormControl,
   FormControlLabel,
@@ -44,6 +45,9 @@ const InPatients = (props) => {
   const doctor = useSelector((store) => store.doctor);
   const totalFilteredInPatients = doctor.totalFilteredInpatients;
   const filteredInPatients = doctor.filteredInPatients;
+  const isLoadingFilteredInPatients = useSelector(
+    (store) => store.receptionist.isLoadingFilteredInPatients
+  );
 
   const debouncedSearch = useDebounce(searchQuery, 500);
 
@@ -210,86 +214,107 @@ const InPatients = (props) => {
       </div>
 
       <div className={styles.patientsTableContainer}>
-        {filteredInPatients && filteredInPatients.length > 0 ? (
-          <div className={styles.tableWrapper}>
-            <table className={styles.patientsTable}>
-              <thead>
-                <tr>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient ID</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Patient</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Bed</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Room</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Wing/Floor</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Doctor</th>
-                  <th style={{ backgroundColor: "#F1F1F1" }}>Status</th>
-                  {/*<th></th>*/}
-                </tr>
-              </thead>
-              <tbody>
-                {filteredInPatients.map((patient, index) => (
-                  <tr key={index}>
-                    <td className={styles.patientId}>
-                      {truncateText(patient?.patId || "Not Assigned", 12)}
-                    </td>
-                    <td className={styles.patientInfo}>
-                      <div>
-                        <div className={styles.patientName}>
-                          {truncateText(patient?.name || "Not Assigned", 15)}
-                        </div>
-                        <div className={styles.patientEmail}>
-                          {truncateText(patient?.email || "Not Assigned", 15)}
-                        </div>
-                      </div>
-                    </td>
-                    <td className={styles.bedNumber}>
-                      <div> {patient?.bedNumber || "Not Assigned"}</div>
-                      <div>{patient?.roomType || "Not Assigned"}</div>
-                    </td>
-                    <td className={styles.room}>
-                      <div>{patient?.roomID || "Not Assigned"}</div>
-                      <div>{patient?.roomName || "Not Assigned"}</div>
-                    </td>
-                    <td className={styles.status}>
-                      <div>{patient?.wing || "N/A"} Wing</div>
-                      <div>{patient?.floor || "N/A"} Floor</div>
-                    </td>
-                    <td className={styles.doctor}>
-                      {patient?.doctor?.name || "Not Assigned"}
-                    </td>
-                    <td className={styles.status}>
-                      <span
-                        className={`${styles.statusBadge} ${
-                          styles[patient.status.toLowerCase()]
-                        }`}
-                      >
-                        {patient?.status}
-                      </span>
-                    </td>
-                    {/*<td className={styles.actions}>*/}
-                    {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
-                    {/*</td>*/}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <TablePagination
-              component="div"
-              count={totalFilteredInPatients}
-              page={page} // current page
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage} // items per page
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-              sx={{
-                width: "100%",
-                backgroundColor: "#fff",
-                borderTop: "2px solid #ddd",
-                zIndex: 11,
-              }}
-            />
-          </div>
+        {isLoadingFilteredInPatients ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "60vh", // or full height you need
+            }}
+          >
+            <CircularProgress sx={{ color: "#25307F" }} size={58} />
+          </Box>
         ) : (
-          <div className={styles.noDataMessage}>No inpatients found.</div>
+          <>
+            {filteredInPatients && filteredInPatients.length > 0 ? (
+              <div className={styles.tableWrapper}>
+                <table className={styles.patientsTable}>
+                  <thead>
+                    <tr>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Patient ID</th>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Patient</th>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Bed</th>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Room</th>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Wing/Floor</th>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Doctor</th>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Status</th>
+                      {/*<th></th>*/}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredInPatients.map((patient, index) => (
+                      <tr key={index}>
+                        <td className={styles.patientId}>
+                          {truncateText(patient?.patId || "Not Assigned", 12)}
+                        </td>
+                        <td className={styles.patientInfo}>
+                          <div>
+                            <div className={styles.patientName}>
+                              {truncateText(
+                                patient?.name || "Not Assigned",
+                                15
+                              )}
+                            </div>
+                            <div className={styles.patientEmail}>
+                              {truncateText(
+                                patient?.email || "Not Assigned",
+                                15
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className={styles.bedNumber}>
+                          <div> {patient?.bedNumber || "Not Assigned"}</div>
+                          <div>{patient?.roomType || "Not Assigned"}</div>
+                        </td>
+                        <td className={styles.room}>
+                          <div>{patient?.roomID || "Not Assigned"}</div>
+                          <div>{patient?.roomName || "Not Assigned"}</div>
+                        </td>
+                        <td className={styles.status}>
+                          <div>{patient?.wing || "N/A"} Wing</div>
+                          <div>{patient?.floor || "N/A"} Floor</div>
+                        </td>
+                        <td className={styles.doctor}>
+                          {patient?.doctor?.name || "Not Assigned"}
+                        </td>
+                        <td className={styles.status}>
+                          <span
+                            className={`${styles.statusBadge} ${
+                              styles[patient.status.toLowerCase()]
+                            }`}
+                          >
+                            {patient?.status}
+                          </span>
+                        </td>
+                        {/*<td className={styles.actions}>*/}
+                        {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
+                        {/*</td>*/}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <TablePagination
+                  component="div"
+                  count={totalFilteredInPatients}
+                  page={page} // current page
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage} // items per page
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                  sx={{
+                    width: "100%",
+                    backgroundColor: "#fff",
+                    borderTop: "2px solid #ddd",
+                    zIndex: 11,
+                  }}
+                />
+              </div>
+            ) : (
+              <div className={styles.noDataMessage}>No inpatients found.</div>
+            )}
+          </>
         )}
 
         <Drawer
