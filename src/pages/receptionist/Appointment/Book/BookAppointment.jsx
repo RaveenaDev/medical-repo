@@ -353,6 +353,20 @@ const BookAppointment = ({
                 fullWidth
                 error={!!errors.departmentName}
                 helperText={errors.departmentName}
+                slotProps={{
+                  select: {
+                    MenuProps: {
+                      PaperProps: {
+                        style: {
+                          maxHeight: 200, // Fixed (max) height in pixels
+                          overflowY: "auto",
+                        },
+                      },
+                      // Or use sx for MUI v5:
+                      // sx: { maxHeight: 200, overflowY: "auto" }
+                    },
+                  },
+                }}
               >
                 {departments.map((department, index) => (
                   <MenuItem
@@ -376,6 +390,20 @@ const BookAppointment = ({
                 fullWidth
                 error={!!errors.doctorEmail}
                 helperText={errors.doctorEmail}
+                slotProps={{
+                  select: {
+                    MenuProps: {
+                      PaperProps: {
+                        style: {
+                          maxHeight: 200, // Fixed (max) height in pixels
+                          overflowY: "auto",
+                        },
+                      },
+                      // Or use sx for MUI v5:
+                      // sx: { maxHeight: 200, overflowY: "auto" }
+                    },
+                  },
+                }}
               >
                 {doctorsByDepartment.map((doctor, index) => (
                   <MenuItem key={index} value={doctor.email}>
