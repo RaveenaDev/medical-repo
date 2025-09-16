@@ -211,7 +211,7 @@ const Rooms = () => {
 
   // console.log("Rooms : ",rooms)
 
-  const loading = false;
+  const loading = doctor.isLoadingFilteredRooms;
   const doctors = useSelector((state) => state.admin.doctors);
 
   return (

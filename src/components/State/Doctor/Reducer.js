@@ -71,10 +71,12 @@ const initialState = {
   surgeries: [],
   totalFilteredSurgeries: null,
   filteredSurgeries: [],
+  isLoadingFilteredSurgeries: true,
   totalRooms: null,
   rooms: [],
   totalFilteredRooms: null,
   filteredRooms: [],
+  isLoadingFilteredRooms: true,
   criticalPatients: [],
   isLoadingCriticalPatients: true,
   totalDiagnosis: null,
@@ -192,7 +194,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredSurgeries: action.payload.totalSurgeries,
         filteredSurgeries: action.payload.surgeries,
-        isLoading: false,
+        isLoadingFilteredSurgeries: false,
       };
 
     case GET_ROOMS:
@@ -207,7 +209,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredRooms: action.payload.totalRooms,
         filteredRooms: action.payload.rooms,
-        isLoading: false,
+        isLoadingFilteredRooms: false,
       };
 
     case GET_DOCTORS:
