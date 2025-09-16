@@ -65,6 +65,7 @@ const initialState = {
   staffCount: null,
   totalFilteredInpatients: null,
   filteredInPatients: [],
+  isLoadingFilteredInPatients: true,
   totalRooms: null,
   totalFilteredRooms: null,
   patient: null,
@@ -106,7 +107,9 @@ const initialState = {
   requestsToApprove: [],
   doctorRequests: [],
   insuredPatients: [],
+  isLoadingInsurancePatients: true,
   insuranceCompanies: [],
+  isLoadingInsuranceCompanies: true,
   estimatedBill: null,
   packages: [],
   progressTracker: [],
@@ -437,12 +440,14 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         insuredPatients: action.payload.data,
+        isLoadingInsurancePatients: false,
       };
 
     case GET_INSURANCE_COMPANIES:
       return {
         ...state,
         insuranceCompanies: action.payload.companies,
+        isLoadingInsuranceCompanies: false,
       };
 
     case ADD_INSURANCE_COMPANY:
@@ -550,7 +555,7 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         totalFilteredInpatients: action.payload.totalInpatients,
         filteredInPatients: action.payload.inpatients,
-        isLoading: false,
+        isLoadingFilteredInPatients: false,
       };
     default:
       return state;

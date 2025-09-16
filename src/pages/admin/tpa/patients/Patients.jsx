@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Box, TablePagination } from "@mui/material";
+import { Button, Box, TablePagination, CircularProgress } from "@mui/material";
 import styles from "./Patients.module.scss";
 import ViewModal from "./modals/ViewModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,6 +43,9 @@ const Patients = () => {
   }, [dispatch]);
 
   const insuredPatients = useSelector((store) => store.admin.insuredPatients);
+  const loading = useSelector(
+    (store) => store.admin.isLoadingInsurancePatients
+  );
 
   // console.log("Ins: ",insuredPatients)
 
@@ -50,139 +53,152 @@ const Patients = () => {
 
   return (
     <div className={styles.billingsContainer}>
-      <div className={styles.billingsTable} style={{ position: "relative" }}>
-        {/* Table Header */}
-        <div className={styles.tableHeader}>
-          <span>PAT ID</span>
-          <span>Name</span>
-          <span>Phone No.</span>
-          <span>Policy No.</span>
-          <span>Company</span>
-
-          <span>Status</span>
-          <span></span>
-        </div>
-
-        {/* Table Body */}
-        <div
-          className={styles.tableBody}
-          style={{
-            paddingBottom: "1vh",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.4vh",
-            background: "#f1f1f1",
-
-            height: "69vh",
-            overflowY: "auto",
-          }}
-        >
-          {insuredPatients.length > 0 ? (
-            insuredPatients
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item) => (
-                <div className={styles.tableRow} key={item._id}>
-                  {/*<span className={styles.blue}>{item.patient?.insuranceDetails?.insuranceIdNumber}</span>*/}
-                  <span className={styles.blue}>{item.patient?.patId}</span>
-                  <span
-                    className={styles.blue}
-                    style={{ display: "flex", flexDirection: "column" }}
-                  >
-                    <span>{item.patient?.name}</span>
-                    <span
-                      style={{
-                        fontSize: "0.85rem",
-                        color: "#555",
-                        maxWidth: "150px", // Adjust as needed
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                      }}
-                      title={item.patient.email} // Show full email on hover
-                    >
-                      {item.patient.email}
-                    </span>
-                  </span>
-                  <span className={styles.grey}>{item.patient.phone}</span>
-                  <span className={styles.grey}>
-                    {item.admissionDetails.insurance?.policyNumber}
-                  </span>
-                  <span className={styles.grey}>
-                    {item.admissionDetails.insurance?.insuranceCompany}
-                  </span>
-
-                  <span
-                    className={`${styles.status} ${
-                      item.admissionDetails.insurance.insuranceApproved.toLowerCase() ===
-                      "approved"
-                        ? styles.ongoing
-                        : item.admissionDetails.insurance.insuranceApproved.toLowerCase() ===
-                          "pending"
-                        ? styles.pending
-                        : styles.rejected
-                    }`}
-                  >
-                    {item.admissionDetails.insurance.insuranceApproved
-                      .charAt(0)
-                      .toUpperCase() +
-                      item.admissionDetails.insurance.insuranceApproved.slice(
-                        1
-                      )}
-                  </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      //marginRight: "2vw",
-                    }}
-                  >
-                    <button
-                      onClick={() => handleViewClick(item)} // pass entire record
-                      className={styles.viewBtn}
-                    >
-                      View
-                    </button>
-                  </div>
-                </div>
-              ))
-          ) : (
-            <div
-              className={`${styles.tableRow} ${styles.blue}`}
-              style={{
-                gridTemplateColumns: "1fr",
-                textAlign: "center",
-                fontSize: "2.3vh",
-                fontWeight: "500",
-              }}
-            >
-              No Records Found
-            </div>
-          )}
-        </div>
-
-        {/* Pagination */}
+      {loading ? (
         <Box
           sx={{
-            width: "100%",
-            position: "sticky",
-            bottom: 0,
-            backgroundColor: "#fff",
-            borderTop: "2px solid #ddd",
-            zIndex: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "83vh", // or full height you need
+            bgcolor: "#f1f1f1",
           }}
         >
-          <TablePagination
-            component="div"
-            count={insurancePatientsCount}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
-          />
+          <CircularProgress sx={{ color: "#25307F" }} size={55} />
         </Box>
-      </div>
+      ) : (
+        <div className={styles.billingsTable} style={{ position: "relative" }}>
+          {/* Table Header */}
+          <div className={styles.tableHeader}>
+            <span>PAT ID</span>
+            <span>Name</span>
+            <span>Phone No.</span>
+            <span>Policy No.</span>
+            <span>Company</span>
 
+            <span>Status</span>
+            <span></span>
+          </div>
+
+          {/* Table Body */}
+          <div
+            className={styles.tableBody}
+            style={{
+              paddingBottom: "1vh",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.4vh",
+              background: "#f1f1f1",
+
+              height: "69vh",
+              overflowY: "auto",
+            }}
+          >
+            {insuredPatients.length > 0 ? (
+              insuredPatients
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item) => (
+                  <div className={styles.tableRow} key={item._id}>
+                    {/*<span className={styles.blue}>{item.patient?.insuranceDetails?.insuranceIdNumber}</span>*/}
+                    <span className={styles.blue}>{item.patient?.patId}</span>
+                    <span
+                      className={styles.blue}
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
+                      <span>{item.patient?.name}</span>
+                      <span
+                        style={{
+                          fontSize: "0.85rem",
+                          color: "#555",
+                          maxWidth: "150px", // Adjust as needed
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                        }}
+                        title={item.patient.email} // Show full email on hover
+                      >
+                        {item.patient.email}
+                      </span>
+                    </span>
+                    <span className={styles.grey}>{item.patient.phone}</span>
+                    <span className={styles.grey}>
+                      {item.admissionDetails.insurance?.policyNumber}
+                    </span>
+                    <span className={styles.grey}>
+                      {item.admissionDetails.insurance?.insuranceCompany}
+                    </span>
+
+                    <span
+                      className={`${styles.status} ${
+                        item.admissionDetails.insurance.insuranceApproved.toLowerCase() ===
+                        "approved"
+                          ? styles.ongoing
+                          : item.admissionDetails.insurance.insuranceApproved.toLowerCase() ===
+                            "pending"
+                          ? styles.pending
+                          : styles.rejected
+                      }`}
+                    >
+                      {item.admissionDetails.insurance.insuranceApproved
+                        .charAt(0)
+                        .toUpperCase() +
+                        item.admissionDetails.insurance.insuranceApproved.slice(
+                          1
+                        )}
+                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        //marginRight: "2vw",
+                      }}
+                    >
+                      <button
+                        onClick={() => handleViewClick(item)} // pass entire record
+                        className={styles.viewBtn}
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))
+            ) : (
+              <div
+                className={`${styles.tableRow} ${styles.blue}`}
+                style={{
+                  gridTemplateColumns: "1fr",
+                  textAlign: "center",
+                  fontSize: "2.3vh",
+                  fontWeight: "500",
+                }}
+              >
+                No Records Found
+              </div>
+            )}
+          </div>
+
+          {/* Pagination */}
+          <Box
+            sx={{
+              width: "100%",
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 2,
+            }}
+          >
+            <TablePagination
+              component="div"
+              count={insurancePatientsCount}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
+            />
+          </Box>
+        </div>
+      )}
       {/* Modal */}
       {activeModal === "view" && (
         <>

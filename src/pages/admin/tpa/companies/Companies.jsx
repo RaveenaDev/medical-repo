@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -45,7 +46,9 @@ const Companies = () => {
   }, [dispatch]);
 
   const companies = useSelector((store) => store.admin.insuranceCompanies);
-
+  const loading = useSelector(
+    (store) => store.admin.isLoadingInsuranceCompanies
+  );
   // console.log("Comp: ",companies)
 
   const navigate = useNavigate();
@@ -87,89 +90,105 @@ const Companies = () => {
           ADD COMPANY
         </Button>
       </div>
-
-      <div className={styles.billingsTable} style={{ position: "relative" }}>
-        {/* Table Header */}
-        <div className={styles.tableHeader}>
-          <span>Company ID</span>
-          <span style={{ textAlign: "center" }}>Company Name</span>
-          <span></span>
-        </div>
-
-        {/* Table Body */}
-        <div
-          className={styles.tableBody}
-          style={{
-            paddingBottom: "1vh",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.4vh",
-            background: "#f1f1f1",
-            height: "63vh",
-            overflowY: "auto",
-          }}
-        >
-          {companies.length > 0 ? (
-            companies
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((company) => (
-                <div className={styles.tableRow} key={company._id}>
-                  <span className={styles.blue}>{company.id}</span>
-                  <span style={{ textAlign: "center" }} className={styles.blue}>
-                    {company.name}
-                  </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      marginRight: "2vw",
-                    }}
-                  >
-                    <button
-                      onClick={() => handleViewClick(company)}
-                      className={styles.viewBtn}
-                    >
-                      View
-                    </button>
-                  </div>
-                </div>
-              ))
-          ) : (
-            <div
-              className={`${styles.tableRow} ${styles.blue}`}
-              style={{
-                gridTemplateColumns: "1fr",
-                textAlign: "center",
-                fontSize: "2.3vh",
-                fontWeight: "500",
-              }}
-            >
-              No Records Found
-            </div>
-          )}
-        </div>
-        {/* Pagination */}
+      {loading ? (
         <Box
           sx={{
-            width: "100%",
-            position: "sticky",
-            bottom: 10,
-            backgroundColor: "#fff",
-            borderTop: "2px solid #ddd",
-            zIndex: 11,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "75vh", // or full height you need
+            bgcolor: "#F1F1F1",
           }}
         >
-          <TablePagination
-            component="div"
-            count={companyCount}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
-          />
+          <CircularProgress sx={{ color: "#25307F" }} size={55} />
         </Box>
-      </div>
+      ) : (
+        <div className={styles.billingsTable} style={{ position: "relative" }}>
+          {/* Table Header */}
+          <div className={styles.tableHeader}>
+            <span>Company ID</span>
+            <span style={{ textAlign: "center" }}>Company Name</span>
+            <span></span>
+          </div>
+
+          {/* Table Body */}
+          <div
+            className={styles.tableBody}
+            style={{
+              paddingBottom: "1vh",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.4vh",
+              background: "#f1f1f1",
+              height: "63vh",
+              overflowY: "auto",
+            }}
+          >
+            {companies.length > 0 ? (
+              companies
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((company) => (
+                  <div className={styles.tableRow} key={company._id}>
+                    <span className={styles.blue}>{company.id}</span>
+                    <span
+                      style={{ textAlign: "center" }}
+                      className={styles.blue}
+                    >
+                      {company.name}
+                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginRight: "2vw",
+                      }}
+                    >
+                      <button
+                        onClick={() => handleViewClick(company)}
+                        className={styles.viewBtn}
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))
+            ) : (
+              <div
+                className={`${styles.tableRow} ${styles.blue}`}
+                style={{
+                  gridTemplateColumns: "1fr",
+                  textAlign: "center",
+                  fontSize: "2.3vh",
+                  fontWeight: "500",
+                }}
+              >
+                No Records Found
+              </div>
+            )}
+          </div>
+          {/* Pagination */}
+          <Box
+            sx={{
+              width: "100%",
+              position: "sticky",
+              bottom: 10,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 11,
+            }}
+          >
+            <TablePagination
+              component="div"
+              count={companyCount}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
+            />
+          </Box>
+        </div>
+      )}
 
       <CompanyRateModal
         open={modalOpen}

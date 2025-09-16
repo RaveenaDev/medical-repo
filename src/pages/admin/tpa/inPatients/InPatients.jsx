@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
+  CircularProgress,
   Drawer,
   FormControl,
   FormControlLabel,
@@ -31,7 +32,7 @@ const InPatients = () => {
   // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Filters (status, type, sort order)
   const [filters, setFilters] = useState({
@@ -48,17 +49,19 @@ const InPatients = () => {
   const doctor = useSelector((store) => store.doctor);
   const totalFilteredInPatients = doctor.totalFilteredInpatients;
   const filteredInPatients = doctor.filteredInPatients;
-
-    const debouncedSearch = useDebounce(searchQuery, 500);
+  const isLoadingFilteredInPatients = doctor.isLoadingFilteredInPatients;
+  const debouncedSearch = useDebounce(searchQuery, 500);
 
   // Fetch patients whenever filters/pagination change
   useEffect(() => {
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage,debouncedSearch));
-  }, [dispatch, sortOrder, page, rowsPerPage,filters,debouncedSearch]);
+    dispatch(
+      getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch)
+    );
+  }, [dispatch, sortOrder, page, rowsPerPage, filters, debouncedSearch]);
 
-    useEffect(() => {
-        setPage(0);
-    }, [debouncedSearch, filters.status, sortOrder]);
+  useEffect(() => {
+    setPage(0);
+  }, [debouncedSearch, filters.status, sortOrder]);
 
   // Helper: truncate long strings (ID, name, email)
   const truncateText = (text, maxLength) =>
@@ -151,190 +154,212 @@ const InPatients = () => {
         </div>
         <hr />
       </div>
-
-      {/* Patients Table */}
-      <div className={styles.patientsTableContainer}>
-        {filteredInPatients && filteredInPatients.length > 0 ? (
-          <div className={styles.tableWrapper}>
-            <table className={styles.patientsTable}>
-              <thead>
-                <tr>
-                  <th>Patient ID</th>
-                  <th>Patient</th>
-                  <th>Bed</th>
-                  <th>Condition</th>
-                  <th>Doctor</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredInPatients.map((patient, index) => (
-                  <tr key={index}>
-                    <td className={styles.patientId}>
-                      {truncateText(patient?.patId || "Not Assigned", 12)}
-                    </td>
-                    <td className={styles.patientInfo}>
-                      <div>
-                        <div className={styles.patientName}>
-                          {truncateText(patient?.name || "Not Assigned", 15)}
-                        </div>
-                        <div className={styles.patientEmail}>
-                          {truncateText(patient?.email || "Not Assigned", 15)}
-                        </div>
-                      </div>
-                    </td>
-                    <td className={styles.bedNumber}>
-                      {patient?.bedType || "Not Assigned"}
-                    </td>
-                    <td className={styles.condition}>
-                      {patient?.admissionStatus || "Not Assigned"}
-                    </td>
-                    <td className={styles.doctor}>
-                      {patient?.doctor?.name || "Not Assigned"}
-                    </td>
-                    <td className={styles.status}>
-                      <span
-                        className={`${styles.statusBadge} ${
-                          styles[patient.status?.toLowerCase()]
-                        }`}
-                      >
-                        {patient?.status}
-                      </span>
-                    </td>
-                    <td className={styles.actions}>
-                      {/* Menu with options like Add Insurance */}
-                      <ActionMenu patient={patient} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className={styles.noDataMessage}>No inpatients found.</div>
-        )}
-
-        {/* Filter Drawer (right side) */}
-        <Drawer
-          anchor="right"
-          open={filterDrawerOpen}
-          onClose={() => setFilterDrawerOpen(false)}
+      {isLoadingFilteredInPatients ? (
+        <Box
           sx={{
-            "& .MuiDrawer-paper": {
-              height: "58vh",
-              top: "18vh",
-              borderRadius: "10px 0 0 10px",
-            },
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "67vh", // or full height you need
           }}
         >
-          <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
-            {/* Drawer Header */}
-            <Box
+          <CircularProgress sx={{ color: "#25307F" }} size={55} />
+        </Box>
+      ) : (
+        <>
+          {/* Patients Table */}
+          <div className={styles.patientsTableContainer}>
+            {filteredInPatients && filteredInPatients.length > 0 ? (
+              <div className={styles.tableWrapper}>
+                <table className={styles.patientsTable}>
+                  <thead>
+                    <tr>
+                      <th>Patient ID</th>
+                      <th>Patient</th>
+                      <th>Bed</th>
+                      <th>Condition</th>
+                      <th>Doctor</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredInPatients.map((patient, index) => (
+                      <tr key={index}>
+                        <td className={styles.patientId}>
+                          {truncateText(patient?.patId || "Not Assigned", 12)}
+                        </td>
+                        <td className={styles.patientInfo}>
+                          <div>
+                            <div className={styles.patientName}>
+                              {truncateText(
+                                patient?.name || "Not Assigned",
+                                15
+                              )}
+                            </div>
+                            <div className={styles.patientEmail}>
+                              {truncateText(
+                                patient?.email || "Not Assigned",
+                                15
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className={styles.bedNumber}>
+                          {patient?.bedType || "Not Assigned"}
+                        </td>
+                        <td className={styles.condition}>
+                          {patient?.admissionStatus || "Not Assigned"}
+                        </td>
+                        <td className={styles.doctor}>
+                          {patient?.doctor?.name || "Not Assigned"}
+                        </td>
+                        <td className={styles.status}>
+                          <span
+                            className={`${styles.statusBadge} ${
+                              styles[patient.status?.toLowerCase()]
+                            }`}
+                          >
+                            {patient?.status}
+                          </span>
+                        </td>
+                        <td className={styles.actions}>
+                          {/* Menu with options like Add Insurance */}
+                          <ActionMenu patient={patient} />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className={styles.noDataMessage}>No inpatients found.</div>
+            )}
+
+            {/* Filter Drawer (right side) */}
+            <Drawer
+              anchor="right"
+              open={filterDrawerOpen}
+              onClose={() => setFilterDrawerOpen(false)}
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 2,
+                "& .MuiDrawer-paper": {
+                  height: "58vh",
+                  top: "18vh",
+                  borderRadius: "10px 0 0 10px",
+                },
               }}
             >
-              <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
-                Filter By
-              </Typography>
-              <IconButton
-                sx={{ color: "black" }}
-                onClick={() => setFilterDrawerOpen(false)}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
+              <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
+                {/* Drawer Header */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 2,
+                  }}
+                >
+                  <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
+                    Filter By
+                  </Typography>
+                  <IconButton
+                    sx={{ color: "black" }}
+                    onClick={() => setFilterDrawerOpen(false)}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
 
-            {/* Filter Options */}
-            <FormControl sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}>
-              <FormLabel
-                sx={{
-                  marginBottom: 1,
-                  color: "#000000",
-                  "&.Mui-focused": { color: "#000000" },
-                }}
-              >
-                Status
-              </FormLabel>
-              <RadioGroup
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
-              >
-                {["Stable", "Critical", "Moderate"].map((status) => (
-                  <FormControlLabel
-                    key={status}
-                    value={status}
-                    control={
-                      <Radio
-                        sx={{
-                          color: "#878787",
-                          "&.Mui-checked": { color: "#25307F" },
-                        }}
+                {/* Filter Options */}
+                <FormControl
+                  sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}
+                >
+                  <FormLabel
+                    sx={{
+                      marginBottom: 1,
+                      color: "#000000",
+                      "&.Mui-focused": { color: "#000000" },
+                    }}
+                  >
+                    Status
+                  </FormLabel>
+                  <RadioGroup
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                  >
+                    {["Stable", "Critical", "Moderate"].map((status) => (
+                      <FormControlLabel
+                        key={status}
+                        value={status}
+                        control={
+                          <Radio
+                            sx={{
+                              color: "#878787",
+                              "&.Mui-checked": { color: "#25307F" },
+                            }}
+                          />
+                        }
+                        label={status}
+                        sx={{ height: "34px", color: "#878787" }}
                       />
-                    }
-                    label={status}
-                    sx={{ height: "34px", color: "#878787" }}
-                  />
-                ))}
-                <FormControlLabel
-                  value=""
-                  control={
-                    <Radio
-                      sx={{
-                        color: "#878787",
-                        "&.Mui-checked": { color: "#25307F" },
-                      }}
+                    ))}
+                    <FormControlLabel
+                      value=""
+                      control={
+                        <Radio
+                          sx={{
+                            color: "#878787",
+                            "&.Mui-checked": { color: "#25307F" },
+                          }}
+                        />
+                      }
+                      label="All"
+                      sx={{ height: "34px", color: "#878787" }}
                     />
-                  }
-                  label="All"
-                  sx={{ height: "34px", color: "#878787" }}
-                />
-              </RadioGroup>
-            </FormControl>
+                  </RadioGroup>
+                </FormControl>
 
-            {/* Search Button */}
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#25307F",
-                textTransform: "none",
-                borderRadius: "16px",
-                padding: "6px 35px",
-              }}
-              onClick={handleSearchResults}
-            >
-              Search Results
-            </Button>
+                {/* Search Button */}
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#25307F",
+                    textTransform: "none",
+                    borderRadius: "16px",
+                    padding: "6px 35px",
+                  }}
+                  onClick={handleSearchResults}
+                >
+                  Search Results
+                </Button>
+              </Box>
+            </Drawer>
+          </div>
+
+          {/* Pagination Section */}
+          <Box
+            sx={{
+              width: "100%",
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 2,
+            }}
+          >
+            <TablePagination
+              component="div"
+              count={totalFilteredInPatients}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]}
+            />
           </Box>
-        </Drawer>
-      </div>
-
-      {/* Pagination Section */}
-      <Box
-        sx={{
-          width: "100%",
-          position: "sticky",
-          bottom: 0,
-          backgroundColor: "#fff",
-          borderTop: "2px solid #ddd",
-          zIndex: 2,
-        }}
-      >
-        <TablePagination
-          component="div"
-          count={totalFilteredInPatients}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
-        />
-      </Box>
+        </>
+      )}
     </div>
   );
 };
