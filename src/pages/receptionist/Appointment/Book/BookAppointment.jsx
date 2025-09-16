@@ -181,32 +181,37 @@ const BookAppointment = ({
 
   const [loadingBtn, setLoadingBtn] = useState(false);
 
-  const handleClick = () => {
-    if (validateForm()) {
-      setLoadingBtn(true);
+    const handleClick = () => {
+        if (!validateForm()) return;
 
-      // Merge selected time into the date object so backend gets one datetime
-      // const payloadDate = new Date(formData.date);
-      // if (formData.time) {
-      //   const [hh, mm] = formData.time.split(":").map(Number);
-      //   payloadDate.setHours(hh || 0, mm || 0, 0, 0);
-      // }
-      //
-      // const payload = {
-      //   ...formData,
-      //   date: payloadDate, // now includes the time
-      // };
+        setLoadingBtn(true);
 
-      console.log('PAYLOAD: ',formData)
-      setLoadingBtn(false);
+        // Merge selected time into the chosen date (local tz)
+        const merged = new Date(formData.date);
+        const [hh, mm] = (formData.time || "00:00").split(":").map(Number);
+        merged.setHours(hh || 0, mm || 0, 0, 0);
 
-      // dispatch(bookAppointment(payload, onClose)).finally(() => {
-      //   setLoadingBtn(false);
-      // });
-    }
-  };
+        // Build payload as backend expects:
+        // - single 'date' field in UTC ISO format
+        // - omit 'time' since it's merged
+        const { time, ...rest } = formData;
+        const payload = {
+            ...rest,
+            // optional: send age as number if your API expects number
+            age: rest.age !== "" ? Number(rest.age) : undefined,
+            date: merged.toISOString(), // 👉 UTC, e.g. "2025-09-16T09:47:00.000Z"
+        };
 
-  const style = {
+        // console.log("Payload: ",payload)
+
+        // setLoadingBtn(false)
+
+        dispatch(bookAppointment(payload, onClose))
+            .finally(() => setLoadingBtn(false));
+    };
+
+
+    const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
