@@ -293,7 +293,7 @@ function Receptionist(props) {
               style={{
                 position: "fixed",
                 top: "0px",
-                padding: "10px",
+                padding: "6px 10px",
                 width: "77%",
                 background: " #F1F1F1",
                 zIndex: 100,
