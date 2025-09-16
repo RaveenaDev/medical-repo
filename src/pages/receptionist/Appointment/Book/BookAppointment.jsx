@@ -203,7 +203,7 @@ const BookAppointment = ({
         };
 
         // console.log("Payload: ",payload)
-
+        //
         // setLoadingBtn(false)
 
         dispatch(bookAppointment(payload, onClose))
