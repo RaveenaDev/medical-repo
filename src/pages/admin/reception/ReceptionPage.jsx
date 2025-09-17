@@ -226,7 +226,6 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                             }}
                           >
                             <TableCell
-                              component="tr"
                               scope="row"
                               sx={{
                                 color: "#25307f",
@@ -238,7 +237,6 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                               {truncateText(row.caseId, 13)}
                             </TableCell>
                             <TableCell
-                              component="tr"
                               scope="row"
                               sx={{ color: "#25307f", border: "none", px: 0.6 }}
                             >

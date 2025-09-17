@@ -288,7 +288,7 @@ const AdminDoctors = (props) => {
                 <h2 className={ayu.departmentTitleDetails}>{noOfDoctors}</h2>
 
                 <div style={{ marginLeft: "25px" }}>
-                  <Grid xs={3}>
+                  <Grid>
                     <Box
                       sx={{
                         width: "250px",

@@ -223,7 +223,6 @@ const DepartDetails1 = (props) => {
                       >
                         {/* Section 1 */}
                         <Grid
-                          md={4}
                           sx={{
                             display: "flex",
                             justifyContent: "center",
@@ -391,8 +390,6 @@ const DepartDetails1 = (props) => {
 
                         {/* Section 2 */}
                         <Grid
-                          xs={12}
-                          sm={6}
                           sx={{ display: "flex", justifyContent: "center" }}
                           className={avi.section2}
                         >

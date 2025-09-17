@@ -579,7 +579,7 @@ function Appointments(props) {
               >
                 <TablePagination
                   component="div"
-                  count={totalAppointmentsCount}
+                  count={totalAppointmentsCount ?? 0}
                   page={page} // current page
                   onPageChange={handleChangePage}
                   rowsPerPage={rowsPerPage} // items per page

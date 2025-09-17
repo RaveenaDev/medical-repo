@@ -96,9 +96,9 @@ export const Services = () => {
                     width="49.8191"
                     height="49.819"
                     filterUnits="userSpaceOnUse"
-                    color-interpolation-filters="sRGB"
+                    colorInterpolationFilters="sRGB"
                   >
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
                     <feColorMatrix
                       in="SourceAlpha"
                       type="matrix"
@@ -175,9 +175,9 @@ export const Services = () => {
                     width="48.9221"
                     height="48.922"
                     filterUnits="userSpaceOnUse"
-                    color-interpolation-filters="sRGB"
+                    colorInterpolationFilters="sRGB"
                   >
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
                     <feColorMatrix
                       in="SourceAlpha"
                       type="matrix"
@@ -254,9 +254,9 @@ export const Services = () => {
                     width="48.9221"
                     height="48.9221"
                     filterUnits="userSpaceOnUse"
-                    color-interpolation-filters="sRGB"
+                    colorInterpolationFilters="sRGB"
                   >
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
                     <feColorMatrix
                       in="SourceAlpha"
                       type="matrix"
@@ -333,9 +333,9 @@ export const Services = () => {
                     width="48.9221"
                     height="48.9221"
                     filterUnits="userSpaceOnUse"
-                    color-interpolation-filters="sRGB"
+                    colorInterpolationFilters="sRGB"
                   >
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
                     <feColorMatrix
                       in="SourceAlpha"
                       type="matrix"
@@ -412,9 +412,9 @@ export const Services = () => {
                     width="48.9221"
                     height="48.9221"
                     filterUnits="userSpaceOnUse"
-                    color-interpolation-filters="sRGB"
+                    colorInterpolationFilters="sRGB"
                   >
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
                     <feColorMatrix
                       in="SourceAlpha"
                       type="matrix"
@@ -460,8 +460,8 @@ export const Services = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                   d="M21.1292 40.5914C32.3387 40.5914 41.4258 31.5043 41.4258 20.2948C41.4258 9.08523 32.3387 -0.00189209 21.1292 -0.00189209C9.91964 -0.00189209 0.83252 9.08523 0.83252 20.2948C0.83252 31.5043 9.91964 40.5914 21.1292 40.5914ZM21.1292 37.0157C11.8945 37.0157 4.40827 29.5295 4.40827 20.2948C4.40827 11.0601 11.8945 3.57385 21.1292 3.57385C23.9516 3.57385 26.6106 4.27313 28.9426 5.50788L22.873 11.5507L19.2893 7.96711L17.4817 9.74307L22.873 15.1344L31.121 6.88632C35.2055 9.93498 37.8501 14.806 37.8501 20.2948C37.8501 29.5295 30.3639 37.0157 21.1292 37.0157ZM24.1732 26.9952L15.3569 24.585V17.608H17.3865L24.8075 20.3354C24.9978 20.3988 25.1616 20.5362 25.299 20.7477C25.4365 20.9591 25.5052 21.1811 25.5052 21.4137C24.5538 21.3925 23.8349 21.3502 23.3487 21.2868C22.8624 21.2234 22.4395 21.1388 22.0801 21.0331L19.5113 20.1768L18.8136 22.6505L21.763 23.6336C22.1224 23.7605 22.4713 23.845 22.8095 23.8873C23.1478 23.9296 23.6024 23.9507 24.1732 23.9507H30.5793C30.8331 23.9507 31.0603 24.0194 31.2612 24.1569C31.462 24.2943 31.6153 24.4582 31.721 24.6484L24.1732 26.9952ZM7.74561 15.0709V29.0249H15.3569V27.1855L24.2366 29.6592L34.385 26.4878V25.2193C34.385 24.0776 34.015 23.1579 33.275 22.4602C32.535 21.7625 31.6365 21.4137 30.5793 21.4137H28.0423C28.0423 20.6525 27.8256 19.9548 27.3921 19.3206C26.9587 18.6863 26.3932 18.2423 25.6955 17.9886L18.2428 15.2295C18.1159 15.1872 17.9785 15.1502 17.8305 15.1185C17.6825 15.0868 17.5345 15.0709 17.3865 15.0709H7.74561ZM12.8198 26.4878H10.2827V17.608H12.8198V26.4878Z"
                   fill="#628EA1"
                 />
