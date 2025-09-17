@@ -141,7 +141,8 @@ const InPatients = (props) => {
 
   return (
     <>
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", top: "7px",
+          paddingLeft:'8px' }}>
         <CommonPanel />
       </div>
       <div className={styles.patientsHeader}>

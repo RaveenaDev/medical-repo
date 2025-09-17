@@ -186,7 +186,7 @@ const Billings = (props) => {
         >
           <TablePagination
             component="div"
-            count={billsCount}
+            count={billsCount ?? 0}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

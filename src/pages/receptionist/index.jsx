@@ -606,7 +606,7 @@ function Receptionist(props) {
 
                                   <TablePagination
                                       component="div"
-                                      count={totalAppointmentsCount}
+                                      count={totalAppointmentsCount ?? 0}   // fallback to 0 if null
                                       page={page}
                                       onPageChange={handleChangePage}
                                       rowsPerPage={rowsPerPage}

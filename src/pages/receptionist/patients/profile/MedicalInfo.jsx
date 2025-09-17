@@ -114,7 +114,7 @@ MedicalInfo.propTypes = {
     patient: PropTypes.object,
     medicalHistory: PropTypes.array,
     currentMedications: PropTypes.array,
-    patDetails: PropTypes.object,
+    patDetails: PropTypes.array,
     symptoms: PropTypes.array,
     history: PropTypes.array,
     showButton: PropTypes.bool,
