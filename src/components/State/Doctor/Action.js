@@ -325,7 +325,7 @@ export const getAllAppointments =
         },
       });
 
-      // console.log("Getting Appointments : ", data);
+      console.log("Getting Appointments : ", data);
 
       // dispatch({ type: GET_APPOINTMENTS, payload: data });
 

@@ -34,7 +34,7 @@ const Appointments = () => {
 
     // console.log("Fetching for date range:", selectedDate, startDate, endDate);
 
-    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+    ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
       dispatch(
         getAllAppointments(status, startDate, endDate, page, rowsPerPage)
       );
@@ -51,23 +51,58 @@ const Appointments = () => {
     setPage(0);
   };
 
-  const scheduledAppointments = useSelector(
-    (store) => store.doctor.scheduledAppointments
-  );
-  const ongoingAppointments = useSelector(
-    (store) => store.doctor.ongoingAppointments
-  );
-  const waitingAppointments = useSelector(
-    (store) => store.doctor.waitingAppointments
-  );
-  const completedAppointments = useSelector(
-    (store) => store.doctor.completedAppointments
+  const doctorId = localStorage.getItem("userId");
+
+// Appointments
+  const scheduledAppointments = useSelector((store) =>
+      store.doctor.scheduledAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      )
   );
 
-  const scheduledCount = useSelector((store) => store.doctor.scheduledCount);
-  const ongoingCount = useSelector((store) => store.doctor.ongoingCount);
-  const waitingCount = useSelector((store) => store.doctor.waitingCount);
-  const completedCount = useSelector((store) => store.doctor.completedCount);
+  const ongoingAppointments = useSelector((store) =>
+      store.doctor.ongoingAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      )
+  );
+
+  const waitingAppointments = useSelector((store) =>
+      store.doctor.waitingAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      )
+  );
+
+  const completedAppointments = useSelector((store) =>
+      store.doctor.completedAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      )
+  );
+
+// Counts
+  const scheduledCount = useSelector((store) =>
+      store.doctor.scheduledAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      ).length
+  );
+
+  const ongoingCount = useSelector((store) =>
+      store.doctor.ongoingAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      ).length
+  );
+
+  const waitingCount = useSelector((store) =>
+      store.doctor.waitingAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      ).length
+  );
+
+  const completedCount = useSelector((store) =>
+      store.doctor.completedAppointments?.filter(
+          (appt) => appt.doctor._id === doctorId
+      ).length
+  );
+
   const boxData = [
     { id: 1, label: "Scheduled", count: scheduledCount },
     { id: 2, label: "Ongoing", count: ongoingCount },
@@ -120,7 +155,6 @@ const Appointments = () => {
         style={{
           position: "fixed",
           top: 0,
-          padding: "10px",
           width: "77%",
           background: "#F1F1F1",
           zIndex: 100,
@@ -129,16 +163,16 @@ const Appointments = () => {
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: "200px" }}>
-        <div className={styles.todayRow}>
+      <div style={{ marginTop: "25vh" }}>
+        <div className={styles.todayRow} style={{padding:'6px 9px',width:'10vw'}}>
           <div className={styles.text}>
-            <span className={styles.label}>
+            <span className={styles.label} style={{fontSize:'12px'}}>
               {selectedDate.format("YYYY-MM-DD") ===
               dayjs().format("YYYY-MM-DD")
                 ? "Today"
                 : "Selected Date"}
             </span>
-            <span className={styles.date}>
+            <span className={styles.date} style={{fontSize:'11px'}}>
               {selectedDate.format("DD-MM-YYYY")}
             </span>
           </div>
@@ -177,13 +211,13 @@ const Appointments = () => {
               spacing={2}
               justifyContent="space-between"
               alignItems="center"
-              sx={{ margin: "10px 30px 10px 0" }}
+              sx={{ margin: "5px 10px 10px 0" }}
             >
               <Grid size={3} pl={2}>
                 <h3
                   style={{
                     color: "#25307F",
-                    paddingBottom: "12px",
+                    paddingBottom: "4px",
                     cursor: "pointer",
                   }}
                   onClick={handleBack}
@@ -197,7 +231,6 @@ const Appointments = () => {
             {/* Boxes */}
             <div
               style={{
-                marginBottom: "1rem",
                 padding: "0 2rem",
                 display: "flex",
                 gap: "1rem",
@@ -211,21 +244,21 @@ const Appointments = () => {
                       activeBox === box.id ? "#D6E4FF" : "#F1F1F1",
                     px: { sm: 3, md: 5, lg: 7 },
                     mx: "auto",
-                    height: 55,
+                    height: 48,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
                     borderRadius: 1,
                     cursor: "pointer",
                     borderBottom:
-                      activeBox === box.id ? "4px solid #25307F" : "none",
+                      activeBox === box.id ? "3px solid #25307F" : "none",
                     transition: "all 0.3s ease-in-out",
                   }}
                   onClick={() => handleBoxClick(box.id)}
                 >
                   <h2
                     style={{
-                      fontSize: "2.1rem",
+                      fontSize: "1.8rem",
                       fontWeight: 600,
                       color: activeBox === box.id ? "#25307F" : "#4A4A4A",
                     }}
@@ -234,7 +267,7 @@ const Appointments = () => {
                   </h2>
                   <span
                     style={{
-                      fontSize: "1.6rem",
+                      fontSize: "1.4rem",
                       fontWeight: 500,
                       color: "black",
                       marginRight: "4px",
@@ -244,7 +277,7 @@ const Appointments = () => {
                   </span>
                   <p
                     style={{
-                      fontSize: "1.1rem",
+                      fontSize: "1rem",
                       fontWeight: 500,
                       color: activeBox === box.id ? "black" : "#747474",
                       marginTop: "4px",

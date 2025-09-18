@@ -408,7 +408,11 @@ const DoctorOverview = ({ todayAppointments }) => {
 
   const diagnosis = doctor.diagnosis;
 
-  const totalAppointments = doctor.totalAppointments;
+  const doctorId = localStorage.getItem("userId");
+
+  const totalAppointments = doctor.totalAppointments?.filter(
+      (appt) => appt.doctor._id === doctorId
+  );
 
   // console.log("Total : ", totalAppointments);
 
