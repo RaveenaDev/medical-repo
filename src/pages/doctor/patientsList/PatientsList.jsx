@@ -201,6 +201,7 @@ const PatientsList = () => {
           <ChevronLeft
             size={25}
             strokeWidth={1.7}
+            style={{ cursor: "pointer" }}
             onClick={() => {
               navigate("/doctor");
             }}
