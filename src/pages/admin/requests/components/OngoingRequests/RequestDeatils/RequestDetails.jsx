@@ -11,6 +11,7 @@ import {
 } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
 import { ChevronDown, ChevronUp, Paperclip } from "lucide-react";
+import { Avatar } from "@mui/material";
 
 const RequestDetails = ({ request, onBack }) => {
   const timelineMessages = [
@@ -120,7 +121,14 @@ const RequestDetails = ({ request, onBack }) => {
           msg.type === "admin" ? (
             <div key={msg.id} className={styles.yourMessage}>
               <div className={styles.leftYM}>
-                <img src={msg.profileImg} alt="" />
+                <Avatar
+                  sx={{
+                    bgcolor: "#e3e3e3",
+                    color: "#25307F",
+                    fontWeight: 500,
+                  }}
+                  className="patientAvatar"
+                ></Avatar>
                 <div className={styles.dottedLine}></div>
               </div>
               <div>
@@ -136,7 +144,16 @@ const RequestDetails = ({ request, onBack }) => {
           ) : (
             <div key={msg.id} className={styles.docRequestContainer}>
               <div className={styles.docProfile}>
-                <img src={msg.profileImg} alt="" width={40} />
+                <Avatar
+                  sx={{
+                    bgcolor: "#e3e3e3",
+                    color: "#25307F",
+                    fontWeight: 500,
+                  }}
+                  className="patientAvatar"
+                >
+                  {msg.sender.charAt(0)}
+                </Avatar>
                 <p>{msg.sender} added a comment</p>
               </div>
               <div className={styles.docMessage}>
