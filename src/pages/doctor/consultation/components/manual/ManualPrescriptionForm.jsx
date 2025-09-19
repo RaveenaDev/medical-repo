@@ -1,5 +1,7 @@
-import { useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import styles from "./ManualPrescriptionForm.module.scss";
+import {useReactToPrint} from "react-to-print";
+import PrescriptionAndMedicinesPrint from "../print/PrescriptionAndMedicinesPrint.jsx";
 
 const ManualPrescriptionForm = ({ patient, existingData, onConfirm }) => {
     const [form, setForm] = useState({
@@ -25,6 +27,10 @@ const ManualPrescriptionForm = ({ patient, existingData, onConfirm }) => {
             reviewDate: existingData?.followUpInstructions?.reviewDate || "",
         },
     });
+
+    const [submissionData, setSubmissionData] = useState(null);
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -59,9 +65,43 @@ const ManualPrescriptionForm = ({ patient, existingData, onConfirm }) => {
         };
 
         onConfirm(submissionData);
+        setSubmissionData(submissionData); // Storing submission data for printing
 
-        console.log("Submitted data:", submissionData);
+        // console.log("Submitted data:", submissionData);
     };
+
+    // Trigger the print only when submissionData is updated
+    useEffect(() => {
+        if (submissionData) {
+            handleReactPrint(); // Trigger print after submissionData is available
+        }
+    }, [submissionData]);
+
+    const handlePrint = () => {
+        const submissionData = {
+            problemStatement: form.problemStatement,
+            icdCode: form.icdCode,
+            therapyPlan: form.therapyPlan,
+            precautions: form.precautions,
+            followUp: form.followUp,
+            medications: form.medications.split("\n").filter(Boolean),
+            injectionsTherapies: form.injectionsTherapies.split("\n").filter(Boolean),
+            lifestyle: form.lifestyle.split("\n").filter(Boolean),
+            nonDrugRecommendations: form.nonDrugRecommendations.split("\n").filter(Boolean),
+            followUpInstructions: {
+                notes: form.followUpInstructions.notes,
+                reviewDate: form.followUpInstructions.reviewDate,
+            },
+        };
+
+        setSubmissionData(submissionData);
+    }
+
+    const printRef = useRef();
+    const handleReactPrint = useReactToPrint({
+        contentRef: printRef,
+        documentTitle: "Prescriptions And Medicines",
+    });
 
     return (
         <div className={styles.manualWrapper1}>
@@ -178,11 +218,34 @@ const ManualPrescriptionForm = ({ patient, existingData, onConfirm }) => {
 
             </div>
 
-            <div className={styles.footer1}>
-            <button className={styles.submitBtn1} onClick={handleSubmit}>
-                    Approve
+            {/*<div className={styles.footer1}>*/}
+            {/*    <button className={styles.submitBtn1} onClick={handleSubmit}>*/}
+            {/*        Approve*/}
+            {/*    </button>*/}
+            {/*</div>*/}
+
+            <div className={styles.row13}>
+                <button className={styles.print} onClick={handlePrint}>
+                    <img src="/assets/Print-icon.svg" alt=""/>
+                    <p>Print</p>
+                </button>
+                <button
+                    className={styles.approve}
+                    onClick={handleSubmit}
+                >
+                    <img src="/assets/Tick.svg" alt="" height={12}/>
+                    <p>Approve</p>
                 </button>
             </div>
+
+            {/* Only pass submissionData to the print component when the print button is clicked */}
+            {submissionData && (
+                <PrescriptionAndMedicinesPrint
+                    ref={printRef}
+                    prescriptions={submissionData}
+                    patient={patient}
+                />
+            )}
         </div>
     );
 };
