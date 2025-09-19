@@ -43,6 +43,7 @@ import {
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BED_INFO,
   GET_PATIENT_BILLS,
+  GET_PATIENT_DETAILS_BY_PAT_ID,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -1834,3 +1835,26 @@ export const transferPatientToBed =
       });
     }
   };
+
+export const getPatientDetailsByPatId = (patId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/search/patid`,
+
+      {
+        params: { patId },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Patient Details INFO", data);
+    dispatch({ type: GET_PATIENT_DETAILS_BY_PAT_ID, payload: data });
+  } catch (error) {
+    console.error("Patient Details Info not available:", error);
+    dispatch({ type: GET_PATIENT_DETAILS_BY_PAT_ID, payload: [] });
+    throw error;
+  }
+};

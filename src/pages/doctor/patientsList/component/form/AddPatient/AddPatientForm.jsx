@@ -3,10 +3,12 @@ import "./AddPatientForm.scss";
 import {
   createAdmissionRequest,
   getAvailableRooms,
+  getPatientDetailsByPatId,
 } from "../../../../../../components/State/Doctor/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getInsuranceCompanies } from "../../../../../../components/State/Admin/Action.js";
 import AdmissionFormPrintWrapper from "./print/AdmissionFormPrintWrapper.jsx";
+import useDebounce from "../../../../../../hooks/useDebounce.js";
 
 /* ---------- Helpers: Indian-format display + raw-state parsing (no commas) ---------- */
 const formatIndian = (val) => {
@@ -52,7 +54,7 @@ const AddPatientForm = ({ onClose }) => {
   const [hasInsurance, setHasInsurance] = useState(false);
   const [form, setForm] = useState({
     patientName: "",
-    patientId: "",
+    patId: "",
     email: "",
     contactNo: "",
     address: "",
@@ -145,8 +147,8 @@ const AddPatientForm = ({ onClose }) => {
 
     // Patient ID or Email (depending on type)
     if (isExistingPatient) {
-      if (!form.patientId.trim()) {
-        newErrors.patientId = "Patient ID is required";
+      if (!form.patId.trim()) {
+        newErrors.patId = "Patient ID is required";
       }
     } else {
       if (!form.email.trim()) {
@@ -218,9 +220,7 @@ const AddPatientForm = ({ onClose }) => {
         : selectedRoles[0] || "";
 
     const payload = {
-      ...(isExistingPatient
-        ? { patId: form.patientId }
-        : { email: form.email }),
+      ...(isExistingPatient ? { patId: form.patId } : { email: form.email }),
       sendTo: sendToValue,
       mobileNumber: form.contactNo,
       name: form.patientName,
@@ -252,6 +252,62 @@ const AddPatientForm = ({ onClose }) => {
     console.log("Pay: ", payload);
 
     dispatch(createAdmissionRequest(payload, onClose));
+  };
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      dispatch(getPatientDetailsByPatId(debouncedSearch));
+    }
+  }, [debouncedSearch, dispatch]);
+
+  const autoCompletePatientSearch = useSelector(
+    (state) => state.doctor.autoCompletePatientSearch
+  );
+  useEffect(() => {
+    if (autoCompletePatientSearch && isExistingPatient) {
+      setForm((prev) => ({
+        ...prev,
+        patientName: autoCompletePatientSearch.name || "",
+        gender:
+          autoCompletePatientSearch.gender == "Not specified"
+            ? "Other"
+            : autoCompletePatientSearch.gender,
+        age: autoCompletePatientSearch.age || "",
+        address: autoCompletePatientSearch.address || "",
+        email: autoCompletePatientSearch.email || "",
+        contactNo: autoCompletePatientSearch.phone || "",
+      }));
+    }
+  }, [autoCompletePatientSearch, isExistingPatient]);
+  useEffect(() => {
+    if (!debouncedSearch) {
+      // Clear patient details + reset form
+      setForm({
+        patId: "",
+        patientName: "",
+        gender: "",
+        age: "",
+        address: "",
+        email: "",
+        contactNo: "",
+      });
+    }
+  }, [debouncedSearch]);
+  const handleNewPatientToggle = () => {
+    setIsExistingPatient(false);
+
+    setForm({
+      patId: "",
+      patientName: "",
+      gender: "",
+      age: "",
+      address: "",
+      email: "",
+      contactNo: "",
+    });
   };
 
   return (
@@ -293,7 +349,7 @@ const AddPatientForm = ({ onClose }) => {
                 type="radio"
                 name="patientType"
                 checked={!isExistingPatient}
-                onChange={() => setIsExistingPatient(false)}
+                onChange={() => handleNewPatientToggle()}
               />
               New Patient
             </label>
@@ -322,15 +378,16 @@ const AddPatientForm = ({ onClose }) => {
                     <label>Patient ID</label>
                     <input
                       type="text"
-                      value={form.patientId}
-                      onChange={(e) =>
-                        setForm({ ...form, patientId: e.target.value })
-                      }
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setForm({ ...form, patId: e.target.value });
+                      }}
                       required
-                      className={errors.patientId ? "input-error" : ""}
+                      className={errors.patId ? "input-error" : ""}
                     />
-                    {errors.patientId && (
-                      <span className="error">{errors.patientId}</span>
+                    {errors.patId && (
+                      <span className="error">{errors.patId}</span>
                     )}
                   </div>
                 ) : (
