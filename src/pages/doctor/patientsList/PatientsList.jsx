@@ -23,6 +23,7 @@ import { Avatar, TablePagination, Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
 import AddPatientForm from "./component/form/AddPatient/AddPatientForm.jsx";
+import { GET_PATIENT_DETAILS_BY_PAT_ID } from "../../../components/State/Doctor/ActionType.js";
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -73,7 +74,10 @@ const PatientsList = () => {
   const [showForm, setShowForm] = useState(false);
 
   const handleAddPatientClick = () => setShowForm(true);
-  const handleCloseForm = () => setShowForm(false);
+  const handleCloseForm = () => {
+    setShowForm(false);
+    dispatch({ type: GET_PATIENT_DETAILS_BY_PAT_ID, payload: {} });
+  };
 
   const handleAdmitPatientClick = (patientId) => {
     setAdmittingPatientId(patientId);
