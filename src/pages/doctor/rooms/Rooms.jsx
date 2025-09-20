@@ -211,7 +211,7 @@ const Rooms = () => {
 
   // console.log("Rooms : ",rooms)
 
-  const loading = false;
+  const loading = doctor.isLoadingFilteredRooms;
   const doctors = useSelector((state) => state.admin.doctors);
 
   return (
@@ -570,7 +570,43 @@ const Rooms = () => {
                   )}
                 </TableBody>
               </Table>
-
+              <Box
+                sx={{
+                  width: "100%",
+                  position: "sticky",
+                  bottom: 0,
+                  backgroundColor: "#fff",
+                  borderTop: "2px solid #ddd",
+                  zIndex: 2,
+                }}
+              >
+                <TablePagination
+                  component="div"
+                  count={totalFilteredRooms}
+                  page={page} // current page
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage} // items per page
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                  sx={{
+                    width: "100%",
+                    backgroundColor: "#fff",
+                    borderTop: "2px solid #ddd",
+                    zIndex: 11,
+                  }}
+                />
+              </Box>
+            </TableContainer>
+            <Box
+              sx={{
+                width: "100%",
+                position: "sticky",
+                bottom: 0,
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 2,
+              }}
+            >
               <TablePagination
                 component="div"
                 count={totalFilteredRooms}
@@ -586,8 +622,7 @@ const Rooms = () => {
                   zIndex: 11,
                 }}
               />
-            </TableContainer>
-
+            </Box>
             {/* Actions Menu */}
             <Menu
               anchorEl={anchorEl}

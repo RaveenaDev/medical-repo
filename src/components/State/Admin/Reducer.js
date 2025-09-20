@@ -2,7 +2,6 @@ import {
   ACCEPT_REQUEST,
   ADD_DEPARTMENT,
   ADD_DOCTORS,
-  ADD_ESTIMATED_BILL,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
   ADD_ROOM,
@@ -33,6 +32,7 @@ import {
   GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_INSURANCE_COMPANIES,
@@ -46,6 +46,7 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
@@ -62,6 +63,9 @@ const initialState = {
   doctorCount: null,
   totalStaffs: null,
   staffCount: null,
+  totalFilteredInpatients: null,
+  filteredInPatients: [],
+  isLoadingFilteredInPatients: true,
   totalRooms: null,
   totalFilteredRooms: null,
   patient: null,
@@ -103,12 +107,15 @@ const initialState = {
   requestsToApprove: [],
   doctorRequests: [],
   insuredPatients: [],
+  isLoadingInsurancePatients: true,
   insuranceCompanies: [],
+  isLoadingInsuranceCompanies: true,
   estimatedBill: null,
   packages: [],
   progressTracker: [],
   isLoadingGetProgressTracker: true,
   roomTypes: [],
+  servicesByDepartment: [],
   isLoadingRoomTypes: false,
 };
 
@@ -173,6 +180,12 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         department: action.payload,
+      };
+
+    case GET_SERVICES_BY_DEPARTMENT_ID:
+      return {
+        ...state,
+        servicesByDepartment: action.payload.services,
       };
 
     case ADD_DEPARTMENT:
@@ -427,12 +440,14 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         insuredPatients: action.payload.data,
+        isLoadingInsurancePatients: false,
       };
 
     case GET_INSURANCE_COMPANIES:
       return {
         ...state,
         insuranceCompanies: action.payload.companies,
+        isLoadingInsuranceCompanies: false,
       };
 
     case ADD_INSURANCE_COMPANY:
@@ -534,6 +549,13 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         roomTypes: action.payload.subcategories,
         isLoadingRoomTypes: false,
+      };
+    case GET_FILTERED_INPATIENTS:
+      return {
+        ...state,
+        totalFilteredInpatients: action.payload.totalInpatients,
+        filteredInPatients: action.payload.inpatients,
+        isLoadingFilteredInPatients: false,
       };
     default:
       return state;

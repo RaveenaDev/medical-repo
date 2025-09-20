@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;600&family=Inter:wght@400;600&display=swap");
+
+.printLayout {
+  font-family: "Inter", sans-serif;
+  color: #222;
+  background: #fff;
+
+  /* Ensure the layout fills the page but adjusts based on content */
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-height: 100vh; /* Ensure content stretches to fill the page */
+  padding: 15mm 20mm; /* Adjust padding as necessary */
+  box-sizing: border-box;
+}
+
+.pdfHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #c00;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+
+  .hospitalName {
+    h1 {
+      font-size: 20pt;
+      margin: 0;
+      color: #c00;
+      font-weight: 700;
+    }
+    .specialties {
+      font-size: 10pt;
+      margin: 2px 0;
+      font-weight: 600;
+      color: #444;
+    }
+    .contact {
+      font-size: 9pt;
+      color: #555;
+      line-height: 1.3;
+    }
+  }
+
+  .logoBox {
+    font-size: 22pt;
+    color: #c00;
+    font-weight: bold;
+  }
+}
+
+/* Patient Info */
+.patientInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+
+  p {
+    font-size: 11pt;
+    margin: 2px 0;
+  }
+}
+
+.separator {
+  border: none;
+  border-top: 1px dashed #aaa;
+  margin: 8px 0;
+}
+
+/* Section */
+.section {
+  margin-top: 12px;
+  page-break-inside: avoid; /* Prevent sections from breaking across pages */
+
+  .sectionTitle {
+    font-size: 13pt;
+    color: #25307f;
+    margin-bottom: 6px;
+    border-left: 4px solid #25307f;
+    padding-left: 6px;
+    font-weight: 600;
+  }
+}
+
+/* Tables */
+.pdfTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+  font-size: 11pt;
+  page-break-inside: avoid; /* Prevent page break in the middle of a table */
+
+  th {
+    background: #f0f2fa;
+    padding: 4px 6px;
+    text-align: left;
+    border: 1px solid #bbb;
+    font-weight: 600;
+    color: #25307f;
+  }
+
+  td {
+    padding: 4px 6px;
+    border: 1px solid #bbb;
+    text-align: left;
+  }
+
+  tr {
+    page-break-inside: avoid; /* Keep rows together */
+  }
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: auto; /* Push footer to the bottom */
+
+  .note {
+    font-size: 9pt;
+    font-style: italic;
+    margin-bottom: 5mm;
+  }
+
+  .signatureBox {
+    text-align: right;
+    p {
+      margin-bottom: 3px;
+      font-weight: 500;
+      font-size: 11pt;
+    }
+    .signLine {
+      width: 60mm;
+      height: 1px;
+      background: #000;
+      margin-left: auto;
+    }
+  }
+}
+
+/* Print Only */
+.printOnly {
+  @media screen {
+    display: none;
+  }
+}

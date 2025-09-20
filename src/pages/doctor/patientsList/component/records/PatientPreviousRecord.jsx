@@ -9,6 +9,7 @@ import DischargeSummary from "./dischargeSummary/DischargeSummary.jsx";
 import TestsAndRecords from "./testandrecords/TestsAndRecords.jsx";
 import Prescriptions from "./prescription/Prescriptions.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
+import Avatar from "@mui/material/Avatar";
 import { Box } from "@mui/material";
 const PatientPreviousRecord = ({ patientDetails, loading }) => {
   // console.log("GOTCHA: ", patientDetails);
@@ -94,11 +95,25 @@ const PatientPreviousRecord = ({ patientDetails, loading }) => {
         <div className="patient-previous-record-container">
           <section className="patient-details">
             <div className="patient-image">
-              <img
-                src="https://randomuser.me/api/portraits/women/12.jpg"
-                alt="Patient"
-                className="patient-image"
-              />
+              <Avatar
+                sx={{
+                  bgcolor: "#e3e3e3",
+                  color: "#25307F",
+                  fontWeight: 500,
+                  width: "4vw",
+                  height: "4vw",
+                  fontSize: "1.5rem",
+                  // fontSize: {
+                  //   xs: "0.75rem", // 12px on mobile
+                  //   sm: "1rem", // 16px on small screens
+                  //   md: "1.25rem", // 20px on medium screens
+                  //   lg: "1.5rem", // 24px on large screens
+                  // },
+                }}
+                className="avatar"
+              >
+                {patientDetails.name[0].toUpperCase()}
+              </Avatar>
             </div>
             <div className="patient-info-container">
               <h2 className="patient_name">{patientDetails.name || "N/A"}</h2>

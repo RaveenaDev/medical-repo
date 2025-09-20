@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -24,7 +25,26 @@ const RoomBedsDialog = ({
   handleChangeRow,
   handleSaveBed,
   handleCancelRow,
+  handleUpdateBed, // <-- send update to backend
 }) => {
+  const [editingBedId, setEditingBedId] = useState(null);
+  const [editedBed, setEditedBed] = useState({});
+
+  const startEditing = (bed) => {
+    setEditingBedId(bed._id); // assuming each bed has an _id
+    setEditedBed({ ...bed });
+  };
+
+  const cancelEditing = () => {
+    setEditingBedId(null);
+    setEditedBed({});
+  };
+
+  const saveEditing = () => {
+    handleUpdateBed(editedBed); // call parent to update backend
+    setEditingBedId(null);
+  };
+
   return (
     <Dialog
       open={open}
@@ -35,7 +55,6 @@ const RoomBedsDialog = ({
         "& .MuiDialog-paper": { maxWidth: "65%" },
       }}
     >
-      {/* Title */}
       <DialogTitle
         sx={{
           fontWeight: "600",
@@ -55,7 +74,6 @@ const RoomBedsDialog = ({
         </Button>
       </DialogTitle>
 
-      {/* Content */}
       <DialogContent
         sx={{
           maxHeight: "500px",
@@ -98,15 +116,81 @@ const RoomBedsDialog = ({
           <TableBody>
             {/* Existing beds */}
             {currentRoom?.beds?.length > 0 &&
-              currentRoom.beds.map((bed, index) => (
-                <TableRow key={`existing-${index}`}>
-                  <TableCell>{bed?.bedNumber || "N/A"}</TableCell>
-                  <TableCell>{bed?.status || "N/A"}</TableCell>
-                  <TableCell></TableCell>
+              currentRoom.beds.map((bed) => (
+                <TableRow key={bed._id}>
+                  <TableCell>
+                    {editingBedId === bed._id ? (
+                      <TextField
+                        size="small"
+                        value={editedBed.bedNumber}
+                        onChange={(e) =>
+                          setEditedBed({
+                            ...editedBed,
+                            bedNumber: e.target.value,
+                          })
+                        }
+                      />
+                    ) : (
+                      bed?.bedNumber || "N/A"
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingBedId === bed._id ? (
+                      <Select
+                        size="small"
+                        value={editedBed.status}
+                        onChange={(e) =>
+                          setEditedBed({ ...editedBed, status: e.target.value })
+                        }
+                      >
+                        <MenuItem value="Available">Available</MenuItem>
+                        <MenuItem value="Occupied">Occupied</MenuItem>
+                        <MenuItem value="Under Maintenance">
+                          Under Maintenance
+                        </MenuItem>
+                      </Select>
+                    ) : (
+                      bed?.status || "N/A"
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingBedId === bed._id ? (
+                      <>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "rgb(46, 130, 59)",
+                            color: "white",
+                          }}
+                          size="small"
+                          onClick={saveEditing}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={cancelEditing}
+                          sx={{ ml: 1 }}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        sx={{ backgroundColor: "#25307F", color: "white" }}
+                        size="small"
+                        onClick={() => startEditing(bed)}
+                      >
+                        Edit Bed
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
 
-            {/* New inline rows */}
+            {/* New inline rows (unchanged) */}
             {newBeds.map((bed, index) => (
               <TableRow key={`new-${index}`}>
                 <TableCell>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.scss";
-import { Box, Button, CircularProgress, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, CircularProgress, Tooltip } from "@mui/material";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ayu from "../departments.module.scss";
 import avi from "./departDetails.module.scss";
@@ -16,7 +16,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getDepartmentById } from "../../../../components/State/Admin/Action.js";
+import {getDepartmentById, getServicesByDepartmentId} from "../../../../components/State/Admin/Action.js";
 
 const DepartDetails1 = (props) => {
   const navigate = useNavigate();
@@ -40,16 +40,21 @@ const DepartDetails1 = (props) => {
 
   const location = useLocation();
   const { departmentId } = location.state || {};
+  // console.log(departmentId)
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getDepartmentById(departmentId));
+    dispatch(getServicesByDepartmentId(departmentId));
   }, [dispatch, departmentId]);
 
-  const department = useSelector((store) => store.admin.department);
+  const admin = useSelector((store) => store.admin);
 
-  // console.log("Dep: ",department)
+  const department = admin.department;
+  const services = admin.servicesByDepartment;
+
+  // console.log("Dep: ", department);
 
   return (
     <>
@@ -110,10 +115,24 @@ const DepartDetails1 = (props) => {
                       <div>
                         <h3 className={avi.heading}>Specific Branch Name</h3>
                         <div className={avi.pro}>
-                          <img
+                          {/* <img
                             className={avi.img}
                             src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
                             alt=""
+                          /> */}
+
+                          <Avatar
+                            src=""
+                            alt="Profile Image"
+                            className={avi.img}
+                            sx={{
+                              width: 80,
+                              height: 80,
+                              borderRadius: "50%",
+                              marginBottom: "2px",
+                              bgcolor: "#e3e3e3",
+                              color: "#25307F",
+                            }}
                           />
                           <p className={avi.name}>
                             {department?.departmentHead.name}
@@ -204,7 +223,6 @@ const DepartDetails1 = (props) => {
                       >
                         {/* Section 1 */}
                         <Grid
-                          md={4}
                           sx={{
                             display: "flex",
                             justifyContent: "center",
@@ -294,7 +312,7 @@ const DepartDetails1 = (props) => {
                                             fontWeight: "bold",
                                           }}
                                         >
-                                          {department?.totalStaffs.length}
+                                          {department?.nurses.length}
                                         </span>
                                       </span>
                                     )}
@@ -313,7 +331,7 @@ const DepartDetails1 = (props) => {
                                       },
                                     }}
                                   >
-                                    {department?.totalStaffs.map(
+                                    {department?.nurses.map(
                                       (staff, index) => (
                                         <MenuItem
                                           key={index}
@@ -324,7 +342,7 @@ const DepartDetails1 = (props) => {
                                             pointerEvents: "none",
                                           }}
                                         >
-                                          {staff?.name}
+                                          {staff}
                                         </MenuItem>
                                       )
                                     )}
@@ -372,262 +390,195 @@ const DepartDetails1 = (props) => {
 
                         {/* Section 2 */}
                         <Grid
-                          xs={12}
-                          sm={6}
                           sx={{ display: "flex", justifyContent: "center" }}
                           className={avi.section2}
                         >
                           <div
-                            style={{
-                              width: "100%",
-                              boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                              padding: "8px 10px 0 20px",
-                              borderRadius: "4px",
-                              border: "1px solid rgba(116, 116, 116, 0.3)",
-                            }}
-                          >
-                            <h4
-                              className={avi.heading}
-                              style={{ fontSize: "15px", color: "#3C3C3C" }}
-                            >
-                              Facilities
-                            </h4>
-                            <ul
                               style={{
-                                listStyleType: "none", // Remove default list style
-                                paddingLeft: "10px",
-                                color: "black",
+                                width: "100%",
+                                boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                                padding: "8px 10px 0 20px",
+                                borderRadius: "4px",
+                                border: "1px solid rgba(116, 116, 116, 0.3)",
                               }}
-                            >
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: "#747474",
-                                    marginRight: "10px",
-                                    fontSize: "1.2em",
-                                    position: "relative",
-                                    top: "-3px", // Adjust this value to control the upward shift
-                                  }}
-                                >
-                                  •
-                                </span>
-                                <div>
-                                  <p className={avi.text1}>Number of Beds:</p>
-                                  <p className={avi.text2}>
-                                    10 (Include ICU/Cardiac Care Units if
-                                    applicable)
-                                  </p>
+                          >
+                            <div className={avi.box3} style={{padding: "0 14px"}}>
+                              <div>
+                                <h4 style={{color: "#000000",fontSize:'1rem'}}>Available services</h4>
+
+                                <div  style={{maxHeight:'60vh',overflowY:'auto'}}>
+                                  {Array.isArray(services) && services.length > 0 ? (
+                                      services.map((serv, sIdx) => (
+                                          <ul
+                                              key={serv?.id || sIdx}
+                                              style={{
+                                                listStyleType: "none",
+                                                paddingLeft: "10px",
+                                                color: "#727272",
+                                                margin: 0,
+                                                marginBottom:"-1rem"
+                                              }}
+                                          >
+                                            <li style={{color: "#000000"}}>
+                                              <span style={{color: "#000000", marginRight: "2px"}}>• </span>
+                                              {serv?.name ?? "Unnamed service"}
+
+                                              {/* Subcategories */}
+                                              {Array.isArray(serv?.categories) && serv.categories.length > 0 && (
+                                                  <ul
+                                                      style={{
+                                                        listStyleType: "disc",
+                                                        marginLeft: "18px",
+                                                        paddingLeft: 0,
+                                                      }}
+                                                  >
+                                                    {serv.categories.map((cat, cIdx) => (
+                                                        <li key={cat?.id || cIdx} style={{color: "#767676",marginBottom:'-7px'}}>
+                                                          {cat?.subCategoryName ?? "Unnamed subcategory"}
+                                                        </li>
+                                                    ))}
+                                                  </ul>
+                                              )}
+                                            </li>
+                                          </ul>
+                                      ))
+                                  ) : (
+                                      <p style={{color: "#9b9b9b", marginLeft: "10px"}}>No services to show.</p>
+                                  )}
                                 </div>
-                              </li>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: "#747474",
-                                    marginRight: "10px",
-                                    fontSize: "1.2em",
-                                    position: "relative",
-                                    top: "-3px", // Adjust this value to control the upward shift
-                                  }}
-                                >
-                                  •
-                                </span>
-                                <div>
-                                  <p className={avi.text1}>
-                                    Specialized Rooms:
-                                  </p>
-                                  <p className={avi.text2}>
-                                    3 Cath Labs, 2 Operating Theaters for
-                                    Cardiovascular Surgeries
-                                  </p>
-                                </div>
-                              </li>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: "#747474",
-                                    marginRight: "10px",
-                                    fontSize: "1.2em",
-                                    position: "relative",
-                                    top: "-3px", // Adjust this value to control the upward shift
-                                  }}
-                                >
-                                  •
-                                </span>
-                                <div>
-                                  <p className={avi.text1}>
-                                    Emergency Care Availability:
-                                  </p>
-                                  <p className={avi.text2}>24/7</p>
-                                </div>
-                              </li>
-                            </ul>
+                              </div>
+                            </div>
                           </div>
                         </Grid>
                       </Grid>
                     </div>
 
-                    <div>
-                      <div className={avi.section3}>
-                        <Grid
-                          container
-                          sx={{
-                            width: "100%",
-                            justifyContent: "flex-start",
-                            paddingBottom: 2,
-                          }}
-                          spacing={2}
-                        >
-                          {/* First Grid Item */}
-                          <Grid xs={12} sm={6} md={5} sx={{ width: "43%" }}>
-                            <div
-                              className={avi.box3}
-                              style={{ padding: "14px" }}
-                            >
-                              <div style={{ marginBottom: "14px" }}>
-                                <h4 style={{ color: "#3C3C3C" }}>
-                                  Available services
-                                </h4>
-                                {department?.availableServices.map(
-                                  (serv, index) => (
-                                    <ul
-                                      key={index}
-                                      style={{
-                                        listStyleType: "none",
-                                        paddingLeft: "10px",
-                                        color: "#727272",
-                                      }}
-                                    >
-                                      <li style={{ color: "#747474" }}>
-                                        <span
-                                          style={{
-                                            color: "#727272",
-                                            marginRight: "2px",
-                                          }}
-                                        >
-                                          •{" "}
-                                        </span>
-                                        {serv}
-                                      </li>
-                                    </ul>
-                                  )
-                                )}
-                              </div>
+                    {/*<div>*/}
+                    {/*  <div className={avi.section3}>*/}
+                    {/*    <Grid*/}
+                    {/*      container*/}
+                    {/*      sx={{*/}
+                    {/*        width: "100%",*/}
+                    {/*        justifyContent: "flex-start",*/}
+                    {/*        paddingBottom: 2,*/}
+                    {/*      }}*/}
+                    {/*      spacing={2}*/}
+                    {/*    >*/}
+                    {/*      /!* First Grid Item *!/*/}
+                    {/*      <Grid xs={12} sm={6} md={5} sx={{ width: "43%" }}>*/}
+                    {/*        <div className={avi.box3} style={{padding: "14px"}}>*/}
+                    {/*          <div style={{marginBottom: "14px"}}>*/}
+                    {/*            <h4 style={{color: "#3C3C3C"}}>Available services:</h4>*/}
 
-                              <div>
-                                <h4 style={{ color: "#3C3C3C" }}>
-                                  Specialized Procedures
-                                </h4>
-                                {department?.specializedProcedures.map(
-                                  (spec, index) => (
-                                    <ul
-                                      key={index}
-                                      style={{
-                                        listStyleType: "none",
-                                        paddingLeft: "10px",
-                                        color: "#727272",
-                                      }}
-                                    >
-                                      <li style={{ color: "#747474" }}>
-                                        <span
-                                          style={{
-                                            color: "#727272",
-                                            marginRight: "2px",
-                                          }}
-                                        >
-                                          •{" "}
-                                        </span>
-                                        {spec}
-                                      </li>
-                                    </ul>
-                                  )
-                                )}
-                              </div>
-                            </div>
-                          </Grid>
+                    {/*            {Array.isArray(services) && services.length > 0 ? (*/}
+                    {/*                services.map((serv, sIdx) => (*/}
+                    {/*                    <ul*/}
+                    {/*                        key={serv?.id || sIdx}*/}
+                    {/*                        style={{*/}
+                    {/*                          listStyleType: "none",*/}
+                    {/*                          paddingLeft: "10px",*/}
+                    {/*                          color: "#727272",*/}
+                    {/*                          margin: 0,*/}
+                    {/*                        }}*/}
+                    {/*                    >*/}
+                    {/*                      <li style={{color: "#000000"}}>*/}
+                    {/*                        <span style={{color: "#000000", marginRight: "2px"}}>• </span>*/}
+                    {/*                        {serv?.name ?? "Unnamed service"}*/}
 
-                          {/* Second Grid Item */}
-                          <Grid xs={12} sm={6} md={7}>
-                            <div
-                              className={avi.box4}
-                              style={{ padding: "14px" }}
-                            >
-                              <div style={{ marginBottom: "14px" }}>
-                                <h4>Critical Equipment</h4>
-                                {department?.criticalEquipment.map(
-                                  (cric, index) => (
-                                    <ul
-                                      key={index}
-                                      style={{
-                                        listStyleType: "none",
-                                        paddingLeft: "10px",
-                                        color: "#727272",
-                                      }}
-                                    >
-                                      <li style={{ color: "#747474" }}>
-                                        <span
-                                          style={{
-                                            color: "#727272",
-                                            marginRight: "2px",
-                                          }}
-                                        >
-                                          •{" "}
-                                        </span>
-                                        {cric}
-                                      </li>
-                                    </ul>
-                                  )
-                                )}
-                              </div>
+                    {/*                        /!* Subcategories *!/*/}
+                    {/*                        {Array.isArray(serv?.categories) && serv.categories.length > 0 && (*/}
+                    {/*                            <ul*/}
+                    {/*                                style={{*/}
+                    {/*                                  listStyleType: "disc",*/}
+                    {/*                                  marginLeft: "18px",*/}
+                    {/*                                  paddingLeft: 0,*/}
+                    {/*                                }}*/}
+                    {/*                            >*/}
+                    {/*                              {serv.categories.map((cat, cIdx) => (*/}
+                    {/*                                  <li key={cat?.id || cIdx} style={{color: "#767676"}}>*/}
+                    {/*                                    {cat?.subCategoryName ?? "Unnamed subcategory"}*/}
+                    {/*                                  </li>*/}
+                    {/*                              ))}*/}
+                    {/*                            </ul>*/}
+                    {/*                        )}*/}
+                    {/*                      </li>*/}
+                    {/*                    </ul>*/}
+                    {/*                ))*/}
+                    {/*            ) : (*/}
+                    {/*                <p style={{color: "#9b9b9b", marginLeft: "10px"}}>No services to show.</p>*/}
+                    {/*            )}*/}
+                    {/*          </div>*/}
+                    {/*        </div>*/}
+                    {/*      </Grid>*/}
 
-                              <div>
-                                <h4 style={{ color: "#3C3C3C" }}>
-                                  Equipment Maintenance
-                                </h4>
-                                {department?.equipmentMaintenance.map(
-                                  (eq, index) => (
-                                    <ul
-                                      key={index}
-                                      style={{
-                                        listStyleType: "none",
-                                        paddingLeft: "10px",
-                                        color: "#727272",
-                                      }}
-                                    >
-                                      <li style={{ color: "#747474" }}>
-                                        <span
-                                          style={{
-                                            color: "#727272",
-                                            marginRight: "2px",
-                                          }}
-                                        >
-                                          •{" "}
-                                        </span>
-                                        {eq}
-                                      </li>
-                                    </ul>
-                                  )
-                                )}
-                              </div>
-                            </div>
-                          </Grid>
-                        </Grid>
-                      </div>
-                    </div>
+                    {/*      /!* Second Grid Item *!/*/}
+                    {/*      <Grid xs={12} sm={6} md={7}>*/}
+                    {/*        <div*/}
+                    {/*            className={avi.box4}*/}
+                    {/*            style={{padding: "14px"}}*/}
+                    {/*        >*/}
+                    {/*          <div style={{marginBottom: "14px"}}>*/}
+                    {/*            <h4>Critical Equipment</h4>*/}
+                    {/*            {department?.criticalEquipment.map(*/}
+                    {/*                (cric, index) => (*/}
+                    {/*                    <ul*/}
+                    {/*                        key={index}*/}
+                    {/*                        style={{*/}
+                    {/*                          listStyleType: "none",*/}
+                    {/*                          paddingLeft: "10px",*/}
+                    {/*                          color: "#727272",*/}
+                    {/*                        }}*/}
+                    {/*                    >*/}
+                    {/*                      <li style={{color: "#747474"}}>*/}
+                    {/*                    <span*/}
+                    {/*                        style={{*/}
+                    {/*                          color: "#727272",*/}
+                    {/*                          marginRight: "2px",*/}
+                    {/*                        }}*/}
+                    {/*                    >*/}
+                    {/*                      •{" "}*/}
+                    {/*                    </span>*/}
+                    {/*                        {cric}*/}
+                    {/*                      </li>*/}
+                    {/*                    </ul>*/}
+                    {/*                )*/}
+                    {/*            )}*/}
+                    {/*          </div>*/}
+
+                    {/*          <div>*/}
+                    {/*            <h4 style={{color: "#3C3C3C"}}>*/}
+                    {/*              Equipment Maintenance*/}
+                    {/*            </h4>*/}
+                    {/*            {department?.equipmentMaintenance.map(*/}
+                    {/*                (eq, index) => (*/}
+                    {/*                    <ul*/}
+                    {/*                        key={index}*/}
+                    {/*                        style={{*/}
+                    {/*                          listStyleType: "none",*/}
+                    {/*                          paddingLeft: "10px",*/}
+                    {/*                          color: "#727272",*/}
+                    {/*                        }}*/}
+                    {/*                    >*/}
+                    {/*                    <li style={{ color: "#747474" }}>*/}
+                    {/*                    <span*/}
+                    {/*                      style={{*/}
+                    {/*                        color: "#727272",*/}
+                    {/*                        marginRight: "2px",*/}
+                    {/*                      }}*/}
+                    {/*                    >*/}
+                    {/*                      •{" "}*/}
+                    {/*                    </span>*/}
+                    {/*                    {eq}*/}
+                    {/*                  </li>*/}
+                    {/*                </ul>*/}
+                    {/*              )*/}
+                    {/*            )}*/}
+                    {/*          </div>*/}
+                    {/*        </div>*/}
+                    {/*      </Grid>*/}
+                    {/*    </Grid>*/}
+                    {/*  </div>*/}
+                    {/*</div>*/}
                   </div>
                 </Box>
               </>

@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import styles from "./PerceptionAndMedicines.module.scss";
 import PNMLoader from "./PNMLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { generatePrescriptionsWithAI } from "../../../../components/State/Doctor/Action.js";
 import ManualPrescriptionForm from "./manual/ManualPrescriptionForm.jsx";
+import {useReactToPrint} from "react-to-print";
+import PrescriptionAndMedicinesPrint from "./print/PrescriptionAndMedicinesPrint.jsx";
 const PerceptionAndMedicines = ({
   patient,
   completeData,
@@ -60,6 +62,14 @@ const PerceptionAndMedicines = ({
     localStorage.setItem("prescriptionMode", manual ? "manual" : "ai");
   };
 
+  const printRef = useRef();
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: "Prescriptions And Medicines",
+  });
+
+  // console.log("Pres: ",generatedPrescriptions)
+
   //console.log("Pat: ",patient)
   return (
     <div>
@@ -72,7 +82,7 @@ const PerceptionAndMedicines = ({
         {/* row2 */}
         <p className={styles.row2}>
           {patient?.name} | Age: {patient?.age ?? "N/A"} |{" "}
-          {patient?.symptoms?.[0] ?? "N/A"} | BP: 140/90
+          {patient?.gender ?? "N/A"}
         </p>
 
         <div className={styles.toggleWrapper}>
@@ -409,17 +419,17 @@ const PerceptionAndMedicines = ({
                           </div>
 
                           {/* row10 */}
-                          <div className={styles.blackText}>
-                            <p>
-                              AI Interaction Tracker: Used: Meds, Diet | Edited: Problem |
-                              Regenerated: Lifestyle & Diet
-                            </p>
-                          </div>
+                          {/*<div className={styles.blackText}>*/}
+                          {/*  <p>*/}
+                          {/*    AI Interaction Tracker: Used: Meds, Diet | Edited: Problem |*/}
+                          {/*    Regenerated: Lifestyle & Diet*/}
+                          {/*  </p>*/}
+                          {/*</div>*/}
                         </div>
 
                         {/* row13 */}
                         <div className={styles.row13}>
-                          <button className={styles.print}>
+                          <button className={styles.print} onClick={handlePrint}>
                             <img src="/assets/Print-icon.svg" alt=""/>
                             <p>Print</p>
                           </button>
@@ -437,6 +447,12 @@ const PerceptionAndMedicines = ({
           )
         }
       </div>
+
+      <PrescriptionAndMedicinesPrint
+      ref={printRef}
+      prescriptions={generatedPrescriptions?.aiGeneratedText}
+      patient={patient}
+      />
     </div>
   );
 };

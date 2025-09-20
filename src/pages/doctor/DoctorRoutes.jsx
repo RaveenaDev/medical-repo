@@ -22,6 +22,7 @@ import {
   getAppointmentByDate,
   getAppointmentsOfToday,
 } from "../../components/State/Doctor/Action.js";
+import Appointments from "./appointments/Appointments.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -54,6 +55,7 @@ const DoctorRoutes = (props) => {
         element={<DoctorOverview todayAppointments={todayAppointments} />}
       />
       <Route path="/doctor-request" element={<DoctorRequest />} />
+      <Route path="/appointments" element={<Appointments />} />
       <Route
         path="/doctor-request/request-details"
         element={<DoctorNewRequest />}

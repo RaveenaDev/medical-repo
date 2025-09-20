@@ -1,9 +1,21 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "./Complete.module.scss";
 
 const Complete = ({ onClose, onComplete, completeData }) => {
-    const handleComplete = () => {
-        onComplete();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const handleCompleteClick = async () => {
+        try {
+            setIsSubmitting(true);
+            // console.log('Clicked')
+            // onComplete MUST return a Promise (see parent below)
+            await onComplete();
+            // await new Promise(r => setTimeout(r, 3000));
+        } catch (e) {
+            console.error(e);
+            // optional: show toast/error UI here
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handlePrint = () => {
@@ -152,17 +164,38 @@ const Complete = ({ onClose, onComplete, completeData }) => {
                 </div>
 
                 <div>
-                    <button onClick={handleComplete} style={{ width: 'fit-content', padding: "8px 1.2rem" }}>
-                        Confirm and Proceed
+                    <button
+                        type="button"
+                        onClick={handleCompleteClick}
+                        disabled={isSubmitting}
+                        aria-busy={isSubmitting}
+                        className={styles.primaryBtn}
+                        style={{width: "fit-content", padding: "8px 1.2rem", position: "relative"}}
+                    >
+                        {isSubmitting ? (
+                            <>
+                                <span className={styles.spinner} aria-hidden="true"/>
+                                Processing…
+                            </>
+                        ) : (
+                            "Confirm and Proceed"
+                        )}
                     </button>
-                    <button onClick={onClose} style={{
-                        width: 'fit-content',
-                        padding: "4px 1rem",
-                        backgroundColor: '#ffffff',
-                        border: '1px solid #25307f',
-                        color: "#292929",
-                        fontWeight: 600
-                    }}>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        disabled={isSubmitting}
+                        style={{
+                            width: "fit-content",
+                            padding: "4px 1rem",
+                            backgroundColor: "#ffffff",
+                            border: "1px solid #25307f",
+                            color: "#292929",
+                            fontWeight: 600,
+                            opacity: isSubmitting ? 0.6 : 1,
+                            cursor: isSubmitting ? "not-allowed" : "pointer",
+                        }}
+                    >
                         Cancel
                     </button>
                 </div>

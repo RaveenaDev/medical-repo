@@ -78,7 +78,7 @@ function Appointments(props) {
     setSelectedBranch(value);
   };
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -95,7 +95,7 @@ function Appointments(props) {
 
     dispatch(getAllDepartments());
 
-    ["Scheduled", "Ongoing", "Waiting", "Completed"].forEach((status) => {
+    ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
       dispatch(
         getAppointments(
           status,
@@ -124,7 +124,9 @@ function Appointments(props) {
     (store) => store.admin.scheduledAppointments
   );
   const scheduledCount = useSelector((store) => store.admin.scheduledCount);
-
+  const isLoadingTotalAppointments = useSelector(
+    (store) => store.admin.isLoadingTotalAppointments
+  );
   // let scheduledAppointments = null;
 
   // IF PROBLEM OCCURS THEN YE HTA DENA ..........................
@@ -144,6 +146,7 @@ function Appointments(props) {
   const completedAppointments = useSelector(
     (store) => store.admin.completedAppointments
   );
+
   const completedCount = useSelector((store) => store.admin.completedCount);
 
   const boxData = [
@@ -201,6 +204,7 @@ function Appointments(props) {
     case "Scheduled":
       totalAppointments = scheduledAppointments;
       totalAppointmentsCount = scheduledCount;
+
       break;
     case "Ongoing":
       totalAppointments = ongoingAppointments;
@@ -217,7 +221,9 @@ function Appointments(props) {
     default:
       totalAppointments = [];
   }
-
+  useEffect(() => {
+    setPage(0);
+  }, [activeLabel]);
   return (
     <div
       style={{
@@ -243,7 +249,7 @@ function Appointments(props) {
       </div>
 
       <div style={{ marginTop: "200px" }}>
-        {!scheduledAppointments ? (
+        {isLoadingTotalAppointments ? (
           <Box
             sx={{
               display: "flex",
@@ -384,7 +390,8 @@ function Appointments(props) {
               {/* Table Section */}
               <TableContainer
                 sx={{
-                  maxHeight: "47vh", // Adjust this to fit your layout needs
+                  maxHeight: "53vh", // Adjust this to fit your layout needs
+                  minHeight: "53vh",
                   overflowY: "auto",
                   position: "relative",
                 }}
@@ -494,6 +501,7 @@ function Appointments(props) {
                               label={patient.status}
                               size="small"
                               sx={{
+                                textTransform: "capitalize",
                                 bgcolor:
                                   patient.status === "Ongoing"
                                     ? "#3DB461"
@@ -505,7 +513,7 @@ function Appointments(props) {
                                 color:
                                   patient.status === "Ongoing"
                                     ? "#FFFFFF"
-                                    : patient.status === "Completed"
+                                    : patient.status === "completed"
                                     ? "orange"
                                     : patient.status === "Scheduled"
                                     ? "white"
@@ -532,24 +540,7 @@ function Appointments(props) {
                     )}
                   </TableBody>
                 </Table>
-                <TablePagination
-                  component="div"
-                  count={totalAppointmentsCount}
-                  page={page} // current page
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage} // items per page
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-                  sx={{
-                    position: "sticky",
-                    bottom: 0,
-                    backgroundColor: "#fff",
-                    borderTop: "2px solid #ddd",
-                    zIndex: 11,
-                  }}
-                />
               </TableContainer>
-
               {/* Actions Menu */}
               <Menu
                 anchorEl={anchorEl}
@@ -575,7 +566,27 @@ function Appointments(props) {
                   </ListItemText>
                 </MenuItem>
               </Menu>
-
+              {/* Pagination */}
+              <Box
+                sx={{
+                  width: "100%",
+                  position: "sticky",
+                  bottom: 5,
+                  backgroundColor: "#fff",
+                  borderTop: "2px solid #ddd",
+                  zIndex: 2,
+                }}
+              >
+                <TablePagination
+                  component="div"
+                  count={totalAppointmentsCount ?? 0}
+                  page={page} // current page
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage} // items per page
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                />{" "}
+              </Box>
               {/* Edit Patient Dialog */}
               <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
                 <DialogTitle>Edit Patient</DialogTitle>

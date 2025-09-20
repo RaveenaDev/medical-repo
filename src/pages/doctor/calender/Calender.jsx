@@ -7,53 +7,11 @@ import dayjs from "dayjs";
 import Select from "react-select";
 import EventDetails from "../components/EventDetails.jsx";
 import { useNavigate } from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {getMonthlyEvents} from "../../../components/State/Doctor/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getMonthlyEvents } from "../../../components/State/Doctor/Action.js";
+import Avatar from "@mui/material/Avatar";
 
 const Calender = () => {
-  const dummyEvents = [
-    {
-      id: 1,
-      title: "Meeting Title",
-      startTime: dayjs().hour(9).minute(0),
-      endTime: dayjs().hour(9).minute(30),
-      profileUrl: "https://i.pravatar.cc/30?img=1",
-      name: "Raj Vishwakarma",
-    },
-    {
-      id: 2,
-      title: "Follow-up",
-      startTime: dayjs().add(1, "day").hour(10).minute(0),
-      endTime: dayjs().add(1, "day").hour(10).minute(30),
-      profileUrl: "https://i.pravatar.cc/30?img=2",
-      name: "Aditi Sharma",
-    },
-    {
-      id: 3,
-      title: "Consultation",
-      startTime: dayjs().add(0, "day").hour(11).minute(30),
-      endTime: dayjs().add(0, "day").hour(12).minute(5),
-      profileUrl: "https://i.pravatar.cc/30?img=3",
-      name: "Rahul Verma",
-    },
-    {
-      id: 4,
-      title: "Meeting Title",
-      startTime: dayjs().add(3, "day").hour(9).minute(0),
-      endTime: dayjs().add(3, "day").hour(9).minute(30),
-      profileUrl: "https://i.pravatar.cc/30?img=7",
-      name: "Raj Vishwakarma",
-    },
-    {
-      id: 5,
-      title: "Meeting Title",
-      startTime: dayjs().hour(22).minute(0),
-      endTime: dayjs().hour(22).minute(30),
-      profileUrl: "https://i.pravatar.cc/30?img=8",
-      name: "Raj Vishwakarma",
-    },
-  ];
-
   const monthOptions = [
     { value: "January", label: "January" },
     { value: "February", label: "February" },
@@ -154,16 +112,16 @@ const Calender = () => {
     return dayjs().hour(hour).minute(minute).format("h:mm A");
   });
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const month = currentDate.month() + 1; // 0 = January, 11 = December
-  const year = currentDate.year();   // e.g., 2025
+  const year = currentDate.year(); // e.g., 2025
 
   useEffect(() => {
     // console.log("Current month and year: ",month,year)
-    dispatch(getMonthlyEvents(month,year))
-  }, [dispatch,currentDate]);
+    dispatch(getMonthlyEvents(month, year));
+  }, [dispatch, currentDate]);
 
-  const events = useSelector((store) => store.doctor.monthlyEvents)
+  const events = useSelector((store) => store.doctor.monthlyEvents);
 
   function convertEventData(events) {
     return events.map((event, index) => {
@@ -189,7 +147,9 @@ const Calender = () => {
       const startParsed = parseTime(event.startTime) || defaultStart;
       const endParsed = parseTime(event.endTime) || defaultEnd;
 
-      const startTime = baseDate.hour(startParsed.hour).minute(startParsed.minute);
+      const startTime = baseDate
+        .hour(startParsed.hour)
+        .minute(startParsed.minute);
       const endTime = baseDate.hour(endParsed.hour).minute(endParsed.minute);
 
       return {
@@ -267,8 +227,6 @@ const Calender = () => {
     const now = dayjs();
     return now.isAfter(event.startTime) && now.isBefore(event.endTime);
   });
-
-
 
   return (
     <>
@@ -379,11 +337,24 @@ const Calender = () => {
                       marginTop: "10px",
                     }}
                   >
-                    <img
+                    {/* <img
                       src={activeEvent.profileUrl}
                       alt={activeEvent.name}
                       style={{ borderRadius: "50%" }}
-                    />
+                    /> */}
+                    <Avatar
+                      sx={{
+                        bgcolor: "#e3e3e3",
+                        color: "#25307F",
+                        fontWeight: 500,
+                        width: "20px",
+                        height: "20px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {activeEvent.name[0].toUpperCase()}
+                    </Avatar>
+
                     <p className="user-name">{activeEvent.name}</p>
                   </div>
                 </div>
@@ -450,7 +421,20 @@ const Calender = () => {
                               </p>
                             </div>
                             <div className="event-user">
-                              <img src={event.profileUrl} alt={event.name} />
+                              {/* <img src={event.profileUrl} alt={event.name} /> */}
+
+                              <Avatar
+                                sx={{
+                                  bgcolor: "#e3e3e3",
+                                  color: "#25307F",
+                                  fontWeight: 500,
+                                  fontSize: "12px",
+                                  height: "20px",
+                                  width: "20px",
+                                }}
+                              >
+                                {event.name[0].toUpperCase()}
+                              </Avatar>
                               <p className="user-name">{event.name}</p>
                             </div>
                           </div>

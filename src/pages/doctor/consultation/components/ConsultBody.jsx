@@ -12,28 +12,31 @@ import Refer from "./Refer";
 import NextAppointment from "./NextAppointment";
 import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
+import Avatar from "@mui/material/Avatar";
 import {
-  generatePrescriptionsWithAI, removePrescriptionsWithAI,
+  generatePrescriptionsWithAI,
+  removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
 import CustomComponent from "./CustomComponent.jsx";
 import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+import AddPatient from "./modals/AddPatient/AddPatient.jsx";
 
 const ConsultBody = ({
   selectedForm,
   appointments,
   onSuccess,
-    onStart,
+  onStart,
   completeData,
   setCompleteData,
   selectedComponent,
   setSelectedComponent,
-    confirmedSections,
-    setConfirmedSections,
-    customSections,
-    setCustomSections
+  confirmedSections,
+  setConfirmedSections,
+  customSections,
+  setCustomSections,
 }) => {
   const [final, setFinal] = useState({
     doctor: null,
@@ -48,76 +51,6 @@ const ConsultBody = ({
 
   const [modalData, setModalData] = useState(null);
 
-  const dummyPatient = [
-    {
-      id: 1,
-      name: "Anil Kumar",
-      profileURL: "https://i.pravatar.cc/30?img=17",
-      Gender: "Male (55yrs)",
-      Birthday: "Jan 20th, 1969",
-      Phone: "(+91) 9123456780",
-      Address:
-        "302, Maple Residency, Banjara Hills, Hyderabad, Telangana, 500034",
-      caseId: 45678,
-      AssessedBy: "Dr. Ravi Gupta",
-      MemberStatus: "Active Member",
-      RegisterDate: "May 18th, 2021",
-      email: "anil.kumar69@gmail.com",
-      token: 100,
-      consultStatus: "Done",
-    },
-    {
-      id: 2,
-      name: "Jaismine Kaur",
-      profileURL: "https://randomuser.me/api/portraits/women/17.jpg",
-      Gender: "Female (28yrs)",
-      Birthday: "Feb 24th, 1997",
-      Phone: "(+91) 1234567890",
-      Address:
-        "904, A Wing, ABC Apartment,Sector 12,Borivali West,Mumbai, Maharashtra, 400092",
-      caseId: 1234567,
-      AssessedBy: "Dr.Arunita Chatterjee",
-      MemberStatus: "Active Member",
-      RegisterDate: "June 24th,2024",
-      email: "jasmeet89@gmail.com",
-      token: 101,
-      consultStatus: "Ongoing",
-    },
-    {
-      id: 3,
-      name: "Rahul Sharma",
-      profileURL: "https://i.pravatar.cc/30?img=15",
-      Gender: "Male (34yrs)",
-      Birthday: "May 12th, 1990",
-      Phone: "(+91) 9876543210",
-      Address:
-        "504, B Wing, Sunrise Tower, Andheri East, Mumbai, Maharashtra, 400069",
-      caseId: 23456,
-      AssessedBy: "Dr. Sameer Mehta",
-      MemberStatus: "Inactive",
-      RegisterDate: "July 15th, 2023",
-      email: "rahul.sharma90@gmail.com",
-      token: 102,
-      consultStatus: "Remaining",
-    },
-    {
-      id: 4,
-      name: "Priya Desai",
-      profileURL: "https://i.pravatar.cc/30?img=16",
-      Gender: "Female (41yrs)",
-      Birthday: "Sep 2nd, 1983",
-      Phone: "(+91) 9988776655",
-      Address: "601, Garden View, Koregaon Park, Pune, Maharashtra, 411001",
-      caseId: 34567,
-      AssessedBy: "Dr. Sunita Rao",
-      MemberStatus: "Active Member",
-      RegisterDate: "August 3rd, 2022",
-      email: "priya.desai83@gmail.com",
-      token: 103,
-      consultStatus: "Remaining",
-    },
-  ];
-
   const [activeModal, setActiveModal] = useState(null);
 
   const [isAllowed, setIsAllowed] = useState(false);
@@ -125,6 +58,10 @@ const ConsultBody = ({
   const dispatch = useDispatch();
 
   const closeModal = () => setActiveModal(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const handleAddPatientClick = () => setShowForm(true);
+  const handleCloseForm = () => setShowForm(false);
 
   useEffect(() => {
     document.body.style.overflow = activeModal ? "hidden" : "auto";
@@ -143,7 +80,7 @@ const ConsultBody = ({
 
   const openNextAppointment = (data) => {
     // console.log("Working")
-    setActiveModal("nextAppointment")
+    setActiveModal("nextAppointment");
     setIsAllowed(data);
   };
 
@@ -171,79 +108,84 @@ const ConsultBody = ({
     }
   }, [selectedComponent, dispatch]);
 
-
   if (!appointments || appointments.length === 0) {
     return (
-        <div className={styles["no-appointments"]}>
-          <p>No appointments found</p>
-        </div>
+      <div className={styles["no-appointments"]}>
+        <p>No appointments found</p>
+      </div>
     );
   }
 
   if (!ongoingAppointment || ongoingAppointment.length === 0) {
     // Step 1: Filter for 'Waiting' status
     const waitingAppointments = appointments.filter(
-        (appointment) => appointment.status === "Waiting"
+      (appointment) => appointment.status === "Waiting"
     );
 
-// Step 2: Find the one with the minimum tokenNumber
-    const nextAppointment = waitingAppointments.length > 0
-        ? waitingAppointments.reduce((min, curr) =>
-                curr.tokenNumber < min.tokenNumber ? curr : min,
-            waitingAppointments[0])
+    // Step 2: Find the one with the minimum tokenNumber
+    const nextAppointment =
+      waitingAppointments.length > 0
+        ? waitingAppointments.reduce(
+            (min, curr) => (curr.tokenNumber < min.tokenNumber ? curr : min),
+            waitingAppointments[0]
+          )
         : null;
-
 
     // console.log("Next Appointment:", nextAppointment);
     return (
-        <>
-          <div style={{display:'flex',flexDirection:'column'
-            ,justifyContent:'center',alignItems:'center',marginTop:'1rem'}}>
-            {
-              nextAppointment ? (
-                  <div className={styles["h2-right"]} style={{
-                    backgroundColor: '#ffffff', border: '1px solid #25307F',
-                    textAlign: 'center'
-                  }} onClick={openNextAppointment}>
-                    <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
-                    <p className={styles["pat-name-r"]}>
-                      {nextAppointment.patient?.name}
-                    </p>
-                    <p className={styles["pat-status-r"]}>Next</p>
-                  </div>
-              ) : (
-                  <p>No next appointments.</p>
-              )
-            }
-
-            <div className={styles["no-appointments"]}>
-              <p>No ongoing appointments found</p>
+      <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "1rem",
+          }}
+        >
+          {nextAppointment ? (
+            <div
+              className={styles["h2-right"]}
+              style={{
+                backgroundColor: "#ffffff",
+                border: "1px solid #25307F",
+                textAlign: "center",
+              }}
+              onClick={openNextAppointment}
+            >
+              <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
+              <p className={styles["pat-name-r"]}>
+                {nextAppointment.patient?.name}
+              </p>
+              <p className={styles["pat-status-r"]}>Next</p>
             </div>
-          </div>
-
-          {activeModal === "nextAppointment" && (
-              <>
-                <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
-                <div className={styles["nextAppointment-modal"]}>
-                  <NextAppointment
-                      onClose={closeModal}
-                      nextAppointment={nextAppointment}
-                      allowance = {true}
-                      onStart={onStart}
-                  />
-                </div>
-              </>
+          ) : (
+            <p>No next appointments.</p>
           )}
-        </>
-    )
 
+          <div className={styles["no-appointments"]}>
+            <p>No ongoing appointments found</p>
+          </div>
+        </div>
+
+        {activeModal === "nextAppointment" && (
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["nextAppointment-modal"]}>
+              <NextAppointment
+                onClose={closeModal}
+                nextAppointment={nextAppointment}
+                allowance={true}
+                onStart={onStart}
+              />
+            </div>
+          </>
+        )}
+      </>
+    );
   }
 
   const openAddQuestion = () => setActiveModal("addQuestion");
-
-  const ongoingPatients = dummyPatient.filter(
-      (patient) => patient.consultStatus === "Ongoing"
-  );
 
   // Step 2: Find the next appointment with a token number greater than ongoing
   let nextAppointment = null;
@@ -280,18 +222,34 @@ const ConsultBody = ({
     };
 
     // console.log("Updated Final: ",updatedFinal)
-    dispatch(submitConsultation(updatedFinal))
+    // dispatch(submitConsultation(updatedFinal))
+    //   .then(() => {
+    //     setCompleteData({});
+    //     onSuccess(); // ✅ Will only run after dispatch finishes
+    //     setConfirmedSections([]);
+    //     setSelectedComponent("PatientInfo");
+    //   })
+    //   .catch((err) => {
+    //     console.error("Submission failed:", err);
+    //   });
+    // dispatch(removePrescriptionsWithAI());
+    // openNextAppointment(true);
+
+    return dispatch(submitConsultation(updatedFinal))
         .then(() => {
+          dispatch(removePrescriptionsWithAI());
+          openNextAppointment(true);
           setCompleteData({});
-          onSuccess(); // ✅ Will only run after dispatch finishes
+          onSuccess();
           setConfirmedSections([]);
-          setSelectedComponent("PatientInfo")
+          setSelectedComponent("PatientInfo");
         })
         .catch((err) => {
           console.error("Submission failed:", err);
+          // rethrow so child knows it failed (optional but recommended)
+          throw err;
         });
-    dispatch(removePrescriptionsWithAI());
-    openNextAppointment(true);
+
   };
 
   const handleRefer = () => {
@@ -329,7 +287,6 @@ const ConsultBody = ({
     setSelectedComponent(sectionName);
   };
 
-
   // console.log("Seel: ",confirmedSections)
 
   return (
@@ -344,7 +301,10 @@ const ConsultBody = ({
           <p className={styles["pat-status-l"]}>{ongoingAppointment.status}</p>
         </div>
         {nextAppointment ? (
-          <div className={styles["h2-right"]} onClick={() => openNextAppointment(false)}>
+          <div
+            className={styles["h2-right"]}
+            onClick={() => openNextAppointment(false)}
+          >
             <p className={styles["pat-num-r"]}>{nextAppointment?.caseId}</p>
             <p className={styles["pat-name-r"]}>
               {nextAppointment.patient?.name}
@@ -371,11 +331,25 @@ const ConsultBody = ({
             }`}
             onClick={() => setSelectedComponent("PatientInfo")}
           >
-            <img
-              src={ongoingPatients[0].profileURL}
-              alt=""
+            {/* MUI Avatar to show the initial letter */}
+            <Avatar
+              sx={{
+                bgcolor: "#e3e3e3",
+                color: "#25307F",
+                fontWeight: 500,
+
+                // fontSize: {
+                //   xs: "0.75rem", // 12px on mobile
+                //   sm: "1rem", // 16px on small screens
+                //   md: "1.25rem", // 20px on medium screens
+                //   lg: "1.5rem", // 24px on large screens
+                // },
+              }}
               className={styles["lp-1-avatar"]}
-            />
+            >
+              {ongoingAppointment.patient.name[0].toUpperCase()}
+            </Avatar>
+
             <div className={styles["lp-1-info"]}>
               <p className={styles["lp-1-name"]}>
                 {ongoingAppointment.patient.name}
@@ -390,8 +364,13 @@ const ConsultBody = ({
             <>
               <div
                 className={`${styles["lp-2"]} ${
-                  selectedComponent === "MedicalHistory" ? styles.active : ""}
-                ${confirmedSections.includes("MedicalHistory") ? styles.confirmed : ""}
+                  selectedComponent === "MedicalHistory" ? styles.active : ""
+                }
+                ${
+                  confirmedSections.includes("MedicalHistory")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
                 onClick={() => setSelectedComponent("MedicalHistory")}
               >
@@ -401,7 +380,11 @@ const ConsultBody = ({
                 className={`${styles["lp-3"]} ${
                   selectedComponent === "CurrentMedication" ? styles.active : ""
                 }
-                ${confirmedSections.includes("CurrentMedication") ? styles.confirmed : ""}
+                ${
+                  confirmedSections.includes("CurrentMedication")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
                 onClick={() => setSelectedComponent("CurrentMedication")}
               >
@@ -411,7 +394,11 @@ const ConsultBody = ({
                 className={`${styles["lp-4"]} ${
                   selectedComponent === "DiagnosisAndVital" ? styles.active : ""
                 }
-                ${confirmedSections.includes("DiagnosisAndVital") ? styles.confirmed : ""}
+                ${
+                  confirmedSections.includes("DiagnosisAndVital")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
                 onClick={() => setSelectedComponent("DiagnosisAndVital")}
               >
@@ -423,7 +410,11 @@ const ConsultBody = ({
                     ? styles.active
                     : ""
                 } ${!completeData.medicalHistory ? styles.disabled : ""}
-                ${confirmedSections.includes("PerceptionAndMedicines") ? styles.confirmed : ""}
+                ${
+                  confirmedSections.includes("PerceptionAndMedicines")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
                 onClick={() => {
                   if (completeData.medicalHistory) {
@@ -438,7 +429,11 @@ const ConsultBody = ({
                 className={`${styles["lp-6"]} ${
                   selectedComponent === "TreatmentAndTest" ? styles.active : ""
                 }
-                ${confirmedSections.includes("TreatmentAndTest") ? styles.confirmed : ""}
+                ${
+                  confirmedSections.includes("TreatmentAndTest")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
               >
                 <p>Treatment and Tests</p>
@@ -457,7 +452,11 @@ const ConsultBody = ({
                     className={`${styles["lp-6"]} ${
                       selectedComponent === section.id ? styles.active : ""
                     }
-                     ${confirmedSections.includes(section.name) ? styles.confirmed : ""}
+                     ${
+                       confirmedSections.includes(section.name)
+                         ? styles.confirmed
+                         : ""
+                     }
                      ${isDisabled ? styles.disabled : ""}`}
                     onClick={() => {
                       if (!isDisabled) {
@@ -490,7 +489,13 @@ const ConsultBody = ({
             <Plus className={styles["lp-7-icon"]} size={38} />
             <p>Add Section</p>
           </div>
-
+          <button
+            type="button"
+            className={styles["btn"]}
+            onClick={handleAddPatientClick}
+          >
+            Admit Patient
+          </button>
           <div className={styles["lp-8"]}>
             <button onClick={handleCompleteBtn}>
               <CircleCheck size={15} />
@@ -514,7 +519,12 @@ const ConsultBody = ({
           <>
             <div className={styles["backdrop-overlay"]} onClick={closeModal} />
             <div className={styles["complete-modal"]}>
-              <Complete onClose={closeModal} onComplete={handleComplete} nextAppointment={openNextAppointment} completeData={completeData}/>
+              <Complete
+                onClose={closeModal}
+                onComplete={handleComplete}
+                nextAppointment={openNextAppointment}
+                completeData={completeData}
+              />
             </div>
           </>
         )}
@@ -596,7 +606,7 @@ const ConsultBody = ({
                 ) {
                   return (
                     <MedicalHistory
-                      patient={ongoingPatients[0]}
+                      patient={ongoingAppointment?.patient}
                       existingData={completeData}
                       selectedComponent="medicalHistory"
                       onConfirm={(medicalData) => {
@@ -605,7 +615,9 @@ const ConsultBody = ({
                           medicalHistory: medicalData,
                         }));
 
-                        setConfirmedSections((prev) => [...new Set([...prev, "Medical History"])]);
+                        setConfirmedSections((prev) => [
+                          ...new Set([...prev, "Medical History"]),
+                        ]);
 
                         const currentIndex = selectedForm.sections.findIndex(
                           (sec) => sec.id === selectedComponent
@@ -638,7 +650,9 @@ const ConsultBody = ({
                           perceptionsAndMedicines: perceptionData,
                         }));
 
-                        setConfirmedSections((prev) => [...new Set([...prev, "Prescription & Medicines"])]);
+                        setConfirmedSections((prev) => [
+                          ...new Set([...prev, "Prescription & Medicines"]),
+                        ]);
 
                         const currentIndex = selectedForm.sections.findIndex(
                           (sec) => sec.id === selectedComponent
@@ -672,7 +686,9 @@ const ConsultBody = ({
                       if (nextSection) {
                         setSelectedComponent(nextSection.id);
                       }
-                      setConfirmedSections((prev) => [...new Set([...prev, currentSection.name])]);
+                      setConfirmedSections((prev) => [
+                        ...new Set([...prev, currentSection.name]),
+                      ]);
                     }}
                     existingData={completeData}
                   />
@@ -682,7 +698,6 @@ const ConsultBody = ({
             {selectedComponent === "PatientInfo" && (
               <PatientInfo
                 ongoingAppointment={ongoingAppointment}
-                patient1={ongoingPatients[0]}
                 onConfirm={() => {
                   if (!selectedForm) {
                     setSelectedComponent("MedicalHistory");
@@ -694,7 +709,7 @@ const ConsultBody = ({
             )}
             {selectedComponent === "MedicalHistory" && (
               <MedicalHistory
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="medicalHistory"
                 onConfirm={(medicalData) => {
@@ -703,13 +718,15 @@ const ConsultBody = ({
                     medicalHistory: medicalData,
                   }));
                   setSelectedComponent("CurrentMedication");
-                  setConfirmedSections((prev) => [...new Set([...prev, "MedicalHistory"])]);
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, "MedicalHistory"]),
+                  ]);
                 }}
               />
             )}
             {selectedComponent === "CurrentMedication" && (
               <CurrentMedication
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="currentMedications"
                 onConfirm={(currentMedicationData) => {
@@ -718,13 +735,15 @@ const ConsultBody = ({
                     currentMedications: currentMedicationData,
                   }));
                   setSelectedComponent("DiagnosisAndVital");
-                  setConfirmedSections((prev) => [...new Set([...prev, "CurrentMedication"])]);
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, "CurrentMedication"]),
+                  ]);
                 }}
               />
             )}
             {selectedComponent === "DiagnosisAndVital" && (
               <DiagnosisAndVital
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="diagnosisVitals"
                 onConfirm={(diagnosisAndVital) => {
@@ -733,7 +752,9 @@ const ConsultBody = ({
                     diagnosisVitals: diagnosisAndVital,
                   }));
                   setSelectedComponent("PerceptionAndMedicines");
-                  setConfirmedSections((prev) => [...new Set([...prev, "DiagnosisAndVital"])]);
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, "DiagnosisAndVital"]),
+                  ]);
                 }}
               />
             )}
@@ -751,13 +772,15 @@ const ConsultBody = ({
                   }));
                   // console.log("Perception Data: ",perceptionData)
                   setSelectedComponent("TreatmentAndTest");
-                  setConfirmedSections((prev) => [...new Set([...prev, "PerceptionAndMedicines"])]);
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, "PerceptionAndMedicines"]),
+                  ]);
                 }}
               />
             )}
             {selectedComponent === "TreatmentAndTest" && (
               <TreatmentAndTest
-                patient={ongoingPatients[0]}
+                patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="treatmentAndTests"
                 onConfirm={(treatmentAndTestsData) => {
@@ -766,7 +789,9 @@ const ConsultBody = ({
                     treatmentAndTests: treatmentAndTestsData,
                   }));
                   setSelectedComponent("TreatmentAndTest");
-                  setConfirmedSections((prev) => [...new Set([...prev, "TreatmentAndTest"])]);
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, "TreatmentAndTest"]),
+                  ]);
                 }}
               />
             )}
@@ -781,13 +806,22 @@ const ConsultBody = ({
                     [selectedComponent]: data,
                   }));
                   // console.log("Selected Comp ; ",selectedComponent)
-                  setConfirmedSections((prev) => [...new Set([...prev, selectedComponent])]);
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, selectedComponent]),
+                  ]);
                 }}
               />
             )}
           </div>
         </div>
       </div>
+      {/* Conditionally Render Form */}
+      {showForm && (
+        <AddPatient
+          onClose={handleCloseForm}
+          patientDetails={ongoingAppointment.patient}
+        />
+      )}
     </div>
   );
 };

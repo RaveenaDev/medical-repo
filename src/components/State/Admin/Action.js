@@ -2,7 +2,6 @@ import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
   ACCEPT_REQUEST,
-  ADD_DEPARTMENT,
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
@@ -36,6 +35,7 @@ import {
   GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
   GET_INSURANCE_COMPANIES,
@@ -49,6 +49,7 @@ import {
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
   GET_SERVICES,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
@@ -300,6 +301,26 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
   }
 };
 
+export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+      `${API_URL}/getservicesbydep/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
+
+    // console.log("Services: ",data)
+    dispatch({ type: GET_SERVICES_BY_DEPARTMENT_ID, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const addDepartment = (department) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -310,13 +331,15 @@ export const addDepartment = (department) => async (dispatch) => {
       },
     });
 
-    console.log("Response: ", data);
+    // console.log("Payload: ",department)
+    // console.log("Response: ", data);
     toast.success("Department Added Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
 
-    dispatch({ type: ADD_DEPARTMENT, payload: data.department });
+    dispatch(getAllDepartments());
+    // dispatch({ type: ADD_DEPARTMENT, payload: data.department });
   } catch (error) {
     console.log(error);
     toast.error("Error while adding Department!", {
@@ -683,25 +706,28 @@ export const deleteExpense = (expenseId) => async (dispatch) => {
 };
 
 // BILLING
-export const getBillingRecords = (page, rowsPerPage) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getBillingRecords =
+  (page, rowsPerPage, search) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getAllBills`, {
-      params: {
-        page: page + 1, // Incrementing page by 1 to match the API requirement
-        limit: rowsPerPage,
-      },
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getAllBills`, {
+        params: {
+          page: page + 1, // Incrementing page by 1 to match the API requirement
+          limit: rowsPerPage,
+          search: search || "", // Default to empty string if search is undefined
+        },
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+      // console.log("Billing Records: ", data);
 
-    dispatch({ type: GET_BILLING_RECORDS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({ type: GET_BILLING_RECORDS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 // BILLING
 export const getBillDetails = (billId) => async (dispatch) => {
@@ -1454,3 +1480,28 @@ export const addBedsToRoom = (payload) => async () => {
     throw error; //  throw so UI can catch it
   }
 };
+export const getFilteredInpatients =
+  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
+    // console.log("Fil:",filteredData)
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getInPatients`, {
+        params: {
+          status: filteredData.status,
+          sort: filteredData.sort,
+          page: page + 1,
+          limit: rowsPerPage,
+          search: search
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      // console.log("InPatt Filtered: ",data)
+      dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };

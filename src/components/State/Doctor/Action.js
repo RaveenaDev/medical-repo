@@ -43,6 +43,7 @@ import {
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BED_INFO,
   GET_PATIENT_BILLS,
+  GET_PATIENT_DETAILS_BY_PAT_ID,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -277,7 +278,7 @@ export const getAppointments = (startDate, endDate) => async (dispatch) => {
 
     const { data } = await axios.get(`${API_URL}/getAppointments`, {
       params: {
-        // status: 'Ongoing',
+        // status: "Scheduled",
         start: startDate,
         end: endDate,
         departmentId: departmentId,
@@ -304,7 +305,48 @@ export const getAppointments = (startDate, endDate) => async (dispatch) => {
     console.log(error);
   }
 };
+export const getAllAppointments =
+  (status, startDate, endDate, page, rowsPerPage) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
+      const departmentId = localStorage.getItem("departmentId");
+
+      const { data } = await axios.get(`${API_URL}/getAppointments`, {
+        params: {
+          status: status,
+          start: startDate,
+          end: endDate,
+          departmentId: departmentId,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      console.log("Getting Appointments : ", data);
+
+      // dispatch({ type: GET_APPOINTMENTS, payload: data });
+
+      if (data.message === "Scheduled appointments retrieved successfully") {
+        dispatch({ type: GET_SCHEDULED_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Ongoing appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_ONGOING_APPOINTMENTS, payload: data });
+      } else if (
+        data.message === "Waiting appointments retrieved successfully"
+      ) {
+        dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
+      } else {
+        dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 export const getDoctorRequests = (status) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -987,7 +1029,7 @@ export const getAppointmentHistory =
         },
       });
 
-      console.log("Appointments History: ", data);
+      // console.log("Appointments History: ", data);
 
       dispatch({ type: GET_APPOINTMENT_HISTORY, payload: data });
     } catch (error) {
@@ -1116,50 +1158,52 @@ export const getAllDepartments = () => async (dispatch) => {
   }
 };
 
-export const createAdmissionRequest = (requestData) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const doctor = localStorage.getItem("userId");
+export const createAdmissionRequest =
+  (requestData, onClose) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const doctor = localStorage.getItem("userId");
 
-    const requestDataWithDoctor = {
-      ...requestData,
-      doctor, // add doctor into body
-    };
+      const requestDataWithDoctor = {
+        ...requestData,
+        doctor, // add doctor into body
+      };
 
-    // console.log("Req: ",requestDataWithDoctor)
+      // console.log("Req: ",requestDataWithDoctor)
 
-    const { data } = await axios.post(
-      `${API_URL}/createAdmissionRequest`,
-      requestDataWithDoctor,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      const { data } = await axios.post(
+        `${API_URL}/createAdmissionRequest`,
+        requestDataWithDoctor,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
-    // return data.request;
-    dispatch(getAdmissionRequests()); // Refresh the list of requests
-    dispatch(getAdmittedPatients());
-    toast.success("Admission Request Created successfully!", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.error(
-      "Error creating admission request:",
-      error.response?.data || error.message
-    );
-    toast.error("Failed to create admission request", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
+      // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
+      // return data.request;
+      dispatch(getAdmissionRequests()); // Refresh the list of requests
+      dispatch(getAdmittedPatients());
+      toast.success("Admission Request Created successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      onClose();
+    } catch (error) {
+      console.error(
+        "Error creating admission request:",
+        error.response?.data || error.message
+      );
+      toast.error("Failed to create admission request", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };
 
 export const getApprovedAdmissions = () => async (dispatch) => {
   try {
@@ -1664,7 +1708,7 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
 };
 
 export const setOngoing = (patientId) => async (dispatch) => {
-  console.log("Pat: ", patientId);
+  // console.log("Pat: ", patientId);
   try {
     const token = localStorage.getItem("jwt");
 
@@ -1702,6 +1746,10 @@ export const setReschedule = (appointmentId) => async (dispatch) => {
     // console.log("Rescheduled app. successful : ", data);
 
     dispatch({ type: SET_RESCHEDULE, payload: data });
+    toast.success("Appointment Rescheduled Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
     return Promise.resolve(data); // 🔑 return promise
   } catch (error) {
     console.log(error);
@@ -1787,3 +1835,26 @@ export const transferPatientToBed =
       });
     }
   };
+
+export const getPatientDetailsByPatId = (patId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/search/patid`,
+
+      {
+        params: { patId },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Patient Details INFO", data);
+    dispatch({ type: GET_PATIENT_DETAILS_BY_PAT_ID, payload: data });
+  } catch (error) {
+    console.error("Patient Details Info not available:", error);
+    dispatch({ type: GET_PATIENT_DETAILS_BY_PAT_ID, payload: [] });
+    throw error;
+  }
+};

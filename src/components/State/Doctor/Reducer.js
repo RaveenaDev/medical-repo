@@ -37,6 +37,7 @@ import {
   GET_ONGOING_APPOINTMENTS,
   GET_PATIENT_BED_INFO,
   GET_PATIENT_BILLS,
+  GET_PATIENT_DETAILS_BY_PAT_ID,
   GET_PATIENT_HISTORY,
   GET_PATIENT_MEDICAL_RECORDS,
   GET_PATIENT_OVERVIEW,
@@ -61,18 +62,22 @@ const initialState = {
   patients: [],
   totalFilteredPatients: null,
   filteredPatients: [],
+  isLoadingFilteredPatients: true,
   totalInpatients: null,
   inPatients: [],
   totalFilteredInpatients: null,
   filteredInPatients: [],
+  isLoadingFilteredInPatients: true,
   totalSurgeries: null,
   surgeries: [],
   totalFilteredSurgeries: null,
   filteredSurgeries: [],
+  isLoadingFilteredSurgeries: true,
   totalRooms: null,
   rooms: [],
   totalFilteredRooms: null,
   filteredRooms: [],
+  isLoadingFilteredRooms: true,
   criticalPatients: [],
   isLoadingCriticalPatients: true,
   totalDiagnosis: null,
@@ -138,11 +143,13 @@ const initialState = {
   isLoadingGetPatientMedicalRecords: true,
   totalAppointmentHistory: null,
   appointmentHistory: [],
+  isLoadingAppointmentHistory: true,
   patientBedInfo: [],
   requestsToApprove: [],
   isLoadingAdmissionRequestToApprove: true,
   roomsAvailable: [],
   bedsAvailable: [],
+  autoCompletePatientSearch: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -158,7 +165,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
-        isLoading: false,
+        isLoadingFilteredPatients: false,
       };
 
     case GET_INPATIENTS:
@@ -174,7 +181,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredInpatients: action.payload.totalInpatients,
         filteredInPatients: action.payload.inpatients,
-        isLoading: false,
+        isLoadingFilteredInPatients: false,
       };
 
     case GET_SURGERIES:
@@ -189,7 +196,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredSurgeries: action.payload.totalSurgeries,
         filteredSurgeries: action.payload.surgeries,
-        isLoading: false,
+        isLoadingFilteredSurgeries: false,
       };
 
     case GET_ROOMS:
@@ -204,7 +211,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredRooms: action.payload.totalRooms,
         filteredRooms: action.payload.rooms,
-        isLoading: false,
+        isLoadingFilteredRooms: false,
       };
 
     case GET_DOCTORS:
@@ -484,6 +491,7 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalAppointmentHistory: action.payload.totalAppointments,
         appointmentHistory: action.payload.appointments,
+        isLoadingAppointmentHistory: false,
       };
 
     case GET_PATIENT_BED_INFO:
@@ -508,6 +516,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         patientBills: action.payload,
         isLoadingPatientBills: false,
+      };
+
+    case GET_PATIENT_DETAILS_BY_PAT_ID:
+      return {
+        ...state,
+        autoCompletePatientSearch: action.payload,
       };
 
     default:

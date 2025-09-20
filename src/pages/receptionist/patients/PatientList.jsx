@@ -145,7 +145,9 @@ const PatientList = () => {
   }, [dispatch, sortOrder, page, rowsPerPage]);
 
   const receptionist = useSelector((store) => store.receptionist);
-  const loading = useSelector((store) => store.receptionist.isLoading);
+  const loading = useSelector(
+    (store) => store.receptionist.isLoadingFilteredPatients
+  );
   const noOfPatients = receptionist.totalFilteredPatients;
   const totalPatients = receptionist.filteredPatients;
 

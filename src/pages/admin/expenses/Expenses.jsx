@@ -473,7 +473,7 @@ const Expenses = (props) => {
                   },
                   /* Hide scrollbar for Firefox */
                   scrollbarWidth: "none", // Firefox
-                  "-ms-overflow-style": "none", // IE 10+
+                  // "-ms-overflow-style": "none", // IE 10+
                 }}
               >
                 <Table

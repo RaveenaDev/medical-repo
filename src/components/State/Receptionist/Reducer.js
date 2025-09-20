@@ -13,25 +13,38 @@ import {
   GET_DOCTORS,
   GET_DOCTORS_BY_DEPARTMENT,
   GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
+  GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_BILLS,
+  GET_PATIENT_DETAILS,
+  GET_PATIENT_FILES,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_RECEPTIONIST_OVERVIEW_SUCCESS,
   GET_RECEPTIONIST_PATIENTS_SUCCESS,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
   UPDATE_ROOM,
+  UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
 
 const initialState = {
   totalPatients: null,
   totalFilteredPatients: null,
+  totalInpatients: null,
+  inPatients: [],
+  totalFilteredInpatients: null,
+  filteredInPatients: [],
+  isLoadingFilteredInPatients: true,
+  patientDetails: [],
   totalDoctors: null,
   doctorCount: null,
   totalStaffs: null,
@@ -49,6 +62,7 @@ const initialState = {
   patient: null,
   patients: [],
   filteredPatients: [],
+  isLoadingFilteredPatients: true,
   doctors: [],
   isLoadingDoctors: true,
   doctorsByDepartment: [],
@@ -56,6 +70,7 @@ const initialState = {
   isLoadingStaffs: true,
   rooms: [],
   filteredRooms: [],
+  isLoadingFilteredRooms: true,
   departments: [],
   department: null,
   progressTracker: [],
@@ -69,6 +84,10 @@ const initialState = {
   success: null,
   bookAppointment: null,
   refreshAppointments: false,
+  patientBills: [],
+  isLoadingPatientBills: true,
+  patientFiles: [],
+  servicesByDepartment: [],
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -94,15 +113,38 @@ export const receptionistReducer = (state = initialState, action) => {
     case GET_FILTERED_PATIENTS:
       return {
         ...state,
-        isLoading: false,
+        isLoadingFilteredPatients: false,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
+      };
+
+    case GET_INPATIENTS:
+      return {
+        ...state,
+        totalInpatients: action.payload.totalInpatients,
+        inPatients: action.payload.inpatients,
+        isLoading: false,
+      };
+
+    case GET_FILTERED_INPATIENTS:
+      return {
+        ...state,
+        totalFilteredInpatients: action.payload.totalInpatients,
+        filteredInPatients: action.payload.inpatients,
+        isLoadingFilteredInPatients: false,
+      };
+
+    case GET_PATIENT_DETAILS:
+      return {
+        ...state,
+        patientDetails: action.payload,
+        isLoadingPatientDetails: false,
       };
 
     case GET_DOCTORS:
       return {
         ...state,
-        totalDoctors: action.payload.count,
+        totalDoctors: action.payload.totalDoctors,
         doctors: action.payload.doctors,
         doctorCount: action.payload.totalDoctors,
         isLoadingDoctors: false,
@@ -132,7 +174,7 @@ export const receptionistReducer = (state = initialState, action) => {
     case GET_ROOMS:
       return {
         ...state,
-        totalRooms: action.payload.rooms.length,
+        totalRooms: action.payload.totalRooms,
         rooms: action.payload.rooms,
         isLoading: false,
       };
@@ -142,6 +184,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalFilteredRooms: action.payload.totalRooms,
         filteredRooms: action.payload.rooms,
+        isLoadingFilteredRooms: false,
       };
 
     case ADD_ROOM:
@@ -178,6 +221,12 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         department: action.payload,
+      };
+
+    case GET_SERVICES_BY_DEPARTMENT_ID:
+      return {
+        ...state,
+        servicesByDepartment: action.payload.services,
       };
 
     case GET_APPOINTMENTS:
@@ -273,6 +322,25 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         progressTracker: action.payload,
         isLoading: false,
+      };
+
+    case GET_PATIENT_BILLS:
+      return {
+        ...state,
+        patientBills: action.payload,
+        isLoadingPatientBills: false,
+      };
+
+    case UPLOAD_PATIENT_FILE:
+      return {
+        ...state,
+        patientFiles: [...state.patientFiles, action.payload],
+      };
+
+    case GET_PATIENT_FILES:
+      return {
+        ...state,
+        patientFiles: action.payload,
       };
 
     default:

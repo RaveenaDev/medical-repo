@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import PatientCard from "./component/modals/PatientCard.jsx";
 import { useEffect, useState } from "react";
-import AddPatientForm from "./component/form/AddPatientForm.jsx";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   admitPatient,
@@ -19,9 +19,11 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import dayjs from "dayjs";
-import { TablePagination, Tooltip } from "@mui/material";
+import { Avatar, TablePagination, Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import AddPatientForm from "./component/form/AddPatient/AddPatientForm.jsx";
+import { GET_PATIENT_DETAILS_BY_PAT_ID } from "../../../components/State/Doctor/ActionType.js";
 
 const PatientsList = () => {
   const navigate = useNavigate();
@@ -72,7 +74,10 @@ const PatientsList = () => {
   const [showForm, setShowForm] = useState(false);
 
   const handleAddPatientClick = () => setShowForm(true);
-  const handleCloseForm = () => setShowForm(false);
+  const handleCloseForm = () => {
+    setShowForm(false);
+    dispatch({ type: GET_PATIENT_DETAILS_BY_PAT_ID, payload: {} });
+  };
 
   const handleAdmitPatientClick = (patientId) => {
     setAdmittingPatientId(patientId);
@@ -179,6 +184,7 @@ const PatientsList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page
   };
+
   return (
     <div className="patientsListDoctorContainer">
       <div className="listHeader">
@@ -199,6 +205,7 @@ const PatientsList = () => {
           <ChevronLeft
             size={25}
             strokeWidth={1.7}
+            style={{ cursor: "pointer" }}
             onClick={() => {
               navigate("/doctor");
             }}
@@ -241,14 +248,16 @@ const PatientsList = () => {
                       <div className="patientInfo">
                         <div className="card_top_row">
                           <div className="patientDetailsContainer">
-                            <img
-                              src={
-                                patient.avatar ||
-                                "https://randomuser.me/api/portraits/women/17.jpg"
-                              }
-                              alt={`${patient.name} Avatar`}
+                            <Avatar
+                              sx={{
+                                bgcolor: "#e3e3e3",
+                                color: "#25307F",
+                                fontWeight: 500,
+                              }}
                               className="patientAvatar"
-                            />
+                            >
+                              {patient.admissionDetails.name[0].toUpperCase()}
+                            </Avatar>
                             <div>
                               <h5 className="patientName">
                                 {patient.admissionDetails.name}

@@ -27,7 +27,7 @@ import PatientDetails from "./pages/admin/patient/PatientDetails.jsx";
 import Billing from "./pages/admin/Billing";
 import History from "./pages/admin/patient/History.jsx";
 import Doctors from "./pages/receptionist/doctors/Doctors.jsx";
-import Staffs from "./pages/receptionist/staffs/Staffs.jsx";
+import Inpatients from "./pages/receptionist/inPatients/Inpatients.jsx";
 import Rooms from "./pages/receptionist/rooms/Rooms.jsx";
 import Billings from "./pages/receptionist/billing/Billings.jsx";
 import { ToastContainer } from "react-toastify";
@@ -243,10 +243,10 @@ function App() {
                 }
               />
               <Route
-                path="/receptionist/staffs"
+                path="/receptionist/inPatients"
                 element={
                   <ProtectedRoute allowedRoles={["receptionist"]}>
-                    <Staffs
+                    <Inpatients
                       setIsSignUpOrLogin={setIsSignUpOrLogin}
                       setEntity={setEntity}
                       entity={entity}

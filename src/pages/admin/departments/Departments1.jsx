@@ -8,6 +8,7 @@ import {
   addDepartment,
   getAllDepartments,
   getDoctors,
+  getStaffs,
 } from "../../../components/State/Admin/Action.js";
 import CommonPanel from "../Components/CommonPanel.jsx";
 import addAppointments from "../../../assets/plus.svg";
@@ -28,7 +29,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { TablePagination } from "@mui/material";
 const names = [
   "Oliver Hansen",
   "Van Henry",
@@ -98,6 +99,7 @@ const Departments1 = (props) => {
   useEffect(() => {
     dispatch(getAllDepartments());
     dispatch(getDoctors());
+    dispatch(getStaffs());
   }, [dispatch]);
 
   const admin = useSelector((store) => store.admin);
@@ -105,21 +107,46 @@ const Departments1 = (props) => {
   const allDepartments = admin.departments;
   const doctors = admin.doctors;
 
-  // console.log(doctors)
+  const staffs = admin.staffs;
+
+  // console.log(allDepartments)
 
   const handleAdd = () => {
-    console.log("Adding new Dep... : ", department);
+    // console.log("Adding new Dep... : ", department);
     dispatch(addDepartment(department));
+    setDepartment({
+      name: "",
+      head: "",
+      doctors: [],
+      nurses: [],
+    });
+    handleClose();
   };
 
   const loading = useSelector((state) => state.admin.isLoading);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(6); // Show 6 cards per page (adjust as you want)
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const paginatedDepartments = allDepartments.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <div
       style={{
         background: "#f1f1f1",
-        height: "99dvh", // Make the entire div take up the full viewport height
-        overflow: "hidden", // Prevent scrolling on the rest of the page
+        height: "110vh", // Make the entire div take up the full viewport height
+        overflow: "auto", // Prevent scrolling on the rest of the page
       }}
     >
       <div
@@ -330,6 +357,7 @@ const Departments1 = (props) => {
                               value={JSON.stringify({
                                 id: doctor._id,
                                 name: doctor.name,
+                                email: doctor?.email,
                               })}
                             >
                               {doctor.name}
@@ -360,7 +388,6 @@ const Departments1 = (props) => {
                           value={department.doctors}
                           onChange={handleMultipleChange}
                           input={<OutlinedInput label="Select Doctors" />}
-                          // MenuProps={MenuProps}
                           MenuProps={{
                             PaperProps: {
                               style: {
@@ -393,19 +420,27 @@ const Departments1 = (props) => {
                             },
                           }}
                         >
-                          {doctors.map((doctor, index) => (
-                            <MenuItem
-                              key={index}
-                              value={doctor._id}
-                              style={getStyles(
-                                doctor.name,
-                                department.doctors,
-                                theme
-                              )}
-                            >
-                              {doctor.name}
-                            </MenuItem>
-                          ))}
+                          {doctors
+                            .filter((doctor) => {
+                              // Only filter out the department head if it's set as an object
+                              if (department.head && department.head.id) {
+                                return doctor._id !== department.head.id; // Filter out the department head from the doctor list
+                              }
+                              return true; // If no valid head, don't filter out any doctors
+                            })
+                            .map((doctor, index) => (
+                              <MenuItem
+                                key={index}
+                                value={doctor._id}
+                                style={getStyles(
+                                  doctor.name,
+                                  department.doctors,
+                                  theme
+                                )}
+                              >
+                                {doctor.name}
+                              </MenuItem>
+                            ))}
                         </Select>
                       </FormControl>
 
@@ -466,13 +501,17 @@ const Departments1 = (props) => {
                             },
                           }}
                         >
-                          {names.map((name) => (
+                          {staffs.map((name) => (
                             <MenuItem
-                              key={name}
-                              value={name}
-                              style={getStyles(name, department.doctors, theme)}
+                              key={name._id}
+                              value={name.name}
+                              style={getStyles(
+                                name.name,
+                                department.doctors,
+                                theme
+                              )}
                             >
-                              {name}
+                              {name.name}
                             </MenuItem>
                           ))}
                         </Select>
@@ -511,10 +550,26 @@ const Departments1 = (props) => {
             {/* Cards */}
 
             <div className={ayu.superCardContainer}>
-              {allDepartments.map((department, index) => (
+              {paginatedDepartments.map((department, index) => (
                 <DepartCard key={index} department={department} index={index} />
               ))}
             </div>
+            <TablePagination
+              component="div"
+              count={allDepartments.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[6, 12, 24, 60, 120]}
+              sx={{
+                width: "100%",
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 11,
+                marginTop: 2,
+              }}
+            />
           </>
         )}
       </div>

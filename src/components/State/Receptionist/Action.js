@@ -14,17 +14,26 @@ import {
   GET_DOCTORS_BY_DEPARTMENT,
   GET_FILTERED_APPOINTMENTS,
   GET_FILTERED_DOCTORS,
+  GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
+  GET_INPATIENTS,
   GET_ONGOING_APPOINTMENTS,
+  GET_PATIENT_BILLS,
+  GET_PATIENT_DETAILS,
+  GET_PATIENT_FILES,
   GET_PATIENTS,
   GET_PROGRESS_TRACKER,
   GET_ROOMS,
   GET_SCHEDULED_APPOINTMENTS,
+  GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
+  START_CONSULTATION,
+  SUBMIT_CONSULTATION,
+  UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
 import axios from "axios";
 import { API_URL } from "../../Config/api.js";
@@ -124,6 +133,24 @@ export const getFilteredPatients =
     }
   };
 
+export const getPatientDetailsById = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/${patientId}/details`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Patient Data: ",data)
+
+    dispatch({ type: GET_PATIENT_DETAILS, payload: data.data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -143,6 +170,49 @@ export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const getInpatients = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getInPatients`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("InPatt: ", data);
+    dispatch({ type: GET_INPATIENTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFilteredInpatients =
+  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
+    // console.log("Fil:",filteredData)
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getInPatients`, {
+        params: {
+          status: filteredData.status,
+          sort: filteredData.sort,
+          page: page + 1,
+          limit: rowsPerPage,
+          search: search
+        }, // Sending status as a query parameter
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      // console.log("InPatt Filtered: ",data)
+      dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
   try {
@@ -264,6 +334,26 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
   }
 };
 
+export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+      `${API_URL}/getservicesbydep/${departmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
+
+    // console.log("Services: ",data)
+    dispatch({ type: GET_SERVICES_BY_DEPARTMENT_ID, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const bookAppointment = (appData, onClose) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -327,7 +417,9 @@ export const getAppointments =
         data.message === "Waiting appointments retrieved successfully"
       ) {
         dispatch({ type: GET_WAITING_APPOINTMENTS, payload: data });
-      } else {
+      } else if (
+        data.message === "completed appointments retrieved successfully"
+      ) {
         dispatch({ type: GET_COMPLETED_APPOINTMENTS, payload: data });
       }
     } catch (error) {
@@ -427,7 +519,7 @@ export const rejectAppointmentRequests = (id) => async (dispatch) => {
   }
 };
 
-export const getBills = (page, rowsPerPage) => async (dispatch) => {
+export const getBills = (page, rowsPerPage, search) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
@@ -438,6 +530,7 @@ export const getBills = (page, rowsPerPage) => async (dispatch) => {
       params: {
         page: page + 1, // Incrementing page by 1 to match the API requirement
         limit: rowsPerPage,
+        search: search || "",
       },
     });
 
@@ -561,3 +654,232 @@ export const getProgressTrackerDetails =
       console.error("Error getting progress details:", error);
     }
   };
+
+export const getBillsByPatientId = (patientId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/getBillsByPatient/${patientId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Bill INFO", data);
+    dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
+  } catch (error) {
+    console.error("patient Bill Info not available:", error);
+    dispatch({ type: GET_PATIENT_BILLS, payload: [] });
+    throw error;
+  }
+};
+
+export const startConsultation = (patientId) => async (dispatch) => {
+  // console.log("Pat: ", patientId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+      `${API_URL}/setOngoing`,
+      { patientId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
+
+    console.log("Ongoing app. successful : ", data);
+
+    dispatch({ type: START_CONSULTATION, payload: data });
+    return Promise.resolve(data); // 🔑 return promise
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error); // 🔑 return promise
+  }
+};
+
+export const submitConsultation = (consultationData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const formData = new FormData();
+
+    const isPrimitive = (v) =>
+      v === null ? false : ["string", "number", "boolean"].includes(typeof v);
+
+    // Append all fields; treat only `files` specially
+    Object.entries(consultationData || {}).forEach(([key, value]) => {
+      if (key === "files" && Array.isArray(value)) {
+        // append up to 5 images as `files`
+        value.slice(0, 5).forEach((file, idx) => {
+          if (file)
+            formData.append("files", file, file.name || `file_${idx + 1}`);
+        });
+        return;
+      }
+
+      if (value === undefined || value === null) return;
+
+      if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (isPrimitive(value)) {
+        formData.append(key, String(value));
+      } else {
+        // objects/arrays → stringify so backend can JSON.parse
+        formData.append(key, JSON.stringify(value));
+      }
+    });
+
+    const { data } = await axios.post(
+      `${API_URL}/submitConsultation`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Don't set Content-Type; browser will set multipart boundary.
+        },
+      }
+    );
+
+    dispatch({ type: SUBMIT_CONSULTATION, payload: data });
+
+    toast.success("Submitted Successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    return data;
+  } catch (error) {
+    const msg =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      "Please confirm all the fields!";
+    toast.error(msg, { position: "bottom-right", autoClose: 2000 });
+    throw error;
+  }
+};
+export const addToBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addToBill/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log("Edit Bill Response:", data);
+    toast.success("Added to bill successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    // Optional: dispatch to refresh data
+    dispatch(getBillById(id));
+
+    dispatch(getBills());
+  } catch (error) {
+    console.error("Error adding to bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
+export const editBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.patch(
+      `${API_URL}/editBillDetails/${id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    // console.log("Edit Bill Response:", data);
+    toast.success("Bill edited successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    // Optional: dispatch to refresh data
+    dispatch(getBillById(id));
+
+    dispatch(getBills());
+  } catch (error) {
+    console.error("Error editing bill:", error);
+    toast.error(error?.response?.data?.message || "Edit failed");
+  }
+};
+
+export const uploadPatientFile = (formData) => async (dispatch) => {
+  // console.log("Pat: ", patientId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/upload`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        "Content-Type": "multipart/form-data", // Ensure this is set
+      },
+    });
+
+    toast.success("File Uploaded Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 1500,
+    });
+    // console.log("File Send Successfully : ", data.data);
+
+    // dispatch({ type: UPLOAD_PATIENT_FILE, payload: data.data[0] });
+  } catch (error) {
+    console.log(error);
+    toast.error("File Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+
+export const getPatientFiles = (patientId) => async (dispatch) => {
+  // console.log("Pat: ", patientId);
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/files/patient/${patientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        "Content-Type": "multipart/form-data", // Ensure this is set
+      },
+    });
+
+    // console.log("Files Got : ", data.data);
+
+    dispatch({ type: GET_PATIENT_FILES, payload: data.data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deletePatientFile = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.delete(`${API_URL}/files/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    toast.success("File Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 1500,
+    });
+    // console.log("File Deleted Successfully : ", data);
+  } catch (error) {
+    console.log(error);
+    toast.error("File Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};

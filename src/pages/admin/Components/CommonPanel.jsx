@@ -19,8 +19,10 @@ import {
   getRooms,
   getStaffs,
 } from "../../../components/State/Admin/Action.js";
-
+import shreyStyles from "./CommonPanel.module.scss";
 import { Dropdown } from "primereact/dropdown";
+// ADD to existing imports:
+import { CalendarToday } from "@mui/icons-material";
 
 const CommonPanel = ({
   setSelectedDate,
@@ -38,13 +40,17 @@ const CommonPanel = ({
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(dayjs());
 
-  const handleDateChange = (newValue) => {
+  const handleDateChange = (event) => {
+    const newDate = dayjs(event.target.value);
     if (setSelectedDate) {
-      setSelectedDate(newValue);
+      setSelectedDate(newDate);
     } else {
-      setInternalSelectedDate(newValue);
+      setInternalSelectedDate(newDate);
     }
   };
+
+  // ADD after existing state declarations:
+  const currentSelectedDate = selectedDate || internalSelectedDate;
 
   useEffect(() => {
     dispatch(getPatients());
@@ -230,63 +236,34 @@ const CommonPanel = ({
             size={12}
             // sx={{ margin: "0 0 20px 0" }}
           >
-            <Grid size={4} sx={{ display: "flex", alignItems: "center" }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Box
-                  sx={{
-                    backgroundColor: "#FFFFFF",
-
-                    borderRadius: 1,
-                    width: 180, // Adjust width here
-                    textAlign: "center",
-                    boxShadow: "0px 4px 4px 0px #C2C2C240",
-                    // padding: "4px", // Reduce padding to make the container smaller
-                  }}
-                >
-                  <DatePicker
-                    value={selectedDate || internalSelectedDate}
+            <Grid size={3}>
+              <div className={shreyStyles.todayRow}>
+                <div className={shreyStyles.text}>
+                  <span className={shreyStyles.label}>
+                    {currentSelectedDate.format("YYYY-MM-DD") ===
+                    dayjs().format("YYYY-MM-DD")
+                      ? "Today"
+                      : "Selected Date"}
+                  </span>
+                  <span className={shreyStyles.date}>
+                    {currentSelectedDate.format("DD-MM-YYYY")}
+                  </span>
+                </div>
+                <div className={shreyStyles.calendarWrapperIn}>
+                  <label htmlFor="commonPanelDatePicker">
+                    <CalendarToday className={shreyStyles.calendarIcon} />
+                  </label>
+                  <input
+                    type="date"
+                    id="commonPanelDatePicker"
+                    value={currentSelectedDate.format("YYYY-MM-DD")}
                     onChange={handleDateChange}
-                    format="DD/MM/YYYY" // Set the date format
-                    slotProps={{
-                      textField: {
-                        sx: {
-                          "& .MuiOutlinedInput-root": {
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                            },
-                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                            },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "transparent !important",
-                              boxShadow: "none !important",
-                            },
-                          },
-                          "& .MuiInputBase-input": {
-                            fontSize: "max(1vw, 12px)",
-                            padding: "10px",
-                            "&:focus": {
-                              outline: "none !important",
-                            },
-                          },
-                          "& .MuiIconButton-root": {
-                            color: "#666", // Adjust icon color if needed
-                            "&:hover": {
-                              backgroundColor: "transparent !important",
-                            },
-                            "&:focus": {
-                              outline: "none !important",
-                              boxShadow: "none !important",
-                            },
-                          },
-                        },
-                      },
-                    }}
                   />
-                </Box>
-              </LocalizationProvider>
+                </div>
+              </div>
             </Grid>
-            <Grid size={8} sx={{ display: "flex", justifyContent: "flex-end" }}>
+
+            <Grid size={9} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 variant="contained"
                 onClick={() => navigate(`/admin/billings`)}

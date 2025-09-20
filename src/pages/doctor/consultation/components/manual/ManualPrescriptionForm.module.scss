@@ -83,3 +83,37 @@ textarea:focus {
 .submitBtn:hover {
   background-color: #076b43;
 }
+
+.row13 {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  gap: 0.7vw;
+  margin-top: 2.4vh;
+  button {
+    display: flex;
+    justify-content: center;
+    font-family: "Karla", sans-serif;
+    gap: 0.5vw;
+    height: 4.4vh;
+    font-size: 1.9vh;
+    border-radius: 5px;
+    padding: 0px 1vw 0px 1vw;
+  }
+
+  .print {
+    background-color: white;
+    border: 1px solid #25307f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .approve {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #25307f;
+    color: white;
+  }
+}

@@ -1,9 +1,9 @@
 import styles from "./AppointmentHistory.module.scss";
 import { ChevronLeft, ChevronUp, ChevronDown } from "lucide-react";
-import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {getAppointmentHistory} from "../../../../components/State/Doctor/Action.js";
-import {TablePagination} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAppointmentHistory } from "../../../../components/State/Doctor/Action.js";
+import { Box, CircularProgress, TablePagination } from "@mui/material";
 
 const AppointmentHistory = ({ onBack }) => {
   // Dropdown 1: Date Range
@@ -11,7 +11,7 @@ const AppointmentHistory = ({ onBack }) => {
   const dateRangeMap = {
     "Last 7 days": 7,
     "Last 30 days": 30,
-    "All": "",
+    All: "",
   };
 
   const [page, setPage] = useState(0);
@@ -21,18 +21,19 @@ const AppointmentHistory = ({ onBack }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [filteredDays, setFilteredDays] = useState(""); // default empty = no filter
 
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // console.log("Page: ",page)
     // console.log("Rows: ",rowsPerPage)
-    dispatch(getAppointmentHistory(page, rowsPerPage,filteredDays));
-  }, [dispatch,page, rowsPerPage,filteredDays]);
+    dispatch(getAppointmentHistory(page, rowsPerPage, filteredDays));
+  }, [dispatch, page, rowsPerPage, filteredDays]);
 
-  const doctor = useSelector((store) => store.doctor)
-  const totalAppointmentHistory = doctor.totalAppointmentHistory
-  const appointmentHistory = doctor.appointmentHistory
+  const doctor = useSelector((store) => store.doctor);
+  const totalAppointmentHistory = doctor.totalAppointmentHistory;
+  const appointmentHistory = doctor.appointmentHistory;
+  const isLoadingAppointmentHistory = doctor.isLoadingAppointmentHistory;
+  //console.log("Appointment History loading: ", isLoadingAppointmentHistory);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -94,47 +95,62 @@ const AppointmentHistory = ({ onBack }) => {
         </div>
       </div>
 
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div>Case Id</div>
-          <div>Name</div>
-          <div>Appointment With</div>
-          <div>Type Visit</div>
-          <div>Token</div>
-          <div>Date</div>
-          <div>Status</div>
-        </div>
-        <div className={styles.dataContainer}>
-          {appointmentHistory.map((item, idx) => (
-            <div key={idx} className={styles.row}>
-              <div className={styles.blueText}>{item.caseId}</div>
-              <div className={styles.blueText}>{item.name}</div>
-              <div>+91 {item.phone}</div>
-              <div>{item.typeVisit}</div>
-              <div>{item.token}</div>
-              <div>{item.date}</div>
-              <div>
-                <button className={styles.viewBtn}>{item.status}</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <TablePagination
-          component="div"
-          count={totalAppointmentHistory}
-          page={page} // current page
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage} // items per page
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+      {isLoadingAppointmentHistory ? (
+        <Box
           sx={{
-            width: '100%',
-            backgroundColor: "#fff",
-            borderTop: "2px solid #ddd",
-            zIndex: 11,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "73vh", // or full height you need
           }}
-      />
+        >
+          <CircularProgress sx={{ color: "#25307F" }} size={58} />
+        </Box>
+      ) : (
+        <>
+          <div className={styles.container}>
+            <div className={styles.header}>
+              <div>Case Id</div>
+              <div>Name</div>
+              <div>Appointment With</div>
+              <div>Type Visit</div>
+              <div>Token</div>
+              <div>Date</div>
+              <div>Status</div>
+            </div>
+            <div className={styles.dataContainer}>
+              {appointmentHistory.map((item, idx) => (
+                <div key={idx} className={styles.row}>
+                  <div className={styles.blueText}>{item.caseId}</div>
+                  <div className={styles.blueText}>{item.name}</div>
+                  <div>+91 {item.phone}</div>
+                  <div>{item.typeVisit}</div>
+                  <div>{item.token}</div>
+                  <div>{item.date}</div>
+                  <div>
+                    <button className={styles.viewBtn}>{item.status}</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <TablePagination
+            component="div"
+            count={totalAppointmentHistory}
+            page={page} // current page
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage} // items per page
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+            sx={{
+              width: "100%",
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 11,
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };

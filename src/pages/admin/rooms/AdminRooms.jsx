@@ -163,21 +163,6 @@ const AdminRooms = (props) => {
       }
     });
 
-    // // Validate each bed
-    //     formData.beds.forEach((bed, i) => {
-    //       if (!bed.bedId) newErrors[`bedId-${i}`] = "Bed ID is required";
-    //       if (!bed.status) newErrors[`status-${i}`] = "Status is required";
-    //       if (!bed.cost) newErrors[`cost-${i}`] = "Cost is required";
-    //     });
-    //
-    //     if (Object.keys(newErrors).length > 0) {
-    //       setErrors(newErrors);
-    //       toast.error("Please fill all required fields!", {
-    //         position: "bottom-right",
-    //       });
-    //       return;
-    //     }
-
     // Convert customRoomType into roomType before sending
     const finalData = {
       ...formData,
@@ -468,7 +453,7 @@ const AdminRooms = (props) => {
             {/* Table Section */}
             <TableContainer
               sx={{
-                maxHeight: "70vh", // Adjust this to fit your layout needs
+                maxHeight: "63vh", // Adjust this to fit your layout needs
                 overflowY: "auto",
               }}
             >
@@ -622,7 +607,18 @@ const AdminRooms = (props) => {
                   )}
                 </TableBody>
               </Table>
-
+              {/* Pagination */}
+            </TableContainer>
+            <Box
+              sx={{
+                width: "100%",
+                position: "sticky",
+                bottom: 0,
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 2,
+              }}
+            >
               <TablePagination
                 component="div"
                 count={totalRooms || 0}
@@ -630,7 +626,7 @@ const AdminRooms = (props) => {
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage} // items per page
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                rowsPerPageOptions={[5, 10, 20, 50, 100]} //  Custom options
                 sx={{
                   width: "100%",
                   backgroundColor: "#fff",
@@ -638,8 +634,7 @@ const AdminRooms = (props) => {
                   zIndex: 11,
                 }}
               />
-            </TableContainer>
-
+            </Box>
             {/* Actions Menu */}
             <Menu
               anchorEl={anchorEl}

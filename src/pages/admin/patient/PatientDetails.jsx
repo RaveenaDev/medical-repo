@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import PersonalInfo from "./PersonalInfo";
-import MedicalInfo from "./MedicalInfo";
 import ProgressTracker from "./ProgressTracker";
 import {
   CircularProgress,
@@ -17,6 +16,9 @@ import {
 import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
 import { Email, WhatsApp } from "@mui/icons-material";
+import {getPatientDetailsById} from "../../../components/State/Receptionist/Action.js";
+import {useDispatch, useSelector} from "react-redux";
+import MedicalInfo from "./MedicalInfo.jsx";
 
 const PatientDetails = (props) => {
   const [medicalHistory, setMedicalHistory] = useState([]);
@@ -24,12 +26,9 @@ const PatientDetails = (props) => {
 
   const location = useLocation();
   const patient = location.state?.patient;
+    const dispatch = useDispatch();
 
   const [showModal, setShowModal] = useState(false);
-
-  if (!patient) {
-    return <p>No patient data found!</p>;
-  }
 
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
@@ -53,6 +52,12 @@ const PatientDetails = (props) => {
     fetchData();
   }, []);
 
+    useEffect(() => {
+        dispatch(getPatientDetailsById(patient?._id));
+    }, [dispatch, patient]);
+
+    const patDetails = useSelector((store) => store.receptionist.patientDetails);
+
   const upcoming = patient.appointments?.filter(
     (app) => app.status === "Scheduled"
   ).length;
@@ -74,6 +79,10 @@ const PatientDetails = (props) => {
     );
     setShowModal(false);
   };
+
+    if (!patient) {
+        return <p>No patient data found!</p>;
+    }
 
   return (
     <>
@@ -326,13 +335,14 @@ const PatientDetails = (props) => {
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                <MedicalInfo
-                  medicalHistory={medicalHistory}
-                  currentMedications={currentMedications}
-                  showSymptoms={false} // Hide Symptoms section
-                  showHistory={false} // Hide Social History section
-                  patient={patient}
-                />
+                  <MedicalInfo
+                      patient={patient}
+                      medicalHistory={medicalHistory}
+                      currentMedications={currentMedications}
+                      patDetails={patDetails}
+                      showSymptoms={false} // Hide Symptoms section
+                      showHistory={false} // Hide Social History section
+                  />
               </div>
             </div>
 

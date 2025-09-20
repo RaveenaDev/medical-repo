@@ -36,6 +36,7 @@ import {
 import AssignOverlay from "./components/AssignOverlay.jsx";
 import { Box, CircularProgress } from "@mui/material";
 import { flex } from "@mui/system";
+import Avatar from "@mui/material/Avatar";
 
 const getDateRange = (filterType) => {
   const now = new Date();
@@ -420,7 +421,7 @@ const Department = () => {
                         className={style.listItem}
                         onClick={() => toggleDoctorSelection(doc._id)}
                       >
-                        <img
+                        {/* <img
                           src={
                             doc.avatar ||
                             "https://randomuser.me/api/portraits/women/12.jpg"
@@ -432,7 +433,18 @@ const Department = () => {
                             e.target.src =
                               "https://randomuser.me/api/portraits/women/12.jpg";
                           }}
-                        />
+                        /> */}
+
+                        <Avatar
+                          sx={{
+                            bgcolor: "#e3e3e3",
+                            color: "#25307F",
+                            fontWeight: 500,
+                          }}
+                          className={style.avatar}
+                        >
+                          {doc.name[0].toUpperCase()}
+                        </Avatar>
                         <div className={style.info}>
                           <span className={style.name}>{doc.name}</span>
                           <span className={style.role}>
@@ -494,7 +506,7 @@ const Department = () => {
                         className={style.listItem}
                         onClick={() => toggleStaffSelection(staff._id)}
                       >
-                        <img
+                        {/* <img
                           src={
                             staff.avatar ||
                             "https://randomuser.me/api/portraits/women/12.jpg"
@@ -506,7 +518,18 @@ const Department = () => {
                             e.target.src =
                               "https://randomuser.me/api/portraits/women/12.jpg";
                           }}
-                        />
+                        /> */}
+
+                        <Avatar
+                          sx={{
+                            bgcolor: "#e3e3e3",
+                            color: "#25307F",
+                            fontWeight: 500,
+                          }}
+                          className={style.avatar}
+                        >
+                          {staff.name[0].toUpperCase()}
+                        </Avatar>
                         <div className={style.info}>
                           <span className={style.name}>{staff.name}</span>
                           <span className={style.role}>

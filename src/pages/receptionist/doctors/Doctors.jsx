@@ -137,7 +137,7 @@ const Doctors = (props) => {
             <CircularProgress sx={{ color: "#25307F" }} size={50} />
           </Box>
         ) : (
-          <div style={{ marginTop: "160px" }}>
+          <div style={{ marginTop: "23vh" }}>
             {isBookAppointment ? (
               <BookAppointment
                 isOpen={isBookAppointment}
@@ -167,7 +167,7 @@ const Doctors = (props) => {
                       className={ayu.departmentTitleDetails}
                       style={{ color: "#878787" }}
                     >
-                      {doctors?.length}
+                      {noOfDoctors}
                     </h2>
 
                     <div style={{ marginLeft: "25px" }}>
@@ -185,6 +185,14 @@ const Doctors = (props) => {
                               outline: "none",
                               border: "1px solid #9797978F",
                               width: "100%",
+                            }}
+                            MenuProps={{
+                              PaperProps: {
+                                sx: {
+                                  maxHeight: 200, // Adjust the height as needed
+                                  overflowY: 'auto', // Enable vertical scrolling
+                                },
+                              },
                             }}
                           >
                             {departmentOptions.map((option) => (

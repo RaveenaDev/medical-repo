@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import DoctorNewRequest from "./DoctorNewRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { getDoctorRequests } from "../../../components/State/Doctor/Action.js";
+import Avatar from "@mui/material/Avatar";
 
 const DoctorRequest = () => {
   const now = dayjs();
@@ -128,34 +129,34 @@ const DoctorRequest = () => {
         <div className={styles.content}>
           <div className={styles.selection}>
             <div
-                onClick={() => handleActive()}
-                className={selectedTab === "active" ? styles.selectedTab : ""}
+              onClick={() => handleActive()}
+              className={selectedTab === "active" ? styles.selectedTab : ""}
             >
               <span>Active Request</span>
             </div>
             <div
-                onClick={() => handleInactive()}
-                className={selectedTab === "inactive" ? styles.selectedTab : ""}
-                style={{cursor: "pointer"}}
+              onClick={() => handleInactive()}
+              className={selectedTab === "inactive" ? styles.selectedTab : ""}
+              style={{ cursor: "pointer" }}
             >
               <span>Inactive Request</span>
             </div>
             <div
-                onClick={() => handleSent()}
-                className={selectedTab === "sent" ? styles.selectedTab : ""}
-                style={{cursor: "pointer"}}
+              onClick={() => handleSent()}
+              className={selectedTab === "sent" ? styles.selectedTab : ""}
+              style={{ cursor: "pointer" }}
             >
               <span>Sent Request</span>
             </div>
           </div>
 
           {activeModal === "NewRequest" && (
-              <>
-                <div
-                    className={styles["backdrop-overlay"]}
-                    onClick={closeModal}
-                />
-                <div className={styles["newRequest"]}>
+            <>
+              <div
+                className={styles["backdrop-overlay"]}
+                onClick={closeModal}
+              />
+              <div className={styles["newRequest"]}>
                 <DoctorNewRequest onClose={closeModal} />
               </div>
             </>
@@ -181,11 +182,21 @@ const DoctorRequest = () => {
                             : styles.grayBackground
                         }`}
                       >
-                        <img
+                        {/* <img
                           src={req.avatarUrl}
                           alt="avatar"
                           className={styles.avatar}
-                        />
+                        /> */}
+                        <Avatar
+                          sx={{
+                            bgcolor: "#e3e3e3",
+                            color: "#25307F",
+                            fontWeight: 500,
+                          }}
+                          className={styles.avatar}
+                        >
+                          {req.requester[0].toUpperCase()}
+                        </Avatar>
                         <div className={styles.reqContent}>
                           <div
                             className={`styles.message ${
@@ -228,11 +239,16 @@ const DoctorRequest = () => {
                             : styles.grayBackground
                         }`}
                       >
-                        <img
-                          src={req.avatarUrl}
-                          alt="avatar"
+                        <Avatar
+                          sx={{
+                            bgcolor: "#e3e3e3",
+                            color: "#25307F",
+                            fontWeight: 500,
+                          }}
                           className={styles.avatar}
-                        />
+                        >
+                          {req.requester[0].toUpperCase()}
+                        </Avatar>
                         <div className={styles.reqContent}>
                           <div
                             className={`${
@@ -256,45 +272,56 @@ const DoctorRequest = () => {
                 ))}
 
               {selectedTab === "sent" &&
-                  Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
-                      <div key={dayLabel} className={styles.dateSection}>
-                        <p>{dayLabel}</p>
-                        {reqs.map((req) => (
-                            <div
-                                key={req.id}
-                                onClick={handleRequestDetail}
-                                className={`${styles.requestItem} ${
-                                    req.background === "blue"
-                                        ? styles.blueBackground
-                                        : styles.grayBackground
-                                }`}
-                            >
-                              <img
-                                  src={req.avatarUrl}
-                                  alt="avatar"
-                                  className={styles.avatar}
-                              />
-                              <div className={styles.reqContent}>
-                                <div
-                                    className={`${
-                                        req.target === true
-                                            ? styles.TLMessage
-                                            : styles.message
-                                    }`}
-                                >
-                                  {req.message}
-                                </div>
-                                <div className={styles.subText}>
-                                  {req.requester} ({req.role}) has requested on{" "}
-                                  {dayjs(req.requestedOn).format(
-                                      "dddd, D MMM at h:mm A"
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                        ))}
+                Object.entries(groupedRequests).map(([dayLabel, reqs]) => (
+                  <div key={dayLabel} className={styles.dateSection}>
+                    <p>{dayLabel}</p>
+                    {reqs.map((req) => (
+                      <div
+                        key={req.id}
+                        onClick={handleRequestDetail}
+                        className={`${styles.requestItem} ${
+                          req.background === "blue"
+                            ? styles.blueBackground
+                            : styles.grayBackground
+                        }`}
+                      >
+                        {/* <img
+                          src={req.avatarUrl}
+                          alt="avatar"
+                          className={styles.avatar}
+                        /> */}
+
+                        <Avatar
+                          sx={{
+                            bgcolor: "#e3e3e3",
+                            color: "#25307F",
+                            fontWeight: 500,
+                          }}
+                          className={styles.avatar}
+                        >
+                          {req.requester[0].toUpperCase()}
+                        </Avatar>
+                        <div className={styles.reqContent}>
+                          <div
+                            className={`${
+                              req.target === true
+                                ? styles.TLMessage
+                                : styles.message
+                            }`}
+                          >
+                            {req.message}
+                          </div>
+                          <div className={styles.subText}>
+                            {req.requester} ({req.role}) has requested on{" "}
+                            {dayjs(req.requestedOn).format(
+                              "dddd, D MMM at h:mm A"
+                            )}
+                          </div>
+                        </div>
                       </div>
-                  ))}
+                    ))}
+                  </div>
+                ))}
             </div>
           )}
         </div>

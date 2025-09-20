@@ -190,6 +190,7 @@
       .modal-actions {
         display: flex;
         justify-content: center;
+        gap: 1rem;
 
         .submit-btn {
           background-color: #25307f;
@@ -265,4 +266,15 @@
 .input-error {
   border: 1px solid red !important;
   outline: none;
+}
+@media screen {
+  .printable {
+    display: none;
+  }
+}
+
+@media print {
+  .printable {
+    display: block;
+  }
 }

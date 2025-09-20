@@ -3,9 +3,37 @@ import { Modal, Box, Typography, Button } from "@mui/material";
 import "./RecordModal.scss";
 import arrowBack from "/arrow_back.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { getBillById } from "../../../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
+import { getBillsByPatientId } from "../../../../../../components/State/Receptionist/Action.js"; // Import the SVG as a React component
 import printJS from "print-js"; // Import print-js
-const RecordModal = ({ open, bill, onClose, patient }) => {
+import { ChevronLeft } from "lucide-react";
+import CircularProgress from "@mui/material/CircularProgress";
+import styles from "./RecordsModal.module.scss";
+const RecordModal = ({ open, onClose, patient }) => {
+  //  console.log("Patient ", patient);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (patient?._id) {
+      dispatch(getBillsByPatientId(patient._id));
+    }
+  }, [patient?._id, dispatch]);
+
+  const patientBills = useSelector(
+    (state) => state.receptionist.patientBills || []
+  );
+  //  console.log("Patient Bills", patientBills);
+
+  const loading = useSelector(
+    (state) => state.receptionist.isLoadingPatientBills
+  );
+  const latestBill =
+    Array.isArray(patientBills) && patientBills.length >= 1
+      ? patientBills[patientBills.length - 1]
+      : {};
+
+  //  console.log("Latest Patient Bills", latestBill);
+
   useEffect(() => {
     // Disable scrolling on the body when the modal is open
     if (open) {
@@ -20,21 +48,20 @@ const RecordModal = ({ open, bill, onClose, patient }) => {
     };
   }, [open]);
 
-  const billId = patient?.bills[patient.bills.length - 1]?._id;
+  //  const billId = patient?.bills[patient.bills.length - 1]?._id;
   // console.log("Bill :",billId)
 
-  const dispatch = useDispatch();
   const printRef = useRef(); // Reference for print container
 
-  useEffect(() => {
-    if (billId) {
-      dispatch(getBillById(billId));
-    }
-  }, [dispatch, billId]);
+  // useEffect(() => {
+  //   if (billId) {
+  //     dispatch(getBillById(billId));
+  //   }
+  // }, [dispatch, billId]);
 
-  const billByID = useSelector((store) => store.receptionist.bill);
+  //  const billByID = useSelector((store) => store.receptionist.bill);
 
-  if (!bill) return null; // Avoid rendering if no bill is selected
+  //if (!bill) return null; // Avoid rendering if no bill is selected
   const handlePrint = () => {
     printJS({
       printable: "printable-bill",
@@ -51,164 +78,216 @@ const RecordModal = ({ open, bill, onClose, patient }) => {
       `,
     });
   };
+
+  const {
+    invoiceNumber,
+    invoiceDate,
+    services,
+    totalAmount,
+    outstanding,
+    paidAmount,
+    status,
+    mode,
+  } = latestBill;
+
+  const safeServices = Array.isArray(services) ? services : [];
+
   return (
     <>
-      <div
-        className={`billing-modal-overlay ${open ? "open" : ""}`}
-        onClick={onClose}
-      >
-        <div
-          className={`billing-modal-content ${open ? "open" : ""}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="billing-modal-header">
-            <div className="header-content">
-              <button className="close-btn" onClick={onClose}>
-                <img src={arrowBack} alt="Back" />
-              </button>
-              <h2>
-                Billing Details: <span>{billByID?.patient.name}</span>
-              </h2>
-            </div>
-            <Button className="print-btn" onClick={handlePrint}>
-              Print
-            </Button>
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <ChevronLeft className={styles.backBtn} onClick={onClose} />
+          <p>
+            Billing Details: <span>{patient?.name || "N/A"}</span>
+          </p>
+        </header>
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "36vh", // or full height you need
+            }}
+          >
+            <CircularProgress sx={{ color: "#25307F" }} size={58} />
+          </Box>
+        ) : patientBills.length === 0 ? (
+          <div className={styles.noBill}>
+            <p>No Bill Found</p>
           </div>
-          <div className="billing-modal-body">
-            <div className="billing-invoice-details">
-              <div className="billing-no">
-                <div>
-                  <span className="bold">Invoice Number</span>
-                  <span>{billByID?.invoiceNumber}</span>
+        ) : (
+          <div>
+            {/* Section 1 */}
+            <div className={styles.section1}>
+              <div className={styles.s1row1}>
+                <div className={styles.s1row1Child}>
+                  <p className={styles.label}>Invoice Number</p>
+                  <p className={styles.value}>{invoiceNumber || "N/A"}</p>
                 </div>
-                <div>
-                  <span className="bold">Invoice Date</span>
-                  <span>
-                    {new Date(billByID?.invoiceDate).toLocaleDateString(
-                      "en-IN",
-                      {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      }
-                    )}
-                  </span>
-                </div>
-              </div>
-              <div className="billing-divider"></div>
-              <div className="billing-invoice-amount">
-                {billByID?.services.map((service, index) => (
-                  <div key={index} className="billing-desc">
-                    <div>
-                      <span className="bold">Description</span>
-                      <span>{service.name}</span>
-                    </div>
-
-                    {service.categories.map((cat, index) => (
-                      <div key={index} className="billing-category">
-                        <div>{cat.subCategoryName}</div>
-                        <div>Qty: {cat.quantity}</div>
-                        <div>Price: {cat.rate}</div>
-                        <div>Total: {cat.total}</div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-                <div className="billing-divider"></div>
-                <div className="billing-total">
-                  <div className="bold">Total</div>
-                  <div className="bold">{billByID?.totalAmount}</div>
-                </div>
-              </div>
-            </div>
-            <div className="billing-amount">
-              <div className="billing-amount-details">
-                <div>
-                  <div className="bold">Total Amount</div>
-                  <div>{billByID?.totalAmount}</div>
-                </div>
-                <div>
-                  <div className="bold">Paid</div>
-                  <div>{billByID?.paidAmount}</div>
-                </div>
-                <div>
-                  <div className="bold ">Outstanding</div>
-                  <div className="center">{billByID?.outstanding}</div>
-                </div>
-                <div>
-                  <div className="bold">Status</div>
-                  <div className="center">{billByID?.status}</div>
-                </div>
-              </div>
-              <div className="billing-divider"></div>
-              <div className="billing-history">
-                <div className="bold">Payment History</div>
-                <div className="billing-summary">
-                  <p>
-                    Amount Paid: <span> {billByID?.paidAmount}</span>
-                  </p>
-                  <p>Mode: {bill?.mode}</p>
-                  <p>
-                    Date:{" "}
-                    <span>
-                      {new Date(billByID?.invoiceDate).toLocaleDateString(
-                        "en-IN",
-                        {
+                <div className={styles.s1row1Child}>
+                  <p className={styles.label}>Invoice Date</p>
+                  <p className={styles.value}>
+                    {invoiceDate
+                      ? new Date(invoiceDate).toLocaleDateString("en-IN", {
                           day: "2-digit",
                           month: "2-digit",
                           year: "numeric",
-                        }
-                      )}
-                    </span>
+                        })
+                      : "N/A"}
+                  </p>
+                </div>
+              </div>
+
+              <div className={styles.s1row2}>
+                <div className={styles.s1row2Child}>
+                  <p className={styles.label}>Description</p>
+                  {safeServices.length > 0 ? (
+                    safeServices.map((service, index) => (
+                      <div key={index}>
+                        {(Array.isArray(service.categories)
+                          ? service.categories
+                          : []
+                        ).map((category, idx) => (
+                          <p key={idx} className={styles.value}>
+                            {category.subCategoryName || "N/A"}
+                          </p>
+                        ))}
+                      </div>
+                    ))
+                  ) : (
+                    <p className={styles.value}>N/A</p>
+                  )}
+                </div>
+                <div className={styles.s1row2Child}>
+                  <p className={`${styles.label2} `}>Quantity</p>
+                  {safeServices.length > 0 ? (
+                    safeServices.map((service, index) => (
+                      <div key={index}>
+                        {(Array.isArray(service.categories)
+                          ? service.categories
+                          : []
+                        ).map((category, idx) => (
+                          <p key={idx} className={styles.value2}>
+                            {category.quantity || "N/A"}
+                          </p>
+                        ))}
+                      </div>
+                    ))
+                  ) : (
+                    <p className={styles.value2}>N/A</p>
+                  )}
+                </div>
+                <div className={styles.s1row2Child}>
+                  <p className={`${styles.label2} `}>Price</p>
+                  {safeServices.length > 0 ? (
+                    safeServices.map((service, index) => (
+                      <div key={index}>
+                        {(Array.isArray(service.categories)
+                          ? service.categories
+                          : []
+                        ).map((category, idx) => (
+                          <p key={idx} className={styles.value2}>
+                            ₹{category.total || "N/A"}
+                          </p>
+                        ))}
+                      </div>
+                    ))
+                  ) : (
+                    <p className={styles.value2}>N/A</p>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.s1row3}>
+                <div className={styles.s1row3Child}>
+                  <p className={styles.label}>Total</p>
+                </div>
+                <div className={styles.s1row3Child}>
+                  <p className={styles.label}>₹{totalAmount || "N/A"}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2 */}
+            <div className={styles.section2}>
+              {" "}
+              <div className={styles.s2row1}>
+                <div className={styles.s2row1Child}>
+                  <p className={styles.label}>Total Amount</p>
+                  <p className={styles.value}>₹{totalAmount || "N/A"}</p>
+                </div>
+                <div className={styles.s2row1Child}>
+                  {" "}
+                  <p className={`${styles.label2} `}>Paid</p>
+                  <p className={`${styles.value2}`}>
+                    ₹
+                    {paidAmount !== undefined && paidAmount !== null
+                      ? paidAmount
+                      : "N/A"}
+                  </p>
+                </div>
+                <div className={styles.s2row1Child}>
+                  {" "}
+                  <p className={`${styles.label2} `}>Outstanding</p>
+                  <p className={`${styles.value2}`}>
+                    ₹
+                    {outstanding !== undefined && outstanding !== null
+                      ? outstanding
+                      : "N/A"}
+                  </p>
+                </div>{" "}
+                <div className={styles.s2row1Child}>
+                  {" "}
+                  <p className={`${styles.label2} `}>Status</p>
+                  <p
+                    className={`${styles.status} ${
+                      status === "Paid"
+                        ? styles.paid
+                        : status === "Pending"
+                        ? styles.pending
+                        : styles.unknown
+                    }`}
+                  >
+                    {status || "N/A"}
+                  </p>
+                </div>
+              </div>
+              <div className={styles.s2row2}>
+                <div className={styles.s2row2Child}>
+                  <p className={styles.label}>Payment History</p>
+                </div>
+                <div className={styles.s2row2Child}>
+                  <p className={styles.value}>
+                    Amount Paid: ₹{" "}
+                    {paidAmount !== undefined && paidAmount !== null
+                      ? paidAmount
+                      : "N/A"}
+                  </p>
+                  <p className={styles.value}>Mode: {mode || "N/A"}</p>
+                  <p className={styles.value}>
+                    Date:{" "}
+                    {invoiceDate
+                      ? new Date(invoiceDate).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                      : "N/A"}
                   </p>
                 </div>
               </div>
             </div>
+
+            {/* Submit Container */}
+            <div className={styles.submitContainer}>
+              <button onClick={handlePrint}>
+                <img src="/assets/printWhite.svg" alt="" />
+                Print Bill
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
-      {/* Hidden Printable Section */}
-      <div style={{ display: "none" }}>
-        <div id="printable-bill" className="print-container" ref={printRef}>
-          <h2>Invoice</h2>
-          <p>
-            <b>Invoice Number:</b> {billByID?.invoiceNumber}
-          </p>
-          <p>
-            <b>Invoice Date:</b>{" "}
-            {new Date(billByID?.invoiceDate).toLocaleDateString("en-IN", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })}
-          </p>
-          <hr />
-          <h3>Services</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {billByID?.services?.map((service, index) =>
-                service.categories?.map((cat, idx) => (
-                  <tr key={`${index}-${idx}`}>
-                    <td>{cat.subCategoryName}</td>
-                    <td>{cat.quantity}</td>
-                    <td>₹{cat.rate}</td>
-                    <td>₹{cat.total}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          <hr />
-          <h3 className="total">Total Amount: ₹{billByID?.totalAmount}</h3>
-        </div>
+        )}
       </div>
     </>
   );
