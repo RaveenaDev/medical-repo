@@ -4,7 +4,7 @@ import Searchbar from "../../../components/Searchbar";
 import Notifications from "../../../components/NotificationFunc/Notification";
 import Companies from "./companies/Companies";
 import Patients from "./patients/Patients";
-import InPatients from "./inPatients/Inpatients";
+import InPatients from "./inPatients/InPatients.jsx";
 const TPA = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
