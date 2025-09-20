@@ -15,7 +15,10 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useLocation, useNavigate } from "react-router-dom";
-import {getDepartmentById, getServicesByDepartmentId} from "../../../../components/State/Receptionist/Action.js";
+import {
+  getDepartmentById,
+  getServicesByDepartmentId,
+} from "../../../../components/State/Receptionist/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 
@@ -36,7 +39,7 @@ const DepartDetails = (props) => {
 
   useEffect(() => {
     dispatch(getDepartmentById(departmentId));
-    dispatch(getServicesByDepartmentId(departmentId))
+    dispatch(getServicesByDepartmentId(departmentId));
   }, [dispatch, departmentId]);
 
   const handleChange = (event) => {
@@ -50,7 +53,7 @@ const DepartDetails = (props) => {
   const receptionist = useSelector((store) => store.receptionist);
 
   const department = receptionist.department;
-  const services = receptionist.servicesByDepartment
+  const services = receptionist.servicesByDepartment;
 
   // console.log("Dep: ",department)
   // console.log("Serv: ",services)
@@ -199,7 +202,11 @@ const DepartDetails = (props) => {
               <div className={avi.section1}>
                 <Grid
                   container
-                  sx={{ width: "100%", justifyContent: "space-between" }}
+                  sx={{
+                    width: "100%",
+                    justifyContent: "space-between",
+                    height: "70vh",
+                  }}
                 >
                   {/* Section 1 */}
                   <Grid
@@ -371,56 +378,77 @@ const DepartDetails = (props) => {
                     className={avi.section2}
                   >
                     <div
-                        style={{
-                          width: "100%",
-                          boxShadow: "0 2px 4px rgba(116, 116, 116, 0.2)",
-                          padding: "8px 10px 0 20px",
-                          borderRadius: "4px",
-                          border: "1px solid rgba(116, 116, 116, 0.3)",
-                        }}
+                      style={{
+                        width: "100%",
+                        boxShadow: "0 2px 4px rgba(116, 116, 116, 0.2)",
+                        padding: "8px 10px 0 20px",
+                        borderRadius: "4px",
+                        border: "1px solid rgba(116, 116, 116, 0.3)",
+                      }}
                     >
-                      <div className={avi.box3} style={{padding: "0 14px"}}>
-                        <div style={{marginBottom: "14px"}}>
-                          <h4 style={{color: "#000000",fontSize:'1rem'}}>Available services</h4>
+                      <div className={avi.box3} style={{ padding: "0 14px" }}>
+                        <div style={{ marginBottom: "14px" }}>
+                          <h4 style={{ color: "#000000", fontSize: "1rem" }}>
+                            Available services
+                          </h4>
 
-                          <div style={{maxHeight:'60vh',overflowY:'auto'}}>
+                          <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
                             {Array.isArray(services) && services.length > 0 ? (
-                                services.map((serv, sIdx) => (
-                                    <ul
-                                        key={serv?.id || sIdx}
-                                        style={{
-                                          listStyleType: "none",
-                                          paddingLeft: "10px",
-                                          color: "#727272",
-                                          margin: 0,
-                                          marginBottom:"-1rem"
-                                        }}
+                              services.map((serv, sIdx) => (
+                                <ul
+                                  key={serv?.id || sIdx}
+                                  style={{
+                                    listStyleType: "none",
+                                    paddingLeft: "10px",
+                                    color: "#727272",
+                                    margin: 0,
+                                    marginBottom: "-1rem",
+                                  }}
+                                >
+                                  <li style={{ color: "#000000" }}>
+                                    <span
+                                      style={{
+                                        color: "#000000",
+                                        marginRight: "2px",
+                                      }}
                                     >
-                                      <li style={{color: "#000000"}}>
-                                        <span style={{color: "#000000", marginRight: "2px"}}>• </span>
-                                        {serv?.name ?? "Unnamed service"}
+                                      •{" "}
+                                    </span>
+                                    {serv?.name ?? "Unnamed service"}
 
-                                        {/* Subcategories */}
-                                        {Array.isArray(serv?.categories) && serv.categories.length > 0 && (
-                                            <ul
-                                                style={{
-                                                  listStyleType: "disc",
-                                                  marginLeft: "18px",
-                                                  paddingLeft: 0,
-                                                }}
+                                    {/* Subcategories */}
+                                    {Array.isArray(serv?.categories) &&
+                                      serv.categories.length > 0 && (
+                                        <ul
+                                          style={{
+                                            listStyleType: "disc",
+                                            marginLeft: "18px",
+                                            paddingLeft: 0,
+                                          }}
+                                        >
+                                          {serv.categories.map((cat, cIdx) => (
+                                            <li
+                                              key={cat?.id || cIdx}
+                                              style={{
+                                                color: "#767676",
+                                                marginBottom: "-7px",
+                                              }}
                                             >
-                                              {serv.categories.map((cat, cIdx) => (
-                                                  <li key={cat?.id || cIdx} style={{color: "#767676",marginBottom:'-7px'}}>
-                                                    {cat?.subCategoryName ?? "Unnamed subcategory"}
-                                                  </li>
-                                              ))}
-                                            </ul>
-                                        )}
-                                      </li>
-                                    </ul>
-                                ))
+                                              {cat?.subCategoryName ??
+                                                "Unnamed subcategory"}
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      )}
+                                  </li>
+                                </ul>
+                              ))
                             ) : (
-                                <p style={{color: "#9b9b9b", marginLeft: "10px"}}>No services to show.</p>
+                              <p
+                                style={{ color: "#9b9b9b", marginLeft: "10px" }}
+                              >
+                                No services to show.
+                              </p>
                             )}
                           </div>
                         </div>
