@@ -3,7 +3,6 @@ import { Plus, Printer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import TreatmentAndTestPrint from "./print/TreatmentAndTestPrint";
-import { Autocomplete, TextField } from "@mui/material";
 
 const commonTests = [
   "CBC (Complete Blood Count)",
@@ -24,29 +23,30 @@ const commonTests = [
   "MRI Spine",
 ];
 
+const initialTreatment = {
+  name: "",
+  dosage: "",
+  frequency: "",
+  duration: "",
+  notes: "",
+};
+
+const initialTest = {
+  name: "",
+  type: "",
+  notes: "",
+};
+
 const TreatmentAndTest = ({
   patient,
   onConfirm,
   existingData,
   selectedComponent,
 }) => {
-  const [treatment, setTreatment] = useState({
-    name: "",
-    dosage: "",
-    frequency: "",
-    duration: "",
-    notes: "",
-  });
-
+  const [treatment, setTreatment] = useState(initialTreatment);
   const [treatments, setTreatments] = useState([]);
-
-  const [test, setTest] = useState({
-    name: "",
-    type: "",
-    priority: "",
-  });
+  const [test, setTest] = useState(initialTest);
   const [tests, setTests] = useState([]);
-
   const [errors, setErrors] = useState({});
 
   const printRef = useRef();
@@ -54,52 +54,37 @@ const TreatmentAndTest = ({
     contentRef: printRef,
     documentTitle: "Treatment & Tests",
   });
-  const frequencyOptions = [
-    "1-0-0 (Morning only)",
-    "0-1-0 (Afternoon only)",
-    "0-0-1 (Evening only)",
-    "1-1-0 (Morning & Afternoon)",
-    "1-0-1 (Morning & Evening)",
-    "0-1-1 (Afternoon & Evening)",
-    "1-1-1 (Morning, Afternoon & Evening)",
-    "SOS (As needed)",
-  ];
-  //  Prefill from existing data
+
+  // Prefill from existing data
   useEffect(() => {
-    //console.log("Ex: ",existingData)
-    //console.log("Sel: ",selectedComponent)
-    if (existingData && selectedComponent && existingData[selectedComponent]) {
+    if (existingData?.[selectedComponent]) {
       const sectionData = existingData[selectedComponent];
       if (sectionData.treatments) setTreatments(sectionData.treatments);
       if (sectionData.tests) setTests(sectionData.tests);
     }
   }, [existingData, selectedComponent]);
+
   const handleAddTreatment = () => {
-    let newErrors = {};
+    const newErrors = {};
     if (!treatment.name) newErrors.name = true;
     if (!treatment.dosage) newErrors.dosage = true;
     if (!treatment.frequency) newErrors.frequency = true;
     if (!treatment.duration) newErrors.duration = true;
 
-    if (Object.keys(newErrors).length > 0) {
+    if (Object.keys(newErrors).length) {
       setErrors(newErrors);
-      return; // stop if errors
+      return;
     }
+
     setTreatments((prev) => [...prev, treatment]);
-    setTreatment({
-      name: "",
-      dosage: "",
-      frequency: "",
-      duration: "",
-      notes: "",
-    });
-    setErrors({}); // clear errors
+    setTreatment(initialTreatment);
+    setErrors({});
   };
 
   const handleAddTest = () => {
     if (test.name) {
       setTests((prev) => [...prev, test]);
-      setTest({ name: "", type: "", priority: "" });
+      setTest(initialTest);
     }
   };
 
@@ -112,27 +97,19 @@ const TreatmentAndTest = ({
   };
 
   const handleSubmit = () => {
-    const finalData = {
-      treatments,
-      tests,
-    };
-    // console.log("Treatment & Test Submitted:", finalData);
-    onConfirm(finalData); // ⬅️ Send to parent
+    onConfirm({ treatments, tests });
   };
+
   const handleFrequencyChange = (e) => {
-    let value = e.target.value.toUpperCase(); // so "sos" → "SOS"
-
-    // Auto-format only if it's numeric without dashes
-    if (/^\d+$/.test(value)) {
-      value = value.split("").join("-"); // "202" → "2-0-2"
-    }
-
-    setTreatment({ ...treatment, frequency: value });
+    let value = e.target.value.toUpperCase();
+    if (/^\d{3}$/.test(value)) value = value.split("").join("-");
+    setTreatment((prev) => ({ ...prev, frequency: value }));
   };
+
   return (
     <div>
       <div className={styles.container1}>
-        {/* row 1 */}
+        {/* Header */}
         <div className={styles.row1}>
           <p>Treatment And Tests</p>
           <button onClick={handlePrint} className={styles.printBtn}>
@@ -140,7 +117,7 @@ const TreatmentAndTest = ({
           </button>
         </div>
 
-        {/* row 2 */}
+        {/* Treatment input */}
         <div className={styles.row2}>
           <input
             type="text"
@@ -154,7 +131,7 @@ const TreatmentAndTest = ({
           <input
             type="text"
             className={`${styles.input1} ${errors.dosage ? styles.error : ""}`}
-            placeholder="Dosage "
+            placeholder="Dosage"
             value={treatment.dosage}
             onChange={(e) =>
               setTreatment({ ...treatment, dosage: e.target.value })
@@ -170,7 +147,6 @@ const TreatmentAndTest = ({
             value={treatment.frequency}
             onChange={handleFrequencyChange}
           />
-
           <datalist id="frequencyOptions">
             <option value="1-0-0">Morning only</option>
             <option value="0-1-0">Afternoon only</option>
@@ -204,29 +180,27 @@ const TreatmentAndTest = ({
           />
         </div>
 
-        {/* row 3 - Add Treatment */}
         <div className={styles.row3}>
           <button type="button" onClick={handleAddTreatment}>
-            <Plus size={18} />
-            Add Treatment
+            <Plus size={18} /> Add Treatment
           </button>
         </div>
 
-        {/* row4 - Show treatments */}
+        {/* Treatments list */}
         {treatments.length > 0 && (
           <div className={styles.row4}>
             <div className={styles.r4Left}>
               <p>Prescribed :</p>
             </div>
             <div className={styles.r4Right}>
-              {treatments.map((t, index) => (
+              {treatments.map((item, index) => (
                 <div key={index} className={styles.r4RightContent}>
                   <p>
                     <span>&#8226;&nbsp;</span>
-                    {t.name} {t.dosage} – ({t.frequency}) x {t.duration}
-                    {t.notes && ` (${t.notes})`}
+                    {item.name} {item.dosage} – ({item.frequency}) x{" "}
+                    {item.duration}
+                    {item.notes && ` (${item.notes})`}
                   </p>
-
                   <button
                     type="button"
                     onClick={() => handleRemoveTreatment(index)}
@@ -239,14 +213,11 @@ const TreatmentAndTest = ({
           </div>
         )}
 
-        {/* row5 */}
+        {/* Test input */}
         <div className={styles.row5}>
           <p>Order Tests</p>
         </div>
-
-        {/* row6 - Test input */}
         <div className={styles.row6}>
-          {/* Test Name with autocomplete */}
           <input
             type="text"
             className={styles.in1}
@@ -256,13 +227,12 @@ const TreatmentAndTest = ({
             onChange={(e) => setTest({ ...test, name: e.target.value })}
           />
           <datalist id="commonTests">
-            {commonTests.map((t, i) => (
-              <option key={i} value={t} />
+            {commonTests.map((testName, i) => (
+              <option key={i} value={testName} />
             ))}
           </datalist>
-          {/* Type */}
           <select
-            className={styles.input1}
+            className={styles.input2}
             value={test.type}
             onChange={(e) => setTest({ ...test, type: e.target.value })}
           >
@@ -273,19 +243,6 @@ const TreatmentAndTest = ({
             <option value="ECG">ECG</option>
             <option value="Other">Other</option>
           </select>
-          {/* Priority */}
-          <select
-            className={styles.input1}
-            value={test.priority}
-            onChange={(e) => setTest({ ...test, priority: e.target.value })}
-          >
-            <option value="">Select Priority</option>
-            <option value="Routine">Routine</option>
-            <option value="Urgent">Urgent</option>
-            <option value="Stat">Stat (Immediate)</option>
-          </select>
-
-          {/* Notes */}
           <input
             type="text"
             className={styles.input1}
@@ -295,29 +252,26 @@ const TreatmentAndTest = ({
           />
         </div>
 
-        {/* row 7 - Add Test */}
         <div className={styles.row7}>
           <button type="button" onClick={handleAddTest}>
-            <Plus size={18} />
-            Add Test
+            <Plus size={18} /> Add Test
           </button>
         </div>
 
-        {/* row 8 - Show tests */}
+        {/* Tests list */}
         {tests.length > 0 && (
           <div className={styles.row4}>
             <div className={styles.r4Left}>
               <p>To be ordered :</p>
             </div>
             <div className={styles.r4Right}>
-              {tests.map((t, index) => (
+              {tests.map((item, index) => (
                 <div key={index} className={styles.r4RightContent}>
                   <p>
                     <span>&#8226;&nbsp;</span>
-                    {t.name} {t.type} {t.priority && `(${t.priority})`}
-                    {t.notes && ` (${t.notes})`}
+                    {item.name} {item.type}
+                    {item.notes && ` (${item.notes})`}
                   </p>
-
                   <button type="button" onClick={() => handleRemoveTest(index)}>
                     Remove
                   </button>
@@ -327,13 +281,15 @@ const TreatmentAndTest = ({
           </div>
         )}
 
-        {/* row 9 - Submit */}
+        {/* Submit */}
         <div className={styles.row9}>
           <button type="button" onClick={handleSubmit}>
             <p>Confirm</p>
           </button>
         </div>
       </div>
+
+      {/* Print version */}
       <TreatmentAndTestPrint
         ref={printRef}
         treatments={treatments}
