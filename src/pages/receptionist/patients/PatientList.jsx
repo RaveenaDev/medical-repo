@@ -44,8 +44,11 @@ import {
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CircularProgress from "@mui/material/CircularProgress";
 import styles from "./PatientList.module.scss";
+import useDebounce from "../../../hooks/useDebounce.js";
+import {Search} from "lucide-react";
 
 const PatientList = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -73,6 +76,7 @@ const PatientList = () => {
 
   // Handle Sort Change
 
+  const debouncedSearch = useDebounce(searchQuery, 500);
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
@@ -247,23 +251,33 @@ const PatientList = () => {
               </Box>
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box className={styles.filterSearch}>
+              <div className={styles["search-wrapper"]}>
+                <Search size={18} className={styles["search-icon"]}/>
+                <input
+                    type="text"
+                    placeholder="Search inpatients..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={styles["search-input"]}
+                />
+              </div>
               <Button
-                startIcon={<FilterAltIcon />}
-                sx={{
-                  textTransform: "none",
-                  padding: "6px 20px",
-                  backgroundColor: "white",
-                  borderRadius: "5px",
-                  fontSize: "15px",
-                  color: "#25307F",
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
+                  startIcon={<FilterAltIcon/>}
+                  sx={{
+                    textTransform: "none",
+                    padding: "6px 20px",
                     backgroundColor: "white",
-                  },
-                }}
-                onClick={() => setFilterDrawerOpen(true)}
+                    borderRadius: "5px",
+                    fontSize: "15px",
+                    color: "#25307F",
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                      backgroundColor: "white",
+                    },
+                  }}
+                  onClick={() => setFilterDrawerOpen(true)}
               >
                 Filter
               </Button>
@@ -271,18 +285,18 @@ const PatientList = () => {
           </Box>
           {/* Table Section */}
           <TableContainer
-            className={styles.tableContainer}
-            sx={{
-              flex: "1 1 auto",
-              minHeight: 0,
-              overflowY: "auto",
-              position: "relative",
-            }}
+              className={styles.tableContainer}
+              sx={{
+                flex: "1 1 auto",
+                minHeight: 0,
+                overflowY: "auto",
+                position: "relative",
+              }}
           >
             <Table
-              sx={{
-                borderCollapse: "separate",
-                borderSpacing: "0 10px",
+                sx={{
+                  borderCollapse: "separate",
+                  borderSpacing: "0 10px",
                 background: "#F1F1F1",
                 marginBottom: "0px",
               }}

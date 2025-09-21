@@ -392,3 +392,31 @@
   font-size: 1.7vh;
   text-align: center;
 }
+
+.filterSearch {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 20px;
+
+  .search-icon {
+    color: #666;
+    margin-right: 6px;
+  }
+
+  .search-input {
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    background: transparent;
+  }
+}

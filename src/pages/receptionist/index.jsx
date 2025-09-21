@@ -112,6 +112,8 @@ function Receptionist(props) {
   const scheduledAppointments = useSelector(
       (store) => store.receptionist.scheduledAppointments
   );
+
+  console.log('Ses: ',scheduledAppointments)
   const scheduledCount = useSelector((store) => store.admin.scheduledCount);
 
   const ongoingAppointments = useSelector(
@@ -476,7 +478,10 @@ function Receptionist(props) {
                                           Branch
                                         </TableCell>
                                         <TableCell align="center" sx={{ color: "#000", fontSize: "16px" }}>
-                                          Token Number
+                                          Appt. Time
+                                        </TableCell>
+                                        <TableCell align="center" sx={{ color: "#000", fontSize: "16px" }}>
+                                          Token No.
                                         </TableCell>
                                         <TableCell align="left" sx={{ color: "#000", fontSize: "16px", pl: 3 }}>
                                           Status
@@ -539,6 +544,20 @@ function Receptionist(props) {
 
                                                     <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
                                                       {appointment.department.name}
+                                                    </TableCell>
+
+                                                    <TableCell sx={{ color: "#747474", fontWeight: 600 }} align="center">
+                                                      {appointment?.tokenDate
+                                                          ? new Date(appointment.tokenDate)
+                                                              .toLocaleTimeString("en-IN", {
+                                                                timeZone: "Asia/Kolkata",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                                hour12: true,
+                                                              })
+                                                              .replace("am", "AM")
+                                                              .replace("pm", "PM")
+                                                          : "N/A"}
                                                     </TableCell>
 
                                                     <TableCell sx={{ color: "#747474", fontWeight: 600 }} align="center">

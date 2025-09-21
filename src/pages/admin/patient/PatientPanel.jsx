@@ -40,11 +40,15 @@ import {
   updatePatient,
 } from "../../../components/State/Admin/Action.js";
 import CircularProgress from "@mui/material/CircularProgress";
+import useDebounce from "../../../hooks/useDebounce.js";
+import styles from "../../receptionist/patients/PatientList.module.scss";
+import {Search} from "lucide-react";
 
 const PatientPanel = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -57,6 +61,8 @@ const PatientPanel = (props) => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const debouncedSearch = useDebounce(searchQuery, 500);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -268,23 +274,33 @@ const PatientPanel = (props) => {
                 </Box>
               </Box>
 
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box className={styles.filterSearch}>
+                <div className={styles["search-wrapper"]}>
+                  <Search size={18} className={styles["search-icon"]}/>
+                  <input
+                      type="text"
+                      placeholder="Search inpatients..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className={styles["search-input"]}
+                  />
+                </div>
                 <Button
-                  startIcon={<FilterAltIcon />}
-                  sx={{
-                    textTransform: "none",
-                    padding: "6px 20px",
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    fontSize: "15px",
-                    color: "#25307F",
-                    "&:focus": {
-                      outline: "none",
-                      boxShadow: "none",
+                    startIcon={<FilterAltIcon/>}
+                    sx={{
+                      textTransform: "none",
+                      padding: "6px 20px",
                       backgroundColor: "white",
-                    },
-                  }}
-                  onClick={() => setFilterDrawerOpen(true)}
+                      borderRadius: "5px",
+                      fontSize: "15px",
+                      color: "#25307F",
+                      "&:focus": {
+                        outline: "none",
+                        boxShadow: "none",
+                        backgroundColor: "white",
+                      },
+                    }}
+                    onClick={() => setFilterDrawerOpen(true)}
                 >
                   Filter
                 </Button>
@@ -293,17 +309,17 @@ const PatientPanel = (props) => {
 
             {/* Table Section */}
             <TableContainer
-              sx={{
-                maxHeight: "69vh", // Adjust this to fit your layout needs
-                overflowY: "auto",
-                position: "relative",
-              }}
+                sx={{
+                  maxHeight: "69vh", // Adjust this to fit your layout needs
+                  overflowY: "auto",
+                  position: "relative",
+                }}
             >
               <Table
-                sx={{
-                  borderCollapse: "separate",
-                  borderSpacing: "0 10px",
-                  background: "#F1F1F1",
+                  sx={{
+                    borderCollapse: "separate",
+                    borderSpacing: "0 10px",
+                    background: "#F1F1F1",
                   marginBottom: "20px",
                 }}
               >

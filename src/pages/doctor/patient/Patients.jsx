@@ -1,6 +1,6 @@
 import CommonPanel from "../components/CommonPanel";
 import { FiFilter } from "react-icons/fi";
-import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
+import {ChevronLeft, ChevronDown, ChevronUp, Search} from "lucide-react";
 import styles from "./Patients.module.scss";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -24,8 +24,10 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import { getFilteredPatients } from "../../../components/State/Doctor/Action.js";
+import useDebounce from "../../../hooks/useDebounce.js";
 const Patients = () => {
   const dispatch = useDispatch();
+    const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
   // const location = useLocation();
@@ -46,6 +48,8 @@ const Patients = () => {
     // dispatch(getPatients());
     dispatch(getFilteredPatients(filters, page, rowsPerPage));
   }, [dispatch, sortOrder, page, rowsPerPage]);
+
+    const debouncedSearch = useDebounce(searchQuery, 500);
 
   const doctor = useSelector((store) => store.doctor);
   const totalFilteredPatients = doctor.totalFilteredPatients;
@@ -308,31 +312,45 @@ const Patients = () => {
                 <MenuItem value="asc">Oldest to Newest</MenuItem>
               </Select>
             </div>
-            <div
-              onClick={() => setFilterDrawerOpen(true)}
-              className={`${styles.filter} ${styles.boxStyle}`}
-            >
-              <FiFilter fill="#25307f" />
-              <span>Filter</span>
-            </div>
+
+              <Box className={styles.filterSearch}>
+                  <div className={styles["search-wrapper"]}>
+                      <Search size={18} className={styles["search-icon"]}/>
+                      <input
+                          type="text"
+                          placeholder="Search inpatients..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className={styles["search-input"]}
+                      />
+                  </div>
+                  <div
+                      onClick={() => setFilterDrawerOpen(true)}
+                      className={`${styles.filter} ${styles.boxStyle}`}
+                  >
+                      <FiFilter fill="#25307f"/>
+                      <span>Filter</span>
+                  </div>
+              </Box>
+
           </div>
         </div>
-        <hr />
+          <hr/>
       </div>
 
-      {/* Modal Component */}
-      <AppointmentRequestModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        appointmentRequests={appointmentRequests}
-      >
-        <p>This is where appointment requests will appear.</p>
-      </AppointmentRequestModal>
+        {/* Modal Component */}
+        <AppointmentRequestModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            appointmentRequests={appointmentRequests}
+        >
+            <p>This is where appointment requests will appear.</p>
+        </AppointmentRequestModal>
 
-      {loading ? (
-        <Box
-          sx={{
-            display: "flex",
+        {loading ? (
+            <Box
+                sx={{
+                    display: "flex",
             justifyContent: "center",
             alignItems: "center",
             height: "60vh", // or full height you need
