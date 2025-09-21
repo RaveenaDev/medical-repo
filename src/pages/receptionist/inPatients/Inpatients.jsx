@@ -141,8 +141,7 @@ const InPatients = (props) => {
 
   return (
     <>
-      <div style={{ position: "relative", top: "7px",
-          paddingLeft:'8px' }}>
+      <div style={{ position: "relative", top: "7px", paddingLeft: "8px" }}>
         <CommonPanel />
       </div>
       <div className={styles.patientsHeader}>
@@ -259,7 +258,7 @@ const InPatients = (props) => {
                             </div>
                             <div className={styles.patientEmail}>
                               {truncateText(
-                                patient?.email || "Not Assigned",
+                                patient?.phone || "Not Assigned",
                                 15
                               )}
                             </div>
