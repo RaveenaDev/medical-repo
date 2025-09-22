@@ -33,7 +33,12 @@ const BookAppointment = ({
   const dispatch = useDispatch();
 
 
+  let dep = "";
+  if (department) {
+    dep = department[0]?.name;
+  }
 
+  if (!isOpen) return null;
   const [formData, setFormData] = useState({
     patientName: "",
     mobileNumber: "",
@@ -49,6 +54,8 @@ const BookAppointment = ({
     gender: "",
     address: "",
   });
+
+
 
   useEffect(() => {
     if (doctorEmail) {
@@ -223,13 +230,6 @@ const BookAppointment = ({
       date: date,
     }));
   };
-
-  let dep = "";
-  if (department) {
-    dep = department[0]?.name;
-  }
-
-  if (!isOpen) return null;
 
   return (
       <>
