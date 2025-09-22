@@ -1,4 +1,5 @@
 import {
+  ADD_PROGRESS_TRACKER_PHASE,
   APPROVE_APPOINTMENT,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
@@ -23,7 +24,8 @@ import {
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
-  GET_DOCTORS, GET_DOCTORS_BY_DEPARTMENT1,
+  GET_DOCTORS,
+  GET_DOCTORS_BY_DEPARTMENT1,
   GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
@@ -530,6 +532,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         autoCompletePatientSearch: action.payload,
+      };
+
+    case ADD_PROGRESS_TRACKER_PHASE:
+      return {
+        ...state,
+        isLoadingGetProgressTracker: true,
       };
 
     default:
