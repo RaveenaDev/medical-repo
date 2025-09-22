@@ -5,12 +5,13 @@ import { Box, TextField } from "@mui/material";
 import { fontSize, styled } from "@mui/system";
 import {
   getAllDepartments,
-  getAllDoctors, removePrescriptionsWithAI,
+  getAllDoctors, getDoctorsByDepartment1, removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 import {toast} from "react-toastify";
 import Complete from "./Complete.jsx";
+import {getDoctorsByDepartment} from "../../../../components/State/Receptionist/Action.js";
 
 const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSuccess,setConfirmedSections,openNextAppointment,setSelectedComponent}) => {
   //console.log("Modal Data: ", modalData);
@@ -54,9 +55,13 @@ const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSu
     dispatch(getAllDepartments());
   }, [dispatch]);
 
-  const doctors = useSelector((store) => store.doctor.allDoctors);
+  const doctors = useSelector((store) => store.doctor.doctorsByDepartment);
   const departments = useSelector((store) => store.doctor.allDepartments);
   const closeModal = () => setActiveModal(null);
+
+  const handleDepartmentDoctors = (departmentId) => {
+    dispatch(getDoctorsByDepartment1(departmentId));
+  };
 
   const handleChange = (value) => {
     setReferralType((prev) =>
@@ -100,18 +105,29 @@ const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSu
     },
   });
 
+  const validateForm = () => {
+    if (!primaryDiagnosis) {
+      toast.error("Please enter the primary diagnosis.", { position: "bottom-right", autoClose: 2000 });
+      return false;
+    }
+
+    // Check for other required fields...
+    return true; // All checks passed, form is valid
+  };
+
+
   const handleReferralBtn = () => {
-    if (!modalData || Object.keys(modalData).length === 0) {
-      toast.error("Kindly fill the details of consultation!", {
-        position: "bottom-right", // Use string for position
-        autoClose: 2000,
-      });
-      return;
+    if (!validateForm()) {
+      return; // If form is invalid, don't submit
     }
     setActiveModal("complete");
-  }
+  };
+
 
   const handleSubmit = () => {
+    if (!validateForm()) {
+      return; // Prevent submission if form is invalid
+    }
     const formData = {
       tab: selectedTab,
       referralUrgency:
@@ -158,6 +174,8 @@ const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSu
     openNextAppointment(true);
   };
 
+  // console.log(patient)
+
   return (
       <>
         {activeModal === "complete" ? (
@@ -186,7 +204,7 @@ const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSu
 
                   <div className={styles.patientInfo}>
                     <p>Patient: {patient.name}</p>
-                    <p>ID: {patient?.patId}</p>
+                    <p>Phone: {patient?.phone}</p>
                     <div className={styles.primaryDiagnosisInput}>
                       <label htmlFor="primaryDiagnosis">Primary Diagnosis:</label>
                       <input
@@ -279,6 +297,7 @@ const Refer = ({ setCompleteData, onClose, modalData,completeData, patient, onSu
                                                         : ""
                                                 }`}
                                                 onClick={() => {
+                                                  handleDepartmentDoctors(option?.departmentId)
                                                   setSelectedDepartment(option);
                                                   setOpenDepartment(false);
                                                 }}

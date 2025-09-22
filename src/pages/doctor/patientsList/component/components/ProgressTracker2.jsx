@@ -55,6 +55,20 @@ const ProgressTracker2 = ({
 
   // Check if any step has status "completed"
   const isFinalPhase = progressTracker.some((step) => step.status === "Final");
+
+  const modalOpen = !!activeModal || !!selectedStep;
+
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [modalOpen]);
+
   return (
     <div>
       <div className={styles.row1PT}>

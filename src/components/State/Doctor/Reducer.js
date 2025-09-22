@@ -1,4 +1,5 @@
 import {
+  ADD_PROGRESS_TRACKER_PHASE,
   APPROVE_APPOINTMENT,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
@@ -24,6 +25,7 @@ import {
   GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
+  GET_DOCTORS_BY_DEPARTMENT1,
   GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
@@ -110,6 +112,7 @@ const initialState = {
   isLoadingMedicalProcedureStats: true,
   doctors: [],
   isLoadingDoctors: true,
+  doctorsByDepartment: [],
   staff: [],
   isLoadingStaffs: true,
   inventoryData: [],
@@ -220,6 +223,13 @@ export const doctorReducer = (state = initialState, action) => {
         doctors: action.payload.doctors,
         isLoadingDoctors: false,
       };
+
+    case GET_DOCTORS_BY_DEPARTMENT1:
+      return {
+        ...state,
+        doctorsByDepartment: action.payload.doctors,
+      };
+
     case GET_STAFF:
       return {
         ...state,
@@ -522,6 +532,12 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         autoCompletePatientSearch: action.payload,
+      };
+
+    case ADD_PROGRESS_TRACKER_PHASE:
+      return {
+        ...state,
+        isLoadingGetProgressTracker: true,
       };
 
     default:

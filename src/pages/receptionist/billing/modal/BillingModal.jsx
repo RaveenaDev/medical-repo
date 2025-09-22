@@ -12,18 +12,13 @@ import {
   Grid,
   InputAdornment,
   CircularProgress,
-  Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
 } from "@mui/material";
-import "./BillingModal.scss";
+import styles from "./BillingModal.module.scss";
+
 import arrowBack from "/arrow_back.svg";
 import printJS from "print-js"; // Import print-js
 
 import { useDispatch } from "react-redux";
-import BillingDialog from "./modals/BillingDialog.jsx";
 import {
   addToBill,
   editBill,
@@ -71,18 +66,7 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
   };
 
   const lineTotal = parseIntSafe(addForm.quantity) * parseIntSafe(addForm.rate);
-  const [openView, setOpenView] = useState(false);
-  const [selectedDetails, setSelectedDetails] = useState(null);
 
-  const handleOpenDialog = (details) => {
-    setSelectedDetails(details);
-    setOpenView(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenView(false);
-    setSelectedDetails(null);
-  };
   const openAddDialog = () => setAddOpen(true);
   const closeAddDialog = () => {
     setAddOpen(false);
@@ -133,28 +117,42 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
   };
 
   // console.log("Edited Bill", editableBill);
-  const printGrand = (editableBill?.services || []).reduce((s, r) => {
-    const q = Number.isFinite(+r.quantity) ? +r.quantity : 0;
-    const pr = Number.isFinite(+r.rate) ? +r.rate : 0;
-    return s + q * pr;
-  }, 0);
 
   const handlePrint = () => {
     printJS({
       printable: "printable-bill",
       type: "html",
-      scanStyles: false, // Prevents unwanted styles from affecting the print
+      scanStyles: false,
       style: `
-        body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 20px; }
-        .print-container { padding: 20px; border: 1px solid #ccc; width: 100%; max-width: 600px; margin: auto; }
-        h2 { text-align: center; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .total { font-weight: bold; }
-      `,
+      @page { size: A4; margin: 6mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { font-family: Arial, sans-serif; font-size: 12px; color: #111; }
+      .bill-wrap { border: 1px solid #222; padding: 10px; }
+      .bill-head { display: flex; gap: 10px; align-items: center; }
+      .bill-head .logo { width: 64px; height: 64px; object-fit: contain; }
+      .bill-head .titleblock { flex: 1; }
+      .bill-title { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; text-align: center; margin: 6px 0 12px; }
+      .muted { color: #555; }
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 8px; }
+      .box { border: 1px solid #999; padding: 8px; border-radius: 2px; }
+      .section-title { font-weight: 700; margin-bottom: 6px; font-size: 12px; }
+      table.bill { width: 100%; border-collapse: collapse; margin-top: 10px; }
+      table.bill th, table.bill td { border: 1px solid #000; padding: 6px; }
+      table.bill th { background: #f2f2f2; text-align: left; }
+      table.bill .right { text-align: right; }
+      table.bill .center { text-align: center; }
+      .totals { margin-top: 12px; width: 100%; }
+      .totals .row { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin: 4px 0; }
+      .totals .label { text-align: right; }
+      .totals .value { min-width: 120px; text-align: right; }
+      .amount-words { border: 1px dashed #999; padding: 8px; margin-top: 10px; font-style: italic; }
+      .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+      .sig-box { height: 64px; border: 1px solid #999; padding: 8px; display: flex; align-items: flex-end; justify-content: space-between; }
+      .footnote { margin-top: 16px; text-align: center; font-size: 11px; color: #444; }
+    `,
     });
   };
+
   if (!open || !bill) return null;
   const computedGrand = (editableBill?.services || []).reduce((sum, r) => {
     const q = Number.isFinite(+r.quantity) ? +r.quantity : 0;
@@ -171,7 +169,7 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
       details: r.details || undefined, // preserved if present
     }));
 
-    console.log("servicesPayload", servicesPayload);
+    // console.log("servicesPayload", servicesPayload);
     const payload = {
       services: servicesPayload,
       paidAmount: Number(editableBill?.paidAmount ?? bill?.paidAmount ?? 0),
@@ -183,29 +181,163 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
 
     setIsEditing(false);
   };
+  // ---- Helpers for print ----
+  const safeNum = (v) => (Number.isFinite(+v) ? +v : 0);
+
+  // Convert 0..99,99,99,999 into Indian words (rupees only)
+  const amountInWordsINR = (num) => {
+    num = Math.round(safeNum(num));
+    if (num === 0) return "Zero rupees only";
+    const ones = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+      "Ten",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tens = [
+      "",
+      "",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
+
+    const two = (n) =>
+      n < 20
+        ? ones[n]
+        : tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
+    const three = (n) => {
+      const h = Math.floor(n / 100),
+        r = n % 100;
+      return (
+        (h ? ones[h] + " Hundred" + (r ? " " : "") : "") + (r ? two(r) : "")
+      );
+    };
+
+    let out = "";
+    const crore = Math.floor(num / 10000000);
+    num %= 10000000;
+    const lakh = Math.floor(num / 100000);
+    num %= 100000;
+    const thou = Math.floor(num / 1000);
+    num %= 1000;
+    const hund = num;
+
+    if (crore) out += three(crore) + " Crore ";
+    if (lakh) out += three(lakh) + " Lakh ";
+    if (thou) out += three(thou) + " Thousand ";
+    if (hund) out += three(hund);
+
+    return (out.trim() + " rupees only").replace(/\s+/g, " ");
+  };
+
+  // Build GST-aware rows for print (gstPct optional; HSN/SAC optional)
+  const printRows = (editableBill?.services || []).map((row) => {
+    const qty = safeNum(row.quantity);
+    const rate = safeNum(row.rate);
+    const base = qty * rate;
+
+    const gstPct = Number.isFinite(+row.gstPct)
+      ? +row.gstPct
+      : Number.isFinite(+row.details?.gstPct)
+      ? +row.details.gstPct
+      : 0;
+
+    const gstAmt = +((base * gstPct) / 100).toFixed(2);
+    const lineTotal = +(base + gstAmt).toFixed(2);
+
+    const desc = row.category || row.service || row.details?.description || "—";
+    const name = row.details?.doctorName || row.details?.bedNumber || "—";
+    const hsn = row.hsnSac ?? row.details?.hsnSac ?? "";
+
+    const date =
+      row.details?.consultationDate ||
+      row.details?.billedDate ||
+      row.date ||
+      row.details?.date ||
+      bill.invoiceDate ||
+      "-";
+    return {
+      desc,
+      name,
+      date,
+      hsn,
+      qty,
+      rate,
+      base,
+      gstPct,
+      gstAmt,
+      lineTotal,
+      raw: row,
+    };
+  });
+
+  const hasGST = printRows.some((r) => r.gstPct > 0);
+  const subTotal = printRows.reduce((a, r) => a + r.base, 0);
+  const taxTotal = printRows.reduce((a, r) => a + r.gstAmt, 0);
+  const grossTotal = +(subTotal + taxTotal).toFixed(2);
+  const roundOff = +(Math.round(grossTotal) - grossTotal).toFixed(2);
+  const netPayable = +(grossTotal + roundOff).toFixed(2);
+
+  const paidAmt = safeNum(editableBill?.paidAmount ?? bill?.paidAmount ?? 0);
+  const balanceDue = Math.max(netPayable - paidAmt, 0);
+
+  // Hospital/patient convenience fields
+  const hospital = bill?.hospital || {};
+  const hospitalName = hospital?.name || "Your Hospital Name";
+  const hospitalAddr = hospital?.address || "123 Street, City, State, PIN";
+  const hospitalPhone = hospital?.phone || "+91-XXXXXXXXXX";
+  const hospitalGstin = hospital?.gstin || ""; // optional
+  const hospitalPan = hospital?.pan || ""; // optional
+  const logoUrl = hospital?.logoUrl || ""; // optional
 
   return (
     <>
       <div
-        className={`billing-modal-overlay ${open ? "open" : ""}`}
+        className={`${styles["billing-modal-overlay"]} ${
+          open ? styles.open : ""
+        }`}
         onClick={onClose}
       >
         <div
-          className={`billing-modal-content ${open ? "open" : ""}`}
+          className={`${styles["billing-modal-content"]} ${
+            open ? styles.open : ""
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="billing-modal-header">
-            <div className="header-content">
-              <button className="close-btn" onClick={onClose}>
+          <div className={styles["billing-modal-header"]}>
+            <div className={styles["header-content"]}>
+              <button className={styles["close-btn"]} onClick={onClose}>
                 <img src={arrowBack} alt="Back" />
               </button>
               <h2>
                 Billing Details: <span>{bill.patient.name}</span>
               </h2>
             </div>
-            <div className="heading-right">
+            <div className={styles["heading-right"]}>
               <button
-                className="billing-edit-btn"
+                className={styles["billing-edit-btn"]}
                 onClick={() => {
                   if (isEditing) {
                     // Cancel -> revert edits back to original bill
@@ -219,20 +351,20 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                 {isEditing ? "Cancel" : "Edit"}
               </button>
 
-              <Button className="print-btn" onClick={handlePrint}>
+              <Button className={styles["print-btn"]} onClick={handlePrint}>
                 <img src="/assets/Print-icon.svg" />
               </Button>
             </div>
           </div>
-          <div className="billing-modal-body">
-            <div className="billing-invoice-details">
-              <div className="billing-no">
+          <div className={styles["billing-modal-body"]}>
+            <div className={styles["billing-invoice-details"]}>
+              <div className={styles["billing-no"]}>
                 <div>
-                  <span className="bold">Invoice Number</span>
+                  <span className={styles["bold"]}>Invoice Number</span>
                   <span>{bill.invoiceNumber}</span>
                 </div>
                 <div>
-                  <span className="bold">Invoice Date</span>
+                  <span className={styles["bold"]}>Invoice Date</span>
                   <span>
                     {new Date(bill.invoiceDate).toLocaleDateString("en-IN", {
                       day: "2-digit",
@@ -242,27 +374,32 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                   </span>
                 </div>
               </div>
-              <div className="billing-divider"></div>
-              <div className="billing-invoice-amount">
-                <div className="billing-desc">
+              <div className={styles["billing-divider"]}></div>
+              <div className={styles["billing-invoice-amount"]}>
+                <div className={styles["billing-desc"]}>
                   {/* Header row (unchanged) */}
                   <div className="">
-                    <div className="billing-description">
-                      <p className="bold">Description</p>
+                    <div className={styles["billing-description"]}>
+                      <p className={styles["bold"]}>Description</p>
                     </div>
-                    <div className="billing-quantity">
-                      <p className="bold">Quantity</p>
+                    <div className={styles["billing-name"]}>
+                      <p className={styles["bold"]}>Name</p>
                     </div>
-                    <div className="billing-price">
-                      <p className="bold">Price</p>
+                    <div className={styles["billing-date"]}>
+                      <p className={styles["bold"]}>Date</p>
                     </div>
-                    <div>
-                      <p className="bold">Actions</p>
+                    <div className={styles["billing-quantity"]}>
+                      <p className={styles["bold"]}>Quantity</p>
                     </div>
+
+                    <div className={styles["billing-price"]}>
+                      <p className={styles["bold"]}>Price</p>
+                    </div>
+
                     {isEditing && (
-                      <div className="billing-clearAll">
+                      <div className={styles["billing-clearAll"]}>
                         <button
-                          className="clear-btn"
+                          className={styles["clear-btn"]}
                           onClick={() => {
                             const updated = JSON.parse(
                               JSON.stringify(editableBill)
@@ -291,17 +428,27 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                       row.service ||
                       row.details?.description ||
                       "—";
+
+                    const name =
+                      row.details?.doctorName || row.details?.bedNumber || "—";
                     const qty = Number.isFinite(+row.quantity)
                       ? +row.quantity
                       : 0;
+
+                    const date =
+                      row.details?.consultationDate ||
+                      row.details?.billedDate ||
+                      row.date ||
+                      row.details?.date ||
+                      "";
                     const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
-                    console.log("service", row);
+                    // console.log("service", row);
                     return (
-                      <div key={i} className="billing-category">
-                        <div className="billing-description">
+                      <div key={i} className={styles["billing-category"]}>
+                        <div className={styles["billing-description"]}>
                           {isEditing ? (
                             <input
-                              className="inputDescription"
+                              className={styles["inputDescription"]}
                               type="text"
                               inputMode="text"
                               value={desc}
@@ -325,11 +472,18 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                             <div>{desc}</div>
                           )}
                         </div>
-
-                        <div className="billing-quantity">
+                        <div className={styles["billing-name"]}>
+                          <div>{name ? name : "—"}</div>
+                        </div>
+                        <div className={styles["billing-date"]}>
+                          <div>
+                            {date ? new Date(date).toLocaleDateString() : "—"}
+                          </div>
+                        </div>
+                        <div className={styles["billing-quantity"]}>
                           {isEditing ? (
                             <input
-                              className="inputQuantity"
+                              className={styles["inputQuantity"]}
                               type="text"
                               inputMode="numeric"
                               pattern="[0-9]*"
@@ -357,10 +511,10 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                           )}
                         </div>
 
-                        <div className="billing-price">
+                        <div className={styles["billing-price"]}>
                           {isEditing ? (
                             <input
-                              className="inputPrice"
+                              className={styles["inputPrice"]}
                               type="text"
                               inputMode="numeric"
                               pattern="[0-9]*"
@@ -387,25 +541,12 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                             <div>₹{rate}</div>
                           )}
                         </div>
-                        <div className="billing-actions">
-                          {row?.details &&
-                          Object.keys(row.details).length > 0 ? (
-                            <button
-                              className="view-details-btn"
-                              onClick={() => handleOpenDialog(row.details)}
-                            >
-                              View
-                            </button>
-                          ) : (
-                            <span className="empty-placeholder">—</span>
-                          )}
-                        </div>
                       </div>
                     );
                   })}
                 </div>
 
-                <div className="billing-divider"></div>
+                <div className={styles["billing-divider"]}></div>
 
                 {/* Totals (computed from editableBill.services) */}
                 {(() => {
@@ -418,18 +559,18 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                     0
                   );
                   return (
-                    <div className="billing-total">
-                      <div className="bold">Total</div>
-                      <div className="bold">₹{grand}</div>
+                    <div className={styles["billing-total"]}>
+                      <div className={styles["bold"]}>Total</div>
+                      <div className={styles["bold"]}>₹{grand}</div>
                     </div>
                   );
                 })()}
               </div>
             </div>
-            <div className="billing-amount">
-              <div className="billing-amount-details">
+            <div className={styles["billing-amount"]}>
+              <div className={styles["billing-amount-details"]}>
                 <div>
-                  <div className="bold">Total Amount</div>
+                  <div className={styles["bold"]}>Total Amount</div>
                   <div>
                     ₹
                     {isEditing
@@ -439,10 +580,10 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                 </div>
 
                 <div>
-                  <div className="bold">Paid</div>
+                  <div className={styles["bold"]}>Paid</div>
                   {isEditing ? (
                     <input
-                      className="inputPaid"
+                      className={styles["inputPaid"]}
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
@@ -469,8 +610,8 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                 </div>
 
                 <div>
-                  <div className="bold ">Outstanding</div>
-                  <div className="center">
+                  <div className={styles["bold"]}>Outstanding</div>
+                  <div className={styles["center"]}>
                     ₹
                     {isEditing ? (
                       Math.max(
@@ -487,10 +628,10 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                 </div>
 
                 <div>
-                  <div className="bold">Status</div>
+                  <div className={styles["bold"]}>Status</div>
                   {isEditing ? (
                     <select
-                      className="inputStatus"
+                      className={styles["inputStatus"]}
                       value={String(
                         editableBill.status ?? bill.status ?? "Pending"
                       )}
@@ -506,7 +647,9 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                     </select>
                   ) : (
                     <div
-                      className={`center status ${String(
+                      className={`${styles["center"]} ${
+                        styles["status"]
+                      } ${String(
                         (editableBill?.status ?? bill.status) || ""
                       ).toLowerCase()}`}
                     >
@@ -515,10 +658,10 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                   )}
                 </div>
               </div>
-              <div className="billing-divider"></div>
-              <div className="billing-history">
-                <div className="bold">Payment History</div>
-                <div className="billing-summary">
+              <div className={styles["billing-divider"]}></div>
+              <div className={styles["billing-history"]}>
+                <div className={styles["bold"]}>Payment History</div>
+                <div className={styles["billing-summary"]}>
                   <p>
                     Amount Paid: <span> {bill.paidAmount}</span>
                   </p>
@@ -527,7 +670,7 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                     <span>
                       {isEditing ? (
                         <select
-                          className="inputMode"
+                          className={styles["inputMode"]}
                           value={String(
                             editableBill.mode ?? bill.mode ?? "Cash"
                           )}
@@ -560,13 +703,13 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
               </div>
             </div>
             {isEditing ? (
-              <div className="billing-edited-save-btn">
+              <div className={styles["billing-edited-save-btn"]}>
                 <Button variant="contained" onClick={handleSave}>
                   Save
                 </Button>
               </div>
             ) : (
-              <div className="billing-edited-save-btn">
+              <div className={styles["billing-edited-save-btn"]}>
                 <Button variant="contained" onClick={openAddDialog}>
                   Add to Bill
                 </Button>
@@ -679,243 +822,273 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/*View details*/}
-      <BillingDialog
-        open={open}
-        onClose={handleCloseDialog}
-        details={selectedDetails}
-      />
+
       {/* Hidden Printable Section */}
       <div style={{ display: "none" }}>
-        <div id="printable-bill" className="print-container" ref={printRef}>
+        <div id="printable-bill" className="bill-wrap">
           {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <h1 style={{ margin: 0 }}> Hospital Name</h1>
-            <p style={{ margin: 0 }}>123 Street, City, State</p>
-            <p style={{ margin: 0 }}>Phone: +91-1234567890</p>
-            <hr style={{ marginTop: "10px" }} />
+          <div className="bill-head">
+            {logoUrl ? (
+              <img className="logo" src={logoUrl} alt="Hospital Logo" />
+            ) : null}
+            <div className="titleblock">
+              <div style={{ fontSize: 18, fontWeight: 700 }}>
+                {hospitalName}
+              </div>
+              <div className="muted">{hospitalAddr}</div>
+              <div className="muted">Phone: {hospitalPhone}</div>
+              {(hospitalGstin || hospitalPan) && (
+                <div className="muted">
+                  {hospitalGstin ? <>GSTIN: {hospitalGstin} </> : null}
+                  {hospitalPan ? <>| PAN: {hospitalPan}</> : null}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Invoice Metadata */}
-          <table style={{ width: "100%", marginBottom: "20px" }}>
-            <tbody>
-              <tr>
-                <td>
-                  <b>Invoice Number:</b> {bill.invoiceNumber || "N/A"}
-                </td>
-                <td>
-                  <b>Date:</b>{" "}
-                  {bill.invoiceDate
-                    ? new Date(bill.invoiceDate).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })
-                    : "—"}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <b>Patient:</b> {bill.patient.name || "—"}
-                </td>
-                <td>
-                  <b>Doctor:</b> {bill.doctorName || "—"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="bill-title">INVOICE</div>
+
+          {/* Bill-to + Invoice Meta */}
+          <div className="grid-2">
+            <div className="box">
+              <div className="section-title">Bill To</div>
+              <div>
+                <b>Patient:</b> {bill?.patient?.name || "—"}
+              </div>
+              <div>
+                <b>Patient ID:</b>{" "}
+                {bill?.patient?.patId || bill?.patient?.patId || "—"}
+              </div>
+              <div>
+                <b>Phone:</b> {bill?.patient?.phone || "—"}
+              </div>
+              {bill?.patient?.age || bill?.patient?.gender ? (
+                <div>
+                  <b>Age/Gender:</b>{" "}
+                  {[bill?.patient?.age, bill?.patient?.gender]
+                    .filter(Boolean)
+                    .join(" / ") || "—"}
+                </div>
+              ) : null}
+              {bill?.patient?.address ? (
+                <div>
+                  <b>Address:</b> {bill.patient.address}
+                </div>
+              ) : null}
+            </div>
+            <div className="box">
+              <div className="section-title">Invoice Details</div>
+              <div>
+                <b>Invoice No:</b> {bill?.invoiceNumber || "—"}
+              </div>
+              <div>
+                <b>Invoice Date:</b>{" "}
+                {bill?.invoiceDate
+                  ? new Date(bill.invoiceDate).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })
+                  : "—"}
+              </div>
+
+              {bill?.doctor?.name ? (
+                <div>
+                  <b>Doctor:</b> {bill.doctor.name}
+                </div>
+              ) : null}
+            </div>
+          </div>
 
           {/* Services Table */}
-          <h3>Services</h3>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+          <table className="bill">
             <thead>
               <tr>
-                <th
-                  style={{
-                    border: "1px solid #000",
-                    padding: "6px",
-                    textAlign: "left",
-                  }}
-                >
-                  Description
+                <th style={{ width: 36 }} className="center">
+                  #
                 </th>
-                <th
-                  style={{
-                    border: "1px solid #000",
-                    padding: "6px",
-                    textAlign: "center",
-                  }}
-                >
+                <th>Description</th>
+                {hasGST && (
+                  <th className="center" style={{ width: 80 }}>
+                    HSN/SAC
+                  </th>
+                )}
+                <th className="center" style={{ width: 60 }}>
+                  Date
+                </th>
+                <th className="center" style={{ width: 60 }}>
                   Qty
                 </th>
-                <th
-                  style={{
-                    border: "1px solid #000",
-                    padding: "6px",
-                    textAlign: "right",
-                  }}
-                >
-                  Price
+                <th className="right" style={{ width: 90 }}>
+                  Rate
                 </th>
-                <th
-                  style={{
-                    border: "1px solid #000",
-                    padding: "6px",
-                    textAlign: "right",
-                  }}
-                >
+                {hasGST && (
+                  <>
+                    <th className="center" style={{ width: 70 }}>
+                      GST %
+                    </th>
+                    <th className="right" style={{ width: 90 }}>
+                      GST Amt
+                    </th>
+                  </>
+                )}
+                <th className="right" style={{ width: 110 }}>
                   Total
                 </th>
               </tr>
             </thead>
             <tbody>
-              {(editableBill?.services || []).map((row, idx) => {
-                const desc =
-                  row.category ||
-                  row.service ||
-                  row.details?.description ||
-                  "—";
-                const qty = Number.isFinite(+row.quantity) ? +row.quantity : 0;
-                const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
-                const total = qty * rate;
-
-                return (
-                  <tr key={idx}>
-                    <td>
-                      <div>{desc}</div>
-
-                      {/* Extra Details */}
-                      {row.details && Object.keys(row.details).length > 0 && (
+              {printRows.map((r, idx) => (
+                <tr key={idx}>
+                  <td className="center">{idx + 1}</td>
+                  <td>
+                    <div>{r.desc}</div>
+                    {/* Optional detail bullets */}
+                    {r.raw?.details &&
+                      Object.keys(r.raw.details).length > 0 && (
                         <div
                           style={{
-                            fontSize: "12px",
-                            marginTop: "6px",
-                            lineHeight: "1.4",
+                            fontSize: 11,
+                            marginTop: 4,
+                            lineHeight: 1.4,
                           }}
+                          className="muted"
                         >
                           <strong>Details:</strong>
                           <ul style={{ margin: "4px 0 0 14px", padding: 0 }}>
-                            {row.details.bedNumber && (
+                            {r.raw.details.bedNumber && (
                               <li>
-                                Bed: {row.details.bedType || "N/A"} (
-                                {row.details.bedNumber})
+                                Bed: {r.raw.details.bedType || "N/A"} (
+                                {r.raw.details.bedNumber})
                               </li>
                             )}
-                            {row.details.daysOccupied && (
-                              <li>Days Occupied: {row.details.daysOccupied}</li>
-                            )}
+
+                            {r.name && <li>Name: {r.name}</li>}
                           </ul>
                         </div>
                       )}
-
-                      {/* Room Details */}
-                      {row.details?.roomDetails &&
-                        Object.keys(row.details.roomDetails).length > 0 && (
-                          <div
-                            style={{
-                              fontSize: "12px",
-                              marginTop: "6px",
-                              lineHeight: "1.4",
-                            }}
-                          >
-                            <strong>Room Charges:</strong>
-                            <ul style={{ margin: "4px 0 0 14px", padding: 0 }}>
-                              {row.details.roomDetails.admissionFee && (
-                                <li>
-                                  Admission Fee: ₹
-                                  {row.details.roomDetails.admissionFee}
-                                </li>
-                              )}
-                              {row.details.roomDetails.doctorVisitPerDay && (
-                                <li>
-                                  Doctor Visit / Day: ₹
-                                  {row.details.roomDetails.doctorVisitPerDay}
-                                </li>
-                              )}
-                              {row.details.roomDetails.nursingPerDay && (
-                                <li>
-                                  Nursing / Day: ₹
-                                  {row.details.roomDetails.nursingPerDay}
-                                </li>
-                              )}
-                              {row.details.roomDetails.monitoringPerDay && (
-                                <li>
-                                  Monitoring / Day: ₹
-                                  {row.details.roomDetails.monitoringPerDay}
-                                </li>
-                              )}
-                              {row.details.roomDetails.stayCharges && (
-                                <li>
-                                  Stay Charges: ₹
-                                  {row.details.roomDetails.stayCharges}
-                                </li>
-                              )}
-                            </ul>
-                          </div>
-                        )}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid #000",
-                        padding: "6px",
-                        textAlign: "center",
-                      }}
-                    >
-                      {qty}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid #000",
-                        padding: "6px",
-                        textAlign: "right",
-                      }}
-                    >
-                      ₹{rate}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid #000",
-                        padding: "6px",
-                        textAlign: "right",
-                      }}
-                    >
-                      ₹{total}
-                    </td>
-                  </tr>
-                );
-              })}
+                  </td>
+                  {hasGST && <td className="center">{r.hsn || "—"}</td>}
+                  <td className="center">
+                    {r.date ? new Date(r.date).toLocaleDateString() : "—"}
+                  </td>
+                  <td className="center">{r.qty}</td>
+                  <td className="right">₹{r.rate.toLocaleString("en-IN")}</td>
+                  {hasGST && (
+                    <>
+                      <td className="center">{r.gstPct}%</td>
+                      <td className="right">
+                        ₹
+                        {r.gstAmt.toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </td>
+                    </>
+                  )}
+                  <td className="right">
+                    ₹
+                    {r.lineTotal.toLocaleString("en-IN", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </td>
+                </tr>
+              ))}
+              {printRows.length === 0 && (
+                <tr>
+                  <td colSpan={hasGST ? 8 : 6} className="center">
+                    No services
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
 
           {/* Totals */}
-          <div style={{ textAlign: "right", marginTop: "10px" }}>
-            <p>
-              <b>Subtotal:</b> ₹{printGrand}
-            </p>
-            {/* Add if you want discount/tax */}
-            {/* <p><b>Discount:</b> ₹500</p> */}
-            {/* <p><b>Tax (18%):</b> ₹{(printGrand * 0.18).toFixed(2)}</p> */}
-            <h3>Total Amount: ₹{printGrand}</h3>
+          <div className="totals">
+            {/* <div className="row">
+              <div className="label">
+                <b>Subtotal</b>
+              </div>
+              <div className="value">
+                ₹
+                {subTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+              </div>
+            </div> */}
+            {hasGST && (
+              <div className="row">
+                <div className="label">
+                  <b>Total GST</b>
+                </div>
+                <div className="value">
+                  ₹
+                  {taxTotal.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                  })}
+                </div>
+              </div>
+            )}
+            {/* <div className="row">
+              <div className="label">Round Off</div>
+              <div className="value">
+                ₹
+                {roundOff.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+              </div>
+            </div> */}
+            <div className="row">
+              <div className="label">
+                <b>Grand Total</b>
+              </div>
+              <div className="value">
+                <b>
+                  ₹
+                  {netPayable.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                  })}
+                </b>
+              </div>
+            </div>
+            <div className="row">
+              <div className="label">Paid</div>
+              <div className="value">
+                ₹{paidAmt.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+              </div>
+            </div>
+            <div className="row">
+              <div className="label">
+                <b>Balance Due</b>
+              </div>
+              <div className="value">
+                <b>
+                  ₹
+                  {balanceDue.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                  })}
+                </b>
+              </div>
+            </div>
+          </div>
+
+          {/* Amount in words */}
+          <div className="amount-words">
+            <b>Amount in words:</b> {amountInWordsINR(netPayable)}
+          </div>
+
+          {/* Signatures */}
+          <div className="signatures">
+            <div className="sig-box">
+              <span>Patient / Authorized Signatory</span>
+              <span style={{ opacity: 0.6 }}>Signature</span>
+            </div>
+            <div className="sig-box">
+              <span>For {hospitalName}</span>
+              <span style={{ opacity: 0.6 }}>Authorized Signatory</span>
+            </div>
           </div>
 
           {/* Footer */}
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "30px",
-              fontSize: "12px",
-              color: "#555",
-            }}
-          >
-            <p>
-              Thank you for choosing <b>Our Hospital</b>. Get well soon!
-            </p>
+          <div className="footnote">
+            This is a computer-generated invoice. Subject to jurisdiction.
+            Thanks for choosing <b>{hospitalName}</b>.
           </div>
         </div>
       </div>

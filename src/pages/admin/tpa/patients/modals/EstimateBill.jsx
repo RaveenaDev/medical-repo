@@ -71,7 +71,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
 
   const packages = useSelector((store) => store.admin.packages);
 
-  // console.log("pac:",packages)
+  console.log("pac:",packages)
 
   // ✅ Prefill from estimateOld if provided, else keep empty
   useEffect(() => {
@@ -172,7 +172,8 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
   };
 
   const handleSelectPackage = (rowId, value) => {
-    updateDraftRow(rowId, "package", value);
+    updateDraftRow(rowId, "package", value.subCategoryName);
+    updateDraftRow(rowId, "rate", value.rate);
     setOpenPackageRowId(null);
   };
 
@@ -410,7 +411,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                               onClick={() =>
                                 handleSelectPackage(
                                   row.id,
-                                  option.subCategoryName
+                                  option
                                 )
                               }
                             >

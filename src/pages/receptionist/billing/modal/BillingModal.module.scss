@@ -13,7 +13,7 @@
   .billing-modal-content {
     position: relative;
     width: 90%;
-    max-width: 600px; // Adjust max width for larger screens
+    max-width: 650px; // Adjust max width for larger screens
     height: 100%;
     background-color: #f1f1f1;
     padding-top: 1rem;
@@ -234,17 +234,24 @@
 }
 
 .billing-description {
-  width: 50%;
+  width: 30%;
 }
-
+.billing-name {
+  width: 25%;
+}
 .billing-quantity {
-  width: 20%;
+  width: 10%;
   display: flex;
   justify-content: center;
 }
 
 .billing-price {
-  width: 30%;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+}
+.billing-date {
+  width: 15%;
   display: flex;
   justify-content: center;
 }

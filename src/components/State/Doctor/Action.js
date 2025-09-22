@@ -2,6 +2,7 @@ import axios from "axios";
 import { API_URL } from "../../Config/api.js";
 import {
   ADD_INVENTORY_ITEM,
+  ADD_PROGRESS_TRACKER_PHASE,
   APPROVE_APPOINTMENT,
   CREATE_ADMISSION_REQUEST,
   CREATE_CATEGORY,
@@ -30,6 +31,7 @@ import {
   GET_DOCTOR_NOTES,
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
+  GET_DOCTORS_BY_DEPARTMENT1,
   GET_FILTERED_INPATIENTS,
   GET_FILTERED_PATIENTS,
   GET_FILTERED_ROOMS,
@@ -326,7 +328,7 @@ export const getAllAppointments =
         },
       });
 
-      console.log("Getting Appointments : ", data);
+      // console.log("Getting Appointments : ", data);
 
       // dispatch({ type: GET_APPOINTMENTS, payload: data });
 
@@ -638,6 +640,25 @@ export const getDoctorsByDepartment = () => async (dispatch) => {
     );
 
     dispatch({ type: GET_DOCTORS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDoctorsByDepartment1 = (departId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(
+      `${API_URL}/getDoctorsByDepartment/${departId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
+
+    dispatch({ type: GET_DOCTORS_BY_DEPARTMENT1, payload: data });
   } catch (error) {
     console.log(error);
   }
@@ -1534,6 +1555,8 @@ export const addProgressTrackerPhase =
           },
         }
       );
+
+      dispatch({ type: ADD_PROGRESS_TRACKER_PHASE });
       // console.log("CASE ID", caseId);
       // console.log("Progress phase added", data);
       dispatch(getProgressTrackerDetails(patientId, caseId));

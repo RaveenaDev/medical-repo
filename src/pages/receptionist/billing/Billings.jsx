@@ -142,21 +142,6 @@ const Billings = (props) => {
                 >
                   View
                 </Button>
-
-                <IconButton
-                  disableRipple
-                  className={styles["menu-btn"]}
-                  sx={{
-                    height: "42px",
-                    width: "42px",
-                    "&:focus": {
-                      outline: "none",
-                      boxShadow: "none",
-                    },
-                  }}
-                >
-                  <MoreVertIcon />
-                </IconButton>
               </div>
             ))
           ) : (
