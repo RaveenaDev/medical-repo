@@ -95,6 +95,7 @@ const Login = (props) => {
     dispatch(login(userDetails))
       .then(() => {
         setLoading(false); // Hide loader on success
+        setCaptcha(generateCaptcha());
       })
       .catch(() => {
         setLoading(false); // Hide loader on failure
