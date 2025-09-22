@@ -30,7 +30,7 @@ const Records = () => {
 
   const billingRecords = useSelector((s) => s.admin?.billingRecords ?? []);
 
-  console.log("billingRecords", billingRecords);
+  // console.log("billingRecords", billingRecords);
   const billsCount = useSelector((s) => s.admin?.recordsCount ?? 0);
   const selectedBill = useSelector((s) => s.admin?.billingRecord ?? null);
   const loading = useSelector((s) => s.admin?.loading ?? false);

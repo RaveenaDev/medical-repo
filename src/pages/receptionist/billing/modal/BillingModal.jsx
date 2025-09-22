@@ -44,7 +44,7 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
   }, [open, bill]);
 
   const dispatch = useDispatch();
-  console.log("original Bill", bill);
+  // console.log("original Bill", bill);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
 
@@ -442,7 +442,7 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                       row.details?.date ||
                       "";
                     const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
-                    console.log("service", row);
+                    // console.log("service", row);
                     return (
                       <div key={i} className={styles["billing-category"]}>
                         <div className={styles["billing-description"]}>
