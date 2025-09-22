@@ -16,7 +16,10 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {getDepartmentById, getServicesByDepartmentId} from "../../../../components/State/Admin/Action.js";
+import {
+  getDepartmentById,
+  getServicesByDepartmentId,
+} from "../../../../components/State/Admin/Action.js";
 
 const DepartDetails1 = (props) => {
   const navigate = useNavigate();
@@ -219,7 +222,11 @@ const DepartDetails1 = (props) => {
                     <div className={avi.section1}>
                       <Grid
                         container
-                        sx={{ width: "100%", justifyContent: "space-between" }}
+                        sx={{
+                          width: "100%",
+                          justifyContent: "space-between",
+                          height: "70vh",
+                        }}
                       >
                         {/* Section 1 */}
                         <Grid
@@ -331,21 +338,19 @@ const DepartDetails1 = (props) => {
                                       },
                                     }}
                                   >
-                                    {department?.nurses.map(
-                                      (staff, index) => (
-                                        <MenuItem
-                                          key={index}
-                                          value="NURSE1"
-                                          sx={{
-                                            color: "#000",
-                                            opacity: 1,
-                                            pointerEvents: "none",
-                                          }}
-                                        >
-                                          {staff}
-                                        </MenuItem>
-                                      )
-                                    )}
+                                    {department?.nurses.map((staff, index) => (
+                                      <MenuItem
+                                        key={index}
+                                        value="NURSE1"
+                                        sx={{
+                                          color: "#000",
+                                          opacity: 1,
+                                          pointerEvents: "none",
+                                        }}
+                                      >
+                                        {staff}
+                                      </MenuItem>
+                                    ))}
                                   </Select>
                                 </FormControl>
                                 <div className={avi.details}>
@@ -394,56 +399,93 @@ const DepartDetails1 = (props) => {
                           className={avi.section2}
                         >
                           <div
-                              style={{
-                                width: "100%",
-                                boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
-                                padding: "8px 10px 0 20px",
-                                borderRadius: "4px",
-                                border: "1px solid rgba(116, 116, 116, 0.3)",
-                              }}
+                            style={{
+                              width: "100%",
+                              boxShadow: "0 3px 4px rgba(116, 116, 116, 0.2)",
+                              padding: "8px 10px 0 20px",
+                              borderRadius: "4px",
+                              border: "1px solid rgba(116, 116, 116, 0.3)",
+                            }}
                           >
-                            <div className={avi.box3} style={{padding: "0 14px"}}>
+                            <div
+                              className={avi.box3}
+                              style={{ padding: "0 14px" }}
+                            >
                               <div>
-                                <h4 style={{color: "#000000",fontSize:'1rem'}}>Available services</h4>
+                                <h4
+                                  style={{ color: "#000000", fontSize: "1rem" }}
+                                >
+                                  Available services
+                                </h4>
 
-                                <div  style={{maxHeight:'60vh',overflowY:'auto'}}>
-                                  {Array.isArray(services) && services.length > 0 ? (
-                                      services.map((serv, sIdx) => (
-                                          <ul
-                                              key={serv?.id || sIdx}
-                                              style={{
-                                                listStyleType: "none",
-                                                paddingLeft: "10px",
-                                                color: "#727272",
-                                                margin: 0,
-                                                marginBottom:"-1rem"
-                                              }}
+                                <div
+                                  style={{
+                                    maxHeight: "60vh",
+                                    overflowY: "auto",
+                                  }}
+                                >
+                                  {Array.isArray(services) &&
+                                  services.length > 0 ? (
+                                    services.map((serv, sIdx) => (
+                                      <ul
+                                        key={serv?.id || sIdx}
+                                        style={{
+                                          listStyleType: "none",
+                                          paddingLeft: "10px",
+                                          color: "#727272",
+                                          margin: 0,
+                                          marginBottom: "-1rem",
+                                        }}
+                                      >
+                                        <li style={{ color: "#000000" }}>
+                                          <span
+                                            style={{
+                                              color: "#000000",
+                                              marginRight: "2px",
+                                            }}
                                           >
-                                            <li style={{color: "#000000"}}>
-                                              <span style={{color: "#000000", marginRight: "2px"}}>• </span>
-                                              {serv?.name ?? "Unnamed service"}
+                                            •{" "}
+                                          </span>
+                                          {serv?.name ?? "Unnamed service"}
 
-                                              {/* Subcategories */}
-                                              {Array.isArray(serv?.categories) && serv.categories.length > 0 && (
-                                                  <ul
+                                          {/* Subcategories */}
+                                          {Array.isArray(serv?.categories) &&
+                                            serv.categories.length > 0 && (
+                                              <ul
+                                                style={{
+                                                  listStyleType: "disc",
+                                                  marginLeft: "18px",
+                                                  paddingLeft: 0,
+                                                }}
+                                              >
+                                                {serv.categories.map(
+                                                  (cat, cIdx) => (
+                                                    <li
+                                                      key={cat?.id || cIdx}
                                                       style={{
-                                                        listStyleType: "disc",
-                                                        marginLeft: "18px",
-                                                        paddingLeft: 0,
+                                                        color: "#767676",
+                                                        marginBottom: "-7px",
                                                       }}
-                                                  >
-                                                    {serv.categories.map((cat, cIdx) => (
-                                                        <li key={cat?.id || cIdx} style={{color: "#767676",marginBottom:'-7px'}}>
-                                                          {cat?.subCategoryName ?? "Unnamed subcategory"}
-                                                        </li>
-                                                    ))}
-                                                  </ul>
-                                              )}
-                                            </li>
-                                          </ul>
-                                      ))
+                                                    >
+                                                      {cat?.subCategoryName ??
+                                                        "Unnamed subcategory"}
+                                                    </li>
+                                                  )
+                                                )}
+                                              </ul>
+                                            )}
+                                        </li>
+                                      </ul>
+                                    ))
                                   ) : (
-                                      <p style={{color: "#9b9b9b", marginLeft: "10px"}}>No services to show.</p>
+                                    <p
+                                      style={{
+                                        color: "#9b9b9b",
+                                        marginLeft: "10px",
+                                      }}
+                                    >
+                                      No services to show.
+                                    </p>
                                   )}
                                 </div>
                               </div>
