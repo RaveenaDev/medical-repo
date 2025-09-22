@@ -29,14 +29,10 @@ const BookAppointment = ({
                            doctorEmail,
                            department,
                          }) => {
-  if (!isOpen) return null;
 
   const dispatch = useDispatch();
 
-  let dep = "";
-  if (department) {
-    dep = department[0]?.name;
-  }
+
 
   const [formData, setFormData] = useState({
     patientName: "",
@@ -103,7 +99,6 @@ const BookAppointment = ({
     dispatch(getPatients());
   }, [dispatch]);
 
-  const doctors = useSelector((store) => store.receptionist.doctors);
   const departments = useSelector((store) => store.receptionist.departments);
   const doctorsByDepartment = useSelector(
       (store) => store.receptionist.doctorsByDepartment
@@ -228,6 +223,13 @@ const BookAppointment = ({
       date: date,
     }));
   };
+
+  let dep = "";
+  if (department) {
+    dep = department[0]?.name;
+  }
+
+  if (!isOpen) return null;
 
   return (
       <>
