@@ -17,6 +17,7 @@ import {
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
   EDIT_TPA_SERVICE,
+  GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -117,6 +118,9 @@ const initialState = {
   roomTypes: [],
   servicesByDepartment: [],
   isLoadingRoomTypes: false,
+  totalAdmissionRequests: null,
+  admissionRequests: [],
+  isLoadingAdmissionRequests: true,
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -557,6 +561,15 @@ export const adminReducer = (state = initialState, action) => {
         filteredInPatients: action.payload.inpatients,
         isLoadingFilteredInPatients: false,
       };
+
+    case GET_ADMISSION_REQUESTS:
+      return {
+        ...state,
+        totalAdmissionRequests: action.payload.count,
+        admissionRequests: action.payload.requests,
+        isLoadingAdmissionRequests: false,
+      };
+
     default:
       return state;
   }

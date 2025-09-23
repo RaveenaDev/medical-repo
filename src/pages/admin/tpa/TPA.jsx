@@ -4,7 +4,8 @@ import Searchbar from "../../../components/Searchbar";
 import Notifications from "../../../components/NotificationFunc/Notification";
 import Companies from "./companies/Companies";
 import Patients from "./patients/Patients";
-import InPatients from "./inPatients/InPatients.jsx";
+import AdmissionRequests from "./inPatients/AdmissionRequests";
+
 const TPA = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
@@ -21,7 +22,7 @@ const TPA = (props) => {
   };
 
   const handleInPatients = () => {
-    setSelectedTab("inpatients");
+    setSelectedTab("admissionRequests");
   };
 
   return (
@@ -53,17 +54,17 @@ const TPA = (props) => {
           <div
             onClick={handleInPatients}
             className={`${styles.selectionDiv} ${
-              selectedTab === "inpatients" ? styles.selectedTab : ""
+              selectedTab === "admissionRequests" ? styles.selectedTab : ""
             }`}
             style={{ cursor: "pointer" }}
           >
-            <span>Inpatients</span>
+            <span>Admission Forms</span>
           </div>
         </div>
 
         {selectedTab === "companies" && <Companies />}
         {selectedTab === "patients" && <Patients />}
-        {selectedTab === "inpatients" && <InPatients />}
+        {selectedTab === "admissionRequests" && <AdmissionRequests />}
       </div>
     </div>
   );

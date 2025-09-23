@@ -19,15 +19,17 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
-import { getFilteredInpatients } from "../../../../components/State/Admin/Action";
+import {
+  getAdmissionRequests,
+  getFilteredInpatients,
+} from "../../../../components/State/Admin/Action.js";
 import styles from "./InPatient.module.scss";
-import ActionMenu from "./components/ActionMenu"; // Custom menu component for actions
+import ActionMenu from "./components/ActionMenu.jsx"; // Custom menu component for actions
 import { Search } from "lucide-react";
 import useDebounce from "../../../../hooks/useDebounce.js";
 
-const InPatients = () => {
+const AdmissionRequests = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   // Pagination state
   const [page, setPage] = useState(0);
@@ -42,22 +44,17 @@ const InPatients = () => {
   });
   const [sortOrder, setSortOrder] = useState("desc");
 
-  // Drawer for filters
-  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
-
   // Redux store: inpatients
-  const doctor = useSelector((store) => store.doctor);
-  const totalFilteredInPatients = doctor.totalFilteredInpatients;
-  const filteredInPatients = doctor.filteredInPatients;
-  const isLoadingFilteredInPatients = doctor.isLoadingFilteredInPatients;
+  const admin = useSelector((store) => store.admin);
+  const totalAdmissionRequests = admin.totalAdmissionRequests;
+  const admissionRequests = admin.admissionRequests;
+  const isLoadingAdmissionRequests = admin.isLoadingAdmissionRequests;
   const debouncedSearch = useDebounce(searchQuery, 500);
 
   // Fetch patients whenever filters/pagination change
   useEffect(() => {
-    dispatch(
-      getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch)
-    );
-  }, [dispatch, sortOrder, page, rowsPerPage, filters, debouncedSearch]);
+    dispatch(getAdmissionRequests());
+  }, [dispatch]);
 
   useEffect(() => {
     setPage(0);
@@ -66,18 +63,6 @@ const InPatients = () => {
   // Helper: truncate long strings (ID, name, email)
   const truncateText = (text, maxLength) =>
     text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-
-  // Handle filter changes inside drawer
-  const handleFilterChange = (event) => {
-    const { name, value } = event.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Apply filters (trigger search)
-  const handleSearchResults = () => {
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
-    setFilterDrawerOpen(false);
-  };
 
   // Sort dropdown change
   const handleSortChange = (event) => {
@@ -102,7 +87,7 @@ const InPatients = () => {
       <div className={styles.patientsHeader}>
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
-            {totalFilteredInPatients} <span>Inpatients</span>
+            {totalAdmissionRequests} <span>Forms</span>
           </span>
           <div className={styles.verticalDivider}></div>
 
@@ -142,19 +127,12 @@ const InPatients = () => {
                 />
               </div>
               {/* Filter button */}
-              <div
-                onClick={() => setFilterDrawerOpen(true)}
-                className={`${styles.filter} ${styles.boxStyle}`}
-              >
-                <FiFilter fill="#25307f" />
-                <span>Filter</span>
-              </div>
             </div>
           </div>
         </div>
         <hr />
       </div>
-      {isLoadingFilteredInPatients ? (
+      {isLoadingAdmissionRequests ? (
         <Box
           sx={{
             display: "flex",
@@ -169,7 +147,7 @@ const InPatients = () => {
         <>
           {/* Patients Table */}
           <div className={styles.patientsTableContainer}>
-            {filteredInPatients && filteredInPatients.length > 0 ? (
+            {admissionRequests && admissionRequests.length > 0 ? (
               <div className={styles.tableWrapper}>
                 <table className={styles.patientsTable}>
                   <thead>
@@ -177,14 +155,14 @@ const InPatients = () => {
                       <th>Patient ID</th>
                       <th>Patient</th>
                       <th>Bed</th>
-                      <th>Condition</th>
+                      <th>Insurance</th>
                       <th>Doctor</th>
                       <th>Status</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredInPatients.map((patient, index) => (
+                    {admissionRequests.map((patient, index) => (
                       <tr key={index}>
                         <td className={styles.patientId}>
                           {truncateText(patient?.patId || "Not Assigned", 12)}
@@ -193,23 +171,34 @@ const InPatients = () => {
                           <div>
                             <div className={styles.patientName}>
                               {truncateText(
-                                patient?.name || "Not Assigned",
+                                patient?.admissionDetails?.name ||
+                                  "Not Assigned",
                                 15
                               )}
                             </div>
                             <div className={styles.patientEmail}>
                               {truncateText(
-                                patient?.email || "Not Assigned",
+                                patient?.admissionDetails?.contact ||
+                                  "Not Assigned",
                                 15
                               )}
                             </div>
                           </div>
                         </td>
                         <td className={styles.bedNumber}>
-                          {patient?.bedType || "Not Assigned"}
+                          <div>
+                            {patient?.admissionDetails?.bed?.bedNumber ||
+                              "Not Assigned"}
+                          </div>
+                          <div>
+                            {patient?.admissionDetails?.bed?.bedType ||
+                              "Not Assigned"}
+                          </div>
                         </td>
                         <td className={styles.condition}>
-                          {patient?.admissionStatus || "Not Assigned"}
+                          {patient?.admissionDetails?.insurance?.hasInsurance
+                            ? "Insured"
+                            : "Not Insured"}
                         </td>
                         <td className={styles.doctor}>
                           {patient?.doctor?.name || "Not Assigned"}
@@ -235,106 +224,6 @@ const InPatients = () => {
             ) : (
               <div className={styles.noDataMessage}>No inpatients found.</div>
             )}
-
-            {/* Filter Drawer (right side) */}
-            <Drawer
-              anchor="right"
-              open={filterDrawerOpen}
-              onClose={() => setFilterDrawerOpen(false)}
-              sx={{
-                "& .MuiDrawer-paper": {
-                  height: "58vh",
-                  top: "18vh",
-                  borderRadius: "10px 0 0 10px",
-                },
-              }}
-            >
-              <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
-                {/* Drawer Header */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 2,
-                  }}
-                >
-                  <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
-                    Filter By
-                  </Typography>
-                  <IconButton
-                    sx={{ color: "black" }}
-                    onClick={() => setFilterDrawerOpen(false)}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </Box>
-
-                {/* Filter Options */}
-                <FormControl
-                  sx={{ marginBottom: 6, marginTop: 2, width: "100%" }}
-                >
-                  <FormLabel
-                    sx={{
-                      marginBottom: 1,
-                      color: "#000000",
-                      "&.Mui-focused": { color: "#000000" },
-                    }}
-                  >
-                    Status
-                  </FormLabel>
-                  <RadioGroup
-                    name="status"
-                    value={filters.status}
-                    onChange={handleFilterChange}
-                  >
-                    {["Stable", "Critical", "Moderate"].map((status) => (
-                      <FormControlLabel
-                        key={status}
-                        value={status}
-                        control={
-                          <Radio
-                            sx={{
-                              color: "#878787",
-                              "&.Mui-checked": { color: "#25307F" },
-                            }}
-                          />
-                        }
-                        label={status}
-                        sx={{ height: "34px", color: "#878787" }}
-                      />
-                    ))}
-                    <FormControlLabel
-                      value=""
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787",
-                            "&.Mui-checked": { color: "#25307F" },
-                          }}
-                        />
-                      }
-                      label="All"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                  </RadioGroup>
-                </FormControl>
-
-                {/* Search Button */}
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#25307F",
-                    textTransform: "none",
-                    borderRadius: "16px",
-                    padding: "6px 35px",
-                  }}
-                  onClick={handleSearchResults}
-                >
-                  Search Results
-                </Button>
-              </Box>
-            </Drawer>
           </div>
 
           {/* Pagination Section */}
@@ -350,7 +239,7 @@ const InPatients = () => {
           >
             <TablePagination
               component="div"
-              count={totalFilteredInPatients}
+              count={totalAdmissionRequests}
               page={page}
               onPageChange={handleChangePage}
               rowsPerPage={rowsPerPage}
@@ -364,4 +253,4 @@ const InPatients = () => {
   );
 };
 
-export default InPatients;
+export default AdmissionRequests;
