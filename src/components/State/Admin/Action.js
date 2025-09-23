@@ -20,6 +20,7 @@ import {
   EDIT_ESTIMATED_BILL,
   EDIT_INSURED_PATIENT,
   EDIT_TPA_SERVICE,
+  GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_COUNTS,
@@ -440,7 +441,7 @@ export const getPatients = () => async (dispatch) => {
 };
 
 export const getFilteredPatients =
-  (filteredData, page, rowsPerPage) => async (dispatch) => {
+  (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
       const token = localStorage.getItem("jwt");
@@ -452,6 +453,7 @@ export const getFilteredPatients =
           sort: filteredData.sort,
           page: page + 1,
           limit: rowsPerPage,
+          search: search,
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -1481,7 +1483,7 @@ export const addBedsToRoom = (payload) => async () => {
   }
 };
 export const getFilteredInpatients =
-  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
+  (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
       const token = localStorage.getItem("jwt");
@@ -1492,7 +1494,7 @@ export const getFilteredInpatients =
           sort: filteredData.sort,
           page: page + 1,
           limit: rowsPerPage,
-          search: search
+          search: search,
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -1505,3 +1507,19 @@ export const getFilteredInpatients =
       console.log(error);
     }
   };
+export const getAdmissionRequests = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Add Reqs ", data);
+    dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};

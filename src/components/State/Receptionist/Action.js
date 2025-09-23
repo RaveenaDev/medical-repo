@@ -107,7 +107,7 @@ export const getPatients = () => async (dispatch) => {
 };
 
 export const getFilteredPatients =
-  (filteredData, page, rowsPerPage) => async (dispatch) => {
+  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
       const token = localStorage.getItem("jwt");
@@ -119,6 +119,7 @@ export const getFilteredPatients =
           sort: filteredData.sort,
           page: page + 1,
           limit: rowsPerPage,
+          search: search
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -370,7 +371,12 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
     // console.log("Booked: ",data)
   } catch (error) {
     console.log(error);
-    toast.error("Failed to book appointment. Please try again!", {
+
+    // Safely get message from backend or fallback
+    const message =
+        error.response?.data?.message || error.message || "Something went wrong";
+
+    toast.error(message, {
       position: "bottom-right", // Use string for position
       autoClose: 3000,
     });

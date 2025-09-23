@@ -219,9 +219,9 @@ const Rooms = (props) => {
                           <TableCell sx={{ fontWeight: "600", width: "30%" }}>
                             Bed ID
                           </TableCell>
-                          <TableCell sx={{ fontWeight: "600", width: "30%" }}>
+                          {/* <TableCell sx={{ fontWeight: "600", width: "30%" }}>
                             Cost
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell sx={{ fontWeight: "600", width: "30%" }}>
                             Status
                           </TableCell>
@@ -233,7 +233,7 @@ const Rooms = (props) => {
                           currentRoom.beds.map((bed, index) => (
                             <TableRow key={index}>
                               <TableCell>{bed?.bedNumber || "N/A"}</TableCell>
-                              <TableCell>{bed?.cost || "N/A"}</TableCell>
+                              {/* <TableCell>{bed?.cost || "N/A"}</TableCell> */}
                               <TableCell>{bed?.status || "N/A"}</TableCell>
                             </TableRow>
                           ))
@@ -353,14 +353,18 @@ const Rooms = (props) => {
                                   height: 10,
                                   borderRadius: "50%",
                                   backgroundColor:
-                                    room.status === "Available"
-                                      ? "#3DB461"
-                                      : room.status === "Occupied"
+                                    room.status === "Under Maintenance"
+                                      ? "#AEC3FF"
+                                      : room.status === "Full"
                                       ? "#FFA412"
-                                      : "#AEC3FF",
+                                      : "#3DB461",
                                 }}
                               />
-                              {room.status}
+                              {room.status === "Under Maintenance"
+                                ? "Under Maintenance"
+                                : room.status === "Full"
+                                ? "Occupied"
+                                : "Available"}
                             </Box>
                           </TableCell>
                           <TableCell sx={{ width: "25%" }}>

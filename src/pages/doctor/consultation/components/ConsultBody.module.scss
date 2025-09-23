@@ -465,7 +465,6 @@
   border-radius: 8px;
 }
 
-
 .lp-1:not(.active):hover,
 .lp-2:not(.active):hover,
 .lp-3:not(.active):hover,
@@ -559,6 +558,7 @@
   padding: 50px 0;
   font-size: 1.2rem;
   color: #777;
+  height: 66vh;
 }
 .scheduleTreatment-modal {
   position: fixed;

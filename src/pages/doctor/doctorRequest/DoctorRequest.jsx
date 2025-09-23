@@ -163,7 +163,7 @@ const DoctorRequest = () => {
           )}
 
           {filteredRequests.length === 0 ? (
-            <div className={styles.noData}>
+            <div className={styles.noData} style={{ height: "67vh" }}>
               <p>No requests found.</p>
             </div>
           ) : (

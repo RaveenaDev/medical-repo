@@ -57,6 +57,7 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
     quantity: "1",
     rate: "0",
     details: "",
+    date: new Date().toISOString().split("T")[0], // default today
   });
   const [addErrors, setAddErrors] = useState({});
 
@@ -91,6 +92,32 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
     return Object.keys(errs).length === 0;
   };
 
+  // const handleAddSubmit = async () => {
+  //   if (!validateAdd()) return;
+  //   setAddLoading(true);
+  //   try {
+  //     const payload = {
+  //       category: addForm.category.trim(),
+  //       quantity: parseIntSafe(addForm.quantity, 0),
+  //       rate: parseIntSafe(addForm.rate, 0),
+  //       details: addForm.details || undefined,
+  //     };
+
+  //     const action = await dispatch(addToBill(payload, billId));
+  //     closeAddDialog();
+  //   } catch (e) {
+  //     console.error(e);
+  //     // You can replace with a toast
+  //     toast.error("Failed to add to bill. Please try again.", {
+  //       position: "bottom-right",
+  //       autoClose: 2000,
+  //     });
+  //   } finally {
+  //     setAddLoading(false);
+  //   }
+  // };
+
+  // console.log("Edited Bill", editableBill);
   const handleAddSubmit = async () => {
     if (!validateAdd()) return;
     setAddLoading(true);
@@ -99,14 +126,16 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
         category: addForm.category.trim(),
         quantity: parseIntSafe(addForm.quantity, 0),
         rate: parseIntSafe(addForm.rate, 0),
-        details: addForm.details || undefined,
+        details: {
+          description: addForm.details || undefined,
+          billedDate: addForm.date, // 👈 include date here
+        },
       };
 
-      const action = await dispatch(addToBill(payload, billId));
+      await dispatch(addToBill(payload, billId));
       closeAddDialog();
     } catch (e) {
       console.error(e);
-      // You can replace with a toast
       toast.error("Failed to add to bill. Please try again.", {
         position: "bottom-right",
         autoClose: 2000,
@@ -115,8 +144,6 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
       setAddLoading(false);
     }
   };
-
-  // console.log("Edited Bill", editableBill);
 
   const handlePrint = () => {
     printJS({
@@ -778,7 +805,16 @@ const BillingModal = ({ open, bill, onClose, billId }) => {
                 />
               </Grid>
             </Grid>
-
+            <TextField
+              label="Date"
+              type="date"
+              value={addForm.date}
+              onChange={handleAddChange("date")}
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
             <TextField
               label="Details (optional)"
               value={addForm.details}
