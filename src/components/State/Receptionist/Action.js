@@ -371,7 +371,12 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
     // console.log("Booked: ",data)
   } catch (error) {
     console.log(error);
-    toast.error("Failed to book appointment. Please try again!", {
+
+    // Safely get message from backend or fallback
+    const message =
+        error.response?.data?.message || error.message || "Something went wrong";
+
+    toast.error(message, {
       position: "bottom-right", // Use string for position
       autoClose: 3000,
     });
