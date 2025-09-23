@@ -122,7 +122,7 @@ const PatientList = () => {
 
   // Handle Search Results
   const handleSearchResults = () => {
-    dispatch(getFilteredPatients(filters));
+    dispatch(getFilteredPatients(filters,page,rowsPerPage,debouncedSearch));
     setFilterDrawerOpen(false);
   };
 
@@ -145,8 +145,8 @@ const PatientList = () => {
   };
   useEffect(() => {
     // dispatch(getPatients());
-    dispatch(getFilteredPatients(filters, page, rowsPerPage));
-  }, [dispatch, sortOrder, page, rowsPerPage]);
+    dispatch(getFilteredPatients(filters, page, rowsPerPage,debouncedSearch));
+  }, [dispatch, sortOrder, page, rowsPerPage,debouncedSearch]);
 
   const receptionist = useSelector((store) => store.receptionist);
   const loading = useSelector(

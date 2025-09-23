@@ -44,12 +44,12 @@ const Patients = () => {
     sort: "desc",
   });
 
+    const debouncedSearch = useDebounce(searchQuery, 500);
+
   useEffect(() => {
     // dispatch(getPatients());
-    dispatch(getFilteredPatients(filters, page, rowsPerPage));
-  }, [dispatch, sortOrder, page, rowsPerPage]);
-
-    const debouncedSearch = useDebounce(searchQuery, 500);
+    dispatch(getFilteredPatients(filters, page, rowsPerPage,debouncedSearch));
+  }, [dispatch, sortOrder, page, rowsPerPage,debouncedSearch]);
 
   const doctor = useSelector((store) => store.doctor);
   const totalFilteredPatients = doctor.totalFilteredPatients;
@@ -88,7 +88,7 @@ const Patients = () => {
 
   const handleSearchResults = () => {
     // admin = null;
-    dispatch(getFilteredPatients(filters, page, rowsPerPage));
+    dispatch(getFilteredPatients(filters, page, rowsPerPage,debouncedSearch));
     setFilterDrawerOpen(false);
   };
 

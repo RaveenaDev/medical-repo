@@ -122,7 +122,7 @@ const PatientPanel = (props) => {
   // Handle Search Results
   const handleSearchResults = () => {
     admin = null;
-    dispatch(getFilteredPatients(filters));
+    dispatch(getFilteredPatients(filters,page,rowsPerPage,debouncedSearch));
     setFilterDrawerOpen(false);
   };
 
@@ -149,8 +149,8 @@ const PatientPanel = (props) => {
 
   useEffect(() => {
     // dispatch(getPatients());
-    dispatch(getFilteredPatients(filters, page, rowsPerPage));
-  }, [dispatch, sortOrder, page, rowsPerPage]);
+    dispatch(getFilteredPatients(filters, page, rowsPerPage,debouncedSearch));
+  }, [dispatch, sortOrder, page, rowsPerPage,debouncedSearch]);
 
   let admin = useSelector((store) => store.admin);
   //   const admin = null;
@@ -182,7 +182,7 @@ const PatientPanel = (props) => {
         <CommonPanel />
       </div>
       <div style={{ marginTop: "140px" }}>
-        {!admin?.filteredPatients || !admin?.totalFilteredPatients ? (
+        {!noOfPatients && !totalPatients ? (
           <Box
             sx={{
               display: "flex",
