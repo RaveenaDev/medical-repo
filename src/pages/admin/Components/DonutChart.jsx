@@ -77,16 +77,24 @@ const renderCustomizedLabel = ({
   index,
   data,
 }) => {
-  const labelRadius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  //  const labelRadius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const chartMax = Math.min(cx, cy); // chart center is at cx, cy
+
+  const screenWidth = window.innerWidth;
+  const radiusIncrement = screenWidth <= 1024 ? 15 : 30;
+  const labelRadius = Math.min(outerRadius + radiusIncrement, chartMax - 18);
+
   const insideX = cx + labelRadius * Math.cos(-midAngle * RADIAN);
   const insideY = cy + labelRadius * Math.sin(-midAngle * RADIAN);
 
   // Connector Line
   const startX = cx + outerRadius * Math.cos(-midAngle * RADIAN);
   const startY = cy + outerRadius * Math.sin(-midAngle * RADIAN);
-  const endX = cx + (outerRadius + 30) * Math.cos(-midAngle * RADIAN);
-  const endY = cy + (outerRadius + 30) * Math.sin(-midAngle * RADIAN);
-  const labelX = endX + (endX > cx ? 15 : -15);
+  // Step 1: Compute a safe distance, never exceeding half chart size
+
+  const endX = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+  const endY = cy + labelRadius * Math.sin(-midAngle * RADIAN);
+  const labelX = endX + (endX > cx ? 12 : -12); // 12px for padding from connector
 
   return (
     <g>
@@ -131,7 +139,9 @@ const renderCustomizedLabel = ({
         fontWeight="500"
         dominantBaseline="middle"
       >
-        {`${data[index].name}`}
+        {data[index].name.length > 8
+          ? data[index].name.slice(0, 8) + "…"
+          : data[index].name}
       </text>
     </g>
   );
@@ -178,16 +188,25 @@ const DonutChart = () => {
 
   const departmentData = big;
 
+  const screenWidth = window.innerWidth;
+  let innerRadius = "45%";
+  let outerRadius = "70%";
+
+  // For screens 1024px or less, reduce both radii by 20%
+  if (screenWidth <= 1200) {
+    innerRadius = "25%";
+    outerRadius = "40%";
+  }
   return (
     <div style={{ width: "100%", height: 303 }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={departmentData}
-            cx="45%"
+            cx="50%"
             cy="50%"
-            innerRadius="40%"
-            outerRadius="60%"
+            innerRadius={innerRadius}
+            outerRadius={outerRadius}
             fill="#8884d8"
             dataKey="value"
             labelLine={false}
