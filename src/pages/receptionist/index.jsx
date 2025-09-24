@@ -20,6 +20,8 @@ import {
 } from "@mui/material";
 import X from "@mui/icons-material/Cancel";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import EventIcon from "@mui/icons-material/Event"; // for Reschedule
+import TodayIcon from "@mui/icons-material/Today"; // for Reschedule Today
 import CommonPanel from "./components/CommonPanel.jsx";
 import BookAppointment from "./Appointment/Book/BookAppointment.jsx";
 import Select from "../../components/Select/index.jsx";
@@ -302,6 +304,73 @@ function Receptionist(props) {
       console.error("Appointment ID not found for cancellation.");
     }
   };
+
+  const handleClickReschedule = async () => {
+    closeRowMenu();
+
+    const appointmentId = menuAppointment?._id;
+    if (appointmentId) {
+      // 🔹 Here call your rescheduleAppointment action
+      // await dispatch(
+      //     rescheduleAppointment({
+      //       appointmentId,
+      //       date: null, // open a modal later to pick date/time
+      //     })
+      // );
+
+      // Refresh
+      const startDate = selectedDate.startOf("day").toISOString();
+      const endDate = selectedDate.endOf("day").toISOString();
+
+      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
+        dispatch(
+            getAppointments(
+                status,
+                startDate,
+                endDate,
+                selectedBranch,
+                page,
+                rowsPerPage
+            )
+        );
+      });
+    }
+  };
+
+  const handleClickRescheduleToday = async () => {
+    closeRowMenu();
+
+    const appointmentId = menuAppointment?._id;
+    if (appointmentId) {
+      // 🔹 Example: reschedule for current day (today)
+      // const today = dayjs().endOf("day").toISOString();
+      //
+      // await dispatch(
+      //     rescheduleAppointment({
+      //       appointmentId,
+      //       date: today,
+      //     })
+      // );
+
+      // Refresh
+      const startDate = selectedDate.startOf("day").toISOString();
+      const endDate = selectedDate.endOf("day").toISOString();
+
+      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
+        dispatch(
+            getAppointments(
+                status,
+                startDate,
+                endDate,
+                selectedBranch,
+                page,
+                rowsPerPage
+            )
+        );
+      });
+    }
+  };
+
 
 
   return (
@@ -826,6 +895,22 @@ function Receptionist(props) {
                 </ListItemIcon>
                 <ListItemText primary="Cancel Appointment" />
               </MenuItem>
+              {/* Reschedule */}
+              <MenuItem onClick={handleClickReschedule}>
+                <ListItemIcon>
+                  <EventIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Reschedule" />
+              </MenuItem>
+
+              {/* Reschedule Today */}
+              <MenuItem onClick={handleClickRescheduleToday}>
+                <ListItemIcon>
+                  <TodayIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Reschedule Today" />
+              </MenuItem>
+
             </>
         )}
 
@@ -845,6 +930,22 @@ function Receptionist(props) {
                 </ListItemIcon>
                 <ListItemText primary="Cancel Appointment" />
               </MenuItem>
+              {/* Reschedule */}
+              <MenuItem onClick={handleClickReschedule}>
+                <ListItemIcon>
+                  <EventIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Reschedule" />
+              </MenuItem>
+
+              {/* Reschedule Today */}
+              <MenuItem onClick={handleClickRescheduleToday}>
+                <ListItemIcon>
+                  <TodayIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Reschedule Today" />
+              </MenuItem>
+
             </>
         )}
       </Menu>
