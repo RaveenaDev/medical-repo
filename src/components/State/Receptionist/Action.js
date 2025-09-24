@@ -31,6 +31,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
+  SET_LOADING_APPOINTMENTS,
   START_CONSULTATION,
   SUBMIT_CONSULTATION,
   UPLOAD_PATIENT_FILE,
@@ -107,7 +108,7 @@ export const getPatients = () => async (dispatch) => {
 };
 
 export const getFilteredPatients =
-  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
+  (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
       const token = localStorage.getItem("jwt");
@@ -119,7 +120,7 @@ export const getFilteredPatients =
           sort: filteredData.sort,
           page: page + 1,
           limit: rowsPerPage,
-          search: search
+          search: search,
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -190,7 +191,7 @@ export const getInpatients = () => async (dispatch) => {
 };
 
 export const getFilteredInpatients =
-  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
+  (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
       const token = localStorage.getItem("jwt");
@@ -201,7 +202,7 @@ export const getFilteredInpatients =
           sort: filteredData.sort,
           page: page + 1,
           limit: rowsPerPage,
-          search: search
+          search: search,
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -374,7 +375,7 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
 
     // Safely get message from backend or fallback
     const message =
-        error.response?.data?.message || error.message || "Something went wrong";
+      error.response?.data?.message || error.message || "Something went wrong";
 
     toast.error(message, {
       position: "bottom-right", // Use string for position
@@ -391,6 +392,8 @@ export const getAppointments =
   (activeLabel, startDate, endDate, selectedBranch, page, rowsPerPage) =>
   async (dispatch) => {
     try {
+      dispatch({ type: SET_LOADING_APPOINTMENTS, payload: true });
+
       const token = localStorage.getItem("jwt");
       if (selectedBranch === "All Branches") selectedBranch = null;
       const { data } = await axios.get(`${API_URL}/getAppointments`, {
@@ -411,6 +414,7 @@ export const getAppointments =
 
       dispatch({ type: GET_APPOINTMENTS, payload: data });
 
+      dispatch({ type: SET_LOADING_APPOINTMENTS, payload: false });
       // console.log("DA: ",data)
 
       if (data.message === "Scheduled appointments retrieved successfully") {

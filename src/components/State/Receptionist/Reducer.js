@@ -32,6 +32,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
+  SET_LOADING_APPOINTMENTS,
   UPDATE_ROOM,
   UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
@@ -75,6 +76,7 @@ const initialState = {
   department: null,
   progressTracker: [],
   appointments: [],
+  isLoadingAppointments: true,
   appointmentRequests: [],
   allBills: [],
   allBillsCount: null,
@@ -234,6 +236,12 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalAppointments: action.payload.count,
         appointments: action.payload.appointments,
+      };
+
+    case SET_LOADING_APPOINTMENTS:
+      return {
+        ...state,
+        isLoadingAppointments: action.payload,
       };
 
     case GET_SCHEDULED_APPOINTMENTS:
