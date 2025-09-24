@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Dashboard from "./dashboard";
-import styles from "./styles.module.scss";
 import Grid from "@mui/material/Grid2";
 import EntityBasedTable from "./EntityBasedTable";
 import {
@@ -20,6 +18,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import X from "@mui/icons-material/Cancel";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import CommonPanel from "./components/CommonPanel.jsx";
 import BookAppointment from "./Appointment/Book/BookAppointment.jsx";
@@ -28,6 +27,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  cancelAppointment,
   getAllDepartments,
   getAppointments,
   getRequestedAppointments,
@@ -206,12 +206,6 @@ function Receptionist(props) {
     setCompleteOpen(true);
   };
 
-  // const handleClickMarkOngoing = async () => {
-  //   closeRowMenu();
-  //
-  //   await dispatch(startConsultation(menuAppointment?.patient?._id))
-  // };
-
   const handleClickMarkOngoing = async () => {
     closeRowMenu();
 
@@ -244,9 +238,6 @@ function Receptionist(props) {
     }
   };
 
-  // === Completion handler ===
-  // Wire this to your Redux action or API call.
-  // Receives { file, note, appointment } from the modal.
   const handleComplete = async ({ file, note, appointment }) => {
     // Prepare consultationData object based on what your backend expects
     const consultationData = {
@@ -283,6 +274,35 @@ function Receptionist(props) {
       );
     });
   };
+
+  const handleClickCancelAppointment = async () => {
+    closeRowMenu();
+
+    const appointmentId = menuAppointment?._id;
+    if (appointmentId) {
+      await dispatch(cancelAppointment(appointmentId));
+
+      // Refresh appointments after cancel
+      const startDate = selectedDate.startOf("day").toISOString();
+      const endDate = selectedDate.endOf("day").toISOString();
+
+      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
+        dispatch(
+            getAppointments(
+                status,
+                startDate,
+                endDate,
+                selectedBranch,
+                page,
+                rowsPerPage
+            )
+        );
+      });
+    } else {
+      console.error("Appointment ID not found for cancellation.");
+    }
+  };
+
 
   return (
     <div
@@ -764,47 +784,71 @@ function Receptionist(props) {
 
       {/* Row menu */}
       <Menu
-        anchorEl={rowMenuAnchor}
-        open={Boolean(rowMenuAnchor)}
-        onClose={closeRowMenu}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+          anchorEl={rowMenuAnchor}
+          open={Boolean(rowMenuAnchor)}
+          onClose={closeRowMenu}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        {menuAppointment?.status === "Waiting" ? (
-          (() => {
-            const doctorId =
-              menuAppointment?.doctor?._id ||
-              menuAppointment?.doctor?.id ||
-              menuAppointment?.doctor;
-            const disableOngoing =
-              doctorId && ongoingDoctorIds.has(String(doctorId));
+        {menuAppointment?.status === "Waiting" && (
+            <>
+              {/* Mark as Ongoing */}
+              {(() => {
+                const doctorId =
+                    menuAppointment?.doctor?._id ||
+                    menuAppointment?.doctor?.id ||
+                    menuAppointment?.doctor;
+                const disableOngoing =
+                    doctorId && ongoingDoctorIds.has(String(doctorId));
 
-            return (
-              <MenuItem
-                onClick={disableOngoing ? undefined : handleClickMarkOngoing}
-                disabled={Boolean(disableOngoing)}
-                title={
-                  disableOngoing
-                    ? "This doctor already has an ongoing case."
-                    : ""
-                }
-              >
+                return (
+                    <MenuItem
+                        onClick={disableOngoing ? undefined : handleClickMarkOngoing}
+                        disabled={Boolean(disableOngoing)}
+                        title={
+                          disableOngoing
+                              ? "This doctor already has an ongoing case."
+                              : ""
+                        }
+                    >
+                      <ListItemIcon>
+                        <PlayArrowIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText primary="Mark as Ongoing" />
+                    </MenuItem>
+                );
+              })()}
+
+              {/* Cancel Appointment */}
+              <MenuItem onClick={handleClickCancelAppointment}>
                 <ListItemIcon>
-                  <PlayArrowIcon fontSize="small" />
+                  <X fontSize="small" /> {/* <- use your cancel icon */}
                 </ListItemIcon>
-                <ListItemText primary="Mark as Ongoing" />
+                <ListItemText primary="Cancel Appointment" />
               </MenuItem>
-            );
-          })()
-        ) : (
-          <MenuItem onClick={handleClickMarkCompleted}>
-            <ListItemIcon>
-              <DoneAllIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Mark as Completed" />
-          </MenuItem>
+            </>
+        )}
+
+        {menuAppointment?.status === "Ongoing" && (
+            <>
+              <MenuItem onClick={handleClickMarkCompleted}>
+                <ListItemIcon>
+                  <DoneAllIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Mark as Completed" />
+              </MenuItem>
+
+              {/* Cancel Appointment */}
+              <MenuItem onClick={handleClickCancelAppointment}>
+                <ListItemIcon>
+                  <X fontSize="small" /> {/* <- cancel icon */}
+                </ListItemIcon>
+                <ListItemText primary="Cancel Appointment" />
+              </MenuItem>
+            </>
         )}
       </Menu>
+
 
       {/* Completion modal */}
       <CompleteAppointmentModal
