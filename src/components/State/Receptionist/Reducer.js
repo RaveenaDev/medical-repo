@@ -75,6 +75,7 @@ const initialState = {
   departments: [],
   department: null,
   progressTracker: [],
+  isLoadingProgressTracker: true,
   appointments: [],
   isLoadingAppointments: true,
   appointmentRequests: [],
@@ -331,7 +332,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         progressTracker: action.payload,
-        isLoading: false,
+        isLoadingProgressTracker: false,
       };
 
     case GET_PATIENT_BILLS:
