@@ -80,6 +80,7 @@ const initialState = {
   appointmentRequests: [],
   allBills: [],
   allBillsCount: null,
+  isLoadingAllBills: true,
   bill: null,
   isLoading: true,
   error: null,
@@ -317,6 +318,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         allBills: action.payload.bills,
         allBillsCount: action.payload.totalBills,
+        isLoadingAllBills: false,
       };
 
     case GET_BILL_BY_ID:
