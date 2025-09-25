@@ -194,7 +194,7 @@ const InPatients = (props) => {
                 <Search size={18} className={styles["search-icon"]} />
                 <input
                   type="text"
-                  placeholder="Search inpatients..."
+                  placeholder="Search Inpatients..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={styles["search-input"]}
