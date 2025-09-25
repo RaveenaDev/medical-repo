@@ -290,14 +290,14 @@ function Receptionist(props) {
 
       ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
         dispatch(
-            getAppointments(
-                status,
-                startDate,
-                endDate,
-                selectedBranch,
-                page,
-                rowsPerPage
-            )
+          getAppointments(
+            status,
+            startDate,
+            endDate,
+            selectedBranch,
+            page,
+            rowsPerPage
+          )
         );
       });
     } else {
@@ -324,14 +324,14 @@ function Receptionist(props) {
 
       ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
         dispatch(
-            getAppointments(
-                status,
-                startDate,
-                endDate,
-                selectedBranch,
-                page,
-                rowsPerPage
-            )
+          getAppointments(
+            status,
+            startDate,
+            endDate,
+            selectedBranch,
+            page,
+            rowsPerPage
+          )
         );
       });
     }
@@ -358,20 +358,18 @@ function Receptionist(props) {
 
       ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
         dispatch(
-            getAppointments(
-                status,
-                startDate,
-                endDate,
-                selectedBranch,
-                page,
-                rowsPerPage
-            )
+          getAppointments(
+            status,
+            startDate,
+            endDate,
+            selectedBranch,
+            page,
+            rowsPerPage
+          )
         );
       });
     }
   };
-
-
 
   return (
     <div
@@ -753,6 +751,7 @@ function Receptionist(props) {
                                               label={appointment.status}
                                               size="small"
                                               sx={{
+                                                textTransform: "capitalize",
                                                 bgcolor:
                                                   appointment.status ===
                                                   "Ongoing"
@@ -853,103 +852,100 @@ function Receptionist(props) {
 
       {/* Row menu */}
       <Menu
-          anchorEl={rowMenuAnchor}
-          open={Boolean(rowMenuAnchor)}
-          onClose={closeRowMenu}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorEl={rowMenuAnchor}
+        open={Boolean(rowMenuAnchor)}
+        onClose={closeRowMenu}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
         {menuAppointment?.status === "Waiting" && (
-            <>
-              {/* Mark as Ongoing */}
-              {(() => {
-                const doctorId =
-                    menuAppointment?.doctor?._id ||
-                    menuAppointment?.doctor?.id ||
-                    menuAppointment?.doctor;
-                const disableOngoing =
-                    doctorId && ongoingDoctorIds.has(String(doctorId));
+          <>
+            {/* Mark as Ongoing */}
+            {(() => {
+              const doctorId =
+                menuAppointment?.doctor?._id ||
+                menuAppointment?.doctor?.id ||
+                menuAppointment?.doctor;
+              const disableOngoing =
+                doctorId && ongoingDoctorIds.has(String(doctorId));
 
-                return (
-                    <MenuItem
-                        onClick={disableOngoing ? undefined : handleClickMarkOngoing}
-                        disabled={Boolean(disableOngoing)}
-                        title={
-                          disableOngoing
-                              ? "This doctor already has an ongoing case."
-                              : ""
-                        }
-                    >
-                      <ListItemIcon>
-                        <PlayArrowIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary="Mark as Ongoing" />
-                    </MenuItem>
-                );
-              })()}
+              return (
+                <MenuItem
+                  onClick={disableOngoing ? undefined : handleClickMarkOngoing}
+                  disabled={Boolean(disableOngoing)}
+                  title={
+                    disableOngoing
+                      ? "This doctor already has an ongoing case."
+                      : ""
+                  }
+                >
+                  <ListItemIcon>
+                    <PlayArrowIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Mark as Ongoing" />
+                </MenuItem>
+              );
+            })()}
 
-              {/* Cancel Appointment */}
-              <MenuItem onClick={handleClickCancelAppointment}>
-                <ListItemIcon>
-                  <X fontSize="small" /> {/* <- use your cancel icon */}
-                </ListItemIcon>
-                <ListItemText primary="Cancel Appointment" />
-              </MenuItem>
-              {/* Reschedule */}
-              <MenuItem onClick={handleClickReschedule}>
-                <ListItemIcon>
-                  <EventIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Reschedule" />
-              </MenuItem>
+            {/* Cancel Appointment */}
+            <MenuItem onClick={handleClickCancelAppointment}>
+              <ListItemIcon>
+                <X fontSize="small" /> {/* <- use your cancel icon */}
+              </ListItemIcon>
+              <ListItemText primary="Cancel Appointment" />
+            </MenuItem>
+            {/* Reschedule */}
+            <MenuItem onClick={handleClickReschedule}>
+              <ListItemIcon>
+                <EventIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Reschedule" />
+            </MenuItem>
 
-              {/* Reschedule Today */}
-              <MenuItem onClick={handleClickRescheduleToday}>
-                <ListItemIcon>
-                  <TodayIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Reschedule Today" />
-              </MenuItem>
-
-            </>
+            {/* Reschedule Today */}
+            <MenuItem onClick={handleClickRescheduleToday}>
+              <ListItemIcon>
+                <TodayIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Reschedule Today" />
+            </MenuItem>
+          </>
         )}
 
         {menuAppointment?.status === "Ongoing" && (
-            <>
-              <MenuItem onClick={handleClickMarkCompleted}>
-                <ListItemIcon>
-                  <DoneAllIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Mark as Completed" />
-              </MenuItem>
+          <>
+            <MenuItem onClick={handleClickMarkCompleted}>
+              <ListItemIcon>
+                <DoneAllIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Mark as Completed" />
+            </MenuItem>
 
-              {/* Cancel Appointment */}
-              <MenuItem onClick={handleClickCancelAppointment}>
-                <ListItemIcon>
-                  <X fontSize="small" /> {/* <- cancel icon */}
-                </ListItemIcon>
-                <ListItemText primary="Cancel Appointment" />
-              </MenuItem>
-              {/* Reschedule */}
-              <MenuItem onClick={handleClickReschedule}>
-                <ListItemIcon>
-                  <EventIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Reschedule" />
-              </MenuItem>
+            {/* Cancel Appointment */}
+            <MenuItem onClick={handleClickCancelAppointment}>
+              <ListItemIcon>
+                <X fontSize="small" /> {/* <- cancel icon */}
+              </ListItemIcon>
+              <ListItemText primary="Cancel Appointment" />
+            </MenuItem>
+            {/* Reschedule */}
+            <MenuItem onClick={handleClickReschedule}>
+              <ListItemIcon>
+                <EventIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Reschedule" />
+            </MenuItem>
 
-              {/* Reschedule Today */}
-              <MenuItem onClick={handleClickRescheduleToday}>
-                <ListItemIcon>
-                  <TodayIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Reschedule Today" />
-              </MenuItem>
-
-            </>
+            {/* Reschedule Today */}
+            <MenuItem onClick={handleClickRescheduleToday}>
+              <ListItemIcon>
+                <TodayIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Reschedule Today" />
+            </MenuItem>
+          </>
         )}
       </Menu>
-
 
       {/* Completion modal */}
       <CompleteAppointmentModal

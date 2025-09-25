@@ -212,6 +212,24 @@
     }
   }
 }
+.sending-btn {
+  background-color: #6c7ae0; /* lighter blue to show progress */
+  box-shadow: 0px 4px 6px 0px #aabaff80; /* softer shadow */
+  color: #eff3f0;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: not-allowed; /* show disabled cursor */
+  border: 0.5px solid #6c7ae099;
+  font-family: "Karla", "sans-serif";
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  opacity: 0.7; /* slightly transparent */
+  pointer-events: none; /* prevent interaction */
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
 
 .radio-group {
   display: flex;

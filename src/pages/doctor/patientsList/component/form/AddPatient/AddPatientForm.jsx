@@ -847,7 +847,11 @@ const AddPatientForm = ({ onClose }) => {
             >
               Print & Preview
             </button>
-            <button type="submit" className="submit-btn" disabled={sending}>
+            <button
+              type="submit"
+              className={sending ? "sending-btn" : "submit-btn"}
+              disabled={sending}
+            >
               {sending ? "Sending..." : "Send"}
             </button>
           </div>
