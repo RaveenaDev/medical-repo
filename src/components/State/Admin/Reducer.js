@@ -51,6 +51,7 @@ import {
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
+  UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
 } from "./ActionType.js";
@@ -568,6 +569,14 @@ export const adminReducer = (state = initialState, action) => {
         totalAdmissionRequests: action.payload.count,
         admissionRequests: action.payload.requests,
         isLoadingAdmissionRequests: false,
+      };
+
+    case UPDATE_ADMISSION_INSURANCE:
+      return {
+        ...state,
+        admissionRequests: state.admissionRequests.map((request) =>
+          request._id === action.payload._id ? action.payload : request
+        ),
       };
 
     default:
