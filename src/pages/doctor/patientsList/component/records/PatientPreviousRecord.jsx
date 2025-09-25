@@ -103,12 +103,6 @@ const PatientPreviousRecord = ({ patientDetails, loading }) => {
                   width: "4vw",
                   height: "4vw",
                   fontSize: "1.5rem",
-                  // fontSize: {
-                  //   xs: "0.75rem", // 12px on mobile
-                  //   sm: "1rem", // 16px on small screens
-                  //   md: "1.25rem", // 20px on medium screens
-                  //   lg: "1.5rem", // 24px on large screens
-                  // },
                 }}
                 className="avatar"
               >

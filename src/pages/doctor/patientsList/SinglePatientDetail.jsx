@@ -35,6 +35,8 @@ const SinglePatientDetail = () => {
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
 
+  // console.log("Pat Details: ",patientDetails)
+
   const isLoading = useSelector(
     (store) => store.doctor.isLoadingPatientDetails
   );
