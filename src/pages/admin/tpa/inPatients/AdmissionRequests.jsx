@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { FiFilter } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+
 import {
   Box,
-  Button,
   CircularProgress,
-  Drawer,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  IconButton,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   TablePagination,
-  Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAdmissionRequests,
-  getFilteredInpatients,
-} from "../../../../components/State/Admin/Action.js";
+import { getAdmissionRequests } from "../../../../components/State/Admin/Action.js";
 import styles from "./InPatient.module.scss";
 import ActionMenu from "./components/ActionMenu.jsx"; // Custom menu component for actions
 import { Search } from "lucide-react";
@@ -157,7 +143,6 @@ const AdmissionRequests = () => {
                       <th>Bed</th>
                       <th>Insurance</th>
                       <th>Doctor</th>
-                      <th>Status</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -173,7 +158,7 @@ const AdmissionRequests = () => {
                               {truncateText(
                                 patient?.admissionDetails?.name ||
                                   "Not Assigned",
-                                15
+                                25
                               )}
                             </div>
                             <div className={styles.patientEmail}>
@@ -203,15 +188,7 @@ const AdmissionRequests = () => {
                         <td className={styles.doctor}>
                           {patient?.doctor?.name || "Not Assigned"}
                         </td>
-                        <td className={styles.status}>
-                          <span
-                            className={`${styles.statusBadge} ${
-                              styles[patient.status?.toLowerCase()]
-                            }`}
-                          >
-                            {patient?.status}
-                          </span>
-                        </td>
+
                         <td className={styles.actions}>
                           {/* Menu with options like Add Insurance */}
                           <ActionMenu patient={patient} />

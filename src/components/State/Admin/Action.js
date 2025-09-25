@@ -54,6 +54,7 @@ import {
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
+  UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
   UPDATE_SERVICE,
@@ -1517,9 +1518,40 @@ export const getAdmissionRequests = () => async (dispatch) => {
       },
     });
 
-    console.log("Add Reqs ", data);
+    // console.log("Add Reqs ", data);
     dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
   } catch (error) {
     console.log(error);
   }
 };
+
+export const addInsuranceAfterAdmission =
+  (admissionId, insuranceData) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.patch(
+        `${API_URL}/addInsuranceAfterAdmission/${admissionId}`,
+        insuranceData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // console.log("Response after adding insurance:", data);
+      dispatch({
+        type: UPDATE_ADMISSION_INSURANCE,
+        payload: data.admissionRequest, // or `data` if you need full response
+      });
+      toast.success("Insurance details added successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      return data; // so component can use it directly
+    } catch (error) {
+      console.error("Error adding insurance after admission:", error);
+      throw error; // propagate error if you want to handle in component
+    }
+  };
