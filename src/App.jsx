@@ -49,6 +49,7 @@ import DoctorRoutes from "./pages/doctor/DoctorRoutes.jsx";
 import IpdRoutes from "./pages/ipd/IpdRoutes.jsx";
 import TPA from "./pages/admin/tpa/TPA.jsx";
 import SingleCompanyDetails from "./pages/admin/tpa/companies/singleCompanyDetails/SingleCompanyDetails.jsx";
+import BillDetailsAdmin from "./pages/admin/billing/components/Records/components/BillDetailsAdmin.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -406,6 +407,18 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
                     <BillingAdmin
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/billings/:billId"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <BillDetailsAdmin
                       setIsSignUpOrLogin={setIsSignUpOrLogin}
                       setEntity={setEntity}
                       entity={entity}

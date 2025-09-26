@@ -106,7 +106,7 @@ const AdmissionRequests = () => {
                 <Search size={18} className={styles["search-icon"]} />
                 <input
                   type="text"
-                  placeholder="Search inpatients..."
+                  placeholder="Search Forms..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={styles["search-input"]}
