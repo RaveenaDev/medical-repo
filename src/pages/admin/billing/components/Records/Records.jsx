@@ -12,10 +12,12 @@ import RecordModal from "./components/RecordsModal.jsx";
 import RecordsHeader from "./components/RecordsHeader.jsx";
 import RecordsTable from "./components/RecordsTable.jsx";
 import RecordsDrawer from "./components/RecordsDrawer.jsx";
+import { useNavigate } from "react-router-dom";
 
 /* ----------------- main component ----------------- */
 const Records = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [selectedBillId, setSelectedBillId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -44,15 +46,21 @@ const Records = () => {
     setPage(0);
   }, [debouncedSearch, filters.status, sortOrder]);
 
+  // const handleViewClick = useCallback(
+  //   (billId) => {
+  //     setSelectedBillId(billId);
+  //     setOpenModal(true);
+  //     dispatch(getBillDetails(billId));
+  //   },
+  //   [dispatch]
+  // );
   const handleViewClick = useCallback(
     (billId) => {
-      setSelectedBillId(billId);
-      setOpenModal(true);
       dispatch(getBillDetails(billId));
+      navigate(`${billId}`);
     },
-    [dispatch]
+    [dispatch, navigate]
   );
-
   const handleCloseModal = useCallback(() => setOpenModal(false), []);
   const handleChangePage = useCallback((_, newPage) => setPage(newPage), []);
   const handleChangeRowsPerPage = useCallback((e) => {
@@ -92,12 +100,12 @@ const Records = () => {
         handleChangeRowsPerPage={handleChangeRowsPerPage}
       />
 
-      <RecordModal
+      {/* <RecordModal
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
         billId={selectedBillId}
-      />
+      /> */}
 
       <RecordsDrawer
         open={filterDrawerOpen}

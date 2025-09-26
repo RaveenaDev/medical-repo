@@ -734,6 +734,8 @@ export const getBillingRecords =
 
 // BILLING
 export const getBillDetails = (billId) => async (dispatch) => {
+  console.log("Fetching details for bill ID:", billId);
+
   try {
     const token = localStorage.getItem("jwt");
 
@@ -742,6 +744,7 @@ export const getBillDetails = (billId) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
+    console.log("Bill Details: ", data);
 
     dispatch({ type: GET_BILL_DETAILS, payload: data });
   } catch (error) {
