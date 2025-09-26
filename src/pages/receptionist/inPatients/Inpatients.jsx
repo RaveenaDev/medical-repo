@@ -144,9 +144,9 @@ const InPatients = (props) => {
       <div style={{ position: "relative", top: "7px", paddingLeft: "8px" }}>
         <CommonPanel />
       </div>
-      <div className={styles.patientsHeader}>
+      <div className={styles.patientsHeader} >
         <div className={styles.headerTop}>
-          <div className={styles.headerLeft}>
+          <div className={styles.headerLeft} style={{marginTop:'2px'}}>
             <ChevronLeft
               size={28}
               strokeWidth={1.7}

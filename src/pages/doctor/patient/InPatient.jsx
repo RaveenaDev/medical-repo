@@ -1,6 +1,6 @@
 import CommonPanel from "../components/CommonPanel";
 import { FiFilter } from "react-icons/fi";
-import { ChevronLeft } from "lucide-react";
+import {ChevronLeft, Search, X} from "lucide-react";
 import styles from "./InPatient.module.scss";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -24,9 +24,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import { getFilteredInpatients } from "../../../components/State/Doctor/Action.js";
+import useDebounce from "../../../hooks/useDebounce.js";
 
 const InPatients = () => {
   const dispatch = useDispatch();
+    const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({
@@ -34,13 +36,16 @@ const InPatients = () => {
     type: "",
     sort: "desc",
   });
+
+    const debouncedSearch = useDebounce(searchQuery, 500);
+
   const [sortOrder, setSortOrder] = useState("desc");
   const navigate = useNavigate();
 
   useEffect(() => {
     // dispatch(getPatients());
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
-  }, [dispatch, sortOrder, page, rowsPerPage]);
+    dispatch(getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch));
+  }, [dispatch, sortOrder, page, rowsPerPage, debouncedSearch]);
 
   const doctor = useSelector((store) => store.doctor);
   const totalFilteredInPatients = doctor.totalFilteredInpatients;
@@ -123,7 +128,7 @@ const InPatients = () => {
 
   const handleSearchResults = () => {
     // admin = null;
-    dispatch(getFilteredInpatients(filters, page, rowsPerPage));
+    dispatch(getFilteredInpatients(filters, page, rowsPerPage,debouncedSearch));
     setFilterDrawerOpen(false);
   };
 
@@ -308,26 +313,44 @@ const InPatients = () => {
                 <MenuItem value="asc">Oldest to Newest</MenuItem>
               </Select>
             </div>
-            <div
-              onClick={() => setFilterDrawerOpen(true)}
-              className={`${styles.filter} ${styles.boxStyle}`}
-            >
-              <FiFilter fill="#25307f" />
-              <span>Filter</span>
-            </div>
+
+              <Box className={styles.filterSearch}>
+                  <div className={styles["search-wrapper"]}>
+                      <Search size={18} className={styles["search-icon"]}/>
+                      <input
+                          type="text"
+                          placeholder="Search Inpatients..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className={styles["search-input"]}
+                      />
+                      <X
+                          strokeWidth={1.2}
+                          className={styles["cross-icon"]}
+                          onClick={() => setSearchQuery("")}
+                      />
+                  </div>
+                  <div
+                      onClick={() => setFilterDrawerOpen(true)}
+                      className={`${styles.filter} ${styles.boxStyle}`}
+                  >
+                      <FiFilter fill="#25307f"/>
+                      <span>Filter</span>
+                  </div>
+              </Box>
           </div>
         </div>
-        <hr />
+          <hr/>
       </div>
 
-      {/* Modal Component */}
-      <AppointmentRequestModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        appointmentRequests={appointmentRequests}
-      >
-        <p>This is where appointment requests will appear.</p>
-      </AppointmentRequestModal>
+        {/* Modal Component */}
+        <AppointmentRequestModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            appointmentRequests={appointmentRequests}
+        >
+            <p>This is where appointment requests will appear.</p>
+        </AppointmentRequestModal>
 
       {loading ? (
         <Box
