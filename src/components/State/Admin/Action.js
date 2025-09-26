@@ -1508,22 +1508,28 @@ export const getFilteredInpatients =
       console.log(error);
     }
   };
-export const getAdmissionRequests = () => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getAdmissionRequests =
+  (search, page, limit) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+        params: {
+          search: search || "",
+          page: page + 1,
+          limit: limit,
+        },
+      });
 
-    // console.log("Add Reqs ", data);
-    dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      // console.log("Add Reqs ", data);
+      dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const addInsuranceAfterAdmission =
   (admissionId, insuranceData) => async (dispatch) => {

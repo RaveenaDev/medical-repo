@@ -39,8 +39,8 @@ const AdmissionRequests = () => {
 
   // Fetch patients whenever filters/pagination change
   useEffect(() => {
-    dispatch(getAdmissionRequests());
-  }, [dispatch]);
+    dispatch(getAdmissionRequests(debouncedSearch, page, rowsPerPage, filters));
+  }, [dispatch, debouncedSearch, page, rowsPerPage, filters]);
 
   useEffect(() => {
     setPage(0);
@@ -150,7 +150,10 @@ const AdmissionRequests = () => {
                     {admissionRequests.map((patient, index) => (
                       <tr key={index}>
                         <td className={styles.patientId}>
-                          {truncateText(patient?.patId || "Not Assigned", 12)}
+                          {truncateText(
+                            patient?.patient?.patId || "Not Assigned",
+                            12
+                          )}
                         </td>
                         <td className={styles.patientInfo}>
                           <div>

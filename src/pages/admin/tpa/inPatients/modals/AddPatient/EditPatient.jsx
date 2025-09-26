@@ -195,7 +195,7 @@ const EditPatient = ({ onClose, patientDetails }) => {
       setForm((prev) => ({
         ...prev,
         patientName: patientDetails.admissionDetails?.name || "",
-        patientId: patientDetails.admissionDetails?.patId || "",
+        patientId: patientDetails.patient?.patId || "",
         email: patientDetails.admissionDetails?.email || "",
         contactNo: patientDetails.admissionDetails?.contact || "",
         address: patientDetails.admissionDetails?.address || "",
