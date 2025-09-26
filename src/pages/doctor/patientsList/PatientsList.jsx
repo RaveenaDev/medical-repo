@@ -218,6 +218,12 @@ const PatientsList = () => {
             <Plus size={20} />
             ADD PATIENT
           </div>
+          <div
+            className="addButton"
+            onClick={() => navigate("admission-forms")}
+          >
+            Addmission Forms
+          </div>
         </div>
       </div>
 

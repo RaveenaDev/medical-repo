@@ -65,6 +65,7 @@ import {
   SET_ONGOING,
   SET_RESCHEDULE,
   SUBMIT_CONSULTATION,
+  UPDATE_ADMISSION_INSURANCE,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
 
@@ -91,7 +92,7 @@ export const getPatients = () => async (dispatch) => {
 };
 
 export const getFilteredPatients =
-  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
+  (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
       const token = localStorage.getItem("jwt");
@@ -105,7 +106,7 @@ export const getFilteredPatients =
           sort: filteredData.sort,
           page: page + 1,
           limit: rowsPerPage,
-          search: search
+          search: search,
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -1245,27 +1246,7 @@ export const getApprovedAdmissions = () => async (dispatch) => {
     console.error("Error fetching approved admissions:", error);
   }
 };
-export const getAdmissionRequests =
-  (status = "") =>
-  async (dispatch) => {
-    try {
-      const token = localStorage.getItem("jwt");
 
-      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        params: status ? { status } : {}, // Only send if provided
-      });
-
-      // console.log("Admission Requests:", data);
-
-      dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
-    } catch (error) {
-      console.error("Error fetching admission requests:", error);
-    }
-  };
 export const getAdmissionRequestsToApprove =
   (status = "") =>
   async (dispatch) => {
@@ -1882,3 +1863,58 @@ export const getPatientDetailsByPatId = (patId) => async (dispatch) => {
     throw error;
   }
 };
+
+export const addInsuranceAfterAdmission =
+  (admissionId, insuranceData) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.patch(
+        `${API_URL}/addInsuranceAfterAdmission/${admissionId}`,
+        insuranceData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // console.log("Response after adding insurance:", data);
+      dispatch({
+        type: UPDATE_ADMISSION_INSURANCE,
+        payload: data.admissionRequest, // or `data` if you need full response
+      });
+      toast.success("Insurance details added successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      return data; // so component can use it directly
+    } catch (error) {
+      console.error("Error adding insurance after admission:", error);
+      throw error; // propagate error if you want to handle in component
+    }
+  };
+export const getAdmissionRequests =
+  (search, page, rowsPerPage) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          search: search,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Only send if provided
+      });
+
+      console.log("Admission Requests:", data);
+
+      dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
+    } catch (error) {
+      console.error("Error fetching admission requests:", error);
+    }
+  };
