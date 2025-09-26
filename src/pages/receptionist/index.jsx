@@ -32,7 +32,7 @@ import {
   cancelAppointment,
   getAllDepartments,
   getAppointments,
-  getRequestedAppointments,
+  getRequestedAppointments, rescheduleAppointment, rescheduleAppointmentToday,
   startConsultation,
   submitConsultation,
   // markAppointmentCompleted, // <- If you already have an action for completion, import it and use in handleComplete below.
@@ -175,6 +175,8 @@ function Receptionist(props) {
   const truncateText = (text, maxLength) =>
     text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 
+  // console.log("T: ",menuAppointment)
+
   let appointments = [];
   let totalAppointmentsCount = 0;
   switch (activeLabel) {
@@ -295,13 +297,22 @@ function Receptionist(props) {
   const handleConfirmReschedule = async ({ combinedISO }) => {
     if (!menuAppointment?._id) return;
 
-    // await dispatch(
-    //     rescheduleAppointment({
-    //       appointmentId: menuAppointment._id,
-    //       tokenDate: combinedISO, // adjust field if your backend expects a different name
-    //       reason: "Rescheduled by receptionist",
-    //     })
-    // );
+    // console.log("MenU: ",menuAppointment)
+    await dispatch(
+        rescheduleAppointment({
+          patientName: menuAppointment.patient.name,
+          appointmentType: menuAppointment.type,
+          doctorEmail: menuAppointment.doctor?.email,
+          mobileNumber: menuAppointment.patient.phone,
+          email: menuAppointment.patient?.email,
+          date: combinedISO,
+          note: "Rescheduled by receptionist",
+          typeVisit: menuAppointment.typeVisit,
+          rescheduledFrom: menuAppointment._id,
+          departmentName: menuAppointment.department.name,
+
+        })
+    );
 
     setRescheduleOpen(false);
     refreshAllBuckets();
@@ -310,14 +321,15 @@ function Receptionist(props) {
   const handleConfirmRescheduleToday = async ({ afterTokenNumber }) => {
     if (!menuAppointment?._id) return;
 
-    // await dispatch(
-    //     rescheduleAppointment({
-    //       appointmentId: menuAppointment._id,
-    //       rescheduleTodayAfterToken: afterTokenNumber,
-    //       baseDate: selectedDate.startOf("day").toISOString(),
-    //       reason: "Moved later today after token",
-    //     })
-    // );
+    await dispatch(
+        rescheduleAppointmentToday({
+          doctorId: menuAppointment?.doctor?._id,
+          fromToken: menuAppointment?.tokenNumber,
+          afterToken: afterTokenNumber,
+          date: selectedDate.startOf("day").format("YYYY-MM-DD"),
+          reason: "Moved later today after token",
+        })
+    );
 
     setRescheduleTodayOpen(false);
     refreshAllBuckets();

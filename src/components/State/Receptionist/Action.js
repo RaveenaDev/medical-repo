@@ -384,6 +384,66 @@ export const bookAppointment = (appData, onClose) => async (dispatch) => {
   }
 };
 
+export const rescheduleAppointmentToday = (appData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/repositionToken`, appData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Data: ",data)
+
+    toast.success("Appointment rescheduled", {
+      position: "bottom-right", // Use string for position
+      autoClose: 3000,
+    });
+  }
+  catch (error) {
+    console.log(error);
+
+    // Safely get message from backend or fallback
+    const message =
+        error.response?.data?.message || error.message || "Something went wrong";
+
+    toast.error(message, {
+      position: "bottom-right", // Use string for position
+      autoClose: 3000,
+    });
+  }
+};
+
+export const rescheduleAppointment = (appData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/bookAppointment`, appData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Rescheduled: ",data)
+
+    toast.success("Appointment rescheduled", {
+      position: "bottom-right", // Use string for position
+      autoClose: 3000,
+    });
+  } catch (error) {
+    console.log(error);
+
+    // Safely get message from backend or fallback
+    const message =
+        error.response?.data?.message || error.message || "Something went wrong";
+
+    toast.error(message, {
+      position: "bottom-right", // Use string for position
+      autoClose: 3000,
+    });
+  }
+};
 export const cancelAppointment = (appointmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");

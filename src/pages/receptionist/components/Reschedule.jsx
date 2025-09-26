@@ -33,7 +33,7 @@ const Reschedule = ({ open, onClose, onConfirm }) => {
             return;
         }
 
-        onConfirm?.({ combinedISO: combined.toISOString(), combined });
+        onConfirm?.({ combinedISO: combined.format("YYYY-MM-DDTHH:mm:ss.SSSZ"), combined });
     };
     return (
         <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
