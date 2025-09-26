@@ -20,6 +20,12 @@ const AdmissionFormPDF = forwardRef(({ form }, ref) => {
       <section className={styles.section}>
         <h4>Patient Details</h4>
         <div className={styles.detailGrid}>
+          {form.patientId && (
+            <>
+              <span>Patient Id</span>
+              <span>{form.patientId}</span>
+            </>
+          )}
           {form.patientName && (
             <>
               <span>Name of Patient</span>

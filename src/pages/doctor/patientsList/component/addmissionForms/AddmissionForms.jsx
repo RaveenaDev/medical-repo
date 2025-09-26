@@ -154,7 +154,10 @@ const AdmissionForms = () => {
                     {admissionRequests.map((patient, index) => (
                       <tr key={index}>
                         <td className={styles.patientId}>
-                          {truncateText(patient?.patId || "Not Assigned", 12)}
+                          {truncateText(
+                            patient?.patient?.patId || "Not Assigned",
+                            12
+                          )}
                         </td>
                         <td className={styles.patientInfo}>
                           <div>
