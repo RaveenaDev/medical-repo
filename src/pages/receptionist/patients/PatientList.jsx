@@ -192,36 +192,13 @@ const PatientList = () => {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: "bold",
-                  display: "flex",
-                  alignItems: "center",
-                  color: "#25307F",
-                  gap: 1,
-                  borderRight: "0.5px solid #4A4A4A8C",
-                  paddingRight: 2,
-                  marginRight: 1,
-                }}
-              >
-                {noOfPatients}
-                <Typography
-                  variant="body1"
-                  component="span"
-                  sx={{
-                    color: "#878787",
-                    fontSize: "1rem",
-                    fontWeight: "normal",
-                  }}
-                >
-                  Patients
-                </Typography>
-              </Typography>
+              <span className={styles.patientCount}>
+            {noOfPatients} <span>Inpatients</span>
+          </span>
 
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{display: "flex", alignItems: "center"}}>
                 <Typography
-                  variant="body1"
+                    variant="body1"
                   sx={{ marginRight: 1, color: "#25307F" }}
                 >
                   Sort by:

@@ -144,7 +144,7 @@ export const getInpatients = () => async (dispatch) => {
 };
 
 export const getFilteredInpatients =
-  (filteredData, page, rowsPerPage) => async (dispatch) => {
+  (filteredData, page, rowsPerPage,search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
       const token = localStorage.getItem("jwt");
@@ -158,6 +158,7 @@ export const getFilteredInpatients =
           sort: filteredData.sort,
           page: page + 1,
           limit: rowsPerPage,
+          search: search
         }, // Sending status as a query parameter
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
