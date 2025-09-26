@@ -40,6 +40,8 @@ import {
 import dayjs from "dayjs";
 import CircularProgress from "@mui/material/CircularProgress";
 import CompleteAppointmentModal from "./components/CompleteAppointmentModal.jsx";
+import Reschedule from "./components/Reschedule.jsx";
+import RescheduleToday from "./components/RescheduleToday.jsx";
 
 function Receptionist(props) {
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -51,6 +53,9 @@ function Receptionist(props) {
 
   const [activeBox, setActiveBox] = useState(1);
   const [selectedBranch, setSelectedBranch] = useState();
+
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const [rescheduleTodayOpen, setRescheduleTodayOpen] = useState(false);
 
   // menu + modal state
   const [rowMenuAnchor, setRowMenuAnchor] = useState(null);
@@ -208,6 +213,24 @@ function Receptionist(props) {
     setCompleteOpen(true);
   };
 
+  // ✅ NEW: helper to refresh all buckets
+  const refreshAllBuckets = () => {
+    const startDateISO = selectedDate.startOf("day").toISOString();
+    const endDateISO = selectedDate.endOf("day").toISOString();
+    ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
+      dispatch(
+          getAppointments(
+              status,
+              startDateISO,
+              endDateISO,
+              selectedBranch,
+              page,
+              rowsPerPage
+          )
+      );
+    });
+  };
+
   const handleClickMarkOngoing = async () => {
     closeRowMenu();
 
@@ -218,23 +241,7 @@ function Receptionist(props) {
       // Dispatch startConsultation with the patientId
       await dispatch(startConsultation(patientId));
 
-      // After the consultation has started, fetch the updated appointments
-      const startDate = selectedDate.startOf("day").toISOString();
-      const endDate = selectedDate.endOf("day").toISOString();
-
-      // Fetch appointments again to update the list (you can choose to call this for specific status like 'Ongoing')
-      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
-        dispatch(
-          getAppointments(
-            status,
-            startDate,
-            endDate,
-            selectedBranch,
-            page,
-            rowsPerPage
-          )
-        );
-      });
+      refreshAllBuckets();
     } else {
       console.error("Patient ID not found for the appointment.");
     }
@@ -258,23 +265,7 @@ function Receptionist(props) {
     // Call the submitConsultation action (dispatching the action)
     await dispatch(submitConsultation(consultationData));
 
-    // After the consultation has started, fetch the updated appointments
-    const startDate = selectedDate.startOf("day").toISOString();
-    const endDate = selectedDate.endOf("day").toISOString();
-
-    // Fetch appointments again to update the list (you can choose to call this for specific status like 'Ongoing')
-    ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
-      dispatch(
-        getAppointments(
-          status,
-          startDate,
-          endDate,
-          selectedBranch,
-          page,
-          rowsPerPage
-        )
-      );
-    });
+    refreshAllBuckets();
   };
 
   const handleClickCancelAppointment = async () => {
@@ -284,91 +275,52 @@ function Receptionist(props) {
     if (appointmentId) {
       await dispatch(cancelAppointment(appointmentId));
 
-      // Refresh appointments after cancel
-      const startDate = selectedDate.startOf("day").toISOString();
-      const endDate = selectedDate.endOf("day").toISOString();
-
-      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
-        dispatch(
-          getAppointments(
-            status,
-            startDate,
-            endDate,
-            selectedBranch,
-            page,
-            rowsPerPage
-          )
-        );
-      });
+      refreshAllBuckets();
     } else {
       console.error("Appointment ID not found for cancellation.");
     }
   };
 
-  const handleClickReschedule = async () => {
+  const handleClickReschedule = () => {
     closeRowMenu();
-
-    const appointmentId = menuAppointment?._id;
-    if (appointmentId) {
-      // 🔹 Here call your rescheduleAppointment action
-      // await dispatch(
-      //     rescheduleAppointment({
-      //       appointmentId,
-      //       date: null, // open a modal later to pick date/time
-      //     })
-      // );
-
-      // Refresh
-      const startDate = selectedDate.startOf("day").toISOString();
-      const endDate = selectedDate.endOf("day").toISOString();
-
-      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
-        dispatch(
-          getAppointments(
-            status,
-            startDate,
-            endDate,
-            selectedBranch,
-            page,
-            rowsPerPage
-          )
-        );
-      });
-    }
+    setRescheduleOpen(true);
   };
 
-  const handleClickRescheduleToday = async () => {
+  const handleClickRescheduleToday = () => {
     closeRowMenu();
+    setRescheduleTodayOpen(true);
+  };
 
-    const appointmentId = menuAppointment?._id;
-    if (appointmentId) {
-      // 🔹 Example: reschedule for current day (today)
-      // const today = dayjs().endOf("day").toISOString();
-      //
-      // await dispatch(
-      //     rescheduleAppointment({
-      //       appointmentId,
-      //       date: today,
-      //     })
-      // );
+  // ✅ NEW: modal confirms
+  const handleConfirmReschedule = async ({ combinedISO }) => {
+    if (!menuAppointment?._id) return;
 
-      // Refresh
-      const startDate = selectedDate.startOf("day").toISOString();
-      const endDate = selectedDate.endOf("day").toISOString();
+    // await dispatch(
+    //     rescheduleAppointment({
+    //       appointmentId: menuAppointment._id,
+    //       tokenDate: combinedISO, // adjust field if your backend expects a different name
+    //       reason: "Rescheduled by receptionist",
+    //     })
+    // );
 
-      ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
-        dispatch(
-          getAppointments(
-            status,
-            startDate,
-            endDate,
-            selectedBranch,
-            page,
-            rowsPerPage
-          )
-        );
-      });
-    }
+    setRescheduleOpen(false);
+    refreshAllBuckets();
+  };
+
+  const handleConfirmRescheduleToday = async ({ afterTokenNumber }) => {
+    if (!menuAppointment?._id) return;
+
+    // await dispatch(
+    //     rescheduleAppointment({
+    //       appointmentId: menuAppointment._id,
+    //       rescheduleTodayAfterToken: afterTokenNumber,
+    //       baseDate: selectedDate.startOf("day").toISOString(),
+    //       reason: "Moved later today after token",
+    //     })
+    // );
+
+    setRescheduleTodayOpen(false);
+    refreshAllBuckets();
   };
 
   return (
@@ -397,7 +349,7 @@ function Receptionist(props) {
           />
         </div>
 
-        <div style={{ marginTop: "210px" }}>
+        <div style={{ marginTop: "200px" }}>
           {loading ? (
             <Box
               sx={{
@@ -429,11 +381,11 @@ function Receptionist(props) {
                       <div
                         style={{
                           position: "sticky",
-                          top: "220px",
+                          top: "210px",
                           background: "#fff",
                           zIndex: 10,
                           width: "100%",
-                          paddingTop: "10px",
+                          // paddingTop: "10px",
                         }}
                       >
                         {departments.length > 0 && (
@@ -459,7 +411,7 @@ function Receptionist(props) {
 
                         <div
                           style={{
-                            marginBottom: "1rem",
+                            marginBottom: "0.8rem",
                             padding: "0 2rem",
                             display: "flex",
                             justifyContent: "space-between",
@@ -530,7 +482,7 @@ function Receptionist(props) {
                       <div style={{ position: "relative" }}>
                         <TableContainer
                           sx={{
-                            maxHeight: "50vh",
+                            maxHeight: "55vh",
                             overflowY: "auto",
                             position: "relative",
                           }}
@@ -953,6 +905,17 @@ function Receptionist(props) {
         onClose={() => setCompleteOpen(false)}
         onComplete={handleComplete}
         appointment={menuAppointment}
+      />
+      
+      <Reschedule
+          open={rescheduleOpen}
+          onClose={() => setRescheduleOpen(false)}
+          onConfirm={handleConfirmReschedule}
+      />
+      <RescheduleToday
+          open={rescheduleTodayOpen}
+          onClose={() => setRescheduleTodayOpen(false)}
+          onConfirm={handleConfirmRescheduleToday}
       />
     </div>
   );

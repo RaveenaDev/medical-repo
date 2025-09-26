@@ -122,7 +122,7 @@ const CommonPanel = ({
           alignItems="center"
           flexDirection={{ md: "row" }}
           size={10}
-          sx={{ margin: "0 0 18px 0" }}
+          sx={{ margin: "0 0 10px 0" }}
         >
           <Grid
             size={3}
@@ -206,7 +206,7 @@ const CommonPanel = ({
             alignItems="center"
             flexDirection={{ md: "row" }}
             size={12}
-            sx={{ margin: "0 0 20px 0" }}
+            // sx={{ margin: "0 0 0.7rem 0" }}
           >
             <Grid size={3}>
               <div className={shreyStyles.todayRow}>
