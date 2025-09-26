@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./EditPatientForm.scss";
-import {
-  createAdmissionRequest,
-  getAvailableRooms,
-} from "../../../../../../components/State/Doctor/Action.js";
+
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addInsuranceAfterAdmission,
-  getInsuranceCompanies,
-} from "../../../../../../components/State/Admin/Action.js";
+
 import AdmissionFormPrintWrapperEdit from "./print/AdmissionFormPrintWrapperEdit.jsx";
+import { getInsuranceCompanies } from "../../../../../../../components/State/Admin/Action.js";
+import { addInsuranceAfterAdmission } from "../../../../../../../components/State/Doctor/Action.js";
 
 /* ---------- Helpers: Indian-format display + raw-state parsing (no commas) ---------- */
 const formatIndian = (val) => {
@@ -50,10 +46,9 @@ const parseToRaw = (input) => {
 };
 /* ------------------------------------------------------------------------------- */
 
-const EditPatient = ({ onClose, patientDetails }) => {
+const EditPatientForm = ({ onClose, patientDetails }) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAvailableRooms());
     dispatch(getInsuranceCompanies());
   }, [dispatch]);
   const [errors, setErrors] = useState({});
@@ -88,8 +83,6 @@ const EditPatient = ({ onClose, patientDetails }) => {
     insuranceStartDate: "",
     insuranceExpiryDate: "",
   });
-
-  const [selectedRoom, setSelectedRoom] = useState(form.roomNo);
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -182,7 +175,7 @@ const EditPatient = ({ onClose, patientDetails }) => {
 
     const admissionId = patientDetails._id;
 
-    console.log("Pay: ", payload);
+    // console.log("Pay: ", payload);
 
     dispatch(addInsuranceAfterAdmission(admissionId, payload));
     onClose();
@@ -635,4 +628,4 @@ const EditPatient = ({ onClose, patientDetails }) => {
   );
 };
 
-export default EditPatient;
+export default EditPatientForm;

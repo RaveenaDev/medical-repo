@@ -23,6 +23,7 @@ import {
   getAppointmentsOfToday,
 } from "../../components/State/Doctor/Action.js";
 import Appointments from "./appointments/Appointments.jsx";
+import AdmissionForms from "./patientsList/component/addmissionForms/AddmissionForms.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -76,6 +77,7 @@ const DoctorRoutes = (props) => {
       <Route path="/settings" element={<Settings />} />
       <Route path="/settings/privacyPolicy" element={<PrivacyPolicy />} />
       <Route path="/settings/helpAndSupport" element={<Help />} />
+      <Route path="/patientList/admission-forms" element={<AdmissionForms />} />
     </Routes>
   );
 };

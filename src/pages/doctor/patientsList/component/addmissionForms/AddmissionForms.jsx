@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import {
   Box,
@@ -8,13 +8,13 @@ import {
   TablePagination,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getAdmissionRequests } from "../../../../components/State/Admin/Action.js";
-import styles from "./InPatient.module.scss";
+import styles from "./AddmissionForms.module.scss";
 import ActionMenu from "./components/ActionMenu.jsx"; // Custom menu component for actions
 import { Search } from "lucide-react";
-import useDebounce from "../../../../hooks/useDebounce.js";
+import { getAdmissionRequests } from "../../../../../components/State/Doctor/Action.js";
+import useDebounce from "../../../../../hooks/useDebounce.js";
 
-const AdmissionRequests = () => {
+const AdmissionForms = () => {
   const dispatch = useDispatch();
 
   // Pagination state
@@ -31,10 +31,10 @@ const AdmissionRequests = () => {
   const [sortOrder, setSortOrder] = useState("desc");
 
   // Redux store: inpatients
-  const admin = useSelector((store) => store.admin);
-  const totalAdmissionRequests = admin.totalAdmissionRequests;
+  const admin = useSelector((store) => store.doctor);
+  const totalAdmissionRequests = admin.admissionRequestsCount;
   const admissionRequests = admin.admissionRequests;
-  const isLoadingAdmissionRequests = admin.isLoadingAdmissionRequests;
+  const isLoadingAdmissionRequests = admin.isLoadingGetAdmissionRequests;
   const debouncedSearch = useDebounce(searchQuery, 500);
 
   // Fetch patients whenever filters/pagination change
@@ -62,15 +62,19 @@ const AdmissionRequests = () => {
   };
 
   // Pagination: rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page when rows per page changes
-  };
+  const handleChangeRowsPerPage = useCallback((e) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
+    setPage(0);
+  }, []);
 
   return (
     <div className={styles.inpatientcontainer}>
       {/* Header Section */}
       <div className={styles.patientsHeader}>
+        <div className={styles.headerTop}>
+          <h2>Admission Forms</h2>
+        </div>
+        <hr />
         <div className={styles.headerBottom}>
           <span className={styles.patientCount}>
             {totalAdmissionRequests} <span>Forms</span>
@@ -233,4 +237,4 @@ const AdmissionRequests = () => {
   );
 };
 
-export default AdmissionRequests;
+export default AdmissionForms;
