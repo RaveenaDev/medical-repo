@@ -12,7 +12,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Avatar from "@mui/material/Avatar";
 import { Box } from "@mui/material";
 const PatientPreviousRecord = ({ patientDetails, loading }) => {
-  // console.log("GOTCHA: ", patientDetails);
+  console.log("GOTCHA: ", patientDetails);
   //console.log("Loading", loading);
 
   const visitData = [
