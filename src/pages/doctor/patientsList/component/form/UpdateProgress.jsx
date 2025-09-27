@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styles from "./UpdateProgress.module.scss";
-import { X, ChevronDown, ChevronUp, Trash2, SquarePen } from "lucide-react";
-
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { X,Trash2, SquarePen } from "lucide-react";
 import {
   addProgressTrackerPhase,
   getDoctorsByDepartment,
@@ -11,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const UpdateProgress = ({ onClose, patientId, caseId }) => {
   const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
   useEffect(() => {
     dispatch(getDoctorsByDepartment());
   }, []);
@@ -23,6 +22,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
   const [editMode, setEditMode] = useState({
     description: false,
   });
+  const [saving, setSaving] = useState(false); // 👈 loader state
 
   const [description, setDescription] = useState("");
 
@@ -34,14 +34,8 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       preview: URL.createObjectURL(file),
     }));
     setSelectedFiles((prev) => [...prev, ...imageFiles]);
-  };
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+    // 👇 critical: clear the input so selecting the same file again triggers onChange
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleRemoveFile = (index) => {
@@ -50,34 +44,70 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       return prev.filter((_, i) => i !== index);
     });
   };
+  // const handleSubmit = async () => {
+  //   if (!selectedPhase || !doctor) {
+  //     alert("Please fill all required fields.");
+  //     return;
+  //   }
+  //
+  //   // Option 2 (optional): Convert files to base64 (uncomment if needed)
+  //   const filesBase64 = await Promise.all(
+  //     selectedFiles.map(async (item) => ({
+  //       name: item.file.name,
+  //       type: item.file.type,
+  //       content: await fileToBase64(item.file),
+  //     }))
+  //   );
+  //
+  //   const payload = {
+  //     caseId,
+  //     patient: patientId,
+  //     title: selectedPhase,
+  //     date: `${date}T${new Date().toTimeString().slice(0, 5)}`,
+  //     assignedDoctor: doctor,
+  //     description,
+  //     isFinalPhase,
+  //     files: filesBase64,
+  //   };
+  //
+  //   dispatch(addProgressTrackerPhase(payload, patientId, caseId));
+  //   onClose();
+  // };
+
   const handleSubmit = async () => {
-    if (!selectedPhase || !doctor) {
+    if (!selectedPhase || !doctor || !date) {
       alert("Please fill all required fields.");
       return;
     }
 
-    // Option 2 (optional): Convert files to base64 (uncomment if needed)
-    const filesBase64 = await Promise.all(
-      selectedFiles.map(async (item) => ({
-        name: item.file.name,
-        type: item.file.type,
-        content: await fileToBase64(item.file),
-      }))
-    );
+    try {
+      setSaving(true); // 👈 start loader
 
-    const payload = {
-      caseId,
-      patient: patientId,
-      title: selectedPhase,
-      date: `${date}T${new Date().toTimeString().slice(0, 5)}`,
-      assignedDoctor: doctor,
-      description,
-      isFinalPhase,
-      files: filesBase64,
-    };
+      const form = new FormData();
+      form.append("caseId", caseId);
+      form.append("patient", patientId);
+      form.append("title", selectedPhase);
+      form.append("date", date);
+      form.append("assignedDoctor", doctor);
+      if (isFinalPhase) form.append("isFinalPhase", "true");
+      form.append(
+          "data",
+          JSON.stringify({
+            description: description || "",
+          })
+      );
+      selectedFiles.forEach((item) => {
+        form.append("files", item.file, item.file.name);
+      });
 
-    dispatch(addProgressTrackerPhase(payload, patientId, caseId));
-    onClose();
+      await dispatch(addProgressTrackerPhase(form, patientId, caseId)); // waits for thunk to finish
+      onClose(); // close after success (toast handled in action)
+    } catch (err) {
+      // errors are already logged in the action; show a basic alert here if you want
+      console.error(err);
+    } finally {
+      setSaving(false); // 👈 stop loader
+    }
   };
 
   const doctors = useSelector((store) => store.doctor.doctors);
@@ -192,12 +222,13 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
                   Choose a file or drag & drop it here
                 </p>
                 <span className={styles.uploadHint}>
-                  JPEG, PNG, PDG upto 50 MB
+                  JPEG, PNG, PDG upto 10 MB
                 </span>
 
                 <label className={styles.browseBtn}>
                   Browse File
                   <input
+                      ref={fileInputRef}            // 👈 attach ref
                     type="file"
                     multiple
                     className={styles.hiddenFileInput}
@@ -241,19 +272,18 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
         {/* Save Button */}
         <div style={{ marginTop: "2vh", textAlign: "center" }}>
           <button
-            style={{
-              backgroundColor: "#25307f",
-              color: "white",
-              padding: "1.2vh 2vw",
-              border: "none",
-              borderRadius: "4px",
-              fontSize: "1.9vh",
-              fontFamily: "Karla, sans-serif",
-              cursor: "pointer",
-            }}
-            onClick={handleSubmit}
+              className={styles.saveBtn}
+              onClick={handleSubmit}
+              disabled={saving}
           >
-            Save Update
+            {saving ? (
+                <>
+                  <span className={styles.loader} aria-hidden />
+                  Saving...
+                </>
+            ) : (
+                "Save"
+            )}
           </button>
         </div>
       </div>

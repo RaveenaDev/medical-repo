@@ -1525,16 +1525,16 @@ export const getPatientBedInfo = (patientId) => async (dispatch) => {
 };
 
 export const addProgressTrackerPhase =
-  (payload, patientId, caseId) => async (dispatch) => {
+  (formData, patientId, caseId) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
       const { data } = await axios.post(
         `${API_URL}/addProgressPhase`,
-        payload,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            // "Content-Type": "application/json",
           },
         }
       );
@@ -1785,12 +1785,12 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
   }
 };
 export const updateProgressTrackerPhase =
-  (payload, patientId, caseId, sourceType, sourceId) => async (dispatch) => {
+  (formData, patientId, caseId, sourceType, sourceId) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
       const { data } = await axios.put(
         `${API_URL}/updatePhase/${sourceType}/${sourceId}`,
-        payload,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
