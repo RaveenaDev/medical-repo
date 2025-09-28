@@ -1564,3 +1564,33 @@ export const addInsuranceAfterAdmission =
       throw error; // propagate error if you want to handle in component
     }
   };
+
+export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.post(
+      `${API_URL}/addPayment/${billId}`,
+      paymentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("Payment Response: ", data);
+    // dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
+    toast.success("Payment added successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    // Optionally refresh bill details
+    // dispatch(getBillDetails(billId));
+  } catch (error) {
+    console.error("Error adding payment to bill:", error);
+    toast.error("Failed to add payment. Please try again.", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  }
+};

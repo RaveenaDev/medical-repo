@@ -1,4 +1,5 @@
 import {
+  addPaymentToBill,
   addToBill,
   editBill,
   getBillDetails,
@@ -18,7 +19,9 @@ import {
   Grid,
   InputAdornment,
   CircularProgress,
+  MenuItem,
 } from "@mui/material";
+
 import styles from "./billDetailsAdmin.module.scss";
 
 import arrowBack from "/arrow_back.svg";
@@ -85,6 +88,59 @@ const BillDetailsAdmin = (props) => {
     setAddOpen(false);
     setAddErrors({});
     setAddForm({ category: "", quantity: "1", rate: "0", details: "" });
+  };
+
+  // ---- Add Payment Dialog ----
+  const [addPaymentOpen, setAddPaymentOpen] = useState(false);
+  const [addPaymentLoading, setAddPaymentLoading] = useState(false);
+  const [addPaymentForm, setAddPaymentForm] = useState({
+    amount: "",
+    mode: "",
+    reference: "",
+  });
+  const [addPaymentErrors, setAddPaymentErrors] = useState({});
+
+  const openAddPayment = () => setAddPaymentOpen(true);
+  const closeAddPayment = () => {
+    setAddPaymentOpen(false);
+    setAddPaymentErrors({});
+    setAddPaymentForm({ amount: "", mode: "", reference: "", billId: billId });
+  };
+  // Validation function
+  const validateAddPaymentForm = (form) => {
+    const errors = {};
+
+    if (!form.amount || isNaN(form.amount) || Number(form.amount) <= 0) {
+      errors.amount = "Enter a valid amount";
+    }
+
+    if (!form.mode) {
+      errors.mode = "Select a payment mode";
+    }
+
+    return errors;
+  };
+
+  // Submit handler
+  const handleAddPaymentSubmit = async () => {
+    const errors = validateAddPaymentForm(addPaymentForm);
+    if (Object.keys(errors).length > 0) {
+      setAddPaymentErrors(errors);
+      return;
+    }
+
+    try {
+      setAddPaymentLoading(true);
+
+      await dispatch(addPaymentToBill(billId, addPaymentForm));
+
+      closeAddPayment(); // reset & close if success
+    } catch (err) {
+      console.error(err);
+      setAddPaymentErrors({ general: "Failed to add payment" });
+    } finally {
+      setAddPaymentLoading(false);
+    }
   };
 
   const handleAddChange = (field) => (e) => {
@@ -326,7 +382,7 @@ const BillDetailsAdmin = (props) => {
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
-        <CircularProgress size={40} />
+        <CircularProgress sx={{ color: "#25307F" }} size={58} />
         <p>Loading bill details...</p>
       </div>
     );
@@ -624,24 +680,7 @@ const BillDetailsAdmin = (props) => {
                 <p>
                   Mode:
                   <span>
-                    {isEditing ? (
-                      <select
-                        className={styles["inputMode"]}
-                        value={String(editableBill.mode ?? bill.mode ?? "Cash")}
-                        onChange={(e) =>
-                          setEditableBill((prev) => ({
-                            ...prev,
-                            mode: e.target.value,
-                          }))
-                        }
-                      >
-                        <option value="Cash">Cash</option>
-
-                        <option value="Online">Online</option>
-                      </select>
-                    ) : (
-                      <span> {editableBill?.mode ?? bill.mode}</span>
-                    )}
+                    <span> {editableBill?.mode ?? bill.mode}</span>
                   </span>
                 </p>
                 <p>
@@ -656,9 +695,14 @@ const BillDetailsAdmin = (props) => {
               </div>
             </div>
           </div>
+          <div className={styles["billing-edited-save-btn"]}>
+            <Button variant="contained" onClick={openAddPayment}>
+              Add Payment
+            </Button>
+          </div>
         </div>
       </div>
-
+      {/* Add to Bill Dialog  */}
       <Dialog
         open={addOpen}
         onClose={addLoading ? undefined : closeAddDialog}
@@ -760,6 +804,127 @@ const BillDetailsAdmin = (props) => {
             startIcon={addLoading ? <CircularProgress size={18} /> : null}
           >
             {addLoading ? "Adding..." : "Add"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Add Payment Dialog */}
+      <Dialog
+        open={addPaymentOpen}
+        onClose={addPaymentLoading ? undefined : closeAddPayment}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Add Payment</DialogTitle>
+
+        <DialogContent dividers>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            {/* Amount */}
+            <TextField
+              label="Amount"
+              value={addPaymentForm.amount}
+              onChange={(e) => {
+                const value = e.target.value;
+                setAddPaymentForm((p) => ({ ...p, amount: value }));
+                setAddPaymentErrors((prev) => ({ ...prev, amount: "" })); // clear error while typing
+              }}
+              onBlur={() => {
+                if (
+                  !addPaymentForm.amount ||
+                  isNaN(addPaymentForm.amount) ||
+                  Number(addPaymentForm.amount) <= 0
+                ) {
+                  setAddPaymentErrors((prev) => ({
+                    ...prev,
+                    amount: "Enter a valid amount",
+                  }));
+                }
+              }}
+              error={!!addPaymentErrors.amount}
+              helperText={addPaymentErrors.amount}
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">₹</InputAdornment>
+                ),
+                inputProps: { inputMode: "numeric", pattern: "[0-9]*" },
+              }}
+            />
+
+            {/* Payment Mode */}
+            <TextField
+              label="Mode"
+              value={addPaymentForm.mode}
+              onChange={(e) => {
+                setAddPaymentForm((p) => ({ ...p, mode: e.target.value }));
+                setAddPaymentErrors((prev) => ({ ...prev, mode: "" })); // clear error
+              }}
+              onBlur={() => {
+                if (!addPaymentForm.mode) {
+                  setAddPaymentErrors((prev) => ({
+                    ...prev,
+                    mode: "Select a payment mode",
+                  }));
+                }
+              }}
+              error={!!addPaymentErrors.mode}
+              helperText={addPaymentErrors.mode}
+              fullWidth
+              select
+            >
+              <MenuItem value="Cash">Cash</MenuItem>
+              <MenuItem value="UPI">UPI</MenuItem>
+              <MenuItem value="Card">Card</MenuItem>
+              <MenuItem value="Net Banking">Net Banking</MenuItem>
+            </TextField>
+
+            {/* Reference ID */}
+            <TextField
+              label="Reference (optional)"
+              value={addPaymentForm.reference}
+              onChange={(e) => {
+                const value = e.target.value;
+                setAddPaymentForm((p) => ({ ...p, reference: value }));
+                setAddPaymentErrors((prev) => ({ ...prev, reference: "" })); // clear error
+              }}
+              onBlur={() => {
+                if (
+                  addPaymentForm.reference &&
+                  addPaymentForm.reference.length > 30
+                ) {
+                  setAddPaymentErrors((prev) => ({
+                    ...prev,
+                    reference: "Reference too long",
+                  }));
+                }
+              }}
+              error={!!addPaymentErrors.reference}
+              helperText={addPaymentErrors.reference}
+              fullWidth
+            />
+
+            {/* General error (like API failure) */}
+            {addPaymentErrors.general && (
+              <Typography color="error" variant="body2">
+                {addPaymentErrors.general}
+              </Typography>
+            )}
+          </Stack>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={closeAddPayment} disabled={addPaymentLoading}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleAddPaymentSubmit}
+            disabled={addPaymentLoading}
+            startIcon={
+              addPaymentLoading ? <CircularProgress size={18} /> : null
+            }
+          >
+            {addPaymentLoading ? "Adding..." : "Add Payment"}
           </Button>
         </DialogActions>
       </Dialog>
