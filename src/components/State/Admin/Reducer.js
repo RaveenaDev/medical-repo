@@ -9,6 +9,7 @@ import {
   ADD_SERVICE,
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
+  ADD_TO_BILL,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
@@ -17,6 +18,7 @@ import {
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
+  EDIT_BILL,
   EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
@@ -584,7 +586,16 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         billingRecord: action.payload.bill,
       };
-
+    case EDIT_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
+    case ADD_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
     default:
       return state;
   }

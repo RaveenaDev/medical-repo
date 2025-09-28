@@ -10,6 +10,7 @@ import {
   ADD_SERVICE,
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
+  ADD_TO_BILL,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
@@ -18,6 +19,7 @@ import {
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
+  EDIT_BILL,
   EDIT_ESTIMATED_BILL,
   EDIT_INSURED_PATIENT,
   EDIT_TPA_SERVICE,
@@ -996,9 +998,7 @@ export const editBill = (payload, id) => async (dispatch) => {
       autoClose: 2000,
     });
 
-    // Optional: dispatch to refresh data
-    dispatch(getBillDetails(id));
-    dispatch(getBillingRecords());
+    dispatch({ type: EDIT_BILL, payload: data });
   } catch (error) {
     console.error("Error editing bill:", error);
     toast.error(error?.response?.data?.message || "Edit failed");
@@ -1013,6 +1013,7 @@ export const addToBill = (payload, id) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    dispatch({ type: ADD_TO_BILL, payload: data });
     // console.log("Edit Bill Response:", data);
     toast.success("Added to bill successfully!", {
       position: "bottom-right",
@@ -1022,7 +1023,7 @@ export const addToBill = (payload, id) => async (dispatch) => {
     // Optional: dispatch to refresh data
     dispatch(getBillDetails(id));
 
-    dispatch(getBillingRecords());
+    // dispatch(getBillingRecords());
   } catch (error) {
     console.error("Error adding to bill:", error);
     toast.error(error?.response?.data?.message || "Add failed");
@@ -1366,7 +1367,7 @@ export const editEstimatedBill = (id, serviceData) => async (dispatch) => {
 
     // console.log("Service Added To Company : ",data)
 
-    dispatch({ type: EDIT_ESTIMATED_BILL, payload: data });
+    // dispatch({ type: EDIT_ESTIMATED_BILL, payload: data });
     toast.success("Bill Edited Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,

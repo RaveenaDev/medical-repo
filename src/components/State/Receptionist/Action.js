@@ -2,8 +2,10 @@ import {
   ACCEPT_APPOINTMENT_REQUESTS,
   ADD_PAYMENT_TO_BILL,
   ADD_ROOM,
+  ADD_TO_BILL,
   BOOK_APPOINTMENT,
   DELETE_ROOM,
+  EDIT_BILL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -873,15 +875,11 @@ export const addToBill = (payload, id) => async (dispatch) => {
       },
     });
     // console.log("Edit Bill Response:", data);
+    dispatch({ type: ADD_TO_BILL, payload: data });
     toast.success("Added to bill successfully!", {
       position: "bottom-right",
       autoClose: 2000,
     });
-
-    // Optional: dispatch to refresh data
-    dispatch(getBillById(id));
-
-    dispatch(getBills());
   } catch (error) {
     console.error("Error adding to bill:", error);
     toast.error(error?.response?.data?.message || "Add failed");
@@ -900,16 +898,13 @@ export const editBill = (payload, id) => async (dispatch) => {
         },
       }
     );
+
+    dispatch({ type: EDIT_BILL, payload: data });
     // console.log("Edit Bill Response:", data);
     toast.success("Bill edited successfully!", {
       position: "bottom-right",
       autoClose: 2000,
     });
-
-    // Optional: dispatch to refresh data
-    dispatch(getBillById(id));
-
-    dispatch(getBills());
   } catch (error) {
     console.error("Error editing bill:", error);
     toast.error(error?.response?.data?.message || "Edit failed");

@@ -2,8 +2,10 @@ import { ADD_PAYMENT_TO_BILL } from "../Admin/ActionType.js";
 import {
   ACCEPT_APPOINTMENT_REQUESTS,
   ADD_ROOM,
+  ADD_TO_BILL,
   BOOK_APPOINTMENT,
   DELETE_ROOM,
+  EDIT_BILL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
@@ -363,6 +365,16 @@ export const receptionistReducer = (state = initialState, action) => {
       };
 
     case ADD_PAYMENT_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
+    case EDIT_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
+    case ADD_TO_BILL:
       return {
         ...state,
         billingRecord: action.payload.bill,
