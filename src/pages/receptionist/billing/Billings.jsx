@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./billingsReception.module.scss"; // updated import
 import Searchbar from "../../../components/Searchbar";
 import NotificationIcon from "../../../components/Notification";
@@ -15,7 +15,10 @@ import BillingModal from "./modal/BillingModal";
 import { useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification";
 import { useDispatch, useSelector } from "react-redux";
-import { getBills } from "../../../components/State/Receptionist/Action.js";
+import {
+  getBillDetails,
+  getBills,
+} from "../../../components/State/Receptionist/Action.js";
 import { Search } from "lucide-react";
 import useDebounce from "../../../hooks/useDebounce.js";
 
@@ -41,10 +44,10 @@ const Billings = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const handleViewClick = (bill) => {
-    setSelectedBill(bill);
-    setOpenModal(true);
-  };
+  // const handleViewClick = (bill) => {
+  //   setSelectedBill(bill);
+  //   setOpenModal(true);
+  // };
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -67,6 +70,14 @@ const Billings = (props) => {
   const isLoadingAllBills = useSelector(
     (store) => store.receptionist.isLoadingAllBills
   );
+  const handleViewClick = useCallback(
+    (billId) => {
+      dispatch(getBillDetails(billId));
+      navigate(`${billId}`);
+    },
+    [dispatch, navigate]
+  );
+  // console.log("allBills", allBills);
   return (
     <div className={styles["billingsReception-container"]}>
       <div
@@ -157,7 +168,7 @@ const Billings = (props) => {
                       {item.status}
                     </span>
                     <Button
-                      onClick={() => handleViewClick(item)}
+                      onClick={() => handleViewClick(item._id)}
                       className={styles["view-btn"]}
                     >
                       View
@@ -202,12 +213,12 @@ const Billings = (props) => {
           </>
         )}
       </div>
-      <BillingModal
+      {/* <BillingModal
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
         billId={selectedBill?._id}
-      />
+      /> */}
     </div>
   );
 };

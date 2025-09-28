@@ -1,10 +1,3 @@
-import {
-  addPaymentToBill,
-  addToBill,
-  editBill,
-  getBillDetails,
-} from "../../../../../../components/State/Admin/Action";
-
 import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
@@ -22,15 +15,21 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import styles from "./billDetailsAdmin.module.scss";
+import styles from "./billDetailsReception.module.scss";
 
 import arrowBack from "/arrow_back.svg";
 import printJS from "print-js"; // Import print-js
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  addPaymentToBill,
+  addToBill,
+  editBill,
+  getBillDetails,
+} from "../../../../components/State/Receptionist/Action";
 
-const BillDetailsAdmin = (props) => {
+const BillDetailsReception = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
@@ -1241,4 +1240,4 @@ const BillDetailsAdmin = (props) => {
   );
 };
 
-export default BillDetailsAdmin;
+export default BillDetailsReception;

@@ -1,3 +1,4 @@
+import { ADD_PAYMENT_TO_BILL } from "../Admin/ActionType.js";
 import {
   ACCEPT_APPOINTMENT_REQUESTS,
   ADD_ROOM,
@@ -7,6 +8,7 @@ import {
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_BY_ID,
+  GET_BILL_DETAILS,
   GET_BILLS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
@@ -92,6 +94,7 @@ const initialState = {
   isLoadingPatientBills: true,
   patientFiles: [],
   servicesByDepartment: [],
+  billingRecord: null,
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -353,7 +356,17 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         patientFiles: action.payload,
       };
+    case GET_BILL_DETAILS:
+      return {
+        ...state,
+        billingRecord: action.payload,
+      };
 
+    case ADD_PAYMENT_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
     default:
       return state;
   }

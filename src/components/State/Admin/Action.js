@@ -5,6 +5,7 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
+  ADD_PAYMENT_TO_BILL,
   ADD_ROOM,
   ADD_SERVICE,
   ADD_SERVICE_TO_COMPANY,
@@ -1578,8 +1579,8 @@ export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
         },
       }
     );
-    console.log("Payment Response: ", data);
-    // dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
+    // console.log("Payment Response: ", data);
+    dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
     toast.success("Payment added successfully!", {
       position: "bottom-right",
       autoClose: 2000,

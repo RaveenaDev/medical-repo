@@ -1,5 +1,6 @@
 import {
   ACCEPT_APPOINTMENT_REQUESTS,
+  ADD_PAYMENT_TO_BILL,
   ADD_ROOM,
   BOOK_APPOINTMENT,
   DELETE_ROOM,
@@ -7,6 +8,7 @@ import {
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_BY_ID,
+  GET_BILL_DETAILS,
   GET_BILLS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
@@ -400,13 +402,12 @@ export const rescheduleAppointmentToday = (appData) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 3000,
     });
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
 
     // Safely get message from backend or fallback
     const message =
-        error.response?.data?.message || error.message || "Something went wrong";
+      error.response?.data?.message || error.message || "Something went wrong";
 
     toast.error(message, {
       position: "bottom-right", // Use string for position
@@ -425,7 +426,7 @@ export const rescheduleAppointment = (appData) => async (dispatch) => {
       },
     });
 
-    console.log("Rescheduled: ",data)
+    console.log("Rescheduled: ", data);
 
     toast.success("Appointment rescheduled", {
       position: "bottom-right", // Use string for position
@@ -436,7 +437,7 @@ export const rescheduleAppointment = (appData) => async (dispatch) => {
 
     // Safely get message from backend or fallback
     const message =
-        error.response?.data?.message || error.message || "Something went wrong";
+      error.response?.data?.message || error.message || "Something went wrong";
 
     toast.error(message, {
       position: "bottom-right", // Use string for position
@@ -448,11 +449,15 @@ export const cancelAppointment = (appointmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.post(`${API_URL}/cancelAppointment/${appointmentId}`, appointmentId, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+    const { data } = await axios.post(
+      `${API_URL}/cancelAppointment/${appointmentId}`,
+      appointmentId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      }
+    );
     // console.log("App. Cancelled : ",data)
     toast.success("Appointment Cancelled Successfully", {
       position: "bottom-right", // Use string for position
@@ -463,7 +468,7 @@ export const cancelAppointment = (appointmentId) => async (dispatch) => {
 
     // Safely get message from backend or fallback
     const message =
-        error.response?.data?.message || error.message || "Something went wrong";
+      error.response?.data?.message || error.message || "Something went wrong";
 
     toast.error(message, {
       position: "bottom-right", // Use string for position
@@ -977,6 +982,54 @@ export const deletePatientFile = (id) => async (dispatch) => {
     console.log(error);
     toast.error("File Deletion Error!", {
       position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
+// BILLING
+export const getBillDetails = (billId) => async (dispatch) => {
+  // console.log("Fetching details for bill ID:", billId);
+
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getBillDetails/${billId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    // console.log("Bill Details: ", data);
+
+    dispatch({ type: GET_BILL_DETAILS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.post(
+      `${API_URL}/addPayment/${billId}`,
+      paymentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Payment Response: ", data);
+    dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
+    toast.success("Payment added successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    // Optionally refresh bill details
+    // dispatch(getBillDetails(billId));
+  } catch (error) {
+    console.error("Error adding payment to bill:", error);
+    toast.error("Failed to add payment. Please try again.", {
+      position: "bottom-right",
       autoClose: 2000,
     });
   }

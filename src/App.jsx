@@ -50,6 +50,7 @@ import IpdRoutes from "./pages/ipd/IpdRoutes.jsx";
 import TPA from "./pages/admin/tpa/TPA.jsx";
 import SingleCompanyDetails from "./pages/admin/tpa/companies/singleCompanyDetails/SingleCompanyDetails.jsx";
 import BillDetailsAdmin from "./pages/admin/billing/components/Records/components/BillDetailsAdmin.jsx";
+import BillDetailsReception from "./pages/receptionist/billing/bill/BillDetailsReception.jsx";
 
 function App() {
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -224,6 +225,18 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["receptionist"]}>
                     <Billings
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/receptionist/billing/:billId"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <BillDetailsReception
                       setIsSignUpOrLogin={setIsSignUpOrLogin}
                       setEntity={setEntity}
                       entity={entity}

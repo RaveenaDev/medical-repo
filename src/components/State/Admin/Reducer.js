@@ -4,6 +4,7 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
+  ADD_PAYMENT_TO_BILL,
   ADD_ROOM,
   ADD_SERVICE,
   ADD_SERVICE_TO_COMPANY,
@@ -577,6 +578,11 @@ export const adminReducer = (state = initialState, action) => {
         admissionRequests: state.admissionRequests.map((request) =>
           request._id === action.payload._id ? action.payload : request
         ),
+      };
+    case ADD_PAYMENT_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
       };
 
     default:
