@@ -12,9 +12,11 @@
     border-radius: 50%;
     width: 1.5vh;
     height: 1.5vh;
+    margin-top: -2.8rem;
   }
 
   .visit-card-content {
+    margin-left: 4px;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
