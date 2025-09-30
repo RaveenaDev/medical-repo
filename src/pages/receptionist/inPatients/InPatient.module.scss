@@ -99,7 +99,7 @@
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: 10px 6px 10px 10px;
 
     .search-icon {
       color: #666;
@@ -410,4 +410,10 @@
   /* Hide scrollbar for Firefox */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.cross-icon {
+  height: 21px;
+  color: #ef4444;
+  cursor: pointer;
 }

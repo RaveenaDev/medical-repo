@@ -348,3 +348,39 @@
   gap: 0.5rem;
   cursor: pointer;
 }
+
+.saveBtn {
+  background-color: #25307f;
+  color: white;
+  padding: 1.2vh 2vw;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.9vh;
+  font-family: Karla, sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.saveBtn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.loader {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+

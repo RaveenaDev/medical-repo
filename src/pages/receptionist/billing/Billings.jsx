@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./billingsReception.module.scss"; // updated import
 import Searchbar from "../../../components/Searchbar";
 import NotificationIcon from "../../../components/Notification";
-import { Box, Button, IconButton, TablePagination } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  TablePagination,
+} from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import arrowBack from "../../../assets/arrow_back.svg";
 import BillingModal from "./modal/BillingModal";
 import { useNavigate } from "react-router-dom";
 import Notifications from "../../../components/NotificationFunc/Notification";
 import { useDispatch, useSelector } from "react-redux";
-import { getBills } from "../../../components/State/Receptionist/Action.js";
+import {
+  getBillDetails,
+  getBills,
+} from "../../../components/State/Receptionist/Action.js";
 import { Search } from "lucide-react";
 import useDebounce from "../../../hooks/useDebounce.js";
 
@@ -35,10 +44,10 @@ const Billings = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const handleViewClick = (bill) => {
-    setSelectedBill(bill);
-    setOpenModal(true);
-  };
+  // const handleViewClick = (bill) => {
+  //   setSelectedBill(bill);
+  //   setOpenModal(true);
+  // };
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -58,7 +67,17 @@ const Billings = (props) => {
 
   const allBills = useSelector((store) => store.receptionist.allBills);
   const billsCount = useSelector((store) => store.receptionist.allBillsCount);
-
+  const isLoadingAllBills = useSelector(
+    (store) => store.receptionist.isLoadingAllBills
+  );
+  const handleViewClick = useCallback(
+    (billId) => {
+      dispatch(getBillDetails(billId));
+      navigate(`${billId}`);
+    },
+    [dispatch, navigate]
+  );
+  // console.log("allBills", allBills);
   return (
     <div className={styles["billingsReception-container"]}>
       <div
@@ -99,7 +118,6 @@ const Billings = (props) => {
 
         <div className={styles["divider"]}></div>
       </div>
-
       <div
         className={styles["billings-table"]}
         style={{ position: "relative" }}
@@ -114,79 +132,93 @@ const Billings = (props) => {
           <span>Actions</span>
         </div>
 
-        <div style={{ paddingBottom: "2rem" }}>
-          {allBills.length > 0 ? (
-            allBills.map((item) => (
-              <div className={styles["table-row"]} key={item._id}>
-                <span className={styles["blue"]}>{item.caseId}</span>
-                <span className={styles["blue"]}>{item.patient.name}</span>
-                <span className={styles["grey"]}>{item.patient.phone}</span>
-                <span className={styles["grey"]}>
-                  {new Date(item.updatedAt).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })}
-                </span>
-                <span className={styles["grey"]}> {item.totalAmount}</span>
-                <span
-                  className={`${styles["status"]} ${
-                    styles[item.status.toLowerCase()]
-                  }`}
+        {isLoadingAllBills ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "65vh", // or full height you need
+            }}
+          >
+            <CircularProgress sx={{ color: "#25307F" }} size={55} />
+          </Box>
+        ) : (
+          <>
+            <div style={{ paddingBottom: "2rem" }}>
+              {allBills.length > 0 ? (
+                allBills.map((item) => (
+                  <div className={styles["table-row"]} key={item._id}>
+                    <span className={styles["blue"]}>{item.caseId}</span>
+                    <span className={styles["blue"]}>{item.patient.name}</span>
+                    <span className={styles["grey"]}>{item.patient.phone}</span>
+                    <span className={styles["grey"]}>
+                      {new Date(item.updatedAt).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </span>
+                    <span className={styles["grey"]}> {item.totalAmount}</span>
+                    <span
+                      className={`${styles["status"]} ${
+                        styles[item.status.toLowerCase()]
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                    <Button
+                      onClick={() => handleViewClick(item._id)}
+                      className={styles["view-btn"]}
+                    >
+                      View
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <div
+                  className={`${styles["table-row"]} ${styles["blue"]}`}
+                  style={{
+                    gridTemplateColumns: "1fr",
+                    textAlign: "center",
+                    fontSize: "1rem",
+                    fontWeight: "500",
+                  }}
                 >
-                  {item.status}
-                </span>
-                <Button
-                  onClick={() => handleViewClick(item)}
-                  className={styles["view-btn"]}
-                >
-                  View
-                </Button>
-              </div>
-            ))
-          ) : (
-            <div
-              className={`${styles["table-row"]} ${styles["blue"]}`}
-              style={{
-                gridTemplateColumns: "1fr",
-                textAlign: "center",
-                fontSize: "1rem",
-                fontWeight: "500",
+                  No Bills found!
+                </div>
+              )}
+            </div>
+
+            <Box
+              sx={{
+                width: "100%",
+                position: "sticky",
+                bottom: 0,
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 11,
               }}
             >
-              No Bills found!
-            </div>
-          )}
-        </div>
-
-        <Box
-          sx={{
-            width: "100%",
-            position: "sticky",
-            bottom: 0,
-            backgroundColor: "#fff",
-            borderTop: "2px solid #ddd",
-            zIndex: 11,
-          }}
-        >
-          <TablePagination
-            component="div"
-            count={billsCount ?? 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
-          />
-        </Box>
+              <TablePagination
+                component="div"
+                count={billsCount ?? 0}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[2, 5, 10, 20, 50, 100]}
+              />
+            </Box>
+          </>
+        )}
       </div>
-
-      <BillingModal
+      {/* <BillingModal
         open={openModal}
         bill={selectedBill}
         onClose={handleCloseModal}
         billId={selectedBill?._id}
-      />
+      /> */}
     </div>
   );
 };

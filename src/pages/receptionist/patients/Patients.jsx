@@ -4,6 +4,7 @@ import styles from "./patients.module.scss";
 import EntityBasedTable from "../EntityBasedTable/index.jsx";
 import PatientList from "./PatientList.jsx";
 import CommonPanel from "../components/CommonPanel.jsx";
+import {ChevronLeft} from "lucide-react";
 
 const Patients = (props) => {
   const [tableIndex, setTableIndex] = useState(null);
@@ -41,9 +42,16 @@ const Patients = (props) => {
         >
           {!props.entity ? (
             <div className={styles.section}>
-              <p className={styles.title}>Patient List</p>
-
-              <PatientList />
+                <div className={styles.headerLeft}>
+                    <ChevronLeft
+                        size={28}
+                        strokeWidth={1.7}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => navigate(-1)}
+                    />
+                    <p className={styles.title}>Patient List</p>
+                </div>
+                <PatientList/>
 
               {/* <button onClick={() => navigate('/profile')} style={{backgroundColor: "white"}}>
             Click here to view the profile

@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { FiFilter } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+
 import {
   Box,
-  Button,
   CircularProgress,
-  Drawer,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  IconButton,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   TablePagination,
-  Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAdmissionRequests,
-  getFilteredInpatients,
-} from "../../../../components/State/Admin/Action.js";
+import { getAdmissionRequests } from "../../../../components/State/Admin/Action.js";
 import styles from "./InPatient.module.scss";
 import ActionMenu from "./components/ActionMenu.jsx"; // Custom menu component for actions
 import { Search } from "lucide-react";
@@ -53,8 +39,8 @@ const AdmissionRequests = () => {
 
   // Fetch patients whenever filters/pagination change
   useEffect(() => {
-    dispatch(getAdmissionRequests());
-  }, [dispatch]);
+    dispatch(getAdmissionRequests(debouncedSearch, page, rowsPerPage, filters));
+  }, [dispatch, debouncedSearch, page, rowsPerPage, filters]);
 
   useEffect(() => {
     setPage(0);
@@ -120,7 +106,7 @@ const AdmissionRequests = () => {
                 <Search size={18} className={styles["search-icon"]} />
                 <input
                   type="text"
-                  placeholder="Search inpatients..."
+                  placeholder="Search Forms..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={styles["search-input"]}
@@ -157,7 +143,6 @@ const AdmissionRequests = () => {
                       <th>Bed</th>
                       <th>Insurance</th>
                       <th>Doctor</th>
-                      <th>Status</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -165,7 +150,10 @@ const AdmissionRequests = () => {
                     {admissionRequests.map((patient, index) => (
                       <tr key={index}>
                         <td className={styles.patientId}>
-                          {truncateText(patient?.patId || "Not Assigned", 12)}
+                          {truncateText(
+                            patient?.patient?.patId || "Not Assigned",
+                            12
+                          )}
                         </td>
                         <td className={styles.patientInfo}>
                           <div>
@@ -173,7 +161,7 @@ const AdmissionRequests = () => {
                               {truncateText(
                                 patient?.admissionDetails?.name ||
                                   "Not Assigned",
-                                15
+                                25
                               )}
                             </div>
                             <div className={styles.patientEmail}>
@@ -203,15 +191,7 @@ const AdmissionRequests = () => {
                         <td className={styles.doctor}>
                           {patient?.doctor?.name || "Not Assigned"}
                         </td>
-                        <td className={styles.status}>
-                          <span
-                            className={`${styles.statusBadge} ${
-                              styles[patient.status?.toLowerCase()]
-                            }`}
-                          >
-                            {patient?.status}
-                          </span>
-                        </td>
+
                         <td className={styles.actions}>
                           {/* Menu with options like Add Insurance */}
                           <ActionMenu patient={patient} />

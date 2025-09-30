@@ -3,181 +3,196 @@ import styles from "./CompletedProgress.module.scss";
 import { X } from "lucide-react";
 
 const SectionBox = ({ title, children }) => (
-  <div className={styles.sectionBox}>
-    <h3>{title}</h3>
-    <div>{children}</div>
-  </div>
+    <div className={styles.sectionBox}>
+      <h3>{title}</h3>
+      <div>{children}</div>
+    </div>
 );
 
-const renderObject = (obj) => {
-  if (!obj) return <p>No valid data</p>; // Check if obj is null or undefined
-
-  // Check if the object is flat (key-value pairs)
-  if (
-    typeof obj === "object" &&
-    !Array.isArray(obj) &&
-    Object.keys(obj).length
-  ) {
-    return Object.entries(obj).map(([key, value]) => (
-      <p key={key}>
-        <strong>{key.replace(/([A-Z])/g, " $1")}: </strong>
-        {Array.isArray(value)
-          ? value.length > 0
-            ? value.map((v, i) => <div key={i}>• {v}</div>)
-            : "No values available" // Handling empty arrays
-          : typeof value === "object"
-          ? renderObject(value) // Recursively render nested objects
-          : String(value)}{" "}
-      </p>
-    ));
+const formatIST = (iso) => {
+  if (!iso) return "Not Available";
+  try {
+    return new Date(iso).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return "Not Available";
   }
+};
 
-  // If it's not an object or it's empty, render it directly
-  return <p>{String(obj)}</p>;
+const isImage = (mime, url) =>
+    (mime && String(mime).startsWith("image/")) ||
+    /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(url || "");
+
+const prettifyKey = (k = "") =>
+    String(k)
+        .replace(/([A-Z])/g, " $1")
+        .replace(/_/g, " ")
+        .replace(/\s+/g, " ")
+        .replace(/^./, (s) => s.toUpperCase())
+        .trim();
+
+const renderValue = (val) => {
+  if (val == null) return <span>—</span>;
+  if (Array.isArray(val)) {
+    return val.length ? (
+        <ul style={{ margin: 0, paddingLeft: "1rem" }}>
+          {val.map((v, i) => (
+              <li key={i}>{String(v)}</li>
+          ))}
+        </ul>
+    ) : (
+        <span>—</span>
+    );
+  }
+  if (typeof val === "object") {
+    return (
+        <div>
+          {Object.entries(val).map(([k, v]) => (
+              <p key={k} style={{ margin: "2px 0" }}>
+                <strong>{prettifyKey(k)}: </strong>
+                {typeof v === "object" ? renderValue(v) : String(v)}
+              </p>
+          ))}
+        </div>
+    );
+  }
+  return <span>{String(val)}</span>;
 };
 
 const CompletedProgress = ({ step, onClose }) => {
-  if (!step || !step.data) return null;
+  if (!step) return null;
 
-  const { data, doctor, phase, date } = step;
+  const { data = {}, doctor, date, title } = step;
 
-  // console.log("CompletedProgress Data:", step); // Log data to the console
+  // Fixed fields (names you said are guaranteed)
+  const description = data.description ?? data.Description ?? "";
+  const treatment = data.Treatment ?? data.treatment ?? "";
+  const notes = data.Notes ?? data.notes ?? "";
+
+  // Everything else in `data` is dynamic — map it
+  const FIXED = new Set([
+    "description",
+    "Description",
+    "Treatment",
+    "treatment",
+    "Notes",
+    "notes",
+  ]);
+  const dynamicPairs = Object.entries(data).filter(([k]) => !FIXED.has(k));
+
+  // Files from backend (step.files)
+  const files = Array.isArray(step.files) ? step.files : [];
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <div className={styles.crossContainer}>
-          <X size={20} onClick={onClose} />
-        </div>
-        <div className={styles.container}>
-          <div className={styles.modalHeader}>
-            <h2 className={styles.title}>
-              {data?.title || phase || "Phase Details"}
-            </h2>
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <div className={styles.crossContainer}>
+            <X size={20} onClick={onClose} />
           </div>
 
-          <div className={styles.modalBody}>
-            {data?.vitals && (
-              <SectionBox title="Vitals">
-                {renderObject(data.vitals)}
-              </SectionBox>
-            )}
+          <div className={styles.container}>
+            {/* Header */}
+            <div className={styles.modalHeader}>
+              <h2 className={styles.title}>{title || "Phase Details"}</h2>
+              <div className={styles.headerMeta}>
+                <div>
+                  <strong>Doctor:</strong> {doctor?.name || "Unknown"}
+                </div>
+                <div>
+                  <strong>Date:</strong> {formatIST(date)}
+                </div>
+              </div>
+            </div>
 
-            {data?.diagnosis && (
-              <SectionBox title="Diagnosis">
-                <p>{data.diagnosis}</p>
-              </SectionBox>
-            )}
+            <div className={styles.modalBody}>
+              {/* Fixed fields */}
+              {description && (
+                  <SectionBox title="Description">
+                    <p>{description}</p>
+                  </SectionBox>
+              )}
 
-            {data?.complaints && (
-              <SectionBox title="Complaints">
-                <p>{data.complaints}</p>
-              </SectionBox>
-            )}
+              {treatment && (
+                  <SectionBox title="Treatment">
+                    <p>{treatment}</p>
+                  </SectionBox>
+              )}
 
-            {data?.description && (
-              <SectionBox title="Description">
-                <p>{data.description}</p>
-              </SectionBox>
-            )}
+              {notes && (
+                  <SectionBox title="Doctor Notes">
+                    <p>{notes}</p>
+                  </SectionBox>
+              )}
 
-            {data?.intraOpNotes && (
-              <SectionBox title="Intraoperative Notes">
-                {renderObject(data.intraOpNotes)}
-              </SectionBox>
-            )}
-
-            {data?.notes && (
-              <SectionBox title="Doctor Notes">
-                <p>{data.notes}</p>
-              </SectionBox>
-            )}
-
-            {data?.status && (
-              <SectionBox title="Healing Status">
-                <p>{data.status}</p>
-              </SectionBox>
-            )}
-
-            {data?.nextVisit && (
-              <SectionBox title="Next Visit">
-                <p>{data.nextVisit}</p>
-              </SectionBox>
-            )}
-
-            {data?.files && (
-              <SectionBox title="Uploaded Files">
-                {data.files.length > 0 ? (
-                  <ul>
-                    {data.files.map((file, idx) => (
-                      <li key={idx} className={styles.fileRow}>
-                        <img
-                          src="/assets/fileIcon.svg"
-                          alt="File"
-                          className={styles.fileIcon}
-                        />
-                        <div className={styles.fileDetails}>
-                          <a
-                            href={file.preview || file.url || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.fileName}
-                          >
-                            {file.name || file}
-                          </a>
+              {/* Dynamic fields (map all remaining keys) */}
+              {dynamicPairs.length > 0 && (
+                  <SectionBox title="Additional Info">
+                    {dynamicPairs.map(([k, v]) => (
+                        <div key={k} style={{ marginBottom: 6 }}>
+                          <strong>{prettifyKey(k)}: </strong>
+                          {renderValue(v)}
                         </div>
-                      </li>
                     ))}
-                  </ul>
+                  </SectionBox>
+              )}
+
+              {/* Files */}
+              <SectionBox title="Uploaded Files">
+                {files.length ? (
+                    <ul className={styles.filesList}>
+                      {files.map((f, idx) => {
+                        const url = f.url || f.preview || "";
+                        const name =
+                            f.originalName || f.name || url.split("/").pop() || "File";
+                        const type = f.fileType || f.type || "";
+                        return (
+                            <li key={f._id || url || idx} className={styles.fileRow}>
+                              {isImage(type, url) ? (
+                                  <img src={url} alt={name} className={styles.thumb} />
+                              ) : (
+                                  <img
+                                      src="/assets/fileIcon.svg"
+                                      alt="File"
+                                      className={styles.fileIcon}
+                                  />
+                              )}
+                              <div className={styles.fileDetails}>
+                                <a
+                                    href={url || "#"}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.fileName}
+                                >
+                                  {name}
+                                </a>
+                                <span className={styles.fileMeta}>
+                            {type || "file"}
+                          </span>
+                              </div>
+                            </li>
+                        );
+                      })}
+                    </ul>
                 ) : (
-                  <p>No files uploaded</p>
+                    <p>None</p>
                 )}
               </SectionBox>
-            )}
+            </div>
 
-            {/* Render any unknown additional fields */}
-            {Object.entries(data).map(([key, val]) => {
-              const known = [
-                "vitals",
-                "diagnosis",
-                "complaints",
-                "description",
-                "intraOpNotes",
-                "files",
-                "notes",
-                "nextVisit",
-                "status",
-                "title",
-              ];
-              if (!known.includes(key)) {
-                return (
-                  <SectionBox key={key} title={key.replace(/([A-Z])/g, " $1")}>
-                    {renderObject(val)}
-                  </SectionBox>
-                );
-              }
-              return null;
-            })}
+            <div className={styles.btnContainer}>
+              <button className={styles.closeBtn} onClick={onClose}>
+                Close
+              </button>
+            </div>
           </div>
-
-          <div className={styles.modalFooter}>
-            <p>
-              <span>Doctor:</span> {doctor?.name || "Unknown"}
-              <br />
-              <span>Date:</span>{" "}
-              {date
-                ? new Date(date).toISOString().split("T")[0]
-                : "Not Available"}
-            </p>
-          </div>
-          <div className={styles.btnContainer}>
-            <button className={styles.closeBtn} onClick={onClose}>
-              Close
-            </button>
-          </div>
-        </div>{" "}
+        </div>
       </div>
-    </div>
   );
 };
 

@@ -1,12 +1,16 @@
+import { ADD_PAYMENT_TO_BILL } from "../Admin/ActionType.js";
 import {
   ACCEPT_APPOINTMENT_REQUESTS,
   ADD_ROOM,
+  ADD_TO_BILL,
   BOOK_APPOINTMENT,
   DELETE_ROOM,
+  EDIT_BILL,
   GET_ALL_DEPARTMENTS,
   GET_APPOINTMENT_REQUESTS,
   GET_APPOINTMENTS,
   GET_BILL_BY_ID,
+  GET_BILL_DETAILS,
   GET_BILLS,
   GET_COMPLETED_APPOINTMENTS,
   GET_DEPARTMENT_BY_ID,
@@ -32,6 +36,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
+  SET_LOADING_APPOINTMENTS,
   UPDATE_ROOM,
   UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
@@ -74,10 +79,13 @@ const initialState = {
   departments: [],
   department: null,
   progressTracker: [],
+  isLoadingProgressTracker: true,
   appointments: [],
+  isLoadingAppointments: true,
   appointmentRequests: [],
   allBills: [],
   allBillsCount: null,
+  isLoadingAllBills: true,
   bill: null,
   isLoading: true,
   error: null,
@@ -88,6 +96,7 @@ const initialState = {
   isLoadingPatientBills: true,
   patientFiles: [],
   servicesByDepartment: [],
+  billingRecord: null,
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -236,6 +245,12 @@ export const receptionistReducer = (state = initialState, action) => {
         appointments: action.payload.appointments,
       };
 
+    case SET_LOADING_APPOINTMENTS:
+      return {
+        ...state,
+        isLoadingAppointments: action.payload,
+      };
+
     case GET_SCHEDULED_APPOINTMENTS:
       return {
         ...state,
@@ -309,6 +324,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         allBills: action.payload.bills,
         allBillsCount: action.payload.totalBills,
+        isLoadingAllBills: false,
       };
 
     case GET_BILL_BY_ID:
@@ -321,7 +337,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         progressTracker: action.payload,
-        isLoading: false,
+        isLoadingProgressTracker: false,
       };
 
     case GET_PATIENT_BILLS:
@@ -342,7 +358,27 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         patientFiles: action.payload,
       };
+    case GET_BILL_DETAILS:
+      return {
+        ...state,
+        billingRecord: action.payload,
+      };
 
+    case ADD_PAYMENT_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
+    case EDIT_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
+    case ADD_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
     default:
       return state;
   }

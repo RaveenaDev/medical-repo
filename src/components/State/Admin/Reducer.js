@@ -4,10 +4,12 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
+  ADD_PAYMENT_TO_BILL,
   ADD_ROOM,
   ADD_SERVICE,
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
+  ADD_TO_BILL,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
@@ -16,6 +18,7 @@ import {
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
+  EDIT_BILL,
   EDIT_TPA_SERVICE,
   GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_FOR_APPROVAL,
@@ -51,6 +54,7 @@ import {
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
+  UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
 } from "./ActionType.js";
@@ -565,11 +569,33 @@ export const adminReducer = (state = initialState, action) => {
     case GET_ADMISSION_REQUESTS:
       return {
         ...state,
-        totalAdmissionRequests: action.payload.count,
+        totalAdmissionRequests: action.payload.totalRequests,
         admissionRequests: action.payload.requests,
         isLoadingAdmissionRequests: false,
       };
 
+    case UPDATE_ADMISSION_INSURANCE:
+      return {
+        ...state,
+        admissionRequests: state.admissionRequests.map((request) =>
+          request._id === action.payload._id ? action.payload : request
+        ),
+      };
+    case ADD_PAYMENT_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
+    case EDIT_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
+    case ADD_TO_BILL:
+      return {
+        ...state,
+        billingRecord: action.payload.bill,
+      };
     default:
       return state;
   }

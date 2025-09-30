@@ -81,7 +81,7 @@ const ProgressTracker2 = ({
         {!isFinalPhase && (
           <button onClick={openUpdateProgress} className={styles.updateBtn}>
             <Plus className={styles.plusIcon} />
-            Update
+            Add
           </button>
         )}
       </div>

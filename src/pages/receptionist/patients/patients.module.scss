@@ -18,11 +18,15 @@
   }
 
   .section {
+    .headerLeft {
+      display: flex;
+      align-items: center;
+      color: #58595b;
+    }
     .title {
-      color: #000000;
-      font-size: 24px;
-      font-weight: 600;
-      margin-left: 1rem;
+      font-weight: 500;
+      color: #333;
+      font-size: 20px;
     }
   }
 }

@@ -44,6 +44,8 @@ const parseToRaw = (input) => {
 
 const AddPatientForm = ({ onClose }) => {
   const dispatch = useDispatch();
+  const [sending, setSending] = useState(false);
+
   useEffect(() => {
     dispatch(getAvailableRooms());
     dispatch(getInsuranceCompanies());
@@ -214,6 +216,7 @@ const AddPatientForm = ({ onClose }) => {
 
     if (!validateForm()) return; // stop if invalid
 
+    setSending(true);
     const sendToValue =
       selectedRoles.includes("Doctor") && selectedRoles.includes("Admin")
         ? "Both"
@@ -249,9 +252,11 @@ const AddPatientForm = ({ onClose }) => {
       },
     };
 
-    console.log("Pay: ", payload);
+    //    console.log("Pay: ", payload);
 
-    dispatch(createAdmissionRequest(payload, onClose));
+    dispatch(createAdmissionRequest(payload, onClose)).finally(() => {
+      setSending(false);
+    });
   };
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -842,8 +847,12 @@ const AddPatientForm = ({ onClose }) => {
             >
               Print & Preview
             </button>
-            <button type="submit" className="submit-btn">
-              Send
+            <button
+              type="submit"
+              className={sending ? "sending-btn" : "submit-btn"}
+              disabled={sending}
+            >
+              {sending ? "Sending..." : "Send"}
             </button>
           </div>
         </form>

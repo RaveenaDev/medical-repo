@@ -1,6 +1,6 @@
 import CommonPanel from "../components/CommonPanel";
 import { FiFilter } from "react-icons/fi";
-import { ChevronLeft, Search } from "lucide-react";
+import { ChevronLeft, Search, X } from "lucide-react";
 import styles from "./InPatient.module.scss";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -144,9 +144,9 @@ const InPatients = (props) => {
       <div style={{ position: "relative", top: "7px", paddingLeft: "8px" }}>
         <CommonPanel />
       </div>
-      <div className={styles.patientsHeader}>
+      <div className={styles.patientsHeader} >
         <div className={styles.headerTop}>
-          <div className={styles.headerLeft}>
+          <div className={styles.headerLeft} style={{marginTop:'2px'}}>
             <ChevronLeft
               size={28}
               strokeWidth={1.7}
@@ -194,10 +194,15 @@ const InPatients = (props) => {
                 <Search size={18} className={styles["search-icon"]} />
                 <input
                   type="text"
-                  placeholder="Search inpatients..."
+                  placeholder="Search Inpatients..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={styles["search-input"]}
+                />
+                <X
+                  strokeWidth={1.2}
+                  className={styles["cross-icon"]}
+                  onClick={() => setSearchQuery("")}
                 />
               </div>
               <div

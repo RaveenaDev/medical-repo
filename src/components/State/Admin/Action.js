@@ -5,10 +5,12 @@ import {
   ADD_DOCTORS,
   ADD_EXPENSE,
   ADD_INSURANCE_COMPANY,
+  ADD_PAYMENT_TO_BILL,
   ADD_ROOM,
   ADD_SERVICE,
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
+  ADD_TO_BILL,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
@@ -17,6 +19,7 @@ import {
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
+  EDIT_BILL,
   EDIT_ESTIMATED_BILL,
   EDIT_INSURED_PATIENT,
   EDIT_TPA_SERVICE,
@@ -54,6 +57,7 @@ import {
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
   NULL_ESTIMATED_BILL,
+  UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
   UPDATE_SERVICE,
@@ -733,6 +737,8 @@ export const getBillingRecords =
 
 // BILLING
 export const getBillDetails = (billId) => async (dispatch) => {
+  console.log("Fetching details for bill ID:", billId);
+
   try {
     const token = localStorage.getItem("jwt");
 
@@ -741,6 +747,7 @@ export const getBillDetails = (billId) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
+    console.log("Bill Details: ", data);
 
     dispatch({ type: GET_BILL_DETAILS, payload: data });
   } catch (error) {
@@ -991,9 +998,7 @@ export const editBill = (payload, id) => async (dispatch) => {
       autoClose: 2000,
     });
 
-    // Optional: dispatch to refresh data
-    dispatch(getBillDetails(id));
-    dispatch(getBillingRecords());
+    dispatch({ type: EDIT_BILL, payload: data });
   } catch (error) {
     console.error("Error editing bill:", error);
     toast.error(error?.response?.data?.message || "Edit failed");
@@ -1008,6 +1013,7 @@ export const addToBill = (payload, id) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    dispatch({ type: ADD_TO_BILL, payload: data });
     // console.log("Edit Bill Response:", data);
     toast.success("Added to bill successfully!", {
       position: "bottom-right",
@@ -1017,7 +1023,7 @@ export const addToBill = (payload, id) => async (dispatch) => {
     // Optional: dispatch to refresh data
     dispatch(getBillDetails(id));
 
-    dispatch(getBillingRecords());
+    // dispatch(getBillingRecords());
   } catch (error) {
     console.error("Error adding to bill:", error);
     toast.error(error?.response?.data?.message || "Add failed");
@@ -1361,7 +1367,7 @@ export const editEstimatedBill = (id, serviceData) => async (dispatch) => {
 
     // console.log("Service Added To Company : ",data)
 
-    dispatch({ type: EDIT_ESTIMATED_BILL, payload: data });
+    // dispatch({ type: EDIT_ESTIMATED_BILL, payload: data });
     toast.success("Bill Edited Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
@@ -1507,19 +1513,86 @@ export const getFilteredInpatients =
       console.log(error);
     }
   };
-export const getAdmissionRequests = () => async (dispatch) => {
+export const getAdmissionRequests =
+  (search, page, limit) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+        params: {
+          search: search || "",
+          page: page + 1,
+          limit: limit,
+        },
+      });
+
+      // console.log("Add Reqs ", data);
+      dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const addInsuranceAfterAdmission =
+  (admissionId, insuranceData) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.patch(
+        `${API_URL}/addInsuranceAfterAdmission/${admissionId}`,
+        insuranceData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // console.log("Response after adding insurance:", data);
+      dispatch({
+        type: UPDATE_ADMISSION_INSURANCE,
+        payload: data.admissionRequest, // or `data` if you need full response
+      });
+      toast.success("Insurance details added successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      return data; // so component can use it directly
+    } catch (error) {
+      console.error("Error adding insurance after admission:", error);
+      throw error; // propagate error if you want to handle in component
+    }
+  };
+
+export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
-
-    const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
+    const { data } = await axios.post(
+      `${API_URL}/addPayment/${billId}`,
+      paymentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Payment Response: ", data);
+    dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
+    toast.success("Payment added successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
     });
-
-    console.log("Add Reqs ", data);
-    dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
+    // Optionally refresh bill details
+    // dispatch(getBillDetails(billId));
   } catch (error) {
-    console.log(error);
+    console.error("Error adding payment to bill:", error);
+    toast.error("Failed to add payment. Please try again.", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
   }
 };

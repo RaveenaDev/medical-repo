@@ -57,6 +57,7 @@ import {
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
   SUBMIT_CONSULTATION,
+  UPDATE_ADMISSION_INSURANCE,
 } from "./ActionType.js";
 
 const initialState = {
@@ -275,13 +276,7 @@ export const doctorReducer = (state = initialState, action) => {
         progressTracker: action.payload,
         isLoadingGetProgressTracker: false,
       };
-    case GET_ADMISSION_REQUESTS:
-      return {
-        ...state,
-        admissionRequests: action.payload.requests,
-        admissionRequestsCount: action.payload.count,
-        isLoadingGetAdmissionRequests: false,
-      };
+
     case GET_ADMISSION_REQUESTS_TO_APPROVE:
       return {
         ...state,
@@ -539,7 +534,20 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         isLoadingGetProgressTracker: true,
       };
-
+    case GET_ADMISSION_REQUESTS:
+      return {
+        ...state,
+        admissionRequests: action.payload.requests,
+        admissionRequestsCount: action.payload.totalRequests,
+        isLoadingGetAdmissionRequests: false,
+      };
+    case UPDATE_ADMISSION_INSURANCE:
+      return {
+        ...state,
+        admissionRequests: state.admissionRequests.map((request) =>
+          request._id === action.payload._id ? action.payload : request
+        ),
+      };
     default:
       return state;
   }
