@@ -2,7 +2,7 @@ import React, {useRef, useState} from "react";
 import { X, Trash2, LucideTrash2 } from "lucide-react";
 import styles from "./OngoingProgress.module.scss";
 import { useDispatch } from "react-redux";
-import { updateProgressTrackerPhase } from "../../../../../../../components/State/Doctor/Action";
+import {getPatientDetailsByID, updateProgressTrackerPhase} from "../../../../../../../components/State/Doctor/Action";
 
 const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
   const dispatch = useDispatch();
@@ -115,7 +115,9 @@ const OngoingProgress = ({ step, onClose, patientId, caseId }) => {
           updateProgressTrackerPhase(form, patientId, caseId, sourceType, sourceId)
       );
 
-      console.log(formData.isFinal)
+      // console.log(formData.isFinal)
+
+      dispatch(getPatientDetailsByID(patientId))
 
       onClose(); // close on success
     } catch (e) {
