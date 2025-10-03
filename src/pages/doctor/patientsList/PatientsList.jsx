@@ -3,7 +3,6 @@ import Searchbar from "../../../components/Searchbar/index.jsx";
 import Notifications from "../../../components/NotificationFunc/Notification.jsx";
 import { ChevronLeft, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { FiFilter } from "react-icons/fi";
 import PatientCard from "./component/modals/PatientCard.jsx";
 import { useEffect, useState } from "react";
 
@@ -13,7 +12,6 @@ import {
   getAdmissionRequests,
   getAdmittedPatients,
   getAppointmentsOfToday,
-  getApprovedAdmissions,
 } from "../../../components/State/Doctor/Action.js";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -50,7 +48,11 @@ const PatientsList = () => {
   const isLoadingGetAdmittedPatients = useSelector(
     (store) => store.doctor.isLoadingGetAdmittedPatients
   );
-  const [filter, setFilter] = useState("Total");
+  // replace your current page/rowsPerPage/filter state with this:
+  const [filter, setFilter] = useState(() => {
+    const saved = sessionStorage.getItem("pld_pagination");
+    return saved ? JSON.parse(saved).filter || "Total" : "Total";
+  });
 
   const filteredPatients = patientsAdmitted.filter((patient) => {
     if (filter === "Total") return true;
@@ -170,8 +172,28 @@ const PatientsList = () => {
     useSelector((state) => state.authentication.userName) ||
     localStorage.getItem("username");
 
-  const [page, setPage] = useState(0); // TablePagination uses 0-based indexing
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [page, setPage] = useState(() => {
+    const saved = sessionStorage.getItem("pld_pagination");
+    return saved ? JSON.parse(saved).page || 0 : 0;
+  });
+  const [rowsPerPage, setRowsPerPage] = useState(() => {
+    const saved = sessionStorage.getItem("pld_pagination");
+    return saved ? JSON.parse(saved).rowsPerPage || 6 : 6;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem(
+        "pld_pagination",
+        JSON.stringify({ page, rowsPerPage, filter })
+    );
+  }, [page, rowsPerPage, filter]);
+
+  useEffect(() => {
+    const total = filteredPatients.length;
+    const lastPage = Math.max(0, Math.ceil(total / rowsPerPage) - 1);
+    if (page > lastPage) setPage(lastPage);
+  }, [filteredPatients.length, rowsPerPage]);
+
   const currentPatients = filteredPatients.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage

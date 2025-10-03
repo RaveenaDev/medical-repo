@@ -3,7 +3,7 @@ import styles from "./UpdateProgress.module.scss";
 import { X,Trash2, SquarePen } from "lucide-react";
 import {
   addProgressTrackerPhase,
-  getDoctorsByDepartment,
+  getDoctorsByDepartment, getPatientDetailsByID,
 } from "../../../../../components/State/Doctor/Action";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -101,6 +101,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       });
 
       await dispatch(addProgressTrackerPhase(form, patientId, caseId)); // waits for thunk to finish
+      dispatch(getPatientDetailsByID(patientId))
       onClose(); // close after success (toast handled in action)
     } catch (err) {
       // errors are already logged in the action; show a basic alert here if you want

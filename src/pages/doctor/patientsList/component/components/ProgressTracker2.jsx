@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import styles from "./ProgressTracker2.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getProgressTrackerDetails } from "../../../../../components/State/Doctor/Action";
@@ -16,29 +16,36 @@ const ProgressTracker2 = ({
   isFollowUpStatus,
   patientDetails,
 }) => {
-  // console.log("ProgressTracker2 patientDetails: ", caseId);
   const dispatch = useDispatch();
   const [selectedStep, setSelectedStep] = useState(null);
-  const [modalType, setModalType] = useState(null); // 'completed' or 'ongoing'
-
-  useEffect(() => {
-    dispatch(getProgressTrackerDetails(patientId, caseId));
-  }, [dispatch, patientId, caseId]);
+  const [modalType, setModalType] = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0); // 🔹 Trigger for reloads
 
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
   const isLoadingGetProgressTracker = useSelector(
     (store) => store.doctor.isLoadingGetProgressTracker
   );
-
-  // console.log("progressTracker details: ", progressTracker);
-
+  const [localLoading, setLocalLoading] = useState(false);
+  // 🔹 Fetch on mount + whenever patientId, caseId, or refreshKey changes
   useEffect(() => {
-    document.body.style.overflow = selectedStep ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [selectedStep]);
+    if (patientId && caseId) {
+      setLocalLoading(true); // start loader
+      dispatch(getProgressTrackerDetails(patientId, caseId)).finally(() =>
+        setLocalLoading(false)
+      ); // stop after finish
+    }
+  }, [dispatch, patientId, caseId, refreshKey]);
 
+  // 🔹 Derived value with memoization
+  const isFinalPhase = useMemo(
+    () =>
+      Array.isArray(progressTracker) &&
+      progressTracker.some((step) => step.status === "Final"),
+    [progressTracker]
+  );
+
+  // 🔹 Modal handlers
   const openModal = (step) => {
     if (step.status === "completed") {
       setModalType("completed");
@@ -48,26 +55,17 @@ const ProgressTracker2 = ({
       setSelectedStep(step);
     }
   };
-  const [activeModal, setActiveModal] = useState(null);
+
   const openDischarge = () => setActiveModal("discharge");
   const openUpdateProgress = () => setActiveModal("update progress");
-  const closeModal = () => setActiveModal(null);
 
-  // Check if any step has status "completed"
-  const isFinalPhase = progressTracker.some((step) => step.status === "Final");
-
-  const modalOpen = !!activeModal || !!selectedStep;
-
-  useEffect(() => {
-    if (modalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [modalOpen]);
+  // 🔹 Close modal and re-fetch
+  const closeModal = useCallback(() => {
+    setActiveModal(null);
+    setSelectedStep(null);
+    setModalType(null);
+    setRefreshKey((prev) => prev + 1); // force re-fetch
+  }, []);
 
   return (
     <div>
@@ -89,7 +87,7 @@ const ProgressTracker2 = ({
         <h4 className={styles.title}>Progress Tracker</h4>
       </div>
 
-      {isLoadingGetProgressTracker ? (
+      {isLoadingGetProgressTracker || localLoading ? (
         <Box
           sx={{
             display: "flex",
