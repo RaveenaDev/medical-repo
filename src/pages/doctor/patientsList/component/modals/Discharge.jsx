@@ -5,10 +5,13 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { dischargePatient } from "../../../../../components/State/Doctor/Action";
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false); // loader state
 
   // Single state object for all form data
   const [formData, setFormData] = useState({
@@ -61,14 +64,17 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
     };
 
     try {
+      setLoading(true); // start loader
       const res = await dispatch(dischargePatient(payload));
       if (res) {
         navigate("/doctor/patientList");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false); // stop loader
+      onClose();
     }
-    onClose();
   };
 
   return (
@@ -203,7 +209,22 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
 
         {/* Save Button */}
         <div className={styles.saveContainer}>
-          <button onClick={handleSubmit}>Save And Download</button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className={`${styles.saveBtn} ${loading ? styles.disabledBtn : ""}`}
+          >
+            {loading ? (
+              <span
+                style={{ display: "flex", alignItems: "center", gap: "6px" }}
+              >
+                <CircularProgress size={16} thickness={5} color="inherit" />
+                Saving...
+              </span>
+            ) : (
+              "Save And Download"
+            )}
+          </button>
         </div>
       </div>
     </div>
