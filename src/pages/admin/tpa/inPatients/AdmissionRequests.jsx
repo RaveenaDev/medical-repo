@@ -22,12 +22,6 @@ const AdmissionRequests = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filters (status, type, sort order)
-  const [filters, setFilters] = useState({
-    status: "",
-    type: "",
-    sort: "desc",
-  });
   const [sortOrder, setSortOrder] = useState("desc");
 
   // Redux store: inpatients
@@ -39,12 +33,14 @@ const AdmissionRequests = () => {
 
   // Fetch patients whenever filters/pagination change
   useEffect(() => {
-    dispatch(getAdmissionRequests(debouncedSearch, page, rowsPerPage, filters));
-  }, [dispatch, debouncedSearch, page, rowsPerPage, filters]);
+    dispatch(
+      getAdmissionRequests(debouncedSearch, page, rowsPerPage, sortOrder)
+    );
+  }, [dispatch, debouncedSearch, page, rowsPerPage, sortOrder]);
 
   useEffect(() => {
     setPage(0);
-  }, [debouncedSearch, filters.status, sortOrder]);
+  }, [debouncedSearch, sortOrder]);
 
   // Helper: truncate long strings (ID, name, email)
   const truncateText = (text, maxLength) =>
@@ -53,7 +49,6 @@ const AdmissionRequests = () => {
   // Sort dropdown change
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
-    setFilters({ ...filters, sort: event.target.value });
   };
 
   // Pagination: page change

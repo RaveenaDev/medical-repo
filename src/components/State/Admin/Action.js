@@ -1514,7 +1514,7 @@ export const getFilteredInpatients =
     }
   };
 export const getAdmissionRequests =
-  (search, page, limit) => async (dispatch) => {
+  (search, page, limit, sort) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
 
@@ -1526,6 +1526,7 @@ export const getAdmissionRequests =
           search: search || "",
           page: page + 1,
           limit: limit,
+          sortOrder: sort,
         },
       });
 
