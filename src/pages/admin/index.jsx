@@ -522,7 +522,7 @@ function Admin(props) {
                             ? "dayName"
                             : "day"
                         }
-                        tick={{ fill: "#fff", fontSize: 14 }}
+                        tick={{ fill: "#fff", fontSize: 12 }}
                         tickLine={false} // Removes the dash/tick marks from Y-axis
                         tickMargin={10}
                         axisLine={{ stroke: "#fff" }}
