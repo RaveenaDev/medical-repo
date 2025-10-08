@@ -271,7 +271,7 @@ const CommonPanel = ({
                   fontSize: "max(1vw, 12px)",
                   color: "#878787",
                   textTransform: "capitalize",
-                  padding: "0px 8px",
+                  padding: "8px 16px",
                   backgroundColor: "#fff",
                   marginRight: "22px",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
@@ -310,7 +310,7 @@ const CommonPanel = ({
                   fontSize: "max(1vw, 12px)",
                   color: "#878787",
                   textTransform: "capitalize",
-                  padding: "0px 8px",
+                  padding: "8px 12px",
                   backgroundColor: "#fff",
                   marginRight: "22px",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
@@ -343,7 +343,7 @@ const CommonPanel = ({
                 </span>
               </Button>
 
-              <div
+              {/* <div
                 style={{
                   backgroundColor: "#25307F",
                   color: "#FFFFFF",
@@ -413,7 +413,7 @@ const CommonPanel = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </div>
+              </div> */}
             </Grid>
           </Grid>
         </div>
