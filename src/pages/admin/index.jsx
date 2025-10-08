@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ayu from "../receptionist/patients/patients.module.scss";
 import CommonPanel from "./Components/CommonPanel.jsx";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { Box, Button, Grid, MenuItem, Select } from "@mui/material";
+import { Box, Button, capitalize, Grid, MenuItem, Select } from "@mui/material";
 import {
   Area,
   AreaChart,
@@ -20,14 +20,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAdmissionRequestsToApprove,
   getAppointmentCounts,
+  getAppointmentData,
 } from "../../components/State/Admin/Action.js";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AdmissionRequests from "./Components/admissionRequests/AdmissionRequests.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function Admin(props) {
-  const [selectedFilter, setSelectedFilter] = useState("Monthly"); // Keep track of selected option
-  const filterOptions = ["Monthly", "Yearly", "Weekly"]; // Static options
+  const [selectedFilter, setSelectedFilter] = useState("weekly"); // Keep track of selected option
+  const filterOptions = ["monthly", "yearly", "weekly"]; // Static options
   // Initial state where all bars are visible
   const [visibleBars, setVisibleBars] = useState({
     appointments: true,
@@ -38,56 +39,63 @@ function Admin(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
-    dispatch(getAppointmentCounts());
+    // dispatch(getAppointmentCounts());
     dispatch(getAdmissionRequestsToApprove());
+    dispatch(getAppointmentData(selectedFilter));
   }, [dispatch]);
-
+  useEffect(() => {
+    dispatch(getAppointmentData(selectedFilter));
+  }, [dispatch, selectedFilter]);
   const [selectedDepartment, setSelectedDepartment] = useState("all");
 
   const appointmentData =
     useSelector((state) => state.admin.appointmentCount) || {}; // Default to empty object
-  const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
-  const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
-  const weeklyData = appointmentData?.Weekly?.daily || {}; // Ensure it's an object
+  // const yearlyData = appointmentData?.yearlyData || {}; // Ensure it's an object
+  // const data = yearlyData?.[2025]?.months || []; // Ensure it's an array
+  // const weeklyData = appointmentData?.Weekly?.daily || {}; // Ensure it's an object
   // console.log("DATA:", appointmentData);
   const isLoadingAppointmentCount = useSelector(
     (state) => state.admin.isLoadingAppointmentCount
   );
-  const [newData, setNewData] = useState([]);
 
-  useEffect(() => {
-    if (selectedFilter === "Monthly") {
-      setNewData(
-        data.map((dat) => ({
-          ...dat, // Spread existing properties
-          name: dat.name.slice(0, 3), // Modify name field
-        }))
-      );
-    }
-    if (selectedFilter === "Weekly") {
-      // console.log("Selected Filter:", selectedFilter);
-      setNewData(
-        weeklyData.map((dat) => ({
-          ...dat, // Spread existing properties
-          name: dat.name.slice(0, 3), // Modify name field
-        }))
-      );
-    }
-    if (selectedFilter === "Yearly") {
-      // Transform yearlyData into an array for the graph
-      const yearlyGraphData = Object.entries(yearlyData).map(
-        ([year, stats]) => ({
-          name: year, // Using the year as the name, can modify if needed
-          ...stats, // Spread in the metrics (cancelled, completed, total)
-        })
-      );
+  const data = appointmentData.data;
 
-      // Optional: sort the data if necessary
-      yearlyGraphData.sort((a, b) => +a.name - +b.name);
+  const newData = data;
 
-      setNewData(yearlyGraphData);
-    }
-  }, [appointmentData, selectedFilter, selectedDepartment, dispatch]);
+  // console.log(newData);
+  // useEffect(() => {
+  //   if (selectedFilter === "Monthly") {
+  //     setNewData(
+  //       data.map((dat) => ({
+  //         ...dat, // Spread existing properties
+  //         name: dat.name.slice(0, 3), // Modify name field
+  //       }))
+  //     );
+  //   }
+  //   if (selectedFilter === "Weekly") {
+  //     // console.log("Selected Filter:", selectedFilter);
+  //     setNewData(
+  //       weeklyData.map((dat) => ({
+  //         ...dat, // Spread existing properties
+  //         name: dat.name.slice(0, 3), // Modify name field
+  //       }))
+  //     );
+  //   }
+  //   if (selectedFilter === "Yearly") {
+  //     // Transform yearlyData into an array for the graph
+  //     const yearlyGraphData = Object.entries(yearlyData).map(
+  //       ([year, stats]) => ({
+  //         name: year, // Using the year as the name, can modify if needed
+  //         ...stats, // Spread in the metrics (cancelled, completed, total)
+  //       })
+  //     );
+
+  //     // Optional: sort the data if necessary
+  //     yearlyGraphData.sort((a, b) => +a.name - +b.name);
+
+  //     setNewData(yearlyGraphData);
+  //   }
+  // }, [appointmentData, selectedFilter, selectedDepartment, dispatch]);
 
   useEffect(() => {
     if (selectedDepartment === "all") {
@@ -253,7 +261,7 @@ function Admin(props) {
               color: "#25307F",
               fontWeight: 500,
               textTransform: "capitalize",
-              padding: "3px 9px",
+              padding: "7px 8px",
               backgroundColor: "#fff",
               marginLeft: "16px",
               position: "absolute",
@@ -456,10 +464,19 @@ function Admin(props) {
                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                           border: "none", // Remove border when focused
                         },
+                        "& .MuiSelect-select": {
+                          textTransform: "capitalize",
+                        },
                       }}
                     >
                       {filterOptions.map((option) => (
-                        <MenuItem key={option} value={option}>
+                        <MenuItem
+                          key={option}
+                          value={option}
+                          sx={{
+                            textTransform: "capitalize",
+                          }}
+                        >
                           {option}
                         </MenuItem>
                       ))}
@@ -485,7 +502,7 @@ function Admin(props) {
                   {/* Content for the top grid */}
                   <ResponsiveContainer width="100%" height={290}>
                     <BarChart
-                      barGap={5} // Adjust space between bars
+                      barGap={4} // Adjust space between bars
                       width={500}
                       height={300}
                       data={newData}
@@ -498,8 +515,14 @@ function Admin(props) {
                     >
                       <CartesianGrid vertical={false} />
                       <XAxis
-                        dataKey="name"
-                        tick={{ fill: "#fff", fontSize: 14 }}
+                        dataKey={
+                          selectedFilter === "yearly"
+                            ? "name"
+                            : selectedFilter === "weekly"
+                            ? "dayName"
+                            : "day"
+                        }
+                        tick={{ fill: "#fff", fontSize: 12 }}
                         tickLine={false} // Removes the dash/tick marks from Y-axis
                         tickMargin={10}
                         axisLine={{ stroke: "#fff" }}

@@ -1514,7 +1514,7 @@ export const getFilteredInpatients =
     }
   };
 export const getAdmissionRequests =
-  (search, page, limit) => async (dispatch) => {
+  (search, page, limit, sort) => async (dispatch) => {
     try {
       const token = localStorage.getItem("jwt");
 
@@ -1526,6 +1526,7 @@ export const getAdmissionRequests =
           search: search || "",
           page: page + 1,
           limit: limit,
+          sortOrder: sort,
         },
       });
 
@@ -1594,5 +1595,25 @@ export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
       position: "bottom-right",
       autoClose: 2000,
     });
+  }
+};
+export const getAppointmentData = (filter) => async (dispatch) => {
+  // console.log("here");
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getAppointment/stats`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+      params: {
+        filterType: filter,
+      },
+    });
+
+    // console.log("Appt Reqs ", data);
+    dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
+  } catch (error) {
+    console.log(error);
   }
 };

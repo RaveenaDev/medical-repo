@@ -92,7 +92,7 @@ const PatientHeader = ({ patient }) => {
 
         <p>XXXXXX</p>
       </div>
-      <div className="patient-actions" style={{ cursor: "pointer" }}>
+      {/* <div className="patient-actions" style={{ cursor: "pointer" }}>
         <div className="box" onClick={handleOpen} style={{ cursor: "pointer" }}>
           <svg
             width="24"
@@ -122,9 +122,9 @@ const PatientHeader = ({ patient }) => {
 
           <p>Billing Details</p>
         </div>
-      </div>
+      </div> */}
 
-      <PaymentDetailsModal open={open} onClose={handleClose} />
+      {/* <PaymentDetailsModal open={open} onClose={handleClose} /> */}
     </div>
   );
 };

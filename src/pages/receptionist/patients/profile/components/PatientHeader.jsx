@@ -104,7 +104,7 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
 
         <p>XXXXXX</p>
       </div>
-      <div className="patient-actions" style={{ cursor: "pointer" }}>
+      {/* <div className="patient-actions" style={{ cursor: "pointer" }}>
         <div
           className="box"
           style={{ cursor: "pointer" }}
@@ -138,16 +138,16 @@ const PatientHeader = ({ showEditPatients = true, patient }) => {
 
           <p>Billing Details</p>
         </div>
-      </div>
+      </div> */}
       {/* Use the separate BillingModal Component */}
 
-      <div
+      {/* <div
         className={`billing-modal ${
           activeModal === "billing" ? "billing-modalOpen" : ""
         }`}
       >
         <RecordModal onClose={closeModal} patient={patient} />
-      </div>
+      </div> */}
     </div>
   );
 };
