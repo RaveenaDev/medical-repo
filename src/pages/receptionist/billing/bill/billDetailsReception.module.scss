@@ -140,7 +140,32 @@
             gap: 0.5rem;
           }
         }
+        .status {
+          font-weight: 600;
+          text-align: center;
+          display: inline-block;
+          width: fit-content;
+          transition: all 0.3s ease;
 
+          &.paid {
+            color: #3db461;
+          }
+
+          &.pending {
+            color: #eaa000;
+          }
+        }
+
+        .statusSelect {
+          border: 1px solid #ccc;
+          border-radius: 6px;
+
+          background-color: #fff;
+          font-weight: 600;
+          outline: none;
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
         .billing-history {
           display: flex;
           flex-direction: column;
@@ -154,14 +179,6 @@
         }
       }
     }
-  }
-  .status.paid {
-    color: #3db461;
-    font-weight: 600;
-  }
-  .status.pending {
-    color: #f6a600;
-    font-weight: 600;
   }
 }
 

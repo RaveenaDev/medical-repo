@@ -58,7 +58,7 @@ const BillDetailsReception = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  // console.log("original Bill", bill);
+  console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -732,11 +732,32 @@ const BillDetailsReception = (props) => {
                 <div className={styles["bold"]}>Status</div>
 
                 <div
-                  className={`${styles["center"]} ${styles["status"]} ${String(
-                    (editableBill?.status ?? bill.status) || ""
-                  ).toLowerCase()}`}
+                  className={`${styles["center"]} ${styles["status"]} ${
+                    editableBill?.status || bill.status
+                      ? styles[
+                          (editableBill?.status || bill.status).toLowerCase()
+                        ]
+                      : ""
+                  }`}
                 >
-                  {editableBill?.status ?? bill.status}
+                  {isEditing ? (
+                    <select
+                      className={`${styles["inputDescription"]} ${styles["statusSelect"]}`}
+                      value={editableBill?.status ?? bill.status}
+                      onChange={(e) => {
+                        const updated = JSON.parse(
+                          JSON.stringify(editableBill)
+                        );
+                        updated.status = e.target.value;
+                        setEditableBill(updated);
+                      }}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Paid">Paid</option>
+                    </select>
+                  ) : (
+                    <div>{editableBill?.status ?? bill.status}</div>
+                  )}
                 </div>
               </div>
             </div>
