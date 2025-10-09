@@ -220,7 +220,7 @@ const Expenses = (props) => {
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: "150px" }}>
+      <div style={{ marginTop: "19vh" }}>
         {loader ? (
           <Box
             sx={{

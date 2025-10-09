@@ -266,7 +266,7 @@ function Admin(props) {
               marginLeft: "16px",
               position: "absolute",
               left: "11.8rem", // % mai isliye nhi di because ye alag file mai hai toh iski position fixed honi jaruri hai during responsiveness
-              top: "8.45rem",
+              top: "7.1rem",
               "&:focus": {
                 outline: "none",
                 boxShadow: "none",

@@ -34,12 +34,12 @@ const CommonPanelMini = () => {
   return (
     <>
       <div className={ayu.patients}>
-        <div className={ayu.patientHeader}>
-          <Searchbar />
-          <Notifications />
-        </div>
+        {/*<div className={ayu.patientHeader}>*/}
+        {/*  <Searchbar />*/}
+        {/*  <Notifications />*/}
+        {/*</div>*/}
 
-        <div className={ayu.cardhandling} style={{ marginTop: "-4rem" }}>
+        <div className={ayu.cardhandling}>
           <h4 className={ayu.heading}>Hello, Dr. {doctorName}</h4>
           <p>
             I hope you are in good mood because there are {todayAppointments}{" "}

@@ -76,10 +76,10 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
   return (
     <>
       <div className={ayu.patients}>
-        <div className={ayu.patientHeader}>
-          <Searchbar />
-          <Notifications />
-        </div>
+        {/*<div className={ayu.patientHeader}>*/}
+        {/*  <Searchbar />*/}
+        {/*  <Notifications />*/}
+        {/*</div>*/}
 
         <div className={ayu.cardhandling}>
           <h4 className={ayu.heading}>Hello, Dr. {doctorName}</h4>
