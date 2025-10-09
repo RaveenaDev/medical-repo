@@ -78,6 +78,7 @@
           display: grid;
           grid-template-columns: 1fr 1fr;
           padding: 1.5rem;
+          gap: 0.5rem;
 
           div {
             display: flex;
@@ -361,4 +362,26 @@
 .payment-heading {
   font-size: 1.25rem;
   font-weight: bold;
+}
+.billing-insurance-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem 2rem;
+  margin: 1.5rem;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    span {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .bold {
+      font-weight: 600;
+      color: #000;
+    }
+  }
 }
