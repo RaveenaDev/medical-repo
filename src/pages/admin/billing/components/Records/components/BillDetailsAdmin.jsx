@@ -59,7 +59,7 @@ const BillDetailsAdmin = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  // console.log("original Bill", bill);
+  console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -1184,7 +1184,7 @@ const BillDetailsAdmin = (props) => {
 
               {bill?.doctor?.name ? (
                 <div>
-                  <b>Doctor:</b> {bill.doctor.name}
+                  <b>Doctor:</b> {bill?.doctor?.name}
                 </div>
               ) : null}
             </div>
