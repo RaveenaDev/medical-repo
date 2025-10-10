@@ -11,26 +11,26 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
     documentTitle: "Estimated Bill",
     removeAfterPrint: true,
     pageStyle: `
-      @page { 
-        size: A4; 
-        margin: 15mm; 
-      }
-      
-      @media print {
-        body {
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
+        @page { 
+          size: A4; 
+          margin: 15mm; 
         }
         
-        .no-print { 
-          display: none !important; 
+        @media print {
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          
+          .no-print { 
+            display: none !important; 
+          }
+          
+          .print-only {
+            display: block !important;
+          }
         }
-        
-        .print-only {
-          display: block !important;
-        }
-      }
-    `,
+      `,
   });
 
   const hasCategories = Boolean(estimatedBill?.categories?.length);
@@ -129,7 +129,16 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                       <span>{item.rate}</span>
                     </div>
                     <div>
-                      <span>{item.date.toLocaleDateString()}</span>
+                      <span>
+                        {" "}
+                        {item.date
+                          ? new Date(item.date).toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "N/A"}
+                      </span>
                     </div>
                     <div>
                       <span>{item.unit}</span>
@@ -167,229 +176,229 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
         {/* PRINT VERSION - Refined Professional Layout */}
         <div ref={billRef} className="print-only" style={{ display: "none" }}>
           <style>{`
-            .print-bill-container {
-              font-family: 'Arial', sans-serif;
-              color: #000;
-              background: #fff;
-              padding: 15px;
-              margin: 0;
-              font-size: 8.5pt;
-              line-height: 1.5;
-            }
-
-            .bill-header {
-              text-align: center;
-              border-bottom: 1.5px solid #000;
-              padding-bottom: 12px;
-              margin-bottom: 20px;
-            }
-
-            .hospital-info {
-              margin-bottom: 8px;
-            }
-
-            .hospital-info h1 {
-              margin: 0;
-              font-size: 20pt;
-              font-weight: bold;
-              text-transform: uppercase;
-            }
-
-            .hospital-info p {
-              margin: 2px 0;
-              font-size: 8pt;
-              color: #333;
-            }
-
-            .bill-title {
-              font-size: 14pt;
-              font-weight: bold;
-              margin: 8px 0 4px;
-            }
-
-            .bill-subtitle {
-              font-size: 10pt;
-              color: #555;
-              margin: 0;
-            }
-
-            .bill-date {
-              font-size: 8pt;
-              color: #333;
-              margin-top: 6px;
-            }
-
-            .bill-info-section {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 20px;
-              gap: 15px;
-            }
-
-            .bill-info-block {
-              flex: 1;
-            }
-
-            .bill-info-block h3 {
-              margin: 0 0 6px 0;
-              font-size: 10pt;
-              font-weight: bold;
-              text-transform: uppercase;
-              border-bottom: 1px solid #000;
-              padding-bottom: 3px;
-            }
-
-            .bill-info-block p {
-              margin: 4px 0;
-              font-size: 8.5pt;
-            }
-
-            .bill-table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-bottom: 20px;
-              border: 1px solid #000;
-            }
-
-            .bill-table thead {
-              border-bottom: 1.5px solid #000;
-            }
-
-            .bill-table th {
-              padding: 6px 8px;
-              text-align: left;
-              font-size: 9pt;
-              font-weight: bold;
-              border-right: 1px solid #000;
-            }
-
-            .bill-table th:last-child,
-            .bill-table td:last-child {
-              text-align: right;
-              border-right: none;
-            }
-
-            .bill-table th:nth-child(4),
-            .bill-table td:nth-child(4),
-            .bill-table th:nth-child(6),
-            .bill-table td:nth-child(6) {
-              text-align: center;
-            }
-
-            .category-header-row td {
-              padding: 6px 8px;
-              font-weight: bold;
-              font-size: 9.5pt;
-              border-top: 1.5px solid #000;
-              border-bottom: 1px solid #000;
-            }
-
-            .bill-table tbody td {
-              padding: 5px 8px;
-              font-size: 8.5pt;
-              border-bottom: 1px solid #ccc;
-              border-right: 1px solid #ccc;
-            }
-
-            .bill-table tbody td:last-child {
-              border-right: none;
-            }
-
-            .bill-table tbody tr:last-child td {
-              border-bottom: none;
-            }
-
-            .subtotal-row td {
-              padding: 6px 8px;
-              font-size: 9pt;
-              font-weight: bold;
-              border-top: 1.5px solid #000;
-              border-bottom: 1px solid #000;
-            }
-
-            .grand-total-section {
-              margin-top: 20px;
-              padding: 10px 12px;
-              border-top: 2px double #000;
-              border-bottom: 2px double #000;
-              display: flex;
-              justify-content: flex-end;
-            }
-
-            .grand-total-row {
-              display: flex;
-              justify-content: space-between;
-              width: 35%;
-              font-size: 11pt;
-              font-weight: bold;
-              text-transform: uppercase;
-            }
-
-            .bill-notes {
-              margin-top: 20px;
-              padding: 10px;
-              border: 1px solid #ccc;
-              font-size: 8pt;
-              color: #444;
-            }
-
-            .bill-notes h4 {
-              margin: 0 0 5px 0;
-              font-size: 9pt;
-              font-weight: bold;
-              text-transform: uppercase;
-            }
-
-            .bill-notes p {
-              margin: 3px 0;
-            }
-
-            .bill-footer {
-              margin-top: 30px;
-              padding-top: 12px;
-              border-top: 1px solid #000;
-              display: flex;
-              justify-content: space-between;
-              font-size: 8pt;
-            }
-
-            .bill-footer-section {
-              text-align: center;
-              width: 45%;
-            }
-
-            .signature-line {
-              width: 160px;
-              border-top: 1px solid #000;
-              margin: 30px auto 6px;
-            }
-
-            .bill-footer-section p {
-              margin: 3px 0;
-            }
-
-            @media print {
               .print-bill-container {
-                page-break-after: avoid;
+                font-family: 'Arial', sans-serif;
+                color: #000;
+                background: #fff;
+                padding: 15px;
+                margin: 0;
+                font-size: 8.5pt;
+                line-height: 1.5;
               }
-              
+
+              .bill-header {
+                text-align: center;
+                border-bottom: 1.5px solid #000;
+                padding-bottom: 12px;
+                margin-bottom: 20px;
+              }
+
+              .hospital-info {
+                margin-bottom: 8px;
+              }
+
+              .hospital-info h1 {
+                margin: 0;
+                font-size: 20pt;
+                font-weight: bold;
+                text-transform: uppercase;
+              }
+
+              .hospital-info p {
+                margin: 2px 0;
+                font-size: 8pt;
+                color: #333;
+              }
+
+              .bill-title {
+                font-size: 14pt;
+                font-weight: bold;
+                margin: 8px 0 4px;
+              }
+
+              .bill-subtitle {
+                font-size: 10pt;
+                color: #555;
+                margin: 0;
+              }
+
+              .bill-date {
+                font-size: 8pt;
+                color: #333;
+                margin-top: 6px;
+              }
+
+              .bill-info-section {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                gap: 15px;
+              }
+
+              .bill-info-block {
+                flex: 1;
+              }
+
+              .bill-info-block h3 {
+                margin: 0 0 6px 0;
+                font-size: 10pt;
+                font-weight: bold;
+                text-transform: uppercase;
+                border-bottom: 1px solid #000;
+                padding-bottom: 3px;
+              }
+
+              .bill-info-block p {
+                margin: 4px 0;
+                font-size: 8.5pt;
+              }
+
               .bill-table {
-                page-break-inside: auto;
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+                border: 1px solid #000;
               }
-              
-              .category-header-row,
-              .subtotal-row,
+
+              .bill-table thead {
+                border-bottom: 1.5px solid #000;
+              }
+
+              .bill-table th {
+                padding: 6px 8px;
+                text-align: left;
+                font-size: 9pt;
+                font-weight: bold;
+                border-right: 1px solid #000;
+              }
+
+              .bill-table th:last-child,
+              .bill-table td:last-child {
+                text-align: right;
+                border-right: none;
+              }
+
+              .bill-table th:nth-child(4),
+              .bill-table td:nth-child(4),
+              .bill-table th:nth-child(6),
+              .bill-table td:nth-child(6) {
+                text-align: center;
+              }
+
+              .category-header-row td {
+                padding: 6px 8px;
+                font-weight: bold;
+                font-size: 9.5pt;
+                border-top: 1.5px solid #000;
+                border-bottom: 1px solid #000;
+              }
+
+              .bill-table tbody td {
+                padding: 5px 8px;
+                font-size: 8.5pt;
+                border-bottom: 1px solid #ccc;
+                border-right: 1px solid #ccc;
+              }
+
+              .bill-table tbody td:last-child {
+                border-right: none;
+              }
+
+              .bill-table tbody tr:last-child td {
+                border-bottom: none;
+              }
+
+              .subtotal-row td {
+                padding: 6px 8px;
+                font-size: 9pt;
+                font-weight: bold;
+                border-top: 1.5px solid #000;
+                border-bottom: 1px solid #000;
+              }
+
               .grand-total-section {
-                page-break-inside: avoid;
-                page-break-before: auto;
+                margin-top: 20px;
+                padding: 10px 12px;
+                border-top: 2px double #000;
+                border-bottom: 2px double #000;
+                display: flex;
+                justify-content: flex-end;
               }
-              
-              tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
+
+              .grand-total-row {
+                display: flex;
+                justify-content: space-between;
+                width: 35%;
+                font-size: 11pt;
+                font-weight: bold;
+                text-transform: uppercase;
               }
-            }
-          `}</style>
+
+              .bill-notes {
+                margin-top: 20px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                font-size: 8pt;
+                color: #444;
+              }
+
+              .bill-notes h4 {
+                margin: 0 0 5px 0;
+                font-size: 9pt;
+                font-weight: bold;
+                text-transform: uppercase;
+              }
+
+              .bill-notes p {
+                margin: 3px 0;
+              }
+
+              .bill-footer {
+                margin-top: 30px;
+                padding-top: 12px;
+                border-top: 1px solid #000;
+                display: flex;
+                justify-content: space-between;
+                font-size: 8pt;
+              }
+
+              .bill-footer-section {
+                text-align: center;
+                width: 45%;
+              }
+
+              .signature-line {
+                width: 160px;
+                border-top: 1px solid #000;
+                margin: 30px auto 6px;
+              }
+
+              .bill-footer-section p {
+                margin: 3px 0;
+              }
+
+              @media print {
+                .print-bill-container {
+                  page-break-after: avoid;
+                }
+                
+                .bill-table {
+                  page-break-inside: auto;
+                }
+                
+                .category-header-row,
+                .subtotal-row,
+                .grand-total-section {
+                  page-break-inside: avoid;
+                  page-break-before: auto;
+                }
+                
+                tr {
+                  page-break-inside: avoid;
+                  page-break-after: auto;
+                }
+              }
+            `}</style>
 
           <div className="print-bill-container">
             <div className="bill-header">
@@ -470,7 +479,18 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                             <td>{item.ward}</td>
                             <td>{item.package}</td>
                             <td style={{ textAlign: "center" }}>{item.rate}</td>
-                            <td>{item.date.toLocaleDateString()}</td>
+                            <td>
+                              {item.date
+                                ? new Date(item.date).toLocaleDateString(
+                                    "en-GB",
+                                    {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "numeric",
+                                    }
+                                  )
+                                : "N/A"}
+                            </td>
                             <td style={{ textAlign: "center" }}>{item.unit}</td>
                             <td style={{ textAlign: "right" }}>{item.total}</td>
                           </tr>
