@@ -129,7 +129,7 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                       <span>{item.rate}</span>
                     </div>
                     <div>
-                      <span>{item.date}</span>
+                      <span>{item.date.toLocaleDateString()}</span>
                     </div>
                     <div>
                       <span>{item.unit}</span>
@@ -470,7 +470,7 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                             <td>{item.ward}</td>
                             <td>{item.package}</td>
                             <td style={{ textAlign: "center" }}>{item.rate}</td>
-                            <td>{item.date}</td>
+                            <td>{item.date.toLocaleDateString()}</td>
                             <td style={{ textAlign: "center" }}>{item.unit}</td>
                             <td style={{ textAlign: "right" }}>{item.total}</td>
                           </tr>
