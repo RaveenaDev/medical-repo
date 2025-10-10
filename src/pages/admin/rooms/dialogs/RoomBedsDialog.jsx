@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,8 +13,11 @@ import {
   Select,
   MenuItem,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { Trash2 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { editBed } from "../../../../components/State/Admin/Action";
 
 const RoomBedsDialog = ({
   open,
@@ -25,13 +28,21 @@ const RoomBedsDialog = ({
   handleChangeRow,
   handleSaveBed,
   handleCancelRow,
-  handleUpdateBed, // <-- send update to backend
 }) => {
+  const dispatch = useDispatch();
   const [editingBedId, setEditingBedId] = useState(null);
   const [editedBed, setEditedBed] = useState({});
+  const [loadingBedId, setLoadingBedId] = useState(null);
+  const [beds, setBeds] = useState([]);
+
+  useEffect(() => {
+    if (currentRoom?.beds) {
+      setBeds(currentRoom.beds);
+    }
+  }, [currentRoom]);
 
   const startEditing = (bed) => {
-    setEditingBedId(bed._id); // assuming each bed has an _id
+    setEditingBedId(bed._id);
     setEditedBed({ ...bed });
   };
 
@@ -40,9 +51,25 @@ const RoomBedsDialog = ({
     setEditedBed({});
   };
 
-  const saveEditing = () => {
-    handleUpdateBed(editedBed); // call parent to update backend
-    setEditingBedId(null);
+  //  Save edits directly and update local state
+  const saveEditing = async () => {
+    if (!editedBed || !editingBedId) return;
+    try {
+      setLoadingBedId(editingBedId);
+      const updatedData = await dispatch(editBed(editingBedId, editedBed));
+      if (updatedData?.bed) {
+        // update local table instantly
+        setBeds((prevBeds) =>
+          prevBeds.map((b) => (b._id === editingBedId ? updatedData.bed : b))
+        );
+      }
+      setEditingBedId(null);
+      setEditedBed({});
+    } catch (err) {
+      console.error("Failed to update bed:", err);
+    } finally {
+      setLoadingBedId(null);
+    }
   };
 
   return (
@@ -115,8 +142,8 @@ const RoomBedsDialog = ({
 
           <TableBody>
             {/* Existing beds */}
-            {currentRoom?.beds?.length > 0 &&
-              currentRoom.beds.map((bed) => (
+            {beds?.length > 0 &&
+              beds.map((bed) => (
                 <TableRow key={bed._id}>
                   <TableCell>
                     {editingBedId === bed._id ? (
@@ -145,6 +172,7 @@ const RoomBedsDialog = ({
                       >
                         <MenuItem value="Available">Available</MenuItem>
                         <MenuItem value="Occupied">Occupied</MenuItem>
+                        <MenuItem value="Reserved">Reserved</MenuItem>
                         <MenuItem value="Under Maintenance">
                           Under Maintenance
                         </MenuItem>
@@ -164,8 +192,13 @@ const RoomBedsDialog = ({
                           }}
                           size="small"
                           onClick={saveEditing}
+                          disabled={loadingBedId === bed._id}
                         >
-                          Save
+                          {loadingBedId === bed._id ? (
+                            <CircularProgress size={16} color="#25307F" />
+                          ) : (
+                            "Save"
+                          )}
                         </Button>
                         <Button
                           variant="outlined"

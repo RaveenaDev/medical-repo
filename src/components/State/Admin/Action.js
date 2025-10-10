@@ -19,6 +19,7 @@ import {
   DELETE_STAFFS,
   DELETE_TPA_SERVICE,
   DELETE_TPA_SERVICE_CATEGORY,
+  EDIT_BED_SUCCESS,
   EDIT_BILL,
   EDIT_ESTIMATED_BILL,
   EDIT_INSURED_PATIENT,
@@ -1615,5 +1616,28 @@ export const getAppointmentData = (filter) => async (dispatch) => {
     dispatch({ type: GET_APPOINTMENT_COUNTS, payload: data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const editBed = (bedId, updates) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.patch(`${API_URL}/beds/${bedId}`, updates, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    toast.success("Bed Edited successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to Edit Bed. Please try again.", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
   }
 };

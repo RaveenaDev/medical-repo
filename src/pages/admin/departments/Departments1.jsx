@@ -161,7 +161,7 @@ const Departments1 = (props) => {
       >
         <CommonPanel />
       </div>
-      <div style={{ marginTop: "150px" }}>
+      <div style={{ marginTop: "20vh" }}>
         {loading ? (
           <Box
             sx={{

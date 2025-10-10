@@ -1,6 +1,29 @@
 .container {
   width: 100%;
-  margin: 0vh;
+  margin: 0;
+}
+
+.head{
+  color: #25307F;
+  font-size: 1.7rem;
+  font-weight: 500;
+}
+
+.backButton,
+.forwardButton {
+  margin: 5px 2px 0 0;
+  color: #25307F;
+  background-color: #f1f1f1;
+  font-weight: bold;
+  font-size: 18px; // Adjusted for responsiveness
+  padding: 4px 8px;
+  border: none;
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
 }
 .header {
   display: flex;

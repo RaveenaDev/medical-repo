@@ -10,14 +10,14 @@ import Notifications from "../../../components/NotificationFunc/Notification.jsx
 const Faq = () => {
     return (
         <>
-            <div style={{display:'flex',position:'absolute',right:'2rem',top:'1.2rem',gap:'1rem'}}>
-                <div style={{marginTop:'2px'}}>
-                    <Searchbar/>
-                </div>
-                <Notifications/>
-            </div>
+            {/*<div style={{display:'flex',position:'absolute',right:'2rem',top:'1.2rem',gap:'1rem'}}>*/}
+            {/*    <div style={{marginTop:'2px'}}>*/}
+            {/*        <Searchbar/>*/}
+            {/*    </div>*/}
+            {/*    <Notifications/>*/}
+            {/*</div>*/}
 
-            <Box sx={{width: "100%", padding: "1rem 1rem",marginTop:'2.5rem'}}>
+            <Box sx={{width: "100%", padding: "1rem 1rem"}}>
                 <div
                     style={{
                         color: "#000",

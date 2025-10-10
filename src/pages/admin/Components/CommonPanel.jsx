@@ -139,10 +139,10 @@ const CommonPanel = ({
   return (
     <>
       <div className={ayu.patients}>
-        <div className={ayu.patientHeader}>
-          <Searchbar />
-          <Notifications />
-        </div>
+        {/*<div className={ayu.patientHeader}>*/}
+        {/*  <Searchbar />*/}
+        {/*  <Notifications />*/}
+        {/*</div>*/}
 
         <div className={ayu.cardhandling}>
           <h3 className={ayu.heading}>Dashboard Overview</h3>
@@ -233,7 +233,6 @@ const CommonPanel = ({
             justifyContent="space-between"
             alignItems="center"
             flexDirection={{ md: "row" }}
-            size={12}
             // sx={{ margin: "0 0 20px 0" }}
           >
             <Grid size={3}>

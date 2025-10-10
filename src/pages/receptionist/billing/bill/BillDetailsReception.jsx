@@ -58,7 +58,7 @@ const BillDetailsReception = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  // console.log("original Bill", bill);
+  console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -431,13 +431,14 @@ const BillDetailsReception = (props) => {
                 <span>{bill?.patient?.name || "Not provided"}</span>
               </div>
               <div>
-                <span className={styles["bold"]}>Patient Number</span>
-                <span>{bill?.patient?.phone || "Not provided"}</span>
-              </div>
-              <div>
                 <span className={styles["bold"]}>Invoice Number</span>
                 <span>{bill?.invoiceNumber}</span>
               </div>
+              <div>
+                <span className={styles["bold"]}>Patient Number</span>
+                <span>{bill?.patient?.phone || "Not provided"}</span>
+              </div>
+
               <div>
                 <span className={styles["bold"]}>Invoice Date</span>
                 <span>
@@ -449,6 +450,74 @@ const BillDetailsReception = (props) => {
                 </span>
               </div>
             </div>
+
+            {bill?.insurance && bill?.insurance?.hasInsurance && (
+              <>
+                <div className={styles["billing-divider"]}></div>
+                <div className={styles["billing-insurance-details"]}>
+                  <div>
+                    <span className={styles["bold"]}>Insurance Company</span>
+                    <span>
+                      {bill.insurance.insuranceCompany || "Not provided"}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={styles["bold"]}>Policy Number</span>
+                    <span>{bill.insurance.policyNumber || "Not provided"}</span>
+                  </div>
+                  <div>
+                    <span className={styles["bold"]}>Insurance ID</span>
+                    <span>
+                      {bill.insurance.insuranceIdNumber || "Not provided"}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={styles["bold"]}>Employee Code</span>
+                    <span>{bill.insurance.employeeCode || "Not provided"}</span>
+                  </div>
+                  <div>
+                    <span className={styles["bold"]}>Employer Name</span>
+                    <span>{bill.insurance.employerName || "Not provided"}</span>
+                  </div>
+                  <div>
+                    <span className={styles["bold"]}>Insurance Period</span>
+                    <span>
+                      {bill.insurance.insuranceStartDate
+                        ? `${new Date(
+                            bill.insurance.insuranceStartDate
+                          ).toLocaleDateString("en-IN")} — ${
+                            bill.insurance.insuranceExpiryDate
+                              ? new Date(
+                                  bill.insurance.insuranceExpiryDate
+                                ).toLocaleDateString("en-IN")
+                              : "N/A"
+                          }`
+                        : "Not provided"}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={styles["bold"]}>Approval Status</span>
+                    <span
+                      className={`${styles["status"]} ${String(
+                        bill.insurance.insuranceApproved || ""
+                      ).toLowerCase()}`}
+                    >
+                      {bill.insurance.insuranceApproved || "Pending"}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={styles["bold"]}>Amount Approved</span>
+                    <span>
+                      ₹
+                      {(bill.insurance.amountApproved ?? 0).toLocaleString(
+                        "en-IN"
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className={styles["billing-divider"]}></div>
             <div className={styles["billing-invoice-amount"]}>
               <div className={styles["billing-desc"]}>
@@ -663,11 +732,32 @@ const BillDetailsReception = (props) => {
                 <div className={styles["bold"]}>Status</div>
 
                 <div
-                  className={`${styles["center"]} ${styles["status"]} ${String(
-                    (editableBill?.status ?? bill.status) || ""
-                  ).toLowerCase()}`}
+                  className={`${styles["center"]} ${styles["status"]} ${
+                    editableBill?.status || bill.status
+                      ? styles[
+                          (editableBill?.status || bill.status).toLowerCase()
+                        ]
+                      : ""
+                  }`}
                 >
-                  {editableBill?.status ?? bill.status}
+                  {isEditing ? (
+                    <select
+                      className={`${styles["inputDescription"]} ${styles["statusSelect"]}`}
+                      value={editableBill?.status ?? bill.status}
+                      onChange={(e) => {
+                        const updated = JSON.parse(
+                          JSON.stringify(editableBill)
+                        );
+                        updated.status = e.target.value;
+                        setEditableBill(updated);
+                      }}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Paid">Paid</option>
+                    </select>
+                  ) : (
+                    <div>{editableBill?.status ?? bill.status}</div>
+                  )}
                 </div>
               </div>
             </div>

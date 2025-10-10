@@ -24,7 +24,7 @@ function Reception(props) {
           selectedDate={selectedDate}
         />
       </div>
-      <div style={{ marginTop: "200px" }}>
+      <div style={{ marginTop: "20vh" }}>
         {" "}
         <ReceptionPage
           setSelectedDate={setSelectedDate}

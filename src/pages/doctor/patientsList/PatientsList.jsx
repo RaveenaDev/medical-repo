@@ -209,10 +209,10 @@ const PatientsList = () => {
 
   return (
     <div className="patientsListDoctorContainer">
-      <div className="listHeader">
-        <Searchbar />
-        <Notifications />
-      </div>
+      {/*<div className="listHeader">*/}
+      {/*  <Searchbar />*/}
+      {/*  <Notifications />*/}
+      {/*</div>*/}
 
       <div className="greeting">
         <h4 className="heading">Hello, Dr. {doctorName}</h4>
