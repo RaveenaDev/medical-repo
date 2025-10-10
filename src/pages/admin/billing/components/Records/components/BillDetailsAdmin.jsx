@@ -59,7 +59,7 @@ const BillDetailsAdmin = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  console.log("original Bill", bill);
+  // console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -173,12 +173,12 @@ const BillDetailsAdmin = (props) => {
         date: addForm.date,
       };
 
-      console.log(payload);
+      // console.log(payload);
       const action = await dispatch(addToBill(payload, billId));
       closeAddDialog();
     } catch (e) {
       console.error(e);
-      // You can replace with a toast
+
       toast.error("Failed to add to bill. Please try again.", {
         position: "bottom-right",
         autoClose: 2000,
@@ -565,8 +565,8 @@ const BillDetailsAdmin = (props) => {
                   <div className={styles["billing-name"]}>
                     <p className={styles["bold"]}>Name</p>
                   </div>
-                  <div className={styles["billing-name"]}>
-                    <p className={styles["bold"]}>Type</p>
+                  <div className={styles["billing-date"]}>
+                    <p className={styles["bold"]}>Date</p>
                   </div>
                   <div className={styles["billing-date"]}>
                     <p className={styles["bold"]}>Date</p>
