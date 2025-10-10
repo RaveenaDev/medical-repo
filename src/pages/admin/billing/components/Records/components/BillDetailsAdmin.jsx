@@ -173,12 +173,12 @@ const BillDetailsAdmin = (props) => {
         date: addForm.date,
       };
 
-      console.log(payload);
+      // console.log(payload);
       const action = await dispatch(addToBill(payload, billId));
       closeAddDialog();
     } catch (e) {
       console.error(e);
-      // You can replace with a toast
+
       toast.error("Failed to add to bill. Please try again.", {
         position: "bottom-right",
         autoClose: 2000,
@@ -565,8 +565,8 @@ const BillDetailsAdmin = (props) => {
                   <div className={styles["billing-name"]}>
                     <p className={styles["bold"]}>Name</p>
                   </div>
-                  <div className={styles["billing-name"]}>
-                    <p className={styles["bold"]}>Type</p>
+                  <div className={styles["billing-date"]}>
+                    <p className={styles["bold"]}>Date</p>
                   </div>
                   <div className={styles["billing-date"]}>
                     <p className={styles["bold"]}>Date</p>
@@ -1184,7 +1184,7 @@ const BillDetailsAdmin = (props) => {
 
               {bill?.doctor?.name ? (
                 <div>
-                  <b>Doctor:</b> {bill.doctor.name}
+                  <b>Doctor:</b> {bill?.doctor?.name}
                 </div>
               ) : null}
             </div>
