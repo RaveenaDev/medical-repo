@@ -19,6 +19,11 @@ export default function Library({
     {
       title: "Step Care Default Template",
       description:
+          "Sections: Medical History,Current Medications,Diagnosis & Vitals,Prescriptions & Medicines,Treatment & Tests",
+    },
+    {
+      title: "Step Care Default Template1",
+      description:
         "Sections: Medical History,Current Medications,Diagnosis & Vitals,Prescriptions & Medicines,Treatment & Tests",
     },
   ];
@@ -87,7 +92,11 @@ export default function Library({
                 <button
                   className={styles.applyBtn}
                   onClick={() => {
-                    onApply(null); // send data to parent
+                    if (index === 0) {
+                      onApply(null);
+                    } else {
+                      onApply(`custom${index}`); // custom1, custom2, ...
+                    } // send data to parent
                     setSelectedComponent("PatientInfo");
                     setCompleteData({});
                     setConfirmedSections([]);

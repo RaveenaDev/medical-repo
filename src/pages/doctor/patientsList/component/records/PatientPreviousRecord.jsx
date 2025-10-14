@@ -356,6 +356,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     });
   }, [combined, search]);
 
+  console.log(filtered)
+
   // ---- LAST VISIT
   const lastVisitDate = useMemo(() => {
     const first = combined[0]?.dateISO;

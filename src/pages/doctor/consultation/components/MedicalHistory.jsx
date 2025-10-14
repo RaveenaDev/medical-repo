@@ -1,561 +1,301 @@
-import { Cross, X } from "lucide-react";
-import styles from "./MedicalHistory.module.scss";
+// MedicalHistory.jsx  (REPLACE FILE)
+import { useEffect, useMemo, useState } from "react";
+import VisitCard from "../../patientsList/component/records/VisitCard/VisitCard.jsx"; // keep your existing card
+import "../../patientsList/component/records/PatientPreviousRecord.scss";            // re-use existing styles
 
-import { useEffect, useRef, useState } from "react";
+/* -------- helpers kept from previous medical record flow -------- */
+const palette = ["#5461BE", "#2E823B", "#EAA000", "#F14400"];
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
-const CONDITIONS = [
-  "Hypertension",
-  "Heart failure",
-  "Irregular heartbeat",
-  "Asthma",
-  "Diabetes",
-  "Peripheral Artery Disease",
-  "Heart attack",
-];
+const formatDate = (iso) => {
+  if (!iso) return "N/A";
+  const d = new Date(iso);
+  return isNaN(d) ? "N/A" : d.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+};
+const toISO = (val) => {
+  if (!val) return null;
+  const d = new Date(val);
+  return isNaN(d) ? null : d.toISOString();
+};
+const isObj = (v) => v && typeof v === "object" && !Array.isArray(v);
+const isEmptyObj = (o) => !o || !isObj(o) || Object.keys(o).length === 0;
 
-export const MedicalHistory = ({ patient, onConfirm,selectedComponent,existingData }) => {
-  const [selected, setSelected] = useState([]);
+/* ---- file helpers for attachments in detail view ---- */
+const getFileUrl = (f) => (typeof f === "string" ? f : f?.url || f?.link || f?.href || f?.path || f?.fileUrl || "");
+const getFileName = (f) => {
+  if (typeof f === "string") return f.split("/").pop() || "File";
+  return f?.originalName || f?.name || f?.fileName || "File";
+};
+const getFileType = (f) => {
+  if (typeof f === "string") {
+    const lower = f.toLowerCase();
+    if (/\.(png|jpe?g|gif|webp|bmp|svg)$/.test(lower)) return "image/*";
+    if (/\.(pdf)$/.test(lower)) return "application/pdf";
+    return "";
+  }
+  return f?.fileType || f?.type || "";
+};
+const isImage = (f) => (getFileType(f) || "").toLowerCase().startsWith("image/") || /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(getFileName(f));
+const isPdf = (f) => (getFileType(f) || "").toLowerCase() === "application/pdf" || /\.pdf$/i.test(getFileName(f));
 
-  const [formData, setFormData] = useState({
-    smoke: "",
-    alcohol: "",
-    heartSurgery: "",
-    diagnosticTests: "",
-    otherCondition: "",
-    visitReason: "",
-    allergies: "",
+/* ---------------- API ---------------- */
+async function fetchPatientRecords(patId) {
+  if (!patId) throw new Error("Missing patId");
+  const res = await fetch(`${API_BASE}/api/patients/${encodeURIComponent(patId)}/records`, {
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
   });
+  if (!res.ok) throw new Error(`Fetch ${res.status}`);
+  return res.json();
+}
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+/* ------------- MAIN ------------- */
+export const MedicalHistory = ({ patient }) => {
+  const patId = useMemo(() => patient?.patId || patient?.patID || patient?.id || null, [patient]);
 
-  const questionRef = useRef(null);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openQuestion, setOpenQuestion] = useState(false);
-  const [dynamicQuestions, setDynamicQuestions] = useState([]);
-  const [questionText, setQuestionText] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+  const [details, setDetails] = useState(null); // full payload
+  const [search, setSearch] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null); // list -> detail
 
+  // fetch once per patient
   useEffect(() => {
-    const existing = existingData?.[selectedComponent];
-
-    if (existing) {
-      setFormData({
-        smoke: existing.smoke || "",
-        alcohol: existing.alcohol || "",
-        heartSurgery: existing.heartSurgery || "",
-        diagnosticTests: existing.diagnosticTests || "",
-        otherCondition: "", // handled separately below
-        visitReason: existing.visitReason || "",
-        allergies: existing.allergies || "",
-      });
-
-      const fromExisting = existing.selectedConditions || [];
-
-      // Split out `otherCondition` if it's not in predefined list
-      const preset = CONDITIONS;
-      const validSelections = fromExisting.filter((c) => preset.includes(c));
-      const customCondition = fromExisting.find((c) => !preset.includes(c));
-
-      setSelected(validSelections);
-      setFormData((prev) => ({ ...prev, otherCondition: customCondition || "" }));
-
-      setDynamicQuestions(existing.dynamicQuestions || []);
-
-      const imagePreviews = (existing.images || []).map((fileName) => ({
-        id: fileName,
-        file: { name: fileName },
-      }));
-      const videoPreviews = (existing.videos || []).map((fileName) => ({
-        id: fileName,
-        file: { name: fileName },
-      }));
-
-      setImages(imagePreviews);
-      setVideos(videoPreviews);
-    }
-  }, [patient]);
-
-  useEffect(() => {
-    if (!openQuestion) return;
-
-    const handleClickOutside = (event) => {
-      if (questionRef.current && !questionRef.current.contains(event.target)) {
-        setOpenQuestion(false);
+    let alive = true;
+    (async () => {
+      try {
+        setLoading(true);
+        setErr("");
+        const data = await fetchPatientRecords(patId);
+        if (!alive) return;
+        setDetails(data || {});
+      } catch (e) {
+        if (!alive) return;
+        setErr(e?.message || "Error");
+      } finally {
+        if (alive) setLoading(false);
       }
-    };
+    })();
+    return () => { alive = false; };
+  }, [patId]);
 
-    document.addEventListener("click", handleClickOutside); // changed to 'click'
+  // normalize to combined items (same as previous flow)
+  const combined = useMemo(() => {
+    const consultations = Array.isArray(details?.consultations) ? details.consultations : [];
+    const admissionRequests = Array.isArray(details?.admissionRequests) ? details.admissionRequests : [];
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [openQuestion]);
+    const normConsultations = consultations.map((c) => ({
+      id: c?._id || `consult-${c?.appointment || Math.random().toString(36).slice(2)}`,
+      kind: "consultation",
+      dateISO: toISO(c?.date),
+      displayDate: formatDate(c?.date),
+      description: c?.treatment?.note || c?.consultationData?.complaints || c?.status || "Consultation",
+      doctorName: c?.doctor?.name || "N/A",
+      departmentName: c?.department?.name || "N/A",
+      typeofVisit: c?.typeofVisit || "Consultation",
+      raw: c,
+    }));
 
-  const handleToggle = (condition) => {
-    setSelected((prev) =>
-      prev.includes(condition)
-        ? prev.filter((c) => c !== condition)
-        : [...prev, condition]
+    const normAdmissions = admissionRequests.map((a) => ({
+      id: a?._id || `admit-${Math.random().toString(36).slice(2)}`,
+      kind: "admission",
+      dateISO: toISO(a?.createdAt) || toISO(a?.updatedAt),
+      displayDate: formatDate(a?.createdAt || a?.updatedAt),
+      description: a?.admissionDetails?.medicalNote || a?.status || "Admission Request",
+      doctorName: a?.approval?.doctor?.name || a?.doctor?.name || "N/A",
+      departmentName: a?.admissionDetails?.department || "N/A",
+      typeofVisit: "Admission",
+      raw: a,
+    }));
+
+    return [...normConsultations, ...normAdmissions].sort((a, b) => {
+      if (!a.dateISO && !b.dateISO) return 0;
+      if (!a.dateISO) return 1;
+      if (!b.dateISO) return -1;
+      return new Date(b.dateISO) - new Date(a.dateISO);
+    });
+  }, [details]);
+
+  // search filter
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return combined;
+    return combined.filter((item) =>
+        (item.description || "").toLowerCase().includes(q) ||
+        (item.doctorName || "").toLowerCase().includes(q) ||
+        (item.departmentName || "").toLowerCase().includes(q) ||
+        (item.typeofVisit || "").toLowerCase().includes(q)
+    );
+  }, [combined, search]);
+
+  /* ---------- DETAIL RENDERERS (compact) ---------- */
+  const DetailHeader = ({ title, dateISO, onBack }) => (
+      <div className="records_details_header" style={{ background: "#fff", display: "flex", alignItems: "center", gap: 12 }}>
+        <button type="button" onClick={onBack} className="backBtnPPR">← Back</button>
+        <div className="patient-records-heading">{title}</div>
+        <div style={{ marginLeft: "auto", color: "#25307F", fontWeight: 600 }}>{formatDate(dateISO)}</div>
+      </div>
+  );
+
+  const ConsultationDetail = ({ item }) => {
+    const c = item?.raw || {};
+    const data = c?.consultationData || {};
+    const files = Array.isArray(c?.files) ? c.files : [];
+
+    return (
+        <div className="records_details_body">
+          <div className="kv-table">
+            <div className="kv-row"><div className="kv-key">Doctor</div><div className="kv-val">{item.doctorName}</div></div>
+            <div className="kv-row"><div className="kv-key">Department</div><div className="kv-val">{item.departmentName}</div></div>
+            <div className="kv-row"><div className="kv-key">Type</div><div className="kv-val">{item.typeofVisit}</div></div>
+            {c?.status && <div className="kv-row"><div className="kv-key">Status</div><div className="kv-val">{c.status}</div></div>}
+            {c?.caseId && <div className="kv-row"><div className="kv-key">Case ID</div><div className="kv-val">{c.caseId}</div></div>}
+            {c?.appointment && <div className="kv-row"><div className="kv-key">Appointment</div><div className="kv-val">{c.appointment}</div></div>}
+            {c?.followUpRequired !== undefined && (
+                <div className="kv-row"><div className="kv-key">Follow-up Required</div><div className="kv-val">{c.followUpRequired ? "Yes" : "No"}</div></div>
+            )}
+            {c?.treatment?.note && <div className="kv-row"><div className="kv-key">Treatment Note</div><div className="kv-val">{c.treatment.note}</div></div>}
+          </div>
+
+          {!isEmptyObj(data) && (
+              <>
+                <h4 style={{ marginTop: 16 }}>Consultation Data</h4>
+                <div className="kv-table">
+                  {Object.entries(data).map(([k, v]) => (
+                      <div className="kv-row" key={k}>
+                        <div className="kv-key">{k.replace(/([a-z])([A-Z])/g, "$1 $2")}</div>
+                        <div className="kv-val">{Array.isArray(v) || isObj(v) ? JSON.stringify(v) : String(v || "N/A")}</div>
+                      </div>
+                  ))}
+                </div>
+              </>
+          )}
+
+          {files.length > 0 && (
+              <>
+                <h4 style={{ marginTop: 16 }}>Attachments</h4>
+                <div className="file-grid">
+                  {files.map((f, idx) => {
+                    const url = getFileUrl(f);
+                    const name = getFileName(f);
+                    if (!url) return null;
+                    if (isImage(f)) return <a key={idx} className="file-thumb" href={url} target="_blank" rel="noreferrer"><img src={url} alt={name} /><span className="file-caption">{name}</span></a>;
+                    if (isPdf(f)) return <a key={idx} className="file-card file-card--pdf" href={url} target="_blank" rel="noreferrer">📄 {name}</a>;
+                    return <a key={idx} className="file-card" href={url} target="_blank" rel="noreferrer">📎 {name}</a>;
+                  })}
+                </div>
+              </>
+          )}
+        </div>
     );
   };
 
-  const [images, setImages] = useState([]);
-  const fileInputRef = useRef(null);
+  const AdmissionDetail = ({ item }) => {
+    const a = item?.raw || {};
+    const ad = a?.admissionDetails || {};
+    const phases = Array.isArray(a?.progressPhases) ? a.progressPhases : [];
 
-  const [videos, setVideos] = useState([]);
-  const videoInputRef = useRef(null);
-
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const newImages = files.map((file) => ({
-      id: URL.createObjectURL(file), // unique identifier
-      file,
-    }));
-    setImages((prev) => [...prev, ...newImages]);
-
-    // Reset input value so same file can be re-selected
-    e.target.value = "";
-  };
-
-  const handleRemoveImage = (id) => {
-    setImages((prev) => prev.filter((img) => img.id !== id));
-  };
-
-  const handleVideoUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const newVideos = files.map((file) => ({
-      id: URL.createObjectURL(file),
-      file,
-    }));
-    setVideos((prev) => [...prev, ...newVideos]);
-
-    // Reset input value so same file can be re-selected
-    e.target.value = "";
-  };
-
-  const handleRemoveVideo = (id) => {
-    setVideos((prev) => prev.filter((vid) => vid.id !== id));
-  };
-
-  return (
-    <form
-      className={styles.medicalHistory}
-      onSubmit={(e) => {
-        e.preventDefault();
-
-        // Combine selected conditions and otherCondition if filled
-        const selectedConditions = [
-          ...selected,
-          ...(formData.otherCondition.trim() ? [formData.otherCondition.trim()] : []),
-        ];
-
-        // Remove `otherCondition` from formData before submission
-        const { otherCondition, ...restFormData } = formData;
-
-        const finalData = {
-          ...restFormData,
-          selectedConditions,
-          dynamicQuestions: dynamicQuestions,
-          images: images.map((img) => img.file.name),
-          videos: videos.map((vid) => vid.file.name),
-        };
-
-        // console.log("Submitted Medical History Form:", finalData);
-
-        onConfirm(finalData);
-      }}
-    >
-      <div className={styles.container1}>
-        {/* row1 */}
-        <div className={styles.row1}>
-          <div>
-            <p>Medical History</p>
+    return (
+        <div className="records_details_body">
+          <div className="kv-table">
+            {a?.caseId && <div className="kv-row"><div className="kv-key">Case ID</div><div className="kv-val">{a.caseId}</div></div>}
+            <div className="kv-row"><div className="kv-key">Address</div><div className="kv-val">{ad?.address || "N/A"}</div></div>
+            <div className="kv-row"><div className="kv-key">Contact</div><div className="kv-val">{ad?.contact || "N/A"}</div></div>
+            <div className="kv-row"><div className="kv-key">Emergency Contact</div><div className="kv-val">{ad?.emergencyContact || "N/A"}</div></div>
+            {ad?.reason && <div className="kv-row"><div className="kv-key">Reason</div><div className="kv-val">{ad.reason}</div></div>}
+            <div className="kv-row"><div className="kv-key">Doctor Approval</div><div className="kv-val">{a?.approval?.doctor?.name || "Pending"}</div></div>
+            <div className="kv-row"><div className="kv-key">Admin Approval</div><div className="kv-val">{a?.approval?.admin?.name || "Pending"}</div></div>
           </div>
-          <div className={styles.attachments}>
-            <div
-                className={styles.tooltipWrapper}
-                onClick={() => fileInputRef.current.click()}
-            >
-              <img src="/assets/gallery-icon.svg" alt=""/>
-              <span className={styles.tooltipText}>Image</span>
+
+          <h4 style={{ marginTop: 16, fontSize: "1.1rem", fontWeight: "bold" }}>Progress Phases</h4>
+          {phases.length === 0 ? (
+              <div style={{ color: "#888" }}>No progress phases</div>
+          ) : (
+              <div className="phases-stack">
+                {[...phases]
+                    .sort((p, q) => new Date(toISO(p?.date) || 0) - new Date(toISO(q?.date) || 0))
+                    .map((p, idx) => (
+                        <div className="phase-card" key={p?._id || idx}>
+                          <div className="phase-card-header">
+                            <div className="phase-title">{p?.title || `Phase ${idx + 1}`}</div>
+                            <div className="phase-date">{formatDate(p?.date)}</div>
+                          </div>
+                          <div className="kv-table">
+                            <div className="kv-row"><div className="kv-key">Case ID</div><div className="kv-val">{p?.caseId || "N/A"}</div></div>
+                            <div className="kv-row"><div className="kv-key">Assigned Doctor</div><div className="kv-val">{isObj(p?.assignedDoctor) ? p?.assignedDoctor?.name || p?.assignedDoctor?._id || "N/A" : p?.assignedDoctor || "N/A"}</div></div>
+                            {p?.isFinal !== undefined && <div className="kv-row"><div className="kv-key">Final</div><div className="kv-val">{p.isFinal ? "Yes" : "No"}</div></div>}
+                            {p?.isDone !== undefined && <div className="kv-row"><div className="kv-key">Done</div><div className="kv-val">{p.isDone ? "Yes" : "No"}</div></div>}
+                          </div>
+                          {p?.description && (<><div style={{ fontWeight: 600, marginTop: 8 }}>Description</div><div>{p.description}</div></>)}
+                        </div>
+                    ))}
+              </div>
+          )}
+        </div>
+    );
+  };
+
+  /* ---------- UI ---------- */
+  if (!patId) return <div style={{ color: "#c00", padding: 8 }}>Patient ID not found.</div>;
+  if (loading) return <div className="visit-list" style={{ padding: 16 }}>Loading…</div>;
+  if (err) return <div className="visit-list" style={{ color: "#c00", padding: 16 }}>Failed: {err}</div>;
+
+  // LIST VIEW
+  if (!selectedItem) {
+    return (
+        <section className="patient-visits">
+          <div className="visit-header">
+            <h3>Past Records</h3>
+            <div className="searchContainerPPR">
               <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  ref={fileInputRef}
-                  style={{display: "none"}}
-                  onChange={handleImageUpload}
-              />
-            </div>
-
-            <div className={styles.tooltipWrapper}>
-              <img
-                  src="/assets/formkit-icon.svg"
-                  alt=""
-                  onClick={(e) => {
-                    e.stopPropagation(); // Stop click from bubbling to document
-                    setOpenQuestion((prev) => !prev); // Toggle state
-                  }}
-              />
-              <span className={styles.tooltipText}>Text</span>
-            </div>
-
-            <div className={styles.tooltipWrapper}>
-              <img
-                  src="/assets/Plus.svg"
-                  alt=""
-                  onClick={() =>
-                      openEdit ? setOpenEdit(false) : setOpenEdit(true)
-                  }
-              />
-              <span className={styles.tooltipText}>Edit</span>
-            </div>
-
-            <div
-                className={styles.tooltipWrapper}
-                onClick={() => videoInputRef.current.click()}
-            >
-              <img src="/assets/video-icon.svg" alt=""/>
-              <span className={styles.tooltipText}>Video</span>
-              <input
-                  type="file"
-                  accept="video/*"
-                  multiple
-                  ref={videoInputRef}
-                  style={{display: "none"}}
-                  onChange={handleVideoUpload}
+                  type="search"
+                  className="search_bar"
+                  placeholder="Search Records…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>
-        </div>
 
-        {images.length > 0 && (
-            <>
-              <h4>Images</h4>
-              <div className={styles.imagePreviewRow}>
-                {images.map((img) => (
-                    <div key={img.id} className={styles.imageWrapper}>
-                      <img
-                          src={img.id}
-                          alt="uploaded"
-                          className={styles.uploadedImage}
-                      />
-                      <button
-                          type="button"
-                          className={styles.removeBtn}
-                          onClick={() => handleRemoveImage(img.id)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                ))}
-              </div>
-            </>
-        )}
-
-        {videos.length > 0 && (
-            <>
-              <h4>Videos</h4>
-              <div className={styles.videoPreviewRow}>
-                {videos.map((vid) => (
-                    <div key={vid.id} className={styles.videoWrapper}>
-                      <video
-                          src={vid.id}
-                          className={styles.uploadedVideo}
-                          controls
-                      />
-                      <button
-                          type="button"
-                          className={styles.removeBtn}
-                          onClick={() => handleRemoveVideo(vid.id)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                ))}
-              </div>
-            </>
-        )}
-
-        {/* Open Question */}
-
-        {openQuestion && (
-            <>
-              {" "}
-              <div ref={questionRef} className={styles.customQuestion}>
-                <input
-                    placeholder="Add your Question"
-                    onChange={(e) => setQuestionText(e.target.value)}
+          <div className="visit-list">
+            {filtered.map((item, index) => (
+                <VisitCard
+                    key={item.id}
+                    date={item.displayDate}
+                    description={item.description}
+                    doctor={item.doctorName}
+                    typeofVisit={item.typeofVisit}
+                    department={item.departmentName}
+                    color={palette[index % palette.length]}
+                    departmentbgColor={item.kind === "admission" ? "#F7F8FC" : undefined}
+                    departmentColor={item.kind === "admission" ? "#5461BE" : undefined}
+                    status={item.kind === "admission" ? item.raw?.status : undefined}
+                    kind={item.kind}
+                    onClick={() => setSelectedItem(item)}
                 />
-                <div className={styles.customQuestionBtns}>
-                  <button
-                      className={styles.cancelBtn}
-                      type="button"
-                      onClick={() => setOpenQuestion(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                      className={styles.saveBtn}
-                      type="button"
-                      onClick={() => {
-                        const trimmed = questionText.trim();
-                        if (trimmed) {
-                          setDynamicQuestions((prev) => [
-                            ...prev,
-                            {question: trimmed, answer: ""},
-                          ]);
-                          setQuestionText(""); // optional: reset input
-                          setOpenQuestion(false); // close the box
-                        }
-                      }}
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </>
-        )}
-
-        {/* Dynamic Questions*/}
-        <div className={styles.dynamicQuestionContainer}>
-          {dynamicQuestions.map((item, index) => (
-              <div key={index} className={styles.dynamicQuestion}>
-                <div className={styles.questionHeader}>
-                  <p className={styles.question}>{item.question}</p>
-
-                  {openEdit && (
-                      <button
-                          type="button"
-                          onClick={() =>
-                              setDynamicQuestions((prev) => prev.filter((_, i) => i !== index))
-                          }
-                          className={styles.removeButton}
-                      >
-                        <X/>
-                      </button>
-                  )}
-                </div>
-
-                <input
-                    type="text"
-                    className={styles.input}
-                    placeholder="Please specify"
-                    value={item.answer}
-                    onChange={(e) => {
-                      const newQuestions = [...dynamicQuestions];
-                      newQuestions[index].answer = e.target.value;
-                      setDynamicQuestions(newQuestions);
-                    }}
-                />
-              </div>
-          ))}
-        </div>
-
-        {/* row2 */}
-        <div className={styles.row2}>
-          <input
-              className={styles.input}
-              type="text"
-              name="visitReason" // ✅ Match with the state key
-              placeholder="Please describe the reason for your visit"
-              value={formData.visitReason}
-              onChange={handleChange} // ✅ Reuse the same handler
-          />
-        </div>
-
-        {/* row3 */}
-        <div className={styles.row3}>
-          <p className={styles.question}>
-            Have you had surgery or procedures? (e.g., stents, bypass
-            surgery)
-          </p>
-          <input
-              type="text"
-              name="heartSurgery"
-              className={styles.input}
-              placeholder="If yes, Please specify"
-              value={formData.heartSurgery}
-              onChange={handleChange}
-          />
-        </div>
-
-        {/* row4 */}
-        <div className={styles.row4}>
-          <p className={styles.question}>
-            Have you had any diagnostic tests related to your current condition?
-          </p>
-          <input
-              type="text"
-              name="diagnosticTests"
-              className={styles.input}
-              placeholder="If yes, Please specify"
-              value={formData.diagnosticTests}
-              onChange={handleChange}
-          />
-        </div>
-
-        {/* row5 */}
-        <div className={styles.row5}>
-          <div>
-            <p className={styles.question}>Do you have any allergies?</p>
-            <input
-                type="text"
-                name="allergies" // ✅ Add name
-                placeholder="If yes, Please specify"
-                value={formData.allergies} // ✅ Controlled value
-                onChange={handleChange} // ✅ Universal change handler
-            />
-          </div>
-
-          <div>
-            <p className={styles.question}>Do you smoke?</p>
-            <div className={styles.customRadios}>
-              <label>
-                <input
-                    type="radio"
-                    name="smoke"
-                    value="yes"
-                    checked={formData.smoke === "yes"}
-                    onChange={handleChange}
-                />
-                <span
-                    className={`${styles.circle} ${
-                        formData.smoke === "yes" ? styles.checked : ""
-                    }`}
-                >
-                  {formData.smoke === "yes" && (
-                      <img
-                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                          alt="Checked Icon"
-                          width={24}
-                          height={24}
-                      />
-                  )}
-                </span>
-                Yes
-              </label>
-              <label>
-                <input
-                    type="radio"
-                    name="smoke"
-                    value="no"
-                    checked={formData.smoke === "no"}
-                    onChange={handleChange}
-                />
-                <span
-                    className={`${styles.circle} ${
-                        formData.smoke === "no" ? styles.checked : ""
-                    }`}
-                >
-                  {formData.smoke === "no" && (
-                      <img
-                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                          alt="Checked Icon"
-                          width={24}
-                          height={24}
-                      />
-                  )}
-                </span>
-                No
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <p className={styles.question}>Do you drink alcohol?</p>
-            <div className={styles.customRadios}>
-              <label>
-                <input
-                    type="radio"
-                    name="alcohol"
-                    value="yes"
-                    checked={formData.alcohol === "yes"}
-                    onChange={handleChange}
-                />
-                <span
-                    className={`${styles.circle} ${
-                        formData.alcohol === "yes" ? styles.checked : ""
-                    }`}
-                >
-                  {formData.alcohol === "yes" && (
-                      <img
-                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                          alt="Checked Icon"
-                          width={24}
-                          height={24}
-                      />
-                  )}
-                </span>
-                Yes
-              </label>
-              <label>
-                <input
-                    type="radio"
-                    name="alcohol"
-                    value="no"
-                    checked={formData.alcohol === "no"}
-                    onChange={handleChange}
-                />
-                <span
-                    className={`${styles.circle} ${
-                        formData.alcohol === "no" ? styles.checked : ""
-                    }`}
-                >
-                  {formData.alcohol === "no" && (
-                      <img
-                          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
-                          alt="Checked Icon"
-                          width={24}
-                          height={24}
-                      />
-                  )}
-                </span>
-                No
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* row6 */}
-        <div className={styles.row6}>
-          <p className={styles.question}>
-            Do you have a history of any of the following conditions? (Check all
-            that apply)
-          </p>
-          <div className={styles.options}>
-            {CONDITIONS.map((condition) => (
-                <button
-                    type="button"
-                    key={condition}
-                    className={`${styles.optionBtn} ${
-                        selected.includes(condition) ? styles.selected : ""
-                    }`}
-                    onClick={() => handleToggle(condition)}
-                >
-                  {condition}
-                </button>
             ))}
-            <input
-                className={styles.otherInput}
-                name="otherCondition"
-                placeholder="Other (Please specify):"
-                value={formData.otherCondition}
-                onChange={handleChange}
-            />
+            {filtered.length === 0 && (
+                <div style={{ color: "#888", fontSize: 14, padding: 12 }}>
+                  No records match your search.
+                </div>
+            )}
           </div>
-        </div>
+        </section>
+    );
+  }
 
-        {/* row7 */}
-        <div className={styles.row7}>
-          <button type="submit">Confirm</button>
-        </div>
-      </div>
-    </form>
+  // DETAIL VIEW
+  const title = selectedItem.kind === "consultation" ? "Consultation Details" : "Admission Request";
+  return (
+      <section className="patient_records_details">
+        <DetailHeader title={title} dateISO={selectedItem.dateISO} onBack={() => setSelectedItem(null)} />
+        {selectedItem.kind === "consultation" ? (
+            <ConsultationDetail item={selectedItem} />
+        ) : (
+            <AdmissionDetail item={selectedItem} />
+        )}
+      </section>
   );
 };
+
+export default MedicalHistory;
