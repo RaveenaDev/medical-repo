@@ -46,7 +46,7 @@ const MedicalInfo = ({
     );
   }
 
-  console.log("Pat: ", patDetails);
+  // console.log("Pat: ", patDetails);
 
   // Your dynamic consultation data (may vary in shape)
   const consData = patDetails?.consultations?.[0]?.consultationData;
@@ -78,7 +78,6 @@ const MedicalInfo = ({
       },
     });
   };
-  console.log("Here: ");
   return (
     <>
       <div

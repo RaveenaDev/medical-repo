@@ -8,8 +8,8 @@ import FileDocuments from "./components/FileDocuments.jsx";
 import PatientHeader from "../components/PatientHeader.jsx";
 import styles from "../profile.module.scss";
 import PatientPreviousRecord from "./PatientPreviousRecord.jsx";
-import { Close } from "@mui/icons-material";
-import { Cross, X } from "lucide-react";
+
+import { X } from "lucide-react";
 
 /* ---------- helpers ---------- */
 const humanize = (s = "") =>

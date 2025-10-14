@@ -25,7 +25,7 @@ import ProgressReport from "./pages/receptionist/patients/profile/ProgressReport
 import PatientPanel from "./pages/admin/patient/PatientPanel.jsx";
 import PatientDetails from "./pages/admin/patient/PatientDetails.jsx";
 import Billing from "./pages/admin/Billing";
-import History from "./pages/admin/patient/History.jsx";
+import History from "./pages/admin/patient/medicalInfo/History.jsx";
 import Doctors from "./pages/receptionist/doctors/Doctors.jsx";
 import Inpatients from "./pages/receptionist/inPatients/Inpatients.jsx";
 import Rooms from "./pages/receptionist/rooms/Rooms.jsx";
