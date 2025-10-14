@@ -3,19 +3,8 @@ import "./PatientPreviousRecord.scss";
 import VisitCard from "./VisitCard/VisitCard.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 import Avatar from "@mui/material/Avatar";
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  Stack,
-  DialogTitle,
-} from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import DownloadIcon from "@mui/icons-material/Download";
+import { Box, Dialog, DialogContent, IconButton } from "@mui/material";
+
 /* -------------------- helpers -------------------- */
 const palette = ["#5461BE", "#2E823B", "#EAA000", "#F14400"];
 
@@ -88,16 +77,16 @@ const JSONValue = ({ value }) => {
   if (isPlainObject(value)) {
     if (isEmptyObject(value)) return <span style={{ color: "#888" }}>No data</span>;
     return (
-      <div className="kv-table">
-        {Object.entries(value).map(([k, v]) => (
-          <div className="kv-row" key={k}>
-            <div className="kv-key">{prettifyKey(k)}</div>
-            <div className="kv-val">
-              <JSONValue value={v} />
-            </div>
-          </div>
-        ))}
-      </div>
+        <div className="kv-table">
+          {Object.entries(value).map(([k, v]) => (
+              <div className="kv-row" key={k}>
+                <div className="kv-key">{prettifyKey(k)}</div>
+                <div className="kv-val">
+                  <JSONValue value={v} />
+                </div>
+              </div>
+          ))}
+        </div>
     );
   }
 
@@ -121,12 +110,12 @@ const FileGrid = ({ files = [] }) => {
   if (!Array.isArray(files) || files.length === 0) return <div style={{ color: "#888" }}>No files</div>;
 
   return (
-    <>
-      <div className="file-grid">
-        {files.map((f, idx) => {
-          const url = getFileUrl(f);
-          const name = getFileName(f);
-          const type = getFileType(f);
+      <>
+        <div className="file-grid">
+          {files.map((f, idx) => {
+            const url = getFileUrl(f);
+            const name = getFileName(f);
+            const type = getFileType(f);
 
             if (url && isImageFile(f)) {
               return (
@@ -205,7 +194,6 @@ const FileGrid = ({ files = [] }) => {
 
 /* -------------------- component -------------------- */
 const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
-  console.log(patientDetails)
   const consultations = Array.isArray(patientDetails?.consultations) ? patientDetails.consultations : [];
   const admissionRequests = Array.isArray(patientDetails?.admissionRequests) ? patientDetails.admissionRequests : [];
 
@@ -238,23 +226,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       typeofVisit: "Admission",
       raw: a,
     }));
-    const normDocuments = otherDocuments.map((a) => ({
-      id: a?._id || `doc-${Math.random().toString(36).slice(2)}`,
-      kind: "documents",
-      dateISO: toISO(a?.createdAt) || toISO(a?.updatedAt),
-      displayDate: formatDate(a?.createdAt || a?.updatedAt),
-      description: a?.originalName || "File Uploaded",
-      doctorName: a?.uploadedBy?.role || "N/A",
-      departmentName: a?.admissionDetails?.department || "N/A",
-      typeofVisit: "File Upload",
-      raw: a,
-    }));
 
-    const sorted = [
-      ...normConsultations,
-      ...normAdmissions,
-      ...normDocuments,
-    ].sort((a, b) => {
+    const sorted = [...normConsultations, ...normAdmissions].sort((a, b) => {
       if (!a.dateISO && !b.dateISO) return 0;
       if (!a.dateISO) return 1;
       if (!b.dateISO) return -1;
@@ -262,7 +235,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     });
 
     return sorted;
-  }, [consultations, admissionRequests, otherDocuments]);
+  }, [consultations, admissionRequests]);
 
   const [selectedItem, setSelectedItem] = useState(combined[0] || null);
   const [search, setSearch] = useState("");
@@ -276,10 +249,10 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     const q = search.toLowerCase();
     return combined.filter((item) => {
       return (
-        (item?.description || "").toLowerCase().includes(q) ||
-        (item?.doctorName || "").toLowerCase().includes(q) ||
-        (item?.departmentName || "").toLowerCase().includes(q) ||
-        (item?.typeofVisit || "").toLowerCase().includes(q)
+          (item?.description || "").toLowerCase().includes(q) ||
+          (item?.doctorName || "").toLowerCase().includes(q) ||
+          (item?.departmentName || "").toLowerCase().includes(q) ||
+          (item?.typeofVisit || "").toLowerCase().includes(q)
       );
     });
   }, [combined, search]);
@@ -314,10 +287,10 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     const files = [...images, ...videos, ...attachments];
 
     return (
-      <section className="patient-records">
-        <DateBadge iso={item?.dateISO} />
-        <div className="visit-details">
-          <h3>Consultation Details</h3>
+        <section className="patient-records">
+          <DateBadge iso={item?.dateISO} />
+          <div className="visit-details">
+            <h3>Consultation Details</h3>
 
             <div className="kv-table">
               <div className="kv-row"><div className="kv-key">Doctor</div><div className="kv-val">{item?.doctorName || "N/A"}</div></div>
@@ -364,15 +337,13 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     });
 
     return (
-      <div className="phases-stack">
-        {sorted.map((p, idx) => (
-          <div className="phase-card" key={p?._id || idx}>
-            <div className="phase-card-header">
-              <div className="phase-title">
-                {p?.title || `Phase ${idx + 1}`}
-              </div>
-              <div className="phase-date">{formatDate(p?.date)}</div>
-            </div>
+        <div className="phases-stack">
+          {sorted.map((p, idx) => (
+              <div className="phase-card" key={p?._id || idx}>
+                <div className="phase-card-header">
+                  <div className="phase-title">{p?.title || `Phase ${idx + 1}`}</div>
+                  <div className="phase-date">{formatDate(p?.date)}</div>
+                </div>
 
                 <div className="kv-table">
                   <div className="kv-row"><div className="kv-key">Case ID</div><div className="kv-val">{p?.caseId || "N/A"}</div></div>
@@ -388,11 +359,11 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
 
                 {p?.description && (<><div style={{ fontWeight: 600, marginTop: 8 }}>Description</div><div>{p.description}</div></>)}
 
-            <div style={{ fontWeight: 600, marginTop: 8 }}>Files</div>
-            <FileGrid files={Array.isArray(p?.files) ? p.files : []} />
-          </div>
-        ))}
-      </div>
+                <div style={{ fontWeight: 600, marginTop: 8 }}>Files</div>
+                <FileGrid files={Array.isArray(p?.files) ? p.files : []} />
+              </div>
+          ))}
+        </div>
     );
   };
 
@@ -417,154 +388,11 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
         </section>
     );
   };
-  const renderDocs = (item) => {
-    const c = item?.raw || {};
-    const fileUrl = c?.url || item?.url;
-    const fileType =
-      c?.fileType?.split("/")[1]?.toUpperCase() ||
-      c?.fileType?.toUpperCase() ||
-      "UNKNOWN";
-    const fileName = c?.originalName || item?.description || "Unnamed File";
-    const uploadedByRaw = c?.uploadedBy?.role || item?.doctorName || "N/A";
-    const uploadedBy =
-      uploadedByRaw.charAt(0).toUpperCase() + uploadedByRaw.slice(1);
-    const fileSizeKB = c?.fileSize
-      ? (c.fileSize / 1024).toFixed(2) + " KB"
-      : "Unknown";
-    const uploadDate = new Date(
-      c?.uploadedAt || item?.dateISO
-    ).toLocaleString();
 
-    const isImage = c?.fileType?.startsWith("image/");
-
-    const handleDownload = async () => {
-      if (!fileUrl) return;
-      setDownloading(true);
-      try {
-        const res = await fetch(fileUrl, { mode: "cors" });
-        if (!res.ok) throw new Error("Network error");
-        const blob = await res.blob();
-        const blobUrl = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(blobUrl);
-      } catch (err) {
-        const a = document.createElement("a");
-        a.href = fileUrl;
-        a.setAttribute("download", fileName);
-        a.target = "_blank";
-        a.rel = "noopener";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      }
-      setDownloading(false);
-    };
-
-    return (
-      <section className="patient-records">
-        <div className="visit-details">
-          <h3>File Uploaded</h3>
-
-          <Card
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              p: 2,
-              mt: 2,
-              boxShadow: 2,
-              borderRadius: 2,
-            }}
-          >
-            {isImage && (
-              <img
-                src={fileUrl}
-                alt={fileName}
-                style={{
-                  width: 80,
-                  height: 80,
-                  objectFit: "cover",
-                  borderRadius: 8,
-                  marginRight: 16,
-                }}
-              />
-            )}
-
-            <CardContent sx={{ flex: 1, padding: "8px 0" }}>
-              <Typography variant="body1" fontWeight={600}>
-                {fileName}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {fileType} • {fileSizeKB}
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 0.5 }}>
-                Uploaded By: {uploadedBy}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {uploadDate}
-              </Typography>
-            </CardContent>
-
-            <Stack direction="row" spacing={1}>
-              {isImage ? (
-                <IconButton
-                  color="primary"
-                  onClick={() => setOpenPreview(true)}
-                >
-                  <VisibilityIcon />
-                </IconButton>
-              ) : (
-                <IconButton color="primary" onClick={handleDownload}>
-                  {downloading ? (
-                    <CircularProgress
-                      size={20}
-                      sx={{ color: "primary.main" }}
-                    />
-                  ) : (
-                    <DownloadIcon />
-                  )}
-                </IconButton>
-              )}
-            </Stack>
-          </Card>
-
-          {/* Image Preview Dialog */}
-          {isImage && (
-            <Dialog
-              open={openPreview}
-              onClose={() => setOpenPreview(false)}
-              fullWidth
-              maxWidth="sm"
-            >
-              <DialogTitle>{fileName}</DialogTitle>
-              <DialogContent>
-                <img
-                  src={fileUrl}
-                  alt={fileName}
-                  style={{
-                    width: "100%",
-                    borderRadius: 8,
-                    marginTop: 8,
-                  }}
-                />
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-      </section>
-    );
-  };
   const renderRightDetails = (item) => {
     if (!item) return null;
     if (item.kind === "consultation") return renderConsultation(item);
     if (item.kind === "admission") return renderAdmission(item);
-    if (item.kind === "documents") return renderDocs(item);
-
     return null;
   };
 
@@ -602,15 +430,15 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
                   </div>
                 </div>
 
-            <div className="patient-lastVisit">Last Visit: {lastVisitDate}</div>
-          </section>
+                <div className="patient-lastVisit">Last Visit: {lastVisitDate}</div>
+              </section>
 
-          {/* -------- Body -------- */}
-          <div className="patient-records-container">
-            {/* LEFT LIST */}
-            <section className="patient-visits">
-              <div className="visit-header">
-                <h3>Past Records</h3>
+              {/* -------- Body -------- */}
+              <div className="patient-records-container">
+                {/* LEFT LIST */}
+                <section className="patient-visits">
+                  <div className="visit-header">
+                    <h3>Past Records</h3>
 
                     <div className="searchContainerPPR">
                       <svg width="1vw" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="searchIconPPR">
@@ -623,29 +451,23 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
                     </div>
                   </div>
 
-              <div className="visit-list">
-                {filtered.map((item, index) => (
-                  <VisitCard
-                    key={item.id}
-                    date={item.displayDate}
-                    description={item.description}
-                    doctor={item.doctorName}
-                    typeofVisit={item.typeofVisit}
-                    department={item.departmentName}
-                    color={palette[index % palette.length]}
-                    departmentbgColor={
-                      item.kind === "admission" ? "#F7F8FC" : undefined
-                    }
-                    departmentColor={
-                      item.kind === "admission" ? "#5461BE" : undefined
-                    }
-                    status={
-                      item.kind === "admission" ? item.raw?.status : undefined
-                    }
-                    kind={item.kind}
-                    onClick={() => setSelectedItem(item)}
-                  />
-                ))}
+                  <div className="visit-list">
+                    {filtered.map((item, index) => (
+                        <VisitCard
+                            key={item.id}
+                            date={item.displayDate}
+                            description={item.description}
+                            doctor={item.doctorName}
+                            typeofVisit={item.typeofVisit}
+                            department={item.departmentName}
+                            color={palette[index % palette.length]}
+                            departmentbgColor={item.kind === "admission" ? "#F7F8FC" : undefined}
+                            departmentColor={item.kind === "admission" ? "#5461BE" : undefined}
+                            status={item.kind === "admission" ? item.raw?.status : undefined}
+                            kind={item.kind}
+                            onClick={() => setSelectedItem(item)}
+                        />
+                    ))}
 
                     {filtered.length === 0 && (
                         <div style={{ color: "#888", fontSize: 14, padding: "12px" }}>No records match your search.</div>
