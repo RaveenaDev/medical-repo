@@ -15,6 +15,7 @@ const emptyRow = () => ({
   package: "",
   rate: "",
   unit: "",
+  date: new Date().toISOString().split("T")[0], // default today
 });
 
 const mapOldEstimateToState = (estimateOld) => {
@@ -71,7 +72,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
 
   const packages = useSelector((store) => store.admin.packages);
 
-  console.log("pac:",packages)
+  console.log("pac:", packages);
 
   // ✅ Prefill from estimateOld if provided, else keep empty
   useEffect(() => {
@@ -262,6 +263,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
         rate: Number(row.rate || 0),
         unit: Number(row.unit || 0),
         total: rowTotal(row),
+        date: row.date || new Date().toISOString().split("T")[0],
       })),
     })),
   };
@@ -409,10 +411,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                                 row.package === option ? styles.active : ""
                               }`}
                               onClick={() =>
-                                handleSelectPackage(
-                                  row.id,
-                                  option
-                                )
+                                handleSelectPackage(row.id, option)
                               }
                             >
                               {option.subCategoryName}
@@ -448,6 +447,16 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                         updateDraftRow(row.id, "unit", e.target.value)
                       }
                       placeholder=""
+                    />
+                  </div>
+                  <div>
+                    <p>Date</p>
+                    <input
+                      type="date"
+                      value={row.date}
+                      onChange={(e) =>
+                        updateDraftRow(row.id, "date", e.target.value)
+                      }
                     />
                   </div>
 
@@ -512,6 +521,9 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
               <span>Rate</span>
             </div>
             <div>
+              <span>Date</span>
+            </div>
+            <div>
               <span>Unit</span>
             </div>
             <div>
@@ -566,6 +578,9 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                       </div>
                       <div>
                         <span>{Number(r.rate || 0)}</span>
+                      </div>
+                      <div>
+                        <span>{r.date}</span>
                       </div>
                       <div>
                         <span>{Number(r.unit || 0)}</span>

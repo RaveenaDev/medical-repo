@@ -58,7 +58,7 @@ const BillDetailsReception = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  console.log("original Bill", bill);
+  // console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -72,6 +72,7 @@ const BillDetailsReception = (props) => {
     quantity: "1",
     rate: "0",
     details: "",
+    date: "",
   });
   const [addErrors, setAddErrors] = useState({});
 
@@ -168,6 +169,7 @@ const BillDetailsReception = (props) => {
         quantity: parseIntSafe(addForm.quantity, 0),
         rate: parseIntSafe(addForm.rate, 0),
         details: addForm.details || undefined,
+        date: addForm.date,
       };
 
       const action = await dispatch(addToBill(payload, billId));
@@ -335,7 +337,12 @@ const BillDetailsReception = (props) => {
     const lineTotal = +(base + gstAmt).toFixed(2);
 
     const desc = row.category || row.service || row.details?.description || "—";
-    const name = row.details?.doctorName || row.details?.bedNumber || "—";
+    const name =
+      row.details?.doctorName ||
+      row.details?.bedType ||
+      row.details?.name ||
+      row.category ||
+      "—";
     const hsn = row.hsnSac ?? row.details?.hsnSac ?? "";
 
     const date =
@@ -372,12 +379,40 @@ const BillDetailsReception = (props) => {
 
   // Hospital/patient convenience fields
   const hospital = bill?.hospital || {};
-  const hospitalName = hospital?.name || "Your Hospital Name";
-  const hospitalAddr = hospital?.address || "123 Street, City, State, PIN";
-  const hospitalPhone = hospital?.phone || "+91-XXXXXXXXXX";
+  const hospitalName = hospital?.name || "SAI ASHA HOSPITAL";
+  const hospitalAddr =
+    hospital?.address ||
+    "MEDICINE/ORTHOPAEDIC/SURGERY/MATERNITY/PADEDIATRIC/DENTAL";
+  const hospitalPhone =
+    hospital?.phone ||
+    "05, 1ST FLOOR, LAXCON PLAZA,PLOT NO.20 & 21, SECTOR-19, NERUL";
   const hospitalGstin = hospital?.gstin || ""; // optional
   const hospitalPan = hospital?.pan || ""; // optional
   const logoUrl = hospital?.logoUrl || ""; // optional
+  const normalizeCategory = (name) => {
+    if (!name) return "Other";
+
+    const lower = name.toLowerCase().trim();
+
+    // Add your category normalization rules here:
+    if (lower.includes("room")) return "Room Charges";
+    if (lower.includes("consult")) return "Consultation";
+    if (lower.includes("lab")) return "Lab Tests";
+    if (lower.includes("medicine") || lower.includes("drug"))
+      return "Medicines";
+    if (lower.includes("surgery")) return "Surgery";
+
+    return name.trim();
+  };
+
+  // Group printRows by category
+  const groupedRows = printRows.reduce((acc, row) => {
+    const category = normalizeCategory(row.desc || row.category || "Other");
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(row);
+    return acc;
+  }, {});
+
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -532,6 +567,9 @@ const BillDetailsReception = (props) => {
                   <div className={styles["billing-date"]}>
                     <p className={styles["bold"]}>Date</p>
                   </div>
+                  <div className={styles["billing-date"]}>
+                    <p className={styles["bold"]}>Date</p>
+                  </div>
                   <div className={styles["billing-quantity"]}>
                     <p className={styles["bold"]}>Quantity</p>
                   </div>
@@ -550,7 +588,12 @@ const BillDetailsReception = (props) => {
                     "—";
 
                   const name =
-                    row.details?.doctorName || row.details?.bedNumber || "—";
+                    row.details?.doctorName ||
+                    row.details?.bedNumber ||
+                    row.details?.name ||
+                    "—";
+
+                  const type = row.details?.bedType || "—";
                   const qty = Number.isFinite(+row.quantity)
                     ? +row.quantity
                     : 0;
@@ -594,6 +637,9 @@ const BillDetailsReception = (props) => {
                       </div>
                       <div className={styles["billing-name"]}>
                         <div>{name ? name : "—"}</div>
+                      </div>
+                      <div className={styles["billing-name"]}>
+                        <div>{type ? type : "—"}</div>
                       </div>
                       <div className={styles["billing-date"]}>
                         <div>
@@ -847,7 +893,16 @@ const BillDetailsReception = (props) => {
               fullWidth
               autoFocus
             />
-
+            <TextField
+              label="Date"
+              type="date"
+              value={addForm.date || ""}
+              onChange={handleAddChange("date")}
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              error={!!addErrors.date}
+              helperText={addErrors.date}
+            />
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <TextField
@@ -1065,12 +1120,12 @@ const BillDetailsReception = (props) => {
             {logoUrl ? (
               <img className="logo" src={logoUrl} alt="Hospital Logo" />
             ) : null}
-            <div className="titleblock">
+            <div className="titleblock" style={{ textAlign: "center" }}>
               <div style={{ fontSize: 18, fontWeight: 700 }}>
                 {hospitalName}
               </div>
-              <div className="muted">{hospitalAddr}</div>
-              <div className="muted">Phone: {hospitalPhone}</div>
+              <div>{hospitalAddr}</div>
+              <div> {hospitalPhone}</div>
               {(hospitalGstin || hospitalPan) && (
                 <div className="muted">
                   {hospitalGstin ? <>GSTIN: {hospitalGstin} </> : null}
@@ -1128,12 +1183,30 @@ const BillDetailsReception = (props) => {
 
               {bill?.doctor?.name ? (
                 <div>
-                  <b>Doctor:</b> {bill.doctor.name}
+                  <b>Doctor:</b> {bill?.doctor?.name}
                 </div>
               ) : null}
             </div>
           </div>
-
+          {bill?.insurance?.hasInsurance ? (
+            <div className="box">
+              <div className="section-title">Insurance Details</div>
+              <div>
+                <b>Company Name:</b> {bill?.insurance?.insuranceCompany || "—"}
+              </div>
+              <div>
+                <b>Policy Number:</b> {bill?.insurance?.policyNumber || "—"}
+              </div>
+              <div>
+                <b>Insurance ID:</b> {bill?.insurance?.insuranceIdNumber || "—"}
+              </div>
+              <div>
+                <b>Employee Code:</b> {bill?.insurance?.employeeCode || "—"}
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
           {/* Services Table */}
           <table className="bill">
             <thead>
@@ -1172,62 +1245,68 @@ const BillDetailsReception = (props) => {
               </tr>
             </thead>
             <tbody>
-              {printRows.map((r, idx) => (
-                <tr key={idx}>
-                  <td className="center">{idx + 1}</td>
-                  <td>
-                    <div>{r.desc}</div>
-                    {/* Optional detail bullets */}
-                    {r.raw?.details &&
-                      Object.keys(r.raw.details).length > 0 && (
-                        <div
-                          style={{
-                            fontSize: 11,
-                            marginTop: 4,
-                            lineHeight: 1.4,
-                          }}
-                          className="muted"
-                        >
-                          <strong>Details:</strong>
-                          <ul style={{ margin: "4px 0 0 14px", padding: 0 }}>
-                            {r.raw.details.bedNumber && (
-                              <li>
-                                Bed: {r.raw.details.bedType || "N/A"} (
-                                {r.raw.details.bedNumber})
-                              </li>
-                            )}
+              {Object.entries(groupedRows).map(([category, rows], catIndex) => (
+                <React.Fragment key={catIndex}>
+                  {/* Category Header Row */}
+                  <tr style={{ background: "#f9f9f9" }}>
+                    <td colSpan={hasGST ? 9 : 7} style={{ fontWeight: "bold" }}>
+                      {category}
+                    </td>
+                  </tr>
 
-                            {r.name && <li>Name: {r.name}</li>}
-                          </ul>
-                        </div>
+                  {/* Items under this category */}
+                  {rows.map((r, idx) => (
+                    <tr key={`${catIndex}-${idx}`}>
+                      <td className="center">{idx + 1}</td>
+                      <td>{r.name}</td>
+                      {hasGST && <td className="center">{r.hsn || "—"}</td>}
+                      <td className="center">
+                        {r.date ? new Date(r.date).toLocaleDateString() : "—"}
+                      </td>
+                      <td className="center">{r.qty}</td>
+                      <td className="right">
+                        ₹{r.rate.toLocaleString("en-IN")}
+                      </td>
+                      {hasGST && (
+                        <>
+                          <td className="center">{r.gstPct}%</td>
+                          <td className="right">
+                            ₹
+                            {r.gstAmt.toLocaleString("en-IN", {
+                              minimumFractionDigits: 2,
+                            })}
+                          </td>
+                        </>
                       )}
-                  </td>
-                  {hasGST && <td className="center">{r.hsn || "—"}</td>}
-                  <td className="center">
-                    {r.date ? new Date(r.date).toLocaleDateString() : "—"}
-                  </td>
-                  <td className="center">{r.qty}</td>
-                  <td className="right">₹{r.rate.toLocaleString("en-IN")}</td>
-                  {hasGST && (
-                    <>
-                      <td className="center">{r.gstPct}%</td>
                       <td className="right">
                         ₹
-                        {r.gstAmt.toLocaleString("en-IN", {
+                        {r.lineTotal.toLocaleString("en-IN", {
                           minimumFractionDigits: 2,
                         })}
                       </td>
-                    </>
-                  )}
-                  <td className="right">
-                    ₹
-                    {r.lineTotal.toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </td>
-                </tr>
+                    </tr>
+                  ))}
+
+                  {/* Optional category subtotal */}
+                  <tr style={{ background: "#efefef" }}>
+                    <td colSpan={hasGST ? 8 : 6} className="right">
+                      <b>Subtotal ({category})</b>
+                    </td>
+                    <td className="right">
+                      <b>
+                        ₹
+                        {rows
+                          .reduce((sum, r) => sum + r.lineTotal, 0)
+                          .toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                          })}
+                      </b>
+                    </td>
+                  </tr>
+                </React.Fragment>
               ))}
-              {printRows.length === 0 && (
+
+              {Object.keys(groupedRows).length === 0 && (
                 <tr>
                   <td colSpan={hasGST ? 8 : 6} className="center">
                     No services
@@ -1240,14 +1319,14 @@ const BillDetailsReception = (props) => {
           {/* Totals */}
           <div className="totals">
             {/* <div className="row">
-              <div className="label">
-                <b>Subtotal</b>
-              </div>
-              <div className="value">
-                ₹
-                {subTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-              </div>
-            </div> */}
+                    <div className="label">
+                      <b>Subtotal</b>
+                    </div>
+                    <div className="value">
+                      ₹
+                      {subTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                    </div>
+                  </div> */}
             {hasGST && (
               <div className="row">
                 <div className="label">
@@ -1262,12 +1341,12 @@ const BillDetailsReception = (props) => {
               </div>
             )}
             {/* <div className="row">
-              <div className="label">Round Off</div>
-              <div className="value">
-                ₹
-                {roundOff.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-              </div>
-            </div> */}
+                    <div className="label">Round Off</div>
+                    <div className="value">
+                      ₹
+                      {roundOff.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                    </div>
+                  </div> */}
             <div className="row">
               <div className="label">
                 <b>Grand Total</b>
