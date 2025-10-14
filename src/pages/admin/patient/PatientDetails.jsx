@@ -16,9 +16,9 @@ import {
 import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
 import { Email, WhatsApp } from "@mui/icons-material";
-import {getPatientDetailsById} from "../../../components/State/Receptionist/Action.js";
-import {useDispatch, useSelector} from "react-redux";
-import MedicalInfo from "./MedicalInfo.jsx";
+import { getPatientDetailsById } from "../../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
+import MedicalInfo from "./medicalInfo/MedicalInfo.jsx";
 
 const PatientDetails = (props) => {
   const [medicalHistory, setMedicalHistory] = useState([]);
@@ -26,7 +26,7 @@ const PatientDetails = (props) => {
 
   const location = useLocation();
   const patient = location.state?.patient;
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -52,11 +52,11 @@ const PatientDetails = (props) => {
     fetchData();
   }, []);
 
-    useEffect(() => {
-        dispatch(getPatientDetailsById(patient?._id));
-    }, [dispatch, patient]);
+  useEffect(() => {
+    dispatch(getPatientDetailsById(patient?._id));
+  }, [dispatch, patient]);
 
-    const patDetails = useSelector((store) => store.receptionist.patientDetails);
+  const patDetails = useSelector((store) => store.receptionist.patientDetails);
 
   const upcoming = patient.appointments?.filter(
     (app) => app.status === "Scheduled"
@@ -80,9 +80,9 @@ const PatientDetails = (props) => {
     setShowModal(false);
   };
 
-    if (!patient) {
-        return <p>No patient data found!</p>;
-    }
+  if (!patient) {
+    return <p>No patient data found!</p>;
+  }
 
   return (
     <>
@@ -335,14 +335,14 @@ const PatientDetails = (props) => {
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                  <MedicalInfo
-                      patient={patient}
-                      medicalHistory={medicalHistory}
-                      currentMedications={currentMedications}
-                      patDetails={patDetails}
-                      showSymptoms={false} // Hide Symptoms section
-                      showHistory={false} // Hide Social History section
-                  />
+                <MedicalInfo
+                  patient={patient}
+                  medicalHistory={medicalHistory}
+                  currentMedications={currentMedications}
+                  patDetails={patDetails}
+                  showSymptoms={false} // Hide Symptoms section
+                  showHistory={false} // Hide Social History section
+                />
               </div>
             </div>
 

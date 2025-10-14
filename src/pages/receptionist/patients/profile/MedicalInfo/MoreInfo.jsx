@@ -1,12 +1,15 @@
 // MoreInfo.jsx
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
+import { Box, Button, Drawer } from "@mui/material";
 import { Modal } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import EntityBasedTable from "../EntityBasedTable/index.jsx";
-import FileDocuments from "./FileDocuments";
-import PatientHeader from "./components/PatientHeader.jsx";
-import styles from "./medicalInfo/profile.module.scss";
+import EntityBasedTable from "../../../EntityBasedTable/index.jsx";
+import FileDocuments from "./components/FileDocuments.jsx";
+import PatientHeader from "../components/PatientHeader.jsx";
+import styles from "../profile.module.scss";
+import PatientPreviousRecord from "./PatientPreviousRecord.jsx";
+import { Close } from "@mui/icons-material";
+import { Cross, X } from "lucide-react";
 
 /* ---------- helpers ---------- */
 const humanize = (s = "") =>
@@ -613,73 +616,74 @@ const ConsultationDetails = ({ data }) => {
 
 /* -------------------------------- */
 
-const History = (props) => {
+const MoreInfo = (props) => {
   const [tableIndex, setTableIndex] = useState(null);
-
+  const [drawerOpen, setDrawerOpen] = useState(false); // Drawer control
   useEffect(() => {
     props?.setIsSignUpOrLogin?.(false);
   }, [props]);
 
   const location = useLocation();
-  const { patient, consultationData } = location.state || {};
+  const { patient, consultationData, patDetails } = location.state || {};
 
   // console.log("Pat: ",patient)
-
+  const handleDrawerOpen = () => setDrawerOpen(true);
+  const handleDrawerClose = () => setDrawerOpen(false);
   return (
-    <div style={{ height: "88vh" }}>
+    <div style={{ height: "93vh", position: "relative" }}>
       {!props.entity ? (
         <>
-          <PatientHeader showEditPatients={false} patient={patient} />
-          <div
-            style={{
-              height: "80vh",
-              padding: "1rem",
-              marginBottom: "1rem",
-              marginTop: "50px",
-              display: "grid",
-              gridTemplateColumns: "1.2fr 1fr",
-              gap: "20px",
+          {/* Patient Header */}
+
+          <PatientHeader
+            showEditPatients={false}
+            patient={patient}
+            showAddButton={true}
+            onClickBtn={handleDrawerOpen}
+          />
+
+          {/* Patient previous records */}
+          <PatientPreviousRecord loading={false} patientDetails={patDetails} />
+
+          {/* Drawer for FileDocuments */}
+          <Drawer
+            anchor="right"
+            open={drawerOpen}
+            onClose={handleDrawerClose}
+            PaperProps={{
+              sx: {
+                width: { xs: "90%", sm: "480px" },
+                p: 2,
+                boxShadow: "0px 0px 15px rgba(0,0,0,0.1)",
+                borderTopLeftRadius: "12px",
+                borderBottomLeftRadius: "12px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+              },
             }}
           >
-            {/* LEFT: detailed consultation data */}
-            <div
-              style={{
-                height: "100%",
-                padding: "20px",
-                textAlign: "left",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "white",
-                borderRadius: "8px",
-                overflow: "auto",
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mb: 2,
               }}
             >
-              <h3
-                className={styles.title}
-                style={{
-                  marginTop: 0,
-                  fontWeight: 600,
-                  fontSize: "1.2rem",
+              <h3 style={{ margin: 0 }}>Upload / Manage Files</h3>
+              <Button
+                sx={{
+                  margin: 0,
                 }}
+                onClick={handleDrawerClose}
+                variant="text"
               >
-                Medical Info
-              </h3>
-              <ConsultationDetails data={consultationData} />
-            </div>
+                <X color="red" />
+              </Button>
+            </Box>
 
-            {/* RIGHT: files/documents */}
-            <div
-              style={{
-                height: "100%",
-                padding: "20px",
-                textAlign: "center",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "white",
-                borderRadius: "8px",
-              }}
-            >
-              <FileDocuments patientId={patient._id} />
-            </div>
-          </div>
+            <FileDocuments patientId={patient?._id} />
+          </Drawer>
         </>
       ) : (
         <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />
@@ -688,4 +692,4 @@ const History = (props) => {
   );
 };
 
-export default History;
+export default MoreInfo;

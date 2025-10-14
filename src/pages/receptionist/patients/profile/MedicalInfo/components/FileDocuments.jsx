@@ -23,7 +23,7 @@ import {
   deletePatientFile,
   getPatientFiles,
   uploadPatientFile,
-} from "../../../../components/State/Receptionist/Action.js";
+} from "../../../../../../components/State/Receptionist/Action";
 
 const FileDocuments = ({ patientId }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -37,7 +37,7 @@ const FileDocuments = ({ patientId }) => {
   const patientFiles =
     useSelector((store) => store.receptionist.patientFiles) || [];
 
-  // console.log(patientFiles)
+  console.log(patientFiles);
 
   const handleAddFile = async (event) => {
     const newFile = event.target.files?.[0];
@@ -106,7 +106,7 @@ const FileDocuments = ({ patientId }) => {
   const [deletingFileId, setDeletingFileId] = useState(null);
 
   return (
-    <Box sx={{ padding: 3, maxWidth: 400, margin: "auto" }}>
+    <Box sx={{ padding: 3 }}>
       {/* Header */}
       <Box
         sx={{
@@ -116,18 +116,27 @@ const FileDocuments = ({ patientId }) => {
           mb: 2,
         }}
       >
-        <Typography sx={{ color: "#25307F" }}>Files/ Documents</Typography>
+        <Typography
+          sx={{ color: "#25307F", fontSize: "18px", fontWeight: "550" }}
+        >
+          Files/ Documents
+        </Typography>
         <Button
           variant="text"
           // startIcon={<AddIcon />}
           component="label"
-          sx={{ textTransform: "none", color: "#25307F" }}
+          sx={{
+            textTransform: "none",
+            color: "#25307F",
+            fontSize: "18px",
+            fontWeight: "600",
+          }}
         >
           {loadingAdd ? (
             <CircularProgress size={24} sx={{ color: "#25307F" }} />
           ) : (
             <>
-              <AddIcon />
+              <AddIcon size={24} />
               Add
             </>
           )}

@@ -14,7 +14,7 @@ import Admin from "./pages/admin/index.jsx";
 import Reception from "./pages/admin/reception/Reception.jsx";
 import Appointments from "./pages/admin/reception/appointments/Appointments.jsx";
 import Patients from "./pages/receptionist/patients/Patients.jsx";
-import MoreInfo from "./pages/receptionist/patients/profile/MoreInfo.jsx";
+import MoreInfo from "./pages/receptionist/patients/profile/MedicalInfo/MoreInfo.jsx";
 import Profile from "./pages/receptionist/patients/profile/Profile.jsx";
 import Settings from "./pages/receptionist/Settings/Settings.jsx";
 import Departments1 from "./pages/admin/departments/Departments1.jsx";
