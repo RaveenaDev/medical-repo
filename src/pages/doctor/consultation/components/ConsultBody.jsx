@@ -14,7 +14,7 @@ import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import {
-  generatePrescriptionsWithAI,
+  generatePrescriptionsWithAI, getPatientDetailsByID,
   removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
@@ -93,6 +93,13 @@ const ConsultBody = ({
       appointment: ongoingAppointment?._id,
     });
   }, [ongoingAppointment]);
+
+  useEffect(() => {
+    dispatch(getPatientDetailsByID(ongoingAppointment?.patient._id));
+  }, [dispatch, ongoingAppointment]);
+
+  const patientDetails = useSelector((store) => store.doctor.patientDetails);
+  console.log(patientDetails)
 
   useEffect(() => {
     if (
@@ -763,6 +770,7 @@ const ConsultBody = ({
             )}
             {selectedComponent === "MedicalHistory" && (
               <MedicalHistory
+                  patientDetails={patientDetails}
                 patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="medicalHistory"

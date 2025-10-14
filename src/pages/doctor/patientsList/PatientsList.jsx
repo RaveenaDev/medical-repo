@@ -227,7 +227,7 @@ const PatientsList = () => {
           <ChevronLeft
             size={25}
             strokeWidth={1.7}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer",color:'#25307F' }}
             onClick={() => {
               navigate("/doctor");
             }}
@@ -244,7 +244,7 @@ const PatientsList = () => {
             className="addButton"
             onClick={() => navigate("admission-forms")}
           >
-            Addmission Forms
+            Admission Forms
           </div>
         </div>
       </div>
