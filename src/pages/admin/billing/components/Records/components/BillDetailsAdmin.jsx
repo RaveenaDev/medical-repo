@@ -558,15 +558,15 @@ const BillDetailsAdmin = (props) => {
             <div className={styles["billing-invoice-amount"]}>
               <div className={styles["billing-desc"]}>
                 {/* Header row (unchanged) */}
-                <div className="">
+                <div className={styles["billing-table-header"]}>
                   <div className={styles["billing-description"]}>
                     <p className={styles["bold"]}>Description</p>
                   </div>
                   <div className={styles["billing-name"]}>
                     <p className={styles["bold"]}>Name</p>
                   </div>
-                  <div className={styles["billing-date"]}>
-                    <p className={styles["bold"]}>Date</p>
+                  <div className={styles["billing-name"]}>
+                    <p className={styles["bold"]}>Type</p>
                   </div>
                   <div className={styles["billing-date"]}>
                     <p className={styles["bold"]}>Date</p>
