@@ -11,7 +11,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  CircularProgress,
 } from "@mui/material";
 import FolderIcon from "@mui/icons-material/Folder";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,7 +22,7 @@ import {
   deletePatientFile,
   getPatientFiles,
   uploadPatientFile,
-} from "../../../../components/State/Receptionist/Action.js";
+} from "../../../../../components/State/Receptionist/Action.js";
 
 const FileDocuments = ({ patientId }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -42,12 +41,10 @@ const FileDocuments = ({ patientId }) => {
   const handleAddFile = async (event) => {
     const newFile = event.target.files?.[0];
     if (newFile) {
-      setLoadingAdd(true);
       const formData = new FormData();
       formData.append("files", newFile);
       formData.append("patientId", patientId);
       await dispatch(uploadPatientFile(formData));
-      setLoadingAdd(false);
       // allow selecting same file again next time
       event.target.value = "";
     }
@@ -55,9 +52,7 @@ const FileDocuments = ({ patientId }) => {
   };
 
   const handleDelete = async (id) => {
-    setDeletingFileId(id);
     await dispatch(deletePatientFile(id));
-    setDeletingFileId(null);
     dispatch(getPatientFiles(patientId));
   };
 
@@ -102,9 +97,6 @@ const FileDocuments = ({ patientId }) => {
     }
   };
 
-  const [loadingAdd, setLoadingAdd] = useState(false);
-  const [deletingFileId, setDeletingFileId] = useState(null);
-
   return (
     <Box sx={{ padding: 3, maxWidth: 400, margin: "auto" }}>
       {/* Header */}
@@ -119,18 +111,11 @@ const FileDocuments = ({ patientId }) => {
         <Typography sx={{ color: "#25307F" }}>Files/ Documents</Typography>
         <Button
           variant="text"
-          // startIcon={<AddIcon />}
+          startIcon={<AddIcon />}
           component="label"
           sx={{ textTransform: "none", color: "#25307F" }}
         >
-          {loadingAdd ? (
-            <CircularProgress size={24} sx={{ color: "#25307F" }} />
-          ) : (
-            <>
-              <AddIcon />
-              Add
-            </>
-          )}
+          Add
           <input
             type="file"
             hidden
@@ -213,11 +198,7 @@ const FileDocuments = ({ patientId }) => {
                 onClick={() => handleDelete(file._id)}
                 color="error"
               >
-                {deletingFileId === file._id ? (
-                  <CircularProgress size={20} sx={{ color: "red" }} />
-                ) : (
-                  <DeleteIcon />
-                )}
+                <DeleteIcon />
               </IconButton>
             </Stack>
           </Card>

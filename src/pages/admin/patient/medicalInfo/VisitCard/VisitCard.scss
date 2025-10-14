@@ -1,0 +1,84 @@
+.visit-card {
+  border: 1px solid #5c6ea7;
+  background: #f2f5ff;
+  border-radius: 5px;
+  padding: 1rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  .visit-card-color {
+    border-radius: 50%;
+    width: 1.5vh;
+    height: 1.5vh;
+    margin-top: -2.8rem;
+  }
+
+  .visit-card-content {
+    margin-left: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+
+    .visit-card-row {
+      display: flex;
+      justify-content: space-between;
+
+      .card-date {
+        font-family: "Karla";
+        font-weight: 500;
+        font-size: max(0.9vw, 9px);
+
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .visit-card-department {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        border-radius: 20px;
+        padding: 0.125rem 0.625rem;
+        font-family: "Karla", sans-serif;
+        font-weight: 500;
+        font-size: max(0.9vw, 9px);
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+    }
+
+    .visit-card-description {
+      color: #333333;
+      font-family: "Karla", sans-serif;
+      font-weight: 500;
+      font-size: 1.8vh;
+      line-height: 100%;
+      letter-spacing: 0%;
+      vertical-align: middle;
+    }
+
+    .visit-card-footer {
+      display: flex;
+      gap: 0.625rem;
+      font-family: "Karla", sans-serif;
+      font-weight: 500;
+      font-size: 1.8vh;
+      line-height: 100%;
+      letter-spacing: 0%;
+      vertical-align: middle;
+      color: #878787c2;
+      align-items: center;
+
+      .bullet {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #333333;
+      }
+    }
+  }
+}

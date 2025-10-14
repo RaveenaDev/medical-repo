@@ -4,7 +4,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import PaymentDetailsModal from "./Modal/PaymentDetailsModal";
 
-const PatientHeader = ({ patient }) => {
+const PatientHeader = ({ patient, showAddButton, onClickBtn }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -92,6 +92,29 @@ const PatientHeader = ({ patient }) => {
 
         <p>XXXXXX</p>
       </div>
+      {showAddButton && (
+        <div className="patient-actions" style={{ cursor: "pointer" }}>
+          <div
+            className="box"
+            style={{
+              cursor: "pointer",
+              background: "#25307f",
+              padding: "2px 16px",
+            }}
+            onClick={onClickBtn}
+          >
+            <p
+              style={{
+                cursor: "pointer",
+
+                color: "#fff",
+              }}
+            >
+              Add files
+            </p>
+          </div>
+        </div>
+      )}
       {/* <div className="patient-actions" style={{ cursor: "pointer" }}>
         <div className="box" onClick={handleOpen} style={{ cursor: "pointer" }}>
           <svg
