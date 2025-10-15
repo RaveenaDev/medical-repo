@@ -34,6 +34,9 @@ import EditRateModal from "./components/EditRateModal.jsx";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { Alert, Snackbar } from "@mui/material";
+import { FileWarning, TriangleAlert } from "lucide-react";
+
 const Rate = () => {
   const [filters, setFilters] = useState({
     department: "",
@@ -48,7 +51,13 @@ const Rate = () => {
 
   const reduxServices = useSelector((store) => store.admin.services);
   const departments = useSelector((store) => store.admin.departments);
+  const PROTECTED_SERVICES = new Set(["Room Type Service", "Consultation"]);
+  const [notice, setNotice] = useState({ open: false, text: "" });
 
+  // 3) helpers
+  const isProtected = (name) =>
+    PROTECTED_SERVICES.has(String(name || "").trim());
+  const showNotice = (text) => setNotice({ open: true, text });
   // console.log("Redux Services: ", reduxServices);
   const services = reduxServices.map((service) => ({
     serviceId: service._id,
@@ -111,7 +120,11 @@ const Rate = () => {
   };
 
   const handleDelete = () => {
-    // dispatch(deleteService(selectedService.category.categoryId));
+    const name = selectedService?.service?.serviceName;
+    if (isProtected(name)) {
+      showNotice(`"${name}" is protected. Do not delete its categories.`);
+      return;
+    }
     dispatch(
       deleteServiceCategory(
         selectedService.service.serviceId,
@@ -121,6 +134,11 @@ const Rate = () => {
   };
 
   const handleDeleteService = () => {
+    const name = selectedService?.service?.serviceName;
+    if (isProtected(name)) {
+      showNotice(`"${name}" is a core service. Do not delete this service.`);
+      return;
+    }
     dispatch(deleteService(selectedService.service.serviceId));
   };
 
@@ -341,6 +359,30 @@ const Rate = () => {
               )
               .map((service, ayu) => (
                 <div key={ayu} className="service-container">
+                  {/* Additional charges note */}
+                  {(service.serviceName === "Room Type Service" ||
+                    service.serviceName === "Consultation") && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        padding: "0px 0px 4px 13px",
+                      }}
+                    >
+                      <TriangleAlert size={16} color="red" />
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        sx={{ fontSize: "0.75rem" }}
+                      >
+                        {service.serviceName === "Room Type Service"
+                          ? "Add all room-related charges here"
+                          : "Add all consultation-related charges here"}
+                      </Typography>
+                    </div>
+                  )}
+
                   {service.categories.map((category, index) => (
                     <div className="rate-table-row" key={index}>
                       <span className="blue">
@@ -399,6 +441,7 @@ const Rate = () => {
                       >
                         <MoreVertIcon />
                       </IconButton>
+
                       {/* Dropdown Menu */}
                       <Menu
                         key={`${service.serviceId}-${category.categoryId}`}
@@ -443,44 +486,43 @@ const Rate = () => {
                           Edit
                         </MenuItem>
 
-                          {
-                              service.categories.length > 1 && (
-                                  <MenuItem
-                                      value="delete"
-                                      sx={{ display: "flex", gap: "4px" }}
-                                      onClick={() => handleDelete()}
-                                  >
-                                      <svg
-                                          width="20"
-                                          height="20"
-                                          viewBox="0 0 20 20"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                          <mask
-                                              id="mask0_1313_1069"
-                                              mask-type="alpha"
-                                              maskUnits="userSpaceOnUse"
-                                              x="0"
-                                              y="0"
-                                              width="20"
-                                              height="20"
-                                          >
-                                              <rect width="20" height="20" fill="#D9D9D9" />
-                                          </mask>
-                                          <g mask="url(#mask0_1313_1069)">
-                                              <path
-                                                  d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
-                                                  fill="#FF4800"
-                                              />
-                                          </g>
-                                      </svg>
-                                      Delete
-                                  </MenuItem>
-                              )
-                          }
+                        {!isProtected(service.serviceName) &&
+                          service.categories.length > 1 && (
+                            <MenuItem
+                              value="delete"
+                              sx={{ display: "flex", gap: "4px" }}
+                              onClick={() => handleDelete()}
+                            >
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <mask
+                                  id="mask0_1313_1069"
+                                  mask-type="alpha"
+                                  maskUnits="userSpaceOnUse"
+                                  x="0"
+                                  y="0"
+                                  width="20"
+                                  height="20"
+                                >
+                                  <rect width="20" height="20" fill="#D9D9D9" />
+                                </mask>
+                                <g mask="url(#mask0_1313_1069)">
+                                  <path
+                                    d="M5.83301 17.5C5.37467 17.5 4.98231 17.3368 4.65592 17.0104C4.32954 16.684 4.16634 16.2917 4.16634 15.8333V5H3.33301V3.33333H7.49967V2.5H12.4997V3.33333H16.6663V5H15.833V15.8333C15.833 16.2917 15.6698 16.684 15.3434 17.0104C15.017 17.3368 14.6247 17.5 14.1663 17.5H5.83301ZM14.1663 5H5.83301V15.8333H14.1663V5ZM7.49967 14.1667H9.16634V6.66667H7.49967V14.1667ZM10.833 14.1667H12.4997V6.66667H10.833V14.1667Z"
+                                    fill="#FF4800"
+                                  />
+                                </g>
+                              </svg>
+                              Delete
+                            </MenuItem>
+                          )}
 
-                        {index === 0 && (
+                        {index === 0 && !isProtected(service.serviceName) && (
                           <MenuItem
                             value="delete"
                             sx={{ display: "flex", gap: "4px" }}
@@ -512,6 +554,12 @@ const Rate = () => {
                               </g>
                             </svg>
                             Delete Service
+                          </MenuItem>
+                        )}
+
+                        {isProtected(service.serviceName) && index === 0 && (
+                          <MenuItem disabled sx={{ opacity: 0.7 }}>
+                            Protected service. Deletion disabled
                           </MenuItem>
                         )}
                       </Menu>
@@ -776,6 +824,22 @@ const Rate = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <Snackbar
+        open={notice.open}
+        autoHideDuration={4000}
+        onClose={() => setNotice({ open: false, text: "" })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setNotice({ open: false, text: "" })}
+          severity="warning"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {notice.text || "This action is not allowed."}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
