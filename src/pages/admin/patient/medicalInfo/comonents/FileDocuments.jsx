@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,6 +11,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  CircularProgress,
 } from "@mui/material";
 import FolderIcon from "@mui/icons-material/Folder";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -18,6 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download"; // ⬅️ NEW
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   deletePatientFile,
   getPatientFiles,
@@ -25,8 +27,10 @@ import {
 } from "../../../../../components/State/Receptionist/Action.js";
 
 const FileDocuments = ({ patientId }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState([]);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [loadingAdd, setLoadingAdd] = useState(false);
+  const [deletingFileId, setDeletingFileId] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,23 +40,27 @@ const FileDocuments = ({ patientId }) => {
   const patientFiles =
     useSelector((store) => store.receptionist.patientFiles) || [];
 
-  // console.log(patientFiles)
-
-  const handleAddFile = async (event) => {
-    const newFile = event.target.files?.[0];
-    if (newFile) {
+  const handleAddFiles = async (event) => {
+    const files = event.target.files;
+    if (files && files.length) {
+      setLoadingAdd(true);
       const formData = new FormData();
-      formData.append("files", newFile);
+      Array.from(files).forEach((file) => {
+        formData.append("files", file);
+      });
       formData.append("patientId", patientId);
       await dispatch(uploadPatientFile(formData));
-      // allow selecting same file again next time
+      setLoadingAdd(false);
+      // Clear file input
       event.target.value = "";
+      dispatch(getPatientFiles(patientId));
     }
-    dispatch(getPatientFiles(patientId));
   };
 
   const handleDelete = async (id) => {
+    setDeletingFileId(id);
     await dispatch(deletePatientFile(id));
+    setDeletingFileId(null);
     dispatch(getPatientFiles(patientId));
   };
 
@@ -98,7 +106,7 @@ const FileDocuments = ({ patientId }) => {
   };
 
   return (
-    <Box sx={{ padding: 3, maxWidth: 400, margin: "auto" }}>
+    <Box sx={{ padding: 3 }}>
       {/* Header */}
       <Box
         sx={{
@@ -108,18 +116,34 @@ const FileDocuments = ({ patientId }) => {
           mb: 2,
         }}
       >
-        <Typography sx={{ color: "#25307F" }}>Files/ Documents</Typography>
+        <Typography
+          sx={{ color: "#25307F", fontSize: "18px", fontWeight: "550" }}
+        >
+          Files/ Documents
+        </Typography>
         <Button
           variant="text"
-          startIcon={<AddIcon />}
           component="label"
-          sx={{ textTransform: "none", color: "#25307F" }}
+          sx={{
+            textTransform: "none",
+            color: "#25307F",
+            fontSize: "18px",
+            fontWeight: "600",
+          }}
         >
-          Add
+          {loadingAdd ? (
+            <CircularProgress size={24} sx={{ color: "#25307F" }} />
+          ) : (
+            <>
+              <AddIcon size={24} />
+              Add
+            </>
+          )}
           <input
             type="file"
             hidden
-            onChange={handleAddFile}
+            multiple
+            onChange={handleAddFiles}
             accept="application/pdf, image/*"
           />
         </Button>
@@ -198,7 +222,11 @@ const FileDocuments = ({ patientId }) => {
                 onClick={() => handleDelete(file._id)}
                 color="error"
               >
-                <DeleteIcon />
+                {deletingFileId === file._id ? (
+                  <CircularProgress size={20} sx={{ color: "red" }} />
+                ) : (
+                  <DeleteIcon />
+                )}
               </IconButton>
             </Stack>
           </Card>
