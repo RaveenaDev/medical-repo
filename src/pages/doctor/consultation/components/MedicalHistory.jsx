@@ -1,7 +1,14 @@
 // MedicalHistory.jsx — list -> detail using CSS modules, with file management for consultationData.files.{images,videos,attachments}
 import { useMemo, useState } from "react";
 import { ChevronLeft } from "lucide-react";
-import { Dialog, DialogContent, IconButton } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  IconButton,
+  DialogTitle,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import VisitCard from "../../patientsList/component/records/VisitCard/VisitCard.jsx";
 import styles from "./MedicalHistory.module.scss";
 
@@ -11,7 +18,13 @@ const palette = ["#5461BE", "#2E823B", "#EAA000", "#F14400"];
 const formatDate = (iso) => {
   if (!iso) return "N/A";
   const d = new Date(iso);
-  return isNaN(d) ? "N/A" : d.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+  return isNaN(d)
+    ? "N/A"
+    : d.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
 };
 const toISO = (v) => {
   if (!v) return null;
@@ -25,7 +38,9 @@ const isEmpty = (o) => !o || !isObj(o) || Object.keys(o).length === 0;
 const fileUrl = (f) => {
   if (!f) return "";
   if (typeof f === "string") return f;
-  return f.url || f.Url || f.URL || f.link || f.href || f.path || f.fileUrl || "";
+  return (
+    f.url || f.Url || f.URL || f.link || f.href || f.path || f.fileUrl || ""
+  );
 };
 const fileName = (f) => {
   if (!f) return "File";
@@ -87,7 +102,13 @@ const asFiles = (x) => {
 };
 
 /* hide file buckets from JSON dump */
-const FILE_KEYS = new Set(["files", "attachments", "documents", "images", "videos"]);
+const FILE_KEYS = new Set([
+  "files",
+  "attachments",
+  "documents",
+  "images",
+  "videos",
+]);
 const stripFileBuckets = (obj) => {
   if (!isObj(obj)) return obj;
   const out = {};
@@ -109,31 +130,38 @@ const gatherFiles = (...candidates) => {
 
 /* ---------- simple JSON renderer ---------- */
 const JsonValue = ({ value }) => {
-  if (value === null || value === undefined || value === "") return <span style={{ color: "#888" }}>N/A</span>;
+  if (value === null || value === undefined || value === "")
+    return <span style={{ color: "#888" }}>N/A</span>;
   if (Array.isArray(value)) {
-    if (value.length === 0) return <span style={{ color: "#888" }}>No items</span>;
+    if (value.length === 0)
+      return <span style={{ color: "#888" }}>No items</span>;
     return (
-        <ul className={styles.kvList}>
-          {value.map((v, i) => (
-              <li key={i}>{isObj(v) || Array.isArray(v) ? <JsonValue value={v} /> : String(v)}</li>
-          ))}
-        </ul>
+      <ul className={styles.kvList}>
+        {value.map((v, i) => (
+          <li key={i}>
+            {isObj(v) || Array.isArray(v) ? <JsonValue value={v} /> : String(v)}
+          </li>
+        ))}
+      </ul>
     );
   }
   if (isObj(value)) {
     const entries = Object.entries(value);
-    if (entries.length === 0) return <span style={{ color: "#888" }}>No data</span>;
+    if (entries.length === 0)
+      return <span style={{ color: "#888" }}>No data</span>;
     return (
-        <div className={styles.kvTable}>
-          {entries.map(([k, v]) => (
-              <div className={styles.kvRow} key={k}>
-                <div className={styles.kvKey}>{k.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_\-]+/g, " ")}</div>
-                <div className={styles.kvVal}>
-                  <JsonValue value={v} />
-                </div>
-              </div>
-          ))}
-        </div>
+      <div className={styles.kvTable}>
+        {entries.map(([k, v]) => (
+          <div className={styles.kvRow} key={k}>
+            <div className={styles.kvKey}>
+              {k.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_\-]+/g, " ")}
+            </div>
+            <div className={styles.kvVal}>
+              <JsonValue value={v} />
+            </div>
+          </div>
+        ))}
+      </div>
     );
   }
   return <span>{String(value)}</span>;
@@ -144,7 +172,8 @@ const FileGrid = ({ files = [] }) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(null);
 
-  if (!Array.isArray(files) || files.length === 0) return <div style={{ color: "#888" }}>No files</div>;
+  if (!Array.isArray(files) || files.length === 0)
+    return <div style={{ color: "#888" }}>No files</div>;
 
   const openPreview = (f) => {
     setActive(f);
@@ -156,127 +185,162 @@ const FileGrid = ({ files = [] }) => {
   };
 
   return (
-      <>
-        <div className={styles.fileGrid}>
-          {files.map((f, i) => {
-            const url = fileUrl(f);
-            const name = fileName(f);
-            const type = fileType(f);
+    <>
+      <div className={styles.fileGrid}>
+        {files.map((f, i) => {
+          const url = fileUrl(f);
+          const name = fileName(f);
+          const type = fileType(f);
 
-            if (url && isImage(f)) {
-              return (
-                  <button
-                      key={f?._id || i}
-                      type="button"
-                      className={styles.fileThumb}
-                      title={name}
-                      onClick={() => openPreview(f)}
-                  >
-                    <img
-                        src={url}
-                        alt={name}
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                          e.currentTarget.parentElement.classList.add(styles.fileThumbBroken);
-                        }}
-                    />
-                    <span className={styles.fileCaption}>{name}</span>
-                  </button>
-              );
-            }
-
-            if (url && isPdf(f)) {
-              return (
-                  <button
-                      key={f?._id || i}
-                      type="button"
-                      className={`${styles.fileCard} ${styles.fileCardPdf}`}
-                      onClick={() => openPreview(f)}
-                      title={name}
-                  >
-                    <div className={styles.fileIcon} aria-hidden>📄</div>
-                    <div className={styles.fileMeta}>
-                      <div className={styles.fileName}>{name}</div>
-                      <div className={styles.fileType}>{type || "application/pdf"}</div>
-                      <div className={styles.fileOpen}>Click to preview</div>
-                    </div>
-                  </button>
-              );
-            }
-
+          if (url && isImage(f)) {
             return (
-                <div key={f?._id || i} className={styles.fileCard} title={name}>
-                  <div className={styles.fileIcon} aria-hidden>📎</div>
-                  <div className={styles.fileMeta}>
-                    <div className={styles.fileName}>{name}</div>
-                    {type ? <div className={styles.fileType}>{type}</div> : null}
-                    {url ? (
-                        <a className={styles.fileOpen} href={url} target="_blank" rel="noreferrer">Open</a>
-                    ) : (
-                        <span className={styles.fileMissing}>No URL</span>
-                    )}
-                  </div>
-                </div>
+              <button
+                key={f?._id || i}
+                type="button"
+                className={styles.fileThumb}
+                title={name}
+                onClick={() => openPreview(f)}
+              >
+                <img
+                  src={url}
+                  alt={name}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.parentElement.classList.add(
+                      styles.fileThumbBroken
+                    );
+                  }}
+                />
+                <span className={styles.fileCaption}>{name}</span>
+              </button>
             );
-          })}
-        </div>
+          }
 
-        <Dialog open={open} onClose={closePreview} fullWidth maxWidth="md">
-          <DialogContent
-              sx={{
-                p: 0,
-                background: "#000",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+          if (url && isPdf(f)) {
+            return (
+              <button
+                key={f?._id || i}
+                type="button"
+                className={`${styles.fileCard} ${styles.fileCardPdf}`}
+                // onClick={() => openPreview(f)}
+                title={name}
+              >
+                <div className={styles.fileIcon} aria-hidden>
+                  📄
+                </div>
+                <div className={styles.fileMeta}>
+                  <div className={styles.fileName}>{name}</div>
+                  <div className={styles.fileType}>
+                    {type || "application/pdf"}
+                  </div>
+                  {/* <div className={styles.fileOpen}>Click to preview</div> */}
+                </div>
+              </button>
+            );
+          }
+
+          return (
+            <div key={f?._id || i} className={styles.fileCard} title={name}>
+              <div className={styles.fileIcon} aria-hidden>
+                📎
+              </div>
+              <div className={styles.fileMeta}>
+                <div className={styles.fileName}>{name}</div>
+                {type ? <div className={styles.fileType}>{type}</div> : null}
+                {url ? (
+                  <a
+                    className={styles.fileOpen}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open
+                  </a>
+                ) : (
+                  <span className={styles.fileMissing}>No URL</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <Dialog open={open} onClose={closePreview} fullWidth maxWidth="md">
+        <DialogContent
+          sx={{
+            p: 0,
+            background: "#000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {active ? (
+            isImage(active) ? (
+              <img
+                src={fileUrl(active)}
+                alt={fileName(active)}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "80vh",
+                  objectFit: "contain",
+                }}
+              />
+            ) : isPdf(active) ? (
+              <iframe
+                src={fileUrl(active)}
+                title={fileName(active)}
+                style={{
+                  width: "100%",
+                  height: "80vh",
+                  border: "none",
+                  background: "#fff",
+                }}
+              />
+            ) : null
+          ) : null}
+          <IconButton
+            onClick={closePreview}
+            sx={{ position: "absolute", top: 8, right: 8, color: "#fff" }}
+            aria-label="Close preview"
           >
-            {active ? (
-                isImage(active) ? (
-                    <img
-                        src={fileUrl(active)}
-                        alt={fileName(active)}
-                        style={{ maxWidth: "100%", maxHeight: "80vh", objectFit: "contain" }}
-                    />
-                ) : isPdf(active) ? (
-                    <iframe
-                        src={fileUrl(active)}
-                        title={fileName(active)}
-                        style={{ width: "100%", height: "80vh", border: "none", background: "#fff" }}
-                    />
-                ) : null
-            ) : null}
-            <IconButton
-                onClick={closePreview}
-                sx={{ position: "absolute", top: 8, right: 8, color: "#fff" }}
-                aria-label="Close preview"
-            >
-              ✕
-            </IconButton>
-          </DialogContent>
-        </Dialog>
-      </>
+            ✕
+          </IconButton>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
 /* ---------- main ---------- */
 export const MedicalHistory = ({ patientDetails = {}, loading }) => {
-  console.log("Det: ",patientDetails)
-  const consultations = Array.isArray(patientDetails?.consultations) ? patientDetails.consultations : [];
-  const admissionRequests = Array.isArray(patientDetails?.admissionRequests) ? patientDetails.admissionRequests : [];
+  console.log("Det: ", patientDetails);
+  const [openPreview, setOpenPreview] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
+  const consultations = Array.isArray(patientDetails?.consultations)
+    ? patientDetails.consultations
+    : [];
+  const admissionRequests = Array.isArray(patientDetails?.admissionRequests)
+    ? patientDetails.admissionRequests
+    : [];
+  const otherDocuments = Array.isArray(patientDetails?.otherDocuments)
+    ? patientDetails?.otherDocuments
+    : [];
   const combined = useMemo(() => {
     const normConsultations = consultations.map((c) => ({
-      id: c?._id || `consult-${c?.appointment || Math.random().toString(36).slice(2)}`,
+      id:
+        c?._id ||
+        `consult-${c?.appointment || Math.random().toString(36).slice(2)}`,
       kind: "consultation",
       dateISO: toISO(c?.date),
       displayDate: formatDate(c?.date),
       description:
-          c?.treatment?.note ||
-          c?.consultationData?.notes || // <-- support notes here
-          c?.consultationData?.complaints ||
-          c?.status ||
-          "Consultation",
+        c?.treatment?.note ||
+        c?.consultationData?.notes || // <-- support notes here
+        c?.consultationData?.complaints ||
+        c?.status ||
+        "Consultation",
       doctorName: c?.doctor?.name || "N/A",
       departmentName: c?.department?.name || "N/A",
       typeofVisit: c?.typeofVisit || "Consultation",
@@ -288,20 +352,34 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
       kind: "admission",
       dateISO: toISO(a?.createdAt) || toISO(a?.updatedAt),
       displayDate: formatDate(a?.createdAt || a?.updatedAt),
-      description: a?.admissionDetails?.medicalNote || a?.status || "Admission Request",
+      description:
+        a?.admissionDetails?.medicalNote || a?.status || "Admission Request",
       doctorName: a?.approval?.doctor?.name || a?.doctor?.name || "N/A",
       departmentName: a?.admissionDetails?.department || "N/A",
       typeofVisit: "Admission",
       raw: a,
     }));
 
-    return [...normConsultations, ...normAdmissions].sort((a, b) => {
-      if (!a.dateISO && !b.dateISO) return 0;
-      if (!a.dateISO) return 1;
-      if (!b.dateISO) return -1;
-      return new Date(b.dateISO) - new Date(a.dateISO);
-    });
-  }, [consultations, admissionRequests]);
+    const normDocuments = otherDocuments.map((a) => ({
+      id: a?._id || `doc-${Math.random().toString(36).slice(2)}`,
+      kind: "documents",
+      dateISO: toISO(a?.createdAt) || toISO(a?.updatedAt),
+      displayDate: formatDate(a?.createdAt || a?.updatedAt),
+      description: a?.originalName || "File Uploaded",
+      doctorName: a?.uploadedBy?.role || "N/A",
+      departmentName: a?.admissionDetails?.department || "N/A",
+      typeofVisit: "File Upload",
+      raw: a,
+    }));
+    return [...normConsultations, ...normAdmissions, ...normDocuments].sort(
+      (a, b) => {
+        if (!a.dateISO && !b.dateISO) return 0;
+        if (!a.dateISO) return 1;
+        if (!b.dateISO) return -1;
+        return new Date(b.dateISO) - new Date(a.dateISO);
+      }
+    );
+  }, [consultations, admissionRequests, otherDocuments]);
 
   const [search, setSearch] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
@@ -309,7 +387,8 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return combined;
-    return combined.filter((item) =>
+    return combined.filter(
+      (item) =>
         (item.description || "").toLowerCase().includes(q) ||
         (item.doctorName || "").toLowerCase().includes(q) ||
         (item.departmentName || "").toLowerCase().includes(q) ||
@@ -321,14 +400,21 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
 
   /* ---------- detail subviews ---------- */
   const DetailHeader = ({ title, dateISO, onBack }) => (
-      <div className={styles.recordsDetailsHeader}>
-        <div className={styles.headingContainer}>
-          <ChevronLeft size={24} strokeWidth={1.7} style={{ cursor: "pointer", color: "#25307F" }} onClick={onBack} />
-          <div className={styles.heading}>Back</div>
-        </div>
-        {/* <div className={styles.patientRecordsHeading}>{title}</div> */}
-        <div style={{ marginLeft: "auto", color: "#25307F", fontWeight: 600 }}>{formatDate(dateISO)}</div>
+    <div className={styles.recordsDetailsHeader}>
+      <div className={styles.headingContainer}>
+        <ChevronLeft
+          size={24}
+          strokeWidth={1.7}
+          style={{ cursor: "pointer", color: "#25307F" }}
+          onClick={onBack}
+        />
+        <div className={styles.heading}>Back</div>
       </div>
+      {/* <div className={styles.patientRecordsHeading}>{title}</div> */}
+      <div style={{ marginLeft: "auto", color: "#25307F", fontWeight: 600 }}>
+        {formatDate(dateISO)}
+      </div>
+    </div>
   );
 
   const ConsultationDetail = ({ item }) => {
@@ -338,45 +424,80 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
 
     // Accept nested consultationData.files.{images,videos,attachments}
     const files = gatherFiles(
-        data?.files        // nested files object with buckets
+      data?.files // nested files object with buckets
     );
 
     return (
-        <div className={styles.recordsDetailsBody}>
-          <div className={styles.kvTable}>
-            <div className={styles.kvRow}><div className={styles.kvKey}>Doctor</div><div className={styles.kvVal}>{item.doctorName}</div></div>
-            <div className={styles.kvRow}><div className={styles.kvKey}>Department</div><div className={styles.kvVal}>{item.departmentName}</div></div>
-            <div className={styles.kvRow}><div className={styles.kvKey}>Type</div><div className={styles.kvVal}>{item.typeofVisit}</div></div>
-            {c?.status && <div className={styles.kvRow}><div className={styles.kvKey}>Status</div><div className={styles.kvVal}>{c.status}</div></div>}
-            {c?.caseId && <div className={styles.kvRow}><div className={styles.kvKey}>Case ID</div><div className={styles.kvVal}>{c.caseId}</div></div>}
-            {/*{c?.appointment && <div className={styles.kvRow}><div className={styles.kvKey}>Appointment</div><div className={styles.kvVal}>{c.appointment}</div></div>}*/}
-            {c?.followUpRequired !== undefined && (
-                <div className={styles.kvRow}><div className={styles.kvKey}>Follow-up Required</div><div className={styles.kvVal}>{c.followUpRequired ? "Yes" : "No"}</div></div>
-            )}
-            {c?.treatment?.note && <div className={styles.kvRow}><div className={styles.kvKey}>Treatment Note</div><div className={styles.kvVal}>{c.treatment.note}</div></div>}
+      <div className={styles.recordsDetailsBody}>
+        <div className={styles.kvTable}>
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Doctor</div>
+            <div className={styles.kvVal}>{item.doctorName}</div>
           </div>
-
-          {!isEmpty(cleanData) && (
-              <>
-                <h4 style={{ marginTop: 16 }}>Consultation Data</h4>
-                <div className={styles.kvTable}>
-                  {Object.entries(cleanData).map(([k, v]) => (
-                      <div className={styles.kvRow} key={k}>
-                        <div className={styles.kvKey}>{k.replace(/([a-z])([A-Z])/g, "$1 $2")}</div>
-                        <div className={styles.kvVal}>{Array.isArray(v) || isObj(v) ? JSON.stringify(v) : String(v ?? "N/A")}</div>
-                      </div>
-                  ))}
-                </div>
-              </>
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Department</div>
+            <div className={styles.kvVal}>{item.departmentName}</div>
+          </div>
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Type</div>
+            <div className={styles.kvVal}>{item.typeofVisit}</div>
+          </div>
+          {c?.status && (
+            <div className={styles.kvRow}>
+              <div className={styles.kvKey}>Status</div>
+              <div className={styles.kvVal}>{c.status}</div>
+            </div>
           )}
-
-          {files.length > 0 && (
-              <>
-                <h4 style={{ marginTop: 16 }}>Attachments</h4>
-                <FileGrid files={files} />
-              </>
+          {c?.caseId && (
+            <div className={styles.kvRow}>
+              <div className={styles.kvKey}>Case ID</div>
+              <div className={styles.kvVal}>{c.caseId}</div>
+            </div>
+          )}
+          {/*{c?.appointment && <div className={styles.kvRow}><div className={styles.kvKey}>Appointment</div><div className={styles.kvVal}>{c.appointment}</div></div>}*/}
+          {c?.followUpRequired !== undefined && (
+            <div className={styles.kvRow}>
+              <div className={styles.kvKey}>Follow-up Required</div>
+              <div className={styles.kvVal}>
+                {c.followUpRequired ? "Yes" : "No"}
+              </div>
+            </div>
+          )}
+          {c?.treatment?.note && (
+            <div className={styles.kvRow}>
+              <div className={styles.kvKey}>Treatment Note</div>
+              <div className={styles.kvVal}>{c.treatment.note}</div>
+            </div>
           )}
         </div>
+
+        {!isEmpty(cleanData) && (
+          <>
+            <h4 style={{ marginTop: 16 }}>Consultation Data</h4>
+            <div className={styles.kvTable}>
+              {Object.entries(cleanData).map(([k, v]) => (
+                <div className={styles.kvRow} key={k}>
+                  <div className={styles.kvKey}>
+                    {k.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                  </div>
+                  <div className={styles.kvVal}>
+                    {Array.isArray(v) || isObj(v)
+                      ? JSON.stringify(v)
+                      : String(v ?? "N/A")}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {files.length > 0 && (
+          <>
+            <h4 style={{ marginTop: 16 }}>Attachments</h4>
+            <FileGrid files={files} />
+          </>
+        )}
+      </div>
     );
   };
 
@@ -387,118 +508,375 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
     const admissionFiles = asFiles(a);
 
     return (
-        <div className={styles.recordsDetailsBody}>
-          <div className={styles.kvTable}>
-            {a?.caseId && <div className={styles.kvRow}><div className={styles.kvKey}>Case ID</div><div className={styles.kvVal}>{a.caseId}</div></div>}
-            <div className={styles.kvRow}><div className={styles.kvKey}>Address</div><div className={styles.kvVal}>{ad?.address || "N/A"}</div></div>
-            <div className={styles.kvRow}><div className={styles.kvKey}>Contact</div><div className={styles.kvVal}>{ad?.contact || "N/A"}</div></div>
-            <div className={styles.kvRow}><div className={styles.kvKey}>Emergency Contact</div><div className={styles.kvVal}>{ad?.emergencyContact || "N/A"}</div></div>
-            {ad?.reason && <div className={styles.kvRow}><div className={styles.kvKey}>Reason</div><div className={styles.kvVal}>{ad.reason}</div></div>}
-          </div>
-
-          {admissionFiles.length > 0 && (
-              <>
-                <h4 style={{ marginTop: 16 }}>Attachments</h4>
-                <FileGrid files={admissionFiles} />
-              </>
+      <div className={styles.recordsDetailsBody}>
+        <div className={styles.kvTable}>
+          {a?.caseId && (
+            <div className={styles.kvRow}>
+              <div className={styles.kvKey}>Case ID</div>
+              <div className={styles.kvVal}>{a.caseId}</div>
+            </div>
           )}
-
-          <h4 style={{ marginTop: 16, fontSize: "1.1rem", fontWeight: "bold" }}>Progress Phases</h4>
-          {phases.length === 0 ? (
-              <div style={{ color: "#888" }}>No progress phases</div>
-          ) : (
-              <div className={styles.phasesStack}>
-                {[...phases]
-                    .sort((p, q) => new Date(toISO(p?.date) || 0) - new Date(toISO(q?.date) || 0))
-                    .map((p, idx) => {
-                      const phaseFiles = asFiles(p);
-                      return (
-                          <div className={styles.phaseCard} key={p?._id || idx}>
-                            <div className={styles.phaseCardHeader}>
-                              <div className={styles.phaseTitle}>{p?.title || `Phase ${idx + 1}`}</div>
-                              <div className={styles.phaseDate}>{formatDate(p?.date)}</div>
-                            </div>
-                            <div className={styles.kvTable}>
-                              <div className={styles.kvRow}><div className={styles.kvKey}>Case ID</div><div className={styles.kvVal}>{p?.caseId || "N/A"}</div></div>
-                              <div className={styles.kvRow}><div className={styles.kvKey}>Assigned Doctor</div><div className={styles.kvVal}>{isObj(p?.assignedDoctor) ? p?.assignedDoctor?.name || p?.assignedDoctor?._id || "N/A" : p?.assignedDoctor || "N/A"}</div></div>
-                              {p?.isFinal !== undefined && <div className={styles.kvRow}><div className={styles.kvKey}>Final</div><div className={styles.kvVal}>{p.isFinal ? "Yes" : "No"}</div></div>}
-                              {p?.isDone !== undefined && <div className={styles.kvRow}><div className={styles.kvKey}>Done</div><div className={styles.kvVal}>{p.isDone ? "Yes" : "No"}</div></div>}
-                            </div>
-
-                            {p?.description && (<><div style={{ fontWeight: 600, marginTop: 8 }}>Description</div><div>{p.description}</div></>)}
-
-                            {!isEmpty(p?.data) && (
-                                <>
-                                  <div style={{ fontWeight: 600, marginTop: 12 }}>Phase Data</div>
-                                  <div className={styles.kvTable}>
-                                    <JsonValue value={p.data} />
-                                  </div>
-                                </>
-                            )}
-
-                            <div style={{ fontWeight: 600, marginTop: 8 }}>Files</div>
-                            <FileGrid files={phaseFiles} />
-                          </div>
-                      );
-                    })}
-              </div>
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Address</div>
+            <div className={styles.kvVal}>{ad?.address || "N/A"}</div>
+          </div>
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Contact</div>
+            <div className={styles.kvVal}>{ad?.contact || "N/A"}</div>
+          </div>
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Emergency Contact</div>
+            <div className={styles.kvVal}>{ad?.emergencyContact || "N/A"}</div>
+          </div>
+          {ad?.reason && (
+            <div className={styles.kvRow}>
+              <div className={styles.kvKey}>Reason</div>
+              <div className={styles.kvVal}>{ad.reason}</div>
+            </div>
           )}
         </div>
+
+        {admissionFiles.length > 0 && (
+          <>
+            <h4 style={{ marginTop: 16 }}>Attachments</h4>
+            <FileGrid files={admissionFiles} />
+          </>
+        )}
+
+        <h4 style={{ marginTop: 16, fontSize: "1.1rem", fontWeight: "bold" }}>
+          Progress Phases
+        </h4>
+        {phases.length === 0 ? (
+          <div style={{ color: "#888" }}>No progress phases</div>
+        ) : (
+          <div className={styles.phasesStack}>
+            {[...phases]
+              .sort(
+                (p, q) =>
+                  new Date(toISO(p?.date) || 0) - new Date(toISO(q?.date) || 0)
+              )
+              .map((p, idx) => {
+                const phaseFiles = asFiles(p);
+                return (
+                  <div className={styles.phaseCard} key={p?._id || idx}>
+                    <div className={styles.phaseCardHeader}>
+                      <div className={styles.phaseTitle}>
+                        {p?.title || `Phase ${idx + 1}`}
+                      </div>
+                      <div className={styles.phaseDate}>
+                        {formatDate(p?.date)}
+                      </div>
+                    </div>
+                    <div className={styles.kvTable}>
+                      <div className={styles.kvRow}>
+                        <div className={styles.kvKey}>Case ID</div>
+                        <div className={styles.kvVal}>{p?.caseId || "N/A"}</div>
+                      </div>
+                      <div className={styles.kvRow}>
+                        <div className={styles.kvKey}>Assigned Doctor</div>
+                        <div className={styles.kvVal}>
+                          {isObj(p?.assignedDoctor)
+                            ? p?.assignedDoctor?.name ||
+                              p?.assignedDoctor?._id ||
+                              "N/A"
+                            : p?.assignedDoctor || "N/A"}
+                        </div>
+                      </div>
+                      {p?.isFinal !== undefined && (
+                        <div className={styles.kvRow}>
+                          <div className={styles.kvKey}>Final</div>
+                          <div className={styles.kvVal}>
+                            {p.isFinal ? "Yes" : "No"}
+                          </div>
+                        </div>
+                      )}
+                      {p?.isDone !== undefined && (
+                        <div className={styles.kvRow}>
+                          <div className={styles.kvKey}>Done</div>
+                          <div className={styles.kvVal}>
+                            {p.isDone ? "Yes" : "No"}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {p?.description && (
+                      <>
+                        <div style={{ fontWeight: 600, marginTop: 8 }}>
+                          Description
+                        </div>
+                        <div>{p.description}</div>
+                      </>
+                    )}
+
+                    {!isEmpty(p?.data) && (
+                      <>
+                        <div style={{ fontWeight: 600, marginTop: 12 }}>
+                          Phase Data
+                        </div>
+                        <div className={styles.kvTable}>
+                          <JsonValue value={p.data} />
+                        </div>
+                      </>
+                    )}
+
+                    <div style={{ fontWeight: 600, marginTop: 8 }}>Files</div>
+                    <FileGrid files={phaseFiles} />
+                  </div>
+                );
+              })}
+          </div>
+        )}
+      </div>
+    );
+  };
+  const DocumentDetail = ({ item }) => {
+    const c = item?.raw || {};
+    const fileUrl = c?.url || item?.url;
+    const fileType = c?.fileType || "unknown";
+    const fileName = c?.originalName || item?.description || "Unnamed File";
+    const uploadedByRaw = c?.uploadedBy?.role || item?.doctorName || "N/A";
+    const uploadedBy =
+      typeof uploadedByRaw === "string"
+        ? uploadedByRaw.charAt(0).toUpperCase() + uploadedByRaw.slice(1)
+        : "N/A";
+    const fileSizeKB = c?.fileSize
+      ? (c.fileSize / 1024).toFixed(2) + " KB"
+      : "Unknown";
+    const uploadDate = new Date(
+      c?.uploadedAt || item?.dateISO
+    ).toLocaleString();
+
+    const isImage = fileType.startsWith("image/");
+
+    const handleDownload = async () => {
+      if (!fileUrl) return;
+      setDownloading(true);
+      try {
+        const res = await fetch(fileUrl, { mode: "cors" });
+        if (!res.ok) throw new Error("Network error");
+        const blob = await res.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (err) {
+        // fallback if blob fails (e.g., CORS)
+        const a = document.createElement("a");
+        a.href = fileUrl;
+        a.setAttribute("download", fileName);
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } finally {
+        setDownloading(false);
+      }
+    };
+
+    const handlePreview = () => setOpenPreview(true);
+    const handleClosePreview = () => setOpenPreview(false);
+
+    const files = fileUrl
+      ? [
+          {
+            url: fileUrl,
+            type: fileType,
+            name: fileName,
+            size: fileSizeKB,
+          },
+        ]
+      : [];
+
+    return (
+      <div className={styles.recordsDetailsBody}>
+        <div className={styles.kvTable}>
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>File Name</div>
+            <div className={styles.kvVal}>{fileName}</div>
+          </div>
+
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>File Type</div>
+            <div className={styles.kvVal}>{fileType}</div>
+          </div>
+
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>File Size</div>
+            <div className={styles.kvVal}>{fileSizeKB}</div>
+          </div>
+
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Uploaded By</div>
+            <div className={styles.kvVal}>{uploadedBy}</div>
+          </div>
+
+          <div className={styles.kvRow}>
+            <div className={styles.kvKey}>Upload Date</div>
+            <div className={styles.kvVal}>{uploadDate}</div>
+          </div>
+        </div>
+
+        {files.length > 0 && (
+          <>
+            <h4 style={{ marginTop: 16 }}>Attachment</h4>
+            <FileGrid files={files} />
+
+            <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
+              {isImage && (
+                <button
+                  onClick={handlePreview}
+                  style={{
+                    background: "transparent",
+                    border: "2px solid #5461BE",
+                    color: "#5461BE",
+                    borderRadius: "8px",
+                    padding: "6px 14px",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  Preview
+                </button>
+              )}
+              <button
+                onClick={handleDownload}
+                disabled={downloading}
+                style={{
+                  background: downloading ? "#a1a1a1" : "#5461BE",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "6px 14px",
+                  fontWeight: 500,
+                  cursor: downloading ? "not-allowed" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {downloading ? (
+                  <CircularProgress size={18} sx={{ color: "#fff" }} />
+                ) : (
+                  "Download"
+                )}
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Image Preview Dialog */}
+        {isImage && (
+          <Dialog
+            open={openPreview}
+            onClose={handleClosePreview}
+            fullWidth
+            maxWidth="md"
+          >
+            <DialogTitle>{fileName}</DialogTitle>
+            <DialogContent>
+              <img
+                src={fileUrl}
+                alt={fileName}
+                style={{
+                  width: "100%",
+                  borderRadius: 8,
+                  marginTop: 8,
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
     );
   };
 
-  if (loading) return <div className={styles.visitList} style={{ padding: 16 }}>Loading…</div>;
+  if (loading)
+    return (
+      <div className={styles.visitList} style={{ padding: 16 }}>
+        Loading…
+      </div>
+    );
 
   // LIST VIEW
   if (!selectedItem) {
     return (
-        <section className={styles.container}>
-          <div className={styles.visitHeader}>
-            <h3>Past Records</h3>
-            <div className={styles.searchContainer}>
-              <input
-                  type="search"
-                  className={styles.searchBar}
-                  placeholder="Search Records…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-              />
+      <section className={styles.container}>
+        <div className={styles.visitHeader}>
+          <h3>Past Records</h3>
+          <div className={styles.searchContainer}>
+            <input
+              type="search"
+              className={styles.searchBar}
+              placeholder="Search Records…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className={styles.visitList}>
+          {filtered.map((item, index) => (
+            <VisitCard
+              key={item.id}
+              date={item.displayDate}
+              description={item.description}
+              doctor={item.doctorName}
+              typeofVisit={item.typeofVisit}
+              department={item.departmentName}
+              color={palette[index % palette.length]}
+              departmentbgColor={
+                item.kind === "admission" ? "#F7F8FC" : undefined
+              }
+              departmentColor={
+                item.kind === "admission" ? "#5461BE" : undefined
+              }
+              status={item.kind === "admission" ? item.raw?.status : undefined}
+              kind={item.kind}
+              onClick={() => setSelectedItem(item)}
+            />
+          ))}
+
+          {filtered.length === 0 && (
+            <div style={{ color: "#888", fontSize: 14, padding: 12 }}>
+              No records match your search.
             </div>
-          </div>
-
-          <div className={styles.visitList}>
-            {filtered.map((item, index) => (
-                <VisitCard
-                    key={item.id}
-                    date={item.displayDate}
-                    description={item.description}
-                    doctor={item.doctorName}
-                    typeofVisit={item.typeofVisit}
-                    department={item.departmentName}
-                    color={palette[index % palette.length]}
-                    departmentbgColor={item.kind === "admission" ? "#F7F8FC" : undefined}
-                    departmentColor={item.kind === "admission" ? "#5461BE" : undefined}
-                    status={item.kind === "admission" ? item.raw?.status : undefined}
-                    kind={item.kind}
-                    onClick={() => setSelectedItem(item)}
-                />
-            ))}
-
-            {filtered.length === 0 && (
-                <div style={{ color: "#888", fontSize: 14, padding: 12 }}>No records match your search.</div>
-            )}
-          </div>
-        </section>
+          )}
+        </div>
+      </section>
     );
   }
 
   // DETAIL VIEW
-  const title = selectedItem.kind === "consultation" ? "Consultation Details" : "Admission Request";
+  const title =
+    selectedItem.kind === "consultation"
+      ? "Consultation Details"
+      : selectedItem.kind === "documents"
+      ? "Records Uploaded"
+      : "Admission Request";
   return (
-      <section className={styles.recordsDetails}>
-        <DetailHeader title={title} dateISO={selectedItem.dateISO} onBack={() => setSelectedItem(null)} />
-        {selectedItem.kind === "consultation" ? <ConsultationDetail item={selectedItem} /> : <AdmissionDetail item={selectedItem} />}
-      </section>
+    <section className={styles.recordsDetails}>
+      <DetailHeader
+        title={title}
+        dateISO={selectedItem.dateISO}
+        onBack={() => setSelectedItem(null)}
+      />
+      {selectedItem.kind === "consultation" ? (
+        <ConsultationDetail item={selectedItem} />
+      ) : selectedItem.kind === "documents" ? (
+        <DocumentDetail item={selectedItem} />
+      ) : (
+        <AdmissionDetail item={selectedItem} />
+      )}
+    </section>
   );
 };
 
