@@ -569,8 +569,8 @@ export const adminReducer = (state = initialState, action) => {
     case GET_ADMISSION_REQUESTS:
       return {
         ...state,
-        totalAdmissionRequests: action.payload.totalRequests,
-        admissionRequests: action.payload.requests,
+        totalAdmissionRequests: action.payload?.totalRequests,
+        admissionRequests: action.payload?.requests,
         isLoadingAdmissionRequests: false,
       };
 

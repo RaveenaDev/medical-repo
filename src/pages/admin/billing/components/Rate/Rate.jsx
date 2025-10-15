@@ -60,11 +60,11 @@ const Rate = () => {
   const showNotice = (text) => setNotice({ open: true, text });
   // console.log("Redux Services: ", reduxServices);
   const services = reduxServices.map((service) => ({
-    serviceId: service._id,
-    serviceName: service.name,
-    department: service.department.name,
-    lastUpdated: service.lastUpdated,
-    categories: service.categories.map((category) => ({
+    serviceId: service?._id,
+    serviceName: service?.name,
+    department: service?.department?.name,
+    lastUpdated: service?.lastUpdated,
+    categories: service?.categories.map((category) => ({
       categoryId: category._id,
       name: category.subCategoryName,
       rateType: category.rateType,

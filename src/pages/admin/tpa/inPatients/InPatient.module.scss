@@ -87,6 +87,10 @@
 .patientsTableContainer {
   padding: 0;
 
+  .noData {
+    height: 63vh;
+  }
+
   .noDataMessage {
     text-align: center;
     padding: 2rem 0;

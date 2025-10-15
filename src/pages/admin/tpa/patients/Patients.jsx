@@ -47,7 +47,7 @@ const Patients = () => {
     (store) => store.admin.isLoadingInsurancePatients
   );
 
-  // console.log("Ins: ",insuredPatients)
+  // console.log("Ins: ", insuredPatients);
 
   const insurancePatientsCount = insuredPatients?.length;
 

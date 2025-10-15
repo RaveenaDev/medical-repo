@@ -197,7 +197,11 @@ const AdmissionRequests = () => {
                 </table>
               </div>
             ) : (
-              <div className={styles.noDataMessage}>No inpatients found.</div>
+              <div className={styles.noData}>
+                <p className={styles.noDataMessage}>
+                  No Admission Forms found.
+                </p>
+              </div>
             )}
           </div>
 

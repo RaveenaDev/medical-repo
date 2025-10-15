@@ -1087,6 +1087,10 @@ export const getInsuredPatients = () => async (dispatch) => {
     dispatch({ type: GET_INSURED_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
+    dispatch({
+      type: GET_INSURED_PATIENTS,
+      payload: { data: [] },
+    });
   }
 };
 
@@ -1535,6 +1539,10 @@ export const getAdmissionRequests =
       dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
     } catch (error) {
       console.log(error);
+      dispatch({
+        type: GET_ADMISSION_REQUESTS,
+        payload: { totalRequests: 0, requests: [] },
+      });
     }
   };
 
