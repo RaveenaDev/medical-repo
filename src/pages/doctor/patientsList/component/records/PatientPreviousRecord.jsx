@@ -326,7 +326,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
 
   /* ----------- ADMISSION: unchanged ----------- */
   const renderProgressPhases = (phases) => {
-    if (!Array.isArray(phases) || phases.length === 0) return <div style={{ color: "#888" }}>No progress phases</div>;
+    if (!Array.isArray(phases) || phases.length === 0)
+      return <div style={{ color: "#888" }}>No progress phases</div>;
 
     const sorted = [...phases].sort((a, b) => {
       const da = toISO(a?.date);
@@ -339,51 +340,141 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
 
     return (
         <div className="phases-stack">
-          {sorted.map((p, idx) => (
-              <div className="phase-card" key={p?._id || idx}>
-                <div className="phase-card-header">
-                  <div className="phase-title">{p?.title || `Phase ${idx + 1}`}</div>
-                  <div className="phase-date">{formatDate(p?.date)}</div>
-                </div>
+          {sorted.map((p, idx) => {
+            const pdata = isPlainObject(p?.data) ? p.data : {};
+            const desc = pdata.description ?? pdata.Description ?? p?.description ?? "";
+            const treatment = pdata.Treatment ?? pdata.treatment ?? "";
+            const notes = pdata.Notes ?? pdata.notes ?? "";
 
-                <div className="kv-table">
-                  <div className="kv-row"><div className="kv-key">Case ID</div><div className="kv-val">{p?.caseId || "N/A"}</div></div>
-                  <div className="kv-row">
-                    <div className="kv-key">Assigned Doctor</div>
-                    <div className="kv-val">
-                      {isPlainObject(p?.assignedDoctor) ? p?.assignedDoctor?.name || p?.assignedDoctor?._id || "N/A" : p?.assignedDoctor || "N/A"}
-                    </div>
+            const FIXED = new Set([
+              "description",
+              "Description",
+              "Treatment",
+              "treatment",
+              "Notes",
+              "notes",
+            ]);
+            const dynamicPairs = Object.entries(pdata).filter(([k]) => !FIXED.has(k));
+
+            return (
+                <div className="phase-card" key={p?._id || idx}>
+                  <div className="phase-card-header">
+                    <div className="phase-title">{p?.title || `Phase ${idx + 1}`}</div>
+                    <div className="phase-date">{formatDate(p?.date)}</div>
                   </div>
-                  {p?.isFinal !== undefined && (<div className="kv-row"><div className="kv-key">Final</div><div className="kv-val">{p.isFinal ? "Yes" : "No"}</div></div>)}
-                  {p?.isDone !== undefined && (<div className="kv-row"><div className="kv-key">Done</div><div className="kv-val">{p.isDone ? "Yes" : "No"}</div></div>)}
+
+                  <div className="kv-table">
+                    <div className="kv-row">
+                      <div className="kv-key">Case ID</div>
+                      <div className="kv-val">{p?.caseId || "N/A"}</div>
+                    </div>
+                    <div className="kv-row">
+                      <div className="kv-key">Assigned Doctor</div>
+                      <div className="kv-val">
+                        {isPlainObject(p?.assignedDoctor)
+                            ? p?.assignedDoctor?.name || p?.assignedDoctor?._id || "N/A"
+                            : p?.assignedDoctor || "N/A"}
+                      </div>
+                    </div>
+                    {p?.isFinal !== undefined && (
+                        <div className="kv-row">
+                          <div className="kv-key">Final</div>
+                          <div className="kv-val">{p.isFinal ? "Yes" : "No"}</div>
+                        </div>
+                    )}
+                    {p?.isDone !== undefined && (
+                        <div className="kv-row">
+                          <div className="kv-key">Done</div>
+                          <div className="kv-val">{p.isDone ? "Yes" : "No"}</div>
+                        </div>
+                    )}
+                  </div>
+
+                  {/* Phase Data */}
+                  {!isEmptyObject(pdata) && (
+                      <>
+                        {/*<div style={{fontWeight: 600, marginBottom: 6}}>Phase Data</div>*/}
+                        <div className="kv-table" style={{marginTop: 12}}>
+                          {desc ? (
+                              <div className="kv-row">
+                                <div className="kv-key">Description</div>
+                                <div className="kv-val">{String(desc)}</div>
+                              </div>
+                          ) : null}
+
+                          {treatment ? (
+                              <div className="kv-row">
+                                <div className="kv-key">Treatment</div>
+                                <div className="kv-val">{String(treatment)}</div>
+                              </div>
+                          ) : null}
+
+                          {notes ? (
+                              <div className="kv-row">
+                                <div className="kv-key">Notes</div>
+                                <div className="kv-val">{String(notes)}</div>
+                              </div>
+                          ) : null}
+                        </div>
+                        {dynamicPairs.length > 0 && (
+                            <>
+                              <div style={{fontWeight: 600,marginTop:'1rem'}}>Additional Info</div>
+                              <div className="kv-table">
+                                {dynamicPairs.map(([k, v]) => (
+                                    <div className="kv-row" key={k}>
+                                      <div className="kv-key">{prettifyKey(k)}</div>
+                                      <div className="kv-val">
+                                        <JSONValue value={v}/>
+                                      </div>
+                                    </div>
+                                ))}
+                              </div>
+                            </>
+                        )}
+                      </>
+                  )}
+
+                  <div style={{fontWeight: 600, marginTop: 12}}>Files</div>
+                  <FileGrid files={Array.isArray(p?.files) ? p.files : []}/>
                 </div>
-
-                {p?.description && (<><div style={{ fontWeight: 600, marginTop: 8 }}>Description</div><div>{p.description}</div></>)}
-
-                <div style={{ fontWeight: 600, marginTop: 8 }}>Files</div>
-                <FileGrid files={Array.isArray(p?.files) ? p.files : []} />
-              </div>
-          ))}
+            );
+          })}
         </div>
     );
   };
+
 
   const renderAdmission = (item) => {
     const a = item?.raw || {};
     const ad = a?.admissionDetails || {};
     return (
         <section className="patient-records">
-          <DateBadge iso={item?.dateISO} />
+          <DateBadge iso={item?.dateISO}/>
           <div className="visit-details">
             <div className="kv-table">
-              {a?.caseId && (<div className="kv-row"><div className="kv-key">Case ID</div><div className="kv-val">{a.caseId}</div></div>)}
-              <div className="kv-row"><div className="kv-key">Address</div><div className="kv-val">{ad?.address || "N/A"}</div></div>
-              <div className="kv-row"><div className="kv-key">Contact</div><div className="kv-val">{ad?.contact || "N/A"}</div></div>
-              <div className="kv-row"><div className="kv-key">Emergency Contact</div><div className="kv-val">{ad?.emergencyContact || "N/A"}</div></div>
-              {ad?.reason && (<div className="kv-row"><div className="kv-key">Reason</div><div className="kv-val">{ad.reason}</div></div>)}
+              {a?.caseId && (<div className="kv-row">
+                <div className="kv-key">Case ID</div>
+                <div className="kv-val">{a.caseId}</div>
+              </div>)}
+              <div className="kv-row">
+                <div className="kv-key">Address</div>
+                <div className="kv-val">{ad?.address || "N/A"}</div>
+              </div>
+              <div className="kv-row">
+                <div className="kv-key">Contact</div>
+                <div className="kv-val">{ad?.contact || "N/A"}</div>
+              </div>
+              <div className="kv-row">
+                <div className="kv-key">Emergency Contact</div>
+                <div className="kv-val">{ad?.emergencyContact || "N/A"}</div>
+              </div>
+              {ad?.reason && (<div className="kv-row">
+                <div className="kv-key">Reason</div>
+                <div className="kv-val">{ad.reason}</div>
+              </div>)}
             </div>
 
-            <h4 style={{ marginTop: 16, fontSize: "1.1rem", fontWeight: "bold" }}>Progress Phases</h4>
+            <h4 style={{marginTop: 16, fontSize: "1.1rem", fontWeight: "bold"}}>Progress Phases</h4>
             {renderProgressPhases(a?.progressPhases)}
           </div>
         </section>
@@ -400,7 +491,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
   /* -------------------- render -------------------- */
   return (
       <div>
-        {loading ? (
+      {loading ? (
             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "36vh" }}>
               <CircularProgress sx={{ color: "#25307F" }} size={58} />
             </Box>
