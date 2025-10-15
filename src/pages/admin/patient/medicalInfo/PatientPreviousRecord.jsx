@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import "./PatientPreviousRecordRep.scss";
+import "./PatientPreviousRecordAdmin.scss";
 import VisitCard from "./VisitCard/VisitCard.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
+
 /* -------------------- helpers -------------------- */
 const palette = ["#5461BE", "#2E823B", "#EAA000", "#F14400"];
 
@@ -37,7 +38,6 @@ const toISO = (val) => {
 
 const isPlainObject = (v) =>
   v !== null && typeof v === "object" && !Array.isArray(v);
-
 const isEmptyObject = (obj) =>
   !obj || !isPlainObject(obj) || Object.keys(obj).length === 0;
 
@@ -47,15 +47,14 @@ const prettifyKey = (k = "") =>
     .replace(/[_\-]+/g, " ")
     .replace(/\b\w/g, (m) => m.toUpperCase());
 
-/** Robust extractors that tolerate backend naming differences */
+/** Robust extractors */
 const getFileUrl = (f) => {
   if (!f) return "";
-  if (typeof f === "string") return f; // in case backend sends plain URL
+  if (typeof f === "string") return f;
   return (
     f.url || f.Url || f.URL || f.link || f.href || f.path || f.fileUrl || ""
   );
 };
-
 const getFileName = (f) => {
   if (!f) return "File";
   if (typeof f === "string") return f.split("/").pop() || "File";
@@ -64,22 +63,21 @@ const getFileName = (f) => {
     f["Original Name"] ||
     f.OriginalName ||
     f.name ||
+    f.filename ||
     f.fileName ||
     "File"
   );
 };
-
 const getFileType = (f) => {
   if (!f) return "";
   if (typeof f === "string") {
     const lower = f.toLowerCase();
     if (/\.(png|jpe?g|gif|webp|bmp|svg)$/.test(lower)) return "image/*";
-    if (/\.(pdf)$/.test(lower)) return "application/pdf";
+    if (/\.pdf$/.test(lower)) return "application/pdf";
     return "";
   }
   return f.fileType || f.type || "";
 };
-
 const isImageFile = (f) => {
   const type = (getFileType(f) || "").toLowerCase();
   const name = getFileName(f).toLowerCase();
@@ -87,18 +85,16 @@ const isImageFile = (f) => {
     type.startsWith("image/") || /\.(png|jpe?g|gif|webp|bmp|svg)$/.test(name)
   );
 };
-
 const isPdfFile = (f) => {
   const type = (getFileType(f) || "").toLowerCase();
   const name = getFileName(f).toLowerCase();
   return type === "application/pdf" || /\.pdf$/.test(name);
 };
 
-/** Render any JSON (object/array/primitive) nicely */
+/** JSON pretty renderer */
 const JSONValue = ({ value }) => {
-  if (value === null || value === undefined || value === "") {
+  if (value === null || value === undefined || value === "")
     return <span style={{ color: "#888" }}>N/A</span>;
-  }
 
   if (Array.isArray(value)) {
     if (value.length === 0)
@@ -138,7 +134,7 @@ const JSONValue = ({ value }) => {
   return <span>{String(value)}</span>;
 };
 
-/* -------------------- FileGrid (images + PDFs + others) -------------------- */
+/* -------------------- FileGrid -------------------- */
 const FileGrid = ({ files = [] }) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(null);
@@ -152,9 +148,8 @@ const FileGrid = ({ files = [] }) => {
     setActive(null);
   };
 
-  if (!Array.isArray(files) || files.length === 0) {
+  if (!Array.isArray(files) || files.length === 0)
     return <div style={{ color: "#888" }}>No files</div>;
-  }
 
   return (
     <>
@@ -164,7 +159,6 @@ const FileGrid = ({ files = [] }) => {
           const name = getFileName(f);
           const type = getFileType(f);
 
-          // Image thumbnail (click to preview)
           if (url && isImageFile(f)) {
             return (
               <button
@@ -189,7 +183,6 @@ const FileGrid = ({ files = [] }) => {
             );
           }
 
-          // PDF card (click to preview in dialog)
           if (url && isPdfFile(f)) {
             return (
               <button
@@ -211,7 +204,6 @@ const FileGrid = ({ files = [] }) => {
             );
           }
 
-          // Fallback for other files: simple link-out
           return (
             <div className="file-card" key={f?._id || idx}>
               <div className="file-icon" aria-hidden>
@@ -240,7 +232,6 @@ const FileGrid = ({ files = [] }) => {
         })}
       </div>
 
-      {/* Preview Dialog: image OR PDF */}
       <Dialog open={open} onClose={closePreview} fullWidth maxWidth="md">
         <DialogContent
           sx={{
@@ -291,22 +282,19 @@ const FileGrid = ({ files = [] }) => {
 
 /* -------------------- component -------------------- */
 const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
-  // console.log("Pat: ", patientDetails);
-  // ---- SOURCE ARRAYS
+  console.log("Pat: ", patientDetails);
   const [openPreview, setOpenPreview] = useState(false);
   const [downloading, setDownloading] = useState(false);
+
   const consultations = Array.isArray(patientDetails?.consultations)
     ? patientDetails.consultations
     : [];
-
   const admissionRequests = Array.isArray(patientDetails?.admissionRequests)
     ? patientDetails.admissionRequests
     : [];
-
   const otherDocuments = Array.isArray(patientDetails?.otherDocuments)
     ? patientDetails?.otherDocuments
     : [];
-  // ---- NORMALIZE + MERGE LEFT LIST
   const combined = useMemo(() => {
     const normConsultations = consultations.map((c) => ({
       id:
@@ -317,6 +305,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       displayDate: formatDate(c?.date),
       description:
         c?.treatment?.note ||
+        c?.consultationData?.notes ||
         c?.consultationData?.complaints ||
         c?.status ||
         "Consultation",
@@ -338,6 +327,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       typeofVisit: "Admission",
       raw: a,
     }));
+
     const normDocuments = otherDocuments.map((a) => ({
       id: a?._id || `doc-${Math.random().toString(36).slice(2)}`,
       kind: "documents",
@@ -349,7 +339,6 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       typeofVisit: "File Upload",
       raw: a,
     }));
-
     const sorted = [
       ...normConsultations,
       ...normAdmissions,
@@ -364,7 +353,6 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     return sorted;
   }, [consultations, admissionRequests, otherDocuments]);
 
-  // ---- STATE
   const [selectedItem, setSelectedItem] = useState(combined[0] || null);
   const [search, setSearch] = useState("");
 
@@ -372,7 +360,6 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     if (!selectedItem && combined.length) setSelectedItem(combined[0]);
   }, [combined, selectedItem]);
 
-  // ---- FILTER BY SEARCH
   const filtered = useMemo(() => {
     if (!search?.trim()) return combined;
     const q = search.toLowerCase();
@@ -386,15 +373,12 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     });
   }, [combined, search]);
 
-  // console.log(filtered);
-
-  // ---- LAST VISIT
   const lastVisitDate = useMemo(() => {
     const first = combined[0]?.dateISO;
     return first ? formatDate(first) : "N/A";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [combined]);
 
-  /* ----------- RIGHT: dynamic renderer ----------- */
   const DateBadge = ({ iso }) =>
     iso ? (
       <div className="record-date">
@@ -418,10 +402,17 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       </div>
     ) : null;
 
+  /* ----------- CONSULTATION: show only files under consultationData.files (images + videos + attachments) ----------- */
   const renderConsultation = (item) => {
     const c = item?.raw || {};
     const data = c?.consultationData || {};
-    const files = Array.isArray(c?.files) ? c.files : []; // if your backend attaches files to consultation
+
+    const images = Array.isArray(data?.files?.images) ? data.files.images : [];
+    const videos = Array.isArray(data?.files?.videos) ? data.files.videos : [];
+    const attachments = Array.isArray(data?.files?.attachments)
+      ? data.files.attachments
+      : [];
+    const files = [...images, ...videos, ...attachments];
 
     return (
       <section className="patient-records">
@@ -478,11 +469,14 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             )}
           </div>
 
-          <h4 style={{ marginTop: 16 }}>Consultation Data</h4>
-          <JSONValue value={isEmptyObject(data) ? null : data} />
+          {data?.notes && (
+            <>
+              <h4 style={{ marginTop: 16 }}>Notes</h4>
+              <div>{String(data.notes)}</div>
+            </>
+          )}
 
-          {/* Optional: consultation attachments */}
-          {Array.isArray(files) && files.length > 0 && (
+          {files.length > 0 && (
             <>
               <h4 style={{ marginTop: 16 }}>Attachments</h4>
               <FileGrid files={files} />
@@ -493,10 +487,10 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     );
   };
 
+  /* ----------- ADMISSION: unchanged ----------- */
   const renderProgressPhases = (phases) => {
-    if (!Array.isArray(phases) || phases.length === 0) {
+    if (!Array.isArray(phases) || phases.length === 0)
       return <div style={{ color: "#888" }}>No progress phases</div>;
-    }
 
     const sorted = [...phases].sort((a, b) => {
       const da = toISO(a?.date);
@@ -509,65 +503,114 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
 
     return (
       <div className="phases-stack">
-        {sorted.map((p, idx) => (
-          <div className="phase-card" key={p?._id || idx}>
-            <div className="phase-card-header">
-              <div className="phase-title">
-                {p?.title || `Phase ${idx + 1}`}
-              </div>
-              <div className="phase-date">{formatDate(p?.date)}</div>
-            </div>
+        {sorted.map((p, idx) => {
+          const pdata = isPlainObject(p?.data) ? p.data : {};
+          const desc =
+            pdata.description ?? pdata.Description ?? p?.description ?? "";
+          const treatment = pdata.Treatment ?? pdata.treatment ?? "";
+          const notes = pdata.Notes ?? pdata.notes ?? "";
 
-            <div className="kv-table">
-              <div className="kv-row">
-                <div className="kv-key">Case ID</div>
-                <div className="kv-val">{p?.caseId || "N/A"}</div>
-              </div>
-              <div className="kv-row">
-                <div className="kv-key">Assigned Doctor</div>
-                <div className="kv-val">
-                  {isPlainObject(p?.assignedDoctor)
-                    ? p?.assignedDoctor?.name || p?.assignedDoctor?._id || "N/A"
-                    : p?.assignedDoctor || "N/A"}
+          const FIXED = new Set([
+            "description",
+            "Description",
+            "Treatment",
+            "treatment",
+            "Notes",
+            "notes",
+          ]);
+          const dynamicPairs = Object.entries(pdata).filter(
+            ([k]) => !FIXED.has(k)
+          );
+
+          return (
+            <div className="phase-card" key={p?._id || idx}>
+              <div className="phase-card-header">
+                <div className="phase-title">
+                  {p?.title || `Phase ${idx + 1}`}
                 </div>
+                <div className="phase-date">{formatDate(p?.date)}</div>
               </div>
-              {p?.isFinal !== undefined && (
+
+              <div className="kv-table">
                 <div className="kv-row">
-                  <div className="kv-key">Final</div>
-                  <div className="kv-val">{p.isFinal ? "Yes" : "No"}</div>
+                  <div className="kv-key">Case ID</div>
+                  <div className="kv-val">{p?.caseId || "N/A"}</div>
                 </div>
-              )}
-              {p?.isDone !== undefined && (
                 <div className="kv-row">
-                  <div className="kv-key">Done</div>
-                  <div className="kv-val">{p.isDone ? "Yes" : "No"}</div>
+                  <div className="kv-key">Assigned Doctor</div>
+                  <div className="kv-val">
+                    {isPlainObject(p?.assignedDoctor)
+                      ? p?.assignedDoctor?.name ||
+                        p?.assignedDoctor?._id ||
+                        "N/A"
+                      : p?.assignedDoctor || "N/A"}
+                  </div>
                 </div>
+                {p?.isFinal !== undefined && (
+                  <div className="kv-row">
+                    <div className="kv-key">Final</div>
+                    <div className="kv-val">{p.isFinal ? "Yes" : "No"}</div>
+                  </div>
+                )}
+                {p?.isDone !== undefined && (
+                  <div className="kv-row">
+                    <div className="kv-key">Done</div>
+                    <div className="kv-val">{p.isDone ? "Yes" : "No"}</div>
+                  </div>
+                )}
+              </div>
+
+              {/* Phase Data */}
+              {!isEmptyObject(pdata) && (
+                <>
+                  {/*<div style={{fontWeight: 600, marginBottom: 6}}>Phase Data</div>*/}
+                  <div className="kv-table" style={{ marginTop: 12 }}>
+                    {desc ? (
+                      <div className="kv-row">
+                        <div className="kv-key">Description</div>
+                        <div className="kv-val">{String(desc)}</div>
+                      </div>
+                    ) : null}
+
+                    {treatment ? (
+                      <div className="kv-row">
+                        <div className="kv-key">Treatment</div>
+                        <div className="kv-val">{String(treatment)}</div>
+                      </div>
+                    ) : null}
+
+                    {notes ? (
+                      <div className="kv-row">
+                        <div className="kv-key">Notes</div>
+                        <div className="kv-val">{String(notes)}</div>
+                      </div>
+                    ) : null}
+                  </div>
+                  {dynamicPairs.length > 0 && (
+                    <>
+                      <div style={{ fontWeight: 600, marginTop: "1rem" }}>
+                        Additional Info
+                      </div>
+                      <div className="kv-table">
+                        {dynamicPairs.map(([k, v]) => (
+                          <div className="kv-row" key={k}>
+                            <div className="kv-key">{prettifyKey(k)}</div>
+                            <div className="kv-val">
+                              <JSONValue value={v} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
               )}
+
+              <div style={{ fontWeight: 600, marginTop: 12 }}>Files</div>
+              <FileGrid files={Array.isArray(p?.files) ? p.files : []} />
             </div>
-
-            {p?.description && (
-              <>
-                <div style={{ fontWeight: 600, marginTop: 8 }}>Description</div>
-                <div>{p.description}</div>
-              </>
-            )}
-
-            {p?.data && (
-              <>
-                <div style={{ fontWeight: 600, marginTop: 8 }}>Data</div>
-                <JSONValue value={p.data} />
-              </>
-            )}
-
-            <div style={{ fontWeight: 600, marginTop: 8 }}>Consultations</div>
-            <JSONValue
-              value={Array.isArray(p?.consultation) ? p.consultation : []}
-            />
-
-            <div style={{ fontWeight: 600, marginTop: 8 }}>Files</div>
-            <FileGrid files={Array.isArray(p?.files) ? p.files : []} />
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   };
@@ -580,28 +623,12 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
         <DateBadge iso={item?.dateISO} />
         <div className="visit-details">
           <div className="kv-table">
-            {/*<div className="kv-row">*/}
-            {/*  <div className="kv-key">Status</div>*/}
-            {/*  <div className="kv-val">{a?.status || "N/A"}</div>*/}
-            {/*</div>*/}
             {a?.caseId && (
               <div className="kv-row">
                 <div className="kv-key">Case ID</div>
                 <div className="kv-val">{a.caseId}</div>
               </div>
             )}
-            {/*<div className="kv-row">*/}
-            {/*  <div className="kv-key">Patient</div>*/}
-            {/*  <div className="kv-val">{ad?.name || "N/A"}</div>*/}
-            {/*</div>*/}
-            {/*<div className="kv-row">*/}
-            {/*  <div className="kv-key">Age</div>*/}
-            {/*  <div className="kv-val">{ad?.age ?? "N/A"}</div>*/}
-            {/*</div>*/}
-            {/*<div className="kv-row">*/}
-            {/*  <div className="kv-key">Gender</div>*/}
-            {/*  <div className="kv-val">{ad?.gender || "N/A"}</div>*/}
-            {/*</div>*/}
             <div className="kv-row">
               <div className="kv-key">Address</div>
               <div className="kv-val">{ad?.address || "N/A"}</div>
@@ -614,29 +641,14 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
               <div className="kv-key">Emergency Contact</div>
               <div className="kv-val">{ad?.emergencyContact || "N/A"}</div>
             </div>
-
             {ad?.reason && (
               <div className="kv-row">
                 <div className="kv-key">Reason</div>
                 <div className="kv-val">{ad.reason}</div>
               </div>
             )}
-
-            <div className="kv-row">
-              <div className="kv-key">Doctor Approval</div>
-              <div className="kv-val">
-                {a?.approval?.doctor?.name || "Pending"}
-              </div>
-            </div>
-            <div className="kv-row">
-              <div className="kv-key">Admin Approval</div>
-              <div className="kv-val">
-                {a?.approval?.admin?.name || "Pending"}
-              </div>
-            </div>
           </div>
 
-          {/* Progress Phases */}
           <h4 style={{ marginTop: 16, fontSize: "1.1rem", fontWeight: "bold" }}>
             Progress Phases
           </h4>
@@ -696,6 +708,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
 
     return (
       <section className="patient-records">
+        <DateBadge iso={item?.dateISO} />
         <div className="visit-details">
           <h3>File Uploaded</h3>
 
@@ -811,48 +824,9 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
           <CircularProgress sx={{ color: "#25307F" }} size={58} />
         </Box>
       ) : (
-        <div className="patient-previous-record-container-rep">
-          {/* -------- Header -------- */}
-          {/* <section className="patient-details">
-                <div className="patient-image">
-                  <Avatar
-                      sx={{
-                        bgcolor: "#e3e3e3",
-                        color: "#25307F",
-                        fontWeight: 500,
-                        width: "4vw",
-                        height: "4vw",
-                        fontSize: "1.5rem",
-                      }}
-                      className="avatar"
-                  >
-                    {(patientDetails?.name || "N")[0]?.toUpperCase?.() || "N"}
-                  </Avatar>
-                </div>
-
-                <div className="patient-info-container">
-                  <h2 className="patient_name">{patientDetails?.name || "N/A"}</h2>
-                  <div className="patient-info">
-                <span className="patient-id">
-                  Patient ID: {patientDetails?.patId || "N/A"}
-                </span>
-                    <span className="patient-age">Age: {patientDetails?.Age ?? "N/A"}</span>
-                    <span className="patient-gender">{patientDetails?.gender || "N/A"}</span>
-                  </div>
-
-                  <div className="patient-Allergy">
-                    Contact:
-                    <div className="patient-allergies">
-                      {patientDetails?.contact}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="patient-lastVisit">Last Visit: {lastVisitDate}</div>
-              </section> */}
-
+        <div className="patient-previous-record-container-admin">
           {/* -------- Body -------- */}
-          <div className="patient-records-container">
+          <div className="patient-records-container-admin">
             {/* LEFT LIST */}
             <section className="patient-visits">
               <div className="visit-header">
@@ -914,8 +888,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
               </div>
             </section>
 
-            {/* RIGHT DETAILS (scrollable) */}
-            <div className="patient_records_details-rep">
+            {/* RIGHT DETAILS */}
+            <div className="patient_records_details-admin">
               <div
                 className="records_details_header"
                 style={{ backgroundColor: "#ffffff" }}
@@ -925,7 +899,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
                     ? selectedItem.kind === "consultation"
                       ? "Consultation Details"
                       : selectedItem.kind === "documents"
-                      ? "File Uploaded"
+                      ? "Records Uploaded"
                       : "Admission Request"
                     : "Details"}
                 </div>

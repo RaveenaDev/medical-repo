@@ -1,4 +1,4 @@
-.patient-previous-record-container-rep {
+.patient-previous-record-container-admin {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -84,10 +84,11 @@
   }
 }
 
-.patient-records-container {
+.patient-records-container-admin {
   display: grid;
-  grid-template-columns: 1.5fr 2fr;
+  grid-template-columns: 1.25fr 2fr;
   column-gap: 1rem;
+  height: 88vh;
 }
 
 .patient-visits {
@@ -154,7 +155,9 @@
   }
 }
 
-.patient_records_details-rep {
+.patient_records_details-admin {
+  height: 82vh;
+  overflow: hidden;
   background: #ffffff;
   display: flex;
   flex-direction: column;

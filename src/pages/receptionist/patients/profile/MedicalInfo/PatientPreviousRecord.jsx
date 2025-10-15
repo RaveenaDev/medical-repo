@@ -824,9 +824,9 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
           <CircularProgress sx={{ color: "#25307F" }} size={58} />
         </Box>
       ) : (
-        <div className="patient-previous-record-container">
+        <div className="patient-previous-record-container-rep">
           {/* -------- Body -------- */}
-          <div className="patient-records-container">
+          <div className="patient-records-container-rep">
             {/* LEFT LIST */}
             <section className="patient-visits">
               <div className="visit-header">
@@ -889,7 +889,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             </section>
 
             {/* RIGHT DETAILS */}
-            <div className="patient_records_details">
+            <div className="patient_records_details-rep">
               <div
                 className="records_details_header"
                 style={{ backgroundColor: "#ffffff" }}

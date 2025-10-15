@@ -84,10 +84,11 @@
   }
 }
 
-.patient-records-container {
+.patient-records-container-rep {
   display: grid;
   grid-template-columns: 1.5fr 2fr;
   column-gap: 1rem;
+  height: 88vh;
 }
 
 .patient-visits {
