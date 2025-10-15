@@ -1,4 +1,4 @@
-.patient-previous-record-container-rep {
+.patient-previous-record-container-doc {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -88,7 +88,8 @@
   display: grid;
   grid-template-columns: 1.5fr 2fr;
   column-gap: 1rem;
-  height: 80vh;
+  height: 88vh;
+  overflow: hidden;
 }
 
 .patient-visits {
@@ -114,12 +115,12 @@
     }
   }
 
-  .visit-list {
+  .visit-list-doc {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     overflow-y: auto;
-    max-height: 80vh;
+    height: 73vh;
 
     /* Hide scrollbar for WebKit-based browsers (Chrome, Safari) */
     &::-webkit-scrollbar {

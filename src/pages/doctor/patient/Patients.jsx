@@ -171,7 +171,10 @@ const Patients = () => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
   const handleClick = (patient) => {
-    navigate("/doctor/patients/profile", { state: { patient } });
+    const latestAppointment =
+      patient.appointments?.[patient.appointments.length - 1];
+    const caseId = latestAppointment?.caseId || "Not Assigned";
+    navigate("/doctor/patients/profile", { state: { patient, caseId } });
   };
   return (
     <div style={{ height: "100vh", overflow: "hidden" }}>

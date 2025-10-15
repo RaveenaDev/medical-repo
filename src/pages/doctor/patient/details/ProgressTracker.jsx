@@ -1,21 +1,17 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProgressTrackerDetails } from "../../../../components/State/Receptionist/Action";
 import styles from "./ProgressTracker.module.scss";
 import { Box, CircularProgress } from "@mui/material";
+import { getProgressTrackerDetails } from "../../../../components/State/Doctor/Action";
 const ProgressTracker = ({ patient }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleClick = () => {
-    navigate("/receptionist/patients/profile/progressReport", {
-      state: { patient },
-    });
-  };
+  const handleClick = () => {};
 
   const location = useLocation();
-  const { caseId } = location.state;
+  const { caseId } = location?.state;
 
   //console.log("Case ID: ", caseId);
 

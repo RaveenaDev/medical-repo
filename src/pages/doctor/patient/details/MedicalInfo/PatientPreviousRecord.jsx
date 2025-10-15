@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import "./PatientPreviousRecordRep.scss";
+import "./PatientPreviousRecordDoc.scss";
 import VisitCard from "./VisitCard/VisitCard.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
@@ -824,7 +824,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
           <CircularProgress sx={{ color: "#25307F" }} size={58} />
         </Box>
       ) : (
-        <div className="patient-previous-record-container-rep">
+        <div className="patient-previous-record-container-doc">
           {/* -------- Body -------- */}
           <div className="patient-records-container-rep">
             {/* LEFT LIST */}
@@ -856,7 +856,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
                 </div>
               </div>
 
-              <div className="visit-list">
+              <div className="visit-list-doc">
                 {filtered.map((item, index) => (
                   <VisitCard
                     key={item.id}
