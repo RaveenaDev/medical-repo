@@ -789,7 +789,7 @@ const BillDetailsAdmin = (props) => {
                 >
                   {isEditing ? (
                     <select
-                      className={`${styles["inputDescription"]} ${styles["statusSelect"]}`}
+                      className={`${styles["statusSelect"]}`}
                       value={editableBill?.status ?? bill.status}
                       onChange={(e) => {
                         const updated = JSON.parse(

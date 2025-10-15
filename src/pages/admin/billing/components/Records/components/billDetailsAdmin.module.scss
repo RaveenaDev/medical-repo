@@ -152,7 +152,7 @@
         .statusSelect {
           border: 1px solid #ccc;
           border-radius: 6px;
-
+          padding: 4px 16px;
           background-color: #fff;
           font-weight: 600;
           outline: none;
@@ -263,7 +263,7 @@
 .inputDescription,
 .inputQuantity,
 .inputPrice {
-  width: 110%;
+  width: 70%;
   margin-top: 1vh;
   border-radius: 4px;
   border: 1px solid gray;
