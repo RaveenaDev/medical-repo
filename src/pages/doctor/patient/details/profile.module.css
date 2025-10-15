@@ -1,0 +1,48 @@
+.name {
+  color: #25307F;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.email {
+  color: #878787;
+  font-size: 14px;
+}
+
+.styling {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 0px;
+  width: 100%;
+  text-align: center;
+}
+.styling h5 {
+  color: #25307F;
+  font-size: 20px;
+}
+.styling p {
+  color: #878787;
+  font-size: 13px;
+}
+
+.title {
+  color: #25307F;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+ul {
+  padding: 6px 0px;
+  margin: 0;
+  list-style-position: inside;
+}
+
+ul li {
+  color: #1A1A1A;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 3px 0px;
+}/*# sourceMappingURL=profile.module.css.map */
