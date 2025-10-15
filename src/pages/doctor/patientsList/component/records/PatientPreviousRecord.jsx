@@ -194,6 +194,7 @@ const FileGrid = ({ files = [] }) => {
 
 /* -------------------- component -------------------- */
 const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
+  console.log("Pat: ",patientDetails)
   const consultations = Array.isArray(patientDetails?.consultations) ? patientDetails.consultations : [];
   const admissionRequests = Array.isArray(patientDetails?.admissionRequests) ? patientDetails.admissionRequests : [];
 

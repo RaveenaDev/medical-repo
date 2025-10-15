@@ -316,6 +316,8 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
     );
   }, [combined, search]);
 
+  console.log("cOM" ,combined)
+
   /* ---------- detail subviews ---------- */
   const DetailHeader = ({ title, dateISO, onBack }) => (
       <div className={styles.recordsDetailsHeader}>
