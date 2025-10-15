@@ -261,6 +261,7 @@ const FileGrid = ({ files = [] }) => {
 
 /* ---------- main ---------- */
 export const MedicalHistory = ({ patientDetails = {}, loading }) => {
+  console.log("Det: ",patientDetails)
   const consultations = Array.isArray(patientDetails?.consultations) ? patientDetails.consultations : [];
   const admissionRequests = Array.isArray(patientDetails?.admissionRequests) ? patientDetails.admissionRequests : [];
 
@@ -316,7 +317,7 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
     );
   }, [combined, search]);
 
-  console.log("cOM" ,combined)
+  // console.log("cOM" ,combined)
 
   /* ---------- detail subviews ---------- */
   const DetailHeader = ({ title, dateISO, onBack }) => (
@@ -425,6 +426,15 @@ export const MedicalHistory = ({ patientDetails = {}, loading }) => {
                             </div>
 
                             {p?.description && (<><div style={{ fontWeight: 600, marginTop: 8 }}>Description</div><div>{p.description}</div></>)}
+
+                            {!isEmpty(p?.data) && (
+                                <>
+                                  <div style={{ fontWeight: 600, marginTop: 12 }}>Phase Data</div>
+                                  <div className={styles.kvTable}>
+                                    <JsonValue value={p.data} />
+                                  </div>
+                                </>
+                            )}
 
                             <div style={{ fontWeight: 600, marginTop: 8 }}>Files</div>
                             <FileGrid files={phaseFiles} />
