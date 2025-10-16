@@ -23,6 +23,7 @@ import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
 import { toast } from "react-toastify";
 import AddPatient from "./modals/AddPatient/AddPatient.jsx";
+import DiagnosisAndVitals from "./NewTemplateComponents/diagnosisAndVitals/DiagnosisAndVitals.jsx";
 
 const ConsultBody = ({
   selectedForm,
@@ -402,7 +403,7 @@ const ConsultBody = ({
                   selectedComponent === "PrescriptionAndMedicines"
                     ? styles.active
                     : ""
-                } ${!completeData.medicalHistory ? styles.disabled : ""}
+                } ${!completeData.diagnosisAndVitals ? styles.disabled : ""}
                 ${
                   confirmedSections.includes("PrescriptionAndMedicines")
                     ? styles.confirmed
@@ -410,7 +411,7 @@ const ConsultBody = ({
                 }
                 `}
                 onClick={() => {
-                  if (completeData.medicalHistory) {
+                  if (completeData.diagnosisAndVitals) {
                     setSelectedComponent("PrescriptionAndMedicines");
                   }
                 }}
@@ -819,6 +820,23 @@ const ConsultBody = ({
                   ]);
                 }}
               />
+            )}
+            {selectedComponent === "DiagnosisAndVitals" && (
+                <DiagnosisAndVitals
+                    patient={ongoingAppointment?.patient}
+                    existingData={completeData}
+                    selectedComponent="DiagnosisAndVitals"
+                    onConfirm={(diagnosisAndVitals) => {
+                      setCompleteData((prev) => ({
+                        ...prev,
+                        diagnosisAndVitals: diagnosisAndVitals,
+                      }));
+                      setSelectedComponent("PrescriptionAndMedicines");
+                      setConfirmedSections((prev) => [
+                        ...new Set([...prev, "DiagnosisAndVitals"]),
+                      ]);
+                    }}
+                />
             )}
             {selectedComponent === "PerceptionAndMedicines" && (
               <PerceptionAndMedicines
