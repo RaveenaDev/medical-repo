@@ -76,6 +76,7 @@ const AdminDoctors = (props) => {
   // const noOfDoctors = null;
   const hospitalName = localStorage.getItem("hospitalName");
 
+  console.log(doctors);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newDoctor, setNewDoctor] = useState({
     profile: "s",
@@ -525,13 +526,57 @@ const AdminDoctors = (props) => {
                   }}
                 >
                   <TableRow>
-                    <TableCell>Profile</TableCell>
-                    <TableCell>Doctor ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Phone Number</TableCell>
-                    <TableCell>Specialization</TableCell>
-                    <TableCell align="center">Status</TableCell>
-                    <TableCell align="center">Profile</TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: "600",
+                      }}
+                    >
+                      Profile
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: "600",
+                      }}
+                    >
+                      Email
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: "600",
+                      }}
+                    >
+                      Name
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: "600",
+                      }}
+                    >
+                      Phone Number
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: "600",
+                      }}
+                    >
+                      Department
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: "600",
+                      }}
+                    >
+                      Specialization
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: "600",
+                      }}
+                      align="center"
+                    >
+                      Status
+                    </TableCell>
+                    {/* <TableCell align="center">Profile</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -563,16 +608,19 @@ const AdminDoctors = (props) => {
                             variant="body1"
                             sx={{ color: "#25307F", fontWeight: "bold" }}
                           >
-                            {truncateText(doctor?._id, 8)}
+                            {truncateText(doctor?.email)}
                           </Typography>
                         </TableCell>
                         <TableCell>
                           <Typography variant="body1" sx={{ color: "#25307F" }}>
-                            {truncateText(doctor?.name, 13)}
+                            {truncateText(doctor?.name, 20)}
                           </Typography>
                         </TableCell>
                         <TableCell sx={{ color: "#747474" }}>
                           {doctor?.phone}
+                        </TableCell>
+                        <TableCell sx={{ color: "#747474" }}>
+                          {doctor?.departments?.[0]?.name || "Not Assigned"}
                         </TableCell>
                         <TableCell sx={{ color: "#747474" }}>
                           {doctor?.specialization || "Not Assigned"}
@@ -619,25 +667,25 @@ const AdminDoctors = (props) => {
                             }}
                           />
                         </TableCell>
-                        <TableCell align="center">
+                        {/* <TableCell align="center">
                           <Button
                             variant="outlined"
                             sx={{
-                              border: "2px solid #25307F", // Purple border
-                              borderRadius: "18px", // Rounded corners
+                              border: "2px solid #25307F", 
+                              borderRadius: "18px", 
                               px: 4,
-                              color: "#25307F", // Blue text color
-                              textTransform: "none", // Prevents uppercase text
-                              fontSize: "12px", // Adjust text size if needed
+                              color: "#25307F", 
+                              textTransform: "none", 
+                              fontSize: "12px",
                               "&:hover": {
-                                borderColor: "#25307F", // Darker border on hover
-                                backgroundColor: "rgba(128, 0, 128, 0.1)", // Light purple hover effect
+                                borderColor: "#25307F", 
+                                backgroundColor: "rgba(128, 0, 128, 0.1)", 
                               },
                             }}
                           >
                             View Profile
                           </Button>
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     ))
                   ) : (
