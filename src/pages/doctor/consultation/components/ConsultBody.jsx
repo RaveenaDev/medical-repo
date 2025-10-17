@@ -100,7 +100,7 @@ const ConsultBody = ({
   }, [dispatch, ongoingAppointment]);
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  console.log(patientDetails)
+  // console.log(patientDetails)
 
   useEffect(() => {
     if (
@@ -208,7 +208,7 @@ const ConsultBody = ({
     nextAppointment = futureAppointments[0] || null;
   }
 
-  // console.log("Next Appointment:", nextAppointment);
+  console.log("Data:", completeData);
 
   const handleCompleteBtn = () => {
     if (!completeData || Object.keys(completeData).length === 0) {
@@ -368,7 +368,7 @@ const ConsultBody = ({
             </div>
           </div>
 
-          {!selectedForm ? (
+          {selectedForm === "custom1" ? (
             <>
               <div
                 className={`${styles["lp-2"]} ${
@@ -419,7 +419,7 @@ const ConsultBody = ({
                 <p>Prescription & Medicines</p>
               </div>
             </>
-          ) : selectedForm === "custom1" ? (
+          ) : !selectedForm ? (
               <>
                 <>
                   <div
@@ -469,7 +469,7 @@ const ConsultBody = ({
                           selectedComponent === "PerceptionAndMedicines"
                               ? styles.active
                               : ""
-                      } ${!completeData.medicalHistory ? styles.disabled : ""}
+                      } ${completeData.currentMedications || completeData.diagnosisVitals ? "": styles.disabled}
                 ${
                           confirmedSections.includes("PerceptionAndMedicines")
                               ? styles.confirmed
@@ -477,7 +477,7 @@ const ConsultBody = ({
                       }
                 `}
                       onClick={() => {
-                        if (completeData.medicalHistory) {
+                        if (completeData.currentMedications || completeData.diagnosisVitals) {
                           setSelectedComponent("PerceptionAndMedicines");
                         }
                       }}
@@ -671,7 +671,7 @@ const ConsultBody = ({
                       patient={ongoingAppointment?.patient}
                       existingData={completeData}
                       selectedComponent="medicalHistory"
-                      onConfirm={(medicalData) => {
+                      onConfirmSummary={(medicalData) => {
                         setCompleteData((prev) => ({
                           ...prev,
                           medicalHistory: medicalData,
@@ -709,7 +709,7 @@ const ConsultBody = ({
                       onConfirm={(perceptionData) => {
                         setCompleteData((prev) => ({
                           ...prev,
-                          perceptionsAndMedicines: perceptionData,
+                          prescriptionsAndMedicines: perceptionData,
                         }));
 
                         setConfirmedSections((prev) => [
@@ -775,7 +775,7 @@ const ConsultBody = ({
                 patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="medicalHistory"
-                onConfirm={(medicalData) => {
+                onConfirmSummary={(medicalData) => {
                   setCompleteData((prev) => ({
                     ...prev,
                     medicalHistory: medicalData,
@@ -848,7 +848,7 @@ const ConsultBody = ({
                 onConfirm={(perceptionData) => {
                   setCompleteData((prev) => ({
                     ...prev,
-                    perceptionsAndMedicines: perceptionData,
+                    prescriptionAndMedicines: perceptionData,
                   }));
                   // console.log("Perception Data: ",perceptionData)
                   setSelectedComponent("TreatmentAndTest");
