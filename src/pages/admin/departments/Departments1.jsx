@@ -59,6 +59,18 @@ const Departments1 = (props) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [isNewHead, setIsNewHead] = useState(false);
+  const [newHead, setNewHead] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "changeme",
+  });
+  const handleNewHeadChange = (e) => {
+    const { name, value } = e.target;
+    setNewHead((prev) => ({ ...prev, [name]: value }));
+  };
+
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
@@ -77,10 +89,24 @@ const Departments1 = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDepartment((prev) => ({
-      ...prev,
-      [name]: name === "head" && value !== "" ? JSON.parse(value) : value,
-    }));
+
+    if (name === "head") {
+      // prevent parsing the special "new" value
+      if (value === "new") {
+        setIsNewHead(true);
+        return;
+      }
+
+      setDepartment((prev) => ({
+        ...prev,
+        head: value ? JSON.parse(value) : "",
+      }));
+    } else {
+      setDepartment((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleMultipleChange = (event) => {
@@ -112,14 +138,13 @@ const Departments1 = (props) => {
   // console.log(allDepartments)
 
   const handleAdd = () => {
-    // console.log("Adding new Dep... : ", department);
-    dispatch(addDepartment(department));
-    setDepartment({
-      name: "",
-      head: "",
-      doctors: [],
-      nurses: [],
-    });
+    const payload = {
+      ...department,
+      head: department.head, // will either be selected doctor or newHead object
+    };
+
+    dispatch(addDepartment(payload));
+    setDepartment({ name: "", head: "", doctors: [], nurses: [] });
     handleClose();
   };
 
@@ -312,9 +337,11 @@ const Departments1 = (props) => {
                           labelId="department-head-label"
                           name="head"
                           value={
-                            department.head
+                            typeof department.head === "string"
+                              ? department.head
+                              : department.head?.id
                               ? JSON.stringify(department.head)
-                              : ""
+                              : "new-head" // fallback for newly added head
                           }
                           label="Select Department Head"
                           onChange={handleChange}
@@ -363,7 +390,101 @@ const Departments1 = (props) => {
                               {doctor.name}
                             </MenuItem>
                           ))}
+                          {department.head && !department.head.id && (
+                            <MenuItem
+                              key="new-head"
+                              value="new-head"
+                              sx={{ fontWeight: 500, color: "#25307F" }}
+                            >
+                              {department.head.name || "New Department Head"}
+                            </MenuItem>
+                          )}
+                          <MenuItem
+                            onClick={() => setIsNewHead(true)}
+                            sx={{ color: "#25307F", fontWeight: 500 }}
+                          >
+                            + Add New Head
+                          </MenuItem>
                         </Select>
+                        <Modal
+                          open={isNewHead}
+                          onClose={() => setIsNewHead(false)}
+                        >
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              top: "50%",
+                              left: "50%",
+                              transform: "translate(-50%, -50%)",
+                              bgcolor: "background.paper",
+                              boxShadow: 24,
+                              p: 3,
+                              width: 400,
+                            }}
+                          >
+                            <h4 style={{ marginBottom: "1rem" }}>
+                              Add New Department Head
+                            </h4>
+
+                            <TextField
+                              fullWidth
+                              label="Name"
+                              name="name"
+                              value={newHead.name}
+                              onChange={handleNewHeadChange}
+                              size="small"
+                              sx={{ mb: 2 }}
+                            />
+
+                            <TextField
+                              fullWidth
+                              label="Email"
+                              name="email"
+                              value={newHead.email}
+                              onChange={handleNewHeadChange}
+                              size="small"
+                              sx={{ mb: 2 }}
+                            />
+
+                            <TextField
+                              fullWidth
+                              label="Phone"
+                              name="phone"
+                              value={newHead.phone}
+                              onChange={handleNewHeadChange}
+                              size="small"
+                              sx={{ mb: 2 }}
+                            />
+
+                            <TextField
+                              fullWidth
+                              label="Password"
+                              name="password"
+                              value={newHead.password}
+                              onChange={handleNewHeadChange}
+                              size="small"
+                              sx={{ mb: 3 }}
+                            />
+
+                            <Button
+                              variant="contained"
+                              sx={{
+                                backgroundColor: "#25307F",
+                                textTransform: "none",
+                                width: "100%",
+                              }}
+                              onClick={() => {
+                                setDepartment((prev) => ({
+                                  ...prev,
+                                  head: newHead,
+                                }));
+                                setIsNewHead(false);
+                              }}
+                            >
+                              Save Head
+                            </Button>
+                          </Box>
+                        </Modal>
                       </FormControl>
 
                       <FormControl

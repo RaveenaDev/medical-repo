@@ -454,7 +454,9 @@ export const adminReducer = (state = initialState, action) => {
     case GET_INSURANCE_COMPANIES:
       return {
         ...state,
-        insuranceCompanies: action.payload.companies,
+        insuranceCompanies: Array.isArray(action.payload.companies)
+          ? action.payload.companies
+          : [],
         isLoadingInsuranceCompanies: false,
       };
 
