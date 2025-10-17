@@ -193,7 +193,7 @@ const Patients = () => {
             <span className={styles.backText}>Patient List</span>
           </div>
           <div className={styles.headerRight}>
-            <Button
+            {/* <Button
               variant="contained"
               onClick={handleRequestBtn}
               sx={{
@@ -232,7 +232,7 @@ const Patients = () => {
               >
                 Requests
               </span>
-            </Button>
+            </Button> */}
 
             {/* <Button
               variant="contained"
