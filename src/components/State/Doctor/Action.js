@@ -970,7 +970,7 @@ export const generatePrescriptionsWithAI =
       dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data.data });
     } catch (error) {
       console.log(error);
-      toast.error("Please fill and confirm Medical History!", {
+      toast.error("Please fill above fields!", {
         position: "bottom-right",
         autoClose: 2000,
       });

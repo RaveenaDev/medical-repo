@@ -9,6 +9,61 @@
   padding: 1.5rem;
 }
 
+/* AI SUMMARY SECTION */
+.aiSummarySection {
+  background: linear-gradient(135deg, #f7f8fc 0%, #e8ecff 100%);
+  border: 1px solid #d0d8f7;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.aiSummaryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+
+  h4 {
+    color: #25307f;
+    font-family: "Karla", sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.aiSummaryContent {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  min-height: 80px;
+
+  p {
+    margin: 0;
+    color: #333;
+    font-family: "Karla", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .noData {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+  }
+}
+
+.summaryLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #5461BE;
+  font-family: "Karla", sans-serif;
+  font-size: 0.95rem;
+}
+
 .visitHeader {
   display: flex;
   justify-content: space-between;
