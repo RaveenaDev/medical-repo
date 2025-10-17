@@ -411,7 +411,7 @@ const DoctorOverview = ({ todayAppointments }) => {
   const doctorId = localStorage.getItem("userId");
 
   const totalAppointments = doctor.totalAppointments?.filter(
-      (appt) => appt.doctor._id === doctorId
+    (appt) => appt.doctor._id === doctorId
   );
 
   // console.log("Total : ", totalAppointments);
@@ -648,13 +648,13 @@ const DoctorOverview = ({ todayAppointments }) => {
                 >
                   <p>
                     <span className={styles.greenDot} />{" "}
-                    <span>{filteredRequests.length} New Patients </span>
+                    <span>{filteredRequests.length} Addmission Requests </span>
                   </p>
                   <ChevronRight className={styles.rightArrow} />
                 </button>
               </div>
             </Grid>
-            <Grid
+            {/* <Grid
               size={8}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "1vw" }}
             >
@@ -775,18 +775,18 @@ const DoctorOverview = ({ todayAppointments }) => {
                 </div>
               </>
               {/* Modal Component */}
-              <AppointmentRequestModal
+            {/* <AppointmentRequestModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 appointmentRequests={appointmentRequests}
               >
                 <p>This is where appointment requests will appear.</p>
               </AppointmentRequestModal>
-            </Grid>
+            </Grid> */}
           </Grid>
         </div>
 
-        <div style={{ marginTop: "32vh" }}>
+        <div style={{ marginTop: "28vh" }}>
           <div className={styles.parent1}>
             <div>
               <div className={styles.child1}>

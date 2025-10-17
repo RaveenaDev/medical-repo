@@ -175,7 +175,7 @@ const TotalSurgeries = () => {
             />
             <span className={styles.backText}>Surgeries List</span>
           </div>
-          <div className={styles.headerRight}>
+          {/* <div className={styles.headerRight}>
             <Button
               variant="contained"
               onClick={handleRequestBtn}
@@ -266,7 +266,7 @@ const TotalSurgeries = () => {
                 Appointment Requests
               </span>
             </Button>
-          </div>
+          </div> */}
         </div>
         <hr />
         <div className={styles.headerBottom}>
