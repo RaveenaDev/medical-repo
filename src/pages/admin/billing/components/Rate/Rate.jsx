@@ -35,7 +35,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Alert, Snackbar } from "@mui/material";
-import { FileWarning, TriangleAlert } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 
 const Rate = () => {
   const [filters, setFilters] = useState({
