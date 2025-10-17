@@ -1,5 +1,5 @@
 // MedicalHistory.jsx — list -> detail using CSS modules, with file management for consultationData.files.{images,videos,attachments}
-import { useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { ChevronLeft } from "lucide-react";
 import {
   Dialog,
@@ -314,7 +314,7 @@ const FileGrid = ({ files = [] }) => {
 
 /* ---------- main ---------- */
 export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary }) => {
-  // console.log("Det: ", patientDetails);
+  console.log("Det: ", patientDetails);
   const [openPreview, setOpenPreview] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [aiSummary, setAiSummary] = useState("");
@@ -329,6 +329,21 @@ export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary 
   const otherDocuments = Array.isArray(patientDetails?.otherDocuments)
       ? patientDetails?.otherDocuments
       : [];
+
+  useEffect(() => {
+    if (!aiSummary && patientDetails?.aiSummary) {
+      const cleanedSummary = patientDetails.aiSummary
+          .replace(/^\*\*/, "") // remove starting **
+          .replace(/\*\*$/, "") // remove ending **
+          .replace(/^Patient Summary:\s*/i, "") // remove "Patient Summary:"
+          .trim(); // remove extra spaces
+
+      setAiSummary(cleanedSummary);
+    }
+  }, [patientDetails, aiSummary]);
+
+
+
   const combined = useMemo(() => {
     const normConsultations = consultations.map((c) => ({
       id:
