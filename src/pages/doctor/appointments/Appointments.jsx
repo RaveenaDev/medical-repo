@@ -53,53 +53,57 @@ const Appointments = () => {
 
   const doctorId = localStorage.getItem("userId");
 
-// Appointments
+  // Appointments
   const scheduledAppointments = useSelector((store) =>
-      store.doctor.scheduledAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
-      )
+    store.doctor.scheduledAppointments?.filter(
+      (appt) => appt.doctor._id === doctorId
+    )
   );
 
   const ongoingAppointments = useSelector((store) =>
-      store.doctor.ongoingAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
-      )
+    store.doctor.ongoingAppointments?.filter(
+      (appt) => appt.doctor._id === doctorId
+    )
   );
 
   const waitingAppointments = useSelector((store) =>
-      store.doctor.waitingAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
-      )
+    store.doctor.waitingAppointments?.filter(
+      (appt) => appt.doctor._id === doctorId
+    )
   );
 
   const completedAppointments = useSelector((store) =>
-      store.doctor.completedAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
-      )
+    store.doctor.completedAppointments?.filter(
+      (appt) => appt.doctor._id === doctorId
+    )
   );
 
-// Counts
-  const scheduledCount = useSelector((store) =>
+  // Counts
+  const scheduledCount = useSelector(
+    (store) =>
       store.doctor.scheduledAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
+        (appt) => appt.doctor._id === doctorId
       ).length
   );
 
-  const ongoingCount = useSelector((store) =>
+  const ongoingCount = useSelector(
+    (store) =>
       store.doctor.ongoingAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
+        (appt) => appt.doctor._id === doctorId
       ).length
   );
 
-  const waitingCount = useSelector((store) =>
+  const waitingCount = useSelector(
+    (store) =>
       store.doctor.waitingAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
+        (appt) => appt.doctor._id === doctorId
       ).length
   );
 
-  const completedCount = useSelector((store) =>
+  const completedCount = useSelector(
+    (store) =>
       store.doctor.completedAppointments?.filter(
-          (appt) => appt.doctor._id === doctorId
+        (appt) => appt.doctor._id === doctorId
       ).length
   );
 
@@ -163,16 +167,19 @@ const Appointments = () => {
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: "25vh" }}>
-        <div className={styles.todayRow} style={{padding:'6px 9px',width:'10vw'}}>
+      <div style={{ marginTop: "22vh" }}>
+        <div
+          className={styles.todayRow}
+          style={{ padding: "6px 9px", width: "10vw" }}
+        >
           <div className={styles.text}>
-            <span className={styles.label} style={{fontSize:'12px'}}>
+            <span className={styles.label} style={{ fontSize: "12px" }}>
               {selectedDate.format("YYYY-MM-DD") ===
               dayjs().format("YYYY-MM-DD")
                 ? "Today"
                 : "Selected Date"}
             </span>
-            <span className={styles.date} style={{fontSize:'11px'}}>
+            <span className={styles.date} style={{ fontSize: "11px" }}>
               {selectedDate.format("DD-MM-YYYY")}
             </span>
           </div>
