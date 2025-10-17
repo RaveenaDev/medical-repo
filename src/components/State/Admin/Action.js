@@ -1180,6 +1180,8 @@ export const getInsuranceCompanies = () => async (dispatch) => {
     dispatch({ type: GET_INSURANCE_COMPANIES, payload: data });
   } catch (error) {
     console.log(error);
+
+    dispatch({ type: GET_INSURANCE_COMPANIES, payload: { companies: 0 } });
   }
 };
 
