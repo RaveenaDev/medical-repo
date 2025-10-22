@@ -314,7 +314,7 @@ const FileGrid = ({ files = [] }) => {
 
 /* ---------- main ---------- */
 export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary }) => {
-  console.log("Det: ", patientDetails);
+  // console.log("Det: ", patientDetails);
   const [openPreview, setOpenPreview] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [aiSummary, setAiSummary] = useState("");

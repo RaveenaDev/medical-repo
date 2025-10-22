@@ -1,12 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./DiagnosisAndVitals.module.scss";
 
-const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
+const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfirm }) => {
     const [mode, setMode] = useState("text");
     const [text, setText] = useState("");
     const [isListening, setIsListening] = useState(false);
     const recognitionRef = useRef(null);
     const isListeningRef = useRef(false);
+
+    // Initialize with existing data if available
+    useEffect(() => {
+        if (existingData?.diagnosisAndVitals?.text) {
+            setText(existingData.diagnosisAndVitals.text);
+        }
+    }, [existingData]);
 
     // Keep isListeningRef in sync with isListening state
     useEffect(() => {
@@ -29,7 +36,6 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
             if (finalChunk) setText((t) => (t ? t + " " : "") + finalChunk.trim());
         };
         rec.onend = () => {
-            // Use ref instead of state to avoid stale closure
             if (isListeningRef.current) {
                 try {
                     rec.start();
@@ -41,10 +47,8 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
         rec.onerror = (e) => {
             console.error("Speech recognition error:", e.error);
             if (e.error === "no-speech" || e.error === "aborted") {
-                // These are not critical errors, just log them
                 return;
             }
-            // For other errors, stop listening
             setIsListening(false);
         };
         recognitionRef.current = rec;
@@ -53,7 +57,7 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
                 rec.abort();
             }
         };
-    }, []); // Empty dependency array - setup only once
+    }, []);
 
     const toggleMic = () => {
         const rec = recognitionRef.current;
@@ -63,7 +67,7 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
         }
         if (isListening) {
             setIsListening(false);
-            rec.stop(); // Use stop() instead of abort() for cleaner shutdown
+            rec.stop();
         } else {
             setIsListening(true);
             try {
@@ -101,7 +105,16 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
         ctx.fillStyle = "#fff";
         ctx.fillRect(0, 0, rect.width, rect.height);
         ctxRef.current = ctx;
-    }, [mode]);
+
+        // Load existing image if available
+        if (existingData?.diagnosisAndVitals?.image) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, rect.width, rect.height);
+            };
+            img.src = existingData.diagnosisAndVitals.image;
+        }
+    }, [mode, existingData]);
 
     const getPos = (e) => {
         const rect = canvasRef.current.getBoundingClientRect();
@@ -132,11 +145,16 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
     };
 
     const handleConfirm = () => {
-        if (mode === "text") {
-            if (onConfirmText) onConfirmText(text.trim());
-        } else {
-            const dataUrl = canvasRef.current.toDataURL("image/png");
-            if (onConfirmImage) onConfirmImage(dataUrl);
+        const diagnosisAndVitals = {
+            mode: mode,
+            text: mode === "text" ? text.trim() : (existingData?.diagnosisAndVitals?.text || ""),
+            image: mode === "whiteboard" ? canvasRef.current.toDataURL("image/png") : (existingData?.diagnosisAndVitals?.image || null),
+            timestamp: new Date().toISOString(),
+            patientId: patient?._id || null
+        };
+
+        if (onConfirm) {
+            onConfirm(diagnosisAndVitals);
         }
     };
 
@@ -154,7 +172,7 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
                     {
                         mode === "text" ?
                             <div className={styles.imgBtn}
-                                 onClick={() => setMode(mode === "text" ? "whiteboard" : "text")}
+                                 onClick={() => setMode("whiteboard")}
                             >
                                 <svg width="22" height="22" viewBox="0 0 27 27" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -166,7 +184,7 @@ const DiagnosisAndVitals = ({ onConfirmText, onConfirmImage }) => {
                             :
                             <button
                                 className={styles.toggleBtn}
-                                onClick={() => setMode(mode === "text" ? "whiteboard" : "text")}
+                                onClick={() => setMode("text")}
                             >
                                 Text
                             </button>

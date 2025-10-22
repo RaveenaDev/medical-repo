@@ -24,6 +24,7 @@ import DynamicFormSection from "./DynamicFormSection.jsx";
 import { toast } from "react-toastify";
 import AddPatient from "./modals/AddPatient/AddPatient.jsx";
 import DiagnosisAndVitals from "./NewTemplateComponents/diagnosisAndVitals/DiagnosisAndVitals.jsx";
+import PrescriptionsAndMedicines from "./NewTemplateComponents/prescriptionAndMedicines/PrescriptionsAndMedicines.jsx";
 
 const ConsultBody = ({
   selectedForm,
@@ -105,6 +106,7 @@ const ConsultBody = ({
   useEffect(() => {
     if (
       selectedComponent === "PerceptionAndMedicines" ||
+        selectedComponent === "PrescriptionAndMedicines" ||
       selectedComponent === "static-2"
     ) {
       const aiData = {
@@ -650,7 +652,7 @@ const ConsultBody = ({
         {/* Right Panel */}
         <div className={styles["right-panel"]}>
           <div className={styles["rp-content"]}>
-            {selectedForm &&
+            {selectedForm && selectedForm !== 'custom1' &&
               selectedForm.sections?.some(
                 (sec) => sec.id === selectedComponent
               ) &&
@@ -761,7 +763,7 @@ const ConsultBody = ({
               <PatientInfo
                 ongoingAppointment={ongoingAppointment}
                 onConfirm={() => {
-                  if (!selectedForm) {
+                  if (!selectedForm || selectedForm === 'custom1') {
                     setSelectedComponent("MedicalHistory");
                   } else {
                     setSelectedComponent("static-1");
@@ -780,7 +782,11 @@ const ConsultBody = ({
                     ...prev,
                     medicalHistory: medicalData,
                   }));
-                  setSelectedComponent("CurrentMedication");
+                  if (selectedForm === 'custom1') {
+                    setSelectedComponent("DiagnosisAndVitals");
+                  } else {
+                    setSelectedComponent("CurrentMedication");
+                  }
                   setConfirmedSections((prev) => [
                     ...new Set([...prev, "MedicalHistory"]),
                   ]);
@@ -829,11 +835,31 @@ const ConsultBody = ({
                     onConfirm={(diagnosisAndVitals) => {
                       setCompleteData((prev) => ({
                         ...prev,
-                        diagnosisAndVitals: diagnosisAndVitals,
+                        diagnosisVitals: diagnosisAndVitals,
                       }));
                       setSelectedComponent("PrescriptionAndMedicines");
                       setConfirmedSections((prev) => [
                         ...new Set([...prev, "DiagnosisAndVitals"]),
+                      ]);
+                    }}
+                />
+            )}
+            {selectedComponent === "PrescriptionAndMedicines" && (
+                <PrescriptionsAndMedicines
+                    patient={ongoingAppointment.patient}
+                    existingData={completeData}
+                    selectedComponent="PrescriptionAndMedicines"
+                    completeData={completeData}
+                    generatedPrescriptions={generatedPrescriptionsWithAI}
+                    onConfirm={(perceptionData) => {
+                      setCompleteData((prev) => ({
+                        ...prev,
+                        prescriptionAndMedicines: perceptionData,
+                      }));
+                      // console.log("Perception Data: ",perceptionData)
+                      setSelectedComponent("TreatmentAndTest");
+                      setConfirmedSections((prev) => [
+                        ...new Set([...prev, "PerceptionAndMedicines"]),
                       ]);
                     }}
                 />

@@ -322,6 +322,12 @@ const Appointments = () => {
                   <TableCell>Doctor</TableCell>
                   <TableCell>Type Visit</TableCell>
                   <TableCell>Branch</TableCell>
+                    <TableCell
+                        align="center"
+                        sx={{ color: "#000", fontSize: "16px" }}
+                    >
+                        Appt. Time
+                    </TableCell>
                   <TableCell align="center">Token Number</TableCell>
                   <TableCell>Status</TableCell>
                 </TableRow>
@@ -386,6 +392,26 @@ const Appointments = () => {
                         <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
                           {appointment.department.name}
                         </TableCell>
+
+                          <TableCell
+                              sx={{
+                                  color: "#747474",
+                                  fontWeight: 600,
+                              }}
+                              align="center"
+                          >
+                              {appointment?.tokenDate
+                                  ? new Date(appointment.tokenDate)
+                                      .toLocaleTimeString("en-IN", {
+                                          timeZone: "Asia/Kolkata",
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                          hour12: true,
+                                      })
+                                      .replace("am", "AM")
+                                      .replace("pm", "PM")
+                                  : "N/A"}
+                          </TableCell>
 
                         <TableCell
                           sx={{ color: "#747474", fontWeight: 600 }}
