@@ -389,7 +389,7 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         services: state.services.some(
           (service) =>
-            service.name === action.payload.service.name &&
+            service.serviceName === action.payload.service.name &&
             service.department.name === action.payload.service.department.name
         )
           ? state.services.map((service) =>
