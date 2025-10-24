@@ -170,6 +170,7 @@ const Rate = () => {
     page * rowsPerPage + rowsPerPage
   );
 
+  console.log("Paginated Services: ", paginatedServices);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

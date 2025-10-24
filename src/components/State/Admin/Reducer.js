@@ -384,22 +384,61 @@ export const adminReducer = (state = initialState, action) => {
         services: action.payload.services,
       };
 
-    case ADD_SERVICE:
+    case ADD_SERVICE: {
+      const newService = action.payload.service;
+
+      // Normalize payload data
+      const newServiceId = newService._id || newService.serviceId;
+      const newServiceName = newService.name || newService.serviceName;
+      const newDepartmentName =
+        newService.department?.name || newService.department;
+
+      const existingIndex = state.services.findIndex((service) => {
+        const serviceIdMatch =
+          service.serviceId === newServiceId || service._id === newServiceId;
+
+        const serviceNameMatch =
+          service.serviceName === newServiceName ||
+          service.name === newServiceName;
+
+        const departmentNameMatch =
+          (service.department?.name || service.department) ===
+          newDepartmentName;
+
+        return serviceIdMatch || (serviceNameMatch && departmentNameMatch);
+      });
+
+      if (existingIndex !== -1) {
+        const updatedServices = [...state.services];
+        const existingService = updatedServices[existingIndex];
+
+        updatedServices[existingIndex] = {
+          ...existingService,
+          ...newService,
+          serviceId: newServiceId,
+          serviceName: newServiceName,
+          department: newDepartmentName,
+          categories: newService.categories || existingService.categories,
+          lastUpdated: newService.lastUpdated || new Date().toISOString(),
+        };
+
+        return { ...state, services: updatedServices };
+      }
+
+      // Add new service
       return {
         ...state,
-        services: state.services.some(
-          (service) =>
-            service.name === action.payload.service.name &&
-            service.department.name === action.payload.service.department.name
-        )
-          ? state.services.map((service) =>
-              service.name === action.payload.service.name &&
-              service.department.name === action.payload.service.department.name
-                ? action.payload.service
-                : service
-            )
-          : [...state.services, action.payload.service],
+        services: [
+          ...state.services,
+          {
+            ...newService,
+            serviceId: newServiceId,
+            serviceName: newServiceName,
+            department: newDepartmentName,
+          },
+        ],
       };
+    }
 
     case DELETE_SERVICE:
       return {
