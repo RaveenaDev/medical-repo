@@ -9,6 +9,7 @@ import SaiAsha from "../../assets/SaiAsha.png";
 const roleOptions = {
   receptionist: [
     { title: "Overview", path: "/receptionist" },
+    { title: "Speak Bot", path: "/receptionist/bot"},  // Bot new changes  
     { title: "Patients", path: "/receptionist/patients" },
     { title: "Departments", path: "/receptionist/departments" },
     { title: "Settings", path: "/receptionist/settings" },
