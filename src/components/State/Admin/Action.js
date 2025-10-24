@@ -785,6 +785,7 @@ export const addService = (serviceData) => async (dispatch) => {
       },
     });
 
+    // console.log(data);
     dispatch({ type: ADD_SERVICE, payload: data });
     toast.success("Service Added Successfully!", {
       position: "bottom-right", // Use string for position
