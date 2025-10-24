@@ -106,10 +106,18 @@ const ConsultBody = ({
   useEffect(() => {
     if (
       selectedComponent === "PerceptionAndMedicines" ||
-        selectedComponent === "PrescriptionAndMedicines" ||
       selectedComponent === "static-2"
     ) {
 
+      const aiData = {
+        ...completeData,
+        patientId: ongoingAppointment?.patient._id,
+      };
+
+      dispatch(generatePrescriptionsWithAI(aiData));
+    }
+
+    else if(selectedComponent === "PrescriptionAndMedicines"){
       const aiData = {
         ...completeData,
         patientId: ongoingAppointment?.patient._id,
