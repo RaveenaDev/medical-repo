@@ -109,13 +109,18 @@ const ConsultBody = ({
         selectedComponent === "PrescriptionAndMedicines" ||
       selectedComponent === "static-2"
     ) {
+
       const aiData = {
         ...completeData,
         patientId: ongoingAppointment?.patient._id,
+        diagnosisVitals: completeData?.diagnosisAndVitals, // ✅ new key
       };
+
+      delete aiData.diagnosisAndVitals; // ❌ remove old key
 
       dispatch(generatePrescriptionsWithAI(aiData));
     }
+
   }, [selectedComponent, dispatch]);
 
   if (!appointments || appointments.length === 0) {
@@ -835,7 +840,7 @@ const ConsultBody = ({
                     onConfirm={(diagnosisAndVitals) => {
                       setCompleteData((prev) => ({
                         ...prev,
-                        diagnosisVitals: diagnosisAndVitals,
+                        diagnosisAndVitals: diagnosisAndVitals,
                       }));
                       setSelectedComponent("PrescriptionAndMedicines");
                       setConfirmedSections((prev) => [
