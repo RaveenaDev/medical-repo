@@ -24,6 +24,8 @@ import {
 } from "../../components/State/Doctor/Action.js";
 import Appointments from "./appointments/Appointments.jsx";
 import AdmissionForms from "./patientsList/component/addmissionForms/AddmissionForms.jsx";
+import PatientProfile from "./patient/details/PatientProfile.jsx";
+import MoreInfo from "./patient/details/MedicalInfo/MoreInfo.jsx";
 
 const DoctorRoutes = (props) => {
   useEffect(() => {
@@ -78,6 +80,8 @@ const DoctorRoutes = (props) => {
       <Route path="/settings/privacyPolicy" element={<PrivacyPolicy />} />
       <Route path="/settings/helpAndSupport" element={<Help />} />
       <Route path="/patientList/admission-forms" element={<AdmissionForms />} />
+      <Route path="/patients/profile" element={<PatientProfile />} />
+      <Route path="/patients/profile/more-info" element={<MoreInfo />} />
     </Routes>
   );
 };

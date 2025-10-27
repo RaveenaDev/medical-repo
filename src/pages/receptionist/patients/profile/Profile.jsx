@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import PersonalInfo from "./PersonalInfo";
-import MedicalInfo from "./MedicalInfo";
+import MedicalInfo from "./MedicalInfo/MedicalInfo.jsx";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ProgressTracker from "./ProgressTracker";
 import { Typography } from "@mui/material";
@@ -345,6 +345,7 @@ const Profile = (props) => {
                 </div>
               </div>
 
+              {/* Progress Tracker  */}
               <Grid xs={12}>
                 <Box
                   sx={{

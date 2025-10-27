@@ -257,7 +257,7 @@ function Admin(props) {
             variant="contained"
             sx={{
               fontSize: "max(1vw, 10px)",
-              width: "13vw",
+              width: "15vw",
               color: "#25307F",
               fontWeight: 500,
               textTransform: "capitalize",
@@ -285,7 +285,7 @@ function Admin(props) {
                 marginRight: "4px",
               }}
             ></span>
-            {filteredRequests.length} New Patients
+            {filteredRequests.length} Addmission Requests
             <span style={{ transform: "translateY(4px)" }}>
               <KeyboardArrowRightIcon />
             </span>

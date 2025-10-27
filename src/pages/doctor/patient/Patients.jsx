@@ -56,7 +56,7 @@ const Patients = () => {
   const filteredPatients = doctor.filteredPatients;
   const loading = doctor.isLoadingFilteredPatients;
 
-  // console.log("FIl: ",filteredPatients)
+  // console.log("FIl: ", filteredPatients);
 
   const handleSortChange = (event) => {
     // admin = null;
@@ -170,7 +170,12 @@ const Patients = () => {
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
-
+  const handleClick = (patient) => {
+    const latestAppointment =
+      patient.appointments?.[patient.appointments.length - 1];
+    const caseId = latestAppointment?.caseId || "Not Assigned";
+    navigate("/doctor/patients/profile", { state: { patient, caseId } });
+  };
   return (
     <div style={{ height: "100vh", overflow: "hidden" }}>
       <div style={{ position: "relative" }}>
@@ -188,7 +193,7 @@ const Patients = () => {
             <span className={styles.backText}>Patient List</span>
           </div>
           <div className={styles.headerRight}>
-            <Button
+            {/* <Button
               variant="contained"
               onClick={handleRequestBtn}
               sx={{
@@ -227,9 +232,9 @@ const Patients = () => {
               >
                 Requests
               </span>
-            </Button>
+            </Button> */}
 
-            <Button
+            {/* <Button
               variant="contained"
               onClick={handleAppointmentRequests}
               sx={{
@@ -277,7 +282,7 @@ const Patients = () => {
               >
                 Appointment Requests
               </span>
-            </Button>
+            </Button> */}
           </div>
         </div>
         <hr />
@@ -370,13 +375,13 @@ const Patients = () => {
                 <table className={styles.patientsTable}>
                   <thead>
                     <tr>
-                      <th style={{ backgroundColor: "#F1F1F1" }}>Case ID</th>
+                      <th style={{ backgroundColor: "#F1F1F1" }}>Pat ID</th>
                       <th style={{ backgroundColor: "#F1F1F1" }}>Name</th>
                       <th style={{ backgroundColor: "#F1F1F1" }}>
                         Phone Number
                       </th>
                       <th style={{ backgroundColor: "#F1F1F1" }}>Type Visit</th>
-                      <th style={{ backgroundColor: "#F1F1F1" }}>Type</th>
+
                       <th style={{ backgroundColor: "#F1F1F1" }}>Date</th>
                       <th style={{ backgroundColor: "#F1F1F1" }}>Booking</th>
                       {/*<th></th>*/}
@@ -384,7 +389,7 @@ const Patients = () => {
                   </thead>
                   <tbody>
                     {filteredPatients.map((patient, index) => (
-                      <tr key={index}>
+                      <tr key={index} onClick={() => handleClick(patient)}>
                         <td className={styles.patientId}>
                           {patient?.patId || "Not Assigned"}
                         </td>
@@ -405,9 +410,7 @@ const Patients = () => {
                         <td className={styles.typeVisit}>
                           {patient?.typeVisit || "Not Assigned"}
                         </td>
-                        <td className={styles.branch}>
-                          {patient.typeVisit || "Not Assigned"}
-                        </td>
+
                         <td className={styles.date}>
                           {/*{truncateText(patient?.appointments[0].date, 10)}*/}
                           {new Date(

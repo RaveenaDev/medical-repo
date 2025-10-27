@@ -155,7 +155,7 @@ const PatientList = () => {
   const noOfPatients = receptionist.totalFilteredPatients;
   const totalPatients = receptionist.filteredPatients;
 
-  // console.log("Total :",totalPatients)
+  // console.log("Total :", totalPatients);
 
   return (
     <div>
@@ -193,12 +193,12 @@ const PatientList = () => {
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <span className={styles.patientCount}>
-            {noOfPatients} <span>Inpatients</span>
-          </span>
+                {noOfPatients} <span>Inpatients</span>
+              </span>
 
-              <Box sx={{display: "flex", alignItems: "center"}}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
-                    variant="body1"
+                  variant="body1"
                   sx={{ marginRight: 1, color: "#25307F" }}
                 >
                   Sort by:
@@ -292,11 +292,11 @@ const PatientList = () => {
                 }}
               >
                 <TableRow>
-                  <TableCell>Case Id</TableCell>
+                  <TableCell>Pat Id</TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Phone Number</TableCell>
                   <TableCell>Type Visit</TableCell>
-                  <TableCell>Branch</TableCell>
+
                   <TableCell>Date</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Actions</TableCell>
@@ -320,8 +320,7 @@ const PatientList = () => {
                       }}
                     >
                       <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                        {patient.appointments[patient.appointments.length - 1]
-                          ?.caseId || "Not Assigned"}
+                        {patient?.patId || "Not Assigned"}
                       </TableCell>
                       <TableCell>
                         <Typography
@@ -343,10 +342,7 @@ const PatientList = () => {
                       <TableCell>
                         {patient?.typeVisit || "Not Assigned"}
                       </TableCell>
-                      <TableCell>
-                        {patient.appointments[patient.appointments.length - 1]
-                          ?.branch || "Not Assigned"}
-                      </TableCell>
+
                       <TableCell>
                         {new Date(patient.registrationDate).toLocaleDateString(
                           "en-IN",

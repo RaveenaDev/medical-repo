@@ -7,9 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
-  MessageSquareText,
   Phone,
-  Plus,
 } from "lucide-react";
 import MedAdminRecord from "./components/MedAdminRecord";
 import Nursing from "./components/Nursing";
@@ -18,8 +16,6 @@ import UpdateProgress from "./form/UpdateProgress";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPatientDetailsByID,
-  getPatientVitals,
-  getProgressTrackerDetails,
   updatePatientStatus,
 } from "../../../../components/State/Doctor/Action.js";
 import BedInfo from "./modals/BedInfo.jsx";
@@ -62,7 +58,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   };
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  // console.log("patientDetails: ", patientDetails);
+  console.log("patientDetails: ", patientDetails);
   // Check if there's a stored value in localStorage on initial load
   const savedStatus = localStorage.getItem(`status-${patientId}`);
 

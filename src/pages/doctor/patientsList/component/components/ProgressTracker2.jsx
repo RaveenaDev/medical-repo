@@ -23,6 +23,8 @@ const ProgressTracker2 = ({
   const [refreshKey, setRefreshKey] = useState(0); // 🔹 Trigger for reloads
 
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
+
+  console.log("Tracker: ",progressTracker)
   const isLoadingGetProgressTracker = useSelector(
     (store) => store.doctor.isLoadingGetProgressTracker
   );

@@ -468,13 +468,12 @@ body {
   margin-left: 0.5vw;
   color: #25307f;
   font-size: 0.91vw;
-
+  width: 15vw;
   border: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5vw;
-  padding: 0vh 0.5vw;
+
   &:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
   }

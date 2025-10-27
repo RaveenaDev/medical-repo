@@ -44,7 +44,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
   const appointments = useSelector((store) => store.doctor.appointmentsOfToday);
   const todayAppointments = appointments ? appointments.length : 0;
 
-  const noOfPatients = doctor.totalPatients;
+  const noOfPatients = doctor.totalPatients ? doctor.totalPatients : 0;
   const patients = doctor.patients;
 
   const noOfInpatients = doctor.totalInpatients;

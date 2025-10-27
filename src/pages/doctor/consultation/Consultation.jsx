@@ -83,7 +83,7 @@ export const Consultation = () => {
   );
 
   const handleApplyForm = (form) => {
-    // console.log("Selected Form:", form);
+    console.log("Selected Form:", form);
     setSelectedForm(form);
   };
 

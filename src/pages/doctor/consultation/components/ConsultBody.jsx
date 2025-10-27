@@ -14,7 +14,7 @@ import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import {
-  generatePrescriptionsWithAI,
+  generatePrescriptionsWithAI, getPatientDetailsByID,
   removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
@@ -23,6 +23,8 @@ import ScheduleTreatment from "./ScheduleTreatment.jsx";
 import DynamicFormSection from "./DynamicFormSection.jsx";
 import { toast } from "react-toastify";
 import AddPatient from "./modals/AddPatient/AddPatient.jsx";
+import DiagnosisAndVitals from "./NewTemplateComponents/diagnosisAndVitals/DiagnosisAndVitals.jsx";
+import PrescriptionsAndMedicines from "./NewTemplateComponents/prescriptionAndMedicines/PrescriptionsAndMedicines.jsx";
 
 const ConsultBody = ({
   selectedForm,
@@ -95,8 +97,16 @@ const ConsultBody = ({
   }, [ongoingAppointment]);
 
   useEffect(() => {
+    dispatch(getPatientDetailsByID(ongoingAppointment?.patient._id));
+  }, [dispatch, ongoingAppointment]);
+
+  const patientDetails = useSelector((store) => store.doctor.patientDetails);
+  // console.log(patientDetails)
+
+  useEffect(() => {
     if (
       selectedComponent === "PerceptionAndMedicines" ||
+        selectedComponent === "PrescriptionAndMedicines" ||
       selectedComponent === "static-2"
     ) {
       const aiData = {
@@ -200,7 +210,7 @@ const ConsultBody = ({
     nextAppointment = futureAppointments[0] || null;
   }
 
-  // console.log("Next Appointment:", nextAppointment);
+  console.log("Data:", completeData);
 
   const handleCompleteBtn = () => {
     if (!completeData || Object.keys(completeData).length === 0) {
@@ -360,7 +370,7 @@ const ConsultBody = ({
             </div>
           </div>
 
-          {!selectedForm ? (
+          {selectedForm === "custom1" ? (
             <>
               <div
                 className={`${styles["lp-2"]} ${
@@ -395,7 +405,7 @@ const ConsultBody = ({
                   selectedComponent === "PrescriptionAndMedicines"
                     ? styles.active
                     : ""
-                } ${!completeData.medicalHistory ? styles.disabled : ""}
+                } ${!completeData.diagnosisAndVitals ? styles.disabled : ""}
                 ${
                   confirmedSections.includes("PrescriptionAndMedicines")
                     ? styles.confirmed
@@ -403,7 +413,7 @@ const ConsultBody = ({
                 }
                 `}
                 onClick={() => {
-                  if (completeData.medicalHistory) {
+                  if (completeData.diagnosisAndVitals) {
                     setSelectedComponent("PrescriptionAndMedicines");
                   }
                 }}
@@ -411,7 +421,7 @@ const ConsultBody = ({
                 <p>Prescription & Medicines</p>
               </div>
             </>
-          ) : selectedForm === "custom1" ? (
+          ) : !selectedForm ? (
               <>
                 <>
                   <div
@@ -461,7 +471,7 @@ const ConsultBody = ({
                           selectedComponent === "PerceptionAndMedicines"
                               ? styles.active
                               : ""
-                      } ${!completeData.medicalHistory ? styles.disabled : ""}
+                      } ${completeData.currentMedications || completeData.diagnosisVitals ? "": styles.disabled}
                 ${
                           confirmedSections.includes("PerceptionAndMedicines")
                               ? styles.confirmed
@@ -469,7 +479,7 @@ const ConsultBody = ({
                       }
                 `}
                       onClick={() => {
-                        if (completeData.medicalHistory) {
+                        if (completeData.currentMedications || completeData.diagnosisVitals) {
                           setSelectedComponent("PerceptionAndMedicines");
                         }
                       }}
@@ -642,7 +652,7 @@ const ConsultBody = ({
         {/* Right Panel */}
         <div className={styles["right-panel"]}>
           <div className={styles["rp-content"]}>
-            {selectedForm &&
+            {selectedForm && selectedForm !== 'custom1' &&
               selectedForm.sections?.some(
                 (sec) => sec.id === selectedComponent
               ) &&
@@ -663,7 +673,7 @@ const ConsultBody = ({
                       patient={ongoingAppointment?.patient}
                       existingData={completeData}
                       selectedComponent="medicalHistory"
-                      onConfirm={(medicalData) => {
+                      onConfirmSummary={(medicalData) => {
                         setCompleteData((prev) => ({
                           ...prev,
                           medicalHistory: medicalData,
@@ -701,7 +711,7 @@ const ConsultBody = ({
                       onConfirm={(perceptionData) => {
                         setCompleteData((prev) => ({
                           ...prev,
-                          perceptionsAndMedicines: perceptionData,
+                          prescriptionsAndMedicines: perceptionData,
                         }));
 
                         setConfirmedSections((prev) => [
@@ -753,7 +763,7 @@ const ConsultBody = ({
               <PatientInfo
                 ongoingAppointment={ongoingAppointment}
                 onConfirm={() => {
-                  if (!selectedForm) {
+                  if (!selectedForm || selectedForm === 'custom1') {
                     setSelectedComponent("MedicalHistory");
                   } else {
                     setSelectedComponent("static-1");
@@ -763,15 +773,20 @@ const ConsultBody = ({
             )}
             {selectedComponent === "MedicalHistory" && (
               <MedicalHistory
+                  patientDetails={patientDetails}
                 patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="medicalHistory"
-                onConfirm={(medicalData) => {
+                onConfirmSummary={(medicalData) => {
                   setCompleteData((prev) => ({
                     ...prev,
                     medicalHistory: medicalData,
                   }));
-                  setSelectedComponent("CurrentMedication");
+                  if (selectedForm === 'custom1') {
+                    setSelectedComponent("DiagnosisAndVitals");
+                  } else {
+                    setSelectedComponent("CurrentMedication");
+                  }
                   setConfirmedSections((prev) => [
                     ...new Set([...prev, "MedicalHistory"]),
                   ]);
@@ -812,6 +827,43 @@ const ConsultBody = ({
                 }}
               />
             )}
+            {selectedComponent === "DiagnosisAndVitals" && (
+                <DiagnosisAndVitals
+                    patient={ongoingAppointment?.patient}
+                    existingData={completeData}
+                    selectedComponent="DiagnosisAndVitals"
+                    onConfirm={(diagnosisAndVitals) => {
+                      setCompleteData((prev) => ({
+                        ...prev,
+                        diagnosisVitals: diagnosisAndVitals,
+                      }));
+                      setSelectedComponent("PrescriptionAndMedicines");
+                      setConfirmedSections((prev) => [
+                        ...new Set([...prev, "DiagnosisAndVitals"]),
+                      ]);
+                    }}
+                />
+            )}
+            {selectedComponent === "PrescriptionAndMedicines" && (
+                <PrescriptionsAndMedicines
+                    patient={ongoingAppointment.patient}
+                    existingData={completeData}
+                    selectedComponent="PrescriptionAndMedicines"
+                    completeData={completeData}
+                    generatedPrescriptions={generatedPrescriptionsWithAI}
+                    onConfirm={(perceptionData) => {
+                      setCompleteData((prev) => ({
+                        ...prev,
+                        prescriptionAndMedicines: perceptionData,
+                      }));
+                      // console.log("Perception Data: ",perceptionData)
+                      setSelectedComponent("TreatmentAndTest");
+                      setConfirmedSections((prev) => [
+                        ...new Set([...prev, "PerceptionAndMedicines"]),
+                      ]);
+                    }}
+                />
+            )}
             {selectedComponent === "PerceptionAndMedicines" && (
               <PerceptionAndMedicines
                 patient={ongoingAppointment.patient}
@@ -822,7 +874,7 @@ const ConsultBody = ({
                 onConfirm={(perceptionData) => {
                   setCompleteData((prev) => ({
                     ...prev,
-                    perceptionsAndMedicines: perceptionData,
+                    prescriptionAndMedicines: perceptionData,
                   }));
                   // console.log("Perception Data: ",perceptionData)
                   setSelectedComponent("TreatmentAndTest");

@@ -785,6 +785,7 @@ export const addService = (serviceData) => async (dispatch) => {
       },
     });
 
+    // console.log(data);
     dispatch({ type: ADD_SERVICE, payload: data });
     toast.success("Service Added Successfully!", {
       position: "bottom-right", // Use string for position
@@ -1087,6 +1088,10 @@ export const getInsuredPatients = () => async (dispatch) => {
     dispatch({ type: GET_INSURED_PATIENTS, payload: data });
   } catch (error) {
     console.log(error);
+    dispatch({
+      type: GET_INSURED_PATIENTS,
+      payload: { data: [] },
+    });
   }
 };
 
@@ -1176,6 +1181,8 @@ export const getInsuranceCompanies = () => async (dispatch) => {
     dispatch({ type: GET_INSURANCE_COMPANIES, payload: data });
   } catch (error) {
     console.log(error);
+
+    dispatch({ type: GET_INSURANCE_COMPANIES, payload: { companies: 0 } });
   }
 };
 
@@ -1535,6 +1542,10 @@ export const getAdmissionRequests =
       dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
     } catch (error) {
       console.log(error);
+      dispatch({
+        type: GET_ADMISSION_REQUESTS,
+        payload: { totalRequests: 0, requests: [] },
+      });
     }
   };
 
