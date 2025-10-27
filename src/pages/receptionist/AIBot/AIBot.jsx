@@ -287,6 +287,7 @@ const AIBot = ({
   isFromDoctor,
   doctorEmail,
   department,
+    setIsSignUpOrLogin
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -297,6 +298,10 @@ const AIBot = ({
 
   const [botMessage, setBotMessage] = useState("");
   const botMessageTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    setIsSignUpOrLogin(false);
+  }, []);
 
   const botSpeak = useCallback(
     (text) => {
