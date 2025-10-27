@@ -33,6 +33,12 @@ import {
   removeBookAppointmentData,
 } from "../../../components/State/Receptionist/Action.js";
 
+// Import all video assets
+import HMSEng from "../../../assets/HMS_Eng.mp4";
+import HMSHin from "../../../assets/HMS_Hin.mp4";
+import HMSMar from "../../../assets/HMS_Mar.mp4";
+
+
 /* ================= i18n ================= */
 const I18N = {
   en: {
@@ -224,37 +230,60 @@ const toDateObj = (spoken) => {
   return null;
 };
 
+/**
+ * Parses a spoken string to extract a 24-hour time format (HH:mm).
+ * This function is designed to be more strict to avoid misinterpreting numbers from other contexts (e.g., age).
+ * @param {string} spoken - The string transcript from speech recognition.
+ * @returns {string|null} The time in "HH:mm" format, or null if no valid time is found.
+ */
 const toTime24 = (spoken) => {
-  let s = (spoken || "").toLowerCase().replace(/o'clock/g, "").trim();
-  const ampmMatch = s.match(/\b(am|pm)\b/);
-  const ampm = ampmMatch ? ampmMatch[1] : null;
-  s = s.replace(/\b(am|pm)\b/, "").trim();
+  const s = (spoken || "").toLowerCase().trim();
 
-  let h = 0, m = 0;
-  const timeParts = s.match(/(\d{1,2})[\s.:](\d{1,2})/);
-  if (timeParts) {
-    h = parseInt(timeParts[1], 10);
-    m = parseInt(timeParts[2], 10);
-  } else {
-    const singleHour = s.match(/\b(\d{1,2})\b/);
-    if (singleHour) h = parseInt(singleHour[1], 10);
-    else return null;
+  // A number must be present to be a time.
+  // It can be in "H:M", "H.M", "H M" or just "H" format.
+  const numMatch = s.match(/\b(\d{1,2})(?:[\s.:](\d{1,2}))?\b/);
+  if (!numMatch) {
+    return null;
   }
 
-  if (isNaN(h) || isNaN(m)) return null;
-  if (ampm === "pm" && h < 12) h += 12;
-  if (ampm === "am" && h === 12) h = 0;
+  // A time keyword (am/pm/o'clock) OR a full H:M format must be present.
+  // This prevents a standalone number (like from "age 18") from being treated as a time.
+  const hasKeyword = /\b(am|pm|o'clock)\b/.test(s);
+  const isFullFormat = numMatch[2] !== undefined;
 
-  return `${String(Math.min(h, 23)).padStart(2, "0")}:${String(Math.min(m, 59)).padStart(2, "0")}`;
+  if (!hasKeyword && !isFullFormat) {
+    return null;
+  }
+
+  let h = parseInt(numMatch[1], 10);
+  let m = numMatch[2] ? parseInt(numMatch[2], 10) : 0;
+
+  if (isNaN(h) || isNaN(m)) return null;
+
+  // Adjust for AM/PM
+  if (/\bpm\b/.test(s) && h < 12) h += 12;
+  if (/\bam\b/.test(s) && h === 12) h = 0; // 12 AM is 00:00
+
+  return `${String(Math.min(h, 23)).padStart(2, "0")}:${String(
+    Math.min(m, 59)
+  ).padStart(2, "0")}`;
 };
+
 
 const capitalizeWords = (s) =>
   s.replace(/\s+/g, " ").trim().replace(/\b\w/g, (c) => c.toUpperCase());
 
+// Map language codes to video sources
+const videoSources = {
+  en: HMSEng,
+  hi: HMSHin,
+  mr: HMSMar,
+};
+
 /* ============== component ============== */
 const AIBot = ({
   isOpen = true,
-  onClose = () => {},
+  onClose = () => { },
   isFromDoctor,
   doctorEmail,
   department,
@@ -277,7 +306,7 @@ const AIBot = ({
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = lang === "hi" ? "hi-IN" : lang === "mr" ? "mr-IN" : "en-US";
         window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
+        // window.speechSynthesis.speak(utterance);
       }
       botMessageTimeoutRef.current = setTimeout(() => setBotMessage(""), 8000);
     },
@@ -506,7 +535,7 @@ const AIBot = ({
 
     // Age: "age 32", "umr 30", "35 saal", "45 varsh/varsha"
     m =
-      txt.match(/\b(?:age|umr|umar|umra|umrah|umraha|varsha|vai|version)\s+(?:is\s+)?(\d{1,3})\b/) ||
+      txt.match(/\b(?:age|umr|umar|umra|umrah|umraha|varsha|vai|version|y|why|h)\s+(?:is\s+)?(\d{1,3})\b/) ||
       txt.match(/\b(\d{1,3})\s*(?:years?|saal|sal|varsh|varsha|version)\b/);
     if (m) patch.age = String(Math.min(+m[1], 120));
 
@@ -643,7 +672,7 @@ const AIBot = ({
     if (isBookingCommand) {
       if (srRef.current) {
         manuallyStopped.current = true;
-        try { srRef.current.stop(); } catch {}
+        try { srRef.current.stop(); } catch { }
         setListening(false);
       }
       const finalData = { ...latestFormDataRef.current, ...patch };
@@ -679,20 +708,20 @@ const AIBot = ({
 
     r.onerror = (e) => {
       console.error("Speech Recognition Error:", e);
-      try { r.stop(); } catch {}
+      try { r.stop(); } catch { }
       setListening(false);
     };
 
     r.onend = () => {
       if (!manuallyStopped.current) {
-        try { r.start(); } catch {}
+        try { r.start(); } catch { }
       } else {
         setListening(false);
         setLiveTranscript("");
       }
     };
 
-    try { r.start(); } catch {}
+    try { r.start(); } catch { }
     srRef.current = r;
     setListening(true);
   };
@@ -700,7 +729,7 @@ const AIBot = ({
   const stopListeningFn = () => {
     if (!srRef.current) return;
     manuallyStopped.current = true;
-    try { srRef.current.stop(); } catch {}
+    try { srRef.current.stop(); } catch { }
   };
 
   stopListening.current = stopListeningFn;
@@ -764,39 +793,6 @@ const AIBot = ({
 
       <div style={{ height: "100vh", position: "relative" }}>
         {/* Bot bubble */}
-        <div
-          style={{
-            position: "fixed",
-            left: 16,
-            bottom: 150,
-            display: "flex",
-            alignItems: "flex-end",
-            gap: 2,
-            zIndex: 998,
-            maxWidth: "280px",
-          }}
-        >
-          <Avatar
-            src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png"
-            sx={{ width: 56, height: 56, border: "2px solid #25307F", mb: 1 }}
-          />
-          {botMessage && (
-            <Paper
-              elevation={4}
-              sx={{
-                p: "10px 14px",
-                bgcolor: "#25307F",
-                color: "white",
-                borderRadius: "16px 16px 16px 0",
-                mb: 1,
-                transition: "opacity 0.3s",
-              }}
-            >
-              <Typography variant="body2">{botMessage}</Typography>
-            </Paper>
-          )}
-        </div>
-
         {/* Top-right controls */}
         <div
           style={{
@@ -833,12 +829,11 @@ const AIBot = ({
                   listening
                     ? T.listening
                     : lastHeard
-                    ? I18N[lang].ui.heard(
-                        `${lastHeard.slice(0, 32)}${
-                          lastHeard.length > 32 ? "…" : ""
+                      ? I18N[lang].ui.heard(
+                        `${lastHeard.slice(0, 32)}${lastHeard.length > 32 ? "…" : ""
                         }`
                       )
-                    : T.voiceReady
+                      : T.voiceReady
                 }
                 variant="outlined"
               />
@@ -884,6 +879,33 @@ const AIBot = ({
           <Divider className="divider" />
           <div className="content">
             <div className="left-panel">
+               <div
+          style={{
+            // position: "fixed",
+            // left: 16,
+            // bottom: 150,
+            display: "flex",
+            alignItems: "flex-end",
+            gap: 8,
+            zIndex: 998,
+          }}
+        >
+          <video
+            key={lang} // IMPORTANT: Add key to force re-render on language change
+            autoPlay
+            style={{
+              margin: "auto",
+              width: "428px",
+              height: "auto",
+              borderRadius: "16px",
+              boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+            }}
+          >
+            {/* Dynamically set the video source based on the selected language */}
+            <source src={videoSources[lang]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
               <h3>{renderRequiredLabel(T.selectDate)}</h3>
               <Calendar
                 onChange={handleDateChange}
