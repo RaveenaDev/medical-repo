@@ -6,6 +6,7 @@ import RecoveryLink from "./pages/login/recoveryLink";
 import UpdatePassword from "./pages/login/updatePassword";
 import Logo from "./components/Logo";
 import Receptionist from "./pages/receptionist";
+import AIBot from "./pages/receptionist/AIBot/AIBot.jsx" // Bot new addeed
 import { Routes, Route, useLocation } from "react-router-dom";
 import Departments from "./pages/receptionist/departments/Departments.jsx";
 import DepartDetails from "./pages/receptionist/departments/DepartDetails/DepartDetails.jsx";
@@ -208,6 +209,22 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+                {/* Bot new changes */}
+                <Route
+                path="/receptionist/bot"
+                element={
+                  <ProtectedRoute allowedRoles={["receptionist"]}>
+                    <AIBot
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              {/* End Bot new changes */}
+
               <Route
                 path="/receptionist/patients"
                 element={
