@@ -413,7 +413,7 @@ export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary 
     );
   }, [combined, search]);
 
-  // console.log("cOM" ,combined)
+  console.log("cOM" ,combined)
 
   /* ---------- AI Summary Handler ---------- */
   const handleConfirmSummary = () => {
@@ -456,10 +456,30 @@ export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary 
     const data = c?.consultationData || {};
     const cleanData = stripFileBuckets(data);
 
-    // Accept nested consultationData.files.{images,videos,attachments}
-    const files = gatherFiles(
-        data?.files // nested files object with buckets
-    );
+    // Accept nested consultationData.files.{images, videos, attachments}
+    const files = gatherFiles(data?.files);
+
+    // Helper function to render non-empty fields or show "N/A" if null or undefined
+    const renderField = (key, value) => {
+      // If the value is empty or null, show "N/A"
+      if (value === undefined || value === null || value === "" || (Array.isArray(value) && value.length === 0) || (isObj(value) && Object.keys(value).length === 0)) {
+        return (
+            <div className={styles.kvRow} key={key}>
+              <div className={styles.kvKey}>{key.replace(/([a-z])([A-Z])/g, "$1 $2")}</div>
+              <div className={styles.kvVal}>N/A</div>
+            </div>
+        );
+      }
+
+      return (
+          <div className={styles.kvRow} key={key}>
+            <div className={styles.kvKey}>{key.replace(/([a-z])([A-Z])/g, "$1 $2")}</div>
+            <div className={styles.kvVal}>
+              {Array.isArray(value) || isObj(value) ? JSON.stringify(value) : String(value ?? "N/A")}
+            </div>
+          </div>
+      );
+    };
 
     return (
         <div className={styles.recordsDetailsBody}>
@@ -488,7 +508,6 @@ export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary 
                   <div className={styles.kvVal}>{c.caseId}</div>
                 </div>
             )}
-            {/*{c?.appointment && <div className={styles.kvRow}><div className={styles.kvKey}>Appointment</div><div className={styles.kvVal}>{c.appointment}</div></div>}*/}
             {c?.followUpRequired !== undefined && (
                 <div className={styles.kvRow}>
                   <div className={styles.kvKey}>Follow-up Required</div>
@@ -505,26 +524,52 @@ export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary 
             )}
           </div>
 
-          {!isEmpty(cleanData) && (
+          {/* Prescription and Medicines Data */}
+          {data?.prescriptionAndMedicines && (
               <>
-                <h4 style={{ marginTop: 16 }}>Consultation Data</h4>
+                <h4 style={{ marginTop: 16 }}>Prescription and Medicines</h4>
                 <div className={styles.kvTable}>
-                  {Object.entries(cleanData).map(([k, v]) => (
-                      <div className={styles.kvRow} key={k}>
-                        <div className={styles.kvKey}>
-                          {k.replace(/([a-z])([A-Z])/g, "$1 $2")}
-                        </div>
-                        <div className={styles.kvVal}>
-                          {Array.isArray(v) || isObj(v)
-                              ? JSON.stringify(v)
-                              : String(v ?? "N/A")}
-                        </div>
-                      </div>
-                  ))}
+                  {renderField("Problem Statement", data.prescriptionAndMedicines.problemStatement)}
+                  {renderField("ICD Code", data.prescriptionAndMedicines.icdCode)}
+                  {renderField("Therapy Plan", data.prescriptionAndMedicines.therapyPlan)}
+                  {data.prescriptionAndMedicines.medications?.map((med, index) =>
+                      renderField(`Medication ${index + 1}`, med)
+                  )}
                 </div>
               </>
           )}
 
+          {/* Medical History */}
+          {data?.medicalHistory?.description && (
+              <>
+                <h4 style={{ marginTop: 16 }}>Medical History</h4>
+                <div className={styles.kvTable}>
+                  {renderField("Description", data.medicalHistory.description)}
+                </div>
+              </>
+          )}
+
+          {/* Diagnosis Vitals */}
+          {data?.diagnosisVitals && (
+              <>
+                <h4 style={{ marginTop: 16 }}>Diagnosis Vitals</h4>
+                <div className={styles.kvTable}>
+                  {renderField("Primary Concern", data.diagnosisVitals.dxPrimaryConcern)}
+                  {renderField("Pain Severity", data.diagnosisVitals.dxPain?.severity)}
+                  {renderField("Pain Location", data.diagnosisVitals.dxPain?.location)}
+                  {renderField("Systolic", data.diagnosisVitals.systolic)}
+                  {renderField("Diastolic", data.diagnosisVitals.diastolic)}
+                  {renderField("Temperature", data.diagnosisVitals.temperature)}
+                  {renderField("Weight", `${data.diagnosisVitals.weight?.value} ${data.diagnosisVitals.weight?.unit}`)}
+                  {renderField("Height", `${data.diagnosisVitals.height?.value} ${data.diagnosisVitals.height?.unit}`)}
+                  {renderField("Heart Rate", data.diagnosisVitals.heartRate)}
+                  {renderField("Oxygen Level", data.diagnosisVitals.oxygenLevel)}
+                  {renderField("Respiration Rate", data.diagnosisVitals.respirationRate)}
+                </div>
+              </>
+          )}
+
+          {/* Files (images, videos, attachments) */}
           {files.length > 0 && (
               <>
                 <h4 style={{ marginTop: 16 }}>Attachments</h4>
@@ -534,6 +579,8 @@ export const MedicalHistory = ({ patientDetails = {}, loading, onConfirmSummary 
         </div>
     );
   };
+
+
 
   const AdmissionDetail = ({ item }) => {
     const a = item?.raw || {};
