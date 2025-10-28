@@ -343,7 +343,7 @@ const Rate = () => {
       <div className="rate-table" style={{ position: "relative" }}>
         <div className="rate-table-header">
           <span>Service Name</span>
-          <span>Department</span>
+
           <span>Category</span>
           <span>Rate Type</span>
           <span>Current Rate</span>
@@ -391,11 +391,7 @@ const Rate = () => {
                           ? truncateText(service.serviceName, 18)
                           : ""}
                       </span>
-                      <span className="blue">
-                        {index === 0
-                          ? truncateText(service.department, 16)
-                          : ""}
-                      </span>
+
                       <span className="blue">
                         {truncateText(category.name, 20)}
                       </span>
