@@ -72,6 +72,7 @@ const Rate = () => {
       amenities: category.amenities || "N/A",
       effectiveDate: category.effectiveDate,
       additionaldetails: category.additionaldetails || {},
+      departments: category.departments || [],
     })),
   }));
 
@@ -170,7 +171,8 @@ const Rate = () => {
     page * rowsPerPage + rowsPerPage
   );
 
-  console.log("Paginated Services: ", paginatedServices);
+  console.log(" Services: ", services);
+  console.log(" Data: ", viewData);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -733,7 +735,7 @@ const Rate = () => {
       {/* View Drawer */}
       <Dialog
         open={viewDrawerOpen}
-        onClose={() => onViewClose()}
+        onClose={onViewClose}
         maxWidth="sm"
         fullWidth
         PaperProps={{
@@ -743,20 +745,44 @@ const Rate = () => {
         {/* Header */}
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ p: 0 }}>Service Details</DialogTitle>
-          <IconButton onClick={() => onViewClose()}>
+          <IconButton onClick={onViewClose}>
             <CloseIcon />
           </IconButton>
         </Box>
 
         <DialogContent dividers>
-          {viewData && (
+          {viewData && viewData.category ? (
             <Box>
+              {/* Departments */}
+              <Box mt={2}>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Departments
+                </Typography>
+                {Array.isArray(viewData.category.departments) &&
+                viewData.category.departments.length > 0 ? (
+                  <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+                    {viewData.category.departments.map((department, idx) => (
+                      <Chip
+                        key={department._id || idx}
+                        label={department?.name || "Unnamed Department"}
+                        sx={{ background: "#F4F6FA" }}
+                      />
+                    ))}
+                  </Box>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No departments listed
+                  </Typography>
+                )}
+              </Box>
+
               {/* Amenities */}
               <Box mt={2}>
-                <Typography variant="subtitle2" fontWeight="600">
+                <Typography variant="subtitle2" fontWeight={600}>
                   Amenities
                 </Typography>
-                {viewData.category.amenities ? (
+                {viewData.category.amenities &&
+                viewData.category.amenities.trim().length > 0 ? (
                   <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
                     {viewData.category.amenities
                       .split(",")
@@ -775,14 +801,14 @@ const Rate = () => {
                 )}
               </Box>
 
-              {/* Additional Details (object) */}
+              {/* Additional Details */}
               <Box mt={2}>
-                <Typography variant="subtitle2" fontWeight="600" gutterBottom>
+                <Typography variant="subtitle2" fontWeight={600} gutterBottom>
                   Additional Details
                 </Typography>
-
                 {viewData.category.additionaldetails &&
-                typeof viewData.category.additionaldetails === "object" ? (
+                typeof viewData.category.additionaldetails === "object" &&
+                Object.keys(viewData.category.additionaldetails).length > 0 ? (
                   <Box
                     component="table"
                     sx={{
@@ -805,7 +831,7 @@ const Rate = () => {
                             <td style={{ textTransform: "capitalize" }}>
                               {key}
                             </td>
-                            <td>{value}</td>
+                            <td>{value ?? "—"}</td>
                           </tr>
                         )
                       )}
@@ -818,6 +844,10 @@ const Rate = () => {
                 )}
               </Box>
             </Box>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No data available
+            </Typography>
           )}
         </DialogContent>
       </Dialog>
