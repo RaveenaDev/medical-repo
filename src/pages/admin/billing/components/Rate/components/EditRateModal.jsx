@@ -178,6 +178,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
             disabled={
               Object.keys(serviceDetails.additionaldetails || {}).length > 0
             }
+            onWheel={(e) => e.target.blur()} //  Prevent scroll change
           />
           <TextField
             label="Amenities"
@@ -213,6 +214,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
                         fullWidth
                         type="number"
                         value={value}
+                        onWheel={(e) => e.target.blur()} //  Prevent scroll change
                         onChange={(e) =>
                           handleAdditionalDetailChange(
                             key,

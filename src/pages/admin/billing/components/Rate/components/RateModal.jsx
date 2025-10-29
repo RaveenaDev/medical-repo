@@ -232,6 +232,7 @@ const RateModal = ({ open, handleClose }) => {
           error={!!errors.rate}
           helperText={errors.rate}
           disabled={serviceDetails.additionaldetails.length > 0}
+          onWheel={(e) => e.target.blur()} //  Prevent scroll change
         />
 
         {/* Additional Details */}
@@ -255,6 +256,7 @@ const RateModal = ({ open, handleClose }) => {
                     fullWidth
                     type="number"
                     value={item.value}
+                    onWheel={(e) => e.target.blur()} //  Prevent scroll change
                     onChange={(e) =>
                       handleAdditionalDetailChange(
                         index,

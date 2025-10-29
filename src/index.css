@@ -105,3 +105,15 @@ button:focus-visible {
   fill-opacity: 1 !important; /* Prevents the grey overlay */
   fill: inherit !important; /* Keeps the original bar color */
 }
+/* In your global CSS (e.g., index.css or App.css) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+}
+input[type="number"]:focus {
+  outline: none;
+}
+input[type="number"]:focus::-webkit-inner-spin-button,
+input[type="number"]:focus::-webkit-outer-spin-button {
+  opacity: 0; /* hides spin buttons on focus */
+}
