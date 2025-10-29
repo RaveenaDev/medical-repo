@@ -224,8 +224,14 @@ const PrescriptionAndMedicines = ({
     }, [generatedPrescriptions]);
 
     const handleRegenerate = () => {
-        const aidData = { ...completeData, patientId: patient._id };
-        dispatch(generatePrescriptionsWithAI(aidData));
+        const aiData = {
+            ...completeData,
+            patientId: patient._id,
+            diagnosisVitals: completeData?.diagnosisAndVitals, // ✅ new key
+        };
+
+        delete aiData.diagnosisAndVitals; // ❌ remove old key
+        dispatch(generatePrescriptionsWithAI(aiData));
         setLoading(true);
     };
 

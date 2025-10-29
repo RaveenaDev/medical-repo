@@ -38,6 +38,7 @@
   height: 92vh;
 }
 
+
 .row2 {
   display: flex;
   border: 1px solid #cccccc;
@@ -484,6 +485,49 @@
     transform: translateY(0) scale(1);
   }
 }
+
+/* Style for the editable section name input */
+.editSectionInput {
+  border: 1px solid #2e823b; /* Green border */
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 200px; /* You can adjust the width as needed */
+  margin-right: 10px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.editSectionInput:focus {
+  border-color: #25703d; /* Darker green when focused */
+}
+
+/* Style for the Save button */
+.saveNameBtn {
+  background-color: #2e823b;
+  color: white;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.saveNameBtn:hover {
+  background-color: #25703d; /* Darker green when hovered */
+}
+
+.saveNameBtn:disabled {
+  background-color: #c8e6c9; /* Lighter green for disabled state */
+  cursor: not-allowed;
+}
+
+/* Additional styling to align and format the Save button with the input */
+.editSectionInput + .saveNameBtn {
+  margin-top: 5px;
+}
+
 
 .inputTitle {
   font-size: 2.1vh;

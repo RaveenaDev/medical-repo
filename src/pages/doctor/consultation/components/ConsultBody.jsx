@@ -101,7 +101,7 @@ const ConsultBody = ({
   }, [dispatch, ongoingAppointment]);
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  // console.log(patientDetails)
+  console.log(generatedPrescriptionsWithAI)
 
   useEffect(() => {
     if (
