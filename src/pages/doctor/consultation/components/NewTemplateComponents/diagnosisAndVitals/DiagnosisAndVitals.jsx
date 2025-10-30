@@ -4,6 +4,9 @@ import styles from "./DiagnosisAndVitals.module.scss";
 const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfirm }) => {
     const [mode, setMode] = useState("text");
     const [text, setText] = useState("");
+    const [formattedText, setFormattedText] = useState("");
+    const [isFormatting, setIsFormatting] = useState(false);
+    const [showFormatted, setShowFormatted] = useState(false);
     const [isListening, setIsListening] = useState(false);
     const recognitionRef = useRef(null);
     const isListeningRef = useRef(false);
@@ -12,6 +15,10 @@ const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfir
     useEffect(() => {
         if (existingData?.diagnosisAndVitals?.text) {
             setText(existingData.diagnosisAndVitals.text);
+            if (existingData.diagnosisAndVitals.formattedText) {
+                setFormattedText(existingData.diagnosisAndVitals.formattedText);
+                setShowFormatted(true);
+            }
         }
     }, [existingData]);
 
@@ -76,6 +83,43 @@ const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfir
                 console.error("Error starting recognition:", err);
                 setIsListening(false);
             }
+        }
+    };
+
+    // AI Formatting function
+    const formatTextWithAI = async () => {
+        if (!text.trim()) {
+            alert("Please enter some text to format");
+            return;
+        }
+
+        setIsFormatting(true);
+        try {
+            // Replace with your actual API endpoint
+            const response = await fetch('YOUR_API_ENDPOINT/format-medical-text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: text,
+                    patientId: patient?._id,
+                    context: 'diagnosis_and_vitals'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Formatting failed');
+            }
+
+            const data = await response.json();
+            setFormattedText(data.formattedText || text);
+            setShowFormatted(true);
+        } catch (error) {
+            console.error('Error formatting text:', error);
+            alert('Failed to format text. Please try again.');
+        } finally {
+            setIsFormatting(false);
         }
     };
 
@@ -145,9 +189,13 @@ const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfir
     };
 
     const handleConfirm = () => {
+        const finalText = showFormatted ? formattedText : text;
+
         const diagnosisAndVitals = {
             mode: mode,
-            text: mode === "text" ? text.trim() : (existingData?.diagnosisAndVitals?.text || ""),
+            text: mode === "text" ? finalText.trim() : (existingData?.diagnosisAndVitals?.text || ""),
+            rawText: mode === "text" ? text.trim() : "", // Keep original for reference
+            formattedText: mode === "text" && showFormatted ? formattedText.trim() : "",
             image: mode === "whiteboard" ? canvasRef.current.toDataURL("image/png") : (existingData?.diagnosisAndVitals?.image || null),
             timestamp: new Date().toISOString(),
             patientId: patient?._id || null
@@ -156,6 +204,10 @@ const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfir
         if (onConfirm) {
             onConfirm(diagnosisAndVitals);
         }
+    };
+
+    const toggleView = () => {
+        setShowFormatted(!showFormatted);
     };
 
     return (
@@ -194,12 +246,24 @@ const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfir
 
             {mode === "text" ? (
                 <div className={styles.textContainer}>
-          <textarea
-              className={styles.textArea}
-              placeholder="Type here or use mic..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-          />
+                    {showFormatted && formattedText && (
+                        <div className={styles.viewToggle}>
+                            <button
+                                className={styles.viewToggleBtn}
+                                onClick={toggleView}
+                            >
+                                {showFormatted ? "View Raw Text" : "View Formatted Text"}
+                            </button>
+                        </div>
+                    )}
+
+                    <textarea
+                        className={styles.textArea}
+                        placeholder="Type here or use mic..."
+                        value={showFormatted ? formattedText : text}
+                        onChange={(e) => showFormatted ? setFormattedText(e.target.value) : setText(e.target.value)}
+                    />
+
                     <div className={styles.bottomButtons}>
                         {
                             isListening ?
@@ -210,7 +274,7 @@ const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfir
                                     Stop Mic
                                 </button>
                                 :
-                                <div style={{cursor:'pointer', padding:0,margin:0,height:'2rem'}} onClick={toggleMic}>
+                                <div style={{cursor:'pointer', padding:0, margin:0, height:'2rem'}} onClick={toggleMic}>
                                     <svg width="50" height="40" viewBox="0 0 60 56" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <rect y="0.199219" width="60" height="55.6077" rx="27.8038" fill="#25307F"/>
@@ -220,6 +284,16 @@ const DiagnosisAndVitals = ({ patient, existingData, selectedComponent, onConfir
                                     </svg>
                                 </div>
                         }
+
+                        {!showFormatted && text.trim() && (
+                            <button
+                                className={`${styles.btn} ${styles.formatBtn}`}
+                                onClick={formatTextWithAI}
+                                disabled={isFormatting}
+                            >
+                                {isFormatting ? "Formatting..." : "Format with AI"}
+                            </button>
+                        )}
 
                         <button className={`${styles.btn} ${styles.confirmBtn}`} onClick={handleConfirm}>
                             Confirm
