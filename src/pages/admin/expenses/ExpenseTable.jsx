@@ -29,7 +29,7 @@ const ExpenseTable = ({
     <TableContainer
       component={Paper}
       sx={{
-        maxHeight: "58vh",
+        maxHeight: "72vh",
         overflowY: "auto",
         mt: 2,
         position: "relative",

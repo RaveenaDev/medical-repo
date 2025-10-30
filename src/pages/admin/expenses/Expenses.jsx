@@ -99,7 +99,7 @@ const Expenses = ({ setIsSignUpOrLogin }) => {
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: "19vh" }}>
+      <div style={{ marginTop: "17vh" }}>
         {loader ? (
           <Box
             sx={{
@@ -113,9 +113,17 @@ const Expenses = ({ setIsSignUpOrLogin }) => {
           </Box>
         ) : (
           <>
-            <h2 style={{ color: "black", fontWeight: 500 }}>Expenses</h2>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <h2 style={{ color: "black", fontWeight: 500 }}>Expenses</h2>
+              <ExpenseForm />
+            </div>
 
-            <ExpenseForm />
             <ExpenseTable
               expenses={expenses}
               totalExpenses={totalExpenses}
