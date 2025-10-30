@@ -146,7 +146,6 @@ const EditExpenseDialog = ({ open, expense, onClose, onSave }) => {
             px: 3,
             "&:hover": {
               backgroundColor: "#AEC3FF",
-              color: "#000",
             },
           }}
         >

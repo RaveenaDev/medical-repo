@@ -80,7 +80,7 @@ const ExpenseForm = () => {
           color: "#fff",
           backgroundColor: "#25307F",
 
-          "&:hover": { background: "#AEC3FF", color: "#000" },
+          "&:hover": { background: "#AEC3FF" },
         }}
       >
         <Plus />
@@ -155,7 +155,7 @@ const ExpenseForm = () => {
                 backgroundColor: "#25307F",
                 height: "45px",
                 mt: 2,
-                "&:hover": { background: "#AEC3FF", color: "#000" },
+                "&:hover": { background: "#AEC3FF" },
               }}
             >
               Submit Expense
