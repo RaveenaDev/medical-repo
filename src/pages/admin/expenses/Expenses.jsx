@@ -1,80 +1,31 @@
 import React, { useEffect, useState } from "react";
-import CommonPanel from "../Components/CommonPanel.jsx";
 import {
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
+  CircularProgress,
+  Menu,
+  MenuItem,
   ListItemIcon,
   ListItemText,
-  Menu,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
 } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import addAppointments from "../../../assets/plus.svg";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addExpense,
-  deleteExpense,
-  getExpenses,
-  updateExpense,
-} from "../../../components/State/Admin/Action.js";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getExpenses,
+  deleteExpense,
+  updateExpense,
+} from "../../../components/State/Admin/Action.js";
+import CommonPanel from "../Components/CommonPanel.jsx";
 import { toast } from "react-toastify";
+import ExpenseForm from "./ExpenseForm.jsx";
+import ExpenseTable from "./ExpenseTable.jsx";
+import EditExpenseDialog from "./EditExpenseDialog.jsx";
+import dayjs from "dayjs";
 
-import "react-toastify/dist/ReactToastify.css";
-import CircularProgress from "@mui/material/CircularProgress";
-
-const Expenses = (props) => {
-  useEffect(() => {
-    props?.setIsSignUpOrLogin(false);
-  }, []);
-
-  const [date, setDate] = useState(dayjs());
+const Expenses = ({ setIsSignUpOrLogin }) => {
+  const dispatch = useDispatch();
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10); // You can change this default
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page when rows per page changes
-  };
-
-  const [expenseData, setExpenseData] = useState({
-    expenseType: "",
-    amount: "",
-    paidTo: "",
-    details: "",
-    date: dayjs().format("YYYY-MM-DD"),
-  });
-
-  const truncateText = (text, maxLength) => {
-    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-  };
-  const [errors, setErrors] = useState({}); // Added error state
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedExpense, setSelectedExpense] = useState(null);
@@ -85,135 +36,63 @@ const Expenses = (props) => {
     amount: "",
     paidTo: "",
     details: "",
-    date: "",
+    date: dayjs().format("YYYY-MM-DD"),
   });
 
-  const handleMenuOpen = (event, expense) => {
-    event.stopPropagation(); // Prevent interference with other clicks
-    setAnchorEl(event.currentTarget);
-    setSelectedExpense(expense);
-  };
+  const expenses = useSelector((store) => store.admin.expenses);
+  const totalExpenses = useSelector((store) => store.admin.totalExpenses);
+  const loader = useSelector((store) => store.admin.isLoading);
 
-  // Handle Menu Close
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedExpense(null);
-  };
-
-  const handleEdit = () => {
-    if (selectedExpense) {
-      setEditedExpense({
-        expenseId: selectedExpense._id,
-        expenseType: selectedExpense.expenseType,
-        amount: selectedExpense.amount,
-        paidTo: selectedExpense.paidTo,
-        details: selectedExpense.details,
-        date: selectedExpense.date,
-      });
-
-      setEditDialogOpen(true);
-    }
-    handleMenuClose();
-  };
-
-  // Handle Delete Action
-  const handleDelete = () => {
-    dispatch(deleteExpense(selectedExpense._id));
-    handleMenuClose();
-  };
-
-  // Handle Edit Dialog Close
-  const handleEditDialogClose = () => {
-    setEditDialogOpen(false);
-  };
-
-  const dispatch = useDispatch();
+  useEffect(() => {
+    setIsSignUpOrLogin(false);
+  }, []);
 
   useEffect(() => {
     dispatch(getExpenses(page, rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
 
-  const expenses = useSelector((store) => store.admin.expenses);
-  const totalExpenses = useSelector((state) => state.admin.totalExpenses);
-
-  const loader = useSelector((store) => store.admin.isLoading);
-  const validateExpenseData = (data) => {
-    let newErrors = {};
-
-    if (!data.expenseType) newErrors.expenseType = "Expense Type is required";
-    if (!data.amount) {
-      newErrors.amount = "Amount is required";
-    } else if (isNaN(data.amount) || Number(data.amount) <= 0) {
-      newErrors.amount = "Enter a valid amount";
-    }
-    if (!data.paidTo) newErrors.paidTo = "Paid To is required";
-    if (!data.details) newErrors.details = "Details are required";
-    if (!data.date) newErrors.date = "Date is required";
-
-    return newErrors;
+  const handleMenuOpen = (event, expense) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedExpense(expense);
   };
 
-  // Handle Add Expense
-  const handleClick = () => {
-    let newErrors = validateExpenseData(expenseData);
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      toast.error("Please fill all required fields correctly!", {
-        position: "bottom-right",
-      });
-      return;
-    }
-
-    dispatch(addExpense(expenseData));
-    setErrors({});
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
-  // Handle Edit Expense
-  const handleSaveEditedExpense = () => {
-    let newErrors = validateExpenseData(editedExpense);
+  const handleEdit = () => {
+    setEditedExpense({
+      expenseId: selectedExpense._id,
+      expenseType: selectedExpense.expenseType,
+      amount: selectedExpense.amount,
+      paidTo: selectedExpense.paidTo,
+      details: selectedExpense.details,
+      date: selectedExpense.date,
+    });
+    setEditDialogOpen(true);
+    handleMenuClose();
+  };
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      toast.error("Please fill all required fields correctly!", {
-        position: "bottom-right",
-      });
-      return;
-    }
+  const handleDelete = () => {
+    dispatch(deleteExpense(selectedExpense._id));
+    toast.info("Expense deleted");
+    handleMenuClose();
+  };
 
-    dispatch(updateExpense(editedExpense.expenseId, editedExpense));
-    setErrors({});
+  const handleSaveEditedExpense = (updatedData) => {
+    dispatch(updateExpense(updatedData.expenseId, updatedData));
     setEditDialogOpen(false);
   };
 
-  const handleChange = (e) => {
-    setExpenseData({ ...expenseData, [e.target.name]: e.target.value });
-  };
-
-  const handleDateChange = (newDate) => {
-    setExpenseData({
-      ...expenseData,
-      date: dayjs(newDate).format("YYYY-MM-DD"),
-    });
-  };
-
-  // console.log(expenses)
-
   return (
-    <div
-      style={{
-        height: "99dvh", // Make the entire div take up the full viewport height
-        overflow: "hidden", // Prevent scrolling on the rest of the page
-        background: " #F1F1F1",
-      }}
-    >
+    <div style={{ height: "99dvh", overflow: "hidden", background: "#F1F1F1" }}>
       <div
         style={{
           position: "fixed",
-          top: "0px",
-          padding: "10px",
+          top: 0,
           width: "76%",
-          background: " #F1F1F1",
+          padding: "10px",
+          background: "#F1F1F1",
           zIndex: 100,
         }}
       >
@@ -227,7 +106,7 @@ const Expenses = (props) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "50vh", // or full height you need
+              height: "50vh",
             }}
           >
             <CircularProgress sx={{ color: "#25307F" }} size={58} />
@@ -236,547 +115,47 @@ const Expenses = (props) => {
           <>
             <h2 style={{ color: "black", fontWeight: 500 }}>Expenses</h2>
 
-            <Box
-              sx={{
-                display: "flex",
-                gap: 1,
-                mt: 2,
-                justifyContent: "space-between",
-              }}
+            <ExpenseForm />
+            <ExpenseTable
+              expenses={expenses}
+              totalExpenses={totalExpenses}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={setPage}
+              onRowsPerPageChange={setRowsPerPage}
+              onMenuOpen={handleMenuOpen}
+            />
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "7px",
-                }}
-              >
-                <div style={{ paddingLeft: "0.2rem" }}>
-                  <p style={{ color: "#25307F" }}>Expense Type</p>
-                </div>
-                <TextField
-                  id="outlined-basic"
-                  label="Expense Type"
-                  name="expenseType"
-                  variant="outlined"
-                  value={expenseData.expenseType}
-                  onChange={handleChange}
-                  error={!!errors.expenseType}
-                  helperText={errors.expenseType}
-                  required
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      padding: "0px", // Remove extra padding from the input wrapper
-                      height: "50px", // Ensure height is consistent
-                    },
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "7px",
-                }}
-              >
-                <div style={{ paddingLeft: "0.2rem" }}>
-                  <p style={{ color: "#25307F" }}>Amount</p>
-                </div>
-                <TextField
-                  id="outlined-basic"
-                  label="Enter Amount"
-                  variant="outlined"
-                  name="amount"
-                  value={expenseData.amount}
-                  onChange={handleChange}
-                  error={!!errors.amount}
-                  helperText={errors.amount}
-                  required
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      padding: "0px", // Remove extra padding from the input wrapper
-                      height: "50px", // Ensure height is consistent
-                    },
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
+              <MenuItem onClick={handleEdit}>
+                <ListItemIcon>
+                  <EditIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Edit</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={handleDelete}>
+                <ListItemIcon>
+                  <DeleteIcon fontSize="small" color="error" />
+                </ListItemIcon>
+                <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+              </MenuItem>
+            </Menu>
 
-                  gap: "7px",
-                }}
-              >
-                <div style={{ paddingLeft: "0.2rem" }}>
-                  <p style={{ color: "#25307F" }}>Paid To</p>
-                </div>
-                <TextField
-                  id="outlined-basic"
-                  label="Paid To"
-                  variant="outlined"
-                  name="paidTo"
-                  value={expenseData.paidTo}
-                  onChange={handleChange}
-                  error={!!errors.paidTo}
-                  helperText={errors.paidTo}
-                  required
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      padding: "0px", // Remove extra padding from the input wrapper
-                      height: "50px", // Ensure height is consistent
-                    },
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-
-                  gap: "7px",
-                }}
-              >
-                <div style={{ paddingLeft: "0.2rem" }}>
-                  <p style={{ color: "#25307F" }}>Details</p>
-                </div>
-                <TextField
-                  id="outlined-basic"
-                  label="Details"
-                  variant="outlined"
-                  name="details"
-                  value={expenseData.details}
-                  onChange={handleChange}
-                  error={!!errors.details}
-                  helperText={errors.details}
-                  required
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      padding: "0px", // Remove extra padding from the input wrapper
-                      height: "50px", // Ensure height is consistent
-                    },
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "7px",
-                }}
-              >
-                <div style={{ paddingLeft: "0.2rem" }}>
-                  <p style={{ color: "#25307F" }}>Date</p>
-                </div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Box
-                    sx={{
-                      borderRadius: 1,
-                      width: 180, // Adjust width here
-                      textAlign: "center",
-                      // boxShadow: "0px 4px 4px 0px #C2C2C240",
-                      // padding: "4px", // Reduce padding to make the container smaller
-                    }}
-                  >
-                    <DatePicker
-                      name="date"
-                      value={date}
-                      onChange={handleDateChange}
-                      sx={{
-                        width: "100%", // Ensure full width
-                        // fontSize: "24px",
-                      }}
-                      slotProps={{
-                        textField: {
-                          sx: {
-                            "& .MuiInputBase-root": {
-                              minHeight: "50px", // Increase height
-                              fontSize: "16px", // Adjust text size
-                            },
-                            "& input": {
-                              padding: "12px", // Internal padding
-                            },
-
-                            "& .MuiInputBase-input": {
-                              fontSize: "14px",
-                              padding: "10px",
-                              "&:focus": {
-                                outline: "none !important",
-                              },
-                            },
-                            "& .MuiIconButton-root": {
-                              color: "#666", // Adjust icon color if needed
-                              "&:hover": {
-                                backgroundColor: "transparent !important",
-                              },
-                              "&:focus": {
-                                outline: "none !important",
-                                boxShadow: "none !important",
-                              },
-                            },
-                          },
-                          error: !!errors.date,
-                          helperText: errors.date,
-                        },
-                      }}
-                    />
-                  </Box>
-                </LocalizationProvider>
-              </div>
-              <Button
-                variant="contained"
-                onClick={handleClick}
-                sx={{
-                  fontSize: { xs: "1rem", sm: "1rem", md: "1.05rem" }, // Smaller font on small screens
-                  color: "#ffffff",
-                  textTransform: "capitalize",
-                  padding: {
-                    xs: "0px 5px",
-                    sm: "0px 5px",
-                    md: "0px 5px",
-                  }, // Adjust padding
-                  backgroundColor: "#25307F",
-                  height: "50px",
-                  width: "11rem",
-                  marginTop: "1.9rem",
-                  outline: "none",
-                  boxShadow: "none",
-                  "&:hover": {
-                    background: "#AEC3FF",
-                  },
-                  "&:focus": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                  "&:active": {
-                    outline: "none",
-                    boxShadow: "none",
-                  },
-                }}
-              >
-                <img src={addAppointments} alt="Img" />
-                <h5 style={{ marginLeft: "1rem" }}>Add Expense</h5>
-              </Button>
-            </Box>
-
-            <div style={{ marginTop: "1.5rem" }}>
-              <TableContainer
-                component={Paper}
-                sx={{
-                  maxHeight: "58vh", // Adjust this to fit your layout needs
-                  overflowY: "auto",
-                  position:
-                    "relative" /* Hide scrollbar for Chrome, Safari, Opera */,
-                  "&::-webkit-scrollbar": {
-                    width: 0,
-                    background: "transparent",
-                  },
-                  /* Hide scrollbar for Firefox */
-                  scrollbarWidth: "none", // Firefox
-                  // "-ms-overflow-style": "none", // IE 10+
-                }}
-              >
-                <Table
-                  sx={{
-                    borderCollapse: "separate", // Ensure border-spacing works
-                    borderSpacing: "0 8px", // Adds vertical spacing between rows
-                    marginBottom: "30px",
-                  }}
-                  aria-label="simple table"
-                >
-                  <TableHead
-                    sx={{
-                      position: "sticky",
-                      top: 0,
-                      backgroundColor: "white", // Ensure it's visible
-                      zIndex: 10, // Keep it above other elements
-                    }}
-                  >
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          fontSize: "15px",
-                          color: "#959595",
-                          padding: "0.5rem 0.8rem",
-                          border: "none",
-                        }}
-                      >
-                        Expense Type
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          fontSize: "15px",
-                          color: "#959595",
-                          padding: "0.5rem 0.8rem",
-                          paddingRight: "28px",
-                          border: "none",
-                        }}
-                      >
-                        Amount
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          fontSize: "15px",
-                          color: "#959595",
-                          padding: "0.5rem 0.8rem",
-                          border: "none",
-                        }}
-                      >
-                        Paid To
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          fontSize: "15px",
-                          color: "#959595",
-                          padding: "0.5rem 0.8rem",
-                          border: "none",
-                        }}
-                      >
-                        Details
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          fontSize: "15px",
-                          color: "#959595",
-                          padding: "0.5rem 0.8rem",
-                          border: "none",
-                        }}
-                      >
-                        Date
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          fontSize: "15px",
-                          color: "#959595",
-                          padding: "0.5rem 0.8rem",
-                          border: "none",
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {expenses.length > 0 ? (
-                      expenses.map((row, index) => (
-                        <TableRow
-                          key={index}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                            backgroundColor: "#F1F5FF",
-                          }}
-                        >
-                          <TableCell
-                            scope="row"
-                            sx={{ color: "#25307f", border: "none" }}
-                          >
-                            {row.expenseType}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            sx={{
-                              color: "#25307f",
-                              border: "none",
-                              paddingRight: "38px",
-                            }}
-                          >
-                            {truncateText(row.amount, 13)}
-                          </TableCell>
-                          <TableCell align="center" sx={{ border: "none" }}>
-                            {truncateText(row.paidTo, 14)}
-                          </TableCell>
-                          <TableCell align="center" sx={{ border: "none" }}>
-                            {row.details}
-                          </TableCell>
-                          <TableCell align="center" sx={{ border: "none" }}>
-                            {new Date(row.date).toLocaleDateString("en-IN", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                            })}
-                          </TableCell>
-                          <TableCell align="center">
-                            <IconButton
-                              onClick={(event) => handleMenuOpen(event, row)}
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          align="center"
-                          colSpan={6}
-                          sx={{ backgroundColor: "#F1F5FF" }}
-                        >
-                          No data found!
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-                <TablePagination
-                  component="div"
-                  count={totalExpenses || 0}
-                  page={page} // current page
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage} // items per page
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-                  sx={{
-                    position: "sticky",
-                    bottom: 0,
-                    backgroundColor: "#fff",
-                    borderTop: "2px solid #ddd",
-                    zIndex: 11,
-                  }}
-                />
-              </TableContainer>
-
-              {/* Actions Menu */}
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-                PaperProps={{
-                  elevation: 2,
-                  sx: { padding: 1 },
-                }}
-              >
-                <MenuItem onClick={handleEdit}>
-                  <ListItemIcon>
-                    <EditIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Edit</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={handleDelete}>
-                  <ListItemIcon>
-                    <DeleteIcon fontSize="small" color="error" />
-                  </ListItemIcon>
-                  <ListItemText sx={{ color: "error.main" }}>
-                    Delete
-                  </ListItemText>
-                </MenuItem>
-              </Menu>
-
-              {/* Edit Patient Dialog */}
-              <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-                <DialogTitle>Edit Expense</DialogTitle>
-                <DialogContent>
-                  <TextField
-                    select
-                    label="Expense Type"
-                    name="expenseType"
-                    value={editedExpense.expenseType}
-                    onChange={(e) =>
-                      setEditedExpense({
-                        ...editedExpense,
-                        expenseType: e.target.value,
-                      })
-                    }
-                    fullWidth
-                    margin="dense"
-                    error={!!errors.expenseType}
-                    helperText={errors.expenseType}
-                  >
-                    <MenuItem value="salary">Salary</MenuItem>
-                    <MenuItem value="rent">Rent</MenuItem>
-                    <MenuItem value="utilities">Utilities</MenuItem>
-                  </TextField>
-
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    label="Amount"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={editedExpense.amount}
-                    onChange={(e) =>
-                      setEditedExpense({
-                        ...editedExpense,
-                        amount: e.target.value,
-                      })
-                    }
-                    error={!!errors.amount}
-                    helperText={errors.amount}
-                  />
-
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    label="Paid To"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={editedExpense.paidTo}
-                    onChange={(e) =>
-                      setEditedExpense({
-                        ...editedExpense,
-                        paidTo: e.target.value,
-                      })
-                    }
-                    error={!!errors.paidTo}
-                    helperText={errors.paidTo}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Details"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={editedExpense.details}
-                    onChange={(e) =>
-                      setEditedExpense({
-                        ...editedExpense,
-                        details: e.target.value,
-                      })
-                    }
-                    error={!!errors.details}
-                    helperText={errors.details}
-                  />
-
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={["DatePicker"]}
-                      sx={{ padding: 0 }}
-                    >
-                      <DatePicker
-                        name="date"
-                        value={dayjs(editedExpense.date)}
-                        onChange={(newDate) =>
-                          setEditedExpense({
-                            ...editedExpense,
-                            date: dayjs(newDate).format("YYYY-MM-DD"),
-                          })
-                        }
-                        slotProps={{
-                          textField: {
-                            error: !!errors.date,
-                            helperText: errors.date,
-                          },
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleEditDialogClose}>Cancel</Button>
-                  <Button onClick={handleSaveEditedExpense}>Save</Button>
-                </DialogActions>
-              </Dialog>
-            </div>
+            <EditExpenseDialog
+              open={editDialogOpen}
+              expense={editedExpense}
+              onClose={() => setEditDialogOpen(false)}
+              onSave={handleSaveEditedExpense}
+            />
           </>
         )}
       </div>
     </div>
   );
 };
+
 export default Expenses;
