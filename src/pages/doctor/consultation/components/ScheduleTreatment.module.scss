@@ -166,6 +166,30 @@
   font-family: "Karla", sans-serif;
 }
 
+.menu1 {
+  max-height: 200px;   // fixed visible height
+  overflow-y: auto;    // scrolls when content exceeds height
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  z-index: 10;
+  position: absolute;
+  width: 100%;
+
+  /* optional aesthetic */
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f0f0f0;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+}
+
+
 .item {
   padding: 1vh 1vw;
   cursor: pointer;

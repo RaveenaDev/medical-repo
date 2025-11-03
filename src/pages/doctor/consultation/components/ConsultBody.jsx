@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import AddPatient from "./modals/AddPatient/AddPatient.jsx";
 import DiagnosisAndVitals from "./NewTemplateComponents/diagnosisAndVitals/DiagnosisAndVitals.jsx";
 import PrescriptionsAndMedicines from "./NewTemplateComponents/prescriptionAndMedicines/PrescriptionsAndMedicines.jsx";
+import TransferPatient from "./NewTemplateComponents/modals/transferPatient/TransferPatient.jsx";
 
 const ConsultBody = ({
   selectedForm,
@@ -305,6 +306,17 @@ const ConsultBody = ({
     setModalData(updatedFinal);
   };
 
+  const handleTransfer = () => {
+    const updatedFinal = {
+      ...final,
+      action: "transfer",
+      consultationData: completeData,
+    };
+
+    setActiveModal("transferToAnotherDoctor");
+    setModalData(updatedFinal);
+  };
+
   const handleAddSection = (sectionName) => {
     setCustomSections([...customSections, sectionName]);
     setSelectedComponent(sectionName);
@@ -349,26 +361,26 @@ const ConsultBody = ({
         {/* Left Panel */}
         <div className={styles["left-panel"]}>
           <div
-            className={`${styles["lp-1"]} ${
-              selectedComponent === "PatientInfo" ? styles.active : ""
-            }`}
-            onClick={() => setSelectedComponent("PatientInfo")}
+              className={`${styles["lp-1"]} ${
+                  selectedComponent === "PatientInfo" ? styles.active : ""
+              }`}
+              onClick={() => setSelectedComponent("PatientInfo")}
           >
             {/* MUI Avatar to show the initial letter */}
             <Avatar
-              sx={{
-                bgcolor: "#e3e3e3",
-                color: "#25307F",
-                fontWeight: 500,
+                sx={{
+                  bgcolor: "#e3e3e3",
+                  color: "#25307F",
+                  fontWeight: 500,
 
-                // fontSize: {
-                //   xs: "0.75rem", // 12px on mobile
-                //   sm: "1rem", // 16px on small screens
-                //   md: "1.25rem", // 20px on medium screens
-                //   lg: "1.5rem", // 24px on large screens
-                // },
-              }}
-              className={styles["lp-1-avatar"]}
+                  // fontSize: {
+                  //   xs: "0.75rem", // 12px on mobile
+                  //   sm: "1rem", // 16px on small screens
+                  //   md: "1.25rem", // 20px on medium screens
+                  //   lg: "1.5rem", // 24px on large screens
+                  // },
+                }}
+                className={styles["lp-1-avatar"]}
             >
               {ongoingAppointment.patient.name[0].toUpperCase()}
             </Avatar>
@@ -384,226 +396,237 @@ const ConsultBody = ({
           </div>
 
           {selectedForm === "custom1" ? (
-            <>
-              <div
-                className={`${styles["lp-2"]} ${
-                  selectedComponent === "MedicalHistory" ? styles.active : ""
-                }
-                ${
-                  confirmedSections.includes("MedicalHistory")
-                    ? styles.confirmed
-                    : ""
-                }
-                `}
-                onClick={() => setSelectedComponent("MedicalHistory")}
-              >
-                <p>Medical History</p>
-              </div>
-              <div
-                className={`${styles["lp-4"]} ${
-                  selectedComponent === "DiagnosisAndVitals" ? styles.active : ""
-                }
-                ${
-                  confirmedSections.includes("DiagnosisAndVitals")
-                    ? styles.confirmed
-                    : ""
-                }
-                `}
-                onClick={() => setSelectedComponent("DiagnosisAndVitals")}
-              >
-                <p>Diagnosis & Vitals</p>
-              </div>
-              <div
-                className={`${styles["lp-5"]} ${
-                  selectedComponent === "PrescriptionAndMedicines"
-                    ? styles.active
-                    : ""
-                } ${!completeData.diagnosisAndVitals ? styles.disabled : ""}
-                ${
-                  confirmedSections.includes("PrescriptionAndMedicines")
-                    ? styles.confirmed
-                    : ""
-                }
-                `}
-                onClick={() => {
-                  if (completeData.diagnosisAndVitals) {
-                    setSelectedComponent("PrescriptionAndMedicines");
-                  }
-                }}
-              >
-                <p>Prescription & Medicines</p>
-              </div>
-            </>
-          ) : !selectedForm ? (
               <>
-                <>
-                  <div
-                      className={`${styles["lp-2"]} ${
-                          selectedComponent === "MedicalHistory" ? styles.active : ""
-                      }
-                ${
-                          confirmedSections.includes("MedicalHistory")
-                              ? styles.confirmed
-                              : ""
-                      }
-                `}
-                      onClick={() => setSelectedComponent("MedicalHistory")}
-                  >
-                    <p>Medical History</p>
-                  </div>
-                  <div
-                      className={`${styles["lp-3"]} ${
-                          selectedComponent === "CurrentMedication" ? styles.active : ""
-                      }
-                ${
-                          confirmedSections.includes("CurrentMedication")
-                              ? styles.confirmed
-                              : ""
-                      }
-                `}
-                      onClick={() => setSelectedComponent("CurrentMedication")}
-                  >
-                    <p>Current Medication</p>
-                  </div>
-                  <div
-                      className={`${styles["lp-4"]} ${
-                          selectedComponent === "DiagnosisAndVital" ? styles.active : ""
-                      }
-                ${
-                          confirmedSections.includes("DiagnosisAndVital")
-                              ? styles.confirmed
-                              : ""
-                      }
-                `}
-                      onClick={() => setSelectedComponent("DiagnosisAndVital")}
-                  >
-                    <p>Diagnosis & Vital</p>
-                  </div>
-                  <div
-                      className={`${styles["lp-5"]} ${
-                          selectedComponent === "PerceptionAndMedicines"
-                              ? styles.active
-                              : ""
-                      } ${completeData.currentMedications || completeData.diagnosisVitals ? "": styles.disabled}
-                ${
-                          confirmedSections.includes("PerceptionAndMedicines")
-                              ? styles.confirmed
-                              : ""
-                      }
-                `}
-                      onClick={() => {
-                        if (completeData.currentMedications || completeData.diagnosisVitals) {
-                          setSelectedComponent("PerceptionAndMedicines");
-                        }
-                      }}
-                  >
-                    <p>Prescription & Medicines</p>
-                  </div>
-                  <div
-                      onClick={() => setSelectedComponent("TreatmentAndTest")}
-                      className={`${styles["lp-6"]} ${
-                          selectedComponent === "TreatmentAndTest" ? styles.active : ""
-                      }
-                ${
-                          confirmedSections.includes("TreatmentAndTest")
-                              ? styles.confirmed
-                              : ""
-                      }
-                `}
-                  >
-                    <p>Treatment and Tests</p>
-                  </div>
-                </>
-              </>
-              )
-          : (
-            <>
-              {selectedForm?.sections?.map((section, index) => {
-                const isDisabled =
-                  section.name === "Prescription & Medicines" &&
-                  !completeData?.medicalHistory;
-
-                return (
-                  <div
-                    key={section.id}
-                    className={`${styles["lp-6"]} ${
-                      selectedComponent === section.id ? styles.active : ""
+                <div
+                    className={`${styles["lp-2"]} ${
+                        selectedComponent === "MedicalHistory" ? styles.active : ""
                     }
-                     ${
-                       confirmedSections.includes(section.name)
-                         ? styles.confirmed
-                         : ""
-                     }
-                     ${isDisabled ? styles.disabled : ""}`}
+                ${
+                        confirmedSections.includes("MedicalHistory")
+                            ? styles.confirmed
+                            : ""
+                    }
+                `}
+                    onClick={() => setSelectedComponent("MedicalHistory")}
+                >
+                  <p>Medical History</p>
+                </div>
+                <div
+                    className={`${styles["lp-4"]} ${
+                        selectedComponent === "DiagnosisAndVitals" ? styles.active : ""
+                    }
+                ${
+                        confirmedSections.includes("DiagnosisAndVitals")
+                            ? styles.confirmed
+                            : ""
+                    }
+                `}
+                    onClick={() => setSelectedComponent("DiagnosisAndVitals")}
+                >
+                  <p>Diagnosis & Vitals</p>
+                </div>
+                <div
+                    className={`${styles["lp-5"]} ${
+                        selectedComponent === "PrescriptionAndMedicines"
+                            ? styles.active
+                            : ""
+                    } ${!completeData.diagnosisAndVitals ? styles.disabled : ""}
+                ${
+                        confirmedSections.includes("PrescriptionAndMedicines")
+                            ? styles.confirmed
+                            : ""
+                    }
+                `}
                     onClick={() => {
-                      if (!isDisabled) {
-                        setSelectedComponent(section.id);
+                      if (completeData.diagnosisAndVitals) {
+                        setSelectedComponent("PrescriptionAndMedicines");
                       }
                     }}
-                  >
-                    <p>{section.name}</p>
-                  </div>
-                );
-              })}
-            </>
-          )}
+                >
+                  <p>Prescription & Medicines</p>
+                </div>
+              </>
+          ) : !selectedForm ? (
+                  <>
+                    <>
+                      <div
+                          className={`${styles["lp-2"]} ${
+                              selectedComponent === "MedicalHistory" ? styles.active : ""
+                          }
+                ${
+                              confirmedSections.includes("MedicalHistory")
+                                  ? styles.confirmed
+                                  : ""
+                          }
+                `}
+                          onClick={() => setSelectedComponent("MedicalHistory")}
+                      >
+                        <p>Medical History</p>
+                      </div>
+                      <div
+                          className={`${styles["lp-3"]} ${
+                              selectedComponent === "CurrentMedication" ? styles.active : ""
+                          }
+                ${
+                              confirmedSections.includes("CurrentMedication")
+                                  ? styles.confirmed
+                                  : ""
+                          }
+                `}
+                          onClick={() => setSelectedComponent("CurrentMedication")}
+                      >
+                        <p>Current Medication</p>
+                      </div>
+                      <div
+                          className={`${styles["lp-4"]} ${
+                              selectedComponent === "DiagnosisAndVital" ? styles.active : ""
+                          }
+                ${
+                              confirmedSections.includes("DiagnosisAndVital")
+                                  ? styles.confirmed
+                                  : ""
+                          }
+                `}
+                          onClick={() => setSelectedComponent("DiagnosisAndVital")}
+                      >
+                        <p>Diagnosis & Vital</p>
+                      </div>
+                      <div
+                          className={`${styles["lp-5"]} ${
+                              selectedComponent === "PerceptionAndMedicines"
+                                  ? styles.active
+                                  : ""
+                          } ${completeData.currentMedications || completeData.diagnosisVitals ? "" : styles.disabled}
+                ${
+                              confirmedSections.includes("PerceptionAndMedicines")
+                                  ? styles.confirmed
+                                  : ""
+                          }
+                `}
+                          onClick={() => {
+                            if (completeData.currentMedications || completeData.diagnosisVitals) {
+                              setSelectedComponent("PerceptionAndMedicines");
+                            }
+                          }}
+                      >
+                        <p>Prescription & Medicines</p>
+                      </div>
+                      <div
+                          onClick={() => setSelectedComponent("TreatmentAndTest")}
+                          className={`${styles["lp-6"]} ${
+                              selectedComponent === "TreatmentAndTest" ? styles.active : ""
+                          }
+                ${
+                              confirmedSections.includes("TreatmentAndTest")
+                                  ? styles.confirmed
+                                  : ""
+                          }
+                `}
+                      >
+                        <p>Treatment and Tests</p>
+                      </div>
+                    </>
+                  </>
+              )
+              : (
+                  <>
+                    {selectedForm?.sections?.map((section, index) => {
+                      const isDisabled =
+                          section.name === "Prescription & Medicines" &&
+                          !completeData?.medicalHistory;
+
+                      return (
+                          <div
+                              key={section.id}
+                              className={`${styles["lp-6"]} ${
+                                  selectedComponent === section.id ? styles.active : ""
+                              }
+                     ${
+                                  confirmedSections.includes(section.name)
+                                      ? styles.confirmed
+                                      : ""
+                              }
+                     ${isDisabled ? styles.disabled : ""}`}
+                              onClick={() => {
+                                if (!isDisabled) {
+                                  setSelectedComponent(section.id);
+                                }
+                              }}
+                          >
+                            <p>{section.name}</p>
+                          </div>
+                      );
+                    })}
+                  </>
+              )}
 
           {customSections.map((section, index) => (
-            <div
-              key={index}
-              className={`${styles["lp-6"]} ${
-                selectedComponent === section ? styles.active : ""
-              }
+              <div
+                  key={index}
+                  className={`${styles["lp-6"]} ${
+                      selectedComponent === section ? styles.active : ""
+                  }
               ${confirmedSections.includes(section) ? styles.confirmed : ""}
               `}
-              onClick={() => setSelectedComponent(section)}
-            >
-              <p>{section}</p>
-            </div>
+                  onClick={() => setSelectedComponent(section)}
+              >
+                <p>{section}</p>
+              </div>
           ))}
 
           <div className={styles["lp-7"]} onClick={openAddQuestion}>
-            <Plus className={styles["lp-7-icon"]} size={38} />
+            <Plus className={styles["lp-7-icon"]} size={38}/>
             <p>Add Section</p>
           </div>
           <button
-            type="button"
-            className={styles["btn"]}
-            onClick={handleAddPatientClick}
+              type="button"
+              className={styles["btn"]}
+              onClick={handleAddPatientClick}
           >
             Admit Patient
           </button>
           <div className={styles["lp-8"]}>
             <button onClick={handleCompleteBtn}>
-              <CircleCheck size={15} />
+              <CircleCheck size={15}/>
               <p>Complete</p>
             </button>
             <button className={styles["lp-8-refBtn"]} onClick={handleRefer}>
-              <img src="/assets/healthicons_referral.svg" sizes={""} alt="" />
+              <img src="/assets/healthicons_referral.svg" sizes={""} alt=""/>
               <p>Refer</p>
             </button>
           </div>
-          <button
-            type="button"
-            className={styles["btn"]}
-            onClick={handleSchedule}
-          >
-            <CalendarCheck className={styles["calendar-icon2"]} />
-            <p>Schedule Treatment</p>
-          </button>
+          <div className={styles["lp-8"]}>
+            <button
+                type="button"
+                className={styles["btn"]}
+                onClick={handleSchedule}
+            >
+              <CalendarCheck className={styles["calendar-icon2"]}/>
+              <p>Schedule Treatment</p>
+            </button>
+
+            <button
+                type="button"
+                className={styles["btn"]}
+                onClick={handleTransfer}
+            >
+              <CalendarCheck className={styles["calendar-icon2"]}/>
+              <p>Transfer Patient</p>
+            </button>
+          </div>
         </div>
         {activeModal === "complete" && (
-          <>
-            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
-            <div className={styles["complete-modal"]}>
-              <Complete
-                onClose={closeModal}
-                onComplete={handleComplete}
-                nextAppointment={openNextAppointment}
-                completeData={completeData}
-              />
-            </div>
-          </>
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal}/>
+              <div className={styles["complete-modal"]}>
+                <Complete
+                    onClose={closeModal}
+                    onComplete={handleComplete}
+                    nextAppointment={openNextAppointment}
+                    completeData={completeData}
+                />
+              </div>
+            </>
         )}
         {activeModal === "refer" && (
           <>
@@ -661,6 +684,23 @@ const ConsultBody = ({
               />
             </div>
           </>
+        )}
+
+        {activeModal === "transferToAnotherDoctor" && (
+            <>
+              <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+              <div className={styles["scheduleTreatment-modal"]}>
+                <TransferPatient
+                    setCompleteData={setCompleteData}
+                    onClose={closeModal}
+                    onAddSection={handleAddSection}
+                    setConfirmedSections={setConfirmedSections}
+                    setSelectedComponent={setSelectedComponent}
+                    modalData={modalData}
+                    onSuccess={onSuccess}
+                />
+              </div>
+            </>
         )}
         {/* Right Panel */}
         <div className={styles["right-panel"]}>
