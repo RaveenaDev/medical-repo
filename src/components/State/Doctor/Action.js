@@ -651,6 +651,7 @@ export const getDoctorsByDepartment = () => async (dispatch) => {
 export const getDoctorsByDepartment1 = (departId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
+    // console.log("Iiii: ",departId)
 
     const { data } = await axios.get(
       `${API_URL}/getDoctorsByDepartment/${departId}`,

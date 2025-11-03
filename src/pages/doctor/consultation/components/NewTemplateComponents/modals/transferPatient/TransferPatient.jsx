@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getAllDepartments,
-    getDoctorsByDepartment,
+    getDoctorsByDepartment, getDoctorsByDepartment1,
     removePrescriptionsWithAI,
     // transferPatient, // <-- action expected on your side
     // If you don't have transferPatient, you can wire to submitConsultation with a different payload key.
@@ -39,7 +39,7 @@ const TransferPatient = ({
     // When department changes, fetch doctors for that department
     useEffect(() => {
         if (transfer.departmentId) {
-            dispatch(getDoctorsByDepartment(transfer.departmentId));
+            dispatch(getDoctorsByDepartment1(transfer.departmentId));
             // Reset doctor on department change
             setTransfer((p) => ({ ...p, doctorId: "" }));
         }
@@ -50,10 +50,11 @@ const TransferPatient = ({
         useSelector((s) => s.doctor?.allDepartments) || [];
 
     const doctorsByDept =
-        useSelector((s) => s.doctor?.doctors) ||
+        useSelector((s) => s.doctor?.doctorsByDepartment) ||
         [];
 
     console.log("Doctors: ",doctorsByDept)
+    // console.log("Departments: ",)
 
     const handleSubmit = async () => {
         const payload = {
