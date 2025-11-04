@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import {
   TextField,
   MenuItem,
@@ -12,13 +12,10 @@ import {
   Chip,
   Paper,
   Typography,
-  Avatar,
 } from "@mui/material";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./AIBot.scss";
-// import CommonPanel from "../components/CommonPanel.jsx";
-// import arrowBack from "../../../assets/arrow_back.svg";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
@@ -32,12 +29,6 @@ import {
   getPatients,
   removeBookAppointmentData,
 } from "../../../components/State/Receptionist/Action.js";
-
-// Import all video assets
-import HMSEng from "../../../assets/HMS_Eng.mp4";
-import HMSHin from "../../../assets/HMS_Hin.mp4";
-import HMSMar from "../../../assets/HMS_Mar.mp4";
-
 
 /* ================= i18n ================= */
 const I18N = {
@@ -78,8 +69,7 @@ const I18N = {
         "Complete all required fields before booking. You can keep speaking to fill them.",
       speakBooking: "Booking your appointment, please wait.",
       speakSubmitted: "Details submitted. I will confirm shortly.",
-      speakNetErr:
-        "Network error. Check your connection and try again.",
+      speakNetErr: "Network error. Check your connection and try again.",
       errors: {
         required: "This field is required",
         phone: "Enter a valid 10-digit phone number",
@@ -88,15 +78,14 @@ const I18N = {
         futureTime: "Select a future time",
       },
       langLabel: "Language",
-      langNote:
-        "",
+      langNote: "",
     },
   },
   hi: {
     langName: "हिन्दी",
     ui: {
       title: "अपॉइंटमेंट बुक करें",
-      selectDate: "तारीख चुनें",
+      selectDate: "तاريخ चुनें",
       selectTime: "समय चुनें",
       note: "नोट",
       patientName: "रोगी का नाम",
@@ -129,8 +118,7 @@ const I18N = {
         "बुकिंग से पहले आवश्यक फ़ील्ड भरें. आप वॉयस से जारी रख सकते हैं.",
       speakBooking: "आपका अपॉइंटमेंट बुक हो रहा है.",
       speakSubmitted: "विवरण भेज दिया. मैं शीघ्र पुष्टि करूँगा.",
-      speakNetErr:
-        "नेटवर्क त्रुटि. कनेक्शन जाँचें और पुनः प्रयास करें.",
+      speakNetErr: "नेटवर्क त्रुटि. कनेक्शन जाँचें और पुनः प्रयास करें.",
       errors: {
         required: "यह फ़ील्ड आवश्यक है",
         phone: "मान्य 10 अंकों का फ़ोन नंबर दर्ज करें",
@@ -139,8 +127,7 @@ const I18N = {
         futureTime: "भविष्य का समय चुनें",
       },
       langLabel: "भाषा",
-      langNote:
-        "",
+      langNote: "",
     },
   },
   mr: {
@@ -180,8 +167,7 @@ const I18N = {
         "बुकिंगपूर्वी आवश्यक फील्ड भरा. तुम्ही व्हॉइसने पुढे जाऊ शकता.",
       speakBooking: "अपॉइंटमेंट बुक होत आहे.",
       speakSubmitted: "तपशील पाठवले. लवकरच पुष्टी करतो.",
-      speakNetErr:
-        "नेटवर्क त्रुटी. कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.",
+      speakNetErr: "नेटवर्क त्रुटी. कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.",
       errors: {
         required: "हे फील्ड आवश्यक आहे",
         phone: "वैध 10 अंकी फोन नंबर टाका",
@@ -190,11 +176,24 @@ const I18N = {
         futureTime: "भविष्यातील वेळ निवडा",
       },
       langLabel: "भाषा",
-      langNote:
-        "",
+      langNote: "",
     },
   },
 };
+
+/* ===== VoiceWave ===== */
+const VoiceWave = ({ active = false, listening = false }) => (
+  <div
+    className="voice-wave"
+    data-active={active ? "true" : "false"}
+    data-listening={listening ? "true" : "false"}
+    aria-hidden="true"
+  >
+    {Array.from({ length: 20 }).map((_, i) => (
+      <div className="bar" key={i} />
+    ))}
+  </div>
+);
 
 /* ============== helpers ============== */
 const addDays = (d, n) => {
@@ -230,84 +229,69 @@ const toDateObj = (spoken) => {
   return null;
 };
 
-/**
- * Parses a spoken string to extract a 24-hour time format (HH:mm).
- * This function is designed to be more strict to avoid misinterpreting numbers from other contexts (e.g., age).
- * @param {string} spoken - The string transcript from speech recognition.
- * @returns {string|null} The time in "HH:mm" format, or null if no valid time is found.
- */
+/** Strict time parser to avoid confusing age with time. */
 const toTime24 = (spoken) => {
   const s = (spoken || "").toLowerCase().trim();
-
-  // A number must be present to be a time.
-  // It can be in "H:M", "H.M", "H M" or just "H" format.
   const numMatch = s.match(/\b(\d{1,2})(?:[\s.:](\d{1,2}))?\b/);
-  if (!numMatch) {
-    return null;
-  }
-
-  // A time keyword (am/pm/o'clock) OR a full H:M format must be present.
-  // This prevents a standalone number (like from "age 18") from being treated as a time.
+  if (!numMatch) return null;
   const hasKeyword = /\b(am|pm|o'clock)\b/.test(s);
   const isFullFormat = numMatch[2] !== undefined;
-
-  if (!hasKeyword && !isFullFormat) {
-    return null;
-  }
+  if (!hasKeyword && !isFullFormat) return null;
 
   let h = parseInt(numMatch[1], 10);
   let m = numMatch[2] ? parseInt(numMatch[2], 10) : 0;
-
   if (isNaN(h) || isNaN(m)) return null;
 
-  // Adjust for AM/PM
   if (/\bpm\b/.test(s) && h < 12) h += 12;
-  if (/\bam\b/.test(s) && h === 12) h = 0; // 12 AM is 00:00
+  if (/\bam\b/.test(s) && h === 12) h = 0;
 
-  return `${String(Math.min(h, 23)).padStart(2, "0")}:${String(
-    Math.min(m, 59)
-  ).padStart(2, "0")}`;
+  return `${String(Math.min(h, 23)).padStart(2, "0")}:${String(Math.min(m, 59)).padStart(2, "0")}`;
 };
-
 
 const capitalizeWords = (s) =>
   s.replace(/\s+/g, " ").trim().replace(/\b\w/g, (c) => c.toUpperCase());
 
-// Map language codes to video sources
-const videoSources = {
-  en: HMSEng,
-  hi: HMSHin,
-  mr: HMSMar,
-};
-
 /* ============== component ============== */
 const AIBot = ({
   isOpen = true,
-  onClose = () => { },
+  onClose = () => {},
   isFromDoctor,
   doctorEmail,
   department,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  /* Language for UI. Voice stays English. */
   const [lang, setLang] = useState("en");
   const T = I18N[lang].ui;
 
   const [botMessage, setBotMessage] = useState("");
   const botMessageTimeoutRef = useRef(null);
 
+  const [isBotTalking, setIsBotTalking] = useState(false);
+  const userPulseTimeoutRef = useRef(null);
+  const ENABLE_TTS = true;
+
   const botSpeak = useCallback(
     (text) => {
       if (botMessageTimeoutRef.current) clearTimeout(botMessageTimeoutRef.current);
       setBotMessage(text);
+
+      const simulate = () => {
+        setIsBotTalking(true);
+        const ms = Math.max(1500, Math.min(9000, text.length * 55));
+        window.setTimeout(() => setIsBotTalking(false), ms);
+      };
+
       if ("speechSynthesis" in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang === "hi" ? "hi-IN" : lang === "mr" ? "mr-IN" : "en-US";
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang === "hi" ? "hi-IN" : lang === "mr" ? "mr-IN" : "en-US";
+        u.onstart = () => setIsBotTalking(true);
+        u.onend = () => setIsBotTalking(false);
         window.speechSynthesis.cancel();
-        // window.speechSynthesis.speak(utterance);
-      }
+        if (ENABLE_TTS) window.speechSynthesis.speak(u);
+        else simulate();
+      } else simulate();
+
       botMessageTimeoutRef.current = setTimeout(() => setBotMessage(""), 8000);
     },
     [lang]
@@ -341,6 +325,8 @@ const AIBot = ({
     return () => {
       clearTimeout(t);
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      if (botMessageTimeoutRef.current) clearTimeout(botMessageTimeoutRef.current);
+      if (userPulseTimeoutRef.current) clearTimeout(userPulseTimeoutRef.current);
     };
   }, [botSpeak, T.speakWelcome]);
 
@@ -360,19 +346,15 @@ const AIBot = ({
     let { name, value } = e.target;
     if (typeof value === "string") value = value.trimStart();
     if (name === "age") value = value.replace(/\D/g, "");
-    if (name === "departmentName") {
-      setFormData((fd) => {
-        const updated = { ...fd, departmentName: value, doctorEmail: "" };
-        latestFormDataRef.current = updated;
-        return updated;
-      });
-    } else {
-      setFormData((fd) => {
-        const updated = { ...fd, [name]: value };
-        latestFormDataRef.current = updated;
-        return updated;
-      });
-    }
+    setFormData((fd) => {
+      const updated = {
+        ...fd,
+        [name]: value,
+        ...(name === "departmentName" && { doctorEmail: "" }),
+      };
+      latestFormDataRef.current = updated;
+      return updated;
+    });
   };
 
   const renderRequiredLabel = (label) => (
@@ -404,23 +386,14 @@ const AIBot = ({
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const bookingSuccess = useSelector((s) => s.receptionist.bookAppointment);
-
-  useEffect(() => {
-    if (bookingSuccess) setShowSuccessModal(true);
-  }, [bookingSuccess]);
+  useEffect(() => { if (bookingSuccess) setShowSuccessModal(true); }, [bookingSuccess]);
 
   const validateForm = (data = null) => {
     const fd = data || latestFormDataRef.current || formData;
     let newErrors = {};
     const required = [
-      "patientName",
-      "mobileNumber",
-      "appointmentType",
-      "departmentName",
-      "doctorEmail",
-      "age",
-      "gender",
-      "time",
+      "patientName", "mobileNumber", "appointmentType", "departmentName",
+      "doctorEmail", "age", "gender", "time",
     ];
     required.forEach((f) => {
       if (!fd[f]?.toString().trim()) newErrors[f] = T.errors.required;
@@ -428,12 +401,8 @@ const AIBot = ({
     if (fd.mobileNumber && !/^\d{10}$/.test(fd.mobileNumber.trim())) {
       newErrors.mobileNumber = T.errors.phone;
     }
-    if (fd.age && (+fd.age < 0 || +fd.age > 120)) {
-      newErrors.age = T.errors.age;
-    }
-    if (fd.email && !/^\S+@\S+\.\S+$/.test(fd.email.trim())) {
-      newErrors.email = T.errors.email;
-    }
+    if (fd.age && (+fd.age < 0 || +fd.age > 120)) newErrors.age = T.errors.age;
+    if (fd.email && !/^\S+@\S+\.\S+$/.test(fd.email.trim())) newErrors.email = T.errors.email;
     if (fd.time) {
       const [hh, mm] = fd.time.split(":").map(Number);
       const chosen = new Date(fd.date);
@@ -448,7 +417,6 @@ const AIBot = ({
 
   const [loadingBtn, setLoadingBtn] = useState(false);
   const stopListening = useRef(null);
-  const startListeningRef = useRef(null);
 
   const handleClick = useCallback(
     async (dataForBooking = null) => {
@@ -474,14 +442,9 @@ const AIBot = ({
   );
 
   const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    boxShadow: 24,
-    p: 4,
+    position: "absolute", top: "50%", left: "50%",
+    transform: "translate(-50%, -50%)", width: 400,
+    bgcolor: "background.paper", boxShadow: 24, p: 4,
   };
 
   const handleDateChange = (date) => {
@@ -502,289 +465,135 @@ const AIBot = ({
   const [liveTranscript, setLiveTranscript] = useState("");
   const srRef = useRef(null);
   const manuallyStopped = useRef(false);
+  // State to hold microphone error messages, especially for Brave browser
+  const [micError, setMicError] = useState("");
 
-  const departmentsLower = useMemo(
-    () => departments.map((d) => (d.departmentName || "").toLowerCase()),
-    [departments]
-  );
-
-  /* ============== Voice parsing with hi/mr transliterations for all fields ============== */
   const handleVoiceCommand = (txtRaw) => {
-    // ASR is English. Accept common Hindi/Marathi transliterated tokens.
     let txt = (txtRaw || "").toLowerCase().trim();
     let patch = {};
-
     const isBookingCommand = /\b(book|confirm)\b.*\bappointment\b/.test(txt);
-    if (isBookingCommand) {
-      txt = txt.replace(/\b(book|confirm)\b.*\bappointment\b/, " ").trim();
-    }
-
-    const tail = (re) => {
-      const m = txt.match(re);
-      return m ? (m[2] || m[1] || "").replace(/^is\s+/, "").trim() : null;
-    };
-
-    // Name: "patient name/name/naam/nam/mera naam/patient ka naam ..."
-    let m =
-      txt.match(/\b(?:patient\s+name|name|naam|nam|nav|now|mera\s+naam|patient\s+ka\s+naam)\s+(?:is\s+)?(.+)/) ||
-      txt.match(/^\s*(?:patient\s+)?name\s*[:\-]\s*(.+)$/);
-    if (m?.[1]) {
-      const val = m[1].trim();
-      if (val) patch.patientName = capitalizeWords(val);
-    }
-
-    // Age: "age 32", "umr 30", "35 saal", "45 varsh/varsha"
-    m =
-      txt.match(/\b(?:age|umr|umar|umra|umrah|umraha|varsha|vai|version|y|why|h)\s+(?:is\s+)?(\d{1,3})\b/) ||
-      txt.match(/\b(\d{1,3})\s*(?:years?|saal|sal|varsh|varsha|version)\b/);
+    if (isBookingCommand) txt = txt.replace(/\b(book|confirm)\b.*\bappointment\b/, " ").trim();
+    let m = txt.match(/\b(?:patient\s+name|name|naam|nam|nav|now|mera\s+naam|patient\s+ka\s+naam)\s+(?:is\s+)?(.+)/) || txt.match(/^\s*(?:patient\s+)?name\s*[:\-]\s*(.+)$/);
+    if (m?.[1]) patch.patientName = capitalizeWords(m[1].split(/\s+(?:age|umr|gender|mobile|mail)/)[0]);
+    m = txt.match(/\b(?:age|umr|umar|umra|umrah|umraha|varsha|vai|version|y|why|h)\s+(?:is\s+)?(\d{1,3})\b/) || txt.match(/\b(\d{1,3})\s*(?:years?|saal|sal|varsh|varsha|version)\b/);
     if (m) patch.age = String(Math.min(+m[1], 120));
-
-    // Gender
     if (/\b(male|purush|mail)\b/.test(txt)) patch.gender = "Male";
     if (/\b(female|mahila|stri|stree)\b/.test(txt)) patch.gender = "Female";
     if (/\b(other|anya|anyaa)\b/.test(txt)) patch.gender = "Other";
-
-    // Mobile: any 10-digit
     m = txt.replace(/\D/g, "").match(/\b(\d{10})\b/);
     if (m) patch.mobileNumber = m[1];
-
-    // Email
-    m =
-      txt.match(/[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}/i) ||
-      txt.match(/\b(?:mail\s*id|email)\s*(?:is\s*)?([a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,})/i);
+    m = txt.match(/[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}/i) || txt.match(/\b(?:mail\s*id|email)\s*(?:is\s*)?([a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,})/i);
     if (m) patch.email = m[1] || m[0];
-
-    // Appointment Type
-    if (/\b(follow\s?up|dobara|phir\s*se|punah|punaha)\b/.test(txt))
-      patch.appointmentType = "Follow up";
-    else if (/\b(consult(?:ation)?|paramarsh|salah|salaah)\b/.test(txt))
-      patch.appointmentType = "Consultation";
-    else if (/\b(vaccination|teeka|tikakaran|teekakaran)\b/.test(txt))
-      patch.appointmentType = "Vaccination";
-    else if (/\b(other|anya|anyaa)\b/.test(txt))
-      patch.appointmentType = "Other";
-
-    // Visit Type
-    if (/\b(walk\s*in|seedha\s*aana|sidha\s*ana|sidha\s*aao)\b/.test(txt))
-      patch.typeVisit = "Walk in";
-    if (/\b(referral|refer|sifarish)\b/.test(txt))
-      patch.typeVisit = "Referral";
-    if (/\b(on\s*line|online)\b/.test(txt))
-      patch.typeVisit = "Online";
-
-    // Date: today/tomorrow/"kal"/"parso"
-    if (/\b(today|aaj|aj)\b/.test(txt))
-      patch.date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    else if (/\b(tomorrow|kal)\b/.test(txt))
-      patch.date = addDays(new Date(), 1);
-    else if (/\b(parso|parsu|parsoh)\b/.test(txt))
-      patch.date = addDays(new Date(), 2);
-    else {
-      const d1 = toDateObj(txt);
-      if (d1) patch.date = d1;
-    }
-
-    // Time: standard forms + "7 baje", am/pm hints
-    const t = toTime24(txt);
-    if (t) patch.time = t;
+    if (/\b(follow\s?up|dobara|phir\s*se|punah|punaha)\b/.test(txt)) patch.appointmentType = "Follow up";
+    else if (/\b(consult(?:ation)?|paramarsh|salah|salaah)\b/.test(txt)) patch.appointmentType = "Consultation";
+    else if (/\b(vaccination|teeka|tikakaran|teekakaran)\b/.test(txt)) patch.appointmentType = "Vaccination";
+    else if (/\b(other|anya|anyaa)\b/.test(txt)) patch.appointmentType = "Other";
+    if (/\b(walk\s*in|seedha\s*aana|sidha\s*ana|sidha\s*aao)\b/.test(txt)) patch.typeVisit = "Walk in";
+    if (/\b(referral|refer|sifarish)\b/.test(txt)) patch.typeVisit = "Referral";
+    if (/\b(on\s*line|online)\b/.test(txt)) patch.typeVisit = "Online";
+    if (/\b(today|aaj|aj)\b/.test(txt)) patch.date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    else if (/\b(tomorrow|kal)\b/.test(txt)) patch.date = addDays(new Date(), 1);
+    else if (/\b(parso|parsu|parsoh)\b/.test(txt)) patch.date = addDays(new Date(), 2);
+    else { const d1 = toDateObj(txt); if (d1) patch.date = d1; }
+    const t = toTime24(txt); if (t) patch.time = t;
     let hm = txt.match(/\b(\d{1,2})\s*baje?\b/);
-    if (hm && !patch.time) {
-      let h = Math.min(parseInt(hm[1], 10), 12);
-      const isPM = /\b(pm|shaam|raat)\b/.test(txt);
-      const isAM = /\b(am|subah|savera)\b/.test(txt);
-      if (isPM && h < 12) h += 12;
-      if (isAM && h === 12) h = 0;
-      patch.time = `${String(h).padStart(2, "0")}:00`;
-    }
-
-    // Department (Branch): explicit phrase "branch/vibhag/shakha <name>" or any match
-    const depPhrase = (() => {
-      const m1 = txt.match(/\b(?:branch|vibhag|shakha)\s+(.+)$/);
-      return m1 ? (m1[1] || "").trim() : null;
-    })();
-
+    if (hm && !patch.time) { let h = Math.min(parseInt(hm[1], 10), 12); const isPM = /\b(pm|shaam|raat)\b/.test(txt); const isAM = /\b(am|subah|savera)\b/.test(txt); if (isPM && h < 12) h += 12; if (isAM && h === 12) h = 0; patch.time = `${String(h).padStart(2, "0")}:00`; }
+    const depPhrase = txt.match(/\b(?:branch|vibhag|shakha)\s+(.+)$/)?.[1]?.trim();
     let targetDoctorList = doctorsByDepartment;
-    if (depPhrase) {
-      const hit = (departments || []).find((d) =>
-        depPhrase.includes((d.departmentName || "").toLowerCase())
-      );
-      if (hit) {
-        patch.departmentName = hit.departmentName;
-        patch.doctorEmail = "";
-        handleDepartmentDoctors(hit.departmentId);
-        targetDoctorList = allDoctors.filter(
-          (doc) => doc.departmentId === hit.departmentId
-        );
-      }
-    } else {
-      const depHit = (departments || []).find((d) =>
-        txt.includes((d.departmentName || "").toLowerCase())
-      );
-      if (depHit) {
-        patch.departmentName = depHit.departmentName;
-        patch.doctorEmail = "";
-        handleDepartmentDoctors(depHit.departmentId);
-        targetDoctorList = allDoctors.filter(
-          (doc) => doc.departmentId === depHit.departmentId
-        );
-      }
-    }
-
-    // Doctor: "doctor/dr/daktar <name>" or fuzzy includes
-    let docName = (() => {
-      const m2 = txt.match(/\b(?:doctor|dr\.?|daktar|doctar)\s+([^,]+)/);
-      return m2 ? (m2[1] || "").trim() : null;
-    })();
-    if (docName) {
-      const doc = (targetDoctorList || []).find((d) =>
-        (d.name || "").toLowerCase().includes(docName.toLowerCase())
-      );
-      if (doc) patch.doctorEmail = doc.email;
-    } else if ((targetDoctorList || []).length) {
-      const docHit = targetDoctorList.find((d) =>
-        txt.includes((d.name || "").toLowerCase())
-      );
-      if (docHit) patch.doctorEmail = docHit.email;
-    }
-
-    // Note
-    const noteTail = (() => {
-      const m3 = txt.match(/\b(?:note|remarks|tipani|tippani)\s+(.*)$/);
-      return m3 ? (m3[1] || "").trim() : null;
-    })();
-    if (noteTail) patch.note = noteTail;
-
-    // Address
-    const addrTail = (() => {
-      const m4 = txt.match(/\b(?:address|patta|pata|thikana|thikanaa)\s+(.*)$/);
-      return m4 ? (m4[1] || "").trim() : null;
-    })();
-    if (addrTail) patch.address = addrTail;
-
-    if (Object.keys(patch).length) {
-      setFormData((fd) => {
-        const updated = { ...fd, ...patch };
-        latestFormDataRef.current = updated;
-        return updated;
-      });
-    }
-
-    if (isBookingCommand) {
-      if (srRef.current) {
-        manuallyStopped.current = true;
-        try { srRef.current.stop(); } catch { }
-        setListening(false);
-      }
-      const finalData = { ...latestFormDataRef.current, ...patch };
-      handleClick(finalData);
-    }
+    const findAndSetDepartment = (phrase) => { const hit = (departments || []).find((d) => phrase.includes((d.departmentName || "").toLowerCase())); if (hit) { patch.departmentName = hit.departmentName; patch.doctorEmail = ""; handleDepartmentDoctors(hit.departmentId); targetDoctorList = allDoctors.filter((doc) => doc.departmentId === hit.departmentId); return true; } return false; };
+    if (depPhrase) findAndSetDepartment(depPhrase); else findAndSetDepartment(txt);
+    const docPhrase = txt.match(/\b(?:doctor|dr\.?|daktar|doctar)\s+([^,]+)/)?.[1]?.trim();
+    const findAndSetDoctor = (phrase) => { const doc = (targetDoctorList || []).find((d) => (d.name || "").toLowerCase().includes(phrase)); if (doc) patch.doctorEmail = doc.email; };
+    if (docPhrase) findAndSetDoctor(docPhrase); else if ((targetDoctorList || []).length) { targetDoctorList.forEach((doc) => { if (txt.includes((doc.name || "").toLowerCase())) patch.doctorEmail = doc.email; }); }
+    const noteTail = txt.match(/\b(?:note|remarks|tipani|tippani)\s+(.*)$/)?.[1]?.trim(); if (noteTail) patch.note = noteTail;
+    const addrTail = txt.match(/\b(?:address|patta|pata|thikana|thikanaa)\s+(.*)$/)?.[1]?.trim(); if (addrTail) patch.address = addrTail;
+    if (Object.keys(patch).length) { setFormData((fd) => { const updated = { ...fd, ...patch }; latestFormDataRef.current = updated; return updated; }); }
+    if (isBookingCommand) { if (srRef.current) { manuallyStopped.current = true; try { srRef.current.stop(); } catch {} setListening(false); } const finalData = { ...latestFormDataRef.current, ...patch }; handleClick(finalData); }
   };
 
   /* ============== SR wiring ============== */
   const startListening = () => {
     if (!SR || listening) return;
     manuallyStopped.current = false;
+    setMicError(""); // Clear any previous errors
+
     const r = srRef.current || new SR();
     r.continuous = true;
     r.interimResults = true;
-    r.lang = "en-IN"; // always English input
+    r.lang = "en-IN";
 
     r.onresult = (e) => {
-      let interim = "";
-      let final = "";
+      let interim = "", final = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const transcript = e.results[i][0].transcript;
         if (e.results[i].isFinal) final += transcript.trim() + " ";
         else interim += transcript;
       }
-      setLiveTranscript(interim);
+      if (interim || final) {
+        if (userPulseTimeoutRef.current) clearTimeout(userPulseTimeoutRef.current);
+        setLiveTranscript(interim);
+        userPulseTimeoutRef.current = setTimeout(() => setLiveTranscript(""), 300);
+      }
       if (final) {
         const finalCommand = final.trim();
         setLastHeard(finalCommand);
         handleVoiceCommand(finalCommand);
-        setLiveTranscript("");
       }
     };
 
+    // Enhanced error handling for Brave and other issues
     r.onerror = (e) => {
-      console.error("Speech Recognition Error:", e);
-      try { r.stop(); } catch { }
+      console.error("Speech Recognition Error:", e.error);
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        setMicError("Microphone blocked. If you're on Brave, please click the Lion icon in the address bar and set 'Block fingerprinting' to 'Standard'.");
+        manuallyStopped.current = true;
+        try { r.stop(); } catch {}
+      } else {
+        setMicError("Microphone error. Please check your device settings.");
+      }
       setListening(false);
     };
 
     r.onend = () => {
-      if (!manuallyStopped.current) {
-        try { r.start(); } catch { }
-      } else {
-        setListening(false);
-        setLiveTranscript("");
-      }
+      if (!manuallyStopped.current) { try { r.start(); } catch {} } 
+      else { setListening(false); setLiveTranscript(""); }
     };
 
-    try { r.start(); } catch { }
+    try {
+      r.start();
+      setListening(true);
+    } catch (e) {
+      console.error("Error starting speech recognition:", e);
+      setMicError("Could not start microphone. Please check browser permissions.");
+      setListening(false);
+    }
     srRef.current = r;
-    setListening(true);
   };
 
   const stopListeningFn = () => {
     if (!srRef.current) return;
     manuallyStopped.current = true;
-    try { srRef.current.stop(); } catch { }
+    try { srRef.current.stop(); } catch {}
   };
-
   stopListening.current = stopListeningFn;
-  startListeningRef.current = startListening;
 
   const toggleListening = () => {
     if (!SR) return;
     listening ? stopListeningFn() : startListening();
   };
 
-  /* ============== UI ============== */
+  const userTalkingActive = listening && !!liveTranscript;
+  const waveActive = isBotTalking || userTalkingActive;
+
   return (
     <>
-      <Modal
-        open={showSuccessModal}
-        onClose={() => {
-          setShowSuccessModal(false);
-          dispatch(removeBookAppointmentData());
-        }}
-      >
+      <Modal open={showSuccessModal} onClose={() => { setShowSuccessModal(false); dispatch(removeBookAppointmentData()); }}>
         <Box sx={style}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "28px",
-            }}
-          >
-            <svg
-              width="70"
-              height="70"
-              viewBox="0 0 80 80"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M40 0C18 0 0 18 0 40C0 62 18 80 40 80C62 80 80 62 80 40C80 18 62 0 40 0ZM40 72C22.36 72 8 57.64 8 40C8 22.36 22.36 8 40 8C57.64 8 72 22.36 72 40C72 57.64 57.64 72 40 72ZM58.36 22.32L32 48.68L21.64 38.36L16 44L32 60L64 28L58.36 22.32Z"
-                fill="#2E823B"
-              />
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 }}>
+            <svg width="70" height="70" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M40 0C18 0 0 18 0 40C0 62 18 80 40 80C62 80 80 62 80 40C80 18 62 0 40 0ZM40 72C22.36 72 8 57.64 8 40C8 22.36 22.36 8 40 8C57.64 8 72 22.36 72 40C72 57.64 57.64 72 40 72ZM58.36 22.32L32 48.68L21.64 38.36L16 44L32 60L64 28L58.36 22.32Z" fill="#2E823B"/>
             </svg>
-            <Button
-              onClick={() => {
-                onClose();
-                setShowSuccessModal(false);
-                dispatch(removeBookAppointmentData());
-                navigate("/receptionist/patients");
-              }}
-              sx={{
-                backgroundColor: "#25307F",
-                color: "white",
-                "&:focus": { outline: "none", boxShadow: "none" },
-              }}
-            >
+            <Button onClick={() => { onClose(); setShowSuccessModal(false); dispatch(removeBookAppointmentData()); navigate("/receptionist/patients"); }} sx={{ backgroundColor: "#25307F", color: "white", "&:hover": { backgroundColor: "#1b235f" } }}>
               {T.successBtn}
             </Button>
           </div>
@@ -792,75 +601,26 @@ const AIBot = ({
       </Modal>
 
       <div style={{ height: "100vh", position: "relative" }}>
-        {/* Bot bubble */}
-        {/* Top-right controls */}
-        <div
-          style={{
-            position: "fixed",
-            right: 100,
-            top: 10,
-            display: "flex",
-            gap: 12,
-            alignItems: "center",
-            zIndex: 999,
-          }}
-        >
+        <div className="top-controls">
+          {micError && (
+            <Paper elevation={3} sx={{ p: 1.5, backgroundColor: 'error.main', color: 'white', maxWidth: '350px' }}>
+              <Typography variant="body2">{micError}</Typography>
+            </Paper>
+          )}
           {SR ? (
             <>
               {listening && liveTranscript && (
-                <Paper
-                  elevation={3}
-                  sx={{
-                    p: "8px 12px",
-                    bgcolor: "rgba(0,0,0,0.7)",
-                    color: "white",
-                    borderRadius: "16px",
-                    maxWidth: 420,
-                  }}
-                >
-                  <Typography variant="body2" component="p">
-                    {liveTranscript}
-                  </Typography>
+                <Paper elevation={3} className="live-transcript">
+                  <Typography variant="body2" component="p">{liveTranscript}</Typography>
                 </Paper>
               )}
-              <Chip
-                icon={<GraphicEqIcon />}
-                label={
-                  listening
-                    ? T.listening
-                    : lastHeard
-                      ? I18N[lang].ui.heard(
-                        `${lastHeard.slice(0, 32)}${lastHeard.length > 32 ? "…" : ""
-                        }`
-                      )
-                      : T.voiceReady
-                }
-                variant="outlined"
-              />
+              <Chip icon={<GraphicEqIcon />} label={listening ? T.listening : lastHeard ? I18N[lang].ui.heard(`${lastHeard.slice(0, 32)}${lastHeard.length > 32 ? "…" : ""}`) : T.voiceReady} variant="outlined"/>
               <Tooltip title={listening ? T.micStop : T.micStart} placement="left">
-                <IconButton
-                  onClick={toggleListening}
-                  size="large"
-                  sx={{
-                    bgcolor: listening ? "#d32f2f" : "#25307F",
-                    color: "white",
-                    "&:hover": { bgcolor: listening ? "#b71c1c" : "#1b235f" },
-                  }}
-                >
+                <IconButton onClick={toggleListening} size="large" sx={{ bgcolor: listening ? "#d32f2f" : "#25307F", color: "white", "&:hover": { bgcolor: listening ? "#b71c1c" : "#1b235f" } }}>
                   {listening ? <MicOffIcon /> : <MicIcon />}
                 </IconButton>
               </Tooltip>
-
-              {/* Language selector */}
-              <TextField
-                select
-                size="small"
-                value={lang}
-                onChange={(e) => setLang(e.target.value)}
-                label={T.langLabel}
-                sx={{ minWidth: 160 }}
-                helperText={T.langNote}
-              >
+              <TextField select size="small" value={lang} onChange={(e) => setLang(e.target.value)} label={T.langLabel} sx={{ minWidth: 160 }} helperText={T.langNote}>
                 <MenuItem value="en">English</MenuItem>
                 <MenuItem value="hi">हिन्दी</MenuItem>
                 <MenuItem value="mr">मराठी</MenuItem>
@@ -873,247 +633,66 @@ const AIBot = ({
 
         <div className={`book-appointment-AI ${isFromDoctor ? "from-doctor" : "default"}`}>
           <div className="book-header">
-            <h2 style={{ fontWeight: 500, marginTop: "3px" }}>{T.title}</h2>
+            <h2 style={{ fontWeight: 500, marginTop: 3 }}>{T.title}</h2>
           </div>
-
           <Divider className="divider" />
           <div className="content">
             <div className="left-panel">
-               <div
-          style={{
-            // position: "fixed",
-            // left: 16,
-            // bottom: 150,
-            display: "flex",
-            alignItems: "flex-end",
-            gap: 8,
-            zIndex: 998,
-          }}
-        >
-          <video
-            key={lang} // IMPORTANT: Add key to force re-render on language change
-            autoPlay
-            style={{
-              margin: "auto",
-              width: "428px",
-              height: "auto",
-              borderRadius: "16px",
-              boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-            }}
-          >
-            {/* Dynamically set the video source based on the selected language */}
-            <source src={videoSources[lang]} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
+              <div className="wave-slot">
+                <VoiceWave active={waveActive} listening={listening} />
+              </div>
               <h3>{renderRequiredLabel(T.selectDate)}</h3>
-              <Calendar
-                onChange={handleDateChange}
-                name="date"
-                value={formData.date}
-                tileDisabled={({ date }) =>
-                  date < new Date(new Date().setHours(0, 0, 0, 0))
-                }
-              />
-
+              <Calendar onChange={handleDateChange} name="date" value={formData.date} tileDisabled={({ date }) => date < new Date(new Date().setHours(0, 0, 0, 0))}/>
               <h3 style={{ marginTop: 12 }}>{renderRequiredLabel(T.selectTime)}</h3>
-              <TextField
-                type="time"
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ step: 300 }}
-                error={!!errors.time}
-                helperText={errors.time}
-                sx={{
-                  "& .MuiOutlinedInput-root": { height: 46, width: 180 },
-                  "& .MuiOutlinedInput-input": {
-                    padding: "6px 10px",
-                    boxSizing: "border-box",
-                  },
-                }}
-              />
-
+              <TextField type="time" name="time" value={formData.time} onChange={handleChange} InputLabelProps={{ shrink: true }} inputProps={{ step: 300 }} error={!!errors.time} helperText={errors.time} sx={{ "& .MuiOutlinedInput-root": { height: 46, width: 200 }, "& .MuiOutlinedInput-input": { padding: "6px 10px", boxSizing: "border-box" } }}/>
               <h3 style={{ marginTop: 12 }}>{T.note}</h3>
-              <TextField
-                name="note"
-                value={formData.note}
-                onChange={handleChange}
-                multiline
-                rows={5}
-                fullWidth
-                placeholder={T.note}
-              />
+              <TextField name="note" value={formData.note} onChange={handleChange} multiline rows={5} fullWidth placeholder={T.note}/>
             </div>
-
             <div className="right-panel">
               <p>{renderRequiredLabel(T.patientName)}</p>
-              <TextField
-                name="patientName"
-                value={formData.patientName}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.patientName}
-                helperText={errors.patientName}
-              />
-
+              <TextField name="patientName" value={formData.patientName} onChange={handleChange} fullWidth error={!!errors.patientName} helperText={errors.patientName}/>
               <p>{renderRequiredLabel(T.age)}</p>
-              <TextField
-                name="age"
-                value={formData.age}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.age}
-                helperText={errors.age}
-              />
-
+              <TextField name="age" value={formData.age} onChange={handleChange} fullWidth error={!!errors.age} helperText={errors.age}/>
               <p>{renderRequiredLabel(T.gender)}</p>
-              <TextField
-                select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.gender}
-                helperText={errors.gender}
-              >
+              <TextField select name="gender" value={formData.gender} onChange={handleChange} fullWidth error={!!errors.gender} helperText={errors.gender}>
                 <MenuItem value="Male">Male</MenuItem>
                 <MenuItem value="Female">Female</MenuItem>
                 <MenuItem value="Other">Other</MenuItem>
               </TextField>
-
               <p>{T.address}</p>
-              <TextField
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                fullWidth
-                multiline
-                rows={2}
-              />
-
+              <TextField name="address" value={formData.address} onChange={handleChange} fullWidth multiline rows={2}/>
               <p>{renderRequiredLabel(T.apptType)}</p>
-              <TextField
-                select
-                name="appointmentType"
-                value={formData.appointmentType}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.appointmentType}
-                helperText={errors.appointmentType}
-              >
+              <TextField select name="appointmentType" value={formData.appointmentType} onChange={handleChange} fullWidth error={!!errors.appointmentType} helperText={errors.appointmentType}>
                 <MenuItem value="Follow up">{T.followUp}</MenuItem>
                 <MenuItem value="Consultation">{T.consultation}</MenuItem>
                 <MenuItem value="Vaccination">{T.vaccination}</MenuItem>
                 <MenuItem value="Other">{T.other}</MenuItem>
               </TextField>
-
               <p>{renderRequiredLabel(T.branch)}</p>
-              <TextField
-                select
-                name="departmentName"
-                value={formData.departmentName}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.departmentName}
-                helperText={errors.departmentName}
-                slotProps={{
-                  select: {
-                    MenuProps: {
-                      PaperProps: { style: { maxHeight: 200, overflowY: "auto" } },
-                    },
-                  },
-                }}
-              >
+              <TextField select name="departmentName" value={formData.departmentName} onChange={handleChange} fullWidth error={!!errors.departmentName} helperText={errors.departmentName}>
                 {departments.map((department, index) => (
-                  <MenuItem
-                    key={index}
-                    value={department.departmentName}
-                    onClick={() => handleDepartmentDoctors(department.departmentId)}
-                  >
+                  <MenuItem key={index} value={department.departmentName} onClick={() => handleDepartmentDoctors(department.departmentId)}>
                     {department.departmentName}
                   </MenuItem>
                 ))}
               </TextField>
-
               <p>{renderRequiredLabel(T.doctor)}</p>
-              <TextField
-                select
-                name="doctorEmail"
-                value={formData.doctorEmail}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.doctorEmail}
-                helperText={errors.doctorEmail}
-                slotProps={{
-                  select: {
-                    MenuProps: {
-                      PaperProps: { style: { maxHeight: 200, overflowY: "auto" } },
-                    },
-                  },
-                }}
-              >
+              <TextField select name="doctorEmail" value={formData.doctorEmail} onChange={handleChange} fullWidth error={!!errors.doctorEmail} helperText={errors.doctorEmail}>
                 {doctorsByDepartment.map((doctor, index) => (
-                  <MenuItem key={index} value={doctor.email}>
-                    {doctor.name}
-                  </MenuItem>
+                  <MenuItem key={index} value={doctor.email}>{doctor.name}</MenuItem>
                 ))}
               </TextField>
-
               <p>{renderRequiredLabel(T.visitType)}</p>
-              <TextField
-                select
-                name="typeVisit"
-                value={formData.typeVisit}
-                onChange={handleChange}
-                fullWidth
-              >
+              <TextField select name="typeVisit" value={formData.typeVisit} onChange={handleChange} fullWidth>
                 <MenuItem value="Walk in">{T.walkIn}</MenuItem>
                 <MenuItem value="Referral">{T.referral}</MenuItem>
                 <MenuItem value="Online">{T.online}</MenuItem>
               </TextField>
-
               <p>{renderRequiredLabel(T.mobile)}</p>
-              <TextField
-                name="mobileNumber"
-                value={formData.mobileNumber}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.mobileNumber}
-                helperText={errors.mobileNumber}
-              />
-
+              <TextField name="mobileNumber" value={formData.mobileNumber} onChange={handleChange} fullWidth error={!!errors.mobileNumber} helperText={errors.mobileNumber}/>
               <p>{T.email}</p>
-              <TextField
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                fullWidth
-                error={!!errors.email}
-                helperText={errors.email}
-              />
-
-              {loadingBtn ? (
-                <Button
-                  variant="contained"
-                  className="submit-btn"
-                  fullWidth
-                  sx={{ "&:focus": { outline: "none", boxShadow: "none" } }}
-                >
-                  <CircularProgress size={28} thickness={5} sx={{ color: "white" }} />
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  className="submit-btn"
-                  fullWidth
-                  onClick={() => handleClick()}
-                  sx={{ "&:focus": { outline: "none", boxShadow: "none" } }}
-                >
-                  {T.confirm}
-                </Button>
-              )}
+              <TextField name="email" value={formData.email} onChange={handleChange} fullWidth error={!!errors.email} helperText={errors.email}/>
+              {loadingBtn ? (<Button variant="contained" className="submit-btn" fullWidth disabled><CircularProgress size={28} thickness={5} sx={{ color: "white" }} /></Button>) : (<Button variant="contained" className="submit-btn" fullWidth onClick={() => handleClick()}>{T.confirm}</Button>)}
             </div>
           </div>
         </div>
