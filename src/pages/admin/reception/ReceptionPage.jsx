@@ -85,7 +85,7 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
 
   return (
     <Grid container spacing={2} sx={{ marginTop: "-10px" }}>
-      <Grid size={8.5}>
+      <Grid size={12}>
         <Grid container direction="column" spacing={2}>
           {/* First vertically stacked item */}
           <Grid
@@ -521,7 +521,7 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid
+      {/* <Grid
         size={3.5}
         className={styles.container1}
         sx={{
@@ -549,7 +549,7 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                       year: "numeric",
                     })}
                   </p>
-                  {/*<p>Appointment for ENT, 28 September</p>*/}
+                  <p>Appointment for ENT, 28 September</p>
                 </div>
               </div>
             ))
@@ -576,7 +576,7 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                     year: "numeric",
                   })}
                 </p>
-                {/*<p>Appointment for ENT, 28 September</p>*/}
+                <p>Appointment for ENT, 28 September</p>
               </div>
             </div>
           ))}
@@ -600,12 +600,12 @@ const ReceptionPage = ({ setSelectedDate, selectedDate }) => {
                     year: "numeric",
                   })}
                 </p>
-                {/*<p>Appointment for ENT, 28 September</p>*/}
+                <p>Appointment for ENT, 28 September</p>
               </div>
             </div>
           ))}
         </div>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

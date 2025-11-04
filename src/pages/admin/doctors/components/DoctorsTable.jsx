@@ -92,7 +92,7 @@ const DoctorsTable = ({
   return (
     <TableContainer
       sx={{
-        maxHeight: is1024 ? "calc(100vh - 320px)" : "72vh",
+        maxHeight: is1024 ? "calc(100vh - 200px)" : "72vh",
         overflowY: "auto",
         position: "relative",
       }}

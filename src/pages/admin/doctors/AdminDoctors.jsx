@@ -175,7 +175,7 @@ const AdminDoctors = (props) => {
           position: "fixed",
           top: 0,
           padding: isNarrow ? 8 : 10,
-          width: isNarrow ? "100%" : "77%",
+          width: "77%",
           background: "#F1F1F1",
           zIndex: 100,
         }}
