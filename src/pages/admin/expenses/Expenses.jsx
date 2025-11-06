@@ -99,7 +99,7 @@ const Expenses = ({ setIsSignUpOrLogin }) => {
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: "17vh" }}>
+      <div style={{ marginTop: "20vh" }}>
         {loader ? (
           <Box
             sx={{

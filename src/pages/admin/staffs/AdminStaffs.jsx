@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, useMediaQuery } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
@@ -38,6 +38,8 @@ const FIXED_PANEL_SX = {
 const AdminStaffs = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const isCompact = useMediaQuery("(min-width:900px) and (max-width:1200px)");
 
   // selectors with shallowEqual to avoid pointless rerenders
   const staffs = useSelector((s) => s.admin.staffs || [], shallowEqual);
@@ -187,7 +189,7 @@ const AdminStaffs = (props) => {
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: 150 }}>
+      <div style={{ marginTop: isCompact ? 140 : 150 }}>
         {loading ? (
           <Box
             sx={{
@@ -209,26 +211,40 @@ const AdminStaffs = (props) => {
                     transform: "translateY(4px)",
                     color: "black",
                     cursor: "pointer",
+                    fontSize: isCompact ? 18 : 22,
                   }}
                 >
                   <ArrowBackIosIcon />
                 </span>
-                <h2 className={ayu.departmentTitle}>Total Staffs:</h2>
-                <h2 className={ayu.departmentTitleDetails}>{count}</h2>
+                <h2
+                  className={ayu.departmentTitle}
+                  style={{ fontSize: isCompact ? "1.05rem" : "1.25rem" }}
+                >
+                  {isCompact ? "Staff" : "Total Staffs:"}
+                </h2>
+                <h2
+                  className={ayu.departmentTitleDetails}
+                  style={{ fontSize: isCompact ? "1.05rem" : "1.25rem" }}
+                >
+                  {count}
+                </h2>
 
                 <div style={{ marginLeft: "auto" }}>
                   <Button
                     variant="contained"
+                    onClick={onAddClick}
                     sx={{
-                      fontSize: 20,
-                      color: "#ffffff",
+                      bgcolor: "#25307F",
+                      color: "#fff",
                       textTransform: "capitalize",
-                      p: "2px 18px",
-                      backgroundColor: "#25307F",
                       boxShadow: "0px 4px 4px 0px #C2C2C240",
                       "&:hover": { background: "#AEC3FF" },
+                      minWidth: isCompact ? 0 : 120,
+                      px: isCompact ? 1.5 : 2.5,
+                      py: isCompact ? 0.6 : 1,
+                      fontSize: isCompact ? 14 : 18,
+                      height: isCompact ? 34 : 40,
                     }}
-                    onClick={onAddClick}
                   >
                     <img
                       src={addIcon}

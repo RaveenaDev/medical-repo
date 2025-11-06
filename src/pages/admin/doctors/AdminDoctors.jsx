@@ -207,26 +207,38 @@ const AdminDoctors = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <span
-                  onClick={() => navigate(-1)}
+                <div
                   style={{
-                    transform: "translateY(4px)",
-                    color: "black",
-                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 4,
+                    flexWrap: "wrap",
                   }}
                 >
-                  <ArrowBackIosIcon />
-                </span>
+                  <span
+                    onClick={() => navigate(-1)}
+                    style={{
+                      transform: "translateY(4px)",
+                      color: "black",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ArrowBackIosIcon />
+                  </span>
 
-                <h2 className={ayu.departmentTitle} style={{ margin: 0 }}>
-                  Total Doctors:
-                </h2>
-                <h2
-                  className={ayu.departmentTitleDetails}
-                  style={{ margin: 0 }}
-                >
-                  {noOfDoctors}
-                </h2>
+                  <h2
+                    className={ayu.departmentTitle}
+                    style={{ margin: 0, fontSize: isNarrow ? 18 : 22 }}
+                  >
+                    Total Doctors:
+                  </h2>
+                  <h2
+                    className={ayu.departmentTitleDetails}
+                    style={{ margin: 0, fontSize: isNarrow ? 18 : 22 }}
+                  >
+                    {noOfDoctors}
+                  </h2>
+                </div>
 
                 <div
                   style={{

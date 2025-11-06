@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useMemo,
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { memo, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -18,66 +11,116 @@ import {
   Typography,
   Avatar,
   IconButton,
+  useMediaQuery,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-// Row component memoized
-const StaffRow = memo(function StaffRow({ staff, onOpenMenu }) {
+/* compact only for 10–13" screens */
+const useIs10to13Inch = () =>
+  useMediaQuery("(min-width:900px) and (max-width:1200px)");
+
+const EllipsizedCell = ({ children, sx, width }) => (
+  <TableCell
+    sx={{
+      maxWidth: width,
+      width,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      ...sx,
+    }}
+  >
+    {children}
+  </TableCell>
+);
+
+/* ---------- row ---------- */
+const StaffRow = memo(function StaffRow({ staff, onOpenMenu, isCompact }) {
   const deptName =
     staff?.department?.name || staff?.department?.departmentName || "-";
+
+  const avatarSize = isCompact ? 30 : 40;
+  const nameVariant = isCompact ? "body2" : "body1";
+  const rowHeight = isCompact ? 50 : 60;
+
   return (
     <TableRow
       sx={{
         background: "#fff",
-        boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
+        boxShadow: "0px 2px 5px rgba(0,0,0,0.08)",
         borderRadius: "8px",
         "&:hover": { backgroundColor: "#f9f9f9" },
         "& > *": { borderBottom: "unset" },
+        height: rowHeight,
       }}
     >
-      <TableCell>
-        <Avatar
-          src={staff?.profile}
-          alt="Profile"
-          sx={{ width: 40, height: 40 }}
-        />
-      </TableCell>
-      <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+      {!isCompact && (
+        <TableCell>
+          <Avatar
+            src={staff?.profile}
+            alt="Profile"
+            sx={{ width: avatarSize, height: avatarSize }}
+          />
+        </TableCell>
+      )}
+
+      <EllipsizedCell
+        width={isCompact ? 100 : 128}
+        sx={{ color: "#25307F", fontWeight: 700 }}
+      >
         {staff?.staff_id}
-      </TableCell>
-      <TableCell>
+      </EllipsizedCell>
+
+      <EllipsizedCell width={isCompact ? 150 : 220}>
         <Typography
-          variant="body1"
-          sx={{ fontWeight: "bold", color: "#25307F", cursor: "pointer" }}
+          variant={nameVariant}
+          sx={{ fontWeight: 700, color: "#25307F", cursor: "pointer" }}
+          title={staff?.name}
         >
           {staff?.name}
         </Typography>
-      </TableCell>
-      <TableCell sx={{ color: "#747474" }}>{staff?.phone}</TableCell>
-      <TableCell sx={{ color: "#747474" }}>{deptName}</TableCell>
-      <TableCell sx={{ color: "#747474" }}>{staff?.designation}</TableCell>
-      <TableCell>
+      </EllipsizedCell>
+
+      <EllipsizedCell width={isCompact ? 130 : 160} sx={{ color: "#747474" }}>
+        {staff?.phone}
+      </EllipsizedCell>
+
+      <EllipsizedCell width={isCompact ? 140 : 180} sx={{ color: "#747474" }}>
+        {deptName}
+      </EllipsizedCell>
+
+      <EllipsizedCell width={isCompact ? 140 : 180} sx={{ color: "#747474" }}>
+        {staff?.designation}
+      </EllipsizedCell>
+
+      <TableCell sx={{ width: isCompact ? 110 : 140 }}>
         <Chip
           label={staff?.status}
-          size="small"
+          size={isCompact ? "small" : "medium"}
+          variant="outlined"
           sx={{
-            backgroundColor: "transparent",
-            color: staff?.status === "Available" ? "#3DB461" : "#E1473D",
-            fontWeight: "bold",
-            border: "none",
+            color: staff?.status === "Available" ? "#2E823B" : "#E1473D",
+            borderColor: staff?.status === "Available" ? "#2E823B" : "#E1473D",
+            fontWeight: 600,
+            height: isCompact ? 22 : 28,
           }}
         />
       </TableCell>
-      <TableCell>
-        <IconButton onClick={(e) => onOpenMenu(e, staff)}>
-          <MoreVertIcon />
+
+      <TableCell sx={{ width: isCompact ? 52 : 64 }}>
+        <IconButton
+          onClick={(e) => onOpenMenu(e, staff)}
+          size={isCompact ? "small" : "medium"}
+        >
+          <MoreVertIcon fontSize={isCompact ? "small" : "medium"} />
         </IconButton>
       </TableCell>
     </TableRow>
   );
 });
 
-const headers = [
+/* ---------- headers ---------- */
+const headersFull = [
   "Profile",
   "Staff ID",
   "Name",
@@ -88,6 +131,17 @@ const headers = [
   "Actions",
 ];
 
+const headersCompact = [
+  "Staff ID",
+  "Name",
+  "Phone Number",
+  "Department",
+  "Designation",
+  "Status",
+  "Actions",
+];
+
+/* ---------- table ---------- */
 const StaffTable = memo(function StaffTable({
   staffs,
   page,
@@ -97,7 +151,8 @@ const StaffTable = memo(function StaffTable({
   onRowsPerPageChange,
   onOpenMenu,
 }) {
-  // simple windowing for large lists to cut DOM nodes
+  const isCompact = useIs10to13Inch();
+
   const start = page * rowsPerPage;
   const end = start + rowsPerPage;
   const windowed = useMemo(
@@ -105,15 +160,25 @@ const StaffTable = memo(function StaffTable({
     [staffs, start, end]
   );
 
-  // keep table head columns stable
-  const headCells = useMemo(() => headers, []);
+  const headers = isCompact ? headersCompact : headersFull;
 
   return (
     <TableContainer
-      sx={{ maxHeight: "72vh", overflowY: "auto", position: "relative" }}
+      sx={{
+        maxHeight: isCompact ? "68vh" : "72vh",
+        overflowY: "auto",
+        position: "relative",
+        px: isCompact ? 0.5 : 1,
+      }}
     >
       <Table
-        sx={{ borderCollapse: "separate", borderSpacing: "0 10px", mb: "30px" }}
+        size={isCompact ? "small" : "medium"}
+        sx={{
+          borderCollapse: "separate",
+          borderSpacing: isCompact ? "0 8px" : "0 10px",
+          mb: isCompact ? "16px" : "30px",
+          tableLayout: "fixed",
+        }}
       >
         <TableHead
           sx={{
@@ -124,10 +189,10 @@ const StaffTable = memo(function StaffTable({
           }}
         >
           <TableRow>
-            {headCells.map((h) => (
+            {headers.map((h) => (
               <TableCell
                 key={h}
-                sx={{ fontWeight: 500, fontSize: 16, lineHeight: "100%" }}
+                sx={{ fontWeight: 600, fontSize: isCompact ? 13 : 16 }}
               >
                 {h}
               </TableCell>
@@ -142,21 +207,21 @@ const StaffTable = memo(function StaffTable({
                 key={staff?._id}
                 staff={staff}
                 onOpenMenu={onOpenMenu}
+                isCompact={isCompact}
               />
             ))
           ) : (
             <TableRow>
               <TableCell
                 align="center"
-                colSpan={8}
+                colSpan={headers.length}
                 sx={{
                   background: "#fff",
-                  boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
+                  boxShadow: "0px 2px 5px rgba(0,0,0,0.08)",
                   borderRadius: "8px",
-                  "& > *": { borderBottom: "unset" },
                 }}
               >
-                No data found!
+                No data found
               </TableCell>
             </TableRow>
           )}
@@ -170,13 +235,21 @@ const StaffTable = memo(function StaffTable({
         onPageChange={onPageChange}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={onRowsPerPageChange}
-        rowsPerPageOptions={[5, 10, 20, 50, 100]}
+        rowsPerPageOptions={isCompact ? [5, 10, 20, 50] : [5, 10, 20, 50, 100]}
         sx={{
           position: "sticky",
           bottom: 0,
           backgroundColor: "#fff",
           borderTop: "2px solid #ddd",
           zIndex: 11,
+          "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
+            {
+              fontSize: isCompact ? 12 : 14,
+            },
+          "& .MuiTablePagination-select": { fontSize: isCompact ? 12 : 14 },
+          "& .MuiTablePagination-actions button": {
+            padding: isCompact ? "4px" : "6px",
+          },
         }}
       />
     </TableContainer>
