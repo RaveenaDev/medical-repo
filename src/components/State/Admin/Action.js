@@ -812,6 +812,7 @@ export const updateService = (updatedData, serviceId) => async (dispatch) => {
         },
       }
     );
+    console.log("Updated Service Data:", data);
     dispatch({ type: UPDATE_SERVICE, payload: data });
     dispatch(getServices());
     toast.success("Service Edited Successfully!", {

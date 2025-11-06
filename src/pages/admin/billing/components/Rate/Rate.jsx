@@ -349,7 +349,7 @@ const Rate = () => {
           <span>Category</span>
           <span>Rate Type</span>
           <span>Current Rate</span>
-          <span>Effective Date</span>
+
           <span>Last Updated</span>
           <span>More Details</span>
         </div>
@@ -399,16 +399,7 @@ const Rate = () => {
                       </span>
                       <span>{category.rateType}</span>
                       <span className="blue">₹{category.currentRate}</span>
-                      <span>
-                        {new Date(category.effectiveDate).toLocaleDateString(
-                          "en-IN",
-                          {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          }
-                        )}
-                      </span>
+
                       <span>
                         {" "}
                         {new Date(service.lastUpdated).toLocaleDateString(

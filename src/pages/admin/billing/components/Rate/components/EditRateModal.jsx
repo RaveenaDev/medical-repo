@@ -17,7 +17,7 @@ import { Trash2Icon } from "lucide-react";
 const EditRateModal = ({ open, handleClose, service }) => {
   const serviceId = service.service.serviceId;
 
-  // console.log(service);
+  console.log(service);
   const [serviceDetails, setServiceDetails] = useState({
     serviceId: serviceId,
     name: service.service.serviceName,
@@ -85,19 +85,19 @@ const EditRateModal = ({ open, handleClose, service }) => {
     const pass = {
       serviceId: serviceDetails.serviceId,
       name: serviceDetails.name,
-      departmentName: serviceDetails.departmentName,
       categories: [
         {
           _id: service.category.categoryId,
           subCategoryName: serviceDetails.subCategoryName,
           rateType: serviceDetails.rateType,
           rate: finalRate,
-          effectiveDate: serviceDetails.effectiveDate,
           amenities: serviceDetails.amenities,
           additionaldetails: serviceDetails.additionaldetails,
         },
       ],
     };
+
+    console.log("Updated Service Data:", pass);
     dispatch(updateService(pass, serviceId));
     // Reset the form fields
     setServiceDetails({
@@ -106,7 +106,6 @@ const EditRateModal = ({ open, handleClose, service }) => {
       subCategoryName: "",
       rateType: "",
       rate: "",
-      effectiveDate: "",
       amenities: "",
       additionaldetails: {},
     });
@@ -248,16 +247,6 @@ const EditRateModal = ({ open, handleClose, service }) => {
               Add Custom Charges & Details
             </Button>
           </div>
-          <TextField
-            label="Effective Date"
-            fullWidth
-            margin="dense"
-            InputLabelProps={{ shrink: true }}
-            type="date"
-            name="effectiveDate"
-            value={serviceDetails.effectiveDate}
-            onChange={handleChange}
-          />
         </div>
 
         <TextField
