@@ -17,7 +17,7 @@ import { Trash2Icon } from "lucide-react";
 const EditRateModal = ({ open, handleClose, service }) => {
   const serviceId = service.service.serviceId;
 
-  console.log(service);
+  // console.log(service);
   const [serviceDetails, setServiceDetails] = useState({
     serviceId: serviceId,
     name: service.service.serviceName,
@@ -97,7 +97,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
       ],
     };
 
-    console.log("Updated Service Data:", pass);
+    // console.log("Updated Service Data:", pass);
     dispatch(updateService(pass, serviceId));
     // Reset the form fields
     setServiceDetails({
