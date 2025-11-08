@@ -921,9 +921,9 @@ const ConsultBody = ({
                     prescriptionAndMedicines: perceptionData,
                   }));
                   // console.log("Perception Data: ",perceptionData)
-                  setSelectedComponent("TreatmentAndTest");
+                  // setSelectedComponent("TreatmentAndTest");
                   setConfirmedSections((prev) => [
-                    ...new Set([...prev, "PerceptionAndMedicines"]),
+                    ...new Set([...prev, "PrescriptionAndMedicines"]),
                   ]);
                 }}
               />

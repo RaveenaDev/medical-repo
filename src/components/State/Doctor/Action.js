@@ -1921,3 +1921,24 @@ export const getAdmissionRequests =
       console.error("Error fetching admission requests:", error);
     }
   };
+export const chatWithAI = (patientData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/send`, patientData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    return data;
+
+    // dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data.data });
+  } catch (error) {
+    console.log(error);
+    toast.error("Please fill above fields!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  }
+};
