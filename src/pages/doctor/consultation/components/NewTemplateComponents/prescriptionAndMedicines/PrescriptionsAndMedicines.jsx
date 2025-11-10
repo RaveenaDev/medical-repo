@@ -4,7 +4,7 @@ import PNMLoader from "../../PNMLoader.jsx";
 import { useDispatch } from "react-redux";
 import {
   chatWithAI,
-  generatePrescriptionsWithAI,
+  generateNewPrescriptionsWithAI,
 } from "../../../../../../components/State/Doctor/Action.js";
 import ManualPrescriptionForm from "../../manual/ManualPrescriptionForm.jsx";
 import { useReactToPrint } from "react-to-print";
@@ -19,7 +19,9 @@ const PrescriptionAndMedicines = ({
   selectedComponent,
   existingData,
 }) => {
+  console.log("Generated Prescriptions: ", generatedPrescriptions);
   const [loading, setLoading] = useState(true);
+  console.log(loading, "loading state");
   const [isListening, setIsListening] = useState(false);
 
   const [micText, setMicText] = useState("");
@@ -62,7 +64,7 @@ const PrescriptionAndMedicines = ({
         };
 
         setSelected(safeData);
-        setLoading(false);
+        // setLoading(false);
         return;
       } catch (err) {
         console.error(" Failed to parse saved prescription data:", err);
@@ -81,9 +83,7 @@ const PrescriptionAndMedicines = ({
       };
 
       setSelected(safeData);
-      setLoading(false);
-    } else {
-      setLoading(false); //  make sure loader hides even if empty
+      // setLoading(false);
     }
   }, [existingData, selectedComponent, patient?._id]);
 
@@ -149,25 +149,30 @@ const PrescriptionAndMedicines = ({
   };
 
   // ===== Add from AI into selected =====
-  const addMedsFromAI = () =>
+  const addMedsFromAI = () => {
+    const meds =
+      generatedPrescriptions?.aiGeneratedText?.medications ||
+      generatedPrescriptions?.aiPrescription?.medications ||
+      [];
     setSelected((s) => ({
       ...s,
       medications: [
         ...s.medications,
-        ...(generatedPrescriptions?.aiGeneratedText?.medications || [])
-          .filter(
-            (t) => !s.medications.some((m) => m.kind === "ai" && m.text === t)
-          )
+        ...meds
+          .filter((t) => !s.medications.some((m) => m.text === t))
           .map((t) => ({ kind: "ai", text: t })),
       ],
     }));
+  };
 
   const addInjections = () =>
     setSelected((s) => ({
       ...s,
       injectionsTherapies: dedupSimple(
         s.injectionsTherapies,
-        generatedPrescriptions?.aiGeneratedText?.injectionsTherapies || []
+        generatedPrescriptions?.aiGeneratedText?.injectionsTherapies ||
+          generatedPrescriptions?.aiPrescription?.injectionsTherapies ||
+          []
       ),
     }));
 
@@ -176,7 +181,9 @@ const PrescriptionAndMedicines = ({
       ...s,
       nonDrugRecommendations: dedupSimple(
         s.nonDrugRecommendations,
-        generatedPrescriptions?.aiGeneratedText?.nonDrugRecommendations || []
+        generatedPrescriptions?.aiGeneratedText?.nonDrugRecommendations ||
+          generatedPrescriptions?.aiPrescription?.nonDrugRecommendations ||
+          []
       ),
     }));
 
@@ -185,24 +192,34 @@ const PrescriptionAndMedicines = ({
       ...s,
       lifestyle: dedupSimple(
         s.lifestyle,
-        generatedPrescriptions?.aiGeneratedText?.lifestyle || []
+        generatedPrescriptions?.aiGeneratedText?.lifestyle ||
+          generatedPrescriptions?.aiPrescription?.lifestyleDiet ||
+          []
       ),
     }));
 
   // Follow-up from AI: convert Review Date + Notes into two plain bullet strings
   const addFollowUpFromAI = () => {
-    const fu = generatedPrescriptions?.aiGeneratedText?.followUpInstructions;
+    const fu =
+      generatedPrescriptions?.aiGeneratedText?.followUpInstructions ||
+      generatedPrescriptions?.aiPrescription?.followUpInstructions;
     const lines = [];
     if (fu) {
       if (fu.reviewDate) lines.push(`Review: ${fu.reviewDate}`);
       if (fu.notes) lines.push(`Notes: ${fu.notes}`);
     } else if (
-      Array.isArray(generatedPrescriptions?.aiGeneratedText?.followUp)
+      Array.isArray(
+        generatedPrescriptions?.aiGeneratedText?.followUp ||
+          generatedPrescriptions?.aiPrescription?.followUp
+      )
     ) {
       // fallback if you ever return an array
-      lines.push(...generatedPrescriptions.aiGeneratedText.followUp);
-    } else if (generatedPrescriptions?.aiGeneratedText?.followUp) {
-      lines.push(String(generatedPrescriptions.aiGeneratedText.followUp));
+      const followUpArr =
+        generatedPrescriptions?.aiGeneratedText?.followUp ||
+        generatedPrescriptions?.aiPrescription?.followUp ||
+        [];
+      if (Array.isArray(followUpArr)) lines.push(...followUpArr);
+      else if (followUpArr) lines.push(String(followUpArr));
     }
     if (lines.length === 0) return;
     setSelected((s) => ({
@@ -349,7 +366,7 @@ const PrescriptionAndMedicines = ({
     };
 
     delete aiData.diagnosisAndVitals; //  remove old key
-    dispatch(generatePrescriptionsWithAI(aiData));
+    dispatch(generateNewPrescriptionsWithAI(aiData));
     setLoading(true);
   };
 
@@ -472,7 +489,12 @@ const PrescriptionAndMedicines = ({
       setIsSending(false);
     }
   };
+  const aiData =
+    generatedPrescriptions?.aiGeneratedText ||
+    generatedPrescriptions?.aiPrescription ||
+    {};
 
+  console.log("AI Data:", aiData);
   return (
     <div>
       <div className={styles.container1}>
@@ -534,31 +556,30 @@ const PrescriptionAndMedicines = ({
                 <div className={styles.row4}>
                   <p className={styles.value}>
                     <span className={styles.key}>Problem Statement:</span>{" "}
-                    {generatedPrescriptions?.aiGeneratedText?.problemStatement}
+                    {aiData.problemStatement}
                   </p>
                 </div>
                 <div className={styles.row5}>
                   <p className={styles.value}>
-                    <span className={styles.key}>ICD:</span>{" "}
-                    {generatedPrescriptions?.aiGeneratedText?.icdCode}
+                    <span className={styles.key}>ICD:</span> {aiData.icdCode}
                   </p>
                 </div>
                 <div className={styles.row5}>
                   <p className={styles.value}>
                     <span className={styles.key}>Therapy Plan:</span>{" "}
-                    {generatedPrescriptions?.aiGeneratedText?.therapyPlan}
+                    {aiData.therapyPlan}
                   </p>
                 </div>
                 <div className={styles.row5}>
                   <p className={styles.value}>
                     <span className={styles.key}>Precautions:</span>{" "}
-                    {generatedPrescriptions?.aiGeneratedText?.precautions}
+                    {aiData.precautions}
                   </p>
                 </div>
                 <div className={styles.row5}>
                   <p className={styles.value}>
                     <span className={styles.key}>Follow-Up:</span>{" "}
-                    {generatedPrescriptions?.aiGeneratedText?.followUp}
+                    {aiData.followUp}
                   </p>
                 </div>
 
@@ -569,21 +590,19 @@ const PrescriptionAndMedicines = ({
                   </div>
                   <div className={styles.row11}>
                     <div>
-                      {generatedPrescriptions?.aiGeneratedText?.medications?.map(
-                        (med, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                              marginBottom: 4,
-                            }}
-                          >
-                            <span style={{ marginRight: 10 }}>&#8226;</span>
-                            <p style={{ margin: 0 }}>{med}</p>
-                          </div>
-                        )
-                      )}
+                      {(aiData.medications || []).map((med, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            marginBottom: 4,
+                          }}
+                        >
+                          <span style={{ marginRight: 10 }}>&#8226;</span>
+                          <p style={{ margin: 0 }}>{med}</p>
+                        </div>
+                      ))}
                     </div>
                     <div
                       className={styles.iconContainer}
@@ -636,21 +655,19 @@ const PrescriptionAndMedicines = ({
                   </div>
                   <div className={styles.row11}>
                     <div>
-                      {generatedPrescriptions?.aiGeneratedText?.injectionsTherapies?.map(
-                        (text, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                              marginBottom: 4,
-                            }}
-                          >
-                            <span style={{ marginRight: 10 }}>&#8226;</span>
-                            <p style={{ margin: 0 }}>{text}</p>
-                          </div>
-                        )
-                      )}
+                      {(aiData.injectionsTherapies || []).map((text, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            marginBottom: 4,
+                          }}
+                        >
+                          <span style={{ marginRight: 10 }}>&#8226;</span>
+                          <p style={{ margin: 0 }}>{text}</p>
+                        </div>
+                      ))}
                     </div>
                     <div
                       className={styles.iconContainer}
@@ -703,14 +720,12 @@ const PrescriptionAndMedicines = ({
                   </div>
                   <div className={styles.row11}>
                     <div>
-                      {generatedPrescriptions?.aiGeneratedText?.nonDrugRecommendations?.map(
-                        (text, i) => (
-                          <div key={i} style={{ display: "flex" }}>
-                            <span style={{ marginRight: 10 }}>&#8226;</span>
-                            <p style={{ margin: 0 }}>{text}</p>
-                          </div>
-                        )
-                      )}
+                      {(aiData.nonDrugRecommendations || []).map((text, i) => (
+                        <div key={i} style={{ display: "flex" }}>
+                          <span style={{ marginRight: 10 }}>&#8226;</span>
+                          <p style={{ margin: 0 }}>{text}</p>
+                        </div>
+                      ))}
                     </div>
                     <div className={styles.iconContainer} onClick={addNonDrug}>
                       <svg
@@ -760,7 +775,7 @@ const PrescriptionAndMedicines = ({
                   </div>
                   <div className={styles.row11}>
                     <div>
-                      {generatedPrescriptions?.aiGeneratedText?.lifestyle?.map(
+                      {(aiData.lifestyle || aiData.lifestyleDiet || []).map(
                         (text, i) => (
                           <div
                             key={i}
@@ -829,13 +844,12 @@ const PrescriptionAndMedicines = ({
                     <div>
                       <p>
                         <span>&#8226; </span>&nbsp; Review:{" "}
-                        {generatedPrescriptions?.aiGeneratedText
-                          ?.followUpInstructions?.reviewDate || "Not specified"}
+                        {aiData?.followUpInstructions?.reviewDate ||
+                          "Not specified"}
                       </p>
                       <p>
                         <span>&#8226; </span>&nbsp; Notes:{" "}
-                        {generatedPrescriptions?.aiGeneratedText
-                          ?.followUpInstructions?.notes || "Not specified"}
+                        {aiData?.followUpInstructions?.notes || "Not specified"}
                       </p>
                     </div>
                     <div

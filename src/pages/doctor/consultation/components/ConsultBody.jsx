@@ -14,6 +14,7 @@ import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import {
+  generateNewPrescriptionsWithAI,
   generatePrescriptionsWithAI,
   getPatientDetailsByID,
   removePrescriptionsWithAI,
@@ -78,6 +79,10 @@ const ConsultBody = ({
     (store) => store.doctor.generatedPrescriptionsByAI
   );
 
+  const generatedNewPrescriptionsWithAI = useSelector(
+    (store) => store.doctor.generatedNewPrescriptionsByAI
+  );
+
   const ongoingAppointment = appointments.find(
     (app) => app.status === "Ongoing"
   );
@@ -104,6 +109,7 @@ const ConsultBody = ({
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
   console.log(generatedPrescriptionsWithAI);
+  console.log("Prescrition here", generatedNewPrescriptionsWithAI);
 
   useEffect(() => {
     if (
@@ -125,7 +131,9 @@ const ConsultBody = ({
 
       delete aiData.diagnosisAndVitals; // ❌ remove old key
 
-      dispatch(generatePrescriptionsWithAI(aiData));
+      // console.log(`AI Data for New Prescriptions: `, aiData);
+
+      dispatch(generateNewPrescriptionsWithAI(aiData));
     }
   }, [selectedComponent, dispatch]);
 
@@ -221,7 +229,7 @@ const ConsultBody = ({
     nextAppointment = futureAppointments[0] || null;
   }
 
-  console.log("Data:", completeData);
+  // console.log("Data:", completeData);
 
   const handleCompleteBtn = () => {
     if (!completeData || Object.keys(completeData).length === 0) {
@@ -914,7 +922,7 @@ const ConsultBody = ({
                 existingData={completeData}
                 selectedComponent="PrescriptionAndMedicines"
                 completeData={completeData}
-                generatedPrescriptions={generatedPrescriptionsWithAI}
+                generatedPrescriptions={generatedNewPrescriptionsWithAI}
                 onConfirm={(perceptionData) => {
                   setCompleteData((prev) => ({
                     ...prev,

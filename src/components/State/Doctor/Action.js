@@ -12,6 +12,7 @@ import {
   CREATE_NEW_EVENT,
   DELETE_DOCTOR_NOTE,
   EDIT_DOCTOR_NOTE,
+  GENERATE_NEW_PRESCRIPTIONS_WITH_AI,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_TO_APPROVE,
@@ -977,7 +978,31 @@ export const generatePrescriptionsWithAI =
       });
     }
   };
+export const generateNewPrescriptionsWithAI =
+  (patientData) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
+      const { data } = await axios.post(`${API_URL}/generate`, patientData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      });
+
+      // console.log("Generated With AI : ", data.data);
+
+      dispatch({
+        type: GENERATE_NEW_PRESCRIPTIONS_WITH_AI,
+        payload: data.data,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Please fill above fields!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    }
+  };
 export const removePrescriptionsWithAI = () => async (dispatch) => {
   dispatch({ type: REMOVE_PRESCRIPTIONS_WITH_AI });
 };
