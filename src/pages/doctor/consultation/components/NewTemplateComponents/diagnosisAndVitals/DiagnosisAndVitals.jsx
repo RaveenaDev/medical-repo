@@ -125,60 +125,87 @@ const DiagnosisAndVitals = ({
   const lastPosRef = useRef(null);
   const containerRef = useRef(null);
 
+  // Whiteboard logic (replace your current canvas handlers)
   useEffect(() => {
     if (mode !== "whiteboard") return;
+
     const canvas = canvasRef.current;
     const parent = containerRef.current;
-    const dpr = window.devicePixelRatio || 1;
-    const rect = parent.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = rect.width + "px";
-    canvas.style.height = rect.height + "px";
     const ctx = canvas.getContext("2d");
-    ctx.scale(dpr, dpr);
-    ctx.lineWidth = 3;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#000";
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, rect.width, rect.height);
-    ctxRef.current = ctx;
+    const dpr = window.devicePixelRatio || 1;
+    const resizeCanvas = () => {
+      const rect = parent.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
+      ctx.scale(dpr, dpr);
+      ctx.lineWidth = 2;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, rect.width, rect.height);
 
-    // Load existing image if available
-    if (existingData?.diagnosisAndVitals?.image) {
-      const img = new Image();
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, rect.width, rect.height);
+      // Restore saved image if available
+      if (existingData?.diagnosisAndVitals?.image) {
+        const img = new Image();
+        img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        img.src = existingData.diagnosisAndVitals.image;
+      }
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let drawing = false;
+    let last = { x: 0, y: 0 };
+
+    const getPos = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
       };
-      img.src = existingData.diagnosisAndVitals.image;
-    }
+    };
+
+    const startDraw = (e) => {
+      drawing = true;
+      last = getPos(e);
+    };
+
+    const draw = (e) => {
+      if (!drawing) return;
+      const pos = getPos(e);
+      const pressure = e.pressure || 0.5; // stylus support
+      ctx.lineWidth = 1 + pressure * 3;
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+      last = pos;
+    };
+
+    const stopDraw = () => (drawing = false);
+
+    // Pointer events for full stylus + touch support
+    canvas.addEventListener("pointerdown", startDraw);
+    canvas.addEventListener("pointermove", draw);
+    canvas.addEventListener("pointerup", stopDraw);
+    canvas.addEventListener("pointerleave", stopDraw);
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      canvas.removeEventListener("pointerdown", startDraw);
+      canvas.removeEventListener("pointermove", draw);
+      canvas.removeEventListener("pointerup", stopDraw);
+      canvas.removeEventListener("pointerleave", stopDraw);
+    };
   }, [mode, existingData]);
 
-  const getPos = (e) => {
-    const rect = canvasRef.current.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  };
-  const handleDown = (e) => {
-    if (mode !== "whiteboard") return;
-    drawingRef.current = true;
-    lastPosRef.current = getPos(e);
-  };
-  const handleMove = (e) => {
-    if (!drawingRef.current) return;
-    const ctx = ctxRef.current;
-    const pos = getPos(e);
-    const last = lastPosRef.current;
-    ctx.beginPath();
-    ctx.moveTo(last.x, last.y);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    lastPosRef.current = pos;
-  };
-  const handleUp = () => (drawingRef.current = false);
   const clearBoard = () => {
-    const ctx = ctxRef.current;
     const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   };
@@ -334,12 +361,7 @@ const DiagnosisAndVitals = ({
       ) : (
         <div className={styles.whiteboardWrapper}>
           <div className={styles.whiteboard} ref={containerRef}>
-            <canvas
-              ref={canvasRef}
-              onMouseDown={handleDown}
-              onMouseMove={handleMove}
-              onMouseUp={handleUp}
-            />
+            <canvas ref={canvasRef} />
           </div>
           <div className={styles.bottomButtons}>
             <button
