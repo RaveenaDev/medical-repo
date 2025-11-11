@@ -1967,3 +1967,26 @@ export const chatWithAI = (patientData) => async (dispatch) => {
     });
   }
 };
+export const formatWithAI = async (patientData) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/format`, patientData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    console.log("Formatted Data: ", data);
+    return data;
+
+    // dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data.data });
+  } catch (error) {
+    console.error("Error formatting with AI:", error);
+    toast.error("Error formatting data with AI!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    throw error;
+  }
+};
