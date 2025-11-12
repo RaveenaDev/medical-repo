@@ -55,6 +55,7 @@ const ExpenseForm = () => {
     const newErrors = validateExpenseData(expenseData);
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
+      console.log(newErrors);
       toast.error("Please fill all fields");
       return;
     }
@@ -123,10 +124,12 @@ const ExpenseForm = () => {
               mt: 2,
             }}
           >
-            {["ExpenseType", "Amount", "PaidTo", "Details"].map((field) => (
+            {["expenseType", "amount", "paidTo", "details"].map((field) => (
               <TextField
                 key={field}
-                label={field.replace(/([A-Z])/g, " $1")}
+                label={field
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
                 name={field}
                 value={expenseData[field]}
                 onChange={handleChange}
