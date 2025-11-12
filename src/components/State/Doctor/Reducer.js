@@ -5,6 +5,7 @@ import {
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_CONSULTATION_FORM,
   CREATE_NEW_EVENT,
+  GENERATE_NEW_PRESCRIPTIONS_WITH_AI,
   GENERATE_PRESCRIPTIONS_WITH_AI,
   GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_TO_APPROVE,
@@ -126,6 +127,7 @@ const initialState = {
   inventory: [],
   isLoadingInventory: true,
   generatedPrescriptionsByAI: null,
+  generatedNewPrescriptionsByAI: null,
   allDoctors: [],
   approvedAdmissions: [],
   admittedPatients: [],
@@ -439,11 +441,17 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         generatedPrescriptionsByAI: action.payload,
       };
+    case GENERATE_NEW_PRESCRIPTIONS_WITH_AI:
+      return {
+        ...state,
+        generatedNewPrescriptionsByAI: action.payload,
+      };
 
     case REMOVE_PRESCRIPTIONS_WITH_AI:
       return {
         ...state,
         generatedPrescriptionsByAI: null,
+        generatedNewPrescriptionsByAI: null,
       };
 
     case GET_ADMITTED_PATIENTS:

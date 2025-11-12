@@ -14,7 +14,9 @@ import AddQuestion from "./AddQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import {
-  generatePrescriptionsWithAI, getPatientDetailsByID,
+  generateNewPrescriptionsWithAI,
+  generatePrescriptionsWithAI,
+  getPatientDetailsByID,
   removePrescriptionsWithAI,
   submitConsultation,
 } from "../../../../components/State/Doctor/Action.js";
@@ -25,6 +27,7 @@ import { toast } from "react-toastify";
 import AddPatient from "./modals/AddPatient/AddPatient.jsx";
 import DiagnosisAndVitals from "./NewTemplateComponents/diagnosisAndVitals/DiagnosisAndVitals.jsx";
 import PrescriptionsAndMedicines from "./NewTemplateComponents/prescriptionAndMedicines/PrescriptionsAndMedicines.jsx";
+import TransferPatient from "./NewTemplateComponents/modals/transferPatient/TransferPatient.jsx";
 
 const ConsultBody = ({
   selectedForm,
@@ -76,6 +79,10 @@ const ConsultBody = ({
     (store) => store.doctor.generatedPrescriptionsByAI
   );
 
+  const generatedNewPrescriptionsWithAI = useSelector(
+    (store) => store.doctor.generatedNewPrescriptionsByAI
+  );
+
   const ongoingAppointment = appointments.find(
     (app) => app.status === "Ongoing"
   );
@@ -101,23 +108,21 @@ const ConsultBody = ({
   }, [dispatch, ongoingAppointment]);
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  // console.log(patientDetails)
+  console.log(generatedPrescriptionsWithAI);
+  console.log("Prescrition here", generatedNewPrescriptionsWithAI);
 
   useEffect(() => {
     if (
       selectedComponent === "PerceptionAndMedicines" ||
       selectedComponent === "static-2"
     ) {
-
       const aiData = {
         ...completeData,
         patientId: ongoingAppointment?.patient._id,
       };
 
       dispatch(generatePrescriptionsWithAI(aiData));
-    }
-
-    else if(selectedComponent === "PrescriptionAndMedicines"){
+    } else if (selectedComponent === "PrescriptionAndMedicines") {
       const aiData = {
         ...completeData,
         patientId: ongoingAppointment?.patient._id,
@@ -126,9 +131,10 @@ const ConsultBody = ({
 
       delete aiData.diagnosisAndVitals; // ❌ remove old key
 
-      dispatch(generatePrescriptionsWithAI(aiData));
-    }
+      // console.log(`AI Data for New Prescriptions: `, aiData);
 
+      dispatch(generateNewPrescriptionsWithAI(aiData));
+    }
   }, [selectedComponent, dispatch]);
 
   if (!appointments || appointments.length === 0) {
@@ -223,7 +229,7 @@ const ConsultBody = ({
     nextAppointment = futureAppointments[0] || null;
   }
 
-  console.log("Data:", completeData);
+  // console.log("Data:", completeData);
 
   const handleCompleteBtn = () => {
     if (!completeData || Object.keys(completeData).length === 0) {
@@ -259,20 +265,19 @@ const ConsultBody = ({
     // openNextAppointment(true);
 
     return dispatch(submitConsultation(updatedFinal))
-        .then(() => {
-          dispatch(removePrescriptionsWithAI());
-          openNextAppointment(true);
-          setCompleteData({});
-          onSuccess();
-          setConfirmedSections([]);
-          setSelectedComponent("PatientInfo");
-        })
-        .catch((err) => {
-          console.error("Submission failed:", err);
-          // rethrow so child knows it failed (optional but recommended)
-          throw err;
-        });
-
+      .then(() => {
+        dispatch(removePrescriptionsWithAI());
+        openNextAppointment(true);
+        setCompleteData({});
+        onSuccess();
+        setConfirmedSections([]);
+        setSelectedComponent("PatientInfo");
+      })
+      .catch((err) => {
+        console.error("Submission failed:", err);
+        // rethrow so child knows it failed (optional but recommended)
+        throw err;
+      });
   };
 
   const handleRefer = () => {
@@ -302,6 +307,17 @@ const ConsultBody = ({
     };
 
     setActiveModal("scheduleTreatment");
+    setModalData(updatedFinal);
+  };
+
+  const handleTransfer = () => {
+    const updatedFinal = {
+      ...final,
+      action: "transfer",
+      consultationData: completeData,
+    };
+
+    setActiveModal("transferToAnotherDoctor");
     setModalData(updatedFinal);
   };
 
@@ -401,7 +417,9 @@ const ConsultBody = ({
               </div>
               <div
                 className={`${styles["lp-4"]} ${
-                  selectedComponent === "DiagnosisAndVitals" ? styles.active : ""
+                  selectedComponent === "DiagnosisAndVitals"
+                    ? styles.active
+                    : ""
                 }
                 ${
                   confirmedSections.includes("DiagnosisAndVitals")
@@ -435,88 +453,101 @@ const ConsultBody = ({
               </div>
             </>
           ) : !selectedForm ? (
+            <>
               <>
-                <>
-                  <div
-                      className={`${styles["lp-2"]} ${
-                          selectedComponent === "MedicalHistory" ? styles.active : ""
-                      }
+                <div
+                  className={`${styles["lp-2"]} ${
+                    selectedComponent === "MedicalHistory" ? styles.active : ""
+                  }
                 ${
-                          confirmedSections.includes("MedicalHistory")
-                              ? styles.confirmed
-                              : ""
-                      }
+                  confirmedSections.includes("MedicalHistory")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
-                      onClick={() => setSelectedComponent("MedicalHistory")}
-                  >
-                    <p>Medical History</p>
-                  </div>
-                  <div
-                      className={`${styles["lp-3"]} ${
-                          selectedComponent === "CurrentMedication" ? styles.active : ""
-                      }
+                  onClick={() => setSelectedComponent("MedicalHistory")}
+                >
+                  <p>Medical History</p>
+                </div>
+                <div
+                  className={`${styles["lp-3"]} ${
+                    selectedComponent === "CurrentMedication"
+                      ? styles.active
+                      : ""
+                  }
                 ${
-                          confirmedSections.includes("CurrentMedication")
-                              ? styles.confirmed
-                              : ""
-                      }
+                  confirmedSections.includes("CurrentMedication")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
-                      onClick={() => setSelectedComponent("CurrentMedication")}
-                  >
-                    <p>Current Medication</p>
-                  </div>
-                  <div
-                      className={`${styles["lp-4"]} ${
-                          selectedComponent === "DiagnosisAndVital" ? styles.active : ""
-                      }
+                  onClick={() => setSelectedComponent("CurrentMedication")}
+                >
+                  <p>Current Medication</p>
+                </div>
+                <div
+                  className={`${styles["lp-4"]} ${
+                    selectedComponent === "DiagnosisAndVital"
+                      ? styles.active
+                      : ""
+                  }
                 ${
-                          confirmedSections.includes("DiagnosisAndVital")
-                              ? styles.confirmed
-                              : ""
-                      }
+                  confirmedSections.includes("DiagnosisAndVital")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
-                      onClick={() => setSelectedComponent("DiagnosisAndVital")}
-                  >
-                    <p>Diagnosis & Vital</p>
-                  </div>
-                  <div
-                      className={`${styles["lp-5"]} ${
-                          selectedComponent === "PerceptionAndMedicines"
-                              ? styles.active
-                              : ""
-                      } ${completeData.currentMedications || completeData.diagnosisVitals ? "": styles.disabled}
+                  onClick={() => setSelectedComponent("DiagnosisAndVital")}
+                >
+                  <p>Diagnosis & Vital</p>
+                </div>
+                <div
+                  className={`${styles["lp-5"]} ${
+                    selectedComponent === "PerceptionAndMedicines"
+                      ? styles.active
+                      : ""
+                  } ${
+                    completeData.currentMedications ||
+                    completeData.diagnosisVitals
+                      ? ""
+                      : styles.disabled
+                  }
                 ${
-                          confirmedSections.includes("PerceptionAndMedicines")
-                              ? styles.confirmed
-                              : ""
-                      }
+                  confirmedSections.includes("PerceptionAndMedicines")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
-                      onClick={() => {
-                        if (completeData.currentMedications || completeData.diagnosisVitals) {
-                          setSelectedComponent("PerceptionAndMedicines");
-                        }
-                      }}
-                  >
-                    <p>Prescription & Medicines</p>
-                  </div>
-                  <div
-                      onClick={() => setSelectedComponent("TreatmentAndTest")}
-                      className={`${styles["lp-6"]} ${
-                          selectedComponent === "TreatmentAndTest" ? styles.active : ""
-                      }
+                  onClick={() => {
+                    if (
+                      completeData.currentMedications ||
+                      completeData.diagnosisVitals
+                    ) {
+                      setSelectedComponent("PerceptionAndMedicines");
+                    }
+                  }}
+                >
+                  <p>Prescription & Medicines</p>
+                </div>
+                <div
+                  onClick={() => setSelectedComponent("TreatmentAndTest")}
+                  className={`${styles["lp-6"]} ${
+                    selectedComponent === "TreatmentAndTest"
+                      ? styles.active
+                      : ""
+                  }
                 ${
-                          confirmedSections.includes("TreatmentAndTest")
-                              ? styles.confirmed
-                              : ""
-                      }
+                  confirmedSections.includes("TreatmentAndTest")
+                    ? styles.confirmed
+                    : ""
+                }
                 `}
-                  >
-                    <p>Treatment and Tests</p>
-                  </div>
-                </>
+                >
+                  <p>Treatment and Tests</p>
+                </div>
               </>
-              )
-          : (
+            </>
+          ) : (
             <>
               {selectedForm?.sections?.map((section, index) => {
                 const isDisabled =
@@ -583,14 +614,25 @@ const ConsultBody = ({
               <p>Refer</p>
             </button>
           </div>
-          <button
-            type="button"
-            className={styles["btn"]}
-            onClick={handleSchedule}
-          >
-            <CalendarCheck className={styles["calendar-icon2"]} />
-            <p>Schedule Treatment</p>
-          </button>
+          <div className={styles["lp-8"]}>
+            <button
+              type="button"
+              className={styles["btn"]}
+              onClick={handleSchedule}
+            >
+              <CalendarCheck className={styles["calendar-icon2"]} />
+              <p>Schedule Treatment</p>
+            </button>
+
+            <button
+              type="button"
+              className={styles["btn"]}
+              onClick={handleTransfer}
+            >
+              <CalendarCheck className={styles["calendar-icon2"]} />
+              <p>Transfer Patient</p>
+            </button>
+          </div>
         </div>
         {activeModal === "complete" && (
           <>
@@ -662,10 +704,27 @@ const ConsultBody = ({
             </div>
           </>
         )}
+        {activeModal === "transferToAnotherDoctor" && (
+          <>
+            <div className={styles["backdrop-overlay"]} onClick={closeModal} />
+            <div className={styles["scheduleTreatment-modal"]}>
+              <TransferPatient
+                setCompleteData={setCompleteData}
+                onClose={closeModal}
+                onAddSection={handleAddSection}
+                setConfirmedSections={setConfirmedSections}
+                setSelectedComponent={setSelectedComponent}
+                modalData={modalData}
+                onSuccess={onSuccess}
+              />
+            </div>
+          </>
+        )}
         {/* Right Panel */}
         <div className={styles["right-panel"]}>
           <div className={styles["rp-content"]}>
-            {selectedForm && selectedForm !== 'custom1' &&
+            {selectedForm &&
+              selectedForm !== "custom1" &&
               selectedForm.sections?.some(
                 (sec) => sec.id === selectedComponent
               ) &&
@@ -776,7 +835,7 @@ const ConsultBody = ({
               <PatientInfo
                 ongoingAppointment={ongoingAppointment}
                 onConfirm={() => {
-                  if (!selectedForm || selectedForm === 'custom1') {
+                  if (!selectedForm || selectedForm === "custom1") {
                     setSelectedComponent("MedicalHistory");
                   } else {
                     setSelectedComponent("static-1");
@@ -786,7 +845,7 @@ const ConsultBody = ({
             )}
             {selectedComponent === "MedicalHistory" && (
               <MedicalHistory
-                  patientDetails={patientDetails}
+                patientDetails={patientDetails}
                 patient={ongoingAppointment?.patient}
                 existingData={completeData}
                 selectedComponent="medicalHistory"
@@ -795,7 +854,7 @@ const ConsultBody = ({
                     ...prev,
                     medicalHistory: medicalData,
                   }));
-                  if (selectedForm === 'custom1') {
+                  if (selectedForm === "custom1") {
                     setSelectedComponent("DiagnosisAndVitals");
                   } else {
                     setSelectedComponent("CurrentMedication");
@@ -841,41 +900,41 @@ const ConsultBody = ({
               />
             )}
             {selectedComponent === "DiagnosisAndVitals" && (
-                <DiagnosisAndVitals
-                    patient={ongoingAppointment?.patient}
-                    existingData={completeData}
-                    selectedComponent="DiagnosisAndVitals"
-                    onConfirm={(diagnosisAndVitals) => {
-                      setCompleteData((prev) => ({
-                        ...prev,
-                        diagnosisAndVitals: diagnosisAndVitals,
-                      }));
-                      setSelectedComponent("PrescriptionAndMedicines");
-                      setConfirmedSections((prev) => [
-                        ...new Set([...prev, "DiagnosisAndVitals"]),
-                      ]);
-                    }}
-                />
+              <DiagnosisAndVitals
+                patient={ongoingAppointment?.patient}
+                existingData={completeData}
+                selectedComponent="DiagnosisAndVitals"
+                onConfirm={(diagnosisAndVitals) => {
+                  setCompleteData((prev) => ({
+                    ...prev,
+                    diagnosisAndVitals: diagnosisAndVitals,
+                  }));
+                  setSelectedComponent("PrescriptionAndMedicines");
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, "DiagnosisAndVitals"]),
+                  ]);
+                }}
+              />
             )}
             {selectedComponent === "PrescriptionAndMedicines" && (
-                <PrescriptionsAndMedicines
-                    patient={ongoingAppointment.patient}
-                    existingData={completeData}
-                    selectedComponent="PrescriptionAndMedicines"
-                    completeData={completeData}
-                    generatedPrescriptions={generatedPrescriptionsWithAI}
-                    onConfirm={(perceptionData) => {
-                      setCompleteData((prev) => ({
-                        ...prev,
-                        prescriptionAndMedicines: perceptionData,
-                      }));
-                      // console.log("Perception Data: ",perceptionData)
-                      setSelectedComponent("TreatmentAndTest");
-                      setConfirmedSections((prev) => [
-                        ...new Set([...prev, "PerceptionAndMedicines"]),
-                      ]);
-                    }}
-                />
+              <PrescriptionsAndMedicines
+                patient={ongoingAppointment.patient}
+                existingData={completeData}
+                selectedComponent="PrescriptionAndMedicines"
+                completeData={completeData}
+                generatedPrescriptions={generatedNewPrescriptionsWithAI}
+                onConfirm={(perceptionData) => {
+                  setCompleteData((prev) => ({
+                    ...prev,
+                    prescriptionAndMedicines: perceptionData,
+                  }));
+                  // console.log("Perception Data: ",perceptionData)
+                  // setSelectedComponent("TreatmentAndTest");
+                  setConfirmedSections((prev) => [
+                    ...new Set([...prev, "PrescriptionAndMedicines"]),
+                  ]);
+                }}
+              />
             )}
             {selectedComponent === "PerceptionAndMedicines" && (
               <PerceptionAndMedicines

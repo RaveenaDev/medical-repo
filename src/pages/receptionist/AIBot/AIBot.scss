@@ -2,136 +2,221 @@
   margin: auto;
   padding: 15px;
   background: #fff;
-  color: black;
+  color: #000;
   display: flex;
   flex-direction: column;
-  // background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden; // Prevent content from overflowing the modal
-  &.from-doctor {
-    max-height: 75vh;
-  }
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
 
-  &.default {
-    max-height: 100vh; // Prevent overflowing the screen
-  }
+  &.from-doctor { max-height: 75vh; }
+  &.default { max-height: 100vh; }
+
   .book-header {
     position: sticky;
     top: 0;
     z-index: 10;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 10px;
+    background: #fff;
+    padding: 6px 0 4px;
 
-    h2 {
-      font-size: 1.25rem;
-      margin-left: 4px;
-    }
-
-    .close-btn {
-      height: 30px;
-      width: 30px;
-      background: none;
-      padding: 4px 8px;
-      border: none; // Ensure no border is applied
-
-      &:hover,
-      &:focus,
-      &:active {
-        outline: none;
-        box-shadow: none;
-      }
-    }
+    h2 { font-size: 1.25rem; margin: 0 4px; }
   }
 
   .divider {
     position: sticky;
-    top: 40px;
+    top: 48px;
     z-index: 11;
-    background: white;
+    background: #fff;
   }
 
   .content {
-    display: flex;
-    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    margin-top: 10px;
     flex: 1;
-    overflow-y: auto; // Scrollable content
+    overflow-y: auto;
     padding: 20px;
-    height: max-content;
-    gap: 20px;
-    margin-bottom: 40px;
-
-    .left-panel {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      h3 {
-        font-weight: 400;
-      }
-
-      .MuiTextField-root {
-        width: 100%;
-      }
-    }
-
-    .right-panel {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
-      .submit-btn {
-        background: #25307f;
-      }
-
-      .submit-btn:hover {
-        background: #aec3ff;
-      }
-    }
+    margin-bottom: 24px;
   }
-  .react-calendar {
-    background: #eaecff !important;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-family: "Arial", sans-serif;
+
+  .left-panel,
+  .right-panel {
+    min-width: 0;
     width: 100%;
   }
 
-  .react-calendar__tile {
-    color: #181f52 !important; // Change text color
-    font-weight: 500;
+  .left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .wave-slot {
+      height: 40px;
+      position: relative;
+      isolation: isolate;
+      contain: layout paint;
+      transform: translateZ(0);
+      margin-bottom: 6px;
+      box-sizing: border-box;
+    }
+
+    h3 { font-weight: 500; color: #0f1955; margin: 4px 0; }
+    .MuiTextField-root { width: 100%; }
+  }
+
+  .right-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+
+    p { margin: 0; font-weight: 500; color: #0f1955; }
+    .submit-btn { background: #25307f; color: #fff; }
+    .submit-btn:hover { background: #1e2a6a; }
+  }
+
+  /* Calendar Styles */
+  .react-calendar {
+    background: #ffffff !important;
+    border: 1px solid #e2e8ff;
+    border-radius: 12px;
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(37, 48, 127, 0.06);
+    will-change: opacity;
   }
   .react-calendar__navigation {
-    background: #ffffff;
+    background: transparent;
+    margin-bottom: 6px;
+    button {
+      min-height: 34px;
+      border-radius: 8px;
+      &:hover { background: #f3f6ff; }
+    }
   }
-
+  .react-calendar__tile {
+    color: #0f1955 !important;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: transform 120ms ease, background 120ms ease;
+    &:hover { background: #eef2ff !important; }
+  }
   .react-calendar__tile--active {
-    background: #181f52 !important;
-    color: #ffffff !important;
-    border-radius: 5px;
+    background: #25307f !important;
+    color: black !important;
   }
-
-  .react-calendar__tile:hover {
-    background: #aeb4ff !important;
-    border-radius: 5px;
+  .react-calendar__tile--now {
+    background: #f6f7ff !important;
+    border: 1.5px solid #25307f !important;
   }
   .react-calendar__tile:disabled {
-    background: #eaecff !important; /* Same background as regular tiles */
-    color: gray !important; /* Make text gray */
-    opacity: 1 !important; /* Prevent faded look */
+    background: #fafbff !important;
+    color: #a0a6c0 !important;
+    opacity: 1 !important;
     cursor: not-allowed !important;
-    pointer-events: none; /* Ensure no interaction */
+    pointer-events: none;
+  }
+  .MuiTextField-root { font-size: 14px !important; }
+}
+
+/* ===== Speech wave ===== */
+.voice-wave {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4px;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0; top: 0;
+  pointer-events: none;
+  transform: translateZ(0);
+  padding-bottom: 4px;
+  box-sizing: border-box;
+
+  .bar {
+    width: 4px;
+    height: 8px;
+    color: #25307f; /* bot */
+    
+    background-image: radial-gradient(circle at center, currentColor 2px, transparent 2.5px);
+    background-size: 4px 7px;
+    background-position: center bottom;
+    background-repeat: repeat-y;
+
+    transform-origin: bottom center;
+    transform: translateZ(0);
+    will-change: transform, height;
+  }
+  
+  &[data-listening="true"] .bar {
+    color: #0d338c; /* user hint */
   }
 
-  .MuiTextField-root {
-    font-size: 14px !important;
+  &[data-active="true"] {
+    .bar {
+      /* Increased duration slightly for a smoother sweep */
+      animation: waveHeight 800ms infinite ease-in-out,
+                 waveShake 1000ms infinite ease-in-out;
+    }
+    
+    /* SCSS loop to generate a cascading delay from left to right */
+    @for $i from 1 through 20 {
+      .bar:nth-child(#{$i}) {
+        /* The delay increases for each bar, creating the sweep effect */
+        animation-delay: (($i - 1) * 35ms), (($i - 1) * 30ms);
+      }
+    }
   }
+}
 
-  .react-calendar__tile--now {
-    background: #eaecff;
-    border: 1.5px solid #181f52;
+@keyframes waveHeight {
+  0%   { height: 8px; }
+  25%  { height: 22px; }
+  50%  { height: 32px; }
+  75%  { height: 20px; }
+  100% { height: 8px; }
+}
+
+@keyframes waveShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(0.8px); }
+  50% { transform: translateX(-0.8px); }
+  75% { transform: translateX(0.5px); }
+}
+
+/* Top controls */
+.top-controls {
+  position: fixed;
+  right: 100px;
+  top: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 999;
+
+  .live-transcript {
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.72);
+    color: #fff;
+    border-radius: 16px;
+    max-width: 420px;
   }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .book-appointment-AI .content { grid-template-columns: 1fr; }
+  .top-controls { right: 16px; }
+}
+@media (max-width: 640px) {
+  .book-appointment-AI { padding: 10px; }
+  .book-appointment-AI .content { padding: 12px; gap: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-wave .bar { animation: none !important; }
 }

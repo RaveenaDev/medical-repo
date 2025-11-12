@@ -7,6 +7,8 @@ import {
   Button,
   MenuItem,
   Grid,
+  Checkbox,
+  ListItemText,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,13 +22,13 @@ import { Trash2Icon } from "lucide-react";
 const RateModal = ({ open, handleClose }) => {
   const [serviceDetails, setServiceDetails] = useState({
     name: "",
-    departmentName: "",
+    departmentNames: [], // now an array
     subCategoryName: "",
     rateType: "",
-    rate: "", // default base rate
+    rate: "",
     amenities: "",
-    effectiveDate: "", // New field for effective date
-    additionaldetails: [], // Array of { key: '', value: 0 }
+    effectiveDate: "",
+    additionaldetails: [],
   });
 
   const [errors, setErrors] = useState({});
@@ -43,10 +45,16 @@ const RateModal = ({ open, handleClose }) => {
   const departments = useSelector((store) => store.admin.departments);
 
   const handleChange = (e) => {
-    setServiceDetails({
-      ...serviceDetails,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setServiceDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDepartmentChange = (e) => {
+    const { value } = e.target;
+    setServiceDetails((prev) => ({
+      ...prev,
+      departmentNames: typeof value === "string" ? value.split(",") : value,
+    }));
   };
 
   const handleAdditionalDetailChange = (index, field, value) => {
@@ -84,6 +92,7 @@ const RateModal = ({ open, handleClose }) => {
     Object.keys(serviceDetails).forEach((key) => {
       if (
         key !== "additionaldetails" &&
+        key !== "departmentNames" && // allow none selected
         (key !== "rate" || serviceDetails.additionaldetails.length === 0) &&
         !serviceDetails[key]
       ) {
@@ -110,29 +119,30 @@ const RateModal = ({ open, handleClose }) => {
       ),
     };
 
+    console.log("Final Service Details to be submitted:", finalServiceDetails);
+
     dispatch(addService(finalServiceDetails));
     setServiceDetails({
       name: "",
-      departmentName: "",
+      departmentNames: [],
       subCategoryName: "",
       rateType: "",
-      rate: "", // Reset to empty
+      rate: "",
       amenities: "",
-      effectiveDate: "", // Reset effective date
+      effectiveDate: "",
       additionaldetails: [],
     });
     setErrors({});
     handleClose();
   };
 
-  // Calculate the total rate, which is the sum of the additional details
   const totalRate =
     serviceDetails.additionaldetails.length > 0
       ? serviceDetails.additionaldetails.reduce(
           (acc, item) => acc + item.value,
           0
         )
-      : serviceDetails.rate; // Use base rate if no additional details
+      : serviceDetails.rate;
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -150,21 +160,28 @@ const RateModal = ({ open, handleClose }) => {
           required
         />
 
+        {/* Multiple Select for Departments */}
         <TextField
           select
-          label="Department Name"
+          label="Departments"
           fullWidth
           margin="dense"
-          name="departmentName"
-          value={serviceDetails.departmentName}
-          onChange={handleChange}
-          error={!!errors.departmentName}
-          helperText={errors.departmentName}
-          required
+          name="departmentNames"
+          SelectProps={{
+            multiple: true,
+            value: serviceDetails.departmentNames,
+            onChange: handleDepartmentChange,
+            renderValue: (selected) => selected.join(", "),
+          }}
         >
           {departments.map((department, index) => (
             <MenuItem key={index} value={department.departmentName}>
-              {department.departmentName}
+              <Checkbox
+                checked={serviceDetails.departmentNames.includes(
+                  department.departmentName
+                )}
+              />
+              <ListItemText primary={department.departmentName} />
             </MenuItem>
           ))}
         </TextField>
@@ -204,7 +221,6 @@ const RateModal = ({ open, handleClose }) => {
           required
         />
 
-        {/* Current Rate Section */}
         <TextField
           label="Current Rate"
           fullWidth
@@ -215,10 +231,11 @@ const RateModal = ({ open, handleClose }) => {
           onChange={handleChange}
           error={!!errors.rate}
           helperText={errors.rate}
-          disabled={serviceDetails.additionaldetails.length > 0} // Disable when additional details are added
+          disabled={serviceDetails.additionaldetails.length > 0}
+          onWheel={(e) => e.target.blur()} //  Prevent scroll change
         />
 
-        {/* Additional Details Section */}
+        {/* Additional Details */}
         <div>
           <Grid container spacing={2} marginTop={1}>
             {serviceDetails.additionaldetails.map((item, index) => (
@@ -239,6 +256,7 @@ const RateModal = ({ open, handleClose }) => {
                     fullWidth
                     type="number"
                     value={item.value}
+                    onWheel={(e) => e.target.blur()} //  Prevent scroll change
                     onChange={(e) =>
                       handleAdditionalDetailChange(
                         index,
@@ -271,6 +289,7 @@ const RateModal = ({ open, handleClose }) => {
             Add Custom Charges & Details
           </Button>
         </div>
+
         <TextField
           label="Effective Date"
           fullWidth

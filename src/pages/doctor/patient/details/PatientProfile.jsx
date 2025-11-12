@@ -308,7 +308,7 @@ const PatientProfile = () => {
               width: "28%",
               backgroundColor: "#ffffff",
               height: "auto",
-              padding: "16px 8px",
+              padding: "4px 8px 12px 8px",
               borderRadius: "2px",
               boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
             }}

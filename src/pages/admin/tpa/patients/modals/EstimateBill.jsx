@@ -314,191 +314,184 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
           </div>
 
           {activeModal === "createCategory" && (
-            <div className={styles.modalCard}>
-              <div className={styles.formRow}>
-                <p>Category Name</p>
-                <input
-                  type="text"
-                  value={draftCategory.name}
-                  onChange={handleDraftName}
-                  placeholder="e.g., Consultants"
-                />
-              </div>
+            <div className={styles.modalOverlay}>
+              <div className={styles.modalCard}>
+                <div className={styles.modalHeader}>
+                  <h2>
+                    {draftCategory.id ? "Edit Category" : "Create Category"}
+                  </h2>
+                  <X className={styles.closeModalBtn} onClick={closeCreate} />
+                </div>
 
-              {/* Draft rows */}
-              {draftCategory.rows.map((row) => (
-                <div key={row.id} className={styles.categoryContent}>
-                  <div>
-                    <p>Description</p>
-                    <input
-                      type="text"
-                      value={row.description}
-                      onChange={(e) =>
-                        updateDraftRow(row.id, "description", e.target.value)
-                      }
-                      placeholder=""
-                    />
-                  </div>
+                <div className={styles.formRow}>
+                  <p>Category Name</p>
+                  <input
+                    type="text"
+                    value={draftCategory.name}
+                    onChange={handleDraftName}
+                    placeholder="e.g., Consultants"
+                  />
+                </div>
 
-                  <div>
-                    <p>Ward</p>
-                    <div className={styles.dropdown}>
-                      <button
-                        className={styles.trigger}
-                        onClick={() =>
-                          setOpenWardRowId((prev) =>
-                            prev === row.id ? null : row.id
-                          )
+                {draftCategory.rows.map((row) => (
+                  <div key={row.id} className={styles.categoryContent}>
+                    <div>
+                      <p>Description</p>
+                      <input
+                        type="text"
+                        value={row.description}
+                        onChange={(e) =>
+                          updateDraftRow(row.id, "description", e.target.value)
                         }
-                        type="button"
-                      >
-                        <p>{row.ward || "Select Ward"}</p>
+                      />
+                    </div>
 
-                        <span className={styles.arrow}>
+                    <div>
+                      <p>Ward</p>
+                      <div className={styles.dropdown}>
+                        <button
+                          className={styles.trigger}
+                          onClick={() =>
+                            setOpenWardRowId((prev) =>
+                              prev === row.id ? null : row.id
+                            )
+                          }
+                          type="button"
+                        >
+                          <p>{row.ward || "Select Ward"}</p>
                           {openWardRowId === row.id ? (
                             <ChevronUp />
                           ) : (
                             <ChevronDown />
                           )}
-                        </span>
-                      </button>
-
-                      {openWardRowId === row.id && (
-                        <ul className={styles.menu}>
-                          {wardOptions.map((option) => (
-                            <li
-                              key={option}
-                              className={`${styles.item} ${
-                                row.ward === option ? styles.active : ""
-                              }`}
-                              onClick={() => handleSelectWard(row.id, option)}
-                            >
-                              {option}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                        </button>
+                        {openWardRowId === row.id && (
+                          <ul className={styles.menu}>
+                            {wardOptions.map((option) => (
+                              <li
+                                key={option}
+                                onClick={() => handleSelectWard(row.id, option)}
+                                className={`${styles.item} ${
+                                  row.ward === option ? styles.active : ""
+                                }`}
+                              >
+                                {option}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <p>Package</p>
-                    <div className={styles.dropdown}>
-                      <button
-                        className={styles.trigger}
-                        onClick={() =>
-                          setOpenPackageRowId((prev) =>
-                            prev === row.id ? null : row.id
-                          )
-                        }
-                        type="button"
-                      >
-                        <p>{row.package || "Select Package"}</p>
-                        <span className={styles.arrow}>
+                    <div>
+                      <p>Package</p>
+                      <div className={styles.dropdown}>
+                        <button
+                          className={styles.trigger}
+                          onClick={() =>
+                            setOpenPackageRowId((prev) =>
+                              prev === row.id ? null : row.id
+                            )
+                          }
+                          type="button"
+                        >
+                          <p>{row.package || "Select Package"}</p>
                           {openPackageRowId === row.id ? (
                             <ChevronUp />
                           ) : (
                             <ChevronDown />
                           )}
-                        </span>
-                      </button>
-                      {openPackageRowId === row.id && (
-                        <ul className={styles.menu}>
-                          {packages.map((option) => (
-                            <li
-                              key={option}
-                              className={`${styles.item} ${
-                                row.package === option ? styles.active : ""
-                              }`}
-                              onClick={() =>
-                                handleSelectPackage(row.id, option)
-                              }
-                            >
-                              {option.subCategoryName}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                        </button>
+                        {openPackageRowId === row.id && (
+                          <ul className={styles.menu}>
+                            {packages.map((option) => (
+                              <li
+                                key={option._id || option.subCategoryName}
+                                onClick={() =>
+                                  handleSelectPackage(row.id, option)
+                                }
+                                className={`${styles.item} ${
+                                  row.package === option.subCategoryName
+                                    ? styles.active
+                                    : ""
+                                }`}
+                              >
+                                {option.subCategoryName}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p>Rate</p>
+                      <input
+                        type="number"
+                        min="0"
+                        value={row.rate}
+                        onChange={(e) =>
+                          updateDraftRow(row.id, "rate", e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <p>Unit</p>
+                      <input
+                        type="number"
+                        min="0"
+                        value={row.unit}
+                        onChange={(e) =>
+                          updateDraftRow(row.id, "unit", e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <p>Date</p>
+                      <input
+                        type="date"
+                        value={row.date}
+                        onChange={(e) =>
+                          updateDraftRow(row.id, "date", e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className={styles.cancelRow}>
+                      <X
+                        className={styles.crossBtn}
+                        onClick={() => removeDraftRow(row.id)}
+                      />
                     </div>
                   </div>
+                ))}
 
-                  <div>
-                    <p>Rate</p>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={row.rate}
-                      onChange={(e) =>
-                        updateDraftRow(row.id, "rate", e.target.value)
-                      }
-                      placeholder=""
-                    />
+                {warningText && (
+                  <div className={styles.warningText}>
+                    <p style={{ color: "#c44545", fontSize: "14px" }}>
+                      {warningText}
+                    </p>
                   </div>
-
-                  <div>
-                    <p>Unit</p>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={row.unit}
-                      onChange={(e) =>
-                        updateDraftRow(row.id, "unit", e.target.value)
-                      }
-                      placeholder=""
-                    />
-                  </div>
-                  <div>
-                    <p>Date</p>
-                    <input
-                      type="date"
-                      value={row.date}
-                      onChange={(e) =>
-                        updateDraftRow(row.id, "date", e.target.value)
-                      }
-                    />
-                  </div>
-
-                  <div className={styles.cancelRow}>
-                    <X
-                      className={styles.crossBtn}
-                      onClick={() => removeDraftRow(row.id)}
-                    />
-                  </div>
-                </div>
-              ))}
-
-              {/* Warning Text */}
-              <div className={styles.warningText}>
-                <p style={{ color: "#c44545", fontSize: "14px" }}>
-                  {warningText}
-                </p>
-              </div>
-
-              <div className={styles.addMoreAndDoneBtns}>
-                {draftCategory.id && (
-                  <button
-                    className={styles.deleteCategoryBtn}
-                    onClick={handleDeleteCurrentDraft}
-                  >
-                    Delete Category
-                  </button>
                 )}
-                <button
-                  className={styles.addMoreBtn}
-                  onClick={addDraftRow}
-                  type="button"
-                >
-                  Add more
-                </button>
-                <button
-                  className={styles.doneBtn}
-                  onClick={handleDone}
-                  type="button"
-                >
-                  {draftCategory.id ? "Update" : "Done"}
-                </button>
+
+                <div className={styles.addMoreAndDoneBtns}>
+                  {draftCategory.id && (
+                    <button
+                      className={styles.deleteCategoryBtn}
+                      onClick={handleDeleteCurrentDraft}
+                    >
+                      Delete Category
+                    </button>
+                  )}
+                  <button className={styles.addMoreBtn} onClick={addDraftRow}>
+                    Add more
+                  </button>
+                  <button className={styles.doneBtn} onClick={handleDone}>
+                    {draftCategory.id ? "Update" : "Done"}
+                  </button>
+                </div>
               </div>
             </div>
           )}

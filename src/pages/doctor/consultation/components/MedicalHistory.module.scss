@@ -59,7 +59,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  color: #5461BE;
+  color: #5461be;
   font-family: "Karla", sans-serif;
   font-size: 0.95rem;
 }
@@ -86,7 +86,9 @@
   overflow-y: auto;
   max-height: 75vh;
 
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -96,6 +98,17 @@
   display: flex;
   position: relative;
   align-items: center;
+}
+
+/* You used `className="searchIconPPR"` without styles., so expose a global alias */
+.searchIconPPR {
+  position: absolute;
+  left: 0.6vw;
+}
+/* Global alias for plain string usage */
+:global(.searchIconPPR) {
+  position: absolute;
+  left: 0.6vw;
 }
 
 .searchIcon {
@@ -117,7 +130,11 @@
   align-items: center;
   gap: 0.75rem;
 
-  svg { width: 16px; height: 16px; color: #afafaf; }
+  svg {
+    width: 16px;
+    height: 16px;
+    color: #afafaf;
+  }
 }
 
 /* DETAIL PANE */
@@ -127,9 +144,8 @@
   flex-direction: column;
   border-left: 1px solid #eaeef9;
   min-height: 0;
-
-  height: 70vh;
-  overflow: hidden;
+  height: 90vh;
+  overflow: auto;
 }
 
 .recordsDetailsHeader {
@@ -139,7 +155,6 @@
   background: #fff;
   border-bottom: 1px solid #eaeef9;
   padding: 10px 16px;
-
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -186,46 +201,136 @@
   font-size: 14px;
   cursor: pointer;
 }
+/* ===== Visit Details body area ===== */
+/* .visit-details is a plain class from JSX; expose globally */
+.visit_details {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 
-/* Key–Value tables */
-.kvTable {
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1b2559;
+  }
+
+  h4 {
+    margin: 8px 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #25307f;
+  }
+}
+
+/* ---------- Key–Value tables ---------- */
+/* You use both styles.kv_table and plain "kv-row"/"kv-key"/"kv-val" strings. Support all. */
+
+.kv_table {
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: 8px 16px;
   margin-top: 8px;
+  border: 1px solid #e7eaf3;
+  border-radius: 8px;
+  padding: 8px 10px;
 }
-.kvRow { display: contents; }
-.kvKey { font-weight: 600; color: #25307f; }
-.kvVal { color: #222; }
+.kv_row,
+:global(.kv-row) {
+  display: contents;
+}
+.kv_key,
+:global(.kv-key) {
+  font-weight: 600;
+  color: #25307f;
+}
+.kv_val,
+:global(.kv-val) {
+  color: #222;
+}
 
-.kvList { margin: 6px 0 0 18px; }
+/* list variants */
+.kv_list,
+:global(.kv-list) {
+  margin: 6px 0 0 18px;
+}
 
 /* Phases */
-.phasesStack { display: grid; gap: 12px; }
-.phaseCard {
+.phases__stack {
+  display: grid;
+  gap: 12px;
+}
+.phase__card {
   border: 1px solid #e8ecff;
   border-radius: 10px;
   padding: 12px;
   background: #fff;
 }
-.phaseCardHeader {
+.phase__card_header {
   display: flex;
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 6px;
 }
-.phaseTitle { font-weight: 700; }
-.phaseDate { color: #666; font-size: 12px; }
+.phase__title {
+  font-weight: 700;
+}
+.phase__date {
+  color: #666;
+  font-size: 12px;
+}
 
-/* Files */
-.fileGrid {
+/* Optional split grid shell */
+.gridShell {
+  display: grid;
+  grid-template-columns: 1.1fr 2fr;
+  gap: 16px;
+  height: calc(100vh - 280px);
+  min-height: 420px;
+}
+
+/* Right pane scroll behavior */
+.patient-records-container {
+  display: grid;
+  grid-template-columns: 1.1fr 2fr;
+  gap: 16px;
+  height: calc(100vh - 280px);
+  min-height: 420px;
+}
+
+.patient_records_details {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #eaeef9;
+  background: #fff;
+  min-height: 0;
+}
+
+.records_details_header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+  border-bottom: 1px solid #eaeef9;
+  padding: 10px 16px;
+}
+
+.records_details_body {
+  overflow: auto;
+  padding: 12px 16px;
+  min-height: 0;
+}
+
+/* Files grid */
+.file_grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 12px;
   margin-top: 8px;
 }
 
-.fileThumb {
+.file_thumb {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -236,7 +341,9 @@
   cursor: pointer;
   text-align: left;
 
-  &:hover { box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12); }
+  &:hover {
+    box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12);
+  }
 
   img {
     width: 100%;
@@ -247,7 +354,9 @@
   }
 }
 
-.fileThumbBroken {
+/* The runtime code adds a plain string class "file-thumb-broken".
+   Make it work with CSS modules using a global alias. */
+:global(.file-thumb-broken) {
   background: linear-gradient(135deg, #f7f7fb, #ecefff);
   color: #777;
   display: flex;
@@ -255,7 +364,7 @@
   justify-content: center;
 }
 
-.fileCaption {
+.file_caption {
   font-size: 12px;
   color: #333;
   white-space: nowrap;
@@ -263,7 +372,7 @@
   text-overflow: ellipsis;
 }
 
-.fileCard {
+.file_card {
   display: grid;
   grid-template-columns: 36px 1fr;
   gap: 8px;
@@ -274,28 +383,188 @@
   text-align: left;
 }
 
-.fileCardPdf {
+.file_card__pdf {
   cursor: pointer;
 
-  &:hover { box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12); }
+  &:hover {
+    box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12);
+  }
 }
 
-.fileIcon { display: grid; place-items: center; font-size: 20px; }
-.fileMeta { min-width: 0; }
-
-.fileName {
-  font-weight: 600; font-size: 13px; color: #222;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.fileType { color: #666; font-size: 12px; margin-top: 2px; }
-.fileOpen { font-size: 12px; color: #25307f; text-decoration: underline; margin-top: 4px; display: inline-block; }
-.fileMissing { font-size: 12px; color: #999; margin-top: 4px; }
-
-/* Optional split grid shell */
-.gridShell {
+.file_icon {
   display: grid;
-  grid-template-columns: 1.1fr 2fr;
-  gap: 16px;
-  height: calc(100vh - 280px);
-  min-height: 420px;
+  place-items: center;
+  font-size: 20px;
+}
+.file_meta {
+  min-width: 0;
+}
+
+.file_name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file_type {
+  color: #666;
+  font-size: 12px;
+  margin-top: 2px;
+}
+.file_open {
+  font-size: 12px;
+  color: #25307f;
+  text-decoration: underline;
+  margin-top: 4px;
+  display: inline-block;
+}
+.file_missing {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* Records section date badge inside .patient__records */
+.patient__records {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .record-date {
+    font-family: "Karla", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #25307f;
+  }
+}
+
+/* Legacy helper blocks retained for compatibility */
+.patient-previous-record-container-doc {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+  margin-top: 6vh;
+}
+
+.patient-details {
+  display: flex;
+  gap: 3rem;
+  background: #ffffff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 1rem 3rem;
+  justify-content: space-between;
+  align-items: center;
+
+  .avatar {
+    box-shadow: 0px 4px 4px 0px #c2c2c240;
+    border-radius: 50%;
+    width: 10vh;
+    height: 10vh;
+    object-fit: cover;
+  }
+
+  .patient-info-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: #333333;
+    font-family: "Karla", sans-serif;
+    font-weight: 500;
+    font-size: 2vh;
+
+    .patient_name {
+      color: #25307f;
+      font-family: "Hanken Grotesk", sans-serif;
+      font-weight: 500;
+      font-size: 2.7vh;
+    }
+
+    .patient-info {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .patient-Allergy {
+      display: flex;
+      gap: 0.25rem;
+
+      .patient-allergies {
+        display: flex;
+        gap: 0.5rem;
+
+        .allergy-Status {
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+        }
+        .severe {
+          background-color: #f14400;
+        }
+        .moderate {
+          background-color: #eaa000;
+        }
+      }
+    }
+  }
+
+  .patient-lastVisit {
+    background-color: #e9f0ec;
+    color: #2e823b;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: "Karla", sans-serif;
+    font-size: 2.1vh;
+  }
+}
+
+/* Additional search aliases */
+.search_bar {
+  border: 1px solid #afafaf;
+  border-radius: 20px;
+  padding: 0.5vh 0.8vw 0.5vh 2vw;
+  font-family: "Karla", sans-serif;
+  font-weight: 400;
+  font-size: 1.9vh;
+  line-height: 150%;
+  width: 14vw;
+  color: #afafaf;
+
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  svg {
+    color: #afafaf;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.searchContainerPPR {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+/* exportable alias for the date badge */
+.record_date {
+  font-family: "Karla", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #25307f;
 }

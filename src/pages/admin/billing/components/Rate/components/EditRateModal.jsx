@@ -85,19 +85,19 @@ const EditRateModal = ({ open, handleClose, service }) => {
     const pass = {
       serviceId: serviceDetails.serviceId,
       name: serviceDetails.name,
-      departmentName: serviceDetails.departmentName,
       categories: [
         {
           _id: service.category.categoryId,
           subCategoryName: serviceDetails.subCategoryName,
           rateType: serviceDetails.rateType,
           rate: finalRate,
-          effectiveDate: serviceDetails.effectiveDate,
           amenities: serviceDetails.amenities,
           additionaldetails: serviceDetails.additionaldetails,
         },
       ],
     };
+
+    // console.log("Updated Service Data:", pass);
     dispatch(updateService(pass, serviceId));
     // Reset the form fields
     setServiceDetails({
@@ -106,7 +106,6 @@ const EditRateModal = ({ open, handleClose, service }) => {
       subCategoryName: "",
       rateType: "",
       rate: "",
-      effectiveDate: "",
       amenities: "",
       additionaldetails: {},
     });
@@ -178,6 +177,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
             disabled={
               Object.keys(serviceDetails.additionaldetails || {}).length > 0
             }
+            onWheel={(e) => e.target.blur()} //  Prevent scroll change
           />
           <TextField
             label="Amenities"
@@ -213,6 +213,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
                         fullWidth
                         type="number"
                         value={value}
+                        onWheel={(e) => e.target.blur()} //  Prevent scroll change
                         onChange={(e) =>
                           handleAdditionalDetailChange(
                             key,
@@ -246,16 +247,6 @@ const EditRateModal = ({ open, handleClose, service }) => {
               Add Custom Charges & Details
             </Button>
           </div>
-          <TextField
-            label="Effective Date"
-            fullWidth
-            margin="dense"
-            InputLabelProps={{ shrink: true }}
-            type="date"
-            name="effectiveDate"
-            value={serviceDetails.effectiveDate}
-            onChange={handleChange}
-          />
         </div>
 
         <TextField
