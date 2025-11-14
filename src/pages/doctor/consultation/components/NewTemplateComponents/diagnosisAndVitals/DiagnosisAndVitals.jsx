@@ -152,6 +152,9 @@ const DiagnosisAndVitals = ({
 
       if (data?.formattedText) {
         setWhiteboardFormattedText(data.formattedText);
+        if (data.imageUrl) {
+          setWhiteboardImage(data.imageUrl);
+        }
         setShowWBFormatted(true);
       } else {
         alert("AI could not read handwriting.");
@@ -265,23 +268,6 @@ const DiagnosisAndVitals = ({
 
   const handleConfirm = () => {
     const finalText = showFormatted ? formattedText : text;
-    let finalImage = null;
-    if (mode === "whiteboard") {
-      // 1. Prefer the saved whiteboard image (always exists after drawing or formatting)
-      if (whiteboardImage) {
-        finalImage = whiteboardImage;
-      }
-
-      // 2. If editing old data and no new drawing
-      else if (existingData?.diagnosisAndVitals?.image) {
-        finalImage = existingData.diagnosisAndVitals.image;
-      }
-
-      // 3. If canvas is actually on screen, use it
-      else if (canvasRef.current) {
-        finalImage = canvasRef.current.toDataURL("image/png");
-      }
-    }
 
     const diagnosisAndVitals = {
       mode: mode,
@@ -290,7 +276,7 @@ const DiagnosisAndVitals = ({
           ? finalText.trim()
           : existingData?.diagnosisAndVitals?.text || "",
       rawText: mode === "text" ? text.trim() : "", // Keep original for reference
-      image: mode === "whiteboard" ? finalImage : null,
+      image: mode === "whiteboard" ? whiteboardImage : null,
 
       formattedText:
         mode === "text"
