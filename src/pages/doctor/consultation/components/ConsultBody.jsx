@@ -399,7 +399,7 @@ const ConsultBody = ({
             </div>
           </div>
 
-          {selectedForm === "custom1" ? (
+          { !selectedForm ? (
             <>
               <div
                 className={`${styles["lp-2"]} ${
@@ -452,7 +452,7 @@ const ConsultBody = ({
                 <p>Prescription & Medicines</p>
               </div>
             </>
-          ) : !selectedForm ? (
+          ) : selectedForm === "custom1" ? (
             <>
               <>
                 <div
@@ -854,7 +854,7 @@ const ConsultBody = ({
                     ...prev,
                     medicalHistory: medicalData,
                   }));
-                  if (selectedForm === "custom1") {
+                  if (!selectedForm) {
                     setSelectedComponent("DiagnosisAndVitals");
                   } else {
                     setSelectedComponent("CurrentMedication");
