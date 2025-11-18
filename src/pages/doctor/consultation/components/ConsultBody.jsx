@@ -87,8 +87,10 @@ const ConsultBody = ({
     (app) => app.status === "Ongoing"
   );
 
+  console.log("Ongoing Appointment: ", ongoingAppointment);
+
   const openNextAppointment = (data) => {
-    // console.log("Working")
+    console.log("Working");
     setActiveModal("nextAppointment");
     setIsAllowed(data);
   };
@@ -108,8 +110,8 @@ const ConsultBody = ({
   }, [dispatch, ongoingAppointment]);
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  console.log(generatedPrescriptionsWithAI);
-  console.log("Prescrition here", generatedNewPrescriptionsWithAI);
+  // console.log(generatedPrescriptionsWithAI);
+  // console.log("Prescrition here", generatedNewPrescriptionsWithAI);
 
   useEffect(() => {
     if (
@@ -160,7 +162,7 @@ const ConsultBody = ({
           )
         : null;
 
-    // console.log("Next Appointment:", nextAppointment);
+    console.log("Next Appointment:", nextAppointment);
     return (
       <>
         <div
@@ -399,7 +401,7 @@ const ConsultBody = ({
             </div>
           </div>
 
-          {selectedForm === "custom1" ? (
+          {!selectedForm ? (
             <>
               <div
                 className={`${styles["lp-2"]} ${
@@ -452,7 +454,7 @@ const ConsultBody = ({
                 <p>Prescription & Medicines</p>
               </div>
             </>
-          ) : !selectedForm ? (
+          ) : selectedForm === "custom1" ? (
             <>
               <>
                 <div
@@ -854,7 +856,7 @@ const ConsultBody = ({
                     ...prev,
                     medicalHistory: medicalData,
                   }));
-                  if (selectedForm === "custom1") {
+                  if (!selectedForm) {
                     setSelectedComponent("DiagnosisAndVitals");
                   } else {
                     setSelectedComponent("CurrentMedication");

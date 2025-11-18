@@ -876,7 +876,7 @@ export const getAppointmentByDate =
         },
       });
 
-      // console.log("Fetching: ", data);
+      console.log("Fetching: ", data);
       dispatch({ type: GET_APPOINTMENTS_BY_DATE, payload: data });
     } catch (error) {
       console.log(error);
@@ -1146,7 +1146,7 @@ export const submitConsultation =
         }
       );
 
-      // console.log("Consultation from Backend : ", data);
+      console.log("Consultation from Backend : ", data);
 
       dispatch({ type: SUBMIT_CONSULTATION, payload: data });
 
@@ -1981,6 +1981,27 @@ export const formatWithAI = async (patientData) => {
     return data;
 
     // dispatch({ type: GENERATE_PRESCRIPTIONS_WITH_AI, payload: data.data });
+  } catch (error) {
+    console.error("Error formatting with AI:", error);
+    toast.error("Error formatting data with AI!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    throw error;
+  }
+};
+export const formatImageWithAI = async (formData) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/format/image`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data", // ✔ VALID
+      },
+    });
+
+    return data;
   } catch (error) {
     console.error("Error formatting with AI:", error);
     toast.error("Error formatting data with AI!", {

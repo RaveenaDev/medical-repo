@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./DiagnosisAndVitals.module.scss";
-import { formatWithAI } from "../../../../../../components/State/Doctor/Action";
+import {
+  formatImageWithAI,
+  formatWithAI,
+} from "../../../../../../components/State/Doctor/Action";
 
 const DiagnosisAndVitals = ({
   patient,
@@ -16,6 +19,10 @@ const DiagnosisAndVitals = ({
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef(null);
   const isListeningRef = useRef(false);
+
+  const [whiteboardFormattedText, setWhiteboardFormattedText] = useState("");
+  const [isWBFormatting, setIsWBFormatting] = useState(false);
+  const [showWBFormatted, setShowWBFormatted] = useState(false);
 
   // Initialize with existing data if available
   useEffect(() => {
@@ -117,6 +124,48 @@ const DiagnosisAndVitals = ({
       setIsFormatting(false);
     }
   };
+  const [whiteboardImage, setWhiteboardImage] = useState("");
+  // Format Canvas Image with AI
+  const formatCanvasWithAI = async () => {
+    try {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        alert("Canvas not ready");
+        return;
+      }
+
+      setIsWBFormatting(true);
+
+      // Save canvas image BEFORE sending to API
+      const imageData = canvas.toDataURL("image/png");
+      setWhiteboardImage(imageData);
+
+      // Convert to Blob
+      const blob = await new Promise((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+
+      const formData = new FormData();
+      formData.append("image", blob, "handwriting.png");
+
+      const data = await formatImageWithAI(formData);
+
+      if (data?.formattedText) {
+        setWhiteboardFormattedText(data.formattedText);
+        if (data.imageUrl) {
+          setWhiteboardImage(data.imageUrl);
+        }
+        setShowWBFormatted(true);
+      } else {
+        alert("AI could not read handwriting.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to process handwriting.");
+    } finally {
+      setIsWBFormatting(false);
+    }
+  };
 
   // whiteboard
   const canvasRef = useRef(null);
@@ -131,14 +180,18 @@ const DiagnosisAndVitals = ({
 
     const canvas = canvasRef.current;
     const parent = containerRef.current;
+    if (!canvas || !parent) return;
     const ctx = canvas.getContext("2d");
     const dpr = window.devicePixelRatio || 1;
     const resizeCanvas = () => {
+      if (!canvas || !parent) return;
       const rect = parent.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       canvas.style.width = rect.width + "px";
       canvas.style.height = rect.height + "px";
+      // reset scale each resize
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
       ctx.lineWidth = 2;
       ctx.lineJoin = "round";
@@ -148,10 +201,13 @@ const DiagnosisAndVitals = ({
       ctx.fillRect(0, 0, rect.width, rect.height);
 
       // Restore saved image if available
-      if (existingData?.diagnosisAndVitals?.image) {
+      const savedImage =
+        whiteboardImage || existingData?.diagnosisAndVitals?.image;
+
+      if (savedImage) {
         const img = new Image();
         img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
-        img.src = existingData.diagnosisAndVitals.image;
+        img.src = savedImage;
       }
     };
 
@@ -201,7 +257,7 @@ const DiagnosisAndVitals = ({
       canvas.removeEventListener("pointerup", stopDraw);
       canvas.removeEventListener("pointerleave", stopDraw);
     };
-  }, [mode, existingData]);
+  }, [mode, existingData, whiteboardImage, showWBFormatted]);
 
   const clearBoard = () => {
     const canvas = canvasRef.current;
@@ -220,12 +276,17 @@ const DiagnosisAndVitals = ({
           ? finalText.trim()
           : existingData?.diagnosisAndVitals?.text || "",
       rawText: mode === "text" ? text.trim() : "", // Keep original for reference
+      image: mode === "whiteboard" ? whiteboardImage : null,
+
       formattedText:
-        mode === "text" && showFormatted ? formattedText.trim() : "",
-      image:
-        mode === "whiteboard"
-          ? canvasRef.current.toDataURL("image/png")
-          : existingData?.diagnosisAndVitals?.image || null,
+        mode === "text"
+          ? showFormatted
+            ? formattedText
+            : ""
+          : showWBFormatted
+          ? whiteboardFormattedText
+          : "",
+
       timestamp: new Date().toISOString(),
       patientId: patient?._id || null,
     };
@@ -361,9 +422,51 @@ const DiagnosisAndVitals = ({
       ) : (
         <div className={styles.whiteboardWrapper}>
           <div className={styles.whiteboard} ref={containerRef}>
-            <canvas ref={canvasRef} />
+            {showWBFormatted ? (
+              <textarea
+                className={styles.whiteboardTextArea}
+                value={whiteboardFormattedText}
+                onChange={(e) => setWhiteboardFormattedText(e.target.value)}
+              />
+            ) : (
+              <canvas ref={canvasRef} />
+            )}
           </div>
+
           <div className={styles.bottomButtons}>
+            {/* Format Handwriting */}
+            <button
+              className={`${styles.btn} ${styles.formatBtn}`}
+              onClick={formatCanvasWithAI}
+              disabled={isWBFormatting}
+            >
+              {isWBFormatting ? "Processing..." : "Format with AI"}
+            </button>
+
+            {/* Toggle RAW/AI view */}
+            {whiteboardFormattedText && (
+              <button
+                className={styles.viewToggleBtn}
+                onClick={() => {
+                  setShowWBFormatted(!showWBFormatted);
+
+                  if (!showWBFormatted && whiteboardImage) {
+                    // Redraw saved canvas
+                    const canvas = canvasRef.current;
+                    const ctx = canvas.getContext("2d");
+
+                    const img = new Image();
+                    img.onload = () =>
+                      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    img.src = whiteboardImage;
+                  }
+                }}
+              >
+                {showWBFormatted ? "View Drawing" : "View AI Result"}
+              </button>
+            )}
+
+            {/* Confirm */}
             <button
               className={`${styles.btn} ${styles.confirmBtn}`}
               onClick={handleConfirm}
