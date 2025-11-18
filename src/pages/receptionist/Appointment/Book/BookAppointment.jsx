@@ -36,6 +36,10 @@ const BookAppointment = ({
     dep = department[0]?.name;
   }
 
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + 2);
+  const defaultTime = now.toTimeString().slice(0, 5); // HH:MM
+
   if (!isOpen) return null;
   const [formData, setFormData] = useState({
     patientName: "",
@@ -47,7 +51,7 @@ const BookAppointment = ({
     typeVisit: "Walk in",
     note: "",
     date: new Date(), // will store both date & time after submit
-    time: "", // "HH:MM" (24h) selected below the calendar
+    time: defaultTime, // "HH:MM" (24h) selected below the calendar
     age: "",
     gender: "",
     address: "",
