@@ -121,9 +121,20 @@ const BookAppointment = ({
       setShowSuccessModal(true);
     }
   }, [bookingSuccess]);
+  const fieldRefs = {
+    patientName: React.useRef(null),
+    age: React.useRef(null),
+    gender: React.useRef(null),
+    appointmentType: React.useRef(null),
+    departmentName: React.useRef(null),
+    doctorEmail: React.useRef(null),
+    mobileNumber: React.useRef(null),
+    time: React.useRef(null),
+  };
 
   const validateForm = () => {
     let newErrors = {};
+    let firstErrorKey = null;
 
     const requiredFields = [
       "patientName",
@@ -133,61 +144,45 @@ const BookAppointment = ({
       "doctorEmail",
       "age",
       "gender",
-      "time", // make time required
+      "time",
     ];
+
     requiredFields.forEach((field) => {
       const v = formData[field];
-      if (v == null || (typeof v === "string" && v.trim() === "")) {
+      if (!v || (typeof v === "string" && v.trim() === "")) {
         newErrors[field] = "This field is required";
+        if (!firstErrorKey) firstErrorKey = field;
       }
     });
 
-    // Phone
-    if (
-      formData.mobileNumber &&
-      !/^\d{10}$/.test(formData.mobileNumber.trim())
-    ) {
-      newErrors.mobileNumber = "Enter a valid 10-digit phone number";
+    // phone
+    if (formData.mobileNumber && !/^\d{10}$/.test(formData.mobileNumber)) {
+      newErrors.mobileNumber = "Enter valid 10-digit phone number";
+      if (!firstErrorKey) firstErrorKey = "mobileNumber";
     }
 
-    // Age
-    if (
-      formData.age &&
-      (Number(formData.age) < 0 || Number(formData.age) > 120)
-    ) {
-      newErrors.age = "Enter a valid age (0-120)";
-    }
-
-    // Email (optional)
-    if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email.trim())) {
-      newErrors.email = "Enter a valid email address";
-    }
-
-    // If time is set, prevent selecting a past time for today
-    if (formData.time) {
-      const [hh, mm] = formData.time.split(":").map(Number);
-      const chosen = new Date(formData.date);
-      chosen.setHours(hh || 0, mm || 0, 0, 0);
-
-      const now = new Date();
-      const isSameDay =
-        chosen.getFullYear() === now.getFullYear() &&
-        chosen.getMonth() === now.getMonth() &&
-        chosen.getDate() === now.getDate();
-
-      if (isSameDay && chosen < now) {
-        newErrors.time = "Select a future time";
-      }
+    // age
+    if (formData.age && (formData.age < 0 || formData.age > 120)) {
+      newErrors.age = "Enter a valid age (0–120)";
+      if (!firstErrorKey) firstErrorKey = "age";
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return firstErrorKey; // return field name instead of boolean
   };
 
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   const handleClick = () => {
-    if (!validateForm()) return;
+    const firstError = validateForm();
+
+    if (firstError) {
+      fieldRefs[firstError].current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      return;
+    }
 
     setLoadingBtn(true);
 
@@ -321,6 +316,7 @@ const BookAppointment = ({
                 {renderRequiredLabel("Select Time")}
               </h3>
               <TextField
+                inputRef={fieldRefs.time}
                 type="time"
                 name="time"
                 value={formData.time}
@@ -357,6 +353,7 @@ const BookAppointment = ({
             <div className="right-panel">
               <p>{renderRequiredLabel("Patient Name")}</p>
               <TextField
+                ref={fieldRefs.patientName}
                 name="patientName"
                 value={formData.patientName}
                 onChange={handleChange}
@@ -367,6 +364,7 @@ const BookAppointment = ({
 
               <p>{renderRequiredLabel("Age")}</p>
               <TextField
+                ref={fieldRefs.age}
                 name="age"
                 value={formData.age}
                 onChange={handleChange}
@@ -377,6 +375,7 @@ const BookAppointment = ({
 
               <p>{renderRequiredLabel("Gender")}</p>
               <TextField
+                ref={fieldRefs.gender}
                 select
                 name="gender"
                 value={formData.gender}
@@ -402,6 +401,7 @@ const BookAppointment = ({
 
               <p>{renderRequiredLabel("Select Appointment Type")}</p>
               <TextField
+                ref={fieldRefs.appointmentType}
                 select
                 name="appointmentType"
                 value={formData.appointmentType}
@@ -418,6 +418,7 @@ const BookAppointment = ({
 
               <p>{renderRequiredLabel("Select Branch")}</p>
               <TextField
+                ref={fieldRefs.departmentName}
                 select
                 name="departmentName"
                 value={formData.departmentName}
@@ -450,6 +451,7 @@ const BookAppointment = ({
 
               <p>{renderRequiredLabel("Select Doctor")}</p>
               <TextField
+                ref={fieldRefs.doctorEmail}
                 select
                 name="doctorEmail"
                 value={formData.doctorEmail}
@@ -481,6 +483,7 @@ const BookAppointment = ({
                 value={formData.typeVisit}
                 onChange={handleChange}
                 fullWidth
+                ref={fieldRefs.typeVisit}
               >
                 <MenuItem value="Walk in">Walk In</MenuItem>
                 <MenuItem value="Referral">Referral</MenuItem>
@@ -489,6 +492,7 @@ const BookAppointment = ({
 
               <p>{renderRequiredLabel("Mobile Number")}</p>
               <TextField
+                ref={fieldRefs.mobileNumber}
                 name="mobileNumber"
                 value={formData.mobileNumber}
                 onChange={handleChange}
