@@ -32,7 +32,9 @@ import {
   cancelAppointment,
   getAllDepartments,
   getAppointments,
-  getRequestedAppointments, rescheduleAppointment, rescheduleAppointmentToday,
+  getRequestedAppointments,
+  rescheduleAppointment,
+  rescheduleAppointmentToday,
   startConsultation,
   submitConsultation,
   // markAppointmentCompleted, // <- If you already have an action for completion, import it and use in handleComplete below.
@@ -156,8 +158,8 @@ function Receptionist(props) {
 
   const boxData = [
     { id: 1, label: "Scheduled", count: scheduledCount },
-    { id: 2, label: "Ongoing", count: ongoingCount },
     { id: 3, label: "Waiting", count: waitingCount },
+    { id: 2, label: "Ongoing", count: ongoingCount },
     { id: 4, label: "Completed", count: completedCount },
   ];
 
@@ -221,14 +223,14 @@ function Receptionist(props) {
     const endDateISO = selectedDate.endOf("day").toISOString();
     ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
       dispatch(
-          getAppointments(
-              status,
-              startDateISO,
-              endDateISO,
-              selectedBranch,
-              page,
-              rowsPerPage
-          )
+        getAppointments(
+          status,
+          startDateISO,
+          endDateISO,
+          selectedBranch,
+          page,
+          rowsPerPage
+        )
       );
     });
   };
@@ -335,47 +337,46 @@ function Receptionist(props) {
   //   refreshAllBuckets();
   // };
 
-    const handleConfirmReschedule = ({ combinedISO }) => {
-        if (!menuAppointment?._id) return Promise.resolve();
+  const handleConfirmReschedule = ({ combinedISO }) => {
+    if (!menuAppointment?._id) return Promise.resolve();
 
-        return dispatch(
-            rescheduleAppointment({
-                patientName: menuAppointment.patient.name,
-                appointmentType: menuAppointment.type,
-                doctorEmail: menuAppointment.doctor?.email,
-                mobileNumber: menuAppointment.patient.phone,
-                email: menuAppointment.patient?.email,
-                date: combinedISO,
-                note: "Rescheduled by receptionist",
-                typeVisit: menuAppointment.typeVisit,
-                rescheduledFrom: menuAppointment._id,
-                departmentName: menuAppointment.department.name,
-            })
-        ).then(() => {
-            setRescheduleOpen(false);
-            refreshAllBuckets();
-        });
-    };
+    return dispatch(
+      rescheduleAppointment({
+        patientName: menuAppointment.patient.name,
+        appointmentType: menuAppointment.type,
+        doctorEmail: menuAppointment.doctor?.email,
+        mobileNumber: menuAppointment.patient.phone,
+        email: menuAppointment.patient?.email,
+        date: combinedISO,
+        note: "Rescheduled by receptionist",
+        typeVisit: menuAppointment.typeVisit,
+        rescheduledFrom: menuAppointment._id,
+        departmentName: menuAppointment.department.name,
+      })
+    ).then(() => {
+      setRescheduleOpen(false);
+      refreshAllBuckets();
+    });
+  };
 
-    const handleConfirmRescheduleToday = ({ afterTokenNumber }) => {
-        if (!menuAppointment?._id) return Promise.resolve();
+  const handleConfirmRescheduleToday = ({ afterTokenNumber }) => {
+    if (!menuAppointment?._id) return Promise.resolve();
 
-        return dispatch(
-            rescheduleAppointmentToday({
-                doctorId: menuAppointment?.doctor?._id,
-                fromToken: menuAppointment?.tokenNumber,
-                afterToken: afterTokenNumber,
-                date: selectedDate.startOf("day").format("YYYY-MM-DD"),
-                reason: "Moved later today after token",
-            })
-        ).then(() => {
-            setRescheduleTodayOpen(false);
-            refreshAllBuckets();
-        });
-    };
+    return dispatch(
+      rescheduleAppointmentToday({
+        doctorId: menuAppointment?.doctor?._id,
+        fromToken: menuAppointment?.tokenNumber,
+        afterToken: afterTokenNumber,
+        date: selectedDate.startOf("day").format("YYYY-MM-DD"),
+        reason: "Moved later today after token",
+      })
+    ).then(() => {
+      setRescheduleTodayOpen(false);
+      refreshAllBuckets();
+    });
+  };
 
-
-    return (
+  return (
     <div
       style={{
         height: "99dvh",
@@ -958,18 +959,18 @@ function Receptionist(props) {
         onComplete={handleComplete}
         appointment={menuAppointment}
       />
-      
+
       <Reschedule
-          open={rescheduleOpen}
-          onClose={() => setRescheduleOpen(false)}
-          onConfirm={handleConfirmReschedule}
-          // onConfirm={() => new Promise(() => {})}
+        open={rescheduleOpen}
+        onClose={() => setRescheduleOpen(false)}
+        onConfirm={handleConfirmReschedule}
+        // onConfirm={() => new Promise(() => {})}
       />
       <RescheduleToday
-          open={rescheduleTodayOpen}
-          onClose={() => setRescheduleTodayOpen(false)}
-          onConfirm={handleConfirmRescheduleToday}
-          // onConfirm={() => new Promise(() => {})}
+        open={rescheduleTodayOpen}
+        onClose={() => setRescheduleTodayOpen(false)}
+        onConfirm={handleConfirmRescheduleToday}
+        // onConfirm={() => new Promise(() => {})}
       />
     </div>
   );

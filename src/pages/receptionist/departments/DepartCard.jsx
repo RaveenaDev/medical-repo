@@ -46,7 +46,12 @@ const DepartCard = ({ department, index }) => {
             className={styles.circle}
             style={{ backgroundColor: getSequentialColor(index) }}
           ></div>
-          <h2 className={styles.title}>{department.departmentName}</h2>
+          <Tooltip title={department.departmentName} arrow>
+            <h2 className={`${styles.title} ${styles.truncate}`}>
+              {department.departmentName}
+            </h2>
+          </Tooltip>
+
           <span className={styles.arrow}>
             <ArrowForwardIosIcon fontSize="small" />
           </span>
@@ -73,7 +78,7 @@ const DepartCard = ({ department, index }) => {
                     backgroundColor: "rgba(37, 48, 127, 0.75)",
                     color: "white",
                     fontSize: "12px",
-                    padding: "8px",
+
                     borderRadius: "8px",
                     // backdropFilter: "blur(15px)",
                   },
@@ -99,7 +104,7 @@ const DepartCard = ({ department, index }) => {
               boxShadow: "none",
               "&:focus": { outline: "none" },
               minWidth: "auto",
-              width: "40px",
+              width: "30px",
               height: "30px",
             }}
           >
@@ -112,7 +117,6 @@ const DepartCard = ({ department, index }) => {
                     backgroundColor: "rgba(46, 130, 59, 0.75)", // 85% opacity (green)
                     color: "white",
                     fontSize: "12px",
-                    padding: "8px",
                     borderRadius: "8px",
                     // backdropFilter: "blur(5px)", // Optional blur effect
                   },
@@ -135,9 +139,11 @@ const DepartCard = ({ department, index }) => {
       <div className={styles.detailsContainer}>
         <div className={styles.details}>
           <p className={styles.name}>Department Head:</p>
-          <p className={styles.value}>
-            {department?.departmentHead.name || "Not Assigned"}
-          </p>
+          <Tooltip title={department?.departmentHead?.name} arrow>
+            <p className={`${styles.value} ${styles.truncate}`}>
+              {department?.departmentHead?.name || "Not Assigned"}
+            </p>
+          </Tooltip>
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Patients Present:</p>
@@ -159,11 +165,13 @@ const DepartCard = ({ department, index }) => {
         </div>
         <div className={styles.details}>
           <p className={styles.name}>Active Services:</p>
-          {department.activeServices.length > 0 ? (
-            <p className={styles.value}>{department.activeServices[0]}...</p>
-          ) : (
-            <p className={styles.value}>No Services</p>
-          )}
+          <Tooltip title={department.activeServices.join(", ")} arrow>
+            <p className={`${styles.value} ${styles.truncate}`}>
+              {department.activeServices.length > 0
+                ? department.activeServices[0]
+                : "No Services"}
+            </p>
+          </Tooltip>
         </div>
       </div>
     </Box>

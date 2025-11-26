@@ -19,7 +19,6 @@ $blue: #25307f;
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 5px;
-  flex-wrap: wrap; // Allow items to wrap in smaller screens
 
   .backButton,
   .forwardButton {
@@ -81,10 +80,11 @@ $blue: #25307f;
   .cardHeader {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
+    align-items: center;
 
     .titleContainer {
       display: flex;
+      align-items: center;
       gap: 8px;
     }
 
@@ -93,8 +93,6 @@ $blue: #25307f;
       width: 1.5rem;
       height: 1.5rem;
       border-radius: 50%;
-      margin-top: 0.2rem;
-      margin-right: 0.3rem;
     }
 
     .title {
@@ -122,14 +120,13 @@ $blue: #25307f;
   }
 
   .detailsContainer {
-    margin-left: 2rem;
+    margin-left: 1rem;
     margin-top: 12px;
     .details {
       display: flex;
       height: 28px;
       font-weight: 500;
       font-size: 14px;
-      flex-wrap: wrap; // Allows wrapping in small screens
       .name {
         color: black;
       }
@@ -140,10 +137,26 @@ $blue: #25307f;
     }
   }
 
-  @media (max-width: 768px) {
-    min-width: 100%; // Full width for smaller screens
-    height: auto;
-    padding: 1rem;
+  /* Laptops (1024–1366px) */
+  @media (max-width: 1366px) and (min-width: 1024px) {
+    padding: 0.9rem 0.6rem;
+    height: 200px;
+
+    .cardHeader {
+      .title {
+        font-size: 1rem;
+      }
+    }
+
+    .detailsContainer {
+      margin-left: 1.2rem;
+      margin-top: 8px;
+
+      .details {
+        height: 24px;
+        font-size: 13px;
+      }
+    }
   }
 }
 
@@ -168,5 +181,19 @@ $blue: #25307f;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
+  }
+}
+.truncate {
+  max-width: 150px; // Adjust depending on design
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: bottom;
+}
+@media (max-width: 1366px) and (min-width: 1024px) {
+  .truncate {
+    max-width: 120px;
   }
 }
