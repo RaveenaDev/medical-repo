@@ -26,6 +26,7 @@ import {
 } from "../../../../../../components/State/Receptionist/Action";
 
 const FileDocuments = ({ patientId }) => {
+  // console.log(patientId);
   const [selectedFile, setSelectedFile] = useState([]);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
