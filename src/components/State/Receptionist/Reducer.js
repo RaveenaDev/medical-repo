@@ -37,6 +37,7 @@ import {
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
   SET_LOADING_APPOINTMENTS,
+  UPDATE_PATIENT,
   UPDATE_ROOM,
   UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
@@ -127,6 +128,13 @@ export const receptionistReducer = (state = initialState, action) => {
         filteredPatients: action.payload.patients,
       };
 
+    case UPDATE_PATIENT:
+      return {
+        ...state,
+        filteredPatients: state.filteredPatients.map((patient) =>
+          patient._id === action.payload._id ? action.payload : patient
+        ),
+      };
     case GET_INPATIENTS:
       return {
         ...state,
@@ -379,6 +387,7 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         billingRecord: action.payload.bill,
       };
+
     default:
       return state;
   }
