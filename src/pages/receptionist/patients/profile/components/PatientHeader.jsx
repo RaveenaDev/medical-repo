@@ -15,7 +15,7 @@ const PatientHeader = ({
   const [openModal, setOpenModal] = useState(false);
 
   const navigate = useNavigate();
-  // console.log("Pat : ",patient)
+  // console.log("Pat : ", patient);
   const [activeModal, setActiveModal] = useState(null);
   const openBilling = () => setActiveModal("billing");
   const closeModal = () => setActiveModal(null);
@@ -107,7 +107,7 @@ const PatientHeader = ({
           </g>
         </svg>
 
-        <p>XXXXXX</p>
+        <p>{patient?.patId || "N/A"}</p>
       </div>
       {showAddButton && (
         <div className="patient-actions" style={{ cursor: "pointer" }}>

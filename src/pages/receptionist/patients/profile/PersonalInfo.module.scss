@@ -1,0 +1,55 @@
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.section {
+  padding: 12px 5px 18px;
+  border-radius: 8px;
+  margin-top: 10px;
+  display: grid;
+  row-gap: 14px;
+}
+
+/* 3-column layout */
+.cols3 {
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 12px;
+}
+
+/* 2-column layout */
+.cols2 {
+  grid-template-columns: 2fr 1fr;
+  column-gap: 12px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a4a4a;
+  margin-bottom: 4px;
+}
+
+.value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Laptop responsiveness */
+@media (max-width: 1366px) and (min-width: 1024px) {
+  .label {
+    font-size: 13px;
+  }
+  .value {
+    font-size: 14px;
+  }
+}

@@ -74,7 +74,7 @@ const Profile = (props) => {
 
   const patDetails = useSelector((store) => store.receptionist.patientDetails);
 
-  // console.log("Det: ",patDetails)
+  console.log("Det: ", patDetails);
 
   const upcoming = patient.appointments?.filter(
     (app) => app.status === "Scheduled"
