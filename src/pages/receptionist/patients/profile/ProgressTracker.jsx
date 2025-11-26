@@ -9,9 +9,9 @@ const ProgressTracker = ({ patient }) => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    navigate("/receptionist/patients/profile/progressReport", {
-      state: { patient },
-    });
+    // navigate("/receptionist/patients/profile/progressReport", {
+    //   state: { patient },
+    // });
   };
 
   const location = useLocation();

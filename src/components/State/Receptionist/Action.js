@@ -38,6 +38,7 @@ import {
   SET_LOADING_APPOINTMENTS,
   START_CONSULTATION,
   SUBMIT_CONSULTATION,
+  UPDATE_PATIENT,
   UPLOAD_PATIENT_FILE,
 } from "./ActionType.js";
 import axios from "axios";
@@ -720,7 +721,7 @@ export const updatePatient = (patientId, updatedData) => async (dispatch) => {
       },
     });
 
-    dispatch(getFilteredPatients());
+    dispatch({ type: UPDATE_PATIENT, payload: data.resource });
     toast.success("Patient Status Updated Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
