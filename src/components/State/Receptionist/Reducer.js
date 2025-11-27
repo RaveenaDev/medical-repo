@@ -34,6 +34,8 @@ import {
   GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
+  LOADING_FILTERED_INPATIENTS,
+  LOADING_PATIENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
   SET_LOADING_APPOINTMENTS,
@@ -128,6 +130,12 @@ export const receptionistReducer = (state = initialState, action) => {
         filteredPatients: action.payload.patients,
       };
 
+    case LOADING_PATIENTS:
+      return {
+        ...state,
+        isLoadingFilteredPatients: action.payload,
+      };
+
     case UPDATE_PATIENT:
       return {
         ...state,
@@ -148,7 +156,11 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         totalFilteredInpatients: action.payload.totalInpatients,
         filteredInPatients: action.payload.inpatients,
-        isLoadingFilteredInPatients: false,
+      };
+    case LOADING_FILTERED_INPATIENTS:
+      return {
+        ...state,
+        isLoadingFilteredInPatients: action.payload,
       };
 
     case GET_PATIENT_DETAILS:

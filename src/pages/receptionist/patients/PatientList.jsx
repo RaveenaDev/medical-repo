@@ -76,7 +76,7 @@ const PatientList = () => {
 
   // Handle Sort Change
 
-  const debouncedSearch = useDebounce(searchQuery, 500);
+  const debouncedSearch = useDebounce(searchQuery, 300);
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
