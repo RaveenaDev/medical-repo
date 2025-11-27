@@ -278,6 +278,9 @@ const AIBot = ({
   department,
   setIsSignUpOrLogin,
 }) => {
+  useEffect(() => {
+    setIsSignUpOrLogin(false);
+  }, []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [lang, setLang] = useState("en");
