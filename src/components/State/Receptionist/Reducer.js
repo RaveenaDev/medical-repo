@@ -34,6 +34,7 @@ import {
   GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
+  LOADING_DOCTORS,
   LOADING_FILTERED_INPATIENTS,
   LOADING_PATIENTS,
   REJECT_APPOINTMENT_REQUESTS,
@@ -176,7 +177,12 @@ export const receptionistReducer = (state = initialState, action) => {
         totalDoctors: action.payload.totalDoctors,
         doctors: action.payload.doctors,
         doctorCount: action.payload.totalDoctors,
-        isLoadingDoctors: false,
+      };
+
+    case LOADING_DOCTORS:
+      return {
+        ...state,
+        isLoadingDoctors: action.payload,
       };
 
     case GET_FILTERED_DOCTORS:

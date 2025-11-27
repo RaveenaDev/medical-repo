@@ -137,7 +137,7 @@ const Doctors = (props) => {
             <CircularProgress sx={{ color: "#25307F" }} size={50} />
           </Box>
         ) : (
-          <div style={{ marginTop: "23vh" }}>
+          <div style={{ marginTop: "18vh" }}>
             {isBookAppointment ? (
               <BookAppointment
                 isOpen={isBookAppointment}
@@ -190,7 +190,7 @@ const Doctors = (props) => {
                               PaperProps: {
                                 sx: {
                                   maxHeight: 200, // Adjust the height as needed
-                                  overflowY: 'auto', // Enable vertical scrolling
+                                  overflowY: "auto", // Enable vertical scrolling
                                 },
                               },
                             }}
