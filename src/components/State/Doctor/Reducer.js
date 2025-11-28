@@ -55,6 +55,10 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
+  LOADING_APPOINTMENTS,
+  LOADING_INPATIENTS,
+  LOADING_PATIENTS,
+  LOADING_ROOMS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
   SUBMIT_CONSULTATION,
@@ -156,6 +160,7 @@ const initialState = {
   roomsAvailable: [],
   bedsAvailable: [],
   autoCompletePatientSearch: [],
+  isLoadingAppointments: true,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -171,7 +176,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
-        isLoadingFilteredPatients: false,
+      };
+
+    case LOADING_PATIENTS:
+      return {
+        ...state,
+        isLoadingFilteredPatients: action.payload,
       };
 
     case GET_INPATIENTS:
@@ -187,7 +197,11 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredInpatients: action.payload.totalInpatients,
         filteredInPatients: action.payload.inpatients,
-        isLoadingFilteredInPatients: false,
+      };
+    case LOADING_INPATIENTS:
+      return {
+        ...state,
+        isLoadingFilteredInPatients: action.payload,
       };
 
     case GET_SURGERIES:
@@ -217,7 +231,11 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredRooms: action.payload.totalRooms,
         filteredRooms: action.payload.rooms,
-        isLoadingFilteredRooms: false,
+      };
+    case LOADING_ROOMS:
+      return {
+        ...state,
+        isLoadingFilteredRooms: action.payload,
       };
 
     case GET_DOCTORS:
@@ -355,6 +373,12 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         completedAppointments: action.payload.appointments,
         completedCount: action.payload.totalAppointments,
+      };
+
+    case LOADING_APPOINTMENTS:
+      return {
+        ...state,
+        isLoadingAppointments: action.payload,
       };
 
     case GET_DOCTOR_REQUESTS:

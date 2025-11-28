@@ -37,7 +37,7 @@ const InPatients = () => {
     sort: "desc",
   });
 
-  const debouncedSearch = useDebounce(searchQuery, 500);
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   const [sortOrder, setSortOrder] = useState("desc");
   const navigate = useNavigate();

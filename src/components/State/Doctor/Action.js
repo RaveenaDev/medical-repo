@@ -61,6 +61,10 @@ import {
   GET_SURGERIES,
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
+  LOADING_APPOINTMENTS,
+  LOADING_INPATIENTS,
+  LOADING_PATIENTS,
+  LOADING_ROOMS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
   SET_ONGOING,
@@ -96,6 +100,7 @@ export const getFilteredPatients =
   (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
+      dispatch({ type: LOADING_PATIENTS, payload: true });
       const token = localStorage.getItem("jwt");
 
       const item = localStorage.getItem("userId");
@@ -119,6 +124,8 @@ export const getFilteredPatients =
       dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch({ type: LOADING_PATIENTS, payload: false });
     }
   };
 
@@ -148,6 +155,7 @@ export const getFilteredInpatients =
   (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
+      dispatch({ type: LOADING_INPATIENTS, payload: true });
       const token = localStorage.getItem("jwt");
 
       const item = localStorage.getItem("userId");
@@ -170,6 +178,8 @@ export const getFilteredInpatients =
       dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch({ type: LOADING_INPATIENTS, payload: false });
     }
   };
 
@@ -237,6 +247,7 @@ export const getFilteredRooms =
   (filteredData, page, rowsPerPage) => async (dispatch) => {
     // console.log("Fil:", filteredData);
     try {
+      dispatch({ type: LOADING_ROOMS, payload: true });
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
@@ -255,6 +266,8 @@ export const getFilteredRooms =
       dispatch({ type: GET_FILTERED_ROOMS, payload: data });
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch({ type: LOADING_ROOMS, payload: false });
     }
   };
 
@@ -314,6 +327,7 @@ export const getAppointments = (startDate, endDate) => async (dispatch) => {
 export const getAllAppointments =
   (status, startDate, endDate, page, rowsPerPage) => async (dispatch) => {
     try {
+      dispatch({ type: LOADING_APPOINTMENTS, payload: true });
       const token = localStorage.getItem("jwt");
 
       const departmentId = localStorage.getItem("departmentId");
@@ -351,6 +365,8 @@ export const getAllAppointments =
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch({ type: LOADING_APPOINTMENTS, payload: false });
     }
   };
 export const getDoctorRequests = (status) => async (dispatch) => {

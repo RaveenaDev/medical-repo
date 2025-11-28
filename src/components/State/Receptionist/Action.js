@@ -33,6 +33,9 @@ import {
   GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
+  LOADING_DOCTORS,
+  LOADING_FILTERED_INPATIENTS,
+  LOADING_PATIENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
   SET_LOADING_APPOINTMENTS,
@@ -116,6 +119,7 @@ export const getFilteredPatients =
   (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
+      dispatch({ type: LOADING_PATIENTS, payload: true });
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
@@ -137,6 +141,8 @@ export const getFilteredPatients =
       dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch({ type: LOADING_PATIENTS, payload: false });
     }
   };
 
@@ -160,6 +166,7 @@ export const getPatientDetailsById = (patientId) => async (dispatch) => {
 
 export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {
+    dispatch({ type: LOADING_DOCTORS, payload: true });
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
@@ -175,6 +182,8 @@ export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
     dispatch({ type: GET_DOCTORS, payload: data });
   } catch (error) {
     console.log(error);
+  } finally {
+    dispatch({ type: LOADING_DOCTORS, payload: false });
   }
 };
 
@@ -199,6 +208,7 @@ export const getFilteredInpatients =
   (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
     try {
+      dispatch({ type: "LOADING_FILTERED_INPATIENTS", payload: true });
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.get(`${API_URL}/getInPatients`, {
@@ -218,9 +228,10 @@ export const getFilteredInpatients =
       dispatch({ type: GET_FILTERED_INPATIENTS, payload: data });
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch({ type: LOADING_FILTERED_INPATIENTS, payload: false });
     }
   };
-
 export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -683,6 +694,7 @@ export const getDoctorsByDepartment = (departId) => async (dispatch) => {
 export const fetchDoctorsByDepartment =
   (selectedValue, page, rowsPerPage) => async (dispatch) => {
     try {
+      dispatch({ type: LOADING_DOCTORS, payload: true });
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.get(
@@ -710,6 +722,8 @@ export const fetchDoctorsByDepartment =
         position: "bottom-right", // Use string for position
         autoClose: 2000,
       });
+    } finally {
+      dispatch({ type: LOADING_DOCTORS, payload: false });
     }
   };
 export const updatePatient = (patientId, updatedData) => async (dispatch) => {

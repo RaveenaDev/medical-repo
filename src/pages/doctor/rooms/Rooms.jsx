@@ -425,7 +425,7 @@ const Rooms = () => {
             {/* Table Section */}
             <TableContainer
               sx={{
-                maxHeight: "65vh", // Adjust this to fit your layout needs
+                height: "60vh", // Adjust this to fit your layout needs
                 overflowY: "auto",
               }}
             >
@@ -570,7 +570,7 @@ const Rooms = () => {
                   )}
                 </TableBody>
               </Table>
-              <Box
+              {/* <Box
                 sx={{
                   width: "100%",
                   position: "sticky",
@@ -595,7 +595,7 @@ const Rooms = () => {
                     zIndex: 11,
                   }}
                 />
-              </Box>
+              </Box> */}
             </TableContainer>
             <Box
               sx={{
