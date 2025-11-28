@@ -107,7 +107,7 @@ const PatientHeader = ({
           </g>
         </svg>
 
-        <p>XXXXXX</p>
+        <p>{patient?.patId || "N/A"}</p>
       </div>
       {showAddButton && (
         <div className="patient-actions" style={{ cursor: "pointer" }}>
