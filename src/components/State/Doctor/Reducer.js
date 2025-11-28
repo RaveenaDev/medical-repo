@@ -56,7 +56,9 @@ import {
   GET_UPCOMING_EVENTS,
   GET_WAITING_APPOINTMENTS,
   LOADING_APPOINTMENTS,
+  LOADING_INPATIENTS,
   LOADING_PATIENTS,
+  LOADING_ROOMS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
   SUBMIT_CONSULTATION,
@@ -195,7 +197,11 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredInpatients: action.payload.totalInpatients,
         filteredInPatients: action.payload.inpatients,
-        isLoadingFilteredInPatients: false,
+      };
+    case LOADING_INPATIENTS:
+      return {
+        ...state,
+        isLoadingFilteredInPatients: action.payload,
       };
 
     case GET_SURGERIES:
@@ -225,7 +231,11 @@ export const doctorReducer = (state = initialState, action) => {
         ...state,
         totalFilteredRooms: action.payload.totalRooms,
         filteredRooms: action.payload.rooms,
-        isLoadingFilteredRooms: false,
+      };
+    case LOADING_ROOMS:
+      return {
+        ...state,
+        isLoadingFilteredRooms: action.payload,
       };
 
     case GET_DOCTORS:

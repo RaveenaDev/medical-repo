@@ -44,7 +44,7 @@ const Patients = () => {
     sort: "desc",
   });
 
-  const debouncedSearch = useDebounce(searchQuery, 500);
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   useEffect(() => {
     // dispatch(getPatients());
