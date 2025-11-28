@@ -11,6 +11,7 @@ import {
   TableRow,
   Chip,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CommonPanel from "../components/CommonPanel";
@@ -77,6 +78,8 @@ const Appointments = () => {
       (appt) => appt.doctor._id === doctorId
     )
   );
+
+  const isLoading = useSelector((store) => store.doctor.isLoadingAppointments);
 
   // Counts
   const scheduledCount = useSelector(
@@ -301,167 +304,180 @@ const Appointments = () => {
           <TableContainer
             sx={{ maxHeight: "47vh", overflowY: "auto", position: "relative" }}
           >
-            <Table
-              sx={{
-                borderCollapse: "separate",
-                borderSpacing: "0 10px",
-                marginBottom: "30px",
-              }}
-            >
-              <TableHead
+            {isLoading ? (
+              <Box
                 sx={{
-                  position: "sticky",
-                  top: 0,
-                  backgroundColor: "white",
-                  zIndex: 10,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "60vh", // or full height you need
                 }}
               >
-                <TableRow>
-                  <TableCell>Case Id</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Doctor</TableCell>
-                  <TableCell>Type Visit</TableCell>
-                  <TableCell>Branch</TableCell>
+                <CircularProgress sx={{ color: "#25307F" }} size={58} />
+              </Box>
+            ) : (
+              <Table
+                sx={{
+                  borderCollapse: "separate",
+                  borderSpacing: "0 10px",
+                  marginBottom: "30px",
+                }}
+              >
+                <TableHead
+                  sx={{
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "white",
+                    zIndex: 10,
+                  }}
+                >
+                  <TableRow>
+                    <TableCell>Case Id</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Doctor</TableCell>
+                    <TableCell>Type Visit</TableCell>
+                    <TableCell>Branch</TableCell>
                     <TableCell
-                        align="center"
-                        sx={{ color: "#000", fontSize: "16px" }}
+                      align="center"
+                      sx={{ color: "#000", fontSize: "16px" }}
                     >
-                        Appt. Time
+                      Appt. Time
                     </TableCell>
-                  <TableCell align="center">Token Number</TableCell>
-                  <TableCell>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody sx={{ marginBottom: "50px" }}>
-                {appointments.length > 0 ? (
-                  [...appointments]
-                    .sort((a, b) => {
-                      if (a.status === "Ongoing" && b.status !== "Ongoing")
-                        return -1;
-                      if (a.status !== "Ongoing" && b.status === "Ongoing")
-                        return 1;
-                      return 0;
-                    })
-                    .map((appointment) => (
-                      <TableRow
-                        key={appointment._id}
-                        sx={{
-                          bgcolor:
-                            appointment.status === "Ongoing"
-                              ? "#3DB46117"
-                              : "white",
-                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          "&:hover": { backgroundColor: "#f9f9f9" },
-                          "& > *": { borderBottom: "unset" },
-                        }}
-                      >
-                        <TableCell>
-                          <Typography
-                            sx={{
-                              fontWeight: "bold",
-                              cursor: "pointer",
-                              color: "#25307F",
-                            }}
-                          >
-                            {truncateText(appointment.caseId, 12)}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: "bold",
-                              cursor: "pointer",
-                              color: "#25307F",
-                            }}
-                          >
-                            {appointment.patient.name}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
-                          {appointment.doctor?.name}
-                        </TableCell>
-
-                        <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
-                          {appointment.typeVisit}
-                        </TableCell>
-
-                        <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
-                          {appointment.department.name}
-                        </TableCell>
-
-                          <TableCell
+                    <TableCell align="center">Token Number</TableCell>
+                    <TableCell>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody sx={{ marginBottom: "50px" }}>
+                  {appointments.length > 0 ? (
+                    [...appointments]
+                      .sort((a, b) => {
+                        if (a.status === "Ongoing" && b.status !== "Ongoing")
+                          return -1;
+                        if (a.status !== "Ongoing" && b.status === "Ongoing")
+                          return 1;
+                        return 0;
+                      })
+                      .map((appointment) => (
+                        <TableRow
+                          key={appointment._id}
+                          sx={{
+                            bgcolor:
+                              appointment.status === "Ongoing"
+                                ? "#3DB46117"
+                                : "white",
+                            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                            borderRadius: "8px",
+                            "&:hover": { backgroundColor: "#f9f9f9" },
+                            "& > *": { borderBottom: "unset" },
+                          }}
+                        >
+                          <TableCell>
+                            <Typography
                               sx={{
-                                  color: "#747474",
-                                  fontWeight: 600,
+                                fontWeight: "bold",
+                                cursor: "pointer",
+                                color: "#25307F",
                               }}
-                              align="center"
-                          >
-                              {appointment?.tokenDate
-                                  ? new Date(appointment.tokenDate)
-                                      .toLocaleTimeString("en-IN", {
-                                          timeZone: "Asia/Kolkata",
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                          hour12: true,
-                                      })
-                                      .replace("am", "AM")
-                                      .replace("pm", "PM")
-                                  : "N/A"}
+                            >
+                              {truncateText(appointment.caseId, 12)}
+                            </Typography>
                           </TableCell>
 
-                        <TableCell
-                          sx={{ color: "#747474", fontWeight: 600 }}
-                          align="center"
-                        >
-                          {appointment?.tokenNumber || "N/A"}
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              width: "100%",
-                            }}
-                          >
-                            <Chip
-                              label={appointment.status}
-                              size="small"
+                          <TableCell>
+                            <Typography
+                              variant="body1"
                               sx={{
-                                bgcolor:
-                                  appointment.status === "Ongoing"
-                                    ? "#3DB461"
-                                    : "white",
-                                color:
-                                  appointment.status === "Ongoing"
-                                    ? "white"
-                                    : appointment.status === "Completed"
-                                    ? "#EAA000"
-                                    : appointment.status === "Scheduled"
-                                    ? "#25307F"
-                                    : "#757575",
-                                fontWeight: "600",
-                                px: 0.7,
+                                fontWeight: "bold",
+                                cursor: "pointer",
+                                color: "#25307F",
                               }}
-                            />
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                ) : (
-                  <TableRow>
-                    <TableCell align="center" colSpan={7}>
-                      No data found!
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                            >
+                              {appointment.patient.name}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
+                            {appointment.doctor?.name}
+                          </TableCell>
+
+                          <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
+                            {appointment.typeVisit}
+                          </TableCell>
+
+                          <TableCell sx={{ color: "#747474", fontWeight: 600 }}>
+                            {appointment.department.name}
+                          </TableCell>
+
+                          <TableCell
+                            sx={{
+                              color: "#747474",
+                              fontWeight: 600,
+                            }}
+                            align="center"
+                          >
+                            {appointment?.tokenDate
+                              ? new Date(appointment.tokenDate)
+                                  .toLocaleTimeString("en-IN", {
+                                    timeZone: "Asia/Kolkata",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })
+                                  .replace("am", "AM")
+                                  .replace("pm", "PM")
+                              : "N/A"}
+                          </TableCell>
+
+                          <TableCell
+                            sx={{ color: "#747474", fontWeight: 600 }}
+                            align="center"
+                          >
+                            {appointment?.tokenNumber || "N/A"}
+                          </TableCell>
+
+                          <TableCell align="right">
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: "100%",
+                              }}
+                            >
+                              <Chip
+                                label={appointment.status}
+                                size="small"
+                                sx={{
+                                  bgcolor:
+                                    appointment.status === "Ongoing"
+                                      ? "#3DB461"
+                                      : "white",
+                                  color:
+                                    appointment.status === "Ongoing"
+                                      ? "white"
+                                      : appointment.status === "Completed"
+                                      ? "#EAA000"
+                                      : appointment.status === "Scheduled"
+                                      ? "#25307F"
+                                      : "#757575",
+                                  fontWeight: "600",
+                                  px: 0.7,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                  ) : (
+                    <TableRow>
+                      <TableCell align="center" colSpan={7}>
+                        No data found!
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </TableContainer>
           <TablePagination
             component="div"
