@@ -447,6 +447,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     const files = [...images, ...videos, ...attachments];
 
     const fullRow = { gridColumn: "1 / -1" };
+
     const renderStack = (label, content) => {
       if (isEmptyValue(content)) return null;
       return (
@@ -518,6 +519,15 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             }`
           : undefined,
     });
+    /* ------------------------------------------
+   PRESCRIPTION & MEDICINES
+--------------------------------------------*/
+    const pm = data?.prescriptionAndMedicines || {};
+    const medList = pm?.medications || [];
+    const lifestyles = pm?.lifestyle || [];
+    const injections = pm?.injectionsTherapies || [];
+    const nonDrug = pm?.nonDrugRecommendations || [];
+    const followUps = pm?.followUpInstructions || [];
 
     // Build list of shown keys to exclude from dynamic section
     const OMIT = new Set([
@@ -605,23 +615,110 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
               </div>
             </>
           )}
+          {/* PRESCRIPTION UI */}
+          {!isEmptyValue(pm) && (
+            <div className="section-block">
+              <div className="section-title">Prescription & Medicines</div>
 
+              {/* Medications */}
+              {medList.length > 0 && (
+                <>
+                  <h4 style={{ marginBottom: 8 }}>Medications</h4>
+                  {medList.map((m, i) => (
+                    <div className="med-card" key={i}>
+                      <strong style={{ display: "block", marginBottom: 4 }}>
+                        {m.kind === "ai" ? "Suggested" : "Prescribed"}
+                      </strong>
+                      {m.text}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Injections / Therapies */}
+              {injections.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Injections / Therapies
+                  </h4>
+                  {injections.map((inj, i) => (
+                    <div className="list-item" key={i}>
+                      {inj}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Lifestyle Recommendations */}
+              {lifestyles.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Lifestyle Advice
+                  </h4>
+                  {lifestyles.map((l, i) => (
+                    <div className="list-item" key={i}>
+                      {l}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Non-drug recommendations */}
+              {nonDrug.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Non-Drug Recommendations
+                  </h4>
+                  {nonDrug.map((n, i) => (
+                    <div className="list-item" key={i}>
+                      {n}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Follow-up Instructions */}
+              {followUps.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Follow-Up Instructions
+                  </h4>
+                  {followUps.map((f, i) => (
+                    <div className="list-item" key={i}>
+                      {f}
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          )}
           {/* Dynamic fallback: anything else meaningful in consultationData */}
+          {/* ------------------------------------------
+    ADDITIONAL CLINICAL DATA (clean UI)
+--------------------------------------------*/}
           {(() => {
             const pairs = Object.entries(data || {})
-              .filter(([k]) => !OMIT.has(k))
+              .filter(
+                ([k]) =>
+                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k)
+              )
               .map(([k, v]) => [k, pruneDeep(v)])
               .filter(([, v]) => !isEmptyValue(v));
 
             if (pairs.length === 0) return null;
 
             return (
-              <>
-                <h4 style={{ marginTop: 16 }}>Additional Clinical Data</h4>
-                <div className="kv-table">
-                  {pairs.map(([k, v]) => renderStack(prettifyKey(k), v))}
-                </div>
-              </>
+              <div className="section-block">
+                <div className="section-title">Additional Clinical Data</div>
+                {pairs.map(([k, v]) => (
+                  <div key={k} style={{ marginBottom: 12 }}>
+                    <div className="tag">{prettifyKey(k)}</div>
+                    <div style={{ marginTop: 6 }}>
+                      <JSONValue value={v} />
+                    </div>
+                  </div>
+                ))}
+              </div>
             );
           })()}
 

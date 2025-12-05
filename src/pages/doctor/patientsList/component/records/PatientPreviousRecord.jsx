@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
+import { getPatientFiles } from "../../../../../components/State/Receptionist/Action.js";
+import { useDispatch, useSelector } from "react-redux";
 /* -------------------- helpers -------------------- */
 const palette = ["#5461BE", "#2E823B", "#EAA000", "#F14400"];
 
@@ -40,7 +42,32 @@ const isPlainObject = (v) =>
   v !== null && typeof v === "object" && !Array.isArray(v);
 const isEmptyObject = (obj) =>
   !obj || !isPlainObject(obj) || Object.keys(obj).length === 0;
+/* ----- extras: prune empties for dynamic consultationData ----- */
+const isEmptyValue = (v) => {
+  if (v === null || v === undefined) return true;
+  if (typeof v === "string") return v.trim() === "";
+  if (Array.isArray(v)) return v.length === 0 || v.every(isEmptyValue);
+  if (isPlainObject(v))
+    return Object.keys(v).length === 0 || Object.values(v).every(isEmptyValue);
+  return false;
+};
 
+const pruneDeep = (v) => {
+  if (Array.isArray(v)) {
+    const arr = v.map(pruneDeep).filter((x) => !isEmptyValue(x));
+    return arr;
+  }
+  if (isPlainObject(v)) {
+    const out = {};
+    for (const [k, val] of Object.entries(v)) {
+      const pruned = pruneDeep(val);
+      if (!isEmptyValue(pruned)) out[k] = pruned;
+    }
+    return out;
+  }
+  if (typeof v === "string") return v.trim();
+  return v;
+};
 const prettifyKey = (k = "") =>
   String(k)
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -282,9 +309,16 @@ const FileGrid = ({ files = [] }) => {
 
 /* -------------------- component -------------------- */
 const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
-  console.log("Pat: ", patientDetails);
+  // console.log("Pat: ", patientDetails);
+
+  const dispatch = useDispatch();
   const [openPreview, setOpenPreview] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  useEffect(() => {
+    dispatch(getPatientFiles(patientDetails?._id));
+  }, [dispatch, patientDetails?._id]);
+  const patientFiles =
+    useSelector((store) => store.receptionist.patientFiles) || [];
 
   const consultations = Array.isArray(patientDetails?.consultations)
     ? patientDetails.consultations
@@ -292,9 +326,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
   const admissionRequests = Array.isArray(patientDetails?.admissionRequests)
     ? patientDetails.admissionRequests
     : [];
-  const otherDocuments = Array.isArray(patientDetails?.otherDocuments)
-    ? patientDetails?.otherDocuments
-    : [];
+  const otherDocuments = Array.isArray(patientFiles) ? patientFiles : [];
+
   const combined = useMemo(() => {
     const normConsultations = consultations.map((c) => ({
       id:
@@ -403,6 +436,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     ) : null;
 
   /* ----------- CONSULTATION: show only files under consultationData.files (images + videos + attachments) ----------- */
+
   const renderConsultation = (item) => {
     const c = item?.raw || {};
     const data = c?.consultationData || {};
@@ -414,68 +448,283 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       : [];
     const files = [...images, ...videos, ...attachments];
 
+    const fullRow = { gridColumn: "1 / -1" };
+
+    const renderStack = (label, content) => {
+      if (isEmptyValue(content)) return null;
+      return (
+        <>
+          <div className="kv-row">
+            <div className="kv-key" style={fullRow}>
+              {label}
+            </div>
+          </div>
+          <div className="kv-row">
+            <div className="kv-val" style={fullRow}>
+              {isPlainObject(content) || Array.isArray(content) ? (
+                <JSONValue value={content} />
+              ) : (
+                String(content)
+              )}
+            </div>
+          </div>
+        </>
+      );
+    };
+
+    // ---- Known sections from consultationData ----
+    const medHistoryDesc = data?.medicalHistory?.description;
+
+    // Current medications: support multiple shapes
+    const cmRoot = data?.currentMedications;
+    const cmFlag = cmRoot?.currentMedication; // e.g., "yes"/"no"
+    const cmList = Array.isArray(cmRoot?.currentMedications)
+      ? cmRoot.currentMedications
+      : Array.isArray(cmRoot)
+      ? cmRoot
+      : [];
+
+    // Diagnosis + vitals bundle
+    const dx = data?.diagnosisVitals || {};
+    const dxBundle = pruneDeep({
+      "Dx Primary Concern": dx?.dxPrimaryConcern,
+      "Dx Pain": dx?.dxPain?.hasPain
+        ? "Has Pain"
+        : dx?.dxPain?.hasPain === false
+        ? "No Pain"
+        : undefined,
+      "Dx Pain Details": pruneDeep({
+        Location: dx?.dxPain?.location,
+        Severity: dx?.dxPain?.severity,
+      }),
+      "Dx Associated Symptoms": dx?.dxAssociatedSymptoms,
+      "Dx Recent Changes": dx?.dxRecentChanges,
+      "Dx Symptom Onset": dx?.dxSymptomOnset,
+      Weight:
+        (dx?.weight?.value ? `${dx.weight.value}` : null) &&
+        (dx?.weight?.unit
+          ? `${dx.weight.value} ${dx.weight.unit}`
+          : `${dx.weight.value}`),
+      Height:
+        (dx?.height?.value ? `${dx.height.value}` : null) &&
+        (dx?.height?.unit
+          ? `${dx.height.value} ${dx.height.unit}`
+          : `${dx.height.value}`),
+      "Heart Rate": dx?.heartRate,
+      "Respiration Rate": dx?.respirationRate,
+      "Oxygen Level": dx?.oxygenLevel,
+      Temperature: dx?.temperature,
+      BP:
+        dx?.systolic || dx?.diastolic
+          ? `${dx?.systolic ?? ""}${dx?.systolic && dx?.diastolic ? "/" : ""}${
+              dx?.diastolic ?? ""
+            }`
+          : undefined,
+    });
+    /* ------------------------------------------
+   PRESCRIPTION & MEDICINES
+--------------------------------------------*/
+    const pm = data?.prescriptionAndMedicines || {};
+    const medList = pm?.medications || [];
+    const lifestyles = pm?.lifestyle || [];
+    const injections = pm?.injectionsTherapies || [];
+    const nonDrug = pm?.nonDrugRecommendations || [];
+    const followUps = pm?.followUpInstructions || [];
+
+    // Build list of shown keys to exclude from dynamic section
+    const OMIT = new Set([
+      "files",
+      "images",
+      "videos",
+      "notes",
+      "previousHistoryData",
+      "medicalHistory",
+      "currentMedications",
+      "diagnosisVitals",
+    ]);
+
     return (
       <section className="patient-records">
         <DateBadge iso={item?.dateISO} />
+
         <div className="visit-details">
           <h3>Consultation Details</h3>
 
+          {/* Header facts stacked */}
           <div className="kv-table">
-            <div className="kv-row">
-              <div className="kv-key">Doctor</div>
-              <div className="kv-val">{item?.doctorName || "N/A"}</div>
-            </div>
-            <div className="kv-row">
-              <div className="kv-key">Department</div>
-              <div className="kv-val">{item?.departmentName || "N/A"}</div>
-            </div>
-            <div className="kv-row">
-              <div className="kv-key">Type</div>
-              <div className="kv-val">
-                {item?.typeofVisit || "Consultation"}
-              </div>
-            </div>
-            {c?.status && (
-              <div className="kv-row">
-                <div className="kv-key">Status</div>
-                <div className="kv-val">{c.status}</div>
-              </div>
-            )}
-            {c?.caseId && (
-              <div className="kv-row">
-                <div className="kv-key">Case ID</div>
-                <div className="kv-val">{c.caseId}</div>
-              </div>
-            )}
-            {c?.appointment && (
-              <div className="kv-row">
-                <div className="kv-key">Appointment</div>
-                <div className="kv-val">{c.appointment}</div>
-              </div>
-            )}
-            {c?.followUpRequired !== undefined && (
-              <div className="kv-row">
-                <div className="kv-key">Follow-up Required</div>
-                <div className="kv-val">
-                  {c.followUpRequired ? "Yes" : "No"}
-                </div>
-              </div>
-            )}
-            {c?.treatment?.note && (
-              <div className="kv-row">
-                <div className="kv-key">Treatment Note</div>
-                <div className="kv-val">{c.treatment.note}</div>
-              </div>
-            )}
+            {renderStack("Doctor", item?.doctorName || "N/A")}
+            {renderStack("Department", item?.departmentName || "N/A")}
+            {renderStack("Type", item?.typeofVisit || "Consultation")}
+            {c?.status ? renderStack("Status", c.status) : null}
+            {c?.caseId ? renderStack("Case ID", c.caseId) : null}
+            {/*{c?.appointment ? renderStack("Appointment", c.appointment) : null}*/}
+            {c?.followUpRequired !== undefined
+              ? renderStack(
+                  "Follow-up Required",
+                  c.followUpRequired ? "Yes" : "No"
+                )
+              : null}
+            {c?.treatment?.note
+              ? renderStack("Treatment Note", c.treatment.note)
+              : null}
           </div>
 
-          {data?.notes && (
+          {/* Notes */}
+          {data?.notes ? (
             <>
               <h4 style={{ marginTop: 16 }}>Notes</h4>
-              <div>{String(data.notes)}</div>
+              <div className="kv-table">
+                {renderStack("Notes", String(data.notes))}
+              </div>
+            </>
+          ) : null}
+
+          {/* Medical History */}
+          {!isEmptyValue(medHistoryDesc) && (
+            <>
+              <h4 style={{ marginTop: 16 }}>Medical History</h4>
+              <div className="kv-table">
+                {renderStack("Description", medHistoryDesc)}
+              </div>
             </>
           )}
 
+          {/* Current Medications */}
+          {(!isEmptyValue(cmFlag) || !isEmptyValue(cmList)) && (
+            <>
+              <h4 style={{ marginTop: 16 }}>Current Medications</h4>
+              <div className="kv-table">
+                {!isEmptyValue(cmFlag) &&
+                  renderStack("Current Medication", cmFlag)}
+                {!isEmptyValue(cmList) &&
+                  renderStack(
+                    "Medication List",
+                    cmList.map((m, i) => {
+                      if (isPlainObject(m)) return m; // JSONValue will render nicely
+                      return String(m ?? "");
+                    })
+                  )}
+              </div>
+            </>
+          )}
+
+          {/* Diagnosis + Vitals */}
+          {!isEmptyValue(dxBundle) && (
+            <>
+              <h4 style={{ marginTop: 16 }}>Diagnosis Vitals</h4>
+              <div className="kv-table">
+                {Object.entries(dxBundle).map(([k, v]) => renderStack(k, v))}
+              </div>
+            </>
+          )}
+          {/* PRESCRIPTION UI */}
+          {!isEmptyValue(pm) && (
+            <div className="section-block">
+              <div className="section-title">Prescription & Medicines</div>
+
+              {/* Medications */}
+              {medList.length > 0 && (
+                <>
+                  <h4 style={{ marginBottom: 8 }}>Medications</h4>
+                  {medList.map((m, i) => (
+                    <div className="med-card" key={i}>
+                      <strong style={{ display: "block", marginBottom: 4 }}>
+                        {m.kind === "ai" ? "Suggested" : "Prescribed"}
+                      </strong>
+                      {m.text}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Injections / Therapies */}
+              {injections.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Injections / Therapies
+                  </h4>
+                  {injections.map((inj, i) => (
+                    <div className="list-item" key={i}>
+                      {inj}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Lifestyle Recommendations */}
+              {lifestyles.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Lifestyle Advice
+                  </h4>
+                  {lifestyles.map((l, i) => (
+                    <div className="list-item" key={i}>
+                      {l}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Non-drug recommendations */}
+              {nonDrug.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Non-Drug Recommendations
+                  </h4>
+                  {nonDrug.map((n, i) => (
+                    <div className="list-item" key={i}>
+                      {n}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Follow-up Instructions */}
+              {followUps.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Follow-Up Instructions
+                  </h4>
+                  {followUps.map((f, i) => (
+                    <div className="list-item" key={i}>
+                      {f}
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          )}
+          {/* Dynamic fallback: anything else meaningful in consultationData */}
+          {/* ------------------------------------------
+    ADDITIONAL CLINICAL DATA (clean UI)
+--------------------------------------------*/}
+          {(() => {
+            const pairs = Object.entries(data || {})
+              .filter(
+                ([k]) =>
+                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k)
+              )
+              .map(([k, v]) => [k, pruneDeep(v)])
+              .filter(([, v]) => !isEmptyValue(v));
+
+            if (pairs.length === 0) return null;
+
+            return (
+              <div className="section-block">
+                <div className="section-title">Additional Clinical Data</div>
+                {pairs.map(([k, v]) => (
+                  <div key={k} style={{ marginBottom: 12 }}>
+                    <div className="tag">{prettifyKey(k)}</div>
+                    <div style={{ marginTop: 6 }}>
+                      <JSONValue value={v} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+
+          {/* Attachments */}
           {files.length > 0 && (
             <>
               <h4 style={{ marginTop: 16 }}>Attachments</h4>

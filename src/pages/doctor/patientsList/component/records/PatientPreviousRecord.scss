@@ -304,12 +304,24 @@
   gap: 8px 16px;
   margin-top: 8px;
 }
-.kv-row { display: contents; }
-.kv-key { font-weight: 600; color: #25307f; }
-.kv-val { color: #222; }
-.kv-list { margin: 6px 0 0 18px; }
+.kv-row {
+  display: contents;
+}
+.kv-key {
+  font-weight: 600;
+  color: #25307f;
+}
+.kv-val {
+  color: #222;
+}
+.kv-list {
+  margin: 6px 0 0 18px;
+}
 
-.phases-stack { display: grid; gap: 12px; }
+.phases-stack {
+  display: grid;
+  gap: 12px;
+}
 .phase-card {
   border: 1px solid #e8ecff;
   border-radius: 10px;
@@ -322,8 +334,13 @@
   gap: 8px;
   margin-bottom: 6px;
 }
-.phase-title { font-weight: 700; }
-.phase-date { color: #666; font-size: 12px; }
+.phase-title {
+  font-weight: 700;
+}
+.phase-date {
+  color: #666;
+  font-size: 12px;
+}
 
 /* Files grid */
 .file-grid {
@@ -344,7 +361,9 @@
   cursor: pointer;
   text-align: left;
 }
-.file-thumb:hover { box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12); }
+.file-thumb:hover {
+  box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12);
+}
 
 .file-thumb img {
   width: 100%;
@@ -379,15 +398,83 @@
   padding: 8px;
   text-align: left;
 }
-.file-card--pdf { cursor: pointer; }
-.file-card--pdf:hover { box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12); }
-
-.file-icon { display: grid; place-items: center; font-size: 20px; }
-.file-meta { min-width: 0; }
-.file-name {
-  font-weight: 600; font-size: 13px; color: #222;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.file-card--pdf {
+  cursor: pointer;
 }
-.file-type { color: #666; font-size: 12px; margin-top: 2px; }
-.file-open { font-size: 12px; color: #25307f; text-decoration: underline; margin-top: 4px; display: inline-block; }
-.file-missing { font-size: 12px; color: #999; margin-top: 4px; }
+.file-card--pdf:hover {
+  box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12);
+}
+
+.file-icon {
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+.file-meta {
+  min-width: 0;
+}
+.file-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file-type {
+  color: #666;
+  font-size: 12px;
+  margin-top: 2px;
+}
+.file-open {
+  font-size: 12px;
+  color: #25307f;
+  text-decoration: underline;
+  margin-top: 4px;
+  display: inline-block;
+}
+.file-missing {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+}
+.section-block {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 18px;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #25307f;
+}
+
+.tag {
+  display: inline-block;
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.med-card {
+  background: #f7faff;
+  border: 1px solid #d8e2ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.list-item {
+  background: #fafafa;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  border-left: 3px solid #5461be;
+}

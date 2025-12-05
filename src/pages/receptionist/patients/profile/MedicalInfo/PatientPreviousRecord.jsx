@@ -442,9 +442,9 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     const files = [...images, ...videos, ...attachments];
 
     const fullRow = { gridColumn: "1 / -1" };
+
     const renderStack = (label, content) => {
-      const cleaned = pruneDeep(content);
-      if (isEmptyValue(cleaned)) return null;
+      if (isEmptyValue(content)) return null;
       return (
         <>
           <div className="kv-row">
@@ -454,10 +454,10 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
           </div>
           <div className="kv-row">
             <div className="kv-val" style={fullRow}>
-              {isPlainObject(cleaned) || Array.isArray(cleaned) ? (
-                <JSONValue value={cleaned} />
+              {isPlainObject(content) || Array.isArray(content) ? (
+                <JSONValue value={content} />
               ) : (
-                String(cleaned)
+                String(content)
               )}
             </div>
           </div>
@@ -465,25 +465,27 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       );
     };
 
+    // ---- Known sections from consultationData ----
     const medHistoryDesc = data?.medicalHistory?.description;
 
+    // Current medications: support multiple shapes
     const cmRoot = data?.currentMedications;
-    const cmFlag = cmRoot?.currentMedication;
+    const cmFlag = cmRoot?.currentMedication; // e.g., "yes"/"no"
     const cmList = Array.isArray(cmRoot?.currentMedications)
       ? cmRoot.currentMedications
       : Array.isArray(cmRoot)
       ? cmRoot
       : [];
 
+    // Diagnosis + vitals bundle
     const dx = data?.diagnosisVitals || {};
     const dxBundle = pruneDeep({
       "Dx Primary Concern": dx?.dxPrimaryConcern,
-      "Dx Pain":
-        dx?.dxPain?.hasPain === true
-          ? "Has Pain"
-          : dx?.dxPain?.hasPain === false
-          ? "No Pain"
-          : undefined,
+      "Dx Pain": dx?.dxPain?.hasPain
+        ? "Has Pain"
+        : dx?.dxPain?.hasPain === false
+        ? "No Pain"
+        : undefined,
       "Dx Pain Details": pruneDeep({
         Location: dx?.dxPain?.location,
         Severity: dx?.dxPain?.severity,
@@ -492,13 +494,15 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       "Dx Recent Changes": dx?.dxRecentChanges,
       "Dx Symptom Onset": dx?.dxSymptomOnset,
       Weight:
-        dx?.weight?.value != null
-          ? `${dx.weight.value}${dx?.weight?.unit ? ` ${dx.weight.unit}` : ""}`
-          : undefined,
+        (dx?.weight?.value ? `${dx.weight.value}` : null) &&
+        (dx?.weight?.unit
+          ? `${dx.weight.value} ${dx.weight.unit}`
+          : `${dx.weight.value}`),
       Height:
-        dx?.height?.value != null
-          ? `${dx.height.value}${dx?.height?.unit ? ` ${dx.height.unit}` : ""}`
-          : undefined,
+        (dx?.height?.value ? `${dx.height.value}` : null) &&
+        (dx?.height?.unit
+          ? `${dx.height.value} ${dx.height.unit}`
+          : `${dx.height.value}`),
       "Heart Rate": dx?.heartRate,
       "Respiration Rate": dx?.respirationRate,
       "Oxygen Level": dx?.oxygenLevel,
@@ -510,7 +514,17 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             }`
           : undefined,
     });
+    /* ------------------------------------------
+   PRESCRIPTION & MEDICINES
+--------------------------------------------*/
+    const pm = data?.prescriptionAndMedicines || {};
+    const medList = pm?.medications || [];
+    const lifestyles = pm?.lifestyle || [];
+    const injections = pm?.injectionsTherapies || [];
+    const nonDrug = pm?.nonDrugRecommendations || [];
+    const followUps = pm?.followUpInstructions || [];
 
+    // Build list of shown keys to exclude from dynamic section
     const OMIT = new Set([
       "files",
       "images",
@@ -525,9 +539,11 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     return (
       <section className="patient-records">
         <DateBadge iso={item?.dateISO} />
+
         <div className="visit-details">
           <h3>Consultation Details</h3>
 
+          {/* Header facts stacked */}
           <div className="kv-table">
             {renderStack("Doctor", item?.doctorName || "N/A")}
             {renderStack("Department", item?.departmentName || "N/A")}
@@ -546,10 +562,27 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
               : null}
           </div>
 
-          {renderStack("Notes", data?.notes)}
+          {/* Notes */}
+          {data?.notes ? (
+            <>
+              <h4 style={{ marginTop: 16 }}>Notes</h4>
+              <div className="kv-table">
+                {renderStack("Notes", String(data.notes))}
+              </div>
+            </>
+          ) : null}
 
-          {renderStack("Medical History → Description", medHistoryDesc)}
+          {/* Medical History */}
+          {!isEmptyValue(medHistoryDesc) && (
+            <>
+              <h4 style={{ marginTop: 16 }}>Medical History</h4>
+              <div className="kv-table">
+                {renderStack("Description", medHistoryDesc)}
+              </div>
+            </>
+          )}
 
+          {/* Current Medications */}
           {(!isEmptyValue(cmFlag) || !isEmptyValue(cmList)) && (
             <>
               <h4 style={{ marginTop: 16 }}>Current Medications</h4>
@@ -557,11 +590,18 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
                 {!isEmptyValue(cmFlag) &&
                   renderStack("Current Medication", cmFlag)}
                 {!isEmptyValue(cmList) &&
-                  renderStack("Medication List", cmList)}
+                  renderStack(
+                    "Medication List",
+                    cmList.map((m, i) => {
+                      if (isPlainObject(m)) return m; // JSONValue will render nicely
+                      return String(m ?? "");
+                    })
+                  )}
               </div>
             </>
           )}
 
+          {/* Diagnosis + Vitals */}
           {!isEmptyValue(dxBundle) && (
             <>
               <h4 style={{ marginTop: 16 }}>Diagnosis Vitals</h4>
@@ -570,25 +610,114 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
               </div>
             </>
           )}
+          {/* PRESCRIPTION UI */}
+          {!isEmptyValue(pm) && (
+            <div className="section-block">
+              <div className="section-title">Prescription & Medicines</div>
 
+              {/* Medications */}
+              {medList.length > 0 && (
+                <>
+                  <h4 style={{ marginBottom: 8 }}>Medications</h4>
+                  {medList.map((m, i) => (
+                    <div className="med-card" key={i}>
+                      <strong style={{ display: "block", marginBottom: 4 }}>
+                        {m.kind === "ai" ? "Suggested" : "Prescribed"}
+                      </strong>
+                      {m.text}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Injections / Therapies */}
+              {injections.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Injections / Therapies
+                  </h4>
+                  {injections.map((inj, i) => (
+                    <div className="list-item" key={i}>
+                      {inj}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Lifestyle Recommendations */}
+              {lifestyles.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Lifestyle Advice
+                  </h4>
+                  {lifestyles.map((l, i) => (
+                    <div className="list-item" key={i}>
+                      {l}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Non-drug recommendations */}
+              {nonDrug.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Non-Drug Recommendations
+                  </h4>
+                  {nonDrug.map((n, i) => (
+                    <div className="list-item" key={i}>
+                      {n}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Follow-up Instructions */}
+              {followUps.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Follow-Up Instructions
+                  </h4>
+                  {followUps.map((f, i) => (
+                    <div className="list-item" key={i}>
+                      {f}
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          )}
+          {/* Dynamic fallback: anything else meaningful in consultationData */}
+          {/* ------------------------------------------
+    ADDITIONAL CLINICAL DATA (clean UI)
+--------------------------------------------*/}
           {(() => {
             const pairs = Object.entries(data || {})
-              .filter(([k]) => !OMIT.has(k))
+              .filter(
+                ([k]) =>
+                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k)
+              )
               .map(([k, v]) => [k, pruneDeep(v)])
               .filter(([, v]) => !isEmptyValue(v));
 
             if (pairs.length === 0) return null;
 
             return (
-              <>
-                <h4 style={{ marginTop: 16 }}>Additional Clinical Data</h4>
-                <div className="kv-table">
-                  {pairs.map(([k, v]) => renderStack(prettifyKey(k), v))}
-                </div>
-              </>
+              <div className="section-block">
+                <div className="section-title">Additional Clinical Data</div>
+                {pairs.map(([k, v]) => (
+                  <div key={k} style={{ marginBottom: 12 }}>
+                    <div className="tag">{prettifyKey(k)}</div>
+                    <div style={{ marginTop: 6 }}>
+                      <JSONValue value={v} />
+                    </div>
+                  </div>
+                ))}
+              </div>
             );
           })()}
 
+          {/* Attachments */}
           {files.length > 0 && (
             <>
               <h4 style={{ marginTop: 16 }}>Attachments</h4>
