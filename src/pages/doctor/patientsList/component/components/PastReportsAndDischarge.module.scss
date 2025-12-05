@@ -200,3 +200,43 @@
   font-weight: 600;
   font-size: 3vh !important;
 }
+.sectionBlock {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #25307f;
+  margin-bottom: 8px;
+}
+
+.subList {
+  background: #f7faff;
+  border: 1px solid #d8e2ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.pill {
+  background: #f3f4f6;
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.dataItem {
+  background: #fafafa;
+  border-left: 3px solid #5461be;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
