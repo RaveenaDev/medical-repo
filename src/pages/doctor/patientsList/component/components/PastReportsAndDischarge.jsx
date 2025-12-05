@@ -33,6 +33,44 @@ const formatValue = (value) => {
   }
   return JSON.stringify(value);
 };
+const safeFormat = (value) => {
+  if (value === null || value === undefined)
+    return <span style={{ color: "#888" }}>—</span>;
+
+  // string / number
+  if (typeof value === "string" || typeof value === "number") return value;
+
+  // date string
+  if (typeof value === "string" && dayjs(value).isValid()) {
+    return dayjs(value).format("DD MMM YYYY");
+  }
+
+  // array
+  if (Array.isArray(value)) {
+    return (
+      <ul style={{ margin: 0, paddingLeft: "16px" }}>
+        {value.map((v, i) => (
+          <li key={i}>{safeFormat(v)}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  // object → render key-value list
+  if (typeof value === "object") {
+    return (
+      <ul style={{ margin: 0, paddingLeft: "16px" }}>
+        {Object.entries(value).map(([k, v]) => (
+          <li key={k}>
+            <strong>{k}:</strong> {safeFormat(v)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  return JSON.stringify(value);
+};
 
 const PastReportsAndDischarge = ({ patientId }) => {
   const dispatch = useDispatch();
@@ -50,6 +88,7 @@ const PastReportsAndDischarge = ({ patientId }) => {
   const capitalize = (str) =>
     typeof str === "string" ? str.charAt(0).toUpperCase() + str.slice(1) : str;
 
+  console.log("Patient History:", patientHistory);
   return (
     <div className={styles.container}>
       <header>
@@ -95,7 +134,8 @@ const PastReportsAndDischarge = ({ patientId }) => {
 
                 return (
                   <div key={key} style={{ fontSize: "15px" }}>
-                    <strong>{capitalize(key)}:</strong> {displayValue}
+                    <strong>{capitalize(key)}:</strong>{" "}
+                    {safeFormat(displayValue)}
                   </div>
                 );
               })}
@@ -144,7 +184,7 @@ const PastReportsAndDischarge = ({ patientId }) => {
                                       subValue === undefined ? (
                                         <span style={{ color: "#888" }}>—</span>
                                       ) : (
-                                        subValue
+                                        safeFormat(subValue)
                                       )}
                                     </div>
                                   )
@@ -158,7 +198,7 @@ const PastReportsAndDischarge = ({ patientId }) => {
                                 {value === null || value === undefined ? (
                                   <span style={{ color: "#888" }}>—</span>
                                 ) : (
-                                  value
+                                  safeFormat(value )
                                 )}
                               </div>
                             );
