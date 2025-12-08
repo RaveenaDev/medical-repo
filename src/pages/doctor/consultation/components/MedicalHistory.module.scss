@@ -1,6 +1,6 @@
-/* MedicalHistory.module.scss */
-
-/* LIST PANE */
+/* ------------------------------
+   LEFT LIST PANE
+------------------------------ */
 .container {
   background: #ffffff;
   display: flex;
@@ -9,7 +9,9 @@
   padding: 1.5rem;
 }
 
-/* AI SUMMARY SECTION */
+/* ------------------------------
+   AI SUMMARY
+------------------------------ */
 .aiSummarySection {
   background: linear-gradient(135deg, #f7f8fc 0%, #e8ecff 100%);
   border: 1px solid #d0d8f7;
@@ -29,7 +31,6 @@
     font-family: "Karla", sans-serif;
     font-weight: 600;
     font-size: 1.1rem;
-    margin: 0;
   }
 }
 
@@ -44,7 +45,6 @@
     color: #333;
     font-family: "Karla", sans-serif;
     font-size: 0.95rem;
-    line-height: 1.5;
   }
 
   .noData {
@@ -64,18 +64,19 @@
   font-size: 0.95rem;
 }
 
+/* ------------------------------
+   VISITS LIST
+------------------------------ */
 .visitHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   h3 {
-    color: #333333;
+    color: #333;
     font-family: "Karla", sans-serif;
     font-weight: 600;
-    font-size: 2.6vh;
-    line-height: 100%;
-    letter-spacing: 0;
+    font-size: 2.4vh;
   }
 }
 
@@ -93,38 +94,24 @@
   -ms-overflow-style: none;
 }
 
-/* SEARCH */
-.searchContainer {
+/* ------------------------------
+   SEARCH BAR
+------------------------------ */
+.searchContainer,
+.searchContainerPPR {
   display: flex;
-  position: relative;
   align-items: center;
+  position: relative;
 }
 
-/* You used `className="searchIconPPR"` without styles., so expose a global alias */
-.searchIconPPR {
-  position: absolute;
-  left: 0.6vw;
-}
-/* Global alias for plain string usage */
-:global(.searchIconPPR) {
-  position: absolute;
-  left: 0.6vw;
-}
-
-.searchIcon {
-  position: absolute;
-  left: 0.6vw;
-}
-
-.searchBar {
+.searchBar,
+.search_bar {
   border: 1px solid #afafaf;
   border-radius: 20px;
   padding: 0.5vh 0.8vw 0.5vh 2vw;
-  font-family: "Karla", sans-serif;
-  font-weight: 400;
-  font-size: 1.9vh;
-  line-height: 150%;
   width: 14vw;
+  font-family: "Karla", sans-serif;
+  font-size: 1.9vh;
   color: #afafaf;
   display: flex;
   align-items: center;
@@ -137,22 +124,31 @@
   }
 }
 
-/* DETAIL PANE */
-.recordsDetails {
+.searchIconPPR,
+:global(.searchIconPPR) {
+  position: absolute;
+  left: 0.6vw;
+}
+
+/* ------------------------------
+   RIGHT DETAIL PANE
+------------------------------ */
+.recordsDetails,
+.patient_records_details {
   background: #ffffff;
   display: flex;
   flex-direction: column;
   border-left: 1px solid #eaeef9;
-  min-height: 0;
-  height: 90vh;
-  overflow: auto;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-.recordsDetailsHeader {
+.recordsDetailsHeader,
+.records_details_header {
   position: sticky;
   top: 0;
-  z-index: 2;
   background: #fff;
+  z-index: 2;
   border-bottom: 1px solid #eaeef9;
   padding: 10px 16px;
   display: flex;
@@ -160,74 +156,97 @@
   gap: 0.5rem;
 }
 
-.patientRecordsHeading {
-  color: #25307f;
-  font-family: "Karla", sans-serif;
-  font-weight: 500;
-  font-size: 22px;
-  line-height: 100%;
+.recordsDetailsBody,
+.records_details_body {
+  padding: 12px 16px;
 }
 
 .headingContainer {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  margin-left: -0.5rem;
 }
 
 .heading {
   color: #25307f;
-  font-family: "Hanken Grotesk", "sans-serif";
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  vertical-align: middle;
+
+  font-weight: 600;
 }
 
-.recordsDetailsBody {
-  overflow: auto;
-  padding: 12px 16px;
-  min-height: 0;
-}
-
-/* Back button (if used) */
-.backBtn {
-  border: 1px solid #eaeef9;
-  background: #f7f8fc;
+.patientRecordsHeading {
   color: #25307f;
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 14px;
-  cursor: pointer;
+  font-family: "Karla", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
 }
-/* ===== Visit Details body area ===== */
-/* .visit-details is a plain class from JSX; expose globally */
+
+/* ------------------------------
+   SECTION TITLES + BLOCKS
+------------------------------ */
+.section_block {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 18px;
+}
+
+.section_title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #25307f;
+}
+
+.tag {
+  display: inline-block;
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+.med_card {
+  background: #f7faff;
+  border: 1px solid #d8e2ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.list_item {
+  background: #fafafa;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  border-left: 3px solid #5461be;
+}
+/* ------------------------------
+   VISIT DETAILS INNER GRID
+------------------------------ */
 .visit_details {
   padding: 16px;
   display: grid;
-  grid-template-columns: 1fr;
   gap: 16px;
 
   h3 {
-    margin: 0;
     font-size: 18px;
     font-weight: 700;
     color: #1b2559;
   }
 
   h4 {
-    margin: 8px 0 4px;
     font-size: 14px;
     font-weight: 700;
     color: #25307f;
   }
 }
 
-/* ---------- Key–Value tables ---------- */
-/* You use both styles.kv_table and plain "kv-row"/"kv-key"/"kv-val" strings. Support all. */
-
-.kv_table {
+/* ------------------------------
+   KEY–VALUE TABLES
+------------------------------ */
+.kv_table,
+.kv-table {
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: 8px 16px;
@@ -236,110 +255,84 @@
   border-radius: 8px;
   padding: 8px 10px;
 }
+
 .kv_row,
-:global(.kv-row) {
+.kv-row {
   display: contents;
 }
+
 .kv_key,
-:global(.kv-key) {
+.kv-key {
   font-weight: 600;
   color: #25307f;
 }
+
 .kv_val,
-:global(.kv-val) {
+.kv-val {
   color: #222;
 }
 
-/* list variants */
 .kv_list,
-:global(.kv-list) {
+.kv-list {
   margin: 6px 0 0 18px;
 }
 
-/* Phases */
-.phases__stack {
+/* ------------------------------
+   PHASES
+------------------------------ */
+.phases__stack,
+.phases-stack {
   display: grid;
   gap: 12px;
 }
-.phase__card {
+
+.phase__card,
+.phase-card {
   border: 1px solid #e8ecff;
   border-radius: 10px;
   padding: 12px;
   background: #fff;
 }
-.phase__card_header {
+
+.phase__card_header,
+.phase-card-header {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
   margin-bottom: 6px;
+  gap: 8px;
 }
-.phase__title {
+
+.phase__title,
+.phase-title {
   font-weight: 700;
 }
-.phase__date {
+
+.phase__date,
+.phase-date {
   color: #666;
   font-size: 12px;
 }
 
-/* Optional split grid shell */
-.gridShell {
-  display: grid;
-  grid-template-columns: 1.1fr 2fr;
-  gap: 16px;
-  height: calc(100vh - 280px);
-  min-height: 420px;
-}
-
-/* Right pane scroll behavior */
-.patient-records-container {
-  display: grid;
-  grid-template-columns: 1.1fr 2fr;
-  gap: 16px;
-  height: calc(100vh - 280px);
-  min-height: 420px;
-}
-
-.patient_records_details {
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #eaeef9;
-  background: #fff;
-  min-height: 0;
-}
-
-.records_details_header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: #fff;
-  border-bottom: 1px solid #eaeef9;
-  padding: 10px 16px;
-}
-
-.records_details_body {
-  overflow: auto;
-  padding: 12px 16px;
-  min-height: 0;
-}
-
-/* Files grid */
-.file_grid {
+/* ------------------------------
+   FILE GRID
+------------------------------ */
+.file_grid,
+.file-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 12px;
-  margin-top: 8px;
 }
 
-.file_thumb {
+.file_thumb,
+.file-thumb {
   display: flex;
   flex-direction: column;
-  gap: 6px;
   border: 1px solid #e8ecff;
   background: #fff;
   border-radius: 10px;
   padding: 8px;
   cursor: pointer;
-  text-align: left;
+  gap: 6px;
 
   &:hover {
     box-shadow: 0 2px 8px rgba(37, 48, 127, 0.12);
@@ -348,42 +341,42 @@
   img {
     width: 100%;
     height: 110px;
-    object-fit: cover;
     border-radius: 8px;
+    object-fit: cover;
     background: #f4f6ff;
   }
 }
 
-/* The runtime code adds a plain string class "file-thumb-broken".
-   Make it work with CSS modules using a global alias. */
 :global(.file-thumb-broken) {
-  background: linear-gradient(135deg, #f7f7fb, #ecefff);
-  color: #777;
+  background: #ecefff;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #777;
 }
 
-.file_caption {
+.file_caption,
+.file-caption {
   font-size: 12px;
   color: #333;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.file_card {
+.file_card,
+.file-card {
   display: grid;
   grid-template-columns: 36px 1fr;
-  gap: 8px;
   border: 1px solid #e8ecff;
   background: #fff;
   border-radius: 10px;
   padding: 8px;
-  text-align: left;
+  gap: 8px;
 }
 
-.file_card__pdf {
+.file_card__pdf,
+.file-card--pdf {
   cursor: pointer;
 
   &:hover {
@@ -391,87 +384,63 @@
   }
 }
 
-.file_icon {
+.file_icon,
+.file-icon {
   display: grid;
   place-items: center;
-  font-size: 20px;
 }
-.file_meta {
+
+.file_meta,
+.file-meta {
   min-width: 0;
 }
 
-.file_name {
+.file_name,
+.file-name {
   font-weight: 600;
   font-size: 13px;
-  color: #222;
-  white-space: nowrap;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
-.file_type {
+
+.file_type,
+.file-type {
   color: #666;
   font-size: 12px;
-  margin-top: 2px;
 }
-.file_open {
-  font-size: 12px;
+
+.file_open,
+.file-open {
   color: #25307f;
-  text-decoration: underline;
-  margin-top: 4px;
-  display: inline-block;
-}
-.file_missing {
   font-size: 12px;
+  text-decoration: underline;
+}
+
+.file_missing,
+.file-missing {
   color: #999;
-  margin-top: 4px;
+  font-size: 12px;
 }
 
-/* Records section date badge inside .patient__records */
-.patient__records {
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  .record-date {
-    font-family: "Karla", sans-serif;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    vertical-align: middle;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    color: #25307f;
-  }
-}
-
-/* Legacy helper blocks retained for compatibility */
-.patient-previous-record-container-doc {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem 0;
-  margin-top: 6vh;
-}
-
+/* ------------------------------
+   PATIENT DETAILS HEADER
+------------------------------ */
 .patient-details {
   display: flex;
   gap: 3rem;
-  background: #ffffff;
+  align-items: center;
+  padding: 1rem 3rem;
+  background: #fff;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  padding: 1rem 3rem;
-  justify-content: space-between;
-  align-items: center;
 
   .avatar {
-    box-shadow: 0px 4px 4px 0px #c2c2c240;
-    border-radius: 50%;
     width: 10vh;
     height: 10vh;
+    border-radius: 50%;
     object-fit: cover;
+    box-shadow: 0px 4px 4px #c2c2c240;
   }
 
   .patient-info-container {
@@ -479,15 +448,12 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    color: #333333;
     font-family: "Karla", sans-serif;
-    font-weight: 500;
-    font-size: 2vh;
+    color: #333;
 
     .patient_name {
       color: #25307f;
       font-family: "Hanken Grotesk", sans-serif;
-      font-weight: 500;
       font-size: 2.7vh;
     }
 
@@ -509,9 +475,11 @@
           height: 15px;
           border-radius: 50%;
         }
+
         .severe {
           background-color: #f14400;
         }
+
         .moderate {
           background-color: #eaa000;
         }
@@ -520,91 +488,10 @@
   }
 
   .patient-lastVisit {
-    background-color: #e9f0ec;
+    background: #e9f0ec;
     color: #2e823b;
     padding: 5px 10px;
     border-radius: 5px;
     font-family: "Karla", sans-serif;
-    font-size: 2.1vh;
   }
-}
-
-/* Additional search aliases */
-.search_bar {
-  border: 1px solid #afafaf;
-  border-radius: 20px;
-  padding: 0.5vh 0.8vw 0.5vh 2vw;
-  font-family: "Karla", sans-serif;
-  font-weight: 400;
-  font-size: 1.9vh;
-  line-height: 150%;
-  width: 14vw;
-  color: #afafaf;
-
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-
-  svg {
-    color: #afafaf;
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.searchContainerPPR {
-  display: flex;
-  position: relative;
-  align-items: center;
-}
-/* exportable alias for the date badge */
-.record_date {
-  font-family: "Karla", sans-serif;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: #25307f;
-}
-.section-block {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 16px;
-  margin-top: 18px;
-}
-
-.section-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #25307f;
-}
-
-.tag {
-  display: inline-block;
-  background: #f3f4f6;
-  border-radius: 6px;
-  padding: 6px 10px;
-  margin: 6px 0;
-  font-size: 0.9rem;
-  color: #4b5563;
-}
-
-.med-card {
-  background: #f7faff;
-  border: 1px solid #d8e2ff;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.list-item {
-  background: #fafafa;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  border-left: 3px solid #5461be;
 }
