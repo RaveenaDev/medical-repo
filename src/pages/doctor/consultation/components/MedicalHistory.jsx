@@ -504,7 +504,8 @@ export const MedicalHistory = ({
     </div>
   );
 
-  const renderConsultation = (item) => {
+  const ConsultationDetail = ({ item }) => {
+    console.log("ConsultationDetail item:", item);
     const c = item?.raw || {};
     const data = c?.consultationData || {};
 
@@ -521,13 +522,13 @@ export const MedicalHistory = ({
       if (isEmptyValue(content)) return null;
       return (
         <>
-          <div className="kv-row">
-            <div className="kv-key" style={fullRow}>
+          <div className={styles.kv_row}>
+            <div className={styles.kv_key} style={fullRow}>
               {label}
             </div>
           </div>
-          <div className="kv-row">
-            <div className="kv-val" style={fullRow}>
+          <div className={styles.kv_row}>
+            <div className={styles.kv_val} style={fullRow}>
               {isPlainObject(content) || Array.isArray(content) ? (
                 <JSONValue value={content} />
               ) : (
@@ -611,14 +612,12 @@ export const MedicalHistory = ({
     ]);
 
     return (
-      <section className="patient-records">
-        <DateBadge iso={item?.dateISO} />
-
-        <div className="visit-details">
+      <section className={styles.patient_records}>
+        <div className={styles.visit_details}>
           <h3>Consultation Details</h3>
 
           {/* Header facts stacked */}
-          <div className="kv-table">
+          <div className={styles.kv_table}>
             {renderStack("Doctor", item?.doctorName || "N/A")}
             {renderStack("Department", item?.departmentName || "N/A")}
             {renderStack("Type", item?.typeofVisit || "Consultation")}
@@ -640,7 +639,7 @@ export const MedicalHistory = ({
           {data?.notes ? (
             <>
               <h4 style={{ marginTop: 16 }}>Notes</h4>
-              <div className="kv-table">
+              <div className={styles.kv_table}>
                 {renderStack("Notes", String(data.notes))}
               </div>
             </>
@@ -650,7 +649,7 @@ export const MedicalHistory = ({
           {!isEmptyValue(medHistoryDesc) && (
             <>
               <h4 style={{ marginTop: 16 }}>Medical History</h4>
-              <div className="kv-table">
+              <div className={styles.kv_table}>
                 {renderStack("Description", medHistoryDesc)}
               </div>
             </>
@@ -660,7 +659,7 @@ export const MedicalHistory = ({
           {(!isEmptyValue(cmFlag) || !isEmptyValue(cmList)) && (
             <>
               <h4 style={{ marginTop: 16 }}>Current Medications</h4>
-              <div className="kv-table">
+              <div className={styles.kv_table}>
                 {!isEmptyValue(cmFlag) &&
                   renderStack("Current Medication", cmFlag)}
                 {!isEmptyValue(cmList) &&
@@ -679,22 +678,24 @@ export const MedicalHistory = ({
           {!isEmptyValue(dxBundle) && (
             <>
               <h4 style={{ marginTop: 16 }}>Diagnosis Vitals</h4>
-              <div className="kv-table">
+              <div className={styles.kv_table}>
                 {Object.entries(dxBundle).map(([k, v]) => renderStack(k, v))}
               </div>
             </>
           )}
           {/* PRESCRIPTION UI */}
           {!isEmptyValue(pm) && (
-            <div className="section-block">
-              <div className="section-title">Prescription & Medicines</div>
+            <div className={styles.section_block}>
+              <div className={styles.section_title}>
+                Prescription & Medicines
+              </div>
 
               {/* Medications */}
               {medList.length > 0 && (
                 <>
                   <h4 style={{ marginBottom: 8 }}>Medications</h4>
                   {medList.map((m, i) => (
-                    <div className="med-card" key={i}>
+                    <div className={styles.med_card} key={i}>
                       <strong style={{ display: "block", marginBottom: 4 }}>
                         {m.kind === "ai" ? "Suggested" : "Prescribed"}
                       </strong>
@@ -711,7 +712,7 @@ export const MedicalHistory = ({
                     Injections / Therapies
                   </h4>
                   {injections.map((inj, i) => (
-                    <div className="list-item" key={i}>
+                    <div className={styles.list_item} key={i}>
                       {inj}
                     </div>
                   ))}
@@ -725,7 +726,7 @@ export const MedicalHistory = ({
                     Lifestyle Advice
                   </h4>
                   {lifestyles.map((l, i) => (
-                    <div className="list-item" key={i}>
+                    <div className={styles.list_item} key={i}>
                       {l}
                     </div>
                   ))}
@@ -739,7 +740,7 @@ export const MedicalHistory = ({
                     Non-Drug Recommendations
                   </h4>
                   {nonDrug.map((n, i) => (
-                    <div className="list-item" key={i}>
+                    <div className={styles.list_item} key={i}>
                       {n}
                     </div>
                   ))}
@@ -753,7 +754,7 @@ export const MedicalHistory = ({
                     Follow-Up Instructions
                   </h4>
                   {followUps.map((f, i) => (
-                    <div className="list-item" key={i}>
+                    <div className={styles.list_item} key={i}>
                       {f}
                     </div>
                   ))}
@@ -777,11 +778,13 @@ export const MedicalHistory = ({
             if (pairs.length === 0) return null;
 
             return (
-              <div className="section-block">
-                <div className="section-title">Additional Clinical Data</div>
+              <div className={styles.section_block}>
+                <div className={styles.section_title}>
+                  Additional Clinical Data
+                </div>
                 {pairs.map(([k, v]) => (
                   <div key={k} style={{ marginBottom: 12 }}>
-                    <div className="tag">{prettifyKey(k)}</div>
+                    <div className={styles.tag}>{prettifyKey(k)}</div>
                     <div style={{ marginTop: 6 }}>
                       <JSONValue value={v} />
                     </div>
@@ -807,7 +810,7 @@ export const MedicalHistory = ({
     const a = item?.raw || {};
     const ad = a?.admissionDetails || {};
     return (
-      <section className={styles.patient__records}>
+      <section className={styles.patient_records}>
         <div className={styles.visit_details}>
           <div className={styles.kv_table}>
             {a?.caseId && (
@@ -895,7 +898,7 @@ export const MedicalHistory = ({
     };
 
     return (
-      <section className={styles.patient__records}>
+      <section className={styles.patient_records}>
         <div className={styles.visit_details}>
           <h3>File Uploaded</h3>
 
@@ -1115,30 +1118,6 @@ export const MedicalHistory = ({
     );
   };
 
-  const DateBadge = ({ iso }) =>
-    iso ? (
-      // Use a local class exported by CSS modules for reliability
-      <div className={styles.record_date}>
-        <svg
-          width="16"
-          height="18"
-          viewBox="0 0 16 18"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ marginRight: "6px", verticalAlign: "middle" }}
-        >
-          <path
-            d="M1.33398 6.5V14.8333C1.33398 15.2754 1.50958 15.6993 1.82214 16.0118C2.1347 16.3244 2.55862 16.5 3.00065 16.5H13.0007C13.4427 16.5 13.8666 16.3244 14.1792 16.0118C14.4917 15.6993 14.6673 15.2754 14.6673 14.8333V6.5M1.33398 6.5V4.83333C1.33398 4.39131 1.50958 3.96738 1.82214 3.65482C2.1347 3.34226 2.55862 3.16667 3.00065 3.16667H4.66732M1.33398 6.5H14.6673M14.6673 6.5V4.83333C14.6673 4.39131 14.4917 3.96738 14.1792 3.65482C13.8666 3.34226 13.4427 3.16667 13.0007 3.16667H11.334M4.66732 3.16667H11.334M4.66732 3.16667V1.5M11.334 3.16667V1.5"
-            stroke="#25307F"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {formatDate(iso)}
-      </div>
-    ) : null;
-
   if (loading)
     return (
       <div className={styles.visitList} style={{ padding: 16 }}>
@@ -1192,7 +1171,7 @@ export const MedicalHistory = ({
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="searchIconPPR"
+              className={styles.searchIconPPR}
             >
               <path
                 d="M22.1333 24L13.7333 15.6C13.0667 16.1333 12.3 16.5556 11.4333 16.8667C10.5667 17.1778 9.64445 17.3333 8.66667 17.3333C6.24445 17.3333 4.19467 16.4942 2.51733 14.816C0.840001 13.1378 0.000889594 11.088 7.05467e-07 8.66667C-0.000888183 6.24533 0.838223 4.19556 2.51733 2.51733C4.19645 0.839111 6.24622 0 8.66667 0C11.0871 0 13.1373 0.839111 14.8173 2.51733C16.4973 4.19556 17.336 6.24533 17.3333 8.66667C17.3333 9.64444 17.1778 10.5667 16.8667 11.4333C16.5556 12.3 16.1333 13.0667 15.6 13.7333L24 22.1333L22.1333 24ZM8.66667 14.6667C10.3333 14.6667 11.7502 14.0836 12.9173 12.9173C14.0844 11.7511 14.6676 10.3342 14.6667 8.66667C14.6658 6.99911 14.0827 5.58267 12.9173 4.41733C11.752 3.252 10.3351 2.66844 8.66667 2.66667C6.99822 2.66489 5.58178 3.24844 4.41733 4.41733C3.25289 5.58622 2.66933 7.00267 2.66667 8.66667C2.664 10.3307 3.24756 11.7476 4.41733 12.9173C5.58711 14.0871 7.00356 14.6702 8.66667 14.6667Z"
