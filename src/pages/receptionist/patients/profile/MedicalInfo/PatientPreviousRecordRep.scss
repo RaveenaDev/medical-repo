@@ -454,7 +454,7 @@
 
 /* Table made of rows: each .kv-row is a grid with 2 columns */
 .kv-table {
-  display: block;            /* container for rows */
+  display: block; /* container for rows */
   background: #fff;
   border: 1px solid #e7eaf3;
   border-radius: 8px;
@@ -462,12 +462,12 @@
 }
 
 .kv-table + .kv-table {
-  margin-top: 12px;          /* spacing between stacked tables */
+  margin-top: 12px; /* spacing between stacked tables */
 }
 
 .kv-row {
   display: grid;
-  grid-template-columns: 200px 1fr;   /* key fixed, value flexible */
+  grid-template-columns: 200px 1fr; /* key fixed, value flexible */
   column-gap: 12px;
   align-items: start;
   padding: 8px 0;
@@ -489,9 +489,9 @@
   font-size: 13px;
   color: #222;
   line-height: 1.5;
-  white-space: pre-wrap;     /* keep line breaks from text */
-  word-break: break-word;    /* break long tokens */
-  hyphens: auto;             /* nicer breaks for long words */
+  white-space: pre-wrap; /* keep line breaks from text */
+  word-break: break-word; /* break long tokens */
+  hyphens: auto; /* nicer breaks for long words */
 }
 
 /* Section subtitles like “Notes”, “Clinical Data”, “Attachments” */
@@ -530,8 +530,52 @@
 
 /* Narrow screens: shrink key column */
 @media (max-width: 1200px) {
-  .kv-row { grid-template-columns: 160px 1fr; }
+  .kv-row {
+    grid-template-columns: 160px 1fr;
+  }
 }
 @media (max-width: 768px) {
-  .kv-row { grid-template-columns: 130px 1fr; }
+  .kv-row {
+    grid-template-columns: 130px 1fr;
+  }
+}
+.section-block {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 18px;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #25307f;
+}
+
+.tag {
+  display: inline-block;
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.med-card {
+  background: #f7faff;
+  border: 1px solid #d8e2ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.list-item {
+  background: #fafafa;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  border-left: 3px solid #5461be;
 }

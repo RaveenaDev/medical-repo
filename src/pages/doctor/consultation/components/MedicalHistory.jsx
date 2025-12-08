@@ -504,7 +504,7 @@ export const MedicalHistory = ({
     </div>
   );
 
-  const ConsultationDetail = ({ item }) => {
+  const renderConsultation = (item) => {
     const c = item?.raw || {};
     const data = c?.consultationData || {};
 
@@ -516,17 +516,18 @@ export const MedicalHistory = ({
     const files = [...images, ...videos, ...attachments];
 
     const fullRow = { gridColumn: "1 / -1" };
+
     const renderStack = (label, content) => {
       if (isEmptyValue(content)) return null;
       return (
         <>
-          <div className={styles.kv_row}>
-            <div className={styles.kv_key} style={fullRow}>
+          <div className="kv-row">
+            <div className="kv-key" style={fullRow}>
               {label}
             </div>
           </div>
-          <div className={styles.kv_row}>
-            <div className={styles.kv_val} style={fullRow}>
+          <div className="kv-row">
+            <div className="kv-val" style={fullRow}>
               {isPlainObject(content) || Array.isArray(content) ? (
                 <JSONValue value={content} />
               ) : (
@@ -587,6 +588,15 @@ export const MedicalHistory = ({
             }`
           : undefined,
     });
+    /* ------------------------------------------
+   PRESCRIPTION & MEDICINES
+--------------------------------------------*/
+    const pm = data?.prescriptionAndMedicines || {};
+    const medList = pm?.medications || [];
+    const lifestyles = pm?.lifestyle || [];
+    const injections = pm?.injectionsTherapies || [];
+    const nonDrug = pm?.nonDrugRecommendations || [];
+    const followUps = pm?.followUpInstructions || [];
 
     // Build list of shown keys to exclude from dynamic section
     const OMIT = new Set([
@@ -601,17 +611,20 @@ export const MedicalHistory = ({
     ]);
 
     return (
-      <section className={styles.patient__records}>
-        <div className={styles.visit_details}>
+      <section className="patient-records">
+        <DateBadge iso={item?.dateISO} />
+
+        <div className="visit-details">
           <h3>Consultation Details</h3>
 
           {/* Header facts stacked */}
-          <div className={styles.kv_table}>
+          <div className="kv-table">
             {renderStack("Doctor", item?.doctorName || "N/A")}
             {renderStack("Department", item?.departmentName || "N/A")}
             {renderStack("Type", item?.typeofVisit || "Consultation")}
             {c?.status ? renderStack("Status", c.status) : null}
             {c?.caseId ? renderStack("Case ID", c.caseId) : null}
+            {/*{c?.appointment ? renderStack("Appointment", c.appointment) : null}*/}
             {c?.followUpRequired !== undefined
               ? renderStack(
                   "Follow-up Required",
@@ -627,7 +640,7 @@ export const MedicalHistory = ({
           {data?.notes ? (
             <>
               <h4 style={{ marginTop: 16 }}>Notes</h4>
-              <div className={styles.kv_table}>
+              <div className="kv-table">
                 {renderStack("Notes", String(data.notes))}
               </div>
             </>
@@ -637,7 +650,7 @@ export const MedicalHistory = ({
           {!isEmptyValue(medHistoryDesc) && (
             <>
               <h4 style={{ marginTop: 16 }}>Medical History</h4>
-              <div className={styles.kv_table}>
+              <div className="kv-table">
                 {renderStack("Description", medHistoryDesc)}
               </div>
             </>
@@ -647,13 +660,16 @@ export const MedicalHistory = ({
           {(!isEmptyValue(cmFlag) || !isEmptyValue(cmList)) && (
             <>
               <h4 style={{ marginTop: 16 }}>Current Medications</h4>
-              <div className={styles.kv_table}>
+              <div className="kv-table">
                 {!isEmptyValue(cmFlag) &&
                   renderStack("Current Medication", cmFlag)}
                 {!isEmptyValue(cmList) &&
                   renderStack(
                     "Medication List",
-                    cmList.map((m) => (isPlainObject(m) ? m : String(m ?? "")))
+                    cmList.map((m, i) => {
+                      if (isPlainObject(m)) return m; // JSONValue will render nicely
+                      return String(m ?? "");
+                    })
                   )}
               </div>
             </>
@@ -663,28 +679,115 @@ export const MedicalHistory = ({
           {!isEmptyValue(dxBundle) && (
             <>
               <h4 style={{ marginTop: 16 }}>Diagnosis Vitals</h4>
-              <div className={styles.kv_table}>
+              <div className="kv-table">
                 {Object.entries(dxBundle).map(([k, v]) => renderStack(k, v))}
               </div>
             </>
           )}
+          {/* PRESCRIPTION UI */}
+          {!isEmptyValue(pm) && (
+            <div className="section-block">
+              <div className="section-title">Prescription & Medicines</div>
 
+              {/* Medications */}
+              {medList.length > 0 && (
+                <>
+                  <h4 style={{ marginBottom: 8 }}>Medications</h4>
+                  {medList.map((m, i) => (
+                    <div className="med-card" key={i}>
+                      <strong style={{ display: "block", marginBottom: 4 }}>
+                        {m.kind === "ai" ? "Suggested" : "Prescribed"}
+                      </strong>
+                      {m.text}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Injections / Therapies */}
+              {injections.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Injections / Therapies
+                  </h4>
+                  {injections.map((inj, i) => (
+                    <div className="list-item" key={i}>
+                      {inj}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Lifestyle Recommendations */}
+              {lifestyles.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Lifestyle Advice
+                  </h4>
+                  {lifestyles.map((l, i) => (
+                    <div className="list-item" key={i}>
+                      {l}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Non-drug recommendations */}
+              {nonDrug.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Non-Drug Recommendations
+                  </h4>
+                  {nonDrug.map((n, i) => (
+                    <div className="list-item" key={i}>
+                      {n}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Follow-up Instructions */}
+              {followUps.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: 16, marginBottom: 8 }}>
+                    Follow-Up Instructions
+                  </h4>
+                  {followUps.map((f, i) => (
+                    <div className="list-item" key={i}>
+                      {f}
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          )}
           {/* Dynamic fallback: anything else meaningful in consultationData */}
+          {/* ------------------------------------------
+    ADDITIONAL CLINICAL DATA (clean UI)
+--------------------------------------------*/}
           {(() => {
             const pairs = Object.entries(data || {})
-              .filter(([k]) => !OMIT.has(k))
+              .filter(
+                ([k]) =>
+                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k)
+              )
               .map(([k, v]) => [k, pruneDeep(v)])
               .filter(([, v]) => !isEmptyValue(v));
 
             if (pairs.length === 0) return null;
 
             return (
-              <>
-                <h4 style={{ marginTop: 16 }}>Additional Clinical Data</h4>
-                <div className={styles.kv_table}>
-                  {pairs.map(([k, v]) => renderStack(prettifyKey(k), v))}
-                </div>
-              </>
+              <div className="section-block">
+                <div className="section-title">Additional Clinical Data</div>
+                {pairs.map(([k, v]) => (
+                  <div key={k} style={{ marginBottom: 12 }}>
+                    <div className="tag">{prettifyKey(k)}</div>
+                    <div style={{ marginTop: 6 }}>
+                      <JSONValue value={v} />
+                    </div>
+                  </div>
+                ))}
+              </div>
             );
           })()}
 

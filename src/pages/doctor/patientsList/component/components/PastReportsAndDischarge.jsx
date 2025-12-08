@@ -33,6 +33,115 @@ const formatValue = (value) => {
   }
   return JSON.stringify(value);
 };
+const prettyKey = (str = "") =>
+  str
+    .replace(/([A-Z])/g, " $1")
+    .replace(/[_\-]/g, " ")
+    .trim()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
+const isEmpty = (v) => {
+  if (v === null || v === undefined) return true;
+  if (typeof v === "string" && v.trim() === "") return true;
+  if (Array.isArray(v) && v.length === 0) return true;
+  if (typeof v === "object" && Object.keys(v).length === 0) return true;
+  return false;
+};
+
+/* Remove unwanted keys + remove empty items */
+const sanitizeConsultationData = (cd = {}) => {
+  const omit = new Set([
+    "medicalHistory",
+    "previousHistoryData",
+    "_id",
+    "timestamp",
+    "patientId",
+  ]);
+
+  const cleaned = {};
+
+  for (let [key, value] of Object.entries(cd)) {
+    if (omit.has(key)) continue;
+    if (isEmpty(value)) continue;
+
+    cleaned[key] = value;
+  }
+
+  return cleaned;
+};
+const smartFormat = (value) => {
+  if (value === null || value === undefined)
+    return <span style={{ color: "#bbb" }}>—</span>;
+
+  if (typeof value === "string" || typeof value === "number") return value;
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) return null;
+    return (
+      <ul style={{ paddingLeft: "1rem", margin: 0 }}>
+        {value.map((v, i) => (
+          <li key={i}>{smartFormat(v)}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  if (typeof value === "object") {
+    const entries = Object.entries(value).filter(([k, v]) => !isEmpty(v));
+    if (entries.length === 0) return null;
+
+    return (
+      <ul style={{ paddingLeft: "1rem", margin: 0 }}>
+        {entries.map(([k, v]) => (
+          <li key={k}>
+            <strong>{prettyKey(k)}:</strong> {smartFormat(v)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  return String(value);
+};
+
+const safeFormat = (value) => {
+  if (value === null || value === undefined)
+    return <span style={{ color: "#888" }}>—</span>;
+
+  // string / number
+  if (typeof value === "string" || typeof value === "number") return value;
+
+  // date string
+  if (typeof value === "string" && dayjs(value).isValid()) {
+    return dayjs(value).format("DD MMM YYYY");
+  }
+
+  // array
+  if (Array.isArray(value)) {
+    return (
+      <ul style={{ margin: 0, paddingLeft: "16px" }}>
+        {value.map((v, i) => (
+          <li key={i}>{safeFormat(v)}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  // object → render key-value list
+  if (typeof value === "object") {
+    return (
+      <ul style={{ margin: 0, paddingLeft: "16px" }}>
+        {Object.entries(value).map(([k, v]) => (
+          <li key={k}>
+            <strong>{k}:</strong> {safeFormat(v)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  return JSON.stringify(value);
+};
 
 const PastReportsAndDischarge = ({ patientId }) => {
   const dispatch = useDispatch();
@@ -50,6 +159,7 @@ const PastReportsAndDischarge = ({ patientId }) => {
   const capitalize = (str) =>
     typeof str === "string" ? str.charAt(0).toUpperCase() + str.slice(1) : str;
 
+  // console.log("Patient History:", patientHistory);
   return (
     <div className={styles.container}>
       <header>
@@ -74,101 +184,238 @@ const PastReportsAndDischarge = ({ patientId }) => {
         >
           {activeModal && (
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
             >
-              <h2 style={{ marginBottom: "8px", fontSize: "22px" }}>
-                Consultation Details
+              <h2
+                style={{
+                  fontSize: "22px",
+                  fontWeight: 600,
+                  marginBottom: "4px",
+                }}
+              >
+                Consultation Summary
               </h2>
 
-              {/* Top-level fields (excluding _id & consultationData) */}
-              {Object.entries(activeModal).map(([key, value]) => {
-                if (key === "_id" || key === "consultationData") return null;
+              {/* ======================
+        BASIC INFO
+    ======================= */}
+              <div className={styles.sectionBlock}>
+                <div className={styles.sectionTitle}>Overview</div>
 
-                const displayValue =
-                  value === null || value === undefined ? (
-                    <span style={{ color: "#888" }}>—</span>
-                  ) : key === "date" ? (
-                    dayjs(value).format("DD MMM YYYY, hh:mm A")
-                  ) : (
-                    value
-                  );
+                <div className={styles.dataItem}>
+                  <strong>Date:</strong>{" "}
+                  {dayjs(activeModal.date).format("DD MMM YYYY, hh:mm A")}
+                </div>
+                <div className={styles.dataItem}>
+                  <strong>Doctor:</strong> {activeModal.doctor}
+                </div>
+                <div className={styles.dataItem}>
+                  <strong>Department:</strong> {activeModal.department}
+                </div>
+              </div>
+
+              {/* ======================
+        CONSULTATION DATA
+    ======================= */}
+              {(() => {
+                const cd = sanitizeConsultationData(
+                  activeModal.consultationData || {}
+                );
+                if (Object.keys(cd).length === 0) return null;
+
+                const diagnosis = cd.diagnosisAndVitals || cd.diagnosisVitals;
+                const pm = cd.prescriptionAndMedicines;
+                const tests = cd.treatmentAndTests;
+
+                const otherKeys = Object.keys(cd).filter(
+                  (k) =>
+                    ![
+                      "diagnosisVitals",
+                      "diagnosisAndVitals",
+                      "prescriptionAndMedicines",
+                      "treatmentAndTests",
+                      "files",
+                    ].includes(k)
+                );
 
                 return (
-                  <div key={key} style={{ fontSize: "15px" }}>
-                    <strong>{capitalize(key)}:</strong> {displayValue}
-                  </div>
-                );
-              })}
+                  <>
+                    {/* --- Diagnosis & Vitals --- */}
+                    {diagnosis && (
+                      <div className={styles.sectionBlock}>
+                        <div className={styles.sectionTitle}>
+                          Diagnosis & Vitals
+                        </div>
+                        <div className={styles.dataItem}>
+                          {smartFormat(diagnosis)}
+                        </div>
+                      </div>
+                    )}
 
-              {/* Expandable Consultation Data Section */}
-              {activeModal.consultationData && (
-                <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography sx={{ fontWeight: 600 }}>
-                      Consultation Data
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "8px",
-                      }}
-                    >
-                      {Object.entries(activeModal.consultationData).map(
-                        ([key, value]) => {
-                          if (typeof value === "object" && value !== null) {
-                            return (
-                              <div key={key}>
-                                <div
-                                  style={{
-                                    fontWeight: 600,
-                                    marginBottom: "4px",
-                                    color: "#666",
-                                  }}
-                                >
-                                  {capitalize(key)}:
+                    {/* --- Prescription --- */}
+
+                    {pm && (
+                      <div className={styles.sectionBlock}>
+                        <div className={styles.sectionTitle}>
+                          Prescription & Medicines
+                        </div>
+
+                        {/* Problem Statement */}
+                        {pm.problemStatement && (
+                          <div className={styles.dataItem}>
+                            {pm.problemStatement}
+                          </div>
+                        )}
+
+                        {/* ICD Code */}
+                        {pm.icdCode && (
+                          <div className={styles.dataItem}>
+                            <strong>ICD Code:</strong> {pm.icdCode}
+                          </div>
+                        )}
+
+                        {/* Medications */}
+                        {Array.isArray(pm.medications) &&
+                          pm.medications.length > 0 && (
+                            <>
+                              <h4 style={{ marginBottom: 6 }}>Medications</h4>
+
+                              {pm.medications.map((m, i) => {
+                                const medText =
+                                  typeof m === "string"
+                                    ? m
+                                    : m.text || m.name || JSON.stringify(m);
+
+                                return (
+                                  <div key={i} className={styles.subList}>
+                                    {medText}
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+
+                        {/* Therapies */}
+                        {Array.isArray(pm.injectionsTherapies) &&
+                          pm.injectionsTherapies.length > 0 && (
+                            <>
+                              <h4>Therapies / Injections</h4>
+                              {pm.injectionsTherapies.map((t, i) => (
+                                <div key={i} className={styles.dataItem}>
+                                  {t}
                                 </div>
-                                {Object.entries(value).map(
-                                  ([subKey, subValue]) => (
-                                    <div
-                                      key={`${key}-${subKey}`}
-                                      style={{
-                                        marginLeft: "10px",
-                                        fontSize: "15px",
-                                      }}
-                                    >
-                                      <strong>{capitalize(subKey)}:</strong>{" "}
-                                      {subValue === null ||
-                                      subValue === undefined ? (
-                                        <span style={{ color: "#888" }}>—</span>
-                                      ) : (
-                                        subValue
-                                      )}
-                                    </div>
-                                  )
-                                )}
+                              ))}
+                            </>
+                          )}
+
+                        {/* Lifestyle */}
+                        {Array.isArray(pm.lifestyle) &&
+                          pm.lifestyle.length > 0 && (
+                            <>
+                              <h4>Lifestyle Advice</h4>
+                              {pm.lifestyle.map((l, i) => (
+                                <div key={i} className={styles.dataItem}>
+                                  {l}
+                                </div>
+                              ))}
+                            </>
+                          )}
+
+                        {/* Non-drug */}
+                        {Array.isArray(pm.nonDrugRecommendations) &&
+                          pm.nonDrugRecommendations.length > 0 && (
+                            <>
+                              <h4>Non-Drug Recommendations</h4>
+                              {pm.nonDrugRecommendations.map((n, i) => (
+                                <div key={i} className={styles.dataItem}>
+                                  {n}
+                                </div>
+                              ))}
+                            </>
+                          )}
+
+                        {/* Follow-Up */}
+                        {(pm.followUp || pm.followUpInstructions) && (
+                          <>
+                            <h4>Follow-Up</h4>
+
+                            {pm.followUp && (
+                              <div className={styles.dataItem}>
+                                {pm.followUp}
                               </div>
-                            );
-                          } else {
-                            return (
-                              <div key={key} style={{ fontSize: "15px" }}>
-                                <strong>{capitalize(key)}:</strong>{" "}
-                                {value === null || value === undefined ? (
-                                  <span style={{ color: "#888" }}>—</span>
-                                ) : (
-                                  value
-                                )}
+                            )}
+
+                            {pm.followUpInstructions && (
+                              <div className={styles.dataItem}>
+                                {smartFormat(pm.followUpInstructions)}
                               </div>
-                            );
-                          }
-                        }
-                      )}
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-              )}
+                            )}
+                          </>
+                        )}
+
+                        {/* Precautions */}
+                        {pm.precautions && (
+                          <>
+                            <h4>Precautions</h4>
+                            <div className={styles.dataItem}>
+                              {pm.precautions}
+                            </div>
+                          </>
+                        )}
+
+                        {/* Therapy Plan */}
+                        {pm.therapyPlan && (
+                          <>
+                            <h4>Therapy Plan</h4>
+                            <div className={styles.dataItem}>
+                              {pm.therapyPlan}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    {/* --- Tests & Treatments --- */}
+                    {tests && (
+                      <div className={styles.sectionBlock}>
+                        <div className={styles.sectionTitle}>
+                          Treatments & Tests
+                        </div>
+
+                        {tests.treatments?.length > 0 &&
+                          tests.treatments.map((t, i) => (
+                            <div className={styles.subList} key={i}>
+                              <strong>{t.name}</strong> – {t.dosage} (
+                              {t.frequency}) for {t.duration}
+                            </div>
+                          ))}
+
+                        {tests.tests?.length > 0 && (
+                          <div className={styles.dataItem}>
+                            {smartFormat(tests.tests)}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* --- Additional Clean Data --- */}
+                    {otherKeys.length > 0 && (
+                      <div className={styles.sectionBlock}>
+                        <div className={styles.sectionTitle}>
+                          Additional Data
+                        </div>
+
+                        {otherKeys.map((k) => (
+                          <div className={styles.dataItem} key={k}>
+                            <strong>{prettyKey(k)}:</strong>{" "}
+                            {smartFormat(cd[k])}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           )}
         </Box>
@@ -228,13 +475,13 @@ const PastReportsAndDischarge = ({ patientId }) => {
                   <p>
                     <strong>Department:</strong> {entry.department || "N/A"}
                   </p>
-                  <p>
+                  <p className={styles.infoLine}>
                     <strong>Diagnosis:</strong>{" "}
-                    {entry.consultationData?.diagnosis || "Not specified"}
+                    {entry.consultationData?.diagnosisAndVitals?.text || "N/A"}
                   </p>
-                  <p>
+                  <p className={styles.infoLine}>
                     <strong>Complaints:</strong>{" "}
-                    {entry.consultationData?.complaints || "Not specified"}
+                    {entry.consultationData?.complaints || "N/A"}
                   </p>
                 </div>
               </div>

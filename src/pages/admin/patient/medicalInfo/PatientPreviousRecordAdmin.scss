@@ -442,3 +442,43 @@
   color: #999;
   margin-top: 4px;
 }
+.section-block {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 18px;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #25307f;
+}
+
+.tag {
+  display: inline-block;
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.med-card {
+  background: #f7faff;
+  border: 1px solid #d8e2ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.list-item {
+  background: #fafafa;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  border-left: 3px solid #5461be;
+}
