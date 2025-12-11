@@ -53,6 +53,7 @@ import {
   GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
+  LOADING_PATIENTS,
   NULL_ESTIMATED_BILL,
   UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
@@ -125,6 +126,9 @@ const initialState = {
   totalAdmissionRequests: null,
   admissionRequests: [],
   isLoadingAdmissionRequests: true,
+  isLoadingDoctors: false,
+  isLoadingStaffs: false,
+  isLoadingRooms: false,
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -147,6 +151,12 @@ export const adminReducer = (state = initialState, action) => {
         totalDoctors: action.payload.totalDoctors,
         doctorCount: action.payload.totalDoctors,
         doctors: action.payload.doctors,
+      };
+
+    case "LOADING_DOCTORS":
+      return {
+        ...state,
+        isLoadingDoctors: action.payload,
       };
     case GET_FILTERED_DOCTORS:
       return {
@@ -251,7 +261,11 @@ export const adminReducer = (state = initialState, action) => {
         totalFilteredPatients: action.payload.totalPatients,
         filteredPatients: action.payload.patients,
       };
-
+    case LOADING_PATIENTS:
+      return {
+        ...state,
+        isLoadingFilteredPatients: action.payload,
+      };
     case GET_STAFFS:
       return {
         ...state,
@@ -259,6 +273,12 @@ export const adminReducer = (state = initialState, action) => {
         staffCount: action.payload.totalStaff,
         staffs: action.payload.staff,
         isLoading: false,
+      };
+
+    case "LOADING_STAFFS":
+      return {
+        ...state,
+        isLoadingStaffs: action.payload,
       };
     case ADD_STAFFS:
       return {
@@ -292,6 +312,11 @@ export const adminReducer = (state = initialState, action) => {
         isLoading: false,
       };
 
+    case "LOADING_ROOMS":
+      return {
+        ...state,
+        isLoadingRooms: action.payload,
+      };
     case GET_FILTERED_ROOMS:
       return {
         ...state,

@@ -11,6 +11,8 @@ import {
   Typography,
   Chip,
   IconButton,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -57,6 +59,7 @@ const DoctorsTable = ({
   handleChangeRowsPerPage,
   truncateText,
   onRowMenuOpen,
+  loading,
 }) => {
   const is1280 = useMediaQuery("(max-width:1280px)");
   const is1024 = useMediaQuery("(max-width:1024px)");
@@ -105,6 +108,26 @@ const DoctorsTable = ({
           "& .MuiTableCell-root": { py: cellPy, px: cellPx, fontSize: fsBody },
         }}
       >
+        {loading && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "rgba(255, 255, 255, 0.6)",
+              backdropFilter: "blur(2px)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 20,
+            }}
+          >
+            <CircularProgress sx={{ color: "#25307F" }} />
+          </Box>
+        )}
+
         <TableHead
           sx={{
             position: "sticky",

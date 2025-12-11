@@ -232,7 +232,7 @@ const AdminRooms = (props) => {
 
   // console.log("Rooms from state: ", rooms);
   const totalRooms = useSelector((state) => state.admin.totalFilteredRooms);
-  const loading = useSelector((state) => state.admin.isLoading);
+  const loading = useSelector((state) => state.admin.isLoadingRooms);
   // const rooms = undefined;
   const doctors = useSelector((state) => state.admin.doctors);
 
@@ -305,372 +305,379 @@ const AdminRooms = (props) => {
         <CommonPanel />
       </div>
       <div style={{ marginTop: "160px" }}>
-        {loading ? (
+        <>
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "50vh", // or full height you need
+              borderBottom: "1px solid #87878782",
+              paddingBottom: 0.5,
+              marginBottom: 1,
             }}
           >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
-          </Box>
-        ) : (
-          <>
-            <Box
-              sx={{
-                borderBottom: "1px solid #87878782",
-                paddingBottom: 0.5,
-                marginBottom: 1,
-              }}
+            <div
+              className={ayu.headerContainer}
+              style={{ justifyContent: "space-between" }}
             >
-              <div
-                className={ayu.headerContainer}
-                style={{ justifyContent: "space-between" }}
-              >
-                <div style={{ display: "flex" }}>
-                  <span
-                    onClick={() => navigate(-1)}
-                    style={{
-                      transform: "translateY(8px)",
-                      color: "black",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <ArrowBackIosIcon />
-                  </span>
-                  <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
-                  <h2 className={ayu.departmentTitleDetails}>{totalRooms}</h2>
-                </div>
-                <div style={{ display: "flex", gap: "1rem" }}>
-                  <Box sx={{ display: "flex", gap: 3 }}>
-                    {/* Adjust gap for spacing */}
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ color: "black" }}
-                    >
-                      <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor: "#3DB461",
-                        }}
-                      />
-                      Available
-                    </Box>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ color: "black" }}
-                    >
-                      <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor: "#FFA412",
-                        }}
-                      />
-                      Occupied
-                    </Box>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      sx={{ color: "black" }}
-                    >
-                      <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor: "#AEC3FF",
-                        }}
-                      />
-                      Under Maintenance
-                    </Box>
-                  </Box>
-
-                  <div style={{ marginLeft: "auto" }}>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        fontSize: "20px",
-                        color: "#ffffff",
-                        textTransform: "capitalize",
-                        padding: "2px 18px",
-                        backgroundColor: "#25307F",
-                        boxShadow: "0px 4px 4px 0px #C2C2C240",
-                        "&:hover": {
-                          background: "#AEC3FF",
-                        },
-                      }}
-                      onClick={handleAddDialogOpen} // Open modal on click
-                    >
-                      <img
-                        src={addIcon}
-                        className={styles.appointmentBlock__plusIcon}
-                      />
-                      Add
-                    </Button>
-                  </div>
-                </div>
-                <AddRoomDialog
-                  open={addDialogOpen}
-                  onClose={handleAddDialogClose}
-                  onSave={handleSubmit}
-                  formData={formData}
-                  setFormData={setFormData}
-                  errors={errors}
-                  doctors={doctors}
-                  wingTypes={wingTypes}
-                  roomTypes={roomTypes}
-                  roomTypesInState={roomTypesInState}
-                  handleChange={handleChange}
-                  handleBedChange={handleBedChange}
-                  handleAddBed={handleAddBed}
-                  handleRemoveBed={handleRemoveBed}
-                />
-
-                <RoomBedsDialog
-                  open={addDialogOpen1}
-                  onClose={() => setAddDialogOpen1(false)}
-                  currentRoom={currentRoom}
-                  newBeds={newBeds}
-                  handleAddRow={handleAddRow}
-                  handleChangeRow={handleChangeRow}
-                  handleSaveBed={handleSaveBed}
-                  handleCancelRow={handleCancelRow}
-                />
-              </div>
-            </Box>
-
-            {/* Table Section */}
-            <TableContainer
-              sx={{
-                maxHeight: "63vh", // Adjust this to fit your layout needs
-                overflowY: "auto",
-              }}
-            >
-              <Table
-                sx={{
-                  borderCollapse: "separate",
-                  borderSpacing: "0 10px",
-                  width: "100%",
-                  marginBottom: "30px",
-                }}
-              >
-                <TableHead
-                  sx={{
-                    position: "sticky",
-                    backgroundColor: "#f1f1f1",
-                    top: 0,
-                    zIndex: 10, // Keep it above other elements
+              <div style={{ display: "flex" }}>
+                <span
+                  onClick={() => navigate(-1)}
+                  style={{
+                    transform: "translateY(8px)",
+                    color: "black",
+                    cursor: "pointer",
                   }}
                 >
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
-                      Room ID
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
-                      Room Type
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
-                      Name
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "600", width: "25%" }}>
-                      Status
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "600", minWidth: "8rem" }}>
-                      Doctor Assigned
-                    </TableCell>
-                    <TableCell
+                  <ArrowBackIosIcon />
+                </span>
+                <h2 className={ayu.departmentTitle}>Total Rooms:</h2>
+                <h2 className={ayu.departmentTitleDetails}>{totalRooms}</h2>
+              </div>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Box sx={{ display: "flex", gap: 3 }}>
+                  {/* Adjust gap for spacing */}
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    sx={{ color: "black" }}
+                  >
+                    <Box
                       sx={{
-                        fontWeight: "600",
-                        width: "auto",
-                        textAlign: "right",
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        backgroundColor: "#3DB461",
                       }}
-                    ></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rooms.length > 0 ? (
-                    rooms.map((room) => (
-                      <TableRow
-                        key={room._id}
-                        sx={{
-                          background: "#fff",
-                          cursor: "pointer",
-                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          "&:hover": {
-                            backgroundColor: "#f9f9f9",
-                          },
-                        }}
-                        onClick={() => handleAddDialogOpen1(room)}
-                      >
-                        <TableCell
-                          sx={{
-                            color: "#25307F",
-                            fontWeight: "bold",
-                            width: "25%",
-                          }}
-                        >
-                          {room.roomID}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            color: "#25307F",
-                            fontWeight: "bold",
-                            width: "25%",
-                          }}
-                        >
-                          {room?.roomType}
-                        </TableCell>
-                        <TableCell sx={{ width: "25%" }}>
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: "bold",
-                              color: "#25307F",
-                              cursor: "pointer",
-                              whiteSpace: "nowrap", // Prevents text from wrapping
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            }}
-                          >
-                            {room.name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell sx={{ width: "25%" }}>
-                          {" "}
-                          {/* Increase 'pl' value for more spacing */}
-                          <Box display="flex" alignItems="center" gap={1}>
-                            <Box
-                              sx={{
-                                width: 10,
-                                height: 10,
-                                borderRadius: "50%",
-                                backgroundColor:
-                                  room.status === "Under Maintenance"
-                                    ? "#AEC3FF"
-                                    : room.status === "Full"
-                                    ? "#FFA412"
-                                    : "#3DB461",
-                              }}
-                            />
-                            {room.status === "Under Maintenance"
-                              ? "Under Maintenance"
-                              : room.status === "Full"
-                              ? "Occupied"
-                              : "Available"}
-                          </Box>
-                        </TableCell>
-                        <TableCell sx={{ width: "25%" }}>
-                          {room.assignedDoctor?.name || "Not Assigned"}
-                        </TableCell>
+                    />
+                    Available
+                  </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    sx={{ color: "black" }}
+                  >
+                    <Box
+                      sx={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        backgroundColor: "#FFA412",
+                      }}
+                    />
+                    Occupied
+                  </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    sx={{ color: "black" }}
+                  >
+                    <Box
+                      sx={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        backgroundColor: "#AEC3FF",
+                      }}
+                    />
+                    Under Maintenance
+                  </Box>
+                </Box>
 
-                        <TableCell sx={{ width: "auto", textAlign: "right" }}>
-                          <IconButton
-                            onClick={(event) => handleMenuOpen(event, room)}
-                          >
-                            <MoreVertIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
+                <div style={{ marginLeft: "auto" }}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      fontSize: "20px",
+                      color: "#ffffff",
+                      textTransform: "capitalize",
+                      padding: "2px 18px",
+                      backgroundColor: "#25307F",
+                      boxShadow: "0px 4px 4px 0px #C2C2C240",
+                      "&:hover": {
+                        background: "#AEC3FF",
+                      },
+                    }}
+                    onClick={handleAddDialogOpen} // Open modal on click
+                  >
+                    <img
+                      src={addIcon}
+                      className={styles.appointmentBlock__plusIcon}
+                    />
+                    Add
+                  </Button>
+                </div>
+              </div>
+              <AddRoomDialog
+                open={addDialogOpen}
+                onClose={handleAddDialogClose}
+                onSave={handleSubmit}
+                formData={formData}
+                setFormData={setFormData}
+                errors={errors}
+                doctors={doctors}
+                wingTypes={wingTypes}
+                roomTypes={roomTypes}
+                roomTypesInState={roomTypesInState}
+                handleChange={handleChange}
+                handleBedChange={handleBedChange}
+                handleAddBed={handleAddBed}
+                handleRemoveBed={handleRemoveBed}
+              />
+
+              <RoomBedsDialog
+                open={addDialogOpen1}
+                onClose={() => setAddDialogOpen1(false)}
+                currentRoom={currentRoom}
+                newBeds={newBeds}
+                handleAddRow={handleAddRow}
+                handleChangeRow={handleChangeRow}
+                handleSaveBed={handleSaveBed}
+                handleCancelRow={handleCancelRow}
+              />
+            </div>
+          </Box>
+
+          {/* Table Section */}
+          <TableContainer
+            sx={{
+              maxHeight: "63vh", // Adjust this to fit your layout needs
+              overflowY: "auto",
+            }}
+          >
+            <Table
+              sx={{
+                borderCollapse: "separate",
+                borderSpacing: "0 10px",
+                width: "100%",
+                marginBottom: "30px",
+              }}
+            >
+              {loading && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    backdropFilter: "blur(2px)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 20,
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#25307F" }} />
+                </Box>
+              )}
+              <TableHead
+                sx={{
+                  position: "sticky",
+                  backgroundColor: "#f1f1f1",
+                  top: 0,
+                  zIndex: 10, // Keep it above other elements
+                }}
+              >
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                    Room ID
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                    Room Type
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                    Name
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                    Status
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "600", minWidth: "8rem" }}>
+                    Doctor Assigned
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: "600",
+                      width: "auto",
+                      textAlign: "right",
+                    }}
+                  ></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rooms.length > 0 ? (
+                  rooms.map((room) => (
+                    <TableRow
+                      key={room._id}
+                      sx={{
+                        background: "#fff",
+                        cursor: "pointer",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                      }}
+                      onClick={() => handleAddDialogOpen1(room)}
+                    >
                       <TableCell
-                        align="center"
-                        colSpan={7}
                         sx={{
-                          background: "#fff",
-                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          "&:hover": {
-                            backgroundColor: "#f9f9f9",
-                          },
-                          "& > *": {
-                            borderBottom: "unset",
-                          },
+                          color: "#25307F",
+                          fontWeight: "bold",
+                          width: "25%",
                         }}
                       >
-                        No data found!
+                        {room.roomID}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          color: "#25307F",
+                          fontWeight: "bold",
+                          width: "25%",
+                        }}
+                      >
+                        {room?.roomType}
+                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: "bold",
+                            color: "#25307F",
+                            cursor: "pointer",
+                            whiteSpace: "nowrap", // Prevents text from wrapping
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {room.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        {" "}
+                        {/* Increase 'pl' value for more spacing */}
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Box
+                            sx={{
+                              width: 10,
+                              height: 10,
+                              borderRadius: "50%",
+                              backgroundColor:
+                                room.status === "Under Maintenance"
+                                  ? "#AEC3FF"
+                                  : room.status === "Full"
+                                  ? "#FFA412"
+                                  : "#3DB461",
+                            }}
+                          />
+                          {room.status === "Under Maintenance"
+                            ? "Under Maintenance"
+                            : room.status === "Full"
+                            ? "Occupied"
+                            : "Available"}
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        {room.assignedDoctor?.name || "Not Assigned"}
+                      </TableCell>
+
+                      <TableCell sx={{ width: "auto", textAlign: "right" }}>
+                        <IconButton
+                          onClick={(event) => handleMenuOpen(event, room)}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-              {/* Pagination */}
-            </TableContainer>
-            <Box
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      align="center"
+                      colSpan={7}
+                      sx={{
+                        background: "#fff",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      No data found!
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            {/* Pagination */}
+          </TableContainer>
+          <Box
+            sx={{
+              width: "100%",
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "2px solid #ddd",
+              zIndex: 2,
+            }}
+          >
+            <TablePagination
+              component="div"
+              count={totalRooms || 0}
+              page={page} // current page
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage} // items per page
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]} //  Custom options
               sx={{
                 width: "100%",
-                position: "sticky",
-                bottom: 0,
                 backgroundColor: "#fff",
                 borderTop: "2px solid #ddd",
-                zIndex: 2,
+                zIndex: 11,
               }}
-            >
-              <TablePagination
-                component="div"
-                count={totalRooms || 0}
-                page={page} // current page
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage} // items per page
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[5, 10, 20, 50, 100]} //  Custom options
-                sx={{
-                  width: "100%",
-                  backgroundColor: "#fff",
-                  borderTop: "2px solid #ddd",
-                  zIndex: 11,
-                }}
-              />
-            </Box>
-            {/* Actions Menu */}
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              PaperProps={{
-                elevation: 2,
-                sx: { padding: 1 },
-              }}
-            >
-              <MenuItem onClick={handleEdit}>
-                <ListItemIcon>
-                  <EditIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Edit</ListItemText>
-              </MenuItem>
-              <MenuItem onClick={handleDelete}>
-                <ListItemIcon>
-                  <DeleteIcon fontSize="small" color="error" />
-                </ListItemIcon>
-                <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
-              </MenuItem>
-            </Menu>
-
-            <EditRoomDialog
-              open={editDialogOpen}
-              onClose={handleEditDialogClose}
-              onSave={handleSaveEditedRoom}
-              editedRoom={editedRoom}
-              setEditedRoom={setEditedRoom}
-              errors={errors}
-              doctors={doctors}
-              wingTypes={wingTypes}
             />
-          </>
-        )}
+          </Box>
+          {/* Actions Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            PaperProps={{
+              elevation: 2,
+              sx: { padding: 1 },
+            }}
+          >
+            <MenuItem onClick={handleEdit}>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Edit</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" color="error" />
+              </ListItemIcon>
+              <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+            </MenuItem>
+          </Menu>
+
+          <EditRoomDialog
+            open={editDialogOpen}
+            onClose={handleEditDialogClose}
+            onSave={handleSaveEditedRoom}
+            editedRoom={editedRoom}
+            setEditedRoom={setEditedRoom}
+            errors={errors}
+            doctors={doctors}
+            wingTypes={wingTypes}
+            loading={loading}
+          />
+        </>
       </div>
     </div>
   );

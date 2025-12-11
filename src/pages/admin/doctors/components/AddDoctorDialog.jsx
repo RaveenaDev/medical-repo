@@ -12,6 +12,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  CircularProgress,
 } from "@mui/material";
 
 const AddDoctorDialog = ({
@@ -22,6 +23,7 @@ const AddDoctorDialog = ({
   onSubmit,
   errors,
   departments,
+  loading,
 }) => {
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -153,13 +155,18 @@ const AddDoctorDialog = ({
         <Button
           onClick={onSubmit}
           variant="contained"
+          disabled={loading} // Disable while loading
           sx={{
             width: 200,
             backgroundColor: "#25307F",
             "&:hover": { backgroundColor: "green" },
           }}
         >
-          Save
+          {loading ? (
+            <CircularProgress size={26} sx={{ color: "white" }} />
+          ) : (
+            "Save"
+          )}
         </Button>
       </DialogActions>
     </Dialog>

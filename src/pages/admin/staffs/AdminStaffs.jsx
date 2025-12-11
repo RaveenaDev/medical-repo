@@ -43,7 +43,7 @@ const AdminStaffs = (props) => {
 
   // selectors with shallowEqual to avoid pointless rerenders
   const staffs = useSelector((s) => s.admin.staffs || [], shallowEqual);
-  const loading = useSelector((s) => s.admin.isLoading === true);
+  const loading = useSelector((s) => s.admin.isLoadingStaffs);
   const count = useSelector((s) => s.admin.staffCount || 0);
   const departments = useSelector(
     (s) => s.admin.departments || [],
@@ -190,117 +190,107 @@ const AdminStaffs = (props) => {
       </div>
 
       <div style={{ marginTop: isCompact ? 140 : 150 }}>
-        {loading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "50vh",
-            }}
-          >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
-          </Box>
-        ) : (
-          <>
-            <Box sx={{ borderBottom: "0.5px solid #4A4A4A8C", pb: 1.5 }}>
-              <div className={ayu.headerContainer}>
-                <span
-                  onClick={() => navigate(-1)}
-                  style={{
-                    transform: "translateY(4px)",
-                    color: "black",
-                    cursor: "pointer",
-                    fontSize: isCompact ? 18 : 22,
+        <>
+          <Box sx={{ borderBottom: "0.5px solid #4A4A4A8C", pb: 1.5 }}>
+            <div className={ayu.headerContainer}>
+              <span
+                onClick={() => navigate(-1)}
+                style={{
+                  transform: "translateY(4px)",
+                  color: "black",
+                  cursor: "pointer",
+                  fontSize: isCompact ? 18 : 22,
+                }}
+              >
+                <ArrowBackIosIcon />
+              </span>
+              <h2
+                className={ayu.departmentTitle}
+                style={{ fontSize: isCompact ? "1.05rem" : "1.25rem" }}
+              >
+                {isCompact ? "Staff" : "Total Staffs:"}
+              </h2>
+              <h2
+                className={ayu.departmentTitleDetails}
+                style={{ fontSize: isCompact ? "1.05rem" : "1.25rem" }}
+              >
+                {count}
+              </h2>
+
+              <div style={{ marginLeft: "auto" }}>
+                <Button
+                  variant="contained"
+                  onClick={onAddClick}
+                  sx={{
+                    bgcolor: "#25307F",
+                    color: "#fff",
+                    textTransform: "capitalize",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    "&:hover": { background: "#AEC3FF" },
+                    minWidth: isCompact ? 0 : 120,
+                    px: isCompact ? 1.5 : 2.5,
+                    py: isCompact ? 0.6 : 1,
+                    fontSize: isCompact ? 14 : 18,
+                    height: isCompact ? 34 : 40,
                   }}
                 >
-                  <ArrowBackIosIcon />
-                </span>
-                <h2
-                  className={ayu.departmentTitle}
-                  style={{ fontSize: isCompact ? "1.05rem" : "1.25rem" }}
-                >
-                  {isCompact ? "Staff" : "Total Staffs:"}
-                </h2>
-                <h2
-                  className={ayu.departmentTitleDetails}
-                  style={{ fontSize: isCompact ? "1.05rem" : "1.25rem" }}
-                >
-                  {count}
-                </h2>
-
-                <div style={{ marginLeft: "auto" }}>
-                  <Button
-                    variant="contained"
-                    onClick={onAddClick}
-                    sx={{
-                      bgcolor: "#25307F",
-                      color: "#fff",
-                      textTransform: "capitalize",
-                      boxShadow: "0px 4px 4px 0px #C2C2C240",
-                      "&:hover": { background: "#AEC3FF" },
-                      minWidth: isCompact ? 0 : 120,
-                      px: isCompact ? 1.5 : 2.5,
-                      py: isCompact ? 0.6 : 1,
-                      fontSize: isCompact ? 14 : 18,
-                      height: isCompact ? 34 : 40,
-                    }}
-                  >
-                    <img
-                      src={addIcon}
-                      className={styles.appointmentBlock__plusIcon}
-                    />
-                    Add
-                  </Button>
-                </div>
+                  <img
+                    src={addIcon}
+                    className={styles.appointmentBlock__plusIcon}
+                  />
+                  Add
+                </Button>
               </div>
-            </Box>
+            </div>
+          </Box>
 
-            <StaffTable
-              staffs={staffs}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              count={count}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              onOpenMenu={openMenu}
-            />
+          <StaffTable
+            staffs={staffs}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            count={count}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            onOpenMenu={openMenu}
+            loading={loading}
+          />
 
-            <StaffActionsMenu
-              anchorEl={menuAnchor}
-              open={Boolean(menuAnchor)}
-              onClose={closeMenu}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
+          <StaffActionsMenu
+            anchorEl={menuAnchor}
+            open={Boolean(menuAnchor)}
+            onClose={closeMenu}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
 
-            <StaffFormDialog
-              title="Add New Staff"
-              open={addOpen}
-              onClose={() => setAddOpen(false)}
-              form={addForm}
-              setForm={setAddForm}
-              errors={errors}
-              departments={departments}
-              onSubmit={submitAdd}
-              onImage={handleImageChange}
-              submitLabel="Save"
-            />
+          <StaffFormDialog
+            title="Add New Staff"
+            open={addOpen}
+            onClose={() => setAddOpen(false)}
+            form={addForm}
+            setForm={setAddForm}
+            errors={errors}
+            departments={departments}
+            onSubmit={submitAdd}
+            onImage={handleImageChange}
+            submitLabel="Save"
+            loading={loading}
+          />
 
-            <StaffFormDialog
-              title="Edit Staff"
-              open={editOpen}
-              onClose={() => setEditOpen(false)}
-              form={editForm}
-              setForm={setEditForm}
-              errors={errors}
-              departments={departments}
-              onSubmit={submitEdit}
-              onImage={handleImageChange}
-              submitLabel="Save"
-            />
-          </>
-        )}
+          <StaffFormDialog
+            title="Edit Staff"
+            open={editOpen}
+            onClose={() => setEditOpen(false)}
+            form={editForm}
+            setForm={setEditForm}
+            errors={errors}
+            departments={departments}
+            onSubmit={submitEdit}
+            onImage={handleImageChange}
+            submitLabel="Save"
+            loading={loading}
+          />
+        </>
       </div>
     </div>
   );
