@@ -55,7 +55,6 @@ const InPatients = (props) => {
   // console.log("Fil: ", filteredInPatients);
 
   useEffect(() => {
-    // dispatch(getPatients());
     dispatch(
       getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch)
     );

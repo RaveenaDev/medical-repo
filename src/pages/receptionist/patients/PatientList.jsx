@@ -181,7 +181,7 @@ const PatientList = () => {
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <span className={styles.patientCount}>
-              {noOfPatients} <span>Inpatients</span>
+              {noOfPatients} <span>Patients</span>
             </span>
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -305,7 +305,7 @@ const PatientList = () => {
                 <TableCell>Phone Number</TableCell>
                 <TableCell>Type Visit</TableCell>
 
-                <TableCell>Date</TableCell>
+                <TableCell>Registration Date</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -361,7 +361,7 @@ const PatientList = () => {
                         }
                       )}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="left">
                       <Chip
                         label={
                           patient.status.charAt(0).toUpperCase() +
