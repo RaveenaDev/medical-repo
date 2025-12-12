@@ -55,8 +55,8 @@ const DepartDetails = (props) => {
   const department = receptionist.department;
   const services = receptionist.servicesByDepartment;
 
-  // console.log("Dep: ",department)
-  // console.log("Serv: ",services)
+  // console.log("Dep: ", department);
+  // console.log("Serv: ", services);
 
   return (
     <>
@@ -77,7 +77,6 @@ const DepartDetails = (props) => {
                 }}
                 className={ayu.backButton}
                 onClick={handleClick}
-                style={{ marginBottom: "5px" }}
               >
                 <ArrowBackIosIcon />
               </Button>
@@ -90,20 +89,11 @@ const DepartDetails = (props) => {
               </h2>
             </div>
 
-            {/*/!* Horizontal line *!/*/}
-            {/*<hr style={{border: '1px solid #d3d3d3', margin: '20px 0'}} />*/}
-
             <Box className={avi.boxContainer}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                   <h4 className={avi.heading}>Specific Branch Name</h4>
                   <div className={avi.pro}>
-                    {/* <img
-                      className={avi.img}
-                      src="https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"
-                      alt=""
-                    /> */}
-
                     <Avatar
                       src=""
                       sx={{
@@ -112,11 +102,7 @@ const DepartDetails = (props) => {
                         fontWeight: 500,
                       }}
                       className="patientAvatar"
-                    >
-                      {
-                        // department?.departmentHead.name[4].toUpperCase()
-                      }
-                    </Avatar>
+                    ></Avatar>
                     <p className={avi.name}>
                       {department?.departmentHead.name}
                     </p>

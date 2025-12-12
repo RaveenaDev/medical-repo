@@ -162,7 +162,7 @@ $blue: #25307f;
 
 .superCardContainer {
   overflow-y: auto;
-  max-height: 75vh; // Set a max height for the container
+  min-height: 62vh; // Set a max height for the container
   display: grid;
   gap: 1.5rem;
   &::-webkit-scrollbar {
