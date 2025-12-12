@@ -12,6 +12,8 @@ import {
   Avatar,
   IconButton,
   useMediaQuery,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
@@ -150,6 +152,7 @@ const StaffTable = memo(function StaffTable({
   onPageChange,
   onRowsPerPageChange,
   onOpenMenu,
+  loading,
 }) {
   const isCompact = useIs10to13Inch();
 
@@ -171,6 +174,25 @@ const StaffTable = memo(function StaffTable({
         px: isCompact ? 0.5 : 1,
       }}
     >
+      {loading && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(255, 255, 255, 0.6)",
+            backdropFilter: "blur(2px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 20,
+          }}
+        >
+          <CircularProgress sx={{ color: "#25307F" }} />
+        </Box>
+      )}
       <Table
         size={isCompact ? "small" : "medium"}
         sx={{

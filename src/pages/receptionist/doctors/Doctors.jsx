@@ -232,15 +232,13 @@ const Doctors = (props) => {
                     >
                       <TableRow>
                         <TableCell sx={{ color: "#000000" }}>Profile</TableCell>
-                        <TableCell sx={{ color: "#000000" }}>
-                          Doctor ID
-                        </TableCell>
+
                         <TableCell sx={{ color: "#000000" }}>Name</TableCell>
                         <TableCell sx={{ color: "#000000" }}>
                           Phone Number
                         </TableCell>
                         <TableCell sx={{ color: "#000000" }}>
-                          Specialization
+                          Department
                         </TableCell>
                         <TableCell sx={{ color: "#000000" }} align="center">
                           Status
@@ -274,14 +272,7 @@ const Doctors = (props) => {
                                 sx={{ width: 40, height: 40 }} // Adjust size
                               />
                             </TableCell>
-                            <TableCell>
-                              <Typography
-                                variant="body1"
-                                sx={{ fontWeight: "bold", color: "#25307F" }}
-                              >
-                                {truncateText(patient?._id, 8)}
-                              </Typography>
-                            </TableCell>
+
                             <TableCell>
                               <Typography
                                 variant="body1"
@@ -298,7 +289,8 @@ const Doctors = (props) => {
                             <TableCell
                               sx={{ color: "#747474", fontWeight: "bold" }}
                             >
-                              {patient?.specialization || "Not Assigned"}
+                              {patient?.departments?.[0]?.name ||
+                                "Not Assigned"}
                             </TableCell>
                             <TableCell align="center">
                               <Chip

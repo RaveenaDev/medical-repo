@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import {
   Avatar,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,6 +22,7 @@ const StaffFormDialog = ({
   onSubmit,
   onImage, // (file, setForm) => void
   submitLabel = "Save",
+  loading = false,
 }) => {
   const fileRef = useRef(null);
 
@@ -140,18 +142,23 @@ const StaffFormDialog = ({
         </TextField>
       </DialogContent>
 
-      <DialogActions sx={{ justifyContent: "center" }}>
+      <DialogActions sx={{ justifyContent: "center", gap: 2 }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button
           onClick={onSubmit}
           variant="contained"
+          disabled={loading}
           sx={{
             width: 200,
             backgroundColor: "#25307F",
             "&:hover": { background: "#AEC3FF" },
           }}
         >
-          {submitLabel}
+          {loading ? (
+            <CircularProgress size={24} sx={{ color: "white", mr: 1 }} />
+          ) : (
+            "Save"
+          )}
         </Button>
       </DialogActions>
     </Dialog>

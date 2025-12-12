@@ -168,6 +168,7 @@ const AdminDoctors = (props) => {
 
   const isNarrow = useMediaQuery("(max-width:1024px)");
 
+  const isloading = useSelector((store) => store.admin.isLoadingDoctors);
   return (
     <div style={{ height: "99dvh", overflow: "hidden", background: "#F1F1F1" }}>
       <div
@@ -184,177 +185,167 @@ const AdminDoctors = (props) => {
       </div>
 
       <div style={{ marginTop: isNarrow ? 130 : 145 }}>
-        {loading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "50vh",
-            }}
-          >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
-          </Box>
-        ) : (
-          <>
-            <Box>
+        <>
+          <Box>
+            <div
+              className={ayu.headerContainer}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: isNarrow ? 10 : 16,
+                flexWrap: "wrap",
+              }}
+            >
               <div
-                className={ayu.headerContainer}
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: isNarrow ? 10 : 16,
+                  gap: 4,
                   flexWrap: "wrap",
                 }}
               >
-                <div
+                <span
+                  onClick={() => navigate(-1)}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 4,
-                    flexWrap: "wrap",
+                    transform: "translateY(4px)",
+                    color: "black",
+                    cursor: "pointer",
                   }}
                 >
-                  <span
-                    onClick={() => navigate(-1)}
-                    style={{
-                      transform: "translateY(4px)",
-                      color: "black",
-                      cursor: "pointer",
+                  <ArrowBackIosIcon />
+                </span>
+
+                <h2
+                  className={ayu.departmentTitle}
+                  style={{ margin: 0, fontSize: isNarrow ? 18 : 22 }}
+                >
+                  Total Doctors:
+                </h2>
+                <h2
+                  className={ayu.departmentTitleDetails}
+                  style={{ margin: 0, fontSize: isNarrow ? 18 : 22 }}
+                >
+                  {noOfDoctors}
+                </h2>
+              </div>
+
+              <div
+                style={{
+                  marginLeft: isNarrow ? 0 : 25,
+                  flex: isNarrow ? "1 1 240px" : "0 0 auto",
+                }}
+              >
+                <Grid>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      background: "#ffffff",
+                      outline: "none",
                     }}
                   >
-                    <ArrowBackIosIcon />
-                  </span>
-
-                  <h2
-                    className={ayu.departmentTitle}
-                    style={{ margin: 0, fontSize: isNarrow ? 18 : 22 }}
-                  >
-                    Total Doctors:
-                  </h2>
-                  <h2
-                    className={ayu.departmentTitleDetails}
-                    style={{ margin: 0, fontSize: isNarrow ? 18 : 22 }}
-                  >
-                    {noOfDoctors}
-                  </h2>
-                </div>
-
-                <div
-                  style={{
-                    marginLeft: isNarrow ? 0 : 25,
-                    flex: isNarrow ? "1 1 240px" : "0 0 auto",
-                  }}
-                >
-                  <Grid>
-                    <Box
+                    <Select
+                      value={selectedDepartment}
+                      onChange={handleDepartmentChange}
+                      displayEmpty
+                      size="small"
+                      fullWidth
                       sx={{
-                        width: "100%",
                         background: "#ffffff",
                         outline: "none",
+                        border: "1px solid #9797978F",
+                        minWidth: isNarrow ? "auto" : 250,
                       }}
+                      MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
                     >
-                      <Select
-                        value={selectedDepartment}
-                        onChange={handleDepartmentChange}
-                        displayEmpty
-                        size="small"
-                        fullWidth
-                        sx={{
-                          background: "#ffffff",
-                          outline: "none",
-                          border: "1px solid #9797978F",
-                          minWidth: isNarrow ? "auto" : 250,
-                        }}
-                        MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
-                      >
-                        {departmentOptions.map((opt) => (
-                          <MenuItem
-                            key={opt.value}
-                            value={opt.value}
-                            sx={{
-                              height: 40,
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            {opt.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </Box>
-                  </Grid>
-                </div>
-
-                <div style={{ marginLeft: "auto" }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => setAddDialogOpen(true)}
-                    sx={{
-                      fontSize: isNarrow ? 14 : 17,
-                      color: "#ffffff",
-                      textTransform: "capitalize",
-                      px: isNarrow ? 1.5 : 2.5,
-                      py: isNarrow ? 0.45 : 0.6,
-                      backgroundColor: "#25307F",
-                      boxShadow: "0px 4px 4px 0px #C2C2C240",
-                      "&:hover": { background: "#AEC3FF" },
-                    }}
-                  >
-                    <img
-                      src={addIcon}
-                      className={styles.appointmentBlock__plusIcon}
-                      alt="add"
-                      style={{
-                        width: isNarrow ? 16 : 18,
-                        height: isNarrow ? 16 : 18,
-                        marginRight: 8,
-                      }}
-                    />
-                    {isNarrow ? "Add" : "Add"}
-                  </Button>
-                </div>
+                      {departmentOptions.map((opt) => (
+                        <MenuItem
+                          key={opt.value}
+                          value={opt.value}
+                          sx={{
+                            height: 40,
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          {opt.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Box>
+                </Grid>
               </div>
-            </Box>
 
-            <AddDoctorDialog
-              open={addDialogOpen}
-              onClose={() => setAddDialogOpen(false)}
-              newDoctor={newDoctor}
-              setNewDoctor={setNewDoctor}
-              onSubmit={handleSubmit}
-              errors={errors}
-              departments={departments}
-            />
+              <div style={{ marginLeft: "auto" }}>
+                <Button
+                  variant="contained"
+                  onClick={() => setAddDialogOpen(true)}
+                  sx={{
+                    fontSize: isNarrow ? 14 : 17,
+                    color: "#ffffff",
+                    textTransform: "capitalize",
+                    px: isNarrow ? 1.5 : 2.5,
+                    py: isNarrow ? 0.45 : 0.6,
+                    backgroundColor: "#25307F",
+                    boxShadow: "0px 4px 4px 0px #C2C2C240",
+                    "&:hover": { background: "#AEC3FF" },
+                  }}
+                >
+                  <img
+                    src={addIcon}
+                    className={styles.appointmentBlock__plusIcon}
+                    alt="add"
+                    style={{
+                      width: isNarrow ? 16 : 18,
+                      height: isNarrow ? 16 : 18,
+                      marginRight: 8,
+                    }}
+                  />
+                  {isNarrow ? "Add" : "Add"}
+                </Button>
+              </div>
+            </div>
+          </Box>
 
-            <DoctorsTable
-              doctors={doctors}
-              noOfDoctors={noOfDoctors}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              handleChangePage={handleChangePage}
-              handleChangeRowsPerPage={handleChangeRowsPerPage}
-              truncateText={truncateText}
-              onRowMenuOpen={handleMenuOpen}
-            />
+          <AddDoctorDialog
+            open={addDialogOpen}
+            onClose={() => setAddDialogOpen(false)}
+            newDoctor={newDoctor}
+            setNewDoctor={setNewDoctor}
+            onSubmit={handleSubmit}
+            errors={errors}
+            departments={departments}
+            loading={loading}
+          />
 
-            <ActionsMenu
-              anchorEl={anchorEl}
-              onClose={handleMenuClose}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+          <DoctorsTable
+            doctors={doctors}
+            noOfDoctors={noOfDoctors}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            truncateText={truncateText}
+            onRowMenuOpen={handleMenuOpen}
+            loading={isloading}
+          />
 
-            <EditDoctorDialog
-              open={editDialogOpen}
-              onClose={() => setEditDialogOpen(false)}
-              editedDoctor={editedDoctor}
-              setEditedDoctor={setEditedDoctor}
-              onSave={handleSaveEditedDoctor}
-              errors={errors}
-            />
-          </>
-        )}
+          <ActionsMenu
+            anchorEl={anchorEl}
+            onClose={handleMenuClose}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+
+          <EditDoctorDialog
+            open={editDialogOpen}
+            onClose={() => setEditDialogOpen(false)}
+            editedDoctor={editedDoctor}
+            setEditedDoctor={setEditedDoctor}
+            onSave={handleSaveEditedDoctor}
+            errors={errors}
+            loading={loading}
+          />
+        </>
       </div>
     </div>
   );

@@ -91,3 +91,4 @@ export const ADD_PAYMENT_TO_BILL = "ADD_PAYMENT_TO_BILL";
 export const EDIT_BILL = "EDIT_BILL";
 export const ADD_TO_BILL = "ADD_TO_BILL";
 export const EDIT_BED_SUCCESS = "EDIT_BED_SUCCESS";
+export const LOADING_PATIENTS = "LOADING_PATIENTS";

@@ -728,7 +728,9 @@ export const fetchDoctorsByDepartment =
   };
 export const updatePatient = (patientId, updatedData) => async (dispatch) => {
   try {
+    dispatch({ type: LOADING_PATIENTS, payload: true });
     const token = localStorage.getItem("jwt");
+
     const { data } = await axios.put(`${API_URL}/${patientId}`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
@@ -746,6 +748,8 @@ export const updatePatient = (patientId, updatedData) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  } finally {
+    dispatch({ type: LOADING_PATIENTS, payload: false });
   }
 };
 

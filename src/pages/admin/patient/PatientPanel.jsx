@@ -42,7 +42,7 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import useDebounce from "../../../hooks/useDebounce.js";
 import styles from "../../receptionist/patients/PatientList.module.scss";
-import {Search} from "lucide-react";
+import { Search } from "lucide-react";
 
 const PatientPanel = (props) => {
   useEffect(() => {
@@ -122,7 +122,7 @@ const PatientPanel = (props) => {
   // Handle Search Results
   const handleSearchResults = () => {
     admin = null;
-    dispatch(getFilteredPatients(filters,page,rowsPerPage,debouncedSearch));
+    dispatch(getFilteredPatients(filters, page, rowsPerPage, debouncedSearch));
     setFilterDrawerOpen(false);
   };
 
@@ -149,8 +149,8 @@ const PatientPanel = (props) => {
 
   useEffect(() => {
     // dispatch(getPatients());
-    dispatch(getFilteredPatients(filters, page, rowsPerPage,debouncedSearch));
-  }, [dispatch, sortOrder, page, rowsPerPage,debouncedSearch]);
+    dispatch(getFilteredPatients(filters, page, rowsPerPage, debouncedSearch));
+  }, [dispatch, sortOrder, page, rowsPerPage, debouncedSearch]);
 
   let admin = useSelector((store) => store.admin);
   //   const admin = null;
@@ -160,7 +160,7 @@ const PatientPanel = (props) => {
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
-
+  const loading = useSelector((store) => store.admin.isLoadingFilteredPatients);
   return (
     <div
       style={{
@@ -182,583 +182,587 @@ const PatientPanel = (props) => {
         <CommonPanel />
       </div>
       <div style={{ marginTop: "140px" }}>
-        {!noOfPatients && !totalPatients ? (
+        <Box sx={{ padding: 2 }}>
+          {/* Header Section */}
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-between",
               alignItems: "center",
-              height: "50vh", // or full height you need
+              borderTop: "0.5px solid #4A4A4A8C",
+              borderBottom: "0.5px solid #4A4A4A8C",
+              paddingY: 1.5,
             }}
           >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
-          </Box>
-        ) : (
-          <Box sx={{ padding: 2 }}>
-            {/* Header Section */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                borderTop: "0.5px solid #4A4A4A8C",
-                borderBottom: "0.5px solid #4A4A4A8C",
-                paddingY: 1.5,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#25307F",
+                  gap: 1,
+                  borderRight: "0.5px solid #4A4A4A8C",
+                  paddingRight: 2,
+                  marginRight: 1,
+                }}
+              >
+                {noOfPatients}
                 <Typography
-                  variant="h4"
+                  component="span"
+                  variant="body1"
                   sx={{
-                    fontWeight: "bold",
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#25307F",
-                    gap: 1,
-                    borderRight: "0.5px solid #4A4A4A8C",
-                    paddingRight: 2,
-                    marginRight: 1,
+                    color: "#878787",
+                    fontSize: "1rem",
+                    fontWeight: "normal",
                   }}
                 >
-                  {noOfPatients}
-                  <Typography
-                    component="span"
-                    variant="body1"
-                    sx={{
-                      color: "#878787",
-                      fontSize: "1rem",
-                      fontWeight: "normal",
-                    }}
-                  >
-                    Patients
-                  </Typography>
+                  Patients
                 </Typography>
+              </Typography>
 
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      marginRight: 1,
-                      color: "#25307F",
-                      fontFamily: "Inter",
-                      fontWeight: "500",
-                      fontSize: "1.25rem",
-                      lineHeight: " 100%",
-                      letterSpacing: " 0%",
-                    }}
-                  >
-                    Sort by:
-                  </Typography>
-                  <Select
-                    value={sortOrder}
-                    onChange={handleSortChange}
-                    size="small"
-                    sx={{
-                      minWidth: 180,
-                      background: "#fff",
-                      color: "#4A4A4A",
-                      boxShadow: "0px 4px 4px 0px #BDBDBD1C",
-                      border: "1px solid transparent",
-                      outline: "none",
-                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "inherit", // Removes hover effect
-                      },
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "transparent", // Hides the border
-                      },
-                    }}
-                  >
-                    <MenuItem value="desc">Newest to Oldest</MenuItem>
-                    <MenuItem value="asc">Oldest to Newest</MenuItem>
-                  </Select>
-                </Box>
-              </Box>
-
-              <Box className={styles.filterSearch}>
-                <div className={styles["search-wrapper"]}>
-                  <Search size={18} className={styles["search-icon"]}/>
-                  <input
-                      type="text"
-                      placeholder="Search inpatients..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className={styles["search-input"]}
-                  />
-                </div>
-                <Button
-                    startIcon={<FilterAltIcon/>}
-                    sx={{
-                      textTransform: "none",
-                      padding: "6px 20px",
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                      fontSize: "15px",
-                      color: "#25307F",
-                      "&:focus": {
-                        outline: "none",
-                        boxShadow: "none",
-                        backgroundColor: "white",
-                      },
-                    }}
-                    onClick={() => setFilterDrawerOpen(true)}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    marginRight: 1,
+                    color: "#25307F",
+                    fontFamily: "Inter",
+                    fontWeight: "500",
+                    fontSize: "1.25rem",
+                    lineHeight: " 100%",
+                    letterSpacing: " 0%",
+                  }}
                 >
-                  Filter
-                </Button>
+                  Sort by:
+                </Typography>
+                <Select
+                  value={sortOrder}
+                  onChange={handleSortChange}
+                  size="small"
+                  sx={{
+                    minWidth: 180,
+                    background: "#fff",
+                    color: "#4A4A4A",
+                    boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                    border: "1px solid transparent",
+                    outline: "none",
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "inherit", // Removes hover effect
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "transparent", // Hides the border
+                    },
+                  }}
+                >
+                  <MenuItem value="desc">Newest to Oldest</MenuItem>
+                  <MenuItem value="asc">Oldest to Newest</MenuItem>
+                </Select>
               </Box>
             </Box>
 
-            {/* Table Section */}
-            <TableContainer
+            <Box className={styles.filterSearch}>
+              <div className={styles["search-wrapper"]}>
+                <Search size={18} className={styles["search-icon"]} />
+                <input
+                  type="text"
+                  placeholder="Search inpatients..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={styles["search-input"]}
+                />
+              </div>
+              <Button
+                startIcon={<FilterAltIcon />}
                 sx={{
-                  maxHeight: "69vh", // Adjust this to fit your layout needs
-                  overflowY: "auto",
-                  position: "relative",
+                  textTransform: "none",
+                  padding: "6px 20px",
+                  backgroundColor: "white",
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  color: "#25307F",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                    backgroundColor: "white",
+                  },
                 }}
-            >
-              <Table
-                  sx={{
-                    borderCollapse: "separate",
-                    borderSpacing: "0 10px",
-                    background: "#F1F1F1",
-                  marginBottom: "20px",
+                onClick={() => setFilterDrawerOpen(true)}
+              >
+                Filter
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Table Section */}
+          <TableContainer
+            sx={{
+              maxHeight: "69vh", // Adjust this to fit your layout needs
+              overflowY: "auto",
+              position: "relative",
+            }}
+          >
+            {loading && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  backdropFilter: "blur(2px)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: 20,
                 }}
               >
-                <TableHead
-                  sx={{
-                    position: "sticky",
-                    backgroundColor: "#f1f1f1",
-                    top: 0,
-                    zIndex: 10, // Keep it above other elements
-                  }}
-                >
-                  <TableRow>
-                    <TableCell>Case Id</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Phone Number</TableCell>
-                    <TableCell>Type Visit</TableCell>
-                    <TableCell>Branch</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell align="center" sx={{ paddingRight: "22px" }}>
-                      Status
-                    </TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {totalPatients.length > 0 ? (
-                    totalPatients.map((patient, index) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          background: "#fff",
-                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          "&:hover": {
-                            backgroundColor: "#f9f9f9",
-                          },
-                          "& > *": {
-                            borderBottom: "unset",
-                          },
-                        }}
-                      >
-                        <TableCell
-                          sx={{ color: "#25307F", fontWeight: "bold" }}
+                <CircularProgress sx={{ color: "#25307F" }} />
+              </Box>
+            )}
+            <Table
+              sx={{
+                borderCollapse: "separate",
+                borderSpacing: "0 10px",
+                background: "#F1F1F1",
+                marginBottom: "20px",
+              }}
+            >
+              <TableHead
+                sx={{
+                  position: "sticky",
+                  backgroundColor: "#f1f1f1",
+                  top: 0,
+                  zIndex: 10, // Keep it above other elements
+                }}
+              >
+                <TableRow>
+                  <TableCell>Case Id</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Phone Number</TableCell>
+                  <TableCell>Type Visit</TableCell>
+                  <TableCell>Branch</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell align="center" sx={{ paddingRight: "22px" }}>
+                    Status
+                  </TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {totalPatients.length > 0 ? (
+                  totalPatients.map((patient, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        background: "#fff",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                        {truncateText(
+                          patient.appointments[patient.appointments.length - 1]
+                            ?.caseId || "Not Assigned",
+                          13
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ color: "#25307F" }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: "bold",
+                            cursor: "pointer",
+                            color: "#25307F",
+                          }}
+                          onClick={() => handleClick(patient)}
                         >
-                          {truncateText(
-                            patient.appointments[
-                              patient.appointments.length - 1
-                            ]?.caseId || "Not Assigned",
-                            13
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ color: "#25307F" }}>
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: "bold",
-                              cursor: "pointer",
-                              color: "#25307F",
-                            }}
-                            onClick={() => handleClick(patient)}
-                          >
-                            {patient.name}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ textDecoration: "underline" }}
-                          >
-                            {patient.email}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{patient.phone}</TableCell>
-                        <TableCell>
-                          {patient.appointments[patient.appointments.length - 1]
-                            ?.typeVisit || "Not Assigned"}
-                        </TableCell>
-                        <TableCell>
-                          {patient.appointments[patient.appointments.length - 1]
-                            ?.branch || "Not Assigned"}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(
-                            patient.registrationDate
-                          ).toLocaleDateString("en-IN", {
+                          {patient.name}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ textDecoration: "underline" }}
+                        >
+                          {patient.email}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{patient.phone}</TableCell>
+                      <TableCell>
+                        {patient.appointments[patient.appointments.length - 1]
+                          ?.typeVisit || "Not Assigned"}
+                      </TableCell>
+                      <TableCell>
+                        {patient.appointments[patient.appointments.length - 1]
+                          ?.branch || "Not Assigned"}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(patient.registrationDate).toLocaleDateString(
+                          "en-IN",
+                          {
                             day: "2-digit",
                             month: "2-digit",
                             year: "numeric",
-                          })}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Chip
-                            label={
-                              patient.status.charAt(0).toUpperCase() +
-                              patient.status.slice(1)
-                            }
-                            color={
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          label={
+                            patient.status.charAt(0).toUpperCase() +
+                            patient.status.slice(1)
+                          }
+                          color={
+                            patient.status.toLowerCase() === "active"
+                              ? "success"
+                              : "default"
+                          }
+                          size="small"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            bgcolor:
                               patient.status.toLowerCase() === "active"
-                                ? "success"
-                                : "default"
-                            }
-                            size="small"
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              bgcolor:
-                                patient.status.toLowerCase() === "active"
-                                  ? "#d4edda"
-                                  : "#f0f0f0",
-                              color:
-                                patient.status.toLowerCase() === "active"
-                                  ? "#155724"
-                                  : "#757575",
-                              fontWeight: "bold",
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            sx={{
-                              "&:focus": {
-                                outline: "none",
-                                boxShadow: "none",
-                              },
-                            }}
-                            onClick={(event) => handleMenuOpen(event, patient)}
-                          >
-                            <MoreVertIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        align="center"
-                        colSpan={8}
-                        sx={{
-                          background: "#fff",
-                          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          "&:hover": {
-                            backgroundColor: "#f9f9f9",
-                          },
-                          "& > *": {
-                            borderBottom: "unset",
-                          },
-                        }}
-                      >
-                        No data found!
+                                ? "#d4edda"
+                                : "#f0f0f0",
+                            color:
+                              patient.status.toLowerCase() === "active"
+                                ? "#155724"
+                                : "#757575",
+                            fontWeight: "bold",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          sx={{
+                            "&:focus": {
+                              outline: "none",
+                              boxShadow: "none",
+                            },
+                          }}
+                          onClick={(event) => handleMenuOpen(event, patient)}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-              <TablePagination
-                component="div"
-                count={noOfPatients}
-                page={page} // current page
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage} // items per page
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
-                sx={{
-                  position: "sticky",
-                  bottom: 0,
-                  backgroundColor: "#fff",
-                  borderTop: "2px solid #ddd",
-                  zIndex: 11,
-                }}
-              />
-            </TableContainer>
-
-            {/* Actions Menu */}
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleEdit}>
-                <ListItemIcon>
-                  <EditIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Edit</ListItemText>
-              </MenuItem>
-            </Menu>
-
-            {/* Edit Patient Dialog */}
-            <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-              <DialogTitle>Edit Patient</DialogTitle>
-              <DialogContent sx={{ width: "250px" }}>
-                <FormControl fullWidth margin="dense">
-                  <FormLabel>Status</FormLabel>
-                  <RadioGroup
-                    name="status"
-                    value={editedPatient.status || ""}
-                    onChange={(e) =>
-                      setEditedPatient({
-                        ...editedPatient,
-                        status: e.target.value,
-                      })
-                    }
-                  >
-                    <FormControlLabel
-                      value="active"
-                      control={<Radio />}
-                      label="Active"
-                    />
-                    <FormControlLabel
-                      value="inactive"
-                      control={<Radio />}
-                      label="Inactive"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleEditDialogClose}>Cancel</Button>
-                <Button
-                  onClick={handleSaveEditedPatient}
-                  sx={{
-                    backgroundColor: "#25307F",
-                    "&:hover": {
-                      background: "#AEC3FF",
-                    },
-                  }}
-                  variant="contained"
-                >
-                  Save
-                </Button>
-              </DialogActions>
-            </Dialog>
-
-            {/* Filter Drawer */}
-            <Drawer
-              anchor="right"
-              open={filterDrawerOpen}
-              onClose={() => setFilterDrawerOpen(false)}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      align="center"
+                      colSpan={8}
+                      sx={{
+                        background: "#fff",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      No data found!
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <TablePagination
+              component="div"
+              count={noOfPatients}
+              page={page} // current page
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage} // items per page
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
               sx={{
-                "& .MuiDrawer-paper": {
-                  height: "72vh", // Adjust height as needed
-                  top: "10vh", // Center it vertically
-                  borderRadius: "10px 0 0 10px", // Optional rounded corners
-                },
+                position: "sticky",
+                bottom: 0,
+                backgroundColor: "#fff",
+                borderTop: "2px solid #ddd",
+                zIndex: 11,
               }}
-            >
-              <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
-                <Box
+            />
+          </TableContainer>
+
+          {/* Actions Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleEdit}>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Edit</ListItemText>
+            </MenuItem>
+          </Menu>
+
+          {/* Edit Patient Dialog */}
+          <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+            <DialogTitle>Edit Patient</DialogTitle>
+            <DialogContent sx={{ width: "250px" }}>
+              <FormControl fullWidth margin="dense">
+                <FormLabel>Status</FormLabel>
+                <RadioGroup
+                  name="status"
+                  value={editedPatient.status || ""}
+                  onChange={(e) =>
+                    setEditedPatient({
+                      ...editedPatient,
+                      status: e.target.value,
+                    })
+                  }
+                >
+                  <FormControlLabel
+                    value="active"
+                    control={<Radio />}
+                    label="Active"
+                  />
+                  <FormControlLabel
+                    value="inactive"
+                    control={<Radio />}
+                    label="Inactive"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleEditDialogClose}>Cancel</Button>
+              <Button
+                onClick={handleSaveEditedPatient}
+                sx={{
+                  backgroundColor: "#25307F",
+                  "&:hover": {
+                    background: "#AEC3FF",
+                  },
+                }}
+                variant="contained"
+              >
+                Save
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Filter Drawer */}
+          <Drawer
+            anchor="right"
+            open={filterDrawerOpen}
+            onClose={() => setFilterDrawerOpen(false)}
+            sx={{
+              "& .MuiDrawer-paper": {
+                height: "72vh", // Adjust height as needed
+                top: "10vh", // Center it vertically
+                borderRadius: "10px 0 0 10px", // Optional rounded corners
+              },
+            }}
+          >
+            <Box sx={{ width: 200, padding: 2, paddingLeft: 4 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 2,
+                }}
+              >
+                <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
+                  Filter By
+                </Typography>
+                <IconButton
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 2,
+                    "&:focus": {
+                      outline: "none",
+                      boxShadow: "none",
+                    },
+                    color: "black",
                   }}
+                  onClick={() => setFilterDrawerOpen(false)}
                 >
-                  <Typography variant="h6" sx={{ color: "#0B0B0B" }}>
-                    Filter By
-                  </Typography>
-                  <IconButton
-                    sx={{
-                      "&:focus": {
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                      color: "black",
-                    }}
-                    onClick={() => setFilterDrawerOpen(false)}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </Box>
-
-                {/* Filter Options */}
-                <FormControl
-                  sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
-                  component="fieldset"
-                >
-                  <FormLabel
-                    component="legend"
-                    sx={{
-                      marginBottom: 1,
-                      color: "#000000",
-                      "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
-                    }}
-                  >
-                    Status
-                  </FormLabel>
-                  <RadioGroup
-                    name="status"
-                    value={filters.status}
-                    onChange={handleFilterChange}
-                  >
-                    <FormControlLabel
-                      value="active"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787", // Default color
-                            "&.Mui-checked": {
-                              color: "#25307F", // Selected dot color
-                            },
-                          }}
-                        />
-                      }
-                      label="Active"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                    <FormControlLabel
-                      value="inactive"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787", // Default color
-                            "&.Mui-checked": {
-                              color: "#25307F", // Selected dot color
-                            },
-                          }}
-                        />
-                      }
-                      label="In-active"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                    <FormControlLabel
-                      value=""
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787", // Default color
-                            "&.Mui-checked": {
-                              color: "#25307F", // Selected dot color
-                            },
-                          }}
-                        />
-                      }
-                      label="All"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                  </RadioGroup>
-                </FormControl>
-
-                <FormControl
-                  sx={{ marginBottom: 4, width: "100%" }}
-                  component="fieldset"
-                >
-                  <FormLabel
-                    component="legend"
-                    sx={{
-                      marginBottom: 1,
-                      color: "#000000",
-                      "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
-                    }}
-                  >
-                    Type of Visit
-                  </FormLabel>
-                  <RadioGroup
-                    name="type"
-                    value={filters.type}
-                    onChange={handleFilterChange}
-                  >
-                    <FormControlLabel
-                      value="Walk in"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787", // Default color
-                            "&.Mui-checked": {
-                              color: "#25307F", // Selected dot color
-                            },
-                          }}
-                        />
-                      }
-                      label="Walk in"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                    <FormControlLabel
-                      value="Referral"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787", // Default color
-                            "&.Mui-checked": {
-                              color: "#25307F", // Selected dot color
-                            },
-                          }}
-                        />
-                      }
-                      label="Referral"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                    <FormControlLabel
-                      value="Online"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787", // Default color
-                            "&.Mui-checked": {
-                              color: "#25307F", // Selected dot color
-                            },
-                          }}
-                        />
-                      }
-                      label="Online"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                    <FormControlLabel
-                      value=""
-                      control={
-                        <Radio
-                          sx={{
-                            color: "#878787", // Default color
-                            "&.Mui-checked": {
-                              color: "#25307F", // Selected dot color
-                            },
-                          }}
-                        />
-                      }
-                      label="All"
-                      sx={{ height: "34px", color: "#878787" }}
-                    />
-                  </RadioGroup>
-                </FormControl>
-
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#25307F",
-                    textTransform: "none", // Prevents uppercase transformation
-                    borderRadius: "16px",
-                    padding: "6px 35px",
-                    marginLeft: "4px",
-                  }}
-                  onClick={handleSearchResults}
-                >
-                  Search Results
-                </Button>
+                  <CloseIcon />
+                </IconButton>
               </Box>
-            </Drawer>
-          </Box>
-        )}
+
+              {/* Filter Options */}
+              <FormControl
+                sx={{ marginBottom: 4, marginTop: 2, width: "100%" }}
+                component="fieldset"
+              >
+                <FormLabel
+                  component="legend"
+                  sx={{
+                    marginBottom: 1,
+                    color: "#000000",
+                    "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                  }}
+                >
+                  Status
+                </FormLabel>
+                <RadioGroup
+                  name="status"
+                  value={filters.status}
+                  onChange={handleFilterChange}
+                >
+                  <FormControlLabel
+                    value="active"
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
+                    }
+                    label="Active"
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                  <FormControlLabel
+                    value="inactive"
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
+                    }
+                    label="In-active"
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                  <FormControlLabel
+                    value=""
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
+                    }
+                    label="All"
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              <FormControl
+                sx={{ marginBottom: 4, width: "100%" }}
+                component="fieldset"
+              >
+                <FormLabel
+                  component="legend"
+                  sx={{
+                    marginBottom: 1,
+                    color: "#000000",
+                    "&.Mui-focused": { color: "#000000" }, // Prevents blue color on focus
+                  }}
+                >
+                  Type of Visit
+                </FormLabel>
+                <RadioGroup
+                  name="type"
+                  value={filters.type}
+                  onChange={handleFilterChange}
+                >
+                  <FormControlLabel
+                    value="Walk in"
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
+                    }
+                    label="Walk in"
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                  <FormControlLabel
+                    value="Referral"
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
+                    }
+                    label="Referral"
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                  <FormControlLabel
+                    value="Online"
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
+                    }
+                    label="Online"
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                  <FormControlLabel
+                    value=""
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#878787", // Default color
+                          "&.Mui-checked": {
+                            color: "#25307F", // Selected dot color
+                          },
+                        }}
+                      />
+                    }
+                    label="All"
+                    sx={{ height: "34px", color: "#878787" }}
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "#25307F",
+                  textTransform: "none", // Prevents uppercase transformation
+                  borderRadius: "16px",
+                  padding: "6px 35px",
+                  marginLeft: "4px",
+                }}
+                onClick={handleSearchResults}
+              >
+                Search Results
+              </Button>
+            </Box>
+          </Drawer>
+        </Box>
       </div>
     </div>
   );

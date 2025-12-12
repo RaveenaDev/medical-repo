@@ -57,6 +57,7 @@ import {
   GET_SERVICES_BY_DEPARTMENT_ID,
   GET_STAFFS,
   GET_WAITING_APPOINTMENTS,
+  LOADING_PATIENTS,
   NULL_ESTIMATED_BILL,
   UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
@@ -86,6 +87,7 @@ export const getEarnings = (year) => async (dispatch) => {
 
 export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_DOCTORS", payload: true });
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getDoctorsByHospital`, {
@@ -101,11 +103,14 @@ export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
     dispatch({ type: GET_DOCTORS, payload: data });
   } catch (error) {
     console.log(error);
+  } finally {
+    dispatch({ type: "LOADING_DOCTORS", payload: false });
   }
 };
 export const fetchDoctorsByDepartment =
   (selectedValue, page, rowsPerPage) => async (dispatch) => {
     try {
+      dispatch({ type: "LOADING_DOCTORS", payload: true });
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.get(
@@ -133,10 +138,13 @@ export const fetchDoctorsByDepartment =
         position: "bottom-right", // Use string for position
         autoClose: 2000,
       });
+    } finally {
+      dispatch({ type: "LOADING_DOCTORS", payload: false });
     }
   };
 export const addDoctor = (doctorData) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_DOCTORS", payload: true });
     const token = localStorage.getItem("jwt");
     if (!token) {
       throw new Error("Authorization token is missing");
@@ -165,11 +173,14 @@ export const addDoctor = (doctorData) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  } finally {
+    dispatch({ type: "LOADING_DOCTORS", payload: false });
   }
 };
 // Action to update a Doctor
 export const updateDoctor = (doctorId, updatedData) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_DOCTORS", payload: true });
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.put(`${API_URL}/${doctorId}`, updatedData, {
@@ -189,11 +200,14 @@ export const updateDoctor = (doctorId, updatedData) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  } finally {
+    dispatch({ type: "LOADING_DOCTORS", payload: false });
   }
 };
 
 export const deleteDoctor = (doctorId) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_DOCTORS", payload: true });
     const token = localStorage.getItem("jwt");
     const { data } = await axios.delete(`${API_URL}/${doctorId}`, {
       headers: {
@@ -211,11 +225,14 @@ export const deleteDoctor = (doctorId) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  } finally {
+    dispatch({ type: "LOADING_DOCTORS", payload: false });
   }
 };
 
 export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_STAFFS", payload: true });
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getStaff`, {
@@ -231,11 +248,14 @@ export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
     dispatch({ type: GET_STAFFS, payload: data });
   } catch (error) {
     console.log(error);
+  } finally {
+    dispatch({ type: "LOADING_STAFFS", payload: false });
   }
 };
 
 export const getRooms = () => async (dispatch) => {
   try {
+    s;
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
@@ -250,9 +270,9 @@ export const getRooms = () => async (dispatch) => {
     console.log(error);
   }
 };
-
 export const getFilteredRooms = (page, rowsPerPage) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_ROOMS", payload: true });
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
@@ -269,6 +289,96 @@ export const getFilteredRooms = (page, rowsPerPage) => async (dispatch) => {
     dispatch({ type: GET_FILTERED_ROOMS, payload: data });
   } catch (error) {
     console.log(error);
+  } finally {
+    dispatch({ type: "LOADING_ROOMS", payload: false });
+  }
+};
+
+// ADD ROOMS
+
+export const addRoom = (roomData) => async (dispatch) => {
+  try {
+    dispatch({ type: "LOADING_ROOMS", payload: true });
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/addRoom`, roomData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: ADD_ROOM, payload: data });
+
+    dispatch(getFilteredRooms());
+    toast.success("Room Added Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error("Adding Room Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } finally {
+    dispatch({ type: "LOADING_ROOMS", payload: false });
+  }
+};
+// Action to update a room
+export const updateRoom = (roomId, updatedData) => async (dispatch) => {
+  try {
+    dispatch({ type: "LOADING_ROOMS", payload: true });
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.put(`${API_URL}/${roomId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("Updated room:", data);
+    dispatch(getFilteredRooms());
+    toast.success("Room Updated Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+    // dispatch({ type: UPDATE_ROOM, payload: data });
+  } catch (error) {
+    console.error("Error updating room:", error);
+    toast.error("Updating Room Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } finally {
+    dispatch({ type: "LOADING_ROOMS", payload: false });
+  }
+};
+
+// Action to delete a room
+export const deleteRoom = (roomId) => async (dispatch) => {
+  try {
+    dispatch({ type: "LOADING_ROOMS", payload: true });
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.delete(`${API_URL}/${roomId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    dispatch({ type: DELETE_ROOM, payload: data });
+    dispatch(getFilteredRooms());
+    toast.success("Room Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error deleting room:", error);
+    toast.error("Room Deletion Error!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } finally {
+    dispatch({ type: "LOADING_ROOMS", payload: false });
   }
 };
 
@@ -448,7 +558,9 @@ export const getPatients = () => async (dispatch) => {
 export const getFilteredPatients =
   (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
+
     try {
+      dispatch({ type: LOADING_PATIENTS, payload: true });
       const token = localStorage.getItem("jwt");
 
       const { data } = await axios.get(`${API_URL}/getPatientsByStatus`, {
@@ -470,90 +582,16 @@ export const getFilteredPatients =
       dispatch({ type: GET_FILTERED_PATIENTS, payload: data });
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch({ type: LOADING_PATIENTS, payload: false });
     }
   };
-
-// ADD ROOMS
-
-export const addRoom = (roomData) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-
-    const { data } = await axios.post(`${API_URL}/addRoom`, roomData, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
-
-    dispatch({ type: ADD_ROOM, payload: data });
-
-    toast.success("Room Added Successfully!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.log(error);
-    toast.error("Adding Room Error!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  }
-};
-// Action to update a room
-export const updateRoom = (roomId, updatedData) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-
-    const { data } = await axios.put(`${API_URL}/${roomId}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
-
-    // console.log("Updated room:", data);
-    dispatch(getFilteredRooms());
-    toast.success("Room Updated Successfully!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-    // dispatch({ type: UPDATE_ROOM, payload: data });
-  } catch (error) {
-    console.error("Error updating room:", error);
-    toast.error("Updating Room Error!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  }
-};
-
-// Action to delete a room
-export const deleteRoom = (roomId) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const { data } = await axios.delete(`${API_URL}/${roomId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
-
-    dispatch({ type: DELETE_ROOM, payload: data });
-    toast.success("Room Deleted Successfully!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  } catch (error) {
-    console.error("Error deleting room:", error);
-    toast.error("Room Deletion Error!", {
-      position: "bottom-right", // Use string for position
-      autoClose: 2000,
-    });
-  }
-};
 
 // ADD STAFFS
 
 export const addStaff = (staffData) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_STAFFS", payload: true });
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.post(`${API_URL}/addStaff`, staffData, {
@@ -573,11 +611,14 @@ export const addStaff = (staffData) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  } finally {
+    dispatch({ type: "LOADING_STAFFS", payload: false });
   }
 };
 // Action to delete a STaFF
 export const deleteStaff = (StaffId) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_STAFFS", payload: true });
     const token = localStorage.getItem("jwt");
     const { data } = await axios.delete(`${API_URL}/${StaffId}`, {
       headers: {
@@ -596,12 +637,15 @@ export const deleteStaff = (StaffId) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  } finally {
+    dispatch({ type: "LOADING_STAFFS", payload: false });
   }
 };
 
 // Action to update a Staff
 export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
   try {
+    dispatch({ type: "LOADING_STAFFS", payload: true });
     const token = localStorage.getItem("jwt");
     const { data } = await axios.put(`${API_URL}/${StaffId}`, updatedData, {
       headers: {
@@ -620,6 +664,8 @@ export const updateStaff = (StaffId, updatedData) => async (dispatch) => {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
+  } finally {
+    dispatch({ type: "LOADING_STAFFS", payload: false });
   }
 };
 

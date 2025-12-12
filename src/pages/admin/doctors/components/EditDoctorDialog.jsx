@@ -9,6 +9,7 @@ import {
   Button,
   Avatar,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 
 const EditDoctorDialog = ({
@@ -18,6 +19,7 @@ const EditDoctorDialog = ({
   setEditedDoctor,
   onSave,
   errors,
+  loading,
 }) => {
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -149,7 +151,16 @@ const EditDoctorDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={onSave}>Save</Button>
+        <Button
+          onClick={onSave}
+          disabled={loading} // Disable while loading
+        >
+          {loading ? (
+            <CircularProgress size={26} sx={{ color: "white" }} />
+          ) : (
+            "Save"
+          )}
+        </Button>
       </DialogActions>
     </Dialog>
   );
