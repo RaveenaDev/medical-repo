@@ -16,9 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   bookAppointment,
   getAllDepartments,
-  getDoctors,
   getDoctorsByDepartment,
-  getPatients,
   removeBookAppointmentData,
 } from "../../../../components/State/Receptionist/Action.js";
 
@@ -101,16 +99,14 @@ const BookAppointment = ({
   }, [dispatch, department]);
 
   useEffect(() => {
-    dispatch(getDoctors());
     dispatch(getAllDepartments());
-    dispatch(getPatients());
   }, [dispatch]);
 
   const departments = useSelector((store) => store.receptionist.departments);
   const doctorsByDepartment = useSelector(
     (store) => store.receptionist.doctorsByDepartment
   );
-
+  // console.log("doctorsByDepartment:", doctorsByDepartment);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const bookingSuccess = useSelector(
     (store) => store.receptionist.bookAppointment
