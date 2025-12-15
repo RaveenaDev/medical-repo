@@ -56,7 +56,7 @@ const Records = () => {
   // );
   const handleViewClick = useCallback(
     (billId) => {
-      dispatch(getBillDetails(billId));
+      // dispatch(getBillDetails(billId));
       navigate(`${billId}`);
     },
     [dispatch, navigate]
