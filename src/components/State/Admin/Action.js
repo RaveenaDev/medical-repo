@@ -255,7 +255,6 @@ export const getStaffs = (page, rowsPerPage) => async (dispatch) => {
 
 export const getRooms = () => async (dispatch) => {
   try {
-    s;
     const token = localStorage.getItem("jwt");
 
     const { data } = await axios.get(`${API_URL}/getRoomsByHospital`, {
