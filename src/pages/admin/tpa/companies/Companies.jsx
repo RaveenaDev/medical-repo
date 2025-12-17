@@ -14,29 +14,11 @@ import styles from "./Companies.module.scss";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addInsuranceCompany,
-  getInsuranceCompanies,
-} from "../../../../components/State/Admin/Action.js";
-import Grid from "@mui/material/Grid2";
+import { getInsuranceCompanies } from "../../../../components/State/Admin/Action.js";
+
 import CompanyRateModal from "./CompanyRateModal.jsx";
 
 const Companies = () => {
-  const [errors, setErrors] = useState({}); // Added error state
-
-  const [formData, setFormData] = useState({
-    companyID: "",
-    companyName: "",
-    services: [
-      {
-        serviceName: "",
-        serviceCost: "",
-        serviceDescription: "",
-      },
-    ],
-  });
-
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false); // State for modal
 
   const dispatch = useDispatch();
@@ -49,7 +31,7 @@ const Companies = () => {
   const loading = useSelector(
     (store) => store.admin.isLoadingInsuranceCompanies
   );
-  // console.log("Comp: ",companies)
+  // console.log("Comp: ", companies);
 
   const navigate = useNavigate();
   const [page, setPage] = useState(0);

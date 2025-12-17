@@ -96,7 +96,6 @@ const EditPatient = ({ onClose, patientDetails }) => {
   const insuranceCompanies = useSelector(
     (state) => state.admin.insuranceCompanies
   );
-
   const validateForm = () => {
     const newErrors = {};
 

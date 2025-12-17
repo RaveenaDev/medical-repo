@@ -62,6 +62,7 @@ const AdmissionRequests = () => {
     setPage(0); // Reset to first page when rows per page changes
   };
 
+  // console.log("Admission Requests:", admissionRequests);
   return (
     <div className={styles.inpatientcontainer}>
       {/* Header Section */}

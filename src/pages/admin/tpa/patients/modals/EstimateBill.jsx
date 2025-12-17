@@ -72,7 +72,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
 
   const packages = useSelector((store) => store.admin.packages);
 
-  console.log("pac:", packages);
+  // console.log("pac:", packages);
 
   // ✅ Prefill from estimateOld if provided, else keep empty
   useEffect(() => {
@@ -274,10 +274,10 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
     }
 
     // Prepare simplified data structure for backend
-    console.log("=== ESTIMATE BILL DATA FOR BACKEND ===");
-    console.log(JSON.stringify(estimateBill, null, 2));
-    console.log("=== ESTIMATE BILL OBJECT ===");
-    console.log(estimateBill);
+    // console.log("=== ESTIMATE BILL DATA FOR BACKEND ===");
+    // console.log(JSON.stringify(estimateBill, null, 2));
+    // console.log("=== ESTIMATE BILL OBJECT ===");
+    // console.log(estimateBill);
 
     if (estimateOld && estimateOld._id) {
       // ✅ Editing an existing estimate
