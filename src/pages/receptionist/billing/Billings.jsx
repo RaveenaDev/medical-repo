@@ -72,7 +72,7 @@ const Billings = (props) => {
   );
   const handleViewClick = useCallback(
     (billId) => {
-      dispatch(getBillDetails(billId));
+      // dispatch(getBillDetails(billId));
       navigate(`${billId}`);
     },
     [dispatch, navigate]
@@ -90,11 +90,6 @@ const Billings = (props) => {
           zIndex: 100,
         }}
       >
-        <div className={styles["header-Reception"]}>
-          {/* <Searchbar /> */}
-          <Notifications />
-        </div>
-
         <div className={styles["billings-header"]}>
           <button onClick={() => handleClose()} className={styles["back-btn"]}>
             <img src={arrowBack} alt="Back" />

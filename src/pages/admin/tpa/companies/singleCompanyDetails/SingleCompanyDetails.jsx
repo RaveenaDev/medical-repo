@@ -64,7 +64,7 @@ const SingleCompanyDetails = (props) => {
   }, []);
 
   const services = company.services || [];
-  // console.log(services)
+  // console.log(services);
 
   // Pagination
   const paginatedServices = services.slice(

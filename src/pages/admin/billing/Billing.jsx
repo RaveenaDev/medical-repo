@@ -15,10 +15,10 @@ const BillingAdmin = ({ setIsSignUpOrLogin }) => {
   }, [setIsSignUpOrLogin]);
   return (
     <div className="patients">
-      <div className="patientHeader">
+      {/* <div className="patientHeader">
         <Searchbar />
         <Notifications />
-      </div>
+      </div> */}
 
       <div className="bill-heading">
         <svg

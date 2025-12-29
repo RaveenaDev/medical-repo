@@ -19,9 +19,9 @@ const PrescriptionAndMedicines = ({
   selectedComponent,
   existingData,
 }) => {
-  console.log("Generated Prescriptions: ", generatedPrescriptions);
+  // console.log("Generated Prescriptions: ", generatedPrescriptions);
   const [loading, setLoading] = useState(true);
-  console.log(loading, "loading state");
+  // console.log(loading, "loading state");
   const [isListening, setIsListening] = useState(false);
 
   const [micText, setMicText] = useState("");
@@ -494,7 +494,7 @@ const PrescriptionAndMedicines = ({
     generatedPrescriptions?.aiPrescription ||
     {};
 
-  console.log("AI Data:", aiData);
+  // console.log("AI Data:", aiData);
   return (
     <div>
       <div className={styles.container1}>

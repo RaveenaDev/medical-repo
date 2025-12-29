@@ -19,7 +19,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAdmissionRequestsToApprove,
-  getAppointmentCounts,
   getAppointmentData,
 } from "../../components/State/Admin/Action.js";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -97,15 +96,15 @@ function Admin(props) {
   //   }
   // }, [appointmentData, selectedFilter, selectedDepartment, dispatch]);
 
-  useEffect(() => {
-    if (selectedDepartment === "all") {
-      // If "All Branches" is selected, show all doctors
-      dispatch(getAppointmentCounts()); // Fetch all doctors
-    } else {
-      // console.log("Selected Department:", selectedDepartment);
-      dispatch(getAppointmentCounts(selectedDepartment)); // Fetch all doctors
-    }
-  }, [selectedDepartment, dispatch]);
+  // useEffect(() => {
+  //   if (selectedDepartment === "all") {
+  //     // If "All Branches" is selected, show all doctors
+  //     dispatch(getAppointmentCounts()); // Fetch all doctors
+  //   } else {
+  //     // console.log("Selected Department:", selectedDepartment);
+  //     dispatch(getAppointmentCounts(selectedDepartment)); // Fetch all doctors
+  //   }
+  // }, [selectedDepartment, dispatch]);
 
   // console.log(newData);
 
@@ -228,6 +227,7 @@ function Admin(props) {
       (req.sendTo === "Both" || req.sendTo === "Admin") &&
       req.approval?.admin?.approved === false
   );
+  console.log("Filtered Requests:", filteredRequests);
 
   return (
     <div
