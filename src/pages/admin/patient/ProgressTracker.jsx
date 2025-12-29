@@ -24,11 +24,11 @@ const ProgressTracker = ({ patient }) => {
   );
   // console.log("progressTracker details: ", progressTracker);
 
-  const handleClick = () => {
-    navigate("/admin/reception/patients/Tracking", {
-      state: { patient },
-    });
-  };
+  // const handleClick = () => {
+  //   navigate("/admin/reception/patients/Tracking", {
+  //     state: { patient },
+  //   });
+  // };
   return (
     <div>
       {isLoadingProgressTracker ? (
@@ -89,7 +89,7 @@ const ProgressTracker = ({ patient }) => {
                   className={`${styles.tableRow} ${
                     step.status === "ongoing" ? styles.activeRow : ""
                   }`}
-                  onClick={handleClick}
+                  // onClick={handleClick}
                   style={{
                     backgroundColor:
                       step.status === "ongoing" ? "#e8f5e9" : "inherit",
