@@ -18,7 +18,16 @@ const UpdateMAR = ({ onClose, patientId, caseId }) => {
     },
   ]);
 
-  const medFreqOptions = ["Regular", "Alternative", "Custom"];
+  const medFreqOptions = [
+    { value: "OD", label: "Once daily (OD)" },
+    { value: "BD", label: "Twice daily (BD)" },
+    { value: "TDS", label: "Three times daily (TDS)" },
+    { value: "QID", label: "Four times daily (QID)" },
+    { value: "HS", label: "At bedtime (HS)" },
+    { value: "SOS", label: "As needed (SOS)" },
+    { value: "STAT", label: "Immediately (STAT)" },
+    { value: "WEEKLY", label: "Once weekly" },
+  ];
 
   const [openMedFreq, setOpenMedFreq] = useState(null);
 
@@ -105,7 +114,6 @@ const UpdateMAR = ({ onClose, patientId, caseId }) => {
                   value={med.dose}
                   onChange={(e) => handleChange(index, "dose", e.target.value)}
                 />
-                <span>Mg</span>
               </div>
             </div>
 
@@ -138,7 +146,13 @@ const UpdateMAR = ({ onClose, patientId, caseId }) => {
                     setOpenMedFreq((prev) => (prev === index ? null : index))
                   }
                 >
-                  <p>{med.medFreq || "Select"}</p>
+                  <p>
+                    {med.medFreq
+                      ? medFreqOptions.find((o) => o.value === med.medFreq)
+                          ?.label
+                      : "Select"}
+                  </p>
+
                   <span className={styles.arrow}>
                     {openMedFreq === index ? <ChevronUp /> : <ChevronDown />}
                   </span>
@@ -147,16 +161,16 @@ const UpdateMAR = ({ onClose, patientId, caseId }) => {
                   <ul className={styles.menu}>
                     {medFreqOptions.map((option) => (
                       <li
-                        key={option}
+                        key={option.value}
                         className={`${styles.item} ${
-                          med.medFreq === option ? styles.active : ""
+                          med.medFreq === option.value ? styles.active : ""
                         }`}
                         onClick={() => {
-                          handleChange(index, "medFreq", option);
+                          handleChange(index, "medFreq", option.value);
                           setOpenMedFreq(null);
                         }}
                       >
-                        {option}
+                        {option.label}
                       </li>
                     ))}
                   </ul>
@@ -179,7 +193,7 @@ const UpdateMAR = ({ onClose, patientId, caseId }) => {
                 gridColumn: "1 / -1",
               }}
             >
-              <p>Notes</p>
+              <p>Special Instructions</p>
               <input
                 type="text"
                 className={styles.inputText}

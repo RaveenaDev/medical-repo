@@ -12,6 +12,7 @@ import {
   GET_ADMITTED_PATIENTS,
   GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
+  GET_ALL_STAFF,
   GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
@@ -120,6 +121,7 @@ const initialState = {
   isLoadingDoctors: true,
   doctorsByDepartment: [],
   staff: [],
+  allStaff: [],
   isLoadingStaffs: true,
   inventoryData: [],
   isLoadingInventoryData: true,
@@ -257,7 +259,11 @@ export const doctorReducer = (state = initialState, action) => {
         staff: action.payload.staff,
         isLoadingStaffs: false,
       };
-
+    case GET_ALL_STAFF:
+      return {
+        ...state,
+        allStaff: action.payload.staff,
+      };
     case GET_INVENTORY_DATA:
       return {
         ...state,

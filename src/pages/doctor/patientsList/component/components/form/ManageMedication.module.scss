@@ -23,7 +23,7 @@
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
-  height: 64vh;
+  // height: 64vh;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
@@ -62,6 +62,7 @@
   .part1Right {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 1.2vh;
   }
 
@@ -153,6 +154,8 @@
 .section3 {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 2vh;
 }
 

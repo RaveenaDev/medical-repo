@@ -19,6 +19,7 @@ import {
   GET_ADMITTED_PATIENTS,
   GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
+  GET_ALL_STAFF,
   GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
@@ -706,7 +707,22 @@ export const getStaff = () => async (dispatch) => {
     console.log(error);
   }
 };
+export const getAllStaff = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
+    const { data } = await axios.get(`${API_URL}/getStaff`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+
+    // console.log("ALL STAFF DATA", data);
+    dispatch({ type: GET_ALL_STAFF, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getInventoryData = () => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
