@@ -110,20 +110,8 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
 
     healthStatus: patientDetails?.healthStatus ?? "N/A",
 
-    symptoms: Array.isArray(patientDetails?.symptoms)
-      ? patientDetails.symptoms
-      : [],
-
-    currentMedication: Array.isArray(patientDetails?.currentMedication)
-      ? patientDetails.currentMedication
-      : [],
-
     /* ---------- Doctor / Care ---------- */
     doctorName: patientDetails?.createdByName ?? "N/A",
-
-    consultations: Array.isArray(patientDetails?.consultations)
-      ? patientDetails.consultations
-      : [],
 
     /* ---------- Contact ---------- */
     contact: patientDetails?.phone ?? patientDetails?.contact ?? "N/A",
@@ -465,7 +453,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
               />
             )}
             {activeTab === "nursing" && (
-              <Nursing patientId={patientId} patientInfo={patientInfo} />
+              <Nursing patientId={patientId} patientDetails={patientInfo} />
             )}
             {activeTab === "past reports" && (
               <PastReportsAndDischarge patientId={patientId} />

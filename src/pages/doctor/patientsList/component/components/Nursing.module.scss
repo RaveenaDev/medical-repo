@@ -170,3 +170,21 @@
     border-color: #25307f;
   }
 }
+.printBtn {
+  background: #25307f;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.9vh;
+  font-weight: 400;
+  padding: 0.8vh 1.2vw;
+  border-radius: 4px;
+  border: none;
+  margin-right: 1vw;
+  cursor: pointer;
+  &:hover {
+    background: #f2f5ff;
+    color: #25307f;
+  }
+}
