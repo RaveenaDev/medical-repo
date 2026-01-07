@@ -249,6 +249,7 @@
 .billing-edited-save-btn {
   display: flex;
   justify-content: center;
+  gap: 2vw;
   margin: 2vh;
   button {
     background-color: #25307f;
@@ -352,7 +353,7 @@
 .no-records {
   text-align: center;
   color: #555;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   margin-top: 2rem;
 }
 

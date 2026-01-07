@@ -1,4 +1,5 @@
 import {
+  addDiscount,
   addPaymentToBill,
   addToBill,
   editBill,
@@ -415,6 +416,58 @@ const BillDetailsAdmin = (props) => {
     acc[category].push(row);
     return acc;
   }, {});
+  // DISCOUNT
+
+  const [discountOpen, setDiscountOpen] = useState(false);
+  const [discountLoading, setDiscountLoading] = useState(false);
+  const [discountForm, setDiscountForm] = useState({
+    type: "Flat", // Flat | Percentage
+    value: "",
+    reason: "",
+  });
+  const [discountErrors, setDiscountErrors] = useState({});
+  const openDiscount = () => setDiscountOpen(true);
+
+  const closeDiscount = () => {
+    setDiscountOpen(false);
+    setDiscountErrors({});
+    setDiscountForm({ type: "Flat", value: "", reason: "" });
+  };
+  const validateDiscount = () => {
+    const errors = {};
+    const gross = bill?.grossAmount || bill?.totalAmount || 0;
+
+    if (!discountForm.value || discountForm.value <= 0) {
+      errors.value = "Enter a valid value";
+    }
+
+    if (discountForm.type === "Percentage" && discountForm.value > 100) {
+      errors.value = "Percentage cannot exceed 100";
+    }
+
+    if (discountForm.type === "Flat" && discountForm.value > gross) {
+      errors.value = "Discount cannot exceed total amount";
+    }
+
+    setDiscountErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+  const handleApplyDiscount = async () => {
+    if (!validateDiscount()) return;
+
+    try {
+      setDiscountLoading(true);
+
+      await dispatch(addDiscount(discountForm, billId));
+
+      await dispatch(getBillDetails(billId)); // refresh bill
+      closeDiscount();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDiscountLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -560,7 +613,7 @@ const BillDetailsAdmin = (props) => {
                 {/* Header row (unchanged) */}
                 <div className={styles["billing-table-header"]}>
                   <div className={styles["billing-description"]}>
-                    <p className={styles["bold"]}>Description</p>
+                    <p className={styles["bold"]}>Category</p>
                   </div>
                   <div className={styles["billing-name"]}>
                     <p className={styles["bold"]}>Name</p>
@@ -606,6 +659,12 @@ const BillDetailsAdmin = (props) => {
                     row.details?.date ||
                     "";
                   const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
+                  const getEditableNameKey = (details = {}) => {
+                    if (details.doctorName !== undefined) return "doctorName";
+                    if (details.bedNumber !== undefined) return "bedNumber";
+                    return "name"; // fallback
+                  };
+
                   // console.log("service", row);
                   return (
                     <div key={i} className={styles["billing-category"]}>
@@ -640,7 +699,49 @@ const BillDetailsAdmin = (props) => {
                         <div>{name ? name : "—"}</div>
                       </div>
                       <div className={styles["billing-name"]}>
-                        <div>{type ? type : "—"}</div>
+                        {isEditing ? (
+                          <input
+                            className={styles["inputDescription"]}
+                            type="text"
+                            inputMode="text"
+                            value={name}
+                            onChange={(e) => {
+                              const updated = JSON.parse(
+                                JSON.stringify(editableBill)
+                              );
+
+                              if (!updated.services[i].details) {
+                                updated.services[i].details = {};
+                              }
+
+                              const key = getEditableNameKey(
+                                updated.services[i].details
+                              );
+                              updated.services[i].details[key] = e.target.value; // ✅ dynamic field
+
+                              setEditableBill(updated);
+                            }}
+                            onBlur={() => {
+                              const updated = JSON.parse(
+                                JSON.stringify(editableBill)
+                              );
+
+                              if (!updated.services[i].details) {
+                                updated.services[i].details = {};
+                              }
+
+                              const key = getEditableNameKey(
+                                updated.services[i].details
+                              );
+                              updated.services[i].details[key] =
+                                updated.services[i].details[key] || "";
+
+                              setEditableBill(updated);
+                            }}
+                          />
+                        ) : (
+                          <div>{name || "—"}</div>
+                        )}
                       </div>
                       <div className={styles["billing-date"]}>
                         <div>
@@ -761,7 +862,14 @@ const BillDetailsAdmin = (props) => {
                       bill.totalAmount.toLocaleString("en-IN")}
                 </div>
               </div>
-
+              {bill?.discount?.amount > 0 && (
+                <div>
+                  <div className={styles["bold"]}>Discount</div>
+                  <div style={{ color: "red" }}>
+                    - ₹{bill.discount.amount.toLocaleString("en-IN")}
+                  </div>
+                </div>
+              )}
               <div>
                 <div className={styles["bold"]}>Paid</div>
 
@@ -872,9 +980,90 @@ const BillDetailsAdmin = (props) => {
             <Button variant="contained" onClick={openAddPayment}>
               Add Payment
             </Button>
+            <Button variant="outlined" color="error" onClick={openDiscount}>
+              Apply Discount
+            </Button>
           </div>
         </div>
       </div>
+      {/* DISCOUNT Dialog  */}
+
+      <Dialog
+        open={discountOpen}
+        onClose={discountLoading ? undefined : closeDiscount}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Apply Discount</DialogTitle>
+
+        <DialogContent dividers>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            {/* Type */}
+            <TextField
+              select
+              label="Discount Type"
+              value={discountForm.type}
+              onChange={(e) =>
+                setDiscountForm((p) => ({ ...p, type: e.target.value }))
+              }
+              fullWidth
+            >
+              <MenuItem value="Flat">Flat</MenuItem>
+              <MenuItem value="Percentage">Percentage</MenuItem>
+            </TextField>
+
+            {/* Value */}
+            <TextField
+              label={
+                discountForm.type === "Percentage" ? "Percentage (%)" : "Amount"
+              }
+              value={discountForm.value}
+              onChange={(e) =>
+                setDiscountForm((p) => ({
+                  ...p,
+                  value: Number(e.target.value),
+                }))
+              }
+              error={!!discountErrors.value}
+              helperText={discountErrors.value}
+              fullWidth
+              InputProps={{
+                startAdornment:
+                  discountForm.type === "Flat" ? (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ) : null,
+              }}
+            />
+
+            {/* Reason */}
+            <TextField
+              label="Reason (optional)"
+              value={discountForm.reason}
+              onChange={(e) =>
+                setDiscountForm((p) => ({ ...p, reason: e.target.value }))
+              }
+              fullWidth
+              multiline
+              minRows={2}
+            />
+          </Stack>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={closeDiscount} disabled={discountLoading}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleApplyDiscount}
+            disabled={discountLoading}
+            startIcon={discountLoading ? <CircularProgress size={18} /> : null}
+          >
+            Apply
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Add to Bill Dialog  */}
       <Dialog
         open={addOpen}

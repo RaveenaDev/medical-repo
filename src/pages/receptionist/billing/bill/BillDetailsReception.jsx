@@ -696,52 +696,49 @@ const BillDetailsReception = (props) => {
                         )}
                       </div>
                       <div className={styles["billing-name"]}>
-                        <div className={styles["billing-name"]}>
-                          {isEditing ? (
-                            <input
-                              className={styles["inputDescription"]}
-                              type="text"
-                              inputMode="text"
-                              value={name}
-                              onChange={(e) => {
-                                const updated = JSON.parse(
-                                  JSON.stringify(editableBill)
-                                );
+                        {isEditing ? (
+                          <input
+                            className={styles["inputDescription"]}
+                            type="text"
+                            inputMode="text"
+                            value={name}
+                            onChange={(e) => {
+                              const updated = JSON.parse(
+                                JSON.stringify(editableBill)
+                              );
 
-                                if (!updated.services[i].details) {
-                                  updated.services[i].details = {};
-                                }
+                              if (!updated.services[i].details) {
+                                updated.services[i].details = {};
+                              }
 
-                                const key = getEditableNameKey(
-                                  updated.services[i].details
-                                );
-                                updated.services[i].details[key] =
-                                  e.target.value; // ✅ dynamic field
+                              const key = getEditableNameKey(
+                                updated.services[i].details
+                              );
+                              updated.services[i].details[key] = e.target.value; // ✅ dynamic field
 
-                                setEditableBill(updated);
-                              }}
-                              onBlur={() => {
-                                const updated = JSON.parse(
-                                  JSON.stringify(editableBill)
-                                );
+                              setEditableBill(updated);
+                            }}
+                            onBlur={() => {
+                              const updated = JSON.parse(
+                                JSON.stringify(editableBill)
+                              );
 
-                                if (!updated.services[i].details) {
-                                  updated.services[i].details = {};
-                                }
+                              if (!updated.services[i].details) {
+                                updated.services[i].details = {};
+                              }
 
-                                const key = getEditableNameKey(
-                                  updated.services[i].details
-                                );
-                                updated.services[i].details[key] =
-                                  updated.services[i].details[key] || "";
+                              const key = getEditableNameKey(
+                                updated.services[i].details
+                              );
+                              updated.services[i].details[key] =
+                                updated.services[i].details[key] || "";
 
-                                setEditableBill(updated);
-                              }}
-                            />
-                          ) : (
-                            <div>{name || "—"}</div>
-                          )}
-                        </div>
+                              setEditableBill(updated);
+                            }}
+                          />
+                        ) : (
+                          <div>{name || "—"}</div>
+                        )}
                       </div>
                       <div className={styles["billing-name"]}>
                         <div>{type ? type : "—"}</div>

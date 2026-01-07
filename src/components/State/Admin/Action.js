@@ -1077,7 +1077,30 @@ export const addToBill = (payload, id) => async (dispatch) => {
     toast.error(error?.response?.data?.message || "Add failed");
   }
 };
+export const addDiscount = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
 
+    const { data } = await axios.post(
+      `${API_URL}/applyDiscount/${id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    // console.log("Discount Bill Response:", data);
+
+    toast.success("Discount added to bill successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error adding Discount to bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
 export const getDoctorRequests = (status) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
