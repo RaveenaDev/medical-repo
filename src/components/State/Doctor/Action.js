@@ -1622,8 +1622,8 @@ export const dischargePatient = (payload) => async (dispatch) => {
       },
     });
     // console.log("Discharge Response:", data);
-    const dischargeId = data.discharge._id; // Assuming the response contains dischargeId
-    dispatch(dischargePdfDownload(dischargeId));
+    // const dischargeId = data.discharge._id; // Assuming the response contains dischargeId
+    // dispatch(dischargePdfDownload(dischargeId));
     toast.success("Patient discharged Successfully!", {
       position: "bottom-right",
       autoClose: 2000,

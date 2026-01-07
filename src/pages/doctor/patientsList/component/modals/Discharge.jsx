@@ -67,14 +67,256 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
       setLoading(true); // start loader
       const res = await dispatch(dischargePatient(payload));
       if (res) {
+        handlePrintPopup();
         navigate("/doctor/patientList");
+        onClose();
       }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false); // stop loader
-      onClose();
     }
+  };
+  const handlePrintPopup = () => {
+    const printWindow = window.open("", "_blank", "width=900,height=650");
+
+    if (!printWindow) {
+      toast.error("Popup blocked. Please allow popups.");
+      return;
+    }
+
+    printWindow.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Discharge Summary</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #111;
+    }
+
+    .page {
+      page-break-after: always;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .sub {
+      font-size: 11px;
+      margin: 2px 0;
+    }
+
+    .addr {
+      font-size: 10px;
+      margin: 0;
+    }
+
+    .titleBox {
+      border: 1px solid #000;
+      display: inline-block;
+      padding: 4px 18px;
+      margin-top: 8px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .line {
+      margin-top: 10px;
+      border-bottom: 1px solid #000;
+      padding-bottom: 2px;
+    }
+
+    .label {
+      font-size: 10px;
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .col {
+      flex: 1;
+      border-bottom: 1px solid #000;
+      padding-bottom: 2px;
+    }
+
+    .sectionTitle {
+      font-weight: 700;
+      margin-top: 14px;
+    }
+
+    .box {
+      min-height: 48px;
+      border-bottom: 1px solid #000;
+      margin-top: 4px;
+      white-space: pre-wrap;
+    }
+
+    .diagnosisBox {
+      border: 1px solid #000;
+      padding: 6px;
+      margin-top: 14px;
+      min-height: 36px;
+    }
+
+    .note {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 10px;
+    }
+
+    .right {
+      text-align: right;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ================= PAGE 1 ================= -->
+<div class="page">
+
+  <div class="header">
+    <h1>SAI ASHA HOSPITAL</h1>
+    <div class="sub">MEDICINE / ORTHOPEDIC / SURGERY / MATERNITY / PEDIATRIC / DENTAL</div>
+    <div class="addr">
+      05, 1st Floor, Laxcon Plaza, Plot No. 20 & 21, Sector-29, Nerul (E), Navi Mumbai – 400706
+    </div>
+    <div class="addr">
+      Mob: 892 888 9390 &nbsp;&nbsp; Tel: 022 3501 0702 / 022 3503 1026
+    </div>
+
+    <div class="titleBox">DISCHARGE SUMMARY</div>
+  </div>
+
+  <div class="line">
+    <span class="label">Patient's Name</span><br/>
+    ${formData.patientName || " "}
+  </div>
+
+  <div class="row">
+    <div class="col"><span class="label">Age</span><br/>${
+      formData.age || " "
+    }</div>
+    <div class="col"><span class="label">Sex</span><br/>${
+      formData.sex || " "
+    }</div>
+    <div class="col"><span class="label">Class</span><br/> </div>
+  </div>
+
+  <div class="line">
+    <span class="label">Hon. Dr.</span><br/>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <span class="label">Admission Date</span><br/>
+      ${formData.admissionDate || " "}
+    </div>
+    <div class="col">
+      <span class="label">Time</span><br/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <span class="label">Discharge Date</span><br/>
+      ${formData.dischargeDate || " "}
+    </div>
+    <div class="col">
+      <span class="label">Time</span><br/>
+    </div>
+  </div>
+
+  <div class="sectionTitle">CLINICAL NOTE:</div>
+
+  <div style="margin-top:6px;">1. On Admission</div>
+  <div class="box">${formData.onAdmissionNotes || ""}</div>
+
+  <div style="margin-top:10px;">2. On Discharge</div>
+  <div class="box">${formData.onDischargeNotes || ""}</div>
+
+  <div class="diagnosisBox">
+    <b>DIAGNOSIS:</b><br/>
+    ${formData.diagnosis || ""}
+  </div>
+
+  <div class="row" style="margin-top:12px;">
+    <div class="col">
+      <span class="label">To Attend O.P.D. on Day</span><br/>
+      ${formData.followUpDate || " "}
+    </div>
+    <div class="col">
+      <span class="label">Time</span><br/>
+    </div>
+  </div>
+
+  <div class="note">Please bring this card for further reference</div>
+
+</div>
+
+<!-- ================= PAGE 2 ================= -->
+<div class="page">
+
+  <div class="sectionTitle">Investigation Done</div>
+
+  <div class="row">
+    <div class="col"><span class="label">Blood</span></div>
+    <div class="col"><span class="label">X-Ray</span></div>
+  </div>
+
+  <div class="row">
+    <div class="col"><span class="label">Urine</span></div>
+    <div class="col"><span class="label">U.S.G</span></div>
+  </div>
+
+  <div class="sectionTitle" style="margin-top:16px;">
+    Treatment Given / Operation Notes
+  </div>
+  <div class="box" style="min-height:120px;"></div>
+
+  <div class="sectionTitle" style="margin-top:16px;">
+    Follow up Treatment
+  </div>
+  <div class="box" style="min-height:80px;"></div>
+
+  <div class="right">Medical Officer</div>
+
+</div>
+
+<script>
+  window.onload = function () {
+    window.print();
+    window.onafterprint = function () {
+      window.close();
+    };
+  };
+</script>
+
+</body>
+</html>
+  `);
+
+    printWindow.document.close();
   };
 
   return (
