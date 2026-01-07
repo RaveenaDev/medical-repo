@@ -23,6 +23,7 @@ import printJS from "print-js"; // Import print-js
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  addDiscount,
   addPaymentToBill,
   addToBill,
   editBill,
@@ -58,7 +59,7 @@ const BillDetailsReception = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  // console.log("original Bill", bill);
+  console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -413,6 +414,59 @@ const BillDetailsReception = (props) => {
     return acc;
   }, {});
 
+  // DISCOUNT
+
+  const [discountOpen, setDiscountOpen] = useState(false);
+  const [discountLoading, setDiscountLoading] = useState(false);
+  const [discountForm, setDiscountForm] = useState({
+    type: "Flat", // Flat | Percentage
+    value: "",
+    reason: "",
+  });
+  const [discountErrors, setDiscountErrors] = useState({});
+  const openDiscount = () => setDiscountOpen(true);
+
+  const closeDiscount = () => {
+    setDiscountOpen(false);
+    setDiscountErrors({});
+    setDiscountForm({ type: "Flat", value: "", reason: "" });
+  };
+  const validateDiscount = () => {
+    const errors = {};
+    const gross = bill?.grossAmount || bill?.totalAmount || 0;
+
+    if (!discountForm.value || discountForm.value <= 0) {
+      errors.value = "Enter a valid value";
+    }
+
+    if (discountForm.type === "Percentage" && discountForm.value > 100) {
+      errors.value = "Percentage cannot exceed 100";
+    }
+
+    if (discountForm.type === "Flat" && discountForm.value > gross) {
+      errors.value = "Discount cannot exceed total amount";
+    }
+
+    setDiscountErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+  const handleApplyDiscount = async () => {
+    if (!validateDiscount()) return;
+
+    try {
+      setDiscountLoading(true);
+
+      await dispatch(addDiscount(discountForm, billId));
+
+      await dispatch(getBillDetails(billId)); // refresh bill
+      closeDiscount();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDiscountLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -559,7 +613,7 @@ const BillDetailsReception = (props) => {
                 {/* Header row (unchanged) */}
                 <div className={styles["billing-table-header"]}>
                   <div className={styles["billing-description"]}>
-                    <p className={styles["bold"]}>Description</p>
+                    <p className={styles["bold"]}>Category</p>
                   </div>
                   <div className={styles["billing-name"]}>
                     <p className={styles["bold"]}>Name</p>
@@ -606,6 +660,12 @@ const BillDetailsReception = (props) => {
                     "";
                   const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
                   // console.log("service", row);
+                  const getEditableNameKey = (details = {}) => {
+                    if (details.doctorName !== undefined) return "doctorName";
+                    if (details.bedNumber !== undefined) return "bedNumber";
+                    return "name"; // fallback
+                  };
+
                   return (
                     <div key={i} className={styles["billing-category"]}>
                       <div className={styles["billing-description"]}>
@@ -636,7 +696,52 @@ const BillDetailsReception = (props) => {
                         )}
                       </div>
                       <div className={styles["billing-name"]}>
-                        <div>{name ? name : "—"}</div>
+                        <div className={styles["billing-name"]}>
+                          {isEditing ? (
+                            <input
+                              className={styles["inputDescription"]}
+                              type="text"
+                              inputMode="text"
+                              value={name}
+                              onChange={(e) => {
+                                const updated = JSON.parse(
+                                  JSON.stringify(editableBill)
+                                );
+
+                                if (!updated.services[i].details) {
+                                  updated.services[i].details = {};
+                                }
+
+                                const key = getEditableNameKey(
+                                  updated.services[i].details
+                                );
+                                updated.services[i].details[key] =
+                                  e.target.value; // ✅ dynamic field
+
+                                setEditableBill(updated);
+                              }}
+                              onBlur={() => {
+                                const updated = JSON.parse(
+                                  JSON.stringify(editableBill)
+                                );
+
+                                if (!updated.services[i].details) {
+                                  updated.services[i].details = {};
+                                }
+
+                                const key = getEditableNameKey(
+                                  updated.services[i].details
+                                );
+                                updated.services[i].details[key] =
+                                  updated.services[i].details[key] || "";
+
+                                setEditableBill(updated);
+                              }}
+                            />
+                          ) : (
+                            <div>{name || "—"}</div>
+                          )}
+                        </div>
                       </div>
                       <div className={styles["billing-name"]}>
                         <div>{type ? type : "—"}</div>
@@ -760,6 +865,14 @@ const BillDetailsReception = (props) => {
                       bill.totalAmount.toLocaleString("en-IN")}
                 </div>
               </div>
+              {bill?.discount?.amount > 0 && (
+                <div>
+                  <div className={styles["bold"]}>Discount</div>
+                  <div style={{ color: "red" }}>
+                    - ₹{bill.discount.amount.toLocaleString("en-IN")}
+                  </div>
+                </div>
+              )}
 
               <div>
                 <div className={styles["bold"]}>Paid</div>
@@ -871,9 +984,90 @@ const BillDetailsReception = (props) => {
             <Button variant="contained" onClick={openAddPayment}>
               Add Payment
             </Button>
+            <Button variant="outlined" color="error" onClick={openDiscount}>
+              Apply Discount
+            </Button>
           </div>
         </div>
       </div>
+      {/* DISCOUNT Dialog  */}
+
+      <Dialog
+        open={discountOpen}
+        onClose={discountLoading ? undefined : closeDiscount}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Apply Discount</DialogTitle>
+
+        <DialogContent dividers>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            {/* Type */}
+            <TextField
+              select
+              label="Discount Type"
+              value={discountForm.type}
+              onChange={(e) =>
+                setDiscountForm((p) => ({ ...p, type: e.target.value }))
+              }
+              fullWidth
+            >
+              <MenuItem value="Flat">Flat</MenuItem>
+              <MenuItem value="Percentage">Percentage</MenuItem>
+            </TextField>
+
+            {/* Value */}
+            <TextField
+              label={
+                discountForm.type === "Percentage" ? "Percentage (%)" : "Amount"
+              }
+              value={discountForm.value}
+              onChange={(e) =>
+                setDiscountForm((p) => ({
+                  ...p,
+                  value: Number(e.target.value),
+                }))
+              }
+              error={!!discountErrors.value}
+              helperText={discountErrors.value}
+              fullWidth
+              InputProps={{
+                startAdornment:
+                  discountForm.type === "Flat" ? (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ) : null,
+              }}
+            />
+
+            {/* Reason */}
+            <TextField
+              label="Reason (optional)"
+              value={discountForm.reason}
+              onChange={(e) =>
+                setDiscountForm((p) => ({ ...p, reason: e.target.value }))
+              }
+              fullWidth
+              multiline
+              minRows={2}
+            />
+          </Stack>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={closeDiscount} disabled={discountLoading}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleApplyDiscount}
+            disabled={discountLoading}
+            startIcon={discountLoading ? <CircularProgress size={18} /> : null}
+          >
+            Apply
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Add to Bill Dialog  */}
       <Dialog
         open={addOpen}
@@ -946,7 +1140,7 @@ const BillDetailsReception = (props) => {
             </Grid>
 
             <TextField
-              label="Details (optional)"
+              label="Name"
               value={addForm.details}
               onChange={handleAddChange("details")}
               fullWidth
