@@ -42,7 +42,8 @@ const ManageMedication = ({ onClose, recordId, patientId, caseId }) => {
           toast.error("Please select both new date and time");
           return;
         }
-        body.newTime = combineDateAndTimeString(newDate, newTime);
+        body.newDate = newDate;
+        body.newTime = newTime;
         if (notes.trim()) body.notes = notes.trim();
       }
 
