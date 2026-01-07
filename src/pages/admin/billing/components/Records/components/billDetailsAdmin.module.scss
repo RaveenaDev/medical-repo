@@ -121,7 +121,7 @@
 
         .billing-amount-details {
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
           gap: 0rem;
           padding: 1.5rem;
           justify-items: center;
@@ -129,7 +129,13 @@
           div {
             display: flex;
             flex-direction: column;
+
             gap: 0.5rem;
+
+            div {
+              flex-direction: row;
+              align-items: center;
+            }
           }
         }
 

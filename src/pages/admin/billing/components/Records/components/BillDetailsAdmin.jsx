@@ -864,12 +864,29 @@ const BillDetailsAdmin = (props) => {
               </div>
               {bill?.discount?.amount > 0 && (
                 <div>
-                  <div className={styles["bold"]}>Discount</div>
+                  <div className={styles["bold"]}>
+                    Discount{" "}
+                    <span
+                      style={{
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        color: "#666",
+                      }}
+                    >
+                      (
+                      {bill.discount.type === "Flat"
+                        ? "Flat"
+                        : `${bill.discount.value}%`}
+                      )
+                    </span>
+                  </div>
+
                   <div style={{ color: "red" }}>
                     - ₹{bill.discount.amount.toLocaleString("en-IN")}
                   </div>
                 </div>
               )}
+
               <div>
                 <div className={styles["bold"]}>Paid</div>
 
