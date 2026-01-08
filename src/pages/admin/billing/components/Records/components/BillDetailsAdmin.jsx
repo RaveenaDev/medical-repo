@@ -695,9 +695,7 @@ const BillDetailsAdmin = (props) => {
                           <div>{desc}</div>
                         )}
                       </div>
-                      <div className={styles["billing-name"]}>
-                        <div>{name ? name : "—"}</div>
-                      </div>
+
                       <div className={styles["billing-name"]}>
                         {isEditing ? (
                           <input
@@ -742,6 +740,9 @@ const BillDetailsAdmin = (props) => {
                         ) : (
                           <div>{name || "—"}</div>
                         )}
+                      </div>
+                      <div className={styles["billing-name"]}>
+                        <div>{type ? type : "—"}</div>
                       </div>
                       <div className={styles["billing-date"]}>
                         <div>

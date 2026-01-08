@@ -27,30 +27,26 @@ const THEME = {
 
 const Earnings = ({ setIsSignUpOrLogin }) => {
   const dispatch = useDispatch();
-  const totalEarnings = useSelector((s) => s.admin.totalEarnings);
 
-  const [period, setPeriod] = useState("This Year");
-  const [year, setYear] = useState("2025");
+  const [timeFilter, setTimeFilter] = useState("monthly");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    setIsSignUpOrLogin?.(false);
-    dispatch(getEarnings(year));
-  }, [dispatch, year]);
+  const applyTimeFilter = (data) => {
+    const now = new Date();
 
-  const filteredTrend = useMemo(() => {
-    const selectedYear = Number(year);
+    if (timeFilter === "daily") {
+      return data.filter((d) => d.date.toDateString() === now.toDateString());
+    }
 
-    let data = earningsTrend.filter(
-      (d) => d.date.getFullYear() === selectedYear
-    );
+    if (timeFilter === "weekly") {
+      const start = new Date();
+      start.setDate(now.getDate() - 7);
+      return data.filter((d) => d.date >= start && d.date <= now);
+    }
 
-    if (period === "This Year") return data;
-
-    if (period === "This Month") {
-      const now = new Date();
+    if (timeFilter === "monthly") {
       return data.filter(
         (d) =>
           d.date.getMonth() === now.getMonth() &&
@@ -58,39 +54,97 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
       );
     }
 
-    if (period === "Last Month") {
-      const lastMonth = new Date();
-      lastMonth.setMonth(lastMonth.getMonth() - 1);
-
-      return data.filter(
-        (d) =>
-          d.date.getMonth() === lastMonth.getMonth() &&
-          d.date.getFullYear() === lastMonth.getFullYear()
-      );
-    }
-
-    if (period === "Custom" && fromDate && toDate) {
+    if (timeFilter === "custom" && fromDate && toDate) {
       const from = new Date(fromDate);
       const to = new Date(toDate);
-
       return data.filter((d) => d.date >= from && d.date <= to);
     }
 
     return data;
-  }, [period, year, fromDate, toDate]);
+  };
+  const generateTodayHourlyData = () => {
+    const data = [];
+    const today = new Date();
+
+    for (let h = 0; h < 24; h++) {
+      const date = new Date(today);
+      date.setHours(h, 0, 0, 0);
+
+      data.push({
+        date,
+        label: `${h}:00`,
+        opd: Math.floor(200 + Math.random() * 300),
+        ipd: Math.floor(400 + Math.random() * 600),
+      });
+    }
+
+    return data;
+  };
+
+  useEffect(() => {
+    setIsSignUpOrLogin?.(false);
+  }, [dispatch]);
+
+  const filteredTrend = useMemo(() => {
+    if (timeFilter === "daily") {
+      return generateTodayHourlyData();
+    }
+
+    return applyTimeFilter(earningsTrend);
+  }, [timeFilter, fromDate, toDate]);
+
   const filteredPatientTrend = filteredTrend.map((d) => ({
     ...d,
     opd: Math.floor(200 + Math.random() * 200),
     ipd: Math.floor(100 + Math.random() * 100),
   }));
 
-  const mergedDoctorData = doctors.map((d) => ({
-    name: d.name,
-    opdEarnings: d.opdEarnings,
-    ipdEarnings: d.ipdEarnings,
-    opdPatients: d.opdPatients,
-    ipdPatients: d.ipdPatients,
-  }));
+  const filteredDoctors = doctors.map((doc) => {
+    const filteredRecords = applyTimeFilter(doc.records);
+
+    const totals = filteredRecords.reduce(
+      (acc, r) => {
+        acc.opdEarnings += r.opdEarnings;
+        acc.ipdEarnings += r.ipdEarnings;
+        acc.opdPatients += r.opdPatients;
+        acc.ipdPatients += r.ipdPatients;
+        return acc;
+      },
+      {
+        opdEarnings: 0,
+        ipdEarnings: 0,
+        opdPatients: 0,
+        ipdPatients: 0,
+      }
+    );
+
+    return {
+      name: doc.name,
+      ...totals,
+    };
+  });
+  const earningsSummary = useMemo(() => {
+    return filteredTrend.reduce(
+      (acc, d) => {
+        acc.opd += d.opd;
+        acc.ipd += d.ipd;
+        acc.total += d.opd + d.ipd;
+        return acc;
+      },
+      { opd: 0, ipd: 0, total: 0 }
+    );
+  }, [filteredTrend]);
+  const patientSummary = useMemo(() => {
+    return filteredPatientTrend.reduce(
+      (acc, d) => {
+        acc.opd += d.opd;
+        acc.ipd += d.ipd;
+        acc.total += d.opd + d.ipd;
+        return acc;
+      },
+      { opd: 0, ipd: 0, total: 0 }
+    );
+  }, [filteredPatientTrend]);
 
   return (
     <PageWrapper>
@@ -98,10 +152,8 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
       <Content>
         <FilterBar
-          period={period}
-          setPeriod={setPeriod}
-          year={year}
-          setYear={setYear}
+          timeFilter={timeFilter}
+          setTimeFilter={setTimeFilter}
           fromDate={fromDate}
           toDate={toDate}
           setFromDate={setFromDate}
@@ -114,17 +166,17 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
             items={[
               {
                 label: "Total Earnings",
-                value: "₹5,40,000",
+                value: `₹${earningsSummary.total.toLocaleString("en-IN")}`,
                 color: THEME.primary,
               },
               {
                 label: "OPD Earnings",
-                value: "₹2,20,000",
+                value: `₹${earningsSummary.opd.toLocaleString("en-IN")}`,
                 color: THEME.primary,
               },
               {
                 label: "IPD Earnings",
-                value: "₹3,20,000",
+                value: `₹${earningsSummary.ipd.toLocaleString("en-IN")}`,
                 color: THEME.secondary,
               },
             ]}
@@ -140,9 +192,21 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
         <Section title="Patient Load Overview">
           <SummaryRow
             items={[
-              { label: "Total Patients", value: "1,860", color: THEME.primary },
-              { label: "OPD Patients", value: "1,240", color: THEME.primary },
-              { label: "IPD Patients", value: "620", color: THEME.secondary },
+              {
+                label: "Total Patients",
+                value: patientSummary.total,
+                color: THEME.primary,
+              },
+              {
+                label: "OPD Patients",
+                value: patientSummary.opd,
+                color: THEME.primary,
+              },
+              {
+                label: "IPD Patients",
+                value: patientSummary.ipd,
+                color: THEME.secondary,
+              },
             ]}
           />
 
@@ -155,9 +219,15 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
         {/* ===== Doctor-wise Summary ===== */}
         <Section title="Doctor-wise Earnings Summary">
           <DoctorTable
-            rows={mergedDoctorData}
+            rows={filteredDoctors}
             search={search}
             setSearch={setSearch}
+            timeFilter={timeFilter}
+            setTimeFilter={setTimeFilter}
+            fromDate={fromDate}
+            toDate={toDate}
+            setFromDate={setFromDate}
+            setToDate={setToDate}
           />
         </Section>
       </Content>
@@ -208,10 +278,8 @@ const Content = ({ children }) => (
 /* ---------------- FILTERS ---------------- */
 
 const FilterBar = ({
-  period,
-  setPeriod,
-  year,
-  setYear,
+  timeFilter,
+  setTimeFilter,
   fromDate,
   toDate,
   setFromDate,
@@ -234,32 +302,18 @@ const FilterBar = ({
     <TextField
       select
       size="small"
-      label="Period"
-      value={period}
-      onChange={(e) => setPeriod(e.target.value)}
+      label="Time Range"
+      value={timeFilter}
+      onChange={(e) => setTimeFilter(e.target.value)}
     >
-      {["Today", "This Month", "Last Month", "This Year", "Custom"].map((p) => (
-        <MenuItem key={p} value={p}>
-          {p}
-        </MenuItem>
-      ))}
+      <MenuItem value="daily">Today</MenuItem>
+      <MenuItem value="weekly">This Week</MenuItem>
+      <MenuItem value="monthly">This Month</MenuItem>
+      <MenuItem value="yearly">This Year</MenuItem>
+      <MenuItem value="custom">Custom</MenuItem>
     </TextField>
 
-    <TextField
-      select
-      size="small"
-      label="Year"
-      value={year}
-      onChange={(e) => setYear(e.target.value)}
-    >
-      {["2025", "2024", "2023"].map((y) => (
-        <MenuItem key={y} value={y}>
-          {y}
-        </MenuItem>
-      ))}
-    </TextField>
-
-    {period === "Custom" && (
+    {timeFilter === "custom" && (
       <>
         <TextField
           size="small"
@@ -326,7 +380,8 @@ const ChartCard = ({ title, data, children }) => (
     {data?.length ? (
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
-          <XAxis dataKey="month" />
+          <XAxis dataKey="label" />
+
           <YAxis />
           <Tooltip />
           <CartesianGrid horizontal vertical={false} stroke="#BFC5F5" />
@@ -361,22 +416,74 @@ const ChartCard = ({ title, data, children }) => (
 
 /* ---------------- TABLE ---------------- */
 
-const DoctorTable = ({ rows, search, setSearch }) => {
+const DoctorTable = ({
+  rows,
+  search,
+  setSearch,
+  timeFilter,
+  setTimeFilter,
+  fromDate,
+  toDate,
+  setFromDate,
+  setToDate,
+}) => {
   const filteredRows = rows.filter((r) =>
     r.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 2,
+          mb: 1,
+          flexWrap: "wrap",
+        }}
+      >
         <h4>Doctor-wise Summary</h4>
-        <TextField
-          size="small"
-          placeholder="Search doctor..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <TextField
+            size="small"
+            placeholder="Search doctor..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <TextField
+            select
+            size="small"
+            value={timeFilter}
+            onChange={(e) => setTimeFilter(e.target.value)}
+          >
+            <MenuItem value="daily">Today</MenuItem>
+            <MenuItem value="weekly">This Week</MenuItem>
+            <MenuItem value="monthly">This Month</MenuItem>
+            <MenuItem value="yearly">This Year</MenuItem>
+            <MenuItem value="custom">Custom</MenuItem>
+          </TextField>
+        </Box>
       </Box>
+
+      {timeFilter === "custom" && (
+        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+          <TextField
+            size="small"
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
+          <TextField
+            size="small"
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
+        </Box>
+      )}
 
       <Box sx={{ maxHeight: 420, overflowY: "auto", border: "1px solid #eee" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -430,18 +537,27 @@ const td = { padding: 10, borderBottom: "1px solid #eee" };
 
 /* ---------------- DUMMY DATA ---------------- */
 
-const earningsTrend = Array.from({ length: 24 }, (_, i) => {
-  const date = new Date(2024, i);
-  return {
-    date, //  date
-    month: date.toLocaleString("en", {
-      month: "short",
-      year: "2-digit",
-    }),
-    opd: Math.floor(50000 + Math.random() * 50000),
-    ipd: Math.floor(80000 + Math.random() * 70000),
-  };
-});
+const earningsTrend = (() => {
+  const data = [];
+  const today = new Date();
+
+  for (let i = 0; i < 90; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() - i);
+
+    data.push({
+      date,
+      label: date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+      }),
+      opd: Math.floor(3000 + Math.random() * 5000),
+      ipd: Math.floor(6000 + Math.random() * 9000),
+    });
+  }
+
+  return data.reverse();
+})();
 
 const patientTrend = earningsTrend.map((m) => ({
   month: m.month,
@@ -449,10 +565,25 @@ const patientTrend = earningsTrend.map((m) => ({
   ipd: Math.floor(100 + Math.random() * 100),
 }));
 
-const doctors = Array.from({ length: 50 }, (_, i) => ({
-  name: `Dr. Doctor ${i + 1}`,
-  opdEarnings: Math.floor(20000 + Math.random() * 80000),
-  ipdEarnings: Math.floor(40000 + Math.random() * 120000),
-  opdPatients: Math.floor(50 + Math.random() * 200),
-  ipdPatients: Math.floor(20 + Math.random() * 100),
-}));
+const doctors = Array.from({ length: 15 }, (_, i) => {
+  const records = [];
+
+  for (let d = 0; d < 90; d++) {
+    const date = new Date();
+    date.setDate(date.getDate() - d);
+
+    records.push({
+      date,
+      opdEarnings: Math.floor(2000 + Math.random() * 4000),
+      ipdEarnings: Math.floor(5000 + Math.random() * 8000),
+      opdPatients: Math.floor(5 + Math.random() * 15),
+      ipdPatients: Math.floor(2 + Math.random() * 8),
+    });
+  }
+
+  return {
+    doctorId: `doc_${i + 1}`,
+    name: `Dr. Doctor ${i + 1}`,
+    records,
+  };
+});
