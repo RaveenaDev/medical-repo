@@ -1080,6 +1080,30 @@ export const addToBill = (payload, id) => async (dispatch) => {
     toast.error(error?.response?.data?.message || "Add failed");
   }
 };
+
+export const refundBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/refundBill/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // dispatch({ type: ADD_TO_BILL, payload: data });
+    console.log("REFUND Bill Response:", data);
+    toast.success("Bill refunded successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    //  dispatch to refresh data
+    dispatch(getBillDetails(id));
+  } catch (error) {
+    console.error("Error refunding bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
 export const addDiscount = (payload, id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");

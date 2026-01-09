@@ -4,6 +4,7 @@ import {
   addToBill,
   editBill,
   getBillDetails,
+  refundBill,
 } from "../../../../../../components/State/Admin/Action";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -30,6 +31,7 @@ import printJS from "print-js"; // Import print-js
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { Printer } from "lucide-react";
 
 const BillDetailsAdmin = (props) => {
   useEffect(() => {
@@ -376,6 +378,9 @@ const BillDetailsAdmin = (props) => {
   const grossTotal = +(subTotal + taxTotal).toFixed(2);
   const roundOff = +(Math.round(grossTotal) - grossTotal).toFixed(2);
   const netPayable = +(grossTotal + roundOff).toFixed(2);
+  const discountAmt = safeNum(
+    editableBill?.discount?.amount ?? bill?.discount?.amount ?? 0
+  );
 
   const paidAmt = safeNum(editableBill?.paidAmount ?? bill?.paidAmount ?? 0);
   const balanceDue = Math.max(netPayable - paidAmt, 0);
@@ -469,6 +474,72 @@ const BillDetailsAdmin = (props) => {
     }
   };
 
+  // REFUNDS
+
+  const [refundOpen, setRefundOpen] = useState(false);
+  const [refundLoading, setRefundLoading] = useState(false);
+  const [refundForm, setRefundForm] = useState({
+    mode: "Cash",
+    reference: "",
+  });
+
+  const handleRefund = async () => {
+    try {
+      setRefundLoading(true);
+
+      await dispatch(refundBill(refundForm, billId));
+
+      setRefundOpen(false);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRefundLoading(false);
+    }
+  };
+  const handlePrintRefund = (refund) => {
+    const refundAmount = Math.abs(Number(refund.amount) || 0);
+
+    document.getElementById("refund-amount").innerText =
+      refundAmount.toLocaleString("en-IN");
+
+    document.getElementById("refund-mode").innerText = refund.mode || "—";
+
+    document.getElementById("refund-ref").innerText = refund.reference || "—";
+
+    document.getElementById("refund-amount-words").innerText =
+      amountInWordsINR(refundAmount);
+
+    printJS({
+      printable: "refund-print",
+      type: "html",
+      scanStyles: false,
+      style: `
+      @page { size: A4; margin: 6mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { font-family: Arial, sans-serif; font-size: 12px; color: #111; }
+      .bill-wrap { border: 1px solid #222; padding: 10px; }
+      .bill-head { display: flex; justify-content: center; align-items: center; gap: 12px; }
+      .logo { width: 64px; height: 64px; object-fit: contain; }
+      .titleblock { text-align: center; }
+    
+      .bill-title { font-size: 16px; font-weight: 700; text-align: center; margin: 10px 0 14px; }
+      .muted { color: #555; }
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 8px; }
+      .box { border: 1px solid #999; padding: 8px; border-radius: 2px; margin-top: 10px; }
+      .section-title { font-weight: 700; margin-bottom: 6px; }
+      table.bill { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      table.bill th, table.bill td { border: 1px solid #000; padding: 6px; }
+      table.bill th { background: #f2f2f2; }
+      .center { text-align: center; }
+      .right { text-align: right; }
+      .amount-words { border: 1px dashed #999; padding: 8px; margin-top: 10px; font-style: italic; }
+      .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+      .sig-box { height: 64px; border: 1px solid #999; padding: 8px; display: flex; align-items: flex-end; justify-content: space-between; }
+      .footnote { margin-top: 16px; text-align: center; font-size: 11px; color: #444; }
+    `,
+    });
+  };
+
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -514,6 +585,7 @@ const BillDetailsAdmin = (props) => {
             </Button>
           </div>
         </div>
+
         <div className={styles["billing-modal-body"]}>
           <div className={styles["billing-invoice-details"]}>
             <div className={styles["billing-no"]}>
@@ -838,19 +910,23 @@ const BillDetailsAdmin = (props) => {
               })()}
             </div>
           </div>
-          {isEditing ? (
-            <div className={styles["billing-edited-save-btn"]}>
+
+          <div className={styles["billing-edited-save-btn"]}>
+            {isEditing ? (
               <Button variant="contained" onClick={handleSave}>
                 Save
               </Button>
-            </div>
-          ) : (
-            <div className={styles["billing-edited-save-btn"]}>
+            ) : (
               <Button variant="contained" onClick={openAddDialog}>
                 Add to Bill
               </Button>
-            </div>
-          )}
+            )}
+            <Button variant="outlined" color="error" onClick={openDiscount}>
+              Apply Discount
+            </Button>
+          </div>
+
+          {/* Totals  */}
           <div className={styles["billing-amount"]}>
             <div className={styles["billing-amount-details"]}>
               <div>
@@ -893,7 +969,16 @@ const BillDetailsAdmin = (props) => {
 
                 <div>₹{bill.paidAmount.toLocaleString("en-IN")}</div>
               </div>
+              {bill?.refundSummary?.totalRefunded > 0 && (
+                <div>
+                  <div className={styles["bold"]}>Refund </div>
 
+                  <div style={{ color: "red" }}>
+                    - ₹
+                    {bill.refundSummary.totalRefunded.toLocaleString("en-IN")}
+                  </div>
+                </div>
+              )}
               <div>
                 <div className={styles["bold"]}>Outstanding</div>
                 <div className={styles["center"]}>
@@ -993,17 +1078,123 @@ const BillDetailsAdmin = (props) => {
                 </p>
               )}
             </div>
+            <div className={styles["billing-divider"]}></div>
+
+            <div className={styles["billing-history"]}>
+              <div className={styles["payment-heading"]}>Refund History</div>
+
+              {bill.refunds && bill.refunds.length > 0 ? (
+                <>
+                  <div className={styles["refund-list-header"]}>
+                    <div>Date</div>
+                    <div>Amount</div>
+                    <div>Mode</div>
+                    <div>Reference</div>
+                    <div>Action</div>
+                  </div>
+
+                  {bill.refunds.map((refund) => (
+                    <div key={refund._id} className={styles["refund-summary"]}>
+                      <p>{new Date(refund.date).toLocaleDateString("en-IN")}</p>
+
+                      <p style={{ color: "red", fontWeight: 600 }}>
+                        ₹{refund.amount.toLocaleString("en-IN")}
+                      </p>
+
+                      <p>{refund.mode}</p>
+                      <p>{refund.reference || "—"}</p>
+
+                      <button
+                        size="small"
+                        onClick={() => handlePrintRefund(refund)}
+                        className={styles["print-refund-btn"]}
+                      >
+                        <Printer />
+                        Print
+                      </button>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <p className={styles["no-records"]}>No refunds issued.</p>
+              )}
+            </div>
           </div>
           <div className={styles["billing-edited-save-btn"]}>
             <Button variant="contained" onClick={openAddPayment}>
               Add Payment
             </Button>
-            <Button variant="outlined" color="error" onClick={openDiscount}>
-              Apply Discount
+            <Button
+              variant="contained"
+              onClick={() => setRefundOpen(true)}
+              disabled={bill.outstanding > 0}
+            >
+              Add Refund
             </Button>
           </div>
         </div>
       </div>
+
+      {/* REFUND BILL DIALOG */}
+      <Dialog
+        open={refundOpen}
+        onClose={refundLoading ? undefined : () => setRefundOpen(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Process Refund</DialogTitle>
+
+        <DialogContent dividers>
+          <Stack spacing={2}>
+            <TextField
+              label="Refund Amount"
+              value={Math.max(bill.paidAmount - bill.totalAmount, 0)}
+              disabled
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">₹</InputAdornment>
+                ),
+              }}
+            />
+
+            <TextField
+              select
+              label="Refund Mode"
+              value={refundForm.mode}
+              onChange={(e) =>
+                setRefundForm((p) => ({ ...p, mode: e.target.value }))
+              }
+              fullWidth
+            >
+              <MenuItem value="Cash">Cash</MenuItem>
+              <MenuItem value="UPI">UPI</MenuItem>
+              <MenuItem value="Card">Card</MenuItem>
+            </TextField>
+
+            <TextField
+              label="Reference (optional)"
+              value={refundForm.reference}
+              onChange={(e) =>
+                setRefundForm((p) => ({ ...p, reference: e.target.value }))
+              }
+              fullWidth
+            />
+          </Stack>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setRefundOpen(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleRefund}
+            disabled={refundLoading}
+          >
+            Refund
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* DISCOUNT Dialog  */}
 
       <Dialog
@@ -1320,6 +1511,124 @@ const BillDetailsAdmin = (props) => {
         </DialogActions>
       </Dialog>
 
+      {/* Hidden Refund Printable Section */}
+
+      <div style={{ display: "none" }}>
+        <div id="refund-print" className="bill-wrap">
+          {/* Header */}
+          <div className="bill-head">
+            {logoUrl && (
+              <img className="logo" src={logoUrl} alt="Hospital Logo" />
+            )}
+
+            <div className="titleblock">
+              <div style={{ fontSize: 18, fontWeight: 700 }}>
+                {hospitalName}
+              </div>
+              <div>{hospitalAddr}</div>
+              <div>{hospitalPhone}</div>
+
+              {(hospitalGstin || hospitalPan) && (
+                <div className="muted">
+                  {hospitalGstin && <>GSTIN: {hospitalGstin} </>}
+                  {hospitalPan && <>| PAN: {hospitalPan}</>}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Title */}
+          <div className="bill-title">REFUND RECEIPT</div>
+
+          {/* Patient + Refund Info */}
+          <div className="grid-2">
+            <div className="box">
+              <div className="section-title">Patient Details</div>
+
+              <div>
+                <b>Patient Name:</b> {bill?.patient?.name || "—"}
+              </div>
+              <div>
+                <b>Patient ID:</b> {bill?.patient?.patId || "—"}
+              </div>
+              <div>
+                <b>Phone:</b> {bill?.patient?.phone || "—"}
+              </div>
+            </div>
+            <div className="box">
+              <div className="section-title">Invoice Details</div>
+              <div>
+                <b>Invoice No:</b> {bill?.invoiceNumber}
+              </div>
+              <div>
+                <b>Refund Date:</b>{" "}
+                {new Date().toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+            </div>
+          </div>
+          {/* Refund Table */}
+          <table className="bill">
+            <thead>
+              <tr>
+                <th className="center" style={{ width: 60 }}>
+                  #
+                </th>
+                <th>Description</th>
+                <th className="center" style={{ width: 120 }}>
+                  Mode
+                </th>
+                <th className="right" style={{ width: 150 }}>
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="center">1</td>
+                <td>Refund against Invoice #{bill?.invoiceNumber}</td>
+                <td className="center">
+                  <span id="refund-mode" />
+                </td>
+                <td className="right">
+                  ₹<span id="refund-amount" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Reference */}
+          <div className="box">
+            <b>Reference:</b> <span id="refund-ref" />
+          </div>
+
+          {/* Amount in Words */}
+          <div className="amount-words">
+            <b>Amount in words:</b> <span id="refund-amount-words" />
+          </div>
+
+          {/* Signatures */}
+          <div className="signatures">
+            <div className="sig-box">
+              <span>Patient / Authorized Signatory</span>
+              <span style={{ opacity: 0.6 }}>Signature</span>
+            </div>
+            <div className="sig-box">
+              <span>For {hospitalName}</span>
+              <span style={{ opacity: 0.6 }}>Authorized Signatory</span>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="footnote">
+            This is a system-generated refund receipt. Thank you for choosing{" "}
+            <b>{hospitalName}</b>.
+          </div>
+        </div>
+      </div>
       {/* Hidden Printable Section */}
       <div style={{ display: "none" }}>
         <div id="printable-bill" className="bill-wrap">
@@ -1526,15 +1835,6 @@ const BillDetailsAdmin = (props) => {
 
           {/* Totals */}
           <div className="totals">
-            {/* <div className="row">
-              <div className="label">
-                <b>Subtotal</b>
-              </div>
-              <div className="value">
-                ₹
-                {subTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-              </div>
-            </div> */}
             {hasGST && (
               <div className="row">
                 <div className="label">
@@ -1548,13 +1848,7 @@ const BillDetailsAdmin = (props) => {
                 </div>
               </div>
             )}
-            {/* <div className="row">
-              <div className="label">Round Off</div>
-              <div className="value">
-                ₹
-                {roundOff.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-              </div>
-            </div> */}
+
             <div className="row">
               <div className="label">
                 <b>Grand Total</b>
@@ -1563,6 +1857,19 @@ const BillDetailsAdmin = (props) => {
                 <b>
                   ₹
                   {netPayable.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                  })}
+                </b>
+              </div>
+            </div>
+            <div className="row">
+              <div className="label">
+                <b>Dicount</b>
+              </div>
+              <div className="value">
+                <b>
+                  -₹
+                  {discountAmt.toLocaleString("en-IN", {
                     minimumFractionDigits: 2,
                   })}
                 </b>
