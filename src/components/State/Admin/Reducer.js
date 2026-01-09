@@ -55,6 +55,9 @@ import {
   GET_WAITING_APPOINTMENTS,
   LOADING_PATIENTS,
   NULL_ESTIMATED_BILL,
+  TPA_FAIL,
+  TPA_REQUEST,
+  TPA_SUCCESS,
   UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
@@ -129,6 +132,9 @@ const initialState = {
   isLoadingDoctors: false,
   isLoadingStaffs: false,
   isLoadingRooms: false,
+  tpaloading: false,
+  tpadata: null,
+  tpaerror: null,
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -662,6 +668,15 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         billingRecord: action.payload.bill,
       };
+    case TPA_REQUEST:
+      return { ...state, tpaloading: true, tpaerror: null };
+
+    case TPA_SUCCESS:
+      return { ...state, tpaloading: false, tpadata: action.payload };
+
+    case TPA_FAIL:
+      return { ...state, tpaloading: false, tpaerror: action.payload };
+
     default:
       return state;
   }

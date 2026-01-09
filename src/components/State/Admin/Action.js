@@ -59,6 +59,9 @@ import {
   GET_WAITING_APPOINTMENTS,
   LOADING_PATIENTS,
   NULL_ESTIMATED_BILL,
+  TPA_FAIL,
+  TPA_REQUEST,
+  TPA_SUCCESS,
   UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
@@ -1245,7 +1248,7 @@ export const getInsuranceCompanies = () => async (dispatch) => {
       },
     });
 
-    // console.log("Insurance Companies : ",data)
+    // console.log("Insurance Companies : ", data);
 
     dispatch({ type: GET_INSURANCE_COMPANIES, payload: data });
   } catch (error) {
@@ -1721,3 +1724,42 @@ export const editBed = (bedId, updates) => async (dispatch) => {
     });
   }
 };
+
+export const getTPAReport =
+  ({ year, month, company }) =>
+  async (dispatch) => {
+    console.log("TPA ACTION CALLED", { year, month, company });
+
+    dispatch({ type: TPA_REQUEST });
+
+    try {
+      const token = localStorage.getItem("jwt");
+
+      let url = month
+        ? `${API_URL}/tpa/monthly?year=${year}&month=${month}`
+        : `${API_URL}/tpa/yearly?year=${year}`;
+
+      if (company) {
+        url += `&company=${encodeURIComponent(company)}`;
+      }
+
+      // /console.log("TPA API URL:", url);
+
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // console.log("TPA API RESPONSE:", data);
+
+      dispatch({ type: TPA_SUCCESS, payload: data });
+      return data;
+    } catch (error) {
+      console.error("TPA ERROR:", error);
+      dispatch({
+        type: TPA_FAIL,
+        payload: error?.response?.data?.message || "TPA fetch failed",
+      });
+    }
+  };

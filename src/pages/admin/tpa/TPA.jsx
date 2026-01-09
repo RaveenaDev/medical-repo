@@ -7,6 +7,7 @@ import Patients from "./patients/Patients";
 import AdmissionRequests from "./inPatients/AdmissionRequests";
 import ayu from "../departments/departments.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import TPAReports from "./reports/TPAReports";
 
 const TPA = (props) => {
   useEffect(() => {
@@ -26,57 +27,70 @@ const TPA = (props) => {
   const handleInPatients = () => {
     setSelectedTab("admissionRequests");
   };
+  const handleReports = () => {
+    setSelectedTab("reports");
+  };
 
   return (
-      <div className={styles.container}>
-        {/*<div className={styles.header}>*/}
-        {/*  <Searchbar /> <Notifications />*/}
-        {/*</div>*/}
+    <div className={styles.container}>
+      {/*<div className={styles.header}>*/}
+      {/*  <Searchbar /> <Notifications />*/}
+      {/*</div>*/}
 
-        <div style={{display: "flex", alignItems: "center"}}>
-          <button className={styles.backButton}>
-            <ArrowBackIosIcon/>
-          </button>
-          <h2 className={styles.head}>TPA</h2>
-        </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <button className={styles.backButton}>
+          <ArrowBackIosIcon />
+        </button>
+        <h2 className={styles.head}>TPA</h2>
+      </div>
 
-        <div className={styles.content}>
-          <div className={styles.selection}>
-            <div
-                onClick={handleCompanies}
-                className={`${styles.selectionDiv} ${
-                    selectedTab === "companies" ? styles.selectedTab : ""
-                }`}
-            >
-              <span>Companies</span>
-            </div>
-
-            <div
-                onClick={handlePatients}
-                className={`${styles.selectionDiv} ${
-                    selectedTab === "patients" ? styles.selectedTab : ""
-                }`}
-                style={{cursor: "pointer"}}
-            >
-              <span>TPA Patients</span>
-            </div>
-
-            <div
-                onClick={handleInPatients}
-                className={`${styles.selectionDiv} ${
-                    selectedTab === "admissionRequests" ? styles.selectedTab : ""
-                }`}
-                style={{cursor: "pointer"}}
-            >
-              <span>Admission Forms</span>
-            </div>
+      <div className={styles.content}>
+        <div className={styles.selection}>
+          <div
+            onClick={handleCompanies}
+            className={`${styles.selectionDiv} ${
+              selectedTab === "companies" ? styles.selectedTab : ""
+            }`}
+          >
+            <span>Companies</span>
           </div>
 
-          {selectedTab === "companies" && <Companies/>}
-          {selectedTab === "patients" && <Patients/>}
-          {selectedTab === "admissionRequests" && <AdmissionRequests/>}
+          <div
+            onClick={handlePatients}
+            className={`${styles.selectionDiv} ${
+              selectedTab === "patients" ? styles.selectedTab : ""
+            }`}
+            style={{ cursor: "pointer" }}
+          >
+            <span>TPA Patients</span>
+          </div>
+
+          <div
+            onClick={handleInPatients}
+            className={`${styles.selectionDiv} ${
+              selectedTab === "admissionRequests" ? styles.selectedTab : ""
+            }`}
+            style={{ cursor: "pointer" }}
+          >
+            <span>Admission Forms</span>
+          </div>
+          <div
+            onClick={handleReports}
+            className={`${styles.selectionDiv} ${
+              selectedTab === "reports" ? styles.selectedTab : ""
+            }`}
+            style={{ cursor: "pointer" }}
+          >
+            <span>Reports</span>
+          </div>
         </div>
+
+        {selectedTab === "companies" && <Companies />}
+        {selectedTab === "patients" && <Patients />}
+        {selectedTab === "admissionRequests" && <AdmissionRequests />}
+        {selectedTab === "reports" && <TPAReports />}
       </div>
+    </div>
   );
 };
 

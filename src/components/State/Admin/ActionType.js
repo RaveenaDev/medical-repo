@@ -92,3 +92,7 @@ export const EDIT_BILL = "EDIT_BILL";
 export const ADD_TO_BILL = "ADD_TO_BILL";
 export const EDIT_BED_SUCCESS = "EDIT_BED_SUCCESS";
 export const LOADING_PATIENTS = "LOADING_PATIENTS";
+
+export const TPA_REQUEST = "TPA_REQUEST";
+export const TPA_SUCCESS = "TPA_SUCCESS";
+export const TPA_FAIL = "TPA_FAIL";
