@@ -383,7 +383,9 @@ const BillDetailsAdmin = (props) => {
   );
 
   const paidAmt = safeNum(editableBill?.paidAmount ?? bill?.paidAmount ?? 0);
-  const balanceDue = Math.max(netPayable - paidAmt, 0);
+  const balanceDue = safeNum(
+    editableBill?.outstanding ?? bill?.outstanding ?? 0
+  );
 
   // Hospital/patient convenience fields
   const hospital = bill?.hospital || {};
@@ -910,7 +912,7 @@ const BillDetailsAdmin = (props) => {
               })()}
             </div>
           </div>
-
+          {/* Buttons  */}
           <div className={styles["billing-edited-save-btn"]}>
             {isEditing ? (
               <Button variant="contained" onClick={handleSave}>
