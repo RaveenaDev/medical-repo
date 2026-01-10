@@ -5,6 +5,7 @@ import {
   editBill,
   getBillDetails,
   refundBill,
+  searchServiceSubCategories,
 } from "../../../../../../components/State/Admin/Action";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -22,6 +23,7 @@ import {
   InputAdornment,
   CircularProgress,
   MenuItem,
+  Autocomplete,
 } from "@mui/material";
 
 import styles from "./billDetailsAdmin.module.scss";
@@ -32,6 +34,7 @@ import printJS from "print-js"; // Import print-js
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Printer } from "lucide-react";
+import useDebounce from "../../../../../../hooks/useDebounce";
 
 const BillDetailsAdmin = (props) => {
   useEffect(() => {
@@ -542,6 +545,16 @@ const BillDetailsAdmin = (props) => {
     });
   };
 
+  // AUTOFILL FOR ADD TO BILL
+  const [serviceInput, setServiceInput] = useState("");
+  const debouncedServiceInput = useDebounce(serviceInput, 300);
+  useEffect(() => {
+    dispatch(searchServiceSubCategories(debouncedServiceInput));
+  }, [debouncedServiceInput, dispatch]);
+
+  const serviceOptions = useSelector(
+    (state) => state.receptionist.serviceSearch
+  );
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -1285,6 +1298,31 @@ const BillDetailsAdmin = (props) => {
         <DialogTitle>Add to Bill</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ mt: 1 }}>
+            <Autocomplete
+              freeSolo
+              options={serviceOptions}
+              getOptionLabel={(option) =>
+                typeof option === "string" ? option : option.subCategoryName
+              }
+              onInputChange={(e, value) => {
+                setServiceInput(value); // 👈 debounce source
+                setAddForm((p) => ({ ...p, details: value }));
+              }}
+              onChange={(e, value) => {
+                if (value && typeof value !== "string") {
+                  setAddForm((p) => ({
+                    ...p,
+                    details: value.subCategoryName,
+                    rate: String(value.rate || 0),
+                    rateType: value.rateType,
+                    category: value.category,
+                  }));
+                }
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Name" fullWidth />
+              )}
+            />
             <TextField
               label="Category"
               value={addForm.category}
@@ -1345,15 +1383,6 @@ const BillDetailsAdmin = (props) => {
                 />
               </Grid>
             </Grid>
-
-            <TextField
-              label="Name (optional)"
-              value={addForm.details}
-              onChange={handleAddChange("details")}
-              fullWidth
-              multiline
-              minRows={2}
-            />
 
             <Box
               sx={{

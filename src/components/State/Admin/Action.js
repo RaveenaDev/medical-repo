@@ -11,6 +11,7 @@ import {
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   ADD_TO_BILL,
+  CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
@@ -59,6 +60,7 @@ import {
   GET_WAITING_APPOINTMENTS,
   LOADING_PATIENTS,
   NULL_ESTIMATED_BILL,
+  SEARCH_SERVICE_SUBCATEGORIES,
   TPA_FAIL,
   TPA_REQUEST,
   TPA_SUCCESS,
@@ -1080,7 +1082,36 @@ export const addToBill = (payload, id) => async (dispatch) => {
     toast.error(error?.response?.data?.message || "Add failed");
   }
 };
+export const searchServiceSubCategories = (query) => async (dispatch) => {
+  try {
+    if (!query || query.length < 2) {
+      dispatch({ type: CLEAR_SERVICE_SUBCATEGORIES });
+      return;
+    }
 
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/searchServiceSubCategories`, {
+      params: { query },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Search Results:", data);
+
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: data?.results || [],
+    });
+  } catch (error) {
+    console.error("Search service subcategories error:", error);
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: [],
+    });
+  }
+};
 export const refundBill = (payload, id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
