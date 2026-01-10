@@ -4,6 +4,7 @@ import {
   ADD_ROOM,
   ADD_TO_BILL,
   BOOK_APPOINTMENT,
+  CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_ROOM,
   EDIT_BILL,
   GET_ALL_DEPARTMENTS,
@@ -38,6 +39,7 @@ import {
   LOADING_PATIENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
+  SEARCH_SERVICE_SUBCATEGORIES,
   SET_LOADING_APPOINTMENTS,
   START_CONSULTATION,
   SUBMIT_CONSULTATION,
@@ -1093,5 +1095,36 @@ export const refundBill = (payload, id) => async (dispatch) => {
   } catch (error) {
     console.error("Error refunding bill:", error);
     toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
+
+export const searchServiceSubCategories = (query) => async (dispatch) => {
+  try {
+    if (!query || query.length < 2) {
+      dispatch({ type: CLEAR_SERVICE_SUBCATEGORIES });
+      return;
+    }
+
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/searchServiceSubCategories`, {
+      params: { query },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Search Results:", data);
+
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: data?.results || [],
+    });
+  } catch (error) {
+    console.error("Search service subcategories error:", error);
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: [],
+    });
   }
 };

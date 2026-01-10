@@ -13,6 +13,7 @@ import {
   InputAdornment,
   CircularProgress,
   MenuItem,
+  Autocomplete,
 } from "@mui/material";
 
 import styles from "./billDetailsReception.module.scss";
@@ -29,8 +30,10 @@ import {
   editBill,
   getBillDetails,
   refundBill,
+  searchServiceSubCategories,
 } from "../../../../components/State/Receptionist/Action";
 import { Printer } from "lucide-react";
+import useDebounce from "../../../../hooks/useDebounce";
 
 const BillDetailsReception = (props) => {
   useEffect(() => {
@@ -67,7 +70,9 @@ const BillDetailsReception = (props) => {
   const printRef = useRef(); // Reference for print container
 
   const [editableBill, setEditableBill] = useState({});
-
+  const getTodayDate = () => {
+    return new Date().toISOString().split("T")[0];
+  };
   const [addOpen, setAddOpen] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
   const [addForm, setAddForm] = useState({
@@ -75,7 +80,7 @@ const BillDetailsReception = (props) => {
     quantity: "1",
     rate: "0",
     details: "",
-    date: "",
+    date: getTodayDate(),
   });
   const [addErrors, setAddErrors] = useState({});
 
@@ -539,6 +544,17 @@ const BillDetailsReception = (props) => {
       `,
     });
   };
+
+  // AUTOFILL FOR ADD TO BILL
+  const [serviceInput, setServiceInput] = useState("");
+  const debouncedServiceInput = useDebounce(serviceInput, 300);
+  useEffect(() => {
+    dispatch(searchServiceSubCategories(debouncedServiceInput));
+  }, [debouncedServiceInput, dispatch]);
+
+  const serviceOptions = useSelector(
+    (state) => state.receptionist.serviceSearch
+  );
 
   if (loading) {
     return (
@@ -1176,8 +1192,8 @@ const BillDetailsReception = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* DISCOUNT Dialog  */}
 
+      {/* DISCOUNT Dialog  */}
       <Dialog
         open={discountOpen}
         onClose={discountLoading ? undefined : closeDiscount}
@@ -1264,6 +1280,32 @@ const BillDetailsReception = (props) => {
         <DialogTitle>Add to Bill</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ mt: 1 }}>
+            <Autocomplete
+              freeSolo
+              options={serviceOptions}
+              getOptionLabel={(option) =>
+                typeof option === "string" ? option : option.subCategoryName
+              }
+              onInputChange={(e, value) => {
+                setServiceInput(value); // 👈 debounce source
+                setAddForm((p) => ({ ...p, details: value }));
+              }}
+              onChange={(e, value) => {
+                if (value && typeof value !== "string") {
+                  setAddForm((p) => ({
+                    ...p,
+                    details: value.subCategoryName,
+                    rate: String(value.rate || 0),
+                    rateType: value.rateType,
+                    category: value.category,
+                  }));
+                }
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Name" fullWidth />
+              )}
+            />
+
             <TextField
               label="Category"
               value={addForm.category}
@@ -1324,15 +1366,6 @@ const BillDetailsReception = (props) => {
                 />
               </Grid>
             </Grid>
-
-            <TextField
-              label="Name"
-              value={addForm.details}
-              onChange={handleAddChange("details")}
-              fullWidth
-              multiline
-              minRows={2}
-            />
 
             <Box
               sx={{
