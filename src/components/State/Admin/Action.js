@@ -786,26 +786,6 @@ export const getBillingRecords =
     }
   };
 
-// BILLING
-export const getBillDetails = (billId) => async (dispatch) => {
-  console.log("Fetching details for bill ID:", billId);
-
-  try {
-    const token = localStorage.getItem("jwt");
-
-    const { data } = await axios.get(`${API_URL}/getBillDetails/${billId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
-    console.log("Bill Details: ", data);
-
-    dispatch({ type: GET_BILL_DETAILS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getServices = (departmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1032,6 +1012,26 @@ export const approveAdmissionRequestsAdmin =
       }
     }
   };
+
+// BILLING
+export const getBillDetails = (billId) => async (dispatch) => {
+  console.log("Fetching details for bill ID:", billId);
+
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getBillDetails/${billId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    console.log("Bill Details: ", data);
+
+    dispatch({ type: GET_BILL_DETAILS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const editBill = (payload, id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1066,7 +1066,6 @@ export const addToBill = (payload, id) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    dispatch({ type: ADD_TO_BILL, payload: data });
     // console.log("Edit Bill Response:", data);
     toast.success("Added to bill successfully!", {
       position: "bottom-right",
@@ -1157,6 +1156,35 @@ export const addDiscount = (payload, id) => async (dispatch) => {
   } catch (error) {
     console.error("Error adding Discount to bill:", error);
     toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
+export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.post(
+      `${API_URL}/addPayment/${billId}`,
+      paymentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Payment Response: ", data);
+    dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
+    toast.success("Payment added successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    // Optionally refresh bill details
+    // dispatch(getBillDetails(billId));
+  } catch (error) {
+    console.error("Error adding payment to bill:", error);
+    toast.error("Failed to add payment. Please try again.", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
   }
 };
 export const getDoctorRequests = (status) => async (dispatch) => {
@@ -1707,35 +1735,6 @@ export const addInsuranceAfterAdmission =
     }
   };
 
-export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const { data } = await axios.post(
-      `${API_URL}/addPayment/${billId}`,
-      paymentData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    // console.log("Payment Response: ", data);
-    dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
-    toast.success("Payment added successfully!", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-    // Optionally refresh bill details
-    // dispatch(getBillDetails(billId));
-  } catch (error) {
-    console.error("Error adding payment to bill:", error);
-    toast.error("Failed to add payment. Please try again.", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-  }
-};
 export const getAppointmentData = (filter) => async (dispatch) => {
   // console.log("here");
   try {

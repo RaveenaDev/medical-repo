@@ -418,3 +418,15 @@
     }
   }
 }
+
+.noBill {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  p {
+    font-size: 3vh;
+    color: #25307f;
+    font-weight: 600;
+  }
+}

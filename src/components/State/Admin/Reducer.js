@@ -666,11 +666,7 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         billingRecord: action.payload.bill,
       };
-    case ADD_TO_BILL:
-      return {
-        ...state,
-        billingRecord: action.payload.bill,
-      };
+
     case TPA_REQUEST:
       return { ...state, tpaloading: true, tpaerror: null };
 

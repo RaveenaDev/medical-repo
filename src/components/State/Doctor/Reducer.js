@@ -1,6 +1,7 @@
 import {
   ADD_PROGRESS_TRACKER_PHASE,
   APPROVE_APPOINTMENT,
+  CLEAR_SERVICE_SUBCATEGORIES,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_CONSULTATION_FORM,
@@ -22,6 +23,7 @@ import {
   GET_APPROVED_ADMISSIONS,
   GET_AVAILABLE_BEDS,
   GET_AVAILABLE_ROOMS,
+  GET_BILL_DETAILS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
@@ -62,6 +64,7 @@ import {
   LOADING_ROOMS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
+  SEARCH_SERVICE_SUBCATEGORIES,
   SUBMIT_CONSULTATION,
   UPDATE_ADMISSION_INSURANCE,
 } from "./ActionType.js";
@@ -163,6 +166,8 @@ const initialState = {
   bedsAvailable: [],
   autoCompletePatientSearch: [],
   isLoadingAppointments: true,
+  billingRecord: null,
+  serviceSearch: [],
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -585,6 +590,23 @@ export const doctorReducer = (state = initialState, action) => {
         admissionRequests: state.admissionRequests.map((request) =>
           request._id === action.payload._id ? action.payload : request
         ),
+      };
+
+    case GET_BILL_DETAILS:
+      return {
+        ...state,
+        billingRecord: action.payload,
+      };
+    case SEARCH_SERVICE_SUBCATEGORIES:
+      return {
+        ...state,
+        serviceSearch: action.payload,
+      };
+
+    case CLEAR_SERVICE_SUBCATEGORIES:
+      return {
+        ...state,
+        serviceSearch: [],
       };
     default:
       return state;
