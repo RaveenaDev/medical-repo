@@ -24,7 +24,12 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
     onDischargeNotes: "",
     diagnosis: "",
     followUpDate: "",
+    isDAMA: false,
+    damaReason: "",
+    patID: "",
   });
+
+  // console.log("Patient Details in Discharge Modal:", patientDetails);
 
   // Prefill from patientDetails
   useEffect(() => {
@@ -39,6 +44,9 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
         onDischargeNotes: patientDetails.onDischargeNotes || "",
         diagnosis: patientDetails.diagnosis || "",
         followUpDate: patientDetails.followUpDate?.split("T")[0] || "",
+        isDAMA: patientDetails?.isDAMA || false,
+        damaReason: patientDetails?.damaReason || "",
+        patID: patientDetails.patId || "",
       });
     }
   }, [patientDetails]);
@@ -187,6 +195,28 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
       text-align: right;
       margin-top: 40px;
     }
+      .damaLegal {
+  border: 1px solid #000;
+  padding: 8px;
+  margin-top: 16px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.signatureRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  font-size: 11px;
+}
+
+.signatureBox {
+  width: 30%;
+  border-top: 1px solid #000;
+  text-align: center;
+  padding-top: 4px;
+}
+
   </style>
 </head>
 
@@ -220,7 +250,9 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
     <div class="col"><span class="label">Sex</span><br/>${
       formData.sex || " "
     }</div>
-    <div class="col"><span class="label">Class</span><br/> </div>
+    <div class="col"><span class="label">PAT ID</span><br/>${
+      formData.patID || " "
+    }</div>
   </div>
 
   <div class="line">
@@ -256,9 +288,49 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
   <div class="box">${formData.onDischargeNotes || ""}</div>
 
   <div class="diagnosisBox">
+  <b>DISCHARGE TYPE:</b><br/>
+  ${
+    formData.isDAMA
+      ? "DAMA (Discharge Against Medical Advice)"
+      : "Normal Discharge"
+  }
+</div>
+
+${
+  formData.isDAMA
+    ? `<div class="diagnosisBox">
+         <b>Reason for DAMA:</b><br/>
+         ${formData.damaReason || ""}
+       </div>`
+    : ""
+}
+  <div class="diagnosisBox">
     <b>DIAGNOSIS:</b><br/>
     ${formData.diagnosis || ""}
   </div>
+${
+  formData.isDAMA
+    ? `
+<div class="damaLegal">
+  <b>DISCHARGE AGAINST MEDICAL ADVICE (DAMA)</b><br/><br/>
+  I / We, the patient / authorized attendant, hereby state that we are taking
+  discharge against the medical advice of the treating doctor. The nature of the
+  illness, possible risks, complications, and consequences of leaving the
+  hospital at this stage have been clearly explained to us and understood.
+  <br/><br/>
+  We voluntarily choose to leave the hospital and agree that the hospital,
+  management, and treating doctors shall not be held responsible for any
+  deterioration, complications, or adverse outcome after discharge.
+</div>
+
+<div class="signatureRow">
+  <div class="signatureBox">Patient / Attendant Signature</div>
+  <div class="signatureBox">Treating Doctor</div>
+  <div class="signatureBox">Date & Time</div>
+</div>
+`
+    : ""
+}
 
   <div class="row" style="margin-top:12px;">
     <div class="col">
@@ -331,59 +403,49 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
 
         <div className={styles.sectionWrapper}>
           {/* Patient Info (Read-Only) */}
-          <div className={styles.section}>
-            <p className={styles.sectionHeading}>Patient Info</p>
-            <div className={styles.qna}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.label}>Patient Name</p>
-                <input
-                  type="text"
-                  className={styles.input}
-                  value={formData.patientName}
-                  onChange={(e) => handleChange("patientName", e.target.value)}
-                />
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>Patient Information</p>
+
+            <div className={styles.grid3}>
+              <div>
+                <label>Patient Name</label>
+                <input className={styles.input} value={formData.patientName} />
               </div>
-              <div className={styles.questionWrapper}>
-                <p className={styles.label}>Age</p>
-                <input
-                  type="text"
-                  className={styles.input}
-                  value={formData.age}
-                  onChange={(e) => handleChange("age", e.target.value)}
-                />
+
+              <div>
+                <label>Age</label>
+                <input className={styles.input} value={formData.age} />
               </div>
-              <div className={styles.questionWrapper}>
-                <p className={styles.label}>Sex</p>
-                <input
-                  type="text"
-                  className={styles.input}
-                  value={formData.sex}
-                  onChange={(e) => handleChange("sex", e.target.value)}
-                />
+
+              <div>
+                <label>Sex</label>
+                <input className={styles.input} value={formData.sex} />
               </div>
             </div>
           </div>
 
           {/* On Admission */}
-          <div className={styles.section}>
-            <p className={styles.sectionHeading}>On Admission</p>
-            <div className={styles.qna2}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.label}>Admission Date</p>
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>On Admission</p>
+
+            <div className={styles.grid2}>
+              <div className={styles.formItem}>
+                <label>Admission Date</label>
                 <input
                   type="date"
-                  className={styles.inputDate}
+                  className={styles.input}
                   value={formData.admissionDate}
                   onChange={(e) =>
                     handleChange("admissionDate", e.target.value)
                   }
                 />
               </div>
-              <div className={styles.questionWrapper}>
-                <p className={styles.label}>Clinical Notes</p>
-                <input
-                  type="text"
-                  className={styles.input}
+
+              <div className={`${styles.formItem} ${styles.full}`}>
+                <label>Clinical Notes</label>
+                <textarea
+                  rows={4}
+                  className={styles.textarea}
                   value={formData.onAdmissionNotes}
                   onChange={(e) =>
                     handleChange("onAdmissionNotes", e.target.value)
@@ -394,25 +456,27 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
           </div>
 
           {/* On Discharge */}
-          <div className={styles.section}>
-            <p className={styles.sectionHeading}>On Discharge</p>
-            <div className={styles.qna2}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.label}>Discharge Date</p>
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>On Discharge</p>
+
+            <div className={styles.grid2}>
+              <div className={styles.formItem}>
+                <label>Discharge Date</label>
                 <input
                   type="date"
-                  className={styles.inputDate}
+                  className={styles.input}
                   value={formData.dischargeDate}
                   onChange={(e) =>
                     handleChange("dischargeDate", e.target.value)
                   }
                 />
               </div>
-              <div className={styles.questionWrapper}>
-                <p className={styles.label}>Clinical Notes</p>
-                <input
-                  type="text"
-                  className={styles.input}
+
+              <div className={styles.full}>
+                <label>Clinical Notes</label>
+                <textarea
+                  rows={4}
+                  className={styles.textarea}
                   value={formData.onDischargeNotes}
                   onChange={(e) =>
                     handleChange("onDischargeNotes", e.target.value)
@@ -422,19 +486,52 @@ const Discharge = ({ onClose, patientId, caseId, patientDetails }) => {
             </div>
           </div>
 
-          {/* Diagnosis */}
-          <div className={styles.section}>
-            <p className={styles.sectionHeading}>Diagnosis</p>
-            <div className={styles.qna3}>
-              <div className={styles.questionWrapper}>
+          {/* Discharge Type */}
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>Discharge Type</p>
+
+            <div className={styles.radioRow}>
+              <label>
+                <input
+                  type="radio"
+                  checked={!formData.isDAMA}
+                  onChange={() => handleChange("isDAMA", false)}
+                />
+                Normal Discharge
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  checked={formData.isDAMA}
+                  onChange={() => handleChange("isDAMA", true)}
+                />
+                DAMA
+              </label>
+            </div>
+
+            {formData.isDAMA && (
+              <div>
+                <label>Reason for DAMA</label>
                 <textarea
-                  className={styles.textarea}
                   rows={3}
-                  value={formData.diagnosis}
-                  onChange={(e) => handleChange("diagnosis", e.target.value)}
+                  className={styles.textarea}
+                  value={formData.damaReason}
+                  onChange={(e) => handleChange("damaReason", e.target.value)}
                 />
               </div>
-            </div>
+            )}
+          </div>
+
+          {/* Diagnosis */}
+          <div className={`${styles.card} ${styles.highlight}`}>
+            <p className={styles.cardTitle}>Final Diagnosis</p>
+            <textarea
+              rows={4}
+              className={styles.textarea}
+              value={formData.diagnosis}
+              onChange={(e) => handleChange("diagnosis", e.target.value)}
+            />
           </div>
 
           {/* Follow-up */}
