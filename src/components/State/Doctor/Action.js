@@ -50,6 +50,7 @@ import {
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
+  GET_ONGOING_BILL,
   GET_PATIENT_BED_INFO,
   GET_PATIENT_BILLS,
   GET_PATIENT_DETAILS_BY_PAT_ID,
@@ -1400,6 +1401,7 @@ export const getPatientDetailsByID = (patientId) => async (dispatch) => {
     // console.log("Patient Details Received Successfully :", data);
 
     dispatch({ type: GET_PATIENTS_DEATILS, payload: data.data });
+    dispatch({ type: GET_ONGOING_BILL, payload: data.latestLiveBill });
   } catch (error) {
     console.error("Error fetching forms:", error);
   }

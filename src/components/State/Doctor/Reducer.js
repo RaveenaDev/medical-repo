@@ -41,6 +41,7 @@ import {
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
+  GET_ONGOING_BILL,
   GET_PATIENT_BED_INFO,
   GET_PATIENT_BILLS,
   GET_PATIENT_DETAILS_BY_PAT_ID,
@@ -168,6 +169,8 @@ const initialState = {
   isLoadingAppointments: true,
   billingRecord: null,
   serviceSearch: [],
+  ongoingBill: null,
+  isLoadingPatientBill: true,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -596,6 +599,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         billingRecord: action.payload,
+        isLoadingPatientBill: false,
       };
     case SEARCH_SERVICE_SUBCATEGORIES:
       return {
@@ -607,6 +611,11 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         serviceSearch: [],
+      };
+    case GET_ONGOING_BILL:
+      return {
+        ...state,
+        ongoingBill: action.payload,
       };
     default:
       return state;

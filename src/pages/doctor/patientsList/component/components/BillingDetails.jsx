@@ -37,25 +37,11 @@ import {
 import useDebounce from "../../../../../hooks/useDebounce.js";
 
 const BillingDetails = ({ onClose }) => {
-  const location = useLocation();
-  const patientId = location.state?.patientId;
-
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (location.state?.patientId) {
-      dispatch(getBillsByPatientId(location.state.patientId));
-    }
-  }, [patientId, location.state, dispatch]);
+  const lastestbill = useSelector((state) => state.doctor.ongoingBill) || {};
 
-  const patientBills = useSelector((state) => state.doctor.patientBills || []);
-  const loading = useSelector((state) => state.doctor.isLoadingPatientBills);
-  console.log("Patient Bills", patientBills);
-  const lastestbill =
-    Array.isArray(patientBills) && patientBills.length >= 1
-      ? patientBills[patientBills.length - 1]
-      : {};
-
+  // console.log("Latest Bill", lastestbill);
   useEffect(() => {
     if (lastestbill && lastestbill._id) {
       dispatch(getBillDetails(lastestbill._id));
@@ -63,7 +49,9 @@ const BillingDetails = ({ onClose }) => {
   }, [lastestbill, dispatch]);
 
   const bill = useSelector((state) => state.doctor.billingRecord);
-  console.log(" Bill", bill);
+  const loading = useSelector((state) => state.doctor.isLoadingPatientBill);
+  // console.log(" Bill", bill);
+  const billId = bill?._id;
 
   useEffect(() => {
     if (bill) {
@@ -71,6 +59,7 @@ const BillingDetails = ({ onClose }) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
+
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
 
@@ -264,6 +253,8 @@ const BillingDetails = ({ onClose }) => {
   };
   // ---- Helpers for print ----
   const safeNum = (v) => (Number.isFinite(+v) ? +v : 0);
+  const formatINR = (v) =>
+    Number.isFinite(Number(v)) ? Number(v).toLocaleString("en-IN") : "0";
 
   // Convert 0..99,99,99,999 into Indian words (rupees only)
   const amountInWordsINR = (num) => {
@@ -560,7 +551,7 @@ const BillingDetails = ({ onClose }) => {
     (state) => state.receptionist.serviceSearch
   );
 
-  if (loading || !bill) {
+  if (loading) {
     return (
       <div className={styles.loaderWrap}>
         <CircularProgress sx={{ color: "#25307F" }} size={58} />
@@ -569,7 +560,7 @@ const BillingDetails = ({ onClose }) => {
     );
   }
 
-  if (patientBills.length === 0) {
+  if (!bill) {
     return (
       <div className={styles.noBill}>
         <p>No Bill Found</p>
@@ -581,10 +572,7 @@ const BillingDetails = ({ onClose }) => {
       <div className={`${styles["billing-modal-content"]} `}>
         <div className={styles["billing-modal-header"]}>
           <div className={styles["header-content"]}>
-            <button
-              className={styles["close-btn"]}
-              onClick={() => navigate(-1)}
-            >
+            <button className={styles["close-btn"]} onClick={onClose}>
               <img src={arrowBack} alt="Back" />
             </button>
             <h2>
@@ -961,9 +949,8 @@ const BillingDetails = ({ onClose }) => {
                 <div>
                   ₹
                   {isEditing
-                    ? computedGrand
-                    : editableBill?.totalAmount.toLocaleString("en-IN") ??
-                      bill.totalAmount.toLocaleString("en-IN")}
+                    ? formatINR(computedGrand)
+                    : formatINR(editableBill?.totalAmount ?? bill?.totalAmount)}
                 </div>
               </div>
               {bill?.discount?.amount > 0 && (

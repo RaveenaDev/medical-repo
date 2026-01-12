@@ -58,7 +58,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   };
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  console.log("patientDetails: ", patientDetails);
+  // console.log("patientDetails: ", patientDetails);
   // Check if there's a stored value in localStorage on initial load
   const savedStatus = localStorage.getItem(`status-${patientId}`);
 
