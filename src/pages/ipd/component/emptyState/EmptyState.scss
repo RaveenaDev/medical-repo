@@ -1,0 +1,51 @@
+.emptyState {
+  height: 25vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  text-align: center;
+  color: #4a4a4a;
+}
+
+.emptyIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #eef1ff;
+  color: #25307f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #25307f;
+}
+
+.emptyDescription {
+  font-size: 0.9rem;
+  color: #6b6b6b;
+  max-width: 320px;
+}
+
+.emptyActionBtn {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  background: #25307f;
+  color: white;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    background: #1e2766;
+  }
+}

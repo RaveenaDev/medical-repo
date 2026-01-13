@@ -1,0 +1,161 @@
+.container {
+  font-family: "Karla", sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 4px;
+  height: 6.8vh;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0vh;
+  font-size: 2vh;
+}
+
+.profileWrapper {
+  padding: 0vh 4vh;
+  color: #878787;
+  font-weight: 500;
+  height: 6.8vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.activeTab {
+  padding: 0vh 4.4vh;
+  color: #25307f;
+  height: 6.8vh;
+  font-weight: 550;
+
+  border-bottom: 3px solid #25307f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.activeTab2 {
+  padding: 0vh 4.4vh;
+  color: #25307f;
+  height: 6.8vh;
+  font-weight: 550;
+  border-bottom: 3px solid #25307f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  margin-right: 1vw;
+  gap: 0.8vw;
+}
+.dischargeBtn {
+  background: white;
+  color: #25307f;
+  font-size: 1vw;
+  border: 1px solid #25307f;
+  padding: 1.1vh 1vw;
+  border-radius: 4px;
+}
+.billingBtn {
+  background: white;
+  padding: 1vh 1vw;
+  border-radius: 4px;
+  font-size: 1vw;
+  border: none;
+  color: #878787;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4vw;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.printBtn {
+  background: white;
+  padding: 1.2vh 1vw;
+  border-radius: 4px;
+  font-size: 1vw;
+  border: none;
+  color: #878787;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4vw;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.icon {
+  width: 1.2vw;
+}
+
+.diagnosisBtn {
+  background: #2e823b;
+
+  padding: 1.2vh 1vw;
+  border-radius: 4px;
+  font-size: 1vw;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4vw;
+}
+.backBtnWrapper {
+  display: flex;
+  align-items: center;
+  width: 2vw;
+  justify-content: center;
+}
+
+.backIcon {
+  cursor: pointer;
+  color: #58595b;
+  height: 5vh;
+}
+
+.plusIcon {
+  width: 1.2vw;
+  height: 1.2vw;
+}
+
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44, 44, 62, 0.15);
+  z-index: 2;
+}
+.billing-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 76vw;
+  background: #fff;
+  z-index: 10;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+
+  // Initially hidden (off-screen)
+  transform: translateX(100%);
+}
+
+.billing-modalOpen {
+  transform: translateX(0);
+}
