@@ -9,7 +9,6 @@ import {
   admitPatient,
   getAdmissionRequests,
   getAdmittedPatients,
-  getAppointmentsOfToday,
 } from "../../components/State/Doctor/Action.js";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -85,7 +84,7 @@ const IpdOverview = () => {
 
     dispatch(admitPatient(patientId))
       .then(() => {
-        // ✅ success
+        //  success
         setAdmittingPatientId(null); // stop loader
       })
       .catch((error) => {
@@ -154,18 +153,6 @@ const IpdOverview = () => {
   const [selectedDate, setSelectedDate] = useState(
     dayjs().format("YYYY-MM-DD")
   );
-
-  useEffect(() => {
-    const startDate = dayjs(selectedDate).startOf("day").toISOString();
-    const endDate = dayjs(selectedDate).endOf("day").toISOString();
-
-    if (selectedDate) {
-      dispatch(getAppointmentsOfToday(startDate, endDate));
-    }
-  }, [dispatch, selectedDate]);
-
-  const appointments = useSelector((store) => store.doctor.appointmentsOfToday);
-  const todayAppointments = appointments ? appointments.length : 0;
 
   const [page, setPage] = useState(() => {
     const saved = sessionStorage.getItem("pld_pagination");

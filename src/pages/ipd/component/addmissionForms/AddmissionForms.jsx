@@ -10,12 +10,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./AddmissionForms.module.scss";
 import ActionMenu from "./components/ActionMenu.jsx"; // Custom menu component for actions
-import { Search } from "lucide-react";
+import { ChevronLeft, Search } from "lucide-react";
 import { getAdmissionRequests } from "../../../../components/State/Doctor/Action.js";
 import useDebounce from "../../../../hooks/useDebounce.js";
+import { useNavigate } from "react-router-dom";
 
 const AdmissionFormsStaff = () => {
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   // Pagination state
   const [page, setPage] = useState(0);
@@ -72,6 +75,7 @@ const AdmissionFormsStaff = () => {
       {/* Header Section */}
       <div className={styles.patientsHeader}>
         <div className={styles.headerTop}>
+          <ChevronLeft size={34} onClick={() => navigate("/ipd")} />
           <h2>Admission Forms</h2>
         </div>
         <hr />
