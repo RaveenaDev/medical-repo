@@ -193,15 +193,6 @@ const IpdOverview = () => {
     <div className="patientsListContainer">
       <div className="listHeading">
         <div className="headingContainer">
-          <ChevronLeft
-            size={25}
-            strokeWidth={1.7}
-            style={{ cursor: "pointer", color: "#25307F" }}
-            onClick={() => {
-              navigate("/doctor");
-            }}
-          />
-
           <div className="heading">Patients List</div>
         </div>
         <div className="buttonsContainer">
