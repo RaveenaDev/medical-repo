@@ -1,0 +1,184 @@
+/* ================= CLOSE ICON ================= */
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+  cursor: pointer;
+
+  &:hover {
+    background: #ed4301;
+    color: white;
+  }
+}
+
+/* ================= MAIN CONTAINER ================= */
+.container {
+  padding: 0 1vw 2vh;
+  font-family: "Karla", sans-serif;
+  height: 78vh;
+  overflow-y: auto;
+
+  h1 {
+    font-size: 2.5vh;
+    font-weight: 550;
+    color: #25307f;
+    margin-bottom: 0;
+  }
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+  scrollbar-width: none;
+}
+
+/* ================= TITLE ================= */
+.title {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2vh;
+}
+
+/* ================= WRAPPER ================= */
+.sectionWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5vh;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: #ffffff;
+  border: 1px solid #e3e7ff;
+  border-radius: 8px;
+  padding: 1.5vh 1vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
+
+.cardTitle {
+  font-size: 2vh;
+  font-weight: 600;
+  color: #25307f;
+}
+
+/* ================= GRID ================= */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1vw;
+  align-items: start;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 1vw;
+  align-items: start;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+/* ================= FORM ITEM ================= */
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+}
+
+/* ================= LABEL ================= */
+label {
+  font-size: 1.9vh;
+  color: #4a4a4a;
+}
+
+/* ================= INPUTS (OLD LOOK, FIXED ALIGNMENT) ================= */
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  padding: 1.4vh 0.5vw;
+  font-family: "Karla", sans-serif;
+  border-radius: 4px;
+  font-size: 2vh;
+}
+
+.inputDate {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  padding: 1.25vh 0.5vw;
+  border-radius: 4px;
+  font-size: 2vh;
+  font-family: "Karla", sans-serif;
+}
+
+.input:focus,
+.inputDate:focus {
+  border-color: #25307f;
+}
+
+/* ================= TEXTAREA (FIX WIDTH ISSUE) ================= */
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  resize: none;
+  padding: 1.4vh 0.5vw;
+  border-radius: 4px;
+  background: #f2f5ff;
+  font-family: "Karla", sans-serif;
+  font-size: 2vh;
+  border: 1px solid #cfcfcf;
+}
+
+.textarea:focus {
+  border-color: #25307f;
+}
+
+/* ================= RADIO (DAMA) ================= */
+.radioRow {
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+}
+
+.radioRow label {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-size: 1.9vh;
+}
+
+/* ================= HIGHLIGHT ================= */
+.highlight {
+  border: 1px solid #25307f;
+  background: #f1f4ff;
+}
+
+/* ================= SAVE BUTTON ================= */
+.saveContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3vh;
+}
+
+.saveBtn {
+  background: #25307f;
+  color: white;
+  font-weight: 350;
+  font-size: 2vh;
+  border-radius: 4px;
+  padding: 0.9vh 1vw;
+  border: none;
+  cursor: pointer;
+}
+
+.disabledBtn {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
