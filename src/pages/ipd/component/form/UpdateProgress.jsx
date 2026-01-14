@@ -337,6 +337,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
             Mark this as the final stage of treatment
           </label>
         </div>
+        {/* DOCTOR VISIT  */}
         <div className={styles.checkboxContainer}>
           <label className={styles.checkboxLabel}>
             <input

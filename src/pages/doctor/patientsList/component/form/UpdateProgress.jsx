@@ -1,9 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./UpdateProgress.module.scss";
-import { X,Trash2, SquarePen } from "lucide-react";
+import { X, Trash2, PenLine, Eraser } from "lucide-react";
 import {
   addProgressTrackerPhase,
-  getDoctorsByDepartment, getPatientDetailsByID,
+  formatImageWithAI,
+  getAllDoctors,
+  getPatientDetailsByID,
 } from "../../../../../components/State/Doctor/Action";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,7 +13,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
   useEffect(() => {
-    dispatch(getDoctorsByDepartment());
+    dispatch(getAllDoctors());
   }, []);
   const [isFinalPhase, setIsFinalPhase] = useState(false);
 
@@ -19,9 +21,13 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
   const [doctor, setDoctor] = useState("");
   const [date, setDate] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [editMode, setEditMode] = useState({
-    description: false,
-  });
+  const [showAIText, setShowAIText] = useState(false);
+  const [isDoctorVisit, setIsDoctorVisit] = useState(false);
+  const [visitTime, setVisitTime] = useState("");
+  const [visitNote, setVisitNote] = useState("");
+
+  const todayISO = new Date().toISOString().split("T")[0];
+
   const [saving, setSaving] = useState(false); // 👈 loader state
 
   const [description, setDescription] = useState("");
@@ -44,35 +50,6 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       return prev.filter((_, i) => i !== index);
     });
   };
-  // const handleSubmit = async () => {
-  //   if (!selectedPhase || !doctor) {
-  //     alert("Please fill all required fields.");
-  //     return;
-  //   }
-  //
-  //   // Option 2 (optional): Convert files to base64 (uncomment if needed)
-  //   const filesBase64 = await Promise.all(
-  //     selectedFiles.map(async (item) => ({
-  //       name: item.file.name,
-  //       type: item.file.type,
-  //       content: await fileToBase64(item.file),
-  //     }))
-  //   );
-  //
-  //   const payload = {
-  //     caseId,
-  //     patient: patientId,
-  //     title: selectedPhase,
-  //     date: `${date}T${new Date().toTimeString().slice(0, 5)}`,
-  //     assignedDoctor: doctor,
-  //     description,
-  //     isFinalPhase,
-  //     files: filesBase64,
-  //   };
-  //
-  //   dispatch(addProgressTrackerPhase(payload, patientId, caseId));
-  //   onClose();
-  // };
 
   const handleSubmit = async () => {
     if (!selectedPhase || !doctor || !date) {
@@ -81,7 +58,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
     }
 
     try {
-      setSaving(true); // 👈 start loader
+      setSaving(true); //  start loader
 
       const form = new FormData();
       form.append("caseId", caseId);
@@ -90,18 +67,38 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       form.append("date", date);
       form.append("assignedDoctor", doctor);
       if (isFinalPhase) form.append("isFinalPhase", "true");
-      form.append(
-          "data",
-          JSON.stringify({
-            description: description || "",
-          })
-      );
+      form.append("description", description || "");
+      const dataPayload = {};
+
+      if (isDoctorVisit) {
+        if (!visitTime) {
+          alert("Please select visit time");
+          setSaving(false);
+          return;
+        }
+
+        dataPayload.doctorVisit = {
+          doctor: doctor, // from existing Assigned Doctor
+          date: date, // from existing Date of Activity
+          time: visitTime,
+          note: visitNote || "",
+        };
+      }
+
+      if (Object.keys(dataPayload).length > 0) {
+        form.append("data", JSON.stringify(dataPayload));
+      }
+      if (scribbleImage) {
+        const blob = await fetch(scribbleImage).then((r) => r.blob());
+        form.append("files", blob, "progress-handwriting.png");
+      }
+
       selectedFiles.forEach((item) => {
         form.append("files", item.file, item.file.name);
       });
 
       await dispatch(addProgressTrackerPhase(form, patientId, caseId)); // waits for thunk to finish
-      dispatch(getPatientDetailsByID(patientId))
+      dispatch(getPatientDetailsByID(patientId));
       onClose(); // close after success (toast handled in action)
     } catch (err) {
       // errors are already logged in the action; show a basic alert here if you want
@@ -111,7 +108,164 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
     }
   };
 
-  const doctors = useSelector((store) => store.doctor.doctors);
+  const doctors = useSelector((store) => store.doctor.allDoctors);
+  // ScribbleInput component code
+
+  const [descMode, setDescMode] = useState("text"); // text | whiteboard
+  const [scribbleImage, setScribbleImage] = useState(null);
+  const [aiDescription, setAiDescription] = useState("");
+  const [isAIProcessing, setIsAIProcessing] = useState(false);
+  const [showScribbleModal, setShowScribbleModal] = useState(false);
+
+  const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const canvasSizeRef = useRef({ width: 0, height: 0 });
+
+  useEffect(() => {
+    if (!showScribbleModal) return;
+
+    const canvas = canvasRef.current;
+    const parent = containerRef.current;
+    if (!canvas || !parent) return;
+
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+
+    const resize = () => {
+      const rect = parent.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const dpr = window.devicePixelRatio || 1;
+
+      // Store CSS size
+      canvasSizeRef.current = {
+        width: rect.width,
+        height: rect.height,
+      };
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, rect.width, rect.height);
+    };
+
+    resize();
+    // Restore previous scribble if exists
+    if (scribbleImage) {
+      redrawCanvasFromImage(scribbleImage);
+    }
+
+    window.addEventListener("resize", resize);
+
+    let drawing = false;
+    let last = { x: 0, y: 0 };
+
+    const getPos = (e) => {
+      const r = canvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+
+    const start = (e) => {
+      drawing = true;
+      last = getPos(e);
+    };
+
+    const draw = (e) => {
+      if (!drawing) return;
+      const pos = getPos(e);
+
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+
+      last = pos;
+    };
+
+    const stop = () => {
+      drawing = false;
+      setScribbleImage(canvas.toDataURL("image/png"));
+    };
+
+    canvas.addEventListener("pointerdown", start);
+    canvas.addEventListener("pointermove", draw);
+    canvas.addEventListener("pointerup", stop);
+    canvas.addEventListener("pointerleave", stop);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("pointerdown", start);
+      canvas.removeEventListener("pointermove", draw);
+      canvas.removeEventListener("pointerup", stop);
+      canvas.removeEventListener("pointerleave", stop);
+    };
+  }, [showScribbleModal]);
+
+  const convertScribbleToText = async () => {
+    if (!scribbleImage) {
+      alert("Please write something first");
+      return;
+    }
+
+    setIsAIProcessing(true);
+    try {
+      const blob = await fetch(scribbleImage).then((r) => r.blob());
+      const formData = new FormData();
+      formData.append("image", blob, "progress.png");
+
+      const data = await formatImageWithAI(formData);
+
+      if (data?.formattedText) {
+        setDescription(data.formattedText);
+        setAiDescription(data.formattedText);
+        setShowAIText(true);
+      } else {
+        alert("AI could not read handwriting");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to process handwriting");
+    } finally {
+      setIsAIProcessing(false);
+    }
+  };
+
+  const redrawCanvasFromImage = (imageSrc) => {
+    if (!imageSrc) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+
+    const { width, height } = canvasSizeRef.current;
+
+    img.onload = () => {
+      // Clear in CSS pixel space
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Re-apply DPR scaling
+      const dpr = window.devicePixelRatio || 1;
+      ctx.scale(dpr, dpr);
+
+      // Draw using CSS size (🔥 key fix)
+      ctx.drawImage(img, 0, 0, width, height);
+    };
+
+    img.src = imageSrc;
+  };
 
   return (
     <div>
@@ -145,6 +299,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
               <input
                 type="date"
                 value={date}
+                min={todayISO}
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
@@ -181,36 +336,67 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
             Mark this as the final stage of treatment
           </label>
         </div>
+        {/* DOCTOR VISIT  */}
+        <div className={styles.checkboxContainer}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={isDoctorVisit}
+              onChange={(e) => setIsDoctorVisit(e.target.checked)}
+            />
+            This phase is a Doctor Visit
+          </label>
+        </div>
+        {isDoctorVisit && (
+          <div className={styles.doctorVisitBox}>
+            {/* Time */}
+            <div>
+              <p className={styles.label}>Visit Time</p>
+              <input
+                type="time"
+                value={visitTime}
+                onChange={(e) => setVisitTime(e.target.value)}
+                className={styles.textInput}
+                required
+              />
+            </div>
+
+            {/* Note */}
+            <div>
+              <p className={styles.label}>Visit Note</p>
+              <textarea
+                className={styles.textarea}
+                placeholder="e.g. Morning round, Post-op check, ICU visit"
+                value={visitNote}
+                onChange={(e) => setVisitNote(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+        )}
         <div className={styles.row3}>
           {/* Description */}
           <div className={styles.descriptionContainer}>
-            <p className={styles.label}>Description</p>
-            {editMode.description ? (
-              <textarea
-                placeholder="shortness of breath, fatigue, swelling..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className={styles.textarea}
-                rows={5}
-                autoFocus
-              />
-            ) : (
-              <p className={styles.descriptionText}>
-                <span className={styles.placeholder}>
-                  shortness of breath, fatigue, swelling...
-                </span>
-              </p>
-            )}
-            <SquarePen
-              className={`${styles.editBtn} ${
-                editMode.description ? styles.editBtnActive : ""
-              }`}
-              onClick={() =>
-                setEditMode((prev) => ({
-                  ...prev,
-                  description: !prev.description,
-                }))
-              }
+            <div className={styles.descHeader}>
+              <p className={styles.label}>Description</p>
+
+              <button
+                className={styles.scribbleBtn}
+                onClick={() => {
+                  setDescMode("whiteboard");
+                  setShowScribbleModal(true);
+                }}
+              >
+                <PenLine size={16} />
+              </button>
+            </div>
+
+            <textarea
+              className={styles.textarea}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter progress description..."
+              rows={5}
             />
           </div>
 
@@ -229,7 +415,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
                 <label className={styles.browseBtn}>
                   Browse File
                   <input
-                      ref={fileInputRef}            // 👈 attach ref
+                    ref={fileInputRef} // 👈 attach ref
                     type="file"
                     multiple
                     className={styles.hiddenFileInput}
@@ -273,21 +459,93 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
         {/* Save Button */}
         <div style={{ marginTop: "2vh", textAlign: "center" }}>
           <button
-              className={styles.saveBtn}
-              onClick={handleSubmit}
-              disabled={saving}
+            className={styles.saveBtn}
+            onClick={handleSubmit}
+            disabled={saving}
           >
             {saving ? (
-                <>
-                  <span className={styles.loader} aria-hidden />
-                  Saving...
-                </>
+              <>
+                <span className={styles.loader} aria-hidden />
+                Saving...
+              </>
             ) : (
-                "Save"
+              "Save"
             )}
           </button>
         </div>
       </div>
+      {showScribbleModal && (
+        <div className={styles.scribbleModalOverlay}>
+          <div className={styles.scribbleModal}>
+            {/* Header */}
+            <div className={styles.modalHeader}>
+              <h3>Write Progress</h3>
+              <X
+                size={20}
+                className={styles.closeIcon}
+                onClick={() => setShowScribbleModal(false)}
+              />
+            </div>
+
+            {/* Canvas */}
+            <div ref={containerRef} className={styles.modalCanvasWrapper}>
+              {showAIText ? (
+                <textarea
+                  className={styles.aiTextArea}
+                  value={aiDescription}
+                  onChange={(e) => setAiDescription(e.target.value)}
+                  placeholder="AI formatted text..."
+                />
+              ) : (
+                <canvas ref={canvasRef} />
+              )}
+            </div>
+
+            {/* Footer actions */}
+            <div className={styles.modalActions}>
+              {!showAIText && (
+                <button
+                  className={styles.secondaryBtn}
+                  onClick={() => {
+                    const ctx = canvasRef.current.getContext("2d");
+                    ctx.fillStyle = "#fff";
+                    ctx.fillRect(
+                      0,
+                      0,
+                      canvasRef.current.width,
+                      canvasRef.current.height
+                    );
+                    setScribbleImage(null);
+                  }}
+                >
+                  <Eraser size={16} /> Clear
+                </button>
+              )}
+
+              {!showAIText && (
+                <button
+                  className={styles.aiBtn}
+                  onClick={convertScribbleToText}
+                  disabled={isAIProcessing}
+                >
+                  {isAIProcessing ? "Reading..." : "Convert with AI"}
+                </button>
+              )}
+
+              <button
+                className={styles.primaryBtn}
+                onClick={() => {
+                  if (aiDescription) setDescription(aiDescription);
+                  setShowScribbleModal(false);
+                  setShowAIText(false);
+                }}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -289,6 +289,12 @@
   width: 45.5%;
   position: relative;
 }
+.descHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1vh;
+}
 
 .textarea {
   height: 14vh;
@@ -381,6 +387,172 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
+.scribbleModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.scribbleModal {
+  background: #fff;
+  width: 94vw;
+  height: 88vh;
+  max-width: none;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  padding: 14px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+
+  flex-shrink: 0;
+}
+
+.modalCanvasWrapper {
+  flex: 1;
+  background: #f9fafb;
+  padding: 12px;
+
+  display: flex;
+  overflow: hidden;
+}
+
+.modalCanvasWrapper canvas {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  padding: 14px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+
+  flex-shrink: 0;
+}
+
+.scribbleBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef2ff;
+  color: #3730a3;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.closeIcon {
+  cursor: pointer;
+}
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+.aiBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #eef2ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: #e0e7ff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #25307f;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: #1e2768;
+  }
+}
+.aiTextArea {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: "Karla", sans-serif;
+  resize: none;
+  outline: none;
+}
+.doctorVisitBox {
+  margin-top: 1.5vh;
+  padding: 1.2vh 1vw;
+  border: 1px dashed #c7d2fe;
+  border-radius: 6px;
+  background: #f8faff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
