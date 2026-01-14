@@ -212,7 +212,7 @@ const MedAdminRecord = ({ patientId, caseId, patientInfo }) => {
         </>
       )}
 
-      <div className={styles.tableContainer}>
+      <div className={styles.tableContainerStaff}>
         <div className={styles.table}>
           <div className={styles.thead}>
             <div className={styles.th}>
