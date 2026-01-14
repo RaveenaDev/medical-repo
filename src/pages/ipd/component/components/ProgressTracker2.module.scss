@@ -1,9 +1,6 @@
-.container {
+.containerStaff {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
   height: 47vh;
   overflow-y: auto;
   margin-top: 0vh;
@@ -78,14 +75,14 @@
 
 .tableContainer {
   padding-right: 0px;
-  width: 45vw;
+  width: 100%;
   overflow-x: auto;
 }
 
 // Header row styling
 .tableHeaderRow {
   display: flex;
-  width: 44vw;
+
   padding: 0px;
   margin-bottom: 0px;
   border-bottom: 1px solid #eee;
@@ -124,13 +121,13 @@
 // Data row styling
 .tableRow {
   display: flex;
-  width: 44vw;
+  width: 95%;
   height: 9vh;
   border-radius: 8px;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s;
   margin-bottom: 1vh;
-  margin-left: 4px;
+  margin-left: 20px;
   padding: 0px;
   overflow-x: auto;
   cursor: pointer;

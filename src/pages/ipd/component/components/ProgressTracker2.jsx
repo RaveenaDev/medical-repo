@@ -101,7 +101,7 @@ const ProgressTracker2 = ({
           <CircularProgress sx={{ color: "#25307F" }} size={58} />
         </Box>
       ) : (
-        <div className={styles.container}>
+        <div className={styles.containerStaff}>
           <div className={styles.timelineContainer}>
             <div className={styles.timeline}>
               {Array.isArray(progressTracker) && progressTracker.length > 0 ? (
@@ -177,17 +177,16 @@ const ProgressTracker2 = ({
               <div className={styles.noData}>No progress steps available.</div>
             )}
           </div>
-
-          {/* Completed Step Modal */}
-          {modalType === "completed" && selectedStep && (
-            <CompletedProgress
-              step={selectedStep}
-              onClose={() => setSelectedStep(null)}
-              patientId={patientId}
-              caseId={caseId}
-            />
-          )}
         </div>
+      )}
+      {/* Completed Step Modal */}
+      {modalType === "completed" && selectedStep && (
+        <CompletedProgress
+          step={selectedStep}
+          onClose={() => setSelectedStep(null)}
+          patientId={patientId}
+          caseId={caseId}
+        />
       )}
       {/* Ongoing Step Modal */}
       {modalType === "ongoing" && selectedStep && (
