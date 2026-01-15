@@ -1015,7 +1015,7 @@ export const approveAdmissionRequestsAdmin =
 
 // BILLING
 export const getBillDetails = (billId) => async (dispatch) => {
-  console.log("Fetching details for bill ID:", billId);
+  // console.log("Fetching details for bill ID:", billId);
 
   try {
     const token = localStorage.getItem("jwt");
@@ -1025,7 +1025,7 @@ export const getBillDetails = (billId) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    console.log("Bill Details: ", data);
+    // console.log("Bill Details: ", data);
 
     dispatch({ type: GET_BILL_DETAILS, payload: data });
   } catch (error) {
@@ -1782,7 +1782,7 @@ export const editBed = (bedId, updates) => async (dispatch) => {
 export const getTPAReport =
   ({ year, month, company }) =>
   async (dispatch) => {
-    console.log("TPA ACTION CALLED", { year, month, company });
+    // console.log("TPA ACTION CALLED", { year, month, company });
 
     dispatch({ type: TPA_REQUEST });
 

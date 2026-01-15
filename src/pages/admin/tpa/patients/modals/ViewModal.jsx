@@ -9,6 +9,7 @@ import {
 } from "../../../../../components/State/Admin/Action.js";
 import EstimateBill from "./EstimateBill.jsx";
 import ViewBill from "./viewBillModal/ViewBill.jsx";
+import OngoingBill from "./ongoingBill/OngoingBill.jsx";
 
 const ViewModal = ({ onClose, record }) => {
   const { patient } = record;
@@ -19,14 +20,14 @@ const ViewModal = ({ onClose, record }) => {
   const [openStatus, setOpenStatus] = useState(false);
 
   const [selectedStatus, setSelectedStatus] = useState(
-      record.admissionDetails.insurance.insuranceApproved
-          .charAt(0)
-          .toUpperCase() +
+    record.admissionDetails.insurance.insuranceApproved
+      .charAt(0)
+      .toUpperCase() +
       record.admissionDetails.insurance.insuranceApproved.slice(1)
   );
 
   const [approvedAmount, setApprovedAmount] = useState(
-      record.admissionDetails.insurance.amountApproved || ""
+    record.admissionDetails.insurance.amountApproved || ""
   );
 
   // ---------- helpers ----------
@@ -48,16 +49,16 @@ const ViewModal = ({ onClose, record }) => {
     email: patient?.email || "",
     phone: patient?.phone || "",
     insuranceIdNumber:
-        record?.admissionDetails?.insurance?.insuranceIdNumber || "",
+      record?.admissionDetails?.insurance?.insuranceIdNumber || "",
     insuranceCompany:
-        record?.admissionDetails?.insurance?.insuranceCompany || "",
+      record?.admissionDetails?.insurance?.insuranceCompany || "",
     employeeCode: record?.admissionDetails?.insurance?.employeeCode || "",
     policyNumber: record?.admissionDetails?.insurance?.policyNumber || "",
     insuranceStartDate: formatDateInput(
-        record?.admissionDetails?.insurance?.insuranceStartDate
+      record?.admissionDetails?.insurance?.insuranceStartDate
     ),
     insuranceExpiryDate: formatDateInput(
-        record?.admissionDetails?.insurance?.insuranceExpiryDate
+      record?.admissionDetails?.insurance?.insuranceExpiryDate
     ),
   });
   // --------------------------------------------------------
@@ -131,16 +132,16 @@ const ViewModal = ({ onClose, record }) => {
         email: patient?.email || "",
         phone: patient?.phone || "",
         insuranceIdNumber:
-            record?.admissionDetails?.insurance?.insuranceIdNumber || "",
+          record?.admissionDetails?.insurance?.insuranceIdNumber || "",
         insuranceCompany:
-            record?.admissionDetails?.insurance?.insuranceCompany || "",
+          record?.admissionDetails?.insurance?.insuranceCompany || "",
         employeeCode: record?.admissionDetails?.insurance?.employeeCode || "",
         policyNumber: record?.admissionDetails?.insurance?.policyNumber || "",
         insuranceStartDate: formatDateInput(
-            record?.admissionDetails?.insurance?.insuranceStartDate
+          record?.admissionDetails?.insurance?.insuranceStartDate
         ),
         insuranceExpiryDate: formatDateInput(
-            record?.admissionDetails?.insurance?.insuranceExpiryDate
+          record?.admissionDetails?.insurance?.insuranceExpiryDate
         ),
       });
     }
@@ -163,9 +164,7 @@ const ViewModal = ({ onClose, record }) => {
       // Optional: include status/amount here too if desired
       insuranceApproved: selectedStatus?.toLowerCase(),
       amountApproved:
-          selectedStatus === "Approved"
-              ? Number(approvedAmount || 0)
-              : undefined,
+        selectedStatus === "Approved" ? Number(approvedAmount || 0) : undefined,
     };
 
     dispatch(editInsuredPatients(record._id, payload));
@@ -175,319 +174,338 @@ const ViewModal = ({ onClose, record }) => {
   // ----------------------------------------
 
   return (
-      <div>
-        <div className={styles.crossContainer}>
-          <X size={20} onClick={onClose} />
+    <div>
+      <div className={styles.crossContainer}>
+        <X size={20} onClick={onClose} />
+      </div>
+
+      <div className={styles.container}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <h1 className={styles.title}>Patient Insurance Details</h1>
+
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <div className={styles.viewBill}>
+              <button
+                className={styles.viewBillBtn}
+                onClick={() => setActiveModal("ongoingBill")}
+              >
+                View Ongoing Bill
+              </button>
+            </div>
+            {/* View / Create Estimate Bill */}
+            <div className={styles.viewBill}>
+              <button
+                className={styles.viewBillBtn}
+                onClick={() => setActiveModal("viewBill")}
+              >
+                View Estimate Bill
+              </button>
+            </div>
+            <div className={styles.openBill}>
+              <button onClick={handleBillClick} className={styles.openBillBtn}>
+                {estimatedBill ? "Edit" : "Create"} Estimate Bill
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className={styles.container}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h1 className={styles.title}>Patient Insurance Details</h1>
-
-            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              {/* View / Create Estimate Bill */}
-              <div className={styles.viewBill}>
-                <button
-                    className={styles.viewBillBtn}
-                    onClick={() => setActiveModal("viewBill")}
-                >
-                  View Estimate Bill
-                </button>
-              </div>
-              <div className={styles.openBill}>
-                <button onClick={handleBillClick} className={styles.openBillBtn}>
-                  {estimatedBill ? "Edit" : "Create"} Estimate Bill
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Edit profile toggle (pencil) */}
-          <div
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent:'flex-end',
-                marginTop:'0.4rem'
-              }}
-              onClick={handleToggleEdit}
-              title={editMode ? "Exit Edit Mode" : "Edit Patient Profile"}
+        {/* Edit profile toggle (pencil) */}
+        <div
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            marginTop: "0.4rem",
+          }}
+          onClick={handleToggleEdit}
+          title={editMode ? "Exit Edit Mode" : "Edit Patient Profile"}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <mask
+              id="mask0_1313_1066"
+              maskType="alpha"
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="20"
+              height="20"
             >
-              <mask
-                  id="mask0_1313_1066"
-                  maskType="alpha"
-                  maskUnits="userSpaceOnUse"
-                  x="0"
-                  y="0"
-                  width="20"
-                  height="20"
-              >
-                <rect width="20" height="20" fill="#D9D9D9" />
-              </mask>
-              <g mask="url(#mask0_1313_1066)">
-                <path
-                    d="M1.66699 20V16.6667H18.3337V20H1.66699ZM5.00033 13.3334H6.16699L12.667 6.85419L11.4795 5.66669L5.00033 12.1667V13.3334ZM3.33366 15V11.4584L12.667 2.14585C12.8198 1.99308 12.9969 1.87502 13.1982 1.79169C13.3996 1.70835 13.6114 1.66669 13.8337 1.66669C14.0559 1.66669 14.2712 1.70835 14.4795 1.79169C14.6878 1.87502 14.8753 2.00002 15.042 2.16669L16.1878 3.33335C16.3545 3.48613 16.476 3.66669 16.5524 3.87502C16.6288 4.08335 16.667 4.29863 16.667 4.52085C16.667 4.72919 16.6288 4.93405 16.5524 5.13544C16.476 5.33683 16.3545 5.52085 16.1878 5.68752L6.87533 15H3.33366Z"
-                    fill={editMode ? "#6C5CE7" : "#1C1B1F"}
-                />
-              </g>
-            </svg>
-            <span style={{ marginLeft: 6, fontSize: 13 }}>
+              <rect width="20" height="20" fill="#D9D9D9" />
+            </mask>
+            <g mask="url(#mask0_1313_1066)">
+              <path
+                d="M1.66699 20V16.6667H18.3337V20H1.66699ZM5.00033 13.3334H6.16699L12.667 6.85419L11.4795 5.66669L5.00033 12.1667V13.3334ZM3.33366 15V11.4584L12.667 2.14585C12.8198 1.99308 12.9969 1.87502 13.1982 1.79169C13.3996 1.70835 13.6114 1.66669 13.8337 1.66669C14.0559 1.66669 14.2712 1.70835 14.4795 1.79169C14.6878 1.87502 14.8753 2.00002 15.042 2.16669L16.1878 3.33335C16.3545 3.48613 16.476 3.66669 16.5524 3.87502C16.6288 4.08335 16.667 4.29863 16.667 4.52085C16.667 4.72919 16.6288 4.93405 16.5524 5.13544C16.476 5.33683 16.3545 5.52085 16.1878 5.68752L6.87533 15H3.33366Z"
+                fill={editMode ? "#6C5CE7" : "#1C1B1F"}
+              />
+            </g>
+          </svg>
+          <span style={{ marginLeft: 6, fontSize: 13 }}>
             {editMode ? "Editing" : "Edit"}
           </span>
+        </div>
+
+        {/* content */}
+        <div className={styles.content} style={{ marginTop: "-0.6rem" }}>
+          {/* Name (kept read-only) */}
+          <div className={styles.data}>
+            <p className={styles.label}>Name</p>
+            <p className={styles.value}>{patient?.name}</p>
           </div>
 
-          {/* content */}
-          <div className={styles.content} style={{ marginTop: "-0.6rem" }}>
-            {/* Name (kept read-only) */}
-            <div className={styles.data}>
-              <p className={styles.label}>Name</p>
-              <p className={styles.value}>{patient?.name}</p>
-            </div>
+          {/* Email (read-only) */}
+          <div className={styles.data}>
+            <p className={styles.label}>Email</p>
+            <p className={styles.value}>{patient?.email}</p>
+          </div>
 
-            {/* Email (read-only) */}
-            <div className={styles.data}>
-              <p className={styles.label}>Email</p>
-              <p className={styles.value}>{patient?.email}</p>
-            </div>
+          {/* Phone (read-only) */}
+          <div className={styles.data}>
+            <p className={styles.label}>Phone</p>
+            <p className={styles.value}>{patient?.phone}</p>
+          </div>
 
-            {/* Phone (read-only) */}
-            <div className={styles.data}>
-              <p className={styles.label}>Phone</p>
-              <p className={styles.value}>{patient?.phone}</p>
-            </div>
-
-            {/* Insurance ID */}
-            <div className={styles.data}>
-              <p className={styles.label}>Insurance ID</p>
-              {editMode ? (
-                  <input
-                      name="insuranceIdNumber"
-                      type="text"
-                      className={styles.input}
-                      value={patientForm.insuranceIdNumber}
-                      onChange={handleProfileChange}
-                      placeholder="Enter Insurance ID"
-                  />
-              ) : (
-                  <p className={styles.value}>
-                    {record?.admissionDetails?.insurance?.insuranceIdNumber}
-                  </p>
-              )}
-            </div>
-
-            {/* Employee Code */}
-            <div className={styles.data}>
-              <p className={styles.label}>Employee Code</p>
-              {editMode ? (
-                  <input
-                      name="employeeCode"
-                      type="text"
-                      className={styles.input}
-                      value={patientForm.employeeCode}
-                      onChange={handleProfileChange}
-                  />
-              ) : (
-                  <p className={styles.value}>
-                    {record?.admissionDetails?.insurance?.employeeCode}
-                  </p>
-              )}
-            </div>
-
-            {/* Policy No. */}
-            <div className={styles.data}>
-              <p className={styles.label}>Policy No.</p>
-              {editMode ? (
-                  <input
-                      name="policyNumber"
-                      type="text"
-                      className={styles.input}
-                      value={patientForm.policyNumber}
-                      onChange={handleProfileChange}
-                  />
-              ) : (
-                  <p className={styles.value}>
-                    {record?.admissionDetails?.insurance?.policyNumber}
-                  </p>
-              )}
-            </div>
-
-            {/* Start Date */}
-            <div className={styles.data}>
-              <p className={styles.label}>Start Date</p>
-              {editMode ? (
-                  <input
-                      name="insuranceStartDate"
-                      type="date"
-                      className={styles.input}
-                      value={patientForm.insuranceStartDate}
-                      onChange={handleProfileChange}
-                  />
-              ) : (
-                  <p className={styles.value}>
-                    {record?.admissionDetails?.insurance?.insuranceStartDate &&
-                        new Date(
-                            record.admissionDetails.insurance.insuranceStartDate
-                        ).toLocaleDateString()}
-                  </p>
-              )}
-            </div>
-
-            {/* Expiry Date */}
-            <div className={styles.data}>
-              <p className={styles.label}>Expiry Date</p>
-              {editMode ? (
-                  <input
-                      name="insuranceExpiryDate"
-                      type="date"
-                      className={styles.input}
-                      value={patientForm.insuranceExpiryDate}
-                      onChange={handleProfileChange}
-                  />
-              ) : (
-                  <p className={styles.value}>
-                    {record?.admissionDetails?.insurance?.insuranceExpiryDate &&
-                        new Date(
-                            record.admissionDetails.insurance.insuranceExpiryDate
-                        ).toLocaleDateString()}
-                  </p>
-              )}
-            </div>
-
-            {/* Company */}
-            <div className={styles.data}>
-              <p className={styles.label}>Company</p>
-              {editMode ? (
-                  <input
-                      name="insuranceCompany"
-                      type="text"
-                      className={styles.input}
-                      value={patientForm.insuranceCompany}
-                      onChange={handleProfileChange}
-                  />
-              ) : (
-                  <p className={styles.value}>
-                    {record?.admissionDetails?.insurance?.insuranceCompany}
-                  </p>
-              )}
-            </div>
-
-            {/* Status dropdown */}
-            <div className={styles.data}>
-              <p className={styles.label}>Status</p>
-              <div className={styles.dropdown}>
-                <button
-                    className={`${styles.trigger} ${
-                        selectedStatus === "Rejected"
-                            ? styles.rejected
-                            : selectedStatus === "Approved"
-                                ? styles.ongoing
-                                : styles.pending
-                    } `}
-                    onClick={() => setOpenStatus((prev) => !prev)}
-                >
-                  <p>{selectedStatus}</p>
-                  <span className={styles.arrow}>
-                  {openStatus ? <ChevronUp /> : <ChevronDown />}
-                </span>
-                </button>
-                {openStatus && (
-                    <ul className={styles.menu}>
-                      {statusOptions.map((option) => (
-                          <li
-                              key={option}
-                              className={`${styles.item} ${
-                                  selectedStatus === option ? styles.active : ""
-                              }`}
-                              onClick={() => handleClick(option)}
-                          >
-                            {option}
-                          </li>
-                      ))}
-                    </ul>
-                )}
-              </div>
-            </div>
-
-            {/* Approved Amount input (only when status = Approved) */}
-            {selectedStatus === "Approved" && (
-                <div className={styles.data}>
-                  <p className={styles.label}>Approved Amount</p>
-                  <input
-                      type="text"
-                      className={styles.input}
-                      value={formattedAmount}
-                      onChange={handleApprovedAmountChange}
-                      placeholder="Enter approved amount"
-                  />
-                </div>
+          {/* Insurance ID */}
+          <div className={styles.data}>
+            <p className={styles.label}>Insurance ID</p>
+            {editMode ? (
+              <input
+                name="insuranceIdNumber"
+                type="text"
+                className={styles.input}
+                value={patientForm.insuranceIdNumber}
+                onChange={handleProfileChange}
+                placeholder="Enter Insurance ID"
+              />
+            ) : (
+              <p className={styles.value}>
+                {record?.admissionDetails?.insurance?.insuranceIdNumber}
+              </p>
             )}
           </div>
 
-          {/* Profile edit buttons */}
-          {editMode && (
-              <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "10px",
-                    marginTop: "10px",
-                  }}
+          {/* Employee Code */}
+          <div className={styles.data}>
+            <p className={styles.label}>Employee Code</p>
+            {editMode ? (
+              <input
+                name="employeeCode"
+                type="text"
+                className={styles.input}
+                value={patientForm.employeeCode}
+                onChange={handleProfileChange}
+              />
+            ) : (
+              <p className={styles.value}>
+                {record?.admissionDetails?.insurance?.employeeCode}
+              </p>
+            )}
+          </div>
+
+          {/* Policy No. */}
+          <div className={styles.data}>
+            <p className={styles.label}>Policy No.</p>
+            {editMode ? (
+              <input
+                name="policyNumber"
+                type="text"
+                className={styles.input}
+                value={patientForm.policyNumber}
+                onChange={handleProfileChange}
+              />
+            ) : (
+              <p className={styles.value}>
+                {record?.admissionDetails?.insurance?.policyNumber}
+              </p>
+            )}
+          </div>
+
+          {/* Start Date */}
+          <div className={styles.data}>
+            <p className={styles.label}>Start Date</p>
+            {editMode ? (
+              <input
+                name="insuranceStartDate"
+                type="date"
+                className={styles.input}
+                value={patientForm.insuranceStartDate}
+                onChange={handleProfileChange}
+              />
+            ) : (
+              <p className={styles.value}>
+                {record?.admissionDetails?.insurance?.insuranceStartDate &&
+                  new Date(
+                    record.admissionDetails.insurance.insuranceStartDate
+                  ).toLocaleDateString()}
+              </p>
+            )}
+          </div>
+
+          {/* Expiry Date */}
+          <div className={styles.data}>
+            <p className={styles.label}>Expiry Date</p>
+            {editMode ? (
+              <input
+                name="insuranceExpiryDate"
+                type="date"
+                className={styles.input}
+                value={patientForm.insuranceExpiryDate}
+                onChange={handleProfileChange}
+              />
+            ) : (
+              <p className={styles.value}>
+                {record?.admissionDetails?.insurance?.insuranceExpiryDate &&
+                  new Date(
+                    record.admissionDetails.insurance.insuranceExpiryDate
+                  ).toLocaleDateString()}
+              </p>
+            )}
+          </div>
+
+          {/* Company */}
+          <div className={styles.data}>
+            <p className={styles.label}>Company</p>
+            {editMode ? (
+              <input
+                name="insuranceCompany"
+                type="text"
+                className={styles.input}
+                value={patientForm.insuranceCompany}
+                onChange={handleProfileChange}
+              />
+            ) : (
+              <p className={styles.value}>
+                {record?.admissionDetails?.insurance?.insuranceCompany}
+              </p>
+            )}
+          </div>
+
+          {/* Status dropdown */}
+          <div className={styles.data}>
+            <p className={styles.label}>Status</p>
+            <div className={styles.dropdown}>
+              <button
+                className={`${styles.trigger} ${
+                  selectedStatus === "Rejected"
+                    ? styles.rejected
+                    : selectedStatus === "Approved"
+                    ? styles.ongoing
+                    : styles.pending
+                } `}
+                onClick={() => setOpenStatus((prev) => !prev)}
               >
-                <button className={styles.openBillBtn} onClick={handleSaveProfile}>
-                  Save Profile
-                </button>
-                <button className={styles.viewBillBtn} onClick={handleCancelEdit}>
-                  Cancel
-                </button>
-              </div>
-          )}
+                <p>{selectedStatus}</p>
+                <span className={styles.arrow}>
+                  {openStatus ? <ChevronUp /> : <ChevronDown />}
+                </span>
+              </button>
+              {openStatus && (
+                <ul className={styles.menu}>
+                  {statusOptions.map((option) => (
+                    <li
+                      key={option}
+                      className={`${styles.item} ${
+                        selectedStatus === option ? styles.active : ""
+                      }`}
+                      onClick={() => handleClick(option)}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
 
-          {/* Existing Save (insurance status) */}
-          {!editMode && (
-              <div className={styles.submitContainer} onClick={handleSave}>
-                <button>Save</button>
-              </div>
-          )}
-
-          {/* Modals */}
-          {activeModal === "bill" && (
-              <>
-                <div className={styles.backdropOverlay2} />
-                <div className={styles.billModal}>
-                  <EstimateBill
-                      record={record}
-                      onClose={onClose}
-                      closeBill={closeBill}
-                      estimateOld={estimatedBill || undefined}
-                  />
-                </div>
-              </>
-          )}
-          {activeModal === "viewBill" && (
-              <>
-                <div
-                    className={styles.backdropOverlay2}
-                    onClick={() => setActiveModal(null)}
-                />
-                <div className={styles.billModal}>
-                  <ViewBill
-                      record={record}
-                      onClose={closeBill}
-                      estimatedBill={estimatedBill}
-                  />
-                </div>
-              </>
+          {/* Approved Amount input (only when status = Approved) */}
+          {selectedStatus === "Approved" && (
+            <div className={styles.data}>
+              <p className={styles.label}>Approved Amount</p>
+              <input
+                type="text"
+                className={styles.input}
+                value={formattedAmount}
+                onChange={handleApprovedAmountChange}
+                placeholder="Enter approved amount"
+              />
+            </div>
           )}
         </div>
+
+        {/* Profile edit buttons */}
+        {editMode && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <button className={styles.openBillBtn} onClick={handleSaveProfile}>
+              Save Profile
+            </button>
+            <button className={styles.viewBillBtn} onClick={handleCancelEdit}>
+              Cancel
+            </button>
+          </div>
+        )}
+
+        {/* Existing Save (insurance status) */}
+        {!editMode && (
+          <div className={styles.submitContainer} onClick={handleSave}>
+            <button>Save</button>
+          </div>
+        )}
+
+        {/* Modals */}
+        {activeModal === "bill" && (
+          <>
+            <div className={styles.backdropOverlay2} />
+            <div className={styles.billModal}>
+              <EstimateBill
+                record={record}
+                onClose={onClose}
+                closeBill={closeBill}
+                estimateOld={estimatedBill || undefined}
+              />
+            </div>
+          </>
+        )}
+        {activeModal === "ongoingBill" && (
+          <>
+            <div
+              className={styles.backdropOverlay2}
+              onClick={() => setActiveModal(null)}
+            />
+            <div className={styles.billModal}>
+              <OngoingBill record={record} onClose={closeBill} />
+            </div>
+          </>
+        )}
+        {activeModal === "viewBill" && (
+          <>
+            <div
+              className={styles.backdropOverlay2}
+              onClick={() => setActiveModal(null)}
+            />
+            <div className={styles.billModal}>
+              <ViewBill
+                record={record}
+                onClose={closeBill}
+                estimatedBill={estimatedBill}
+              />
+            </div>
+          </>
+        )}
       </div>
+    </div>
   );
 };
 
