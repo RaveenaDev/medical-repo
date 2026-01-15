@@ -354,6 +354,7 @@ const BillingDetails = ({ onClose }) => {
       row.date ||
       row.details?.date ||
       bill.invoiceDate ||
+      row.details.visitDate ||
       "-";
     return {
       desc,
@@ -744,6 +745,7 @@ const BillingDetails = ({ onClose }) => {
                     row.details?.billedDate ||
                     row.date ||
                     row.details?.date ||
+                    row.details.visitDate ||
                     "";
                   const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
                   const getEditableNameKey = (details = {}) => {

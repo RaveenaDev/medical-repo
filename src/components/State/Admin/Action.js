@@ -73,22 +73,30 @@ import {
 
 import { toast } from "react-toastify";
 
-export const getEarnings = (year) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getEarnings =
+  (params = {}) =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getRevenueByYear`, {
-      params: { year: year },
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/reports/doctors/`, {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    dispatch({ type: GET_EARNINGS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({
+        type: GET_EARNINGS,
+        payload: data,
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Get earnings error:", error);
+      throw error;
+    }
+  };
 
 export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {

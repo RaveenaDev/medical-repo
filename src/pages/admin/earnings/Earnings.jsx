@@ -80,6 +80,54 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
     return data;
   };
+  const [doctorRows, setDoctorRows] = useState([]);
+
+  useEffect(() => {
+    const params = {};
+    const now = new Date();
+
+    if (timeFilter === "daily") {
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date();
+      end.setHours(23, 59, 59, 999);
+
+      params.startDate = start.toISOString();
+      params.endDate = end.toISOString();
+    }
+
+    if (timeFilter === "weekly") {
+      const start = new Date();
+      start.setDate(now.getDate() - 7);
+
+      params.startDate = start.toISOString();
+      params.endDate = now.toISOString();
+    }
+
+    if (timeFilter === "monthly") {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      params.startDate = start.toISOString();
+      params.endDate = now.toISOString();
+    }
+
+    if (timeFilter === "yearly") {
+      const start = new Date(now.getFullYear(), 0, 1);
+
+      params.startDate = start.toISOString();
+      params.endDate = now.toISOString();
+    }
+
+    if (timeFilter === "custom" && fromDate && toDate) {
+      params.startDate = fromDate;
+      params.endDate = toDate;
+    }
+
+    dispatch(getEarnings(params)).then((res) => {
+      setDoctorRows(res?.doctors || []);
+    });
+  }, [timeFilter, fromDate, toDate, dispatch]);
 
   useEffect(() => {
     setIsSignUpOrLogin?.(false);
@@ -99,30 +147,6 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
     ipd: Math.floor(100 + Math.random() * 100),
   }));
 
-  const filteredDoctors = doctors.map((doc) => {
-    const filteredRecords = applyTimeFilter(doc.records);
-
-    const totals = filteredRecords.reduce(
-      (acc, r) => {
-        acc.opdEarnings += r.opdEarnings;
-        acc.ipdEarnings += r.ipdEarnings;
-        acc.opdPatients += r.opdPatients;
-        acc.ipdPatients += r.ipdPatients;
-        return acc;
-      },
-      {
-        opdEarnings: 0,
-        ipdEarnings: 0,
-        opdPatients: 0,
-        ipdPatients: 0,
-      }
-    );
-
-    return {
-      name: doc.name,
-      ...totals,
-    };
-  });
   const earningsSummary = useMemo(() => {
     return filteredTrend.reduce(
       (acc, d) => {
@@ -219,7 +243,7 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
         {/* ===== Doctor-wise Summary ===== */}
         <Section title="Doctor-wise Earnings Summary">
           <DoctorTable
-            rows={filteredDoctors}
+            rows={doctorRows}
             search={search}
             setSearch={setSearch}
             timeFilter={timeFilter}
@@ -428,7 +452,7 @@ const DoctorTable = ({
   setToDate,
 }) => {
   const filteredRows = rows.filter((r) =>
-    r.name.toLowerCase().includes(search.toLowerCase())
+    r.doctorName.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -500,12 +524,17 @@ const DoctorTable = ({
           <tbody>
             {filteredRows.map((r, i) => (
               <tr key={i}>
-                <td style={td}>{r.name}</td>
-                <td style={td}>₹{r.opdEarnings}</td>
-                <td style={td}>₹{r.ipdEarnings}</td>
-                <td style={td}>{r.opdPatients}</td>
-                <td style={td}>{r.ipdPatients}</td>
-                <td style={td}>₹{r.opdEarnings + r.ipdEarnings}</td>
+                <td style={td}>{r.doctorName}</td>
+
+                <td style={td}>₹{r.opd.earnings.toLocaleString("en-IN")}</td>
+
+                <td style={td}>₹{r.ipd.earnings.toLocaleString("en-IN")}</td>
+
+                <td style={td}>{r.opd.count}</td>
+
+                <td style={td}>{r.ipd.count}</td>
+
+                <td style={td}>₹{r.total.earnings.toLocaleString("en-IN")}</td>
               </tr>
             ))}
           </tbody>

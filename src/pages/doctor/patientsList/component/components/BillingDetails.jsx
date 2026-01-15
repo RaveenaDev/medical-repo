@@ -41,7 +41,7 @@ const BillingDetails = ({ onClose }) => {
 
   const lastestbill = useSelector((state) => state.doctor.ongoingBill) || {};
 
-  // console.log("Latest Bill", lastestbill);
+  console.log("Latest Bill", lastestbill);
   useEffect(() => {
     if (lastestbill && lastestbill._id) {
       dispatch(getBillDetails(lastestbill._id));
@@ -354,6 +354,7 @@ const BillingDetails = ({ onClose }) => {
       row.date ||
       row.details?.date ||
       bill.invoiceDate ||
+      row.details.visitDate ||
       "-";
     return {
       desc,
@@ -744,6 +745,7 @@ const BillingDetails = ({ onClose }) => {
                     row.details?.billedDate ||
                     row.date ||
                     row.details?.date ||
+                    row.details.visitDate ||
                     "";
                   const rate = Number.isFinite(+row.rate) ? +row.rate : 0;
                   const getEditableNameKey = (details = {}) => {
@@ -752,7 +754,7 @@ const BillingDetails = ({ onClose }) => {
                     return "name"; // fallback
                   };
 
-                  // console.log("service", row);
+                  console.log("service", row);
                   return (
                     <div key={i} className={styles["billing-category"]}>
                       <div className={styles["billing-description"]}>
