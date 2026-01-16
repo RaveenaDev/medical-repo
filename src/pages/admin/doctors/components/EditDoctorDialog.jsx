@@ -68,21 +68,6 @@ const EditDoctorDialog = ({
 
         <TextField
           margin="dense"
-          label="Password"
-          type="password"
-          fullWidth
-          variant="outlined"
-          value={editedDoctor.password}
-          onChange={(e) =>
-            setEditedDoctor({ ...editedDoctor, password: e.target.value })
-          }
-          error={!!errors.password}
-          helperText={errors.password}
-          required
-        />
-
-        <TextField
-          margin="dense"
           label="Name"
           type="text"
           fullWidth
