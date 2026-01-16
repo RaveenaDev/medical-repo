@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import CommonPanel from "../Components/CommonPanel.jsx";
-import { Box, Grid } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+
+import { Box, Grid, TextField, MenuItem } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Area,
   AreaChart,
@@ -10,391 +11,608 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import Select from "../../../components/Select/index.jsx";
-import { useDispatch, useSelector } from "react-redux";
+
+import CommonPanel from "../Components/CommonPanel.jsx";
 import { getEarnings } from "../../../components/State/Admin/Action.js";
 
-const Earnings = (props) => {
-  useEffect(() => {
-    props?.setIsSignUpOrLogin(false);
-  }, []);
+/* ---------------- THEME ---------------- */
 
-  const [branches, setBranches] = useState(["2025", "2024", "2023"]);
+const THEME = {
+  primary: "#444FA2",
+  secondary: "#5765CA",
+  bg: "#F1F1F1",
+};
 
-  // Initial state where all bars are visible
-  const [visibleGraph, setVisibleGraph] = useState({
-    outpatient: true,
-    inpatient: true,
-    surgery: true,
-    diagnostics: true,
-  });
+/* ---------------- MAIN ---------------- */
 
+const Earnings = ({ setIsSignUpOrLogin }) => {
   const dispatch = useDispatch();
 
-  const totalEarnings = useSelector((store) => store.admin.totalEarnings);
-  // const areaData = useSelector((store) => store.admin.monthlyEarnings)
+  const [timeFilter, setTimeFilter] = useState("monthly");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [search, setSearch] = useState("");
+
+  const applyTimeFilter = (data) => {
+    const now = new Date();
+
+    if (timeFilter === "daily") {
+      return data.filter((d) => d.date.toDateString() === now.toDateString());
+    }
+
+    if (timeFilter === "weekly") {
+      const start = new Date();
+      start.setDate(now.getDate() - 7);
+      return data.filter((d) => d.date >= start && d.date <= now);
+    }
+
+    if (timeFilter === "monthly") {
+      return data.filter(
+        (d) =>
+          d.date.getMonth() === now.getMonth() &&
+          d.date.getFullYear() === now.getFullYear()
+      );
+    }
+
+    if (timeFilter === "custom" && fromDate && toDate) {
+      const from = new Date(fromDate);
+      const to = new Date(toDate);
+      return data.filter((d) => d.date >= from && d.date <= to);
+    }
+
+    return data;
+  };
+  const generateTodayHourlyData = () => {
+    const data = [];
+    const today = new Date();
+
+    for (let h = 0; h < 24; h++) {
+      const date = new Date(today);
+      date.setHours(h, 0, 0, 0);
+
+      data.push({
+        date,
+        label: `${h}:00`,
+        opd: Math.floor(200 + Math.random() * 300),
+        ipd: Math.floor(400 + Math.random() * 600),
+      });
+    }
+
+    return data;
+  };
+  const [doctorRows, setDoctorRows] = useState([]);
 
   useEffect(() => {
-    dispatch(getEarnings(2025));
+    const params = {};
+    const now = new Date();
+
+    if (timeFilter === "daily") {
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date();
+      end.setHours(23, 59, 59, 999);
+
+      params.startDate = start.toISOString();
+      params.endDate = end.toISOString();
+    }
+
+    if (timeFilter === "weekly") {
+      const start = new Date();
+      start.setDate(now.getDate() - 7);
+
+      params.startDate = start.toISOString();
+      params.endDate = now.toISOString();
+    }
+
+    if (timeFilter === "monthly") {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      params.startDate = start.toISOString();
+      params.endDate = now.toISOString();
+    }
+
+    if (timeFilter === "yearly") {
+      const start = new Date(now.getFullYear(), 0, 1);
+
+      params.startDate = start.toISOString();
+      params.endDate = now.toISOString();
+    }
+
+    if (timeFilter === "custom" && fromDate && toDate) {
+      params.startDate = fromDate;
+      params.endDate = toDate;
+    }
+
+    dispatch(getEarnings(params)).then((res) => {
+      setDoctorRows(res?.doctors || []);
+    });
+  }, [timeFilter, fromDate, toDate, dispatch]);
+
+  useEffect(() => {
+    setIsSignUpOrLogin?.(false);
   }, [dispatch]);
 
-  const areaData = [
-    {
-      name: "Jan",
-      uv: 8000,
-      pv: 7400,
-      amt: 2800,
-      ayu: 2200,
-    },
-    {
-      name: "Feb",
-      uv: 8000,
-      pv: 6398,
-      amt: 5810,
-      ayu: 2100,
-    },
-    {
-      name: "Mar",
-      uv: 9000,
-      pv: 7800,
-      amt: 4290,
-      ayu: 2400,
-    },
-    {
-      name: "Apr",
-      uv: 8780,
-      pv: 7908,
-      amt: 4000,
-      ayu: 1200,
-    },
-    {
-      name: "May",
-      uv: 7890,
-      pv: 6800,
-      amt: 4181,
-      ayu: 3200,
-    },
-    {
-      name: "Jun",
-      uv: 8390,
-      pv: 6800,
-      amt: 5000,
-      ayu: 2600,
-    },
-    {
-      name: "Jul",
-      uv: 8490,
-      pv: 7300,
-      amt: 4000,
-      ayu: 2500,
-    },
-    {
-      name: "Aug",
-      uv: 9490,
-      pv: 6300,
-      amt: 4100,
-      ayu: 2300,
-    },
-    {
-      name: "Sep",
-      uv: 8490,
-      pv: 6300,
-      amt: 3700,
-      ayu: 2100,
-    },
-    {
-      name: "Oct",
-      uv: 7490,
-      pv: 6300,
-      amt: 3100,
-      ayu: 1800,
-    },
-    {
-      name: "Nov",
-      uv: 8490,
-      pv: 5300,
-      amt: 2100,
-      ayu: 1200,
-    },
-    {
-      name: "Dec",
-      uv: 8490,
-      pv: 5300,
-      amt: 4100,
-      ayu: 3200,
-    },
-  ];
+  const filteredTrend = useMemo(() => {
+    if (timeFilter === "daily") {
+      return generateTodayHourlyData();
+    }
 
-  const handleGraphToggle = (bar) => {
-    // Set only the clicked bar to true, and the others to false
-    setVisibleGraph({
-      outpatient: bar === "outpatient",
-      inpatient: bar === "inpatient",
-      surgery: bar === "surgery",
-      diagnostics: bar === "diagnostics",
-    });
-  };
+    return applyTimeFilter(earningsTrend);
+  }, [timeFilter, fromDate, toDate]);
 
-  // Reset all bars to visible when "Appointment Statistics" is clicked
-  const handleResetGraph = () => {
-    setVisibleGraph({
-      outpatient: true,
-      inpatient: true,
-      surgery: true,
-      diagnostics: true,
-    });
-  };
+  const filteredPatientTrend = filteredTrend.map((d) => ({
+    ...d,
+    opd: Math.floor(200 + Math.random() * 200),
+    ipd: Math.floor(100 + Math.random() * 100),
+  }));
+
+  const earningsSummary = useMemo(() => {
+    return filteredTrend.reduce(
+      (acc, d) => {
+        acc.opd += d.opd;
+        acc.ipd += d.ipd;
+        acc.total += d.opd + d.ipd;
+        return acc;
+      },
+      { opd: 0, ipd: 0, total: 0 }
+    );
+  }, [filteredTrend]);
+  const patientSummary = useMemo(() => {
+    return filteredPatientTrend.reduce(
+      (acc, d) => {
+        acc.opd += d.opd;
+        acc.ipd += d.ipd;
+        acc.total += d.opd + d.ipd;
+        return acc;
+      },
+      { opd: 0, ipd: 0, total: 0 }
+    );
+  }, [filteredPatientTrend]);
+
   return (
-    <div
-      style={{
-        background: "#f1f1f1",
-        height: "99dvh", // Make the entire div take up the full viewport height
-        overflow: "hidden", // Prevent scrolling on the rest of the page
-      }}
-    >
-      <div
-        style={{
-          position: "fixed",
-          top: "0px",
-          padding: "10px",
-          width: "77%",
-          background: " #F1F1F1",
-          zIndex: 100,
-        }}
-      >
-        <CommonPanel />
-      </div>
-      <div style={{ marginTop: "200px" }}>
-        <Box
-          sx={{
-            width: "100%",
-            backgroundColor: "white",
-            py: 2,
-            borderRadius: "0.4rem",
-          }}
-        >
-          <Box display="flex" justifyContent="space-between">
-            <div
-              onClick={handleResetGraph}
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                marginLeft: "1.4rem",
-                padding: "0.4rem",
-                borderRadius: "8px",
-                marginBottom: "3rem",
-                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.3)",
-                width: "fit-content", // Ensures the div width fits the content
-              }}
-            >
-              <p style={{ color: "gray", margin: "0 10px 0 0" }}>
-                Total Revenue (₹):
-              </p>
-              <p
-                style={{
-                  color: "#444FA2",
-                  fontWeight: "500",
-                  margin: "0 10px 0 0",
-                }}
-              >
-                ₹ {totalEarnings}
-              </p>
-              <ArrowUpwardIcon
-                style={{
-                  color: "green",
-                  marginTop: "auto",
-                  marginBottom: "auto",
-                }}
-              />
-            </div>
+    <PageWrapper>
+      <Header />
 
-            <div>
-              {branches.length && (
-                <Grid
-                  container
-                  spacing={2}
-                  justifyContent="flex-end"
-                  alignItems="center"
-                  flexDirection={{ md: "row" }}
-                  size={12}
-                  pr={4}
-                  pt={1.6}
-                >
-                  <Grid
-                    size={3}
-                    sx={{ backgroundColor: "white", borderRadius: "0.2rem" }}
-                  >
-                    <Select
-                      inputId="input-department"
-                      selectId="select-department"
-                      label="Department"
-                      list={branches}
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-              )}
-            </div>
-          </Box>
+      <Content>
+        <FilterBar
+          timeFilter={timeFilter}
+          setTimeFilter={setTimeFilter}
+          fromDate={fromDate}
+          toDate={toDate}
+          setFromDate={setFromDate}
+          setToDate={setToDate}
+        />
 
-          <Box
-            sx={{
-              display: "flex",
-              gap: 5,
-              marginBottom: "1rem",
-              marginRight: "2rem",
-            }}
-            justifyContent="flex-end"
-          >
-            {" "}
-            {/* Adjust gap for spacing */}
-            <Box
-              onClick={() => handleGraphToggle("outpatient")}
-              display="flex"
-              alignItems="center"
-              gap={1}
-              sx={{ color: "black", cursor: "pointer" }}
-            >
-              <Box
-                sx={{
-                  width: 15,
-                  height: 15,
-                  backgroundColor: "#444FA2",
-                }}
-              />
-              Outpatient Revenue
-            </Box>
-            <Box
-              onClick={() => handleGraphToggle("inpatient")}
-              display="flex"
-              alignItems="center"
-              gap={1}
-              sx={{ color: "black", cursor: "pointer" }}
-            >
-              <Box
-                sx={{
-                  width: 15,
-                  height: 15,
-                  backgroundColor: "#5765CA",
-                }}
-              />
-              Inpatient Revenue
-            </Box>
-            <Box
-              onClick={() => handleGraphToggle("surgery")}
-              display="flex"
-              alignItems="center"
-              gap={1}
-              sx={{ color: "black", cursor: "pointer" }}
-            >
-              <Box
-                sx={{
-                  width: 15,
-                  height: 15,
-                  backgroundColor: "#7A8AFF",
-                }}
-              />
-              Surgeries
-            </Box>
-            <Box
-              onClick={() => handleGraphToggle("diagnostics")}
-              display="flex"
-              alignItems="center"
-              gap={1}
-              sx={{ color: "black", cursor: "pointer" }}
-            >
-              <Box
-                sx={{
-                  width: 15,
-                  height: 15,
-                  backgroundColor: "#D7DCFF",
-                }}
-              />
-              Diagnostics
-            </Box>
-          </Box>
+        {/* ===== Earnings ===== */}
+        <Section title="Earnings Overview">
+          <SummaryRow
+            items={[
+              {
+                label: "Total Earnings",
+                value: `₹${earningsSummary.total.toLocaleString("en-IN")}`,
+                color: THEME.primary,
+              },
+              {
+                label: "OPD Earnings",
+                value: `₹${earningsSummary.opd.toLocaleString("en-IN")}`,
+                color: THEME.primary,
+              },
+              {
+                label: "IPD Earnings",
+                value: `₹${earningsSummary.ipd.toLocaleString("en-IN")}`,
+                color: THEME.secondary,
+              },
+            ]}
+          />
 
-          {/* Add spacing before the graph */}
-          <Box
-            sx={{
-              height: "18.8rem",
-              margin: "0 1.8rem 2rem 1.8rem",
-              paddingTop: "3rem",
-              backgroundColor: "#F1F1F1",
-            }}
-          >
-            <ResponsiveContainer width="100%" height={330}>
-              <AreaChart
-                width={500}
-                height={400}
-                data={areaData}
-                margin={{
-                  top: 20,
-                  right: 0,
-                  left: 0,
-                  bottom: 0,
-                }}
-              >
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: 14 }}
-                  tickLine={false}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "#000000" }}
-                  tickCount={6}
-                  domain={["dataMin", "auto"]} // Excludes 0
-                  tickFormatter={(value) => (value === 0 ? "" : value)} // Hides 0
-                />
-                <Tooltip />
-                {visibleGraph.inpatient && (
-                  <Area
-                    type="monotone"
-                    dataKey="uv"
-                    stroke="none"
-                    fill="#5765CB"
-                  />
-                )}
-                {visibleGraph.outpatient && (
-                  <Area
-                    type="monotone"
-                    dataKey="pv"
-                    stroke="none"
-                    fill="#434FA3"
-                  />
-                )}
-                {visibleGraph.surgery && (
-                  <Area
-                    type="monotone"
-                    dataKey="amt"
-                    stroke="none"
-                    fill="#7A8AFF"
-                  />
-                )}
-                {visibleGraph.diagnostics && (
-                  <Area
-                    type="monotone"
-                    dataKey="ayu"
-                    stroke="none"
-                    fill="#D7DCFF"
-                  />
-                )}
+          <ChartCard
+            title="Earnings Trend (OPD vs IPD)"
+            data={filteredTrend}
+          ></ChartCard>
+        </Section>
 
-                <CartesianGrid
-                  horizontal
-                  vertical={false}
-                  stroke="#BFC5F5"
-                  strokeWidth={0.5}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </Box>
-        </Box>
-      </div>
-    </div>
+        {/* ===== Patients ===== */}
+        <Section title="Patient Load Overview">
+          <SummaryRow
+            items={[
+              {
+                label: "Total Patients",
+                value: patientSummary.total,
+                color: THEME.primary,
+              },
+              {
+                label: "OPD Patients",
+                value: patientSummary.opd,
+                color: THEME.primary,
+              },
+              {
+                label: "IPD Patients",
+                value: patientSummary.ipd,
+                color: THEME.secondary,
+              },
+            ]}
+          />
+
+          <ChartCard
+            title="Patient Trend (OPD vs IPD)"
+            data={filteredPatientTrend}
+          ></ChartCard>
+        </Section>
+
+        {/* ===== Doctor-wise Summary ===== */}
+        <Section title="Doctor-wise Earnings Summary">
+          <DoctorTable
+            rows={doctorRows}
+            search={search}
+            setSearch={setSearch}
+            timeFilter={timeFilter}
+            setTimeFilter={setTimeFilter}
+            fromDate={fromDate}
+            toDate={toDate}
+            setFromDate={setFromDate}
+            setToDate={setToDate}
+          />
+        </Section>
+      </Content>
+    </PageWrapper>
   );
 };
+
 export default Earnings;
+
+/* ---------------- LAYOUT ---------------- */
+
+const PageWrapper = ({ children }) => (
+  <div style={{ background: THEME.bg, minHeight: "100vh", marginTop: "180px" }}>
+    {children}
+  </div>
+);
+
+const Header = () => (
+  <Box
+    sx={{
+      position: "fixed",
+      top: 0,
+      width: "77%",
+      zIndex: 100,
+      background: THEME.bg,
+      p: 1,
+    }}
+  >
+    <CommonPanel />
+  </Box>
+);
+
+const Content = ({ children }) => (
+  <Box
+    sx={{
+      pt: "170px",
+      pb: 4,
+      mx: "1.5rem",
+      background: "#fff",
+      p: 2,
+      borderRadius: 2,
+    }}
+  >
+    {children}
+  </Box>
+);
+
+/* ---------------- FILTERS ---------------- */
+
+const FilterBar = ({
+  timeFilter,
+  setTimeFilter,
+  fromDate,
+  toDate,
+  setFromDate,
+  setToDate,
+}) => (
+  <Box
+    sx={{
+      position: "sticky",
+      top: 70,
+      zIndex: 10,
+      background: "#fff",
+      borderBottom: "1px solid #eee",
+      mb: 3,
+      pb: 2,
+      display: "flex",
+      gap: 2,
+      flexWrap: "wrap",
+    }}
+  >
+    <TextField
+      select
+      size="small"
+      label="Time Range"
+      value={timeFilter}
+      onChange={(e) => setTimeFilter(e.target.value)}
+    >
+      <MenuItem value="daily">Today</MenuItem>
+      <MenuItem value="weekly">This Week</MenuItem>
+      <MenuItem value="monthly">This Month</MenuItem>
+      <MenuItem value="yearly">This Year</MenuItem>
+      <MenuItem value="custom">Custom</MenuItem>
+    </TextField>
+
+    {timeFilter === "custom" && (
+      <>
+        <TextField
+          size="small"
+          type="date"
+          label="From"
+          InputLabelProps={{ shrink: true }}
+          value={fromDate}
+          onChange={(e) => setFromDate(e.target.value)}
+        />
+        <TextField
+          size="small"
+          type="date"
+          label="To"
+          InputLabelProps={{ shrink: true }}
+          value={toDate}
+          onChange={(e) => setToDate(e.target.value)}
+        />
+      </>
+    )}
+  </Box>
+);
+
+/* ---------------- UI BLOCKS ---------------- */
+
+const Section = ({ title, children }) => (
+  <Box sx={{ mt: 4 }}>
+    <h3 style={{ color: THEME.primary }}>{title}</h3>
+    {children}
+  </Box>
+);
+
+const SummaryRow = ({ items }) => (
+  <Grid container spacing={2} mb={3}>
+    {items.map((i, idx) => (
+      <Grid item xs={12} sm={6} md={4} key={idx}>
+        <Box
+          sx={{
+            background: THEME.bg,
+            p: 2,
+            borderRadius: 2,
+            borderLeft: `4px solid ${i.color}`,
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 13 }}>{i.label}</p>
+          <h2 style={{ margin: 0, color: i.color }}>{i.value}</h2>
+        </Box>
+      </Grid>
+    ))}
+  </Grid>
+);
+
+const ChartCard = ({ title, data, children }) => (
+  <Box
+    sx={{
+      background: THEME.bg,
+      p: 2,
+      borderRadius: 2,
+      mb: 3,
+      width: "100%",
+      minHeight: 320,
+    }}
+  >
+    <p style={{ fontWeight: 500 }}>{title}</p>
+    {data?.length ? (
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={data}>
+          <XAxis dataKey="label" />
+
+          <YAxis />
+          <Tooltip />
+          <CartesianGrid horizontal vertical={false} stroke="#BFC5F5" />
+          <defs>
+            <linearGradient id="opdGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={THEME.primary} stopOpacity={0.6} />
+              <stop
+                offset="100%"
+                stopColor={THEME.primary}
+                stopOpacity={0.05}
+              />
+            </linearGradient>
+            <linearGradient id="ipdGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={THEME.secondary} stopOpacity={0.6} />
+              <stop
+                offset="100%"
+                stopColor={THEME.secondary}
+                stopOpacity={0.05}
+              />
+            </linearGradient>
+          </defs>
+
+          <Area dataKey="opd" fill="url(#opdGrad)" stroke="none" />
+          <Area dataKey="ipd" fill="url(#ipdGrad)" stroke="none" />
+        </AreaChart>
+      </ResponsiveContainer>
+    ) : (
+      <EmptyState text="No data available" />
+    )}
+  </Box>
+);
+
+/* ---------------- TABLE ---------------- */
+
+const DoctorTable = ({
+  rows,
+  search,
+  setSearch,
+  timeFilter,
+  setTimeFilter,
+  fromDate,
+  toDate,
+  setFromDate,
+  setToDate,
+}) => {
+  const filteredRows = rows.filter((r) =>
+    r.doctorName.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <Box sx={{ mb: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 2,
+          mb: 1,
+          flexWrap: "wrap",
+        }}
+      >
+        <h4>Doctor-wise Summary</h4>
+
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <TextField
+            size="small"
+            placeholder="Search doctor..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <TextField
+            select
+            size="small"
+            value={timeFilter}
+            onChange={(e) => setTimeFilter(e.target.value)}
+          >
+            <MenuItem value="daily">Today</MenuItem>
+            <MenuItem value="weekly">This Week</MenuItem>
+            <MenuItem value="monthly">This Month</MenuItem>
+            <MenuItem value="yearly">This Year</MenuItem>
+            <MenuItem value="custom">Custom</MenuItem>
+          </TextField>
+        </Box>
+      </Box>
+
+      {timeFilter === "custom" && (
+        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+          <TextField
+            size="small"
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
+          <TextField
+            size="small"
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
+        </Box>
+      )}
+
+      <Box sx={{ maxHeight: 420, overflowY: "auto", border: "1px solid #eee" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead style={{ position: "sticky", top: 0, background: THEME.bg }}>
+            <tr>
+              <th style={th}>Doctor</th>
+              <th style={th}>OPD ₹</th>
+              <th style={th}>IPD ₹</th>
+              <th style={th}>OPD Patients</th>
+              <th style={th}>IPD Patients</th>
+              <th style={th}>Total ₹</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRows.map((r, i) => (
+              <tr key={i}>
+                <td style={td}>{r.doctorName}</td>
+
+                <td style={td}>₹{r.opd.earnings.toLocaleString("en-IN")}</td>
+
+                <td style={td}>₹{r.ipd.earnings.toLocaleString("en-IN")}</td>
+
+                <td style={td}>{r.opd.count}</td>
+
+                <td style={td}>{r.ipd.count}</td>
+
+                <td style={td}>₹{r.total.earnings.toLocaleString("en-IN")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Box>
+    </Box>
+  );
+};
+
+/* ---------------- HELPERS ---------------- */
+
+const EmptyState = ({ text }) => (
+  <Box
+    sx={{
+      height: 280,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#999",
+    }}
+  >
+    {text}
+  </Box>
+);
+
+const format = (v, currency) => (currency ? `₹${v}` : v);
+const th = { padding: 10, textAlign: "left" };
+const td = { padding: 10, borderBottom: "1px solid #eee" };
+
+/* ---------------- DUMMY DATA ---------------- */
+
+const earningsTrend = (() => {
+  const data = [];
+  const today = new Date();
+
+  for (let i = 0; i < 90; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() - i);
+
+    data.push({
+      date,
+      label: date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+      }),
+      opd: Math.floor(3000 + Math.random() * 5000),
+      ipd: Math.floor(6000 + Math.random() * 9000),
+    });
+  }
+
+  return data.reverse();
+})();
+
+const patientTrend = earningsTrend.map((m) => ({
+  month: m.month,
+  opd: Math.floor(200 + Math.random() * 200),
+  ipd: Math.floor(100 + Math.random() * 100),
+}));
+
+const doctors = Array.from({ length: 15 }, (_, i) => {
+  const records = [];
+
+  for (let d = 0; d < 90; d++) {
+    const date = new Date();
+    date.setDate(date.getDate() - d);
+
+    records.push({
+      date,
+      opdEarnings: Math.floor(2000 + Math.random() * 4000),
+      ipdEarnings: Math.floor(5000 + Math.random() * 8000),
+      opdPatients: Math.floor(5 + Math.random() * 15),
+      ipdPatients: Math.floor(2 + Math.random() * 8),
+    });
+  }
+
+  return {
+    doctorId: `doc_${i + 1}`,
+    name: `Dr. Doctor ${i + 1}`,
+    records,
+  };
+});

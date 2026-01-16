@@ -69,6 +69,7 @@ const AdminStaffs = (props) => {
       department: "",
       designation: "",
       status: "",
+      email: "",
     }),
     []
   );
@@ -119,6 +120,7 @@ const AdminStaffs = (props) => {
         selected?.department?._id || selected?.department?.departmentId || "",
       designation: selected.designation ?? "",
       status: selected.status ?? "",
+      email: selected.email ?? "",
     });
     setEditOpen(true);
     closeMenu();

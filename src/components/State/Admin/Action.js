@@ -11,6 +11,7 @@ import {
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   ADD_TO_BILL,
+  CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
@@ -59,6 +60,10 @@ import {
   GET_WAITING_APPOINTMENTS,
   LOADING_PATIENTS,
   NULL_ESTIMATED_BILL,
+  SEARCH_SERVICE_SUBCATEGORIES,
+  TPA_FAIL,
+  TPA_REQUEST,
+  TPA_SUCCESS,
   UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
@@ -68,22 +73,30 @@ import {
 
 import { toast } from "react-toastify";
 
-export const getEarnings = (year) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
+export const getEarnings =
+  (params = {}) =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${API_URL}/getRevenueByYear`, {
-      params: { year: year },
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
+      const { data } = await axios.get(`${API_URL}/reports/doctors/`, {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    dispatch({ type: GET_EARNINGS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+      dispatch({
+        type: GET_EARNINGS,
+        payload: data,
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Get earnings error:", error);
+      throw error;
+    }
+  };
 
 export const getDoctors = (page, rowsPerPage) => async (dispatch) => {
   try {
@@ -781,26 +794,6 @@ export const getBillingRecords =
     }
   };
 
-// BILLING
-export const getBillDetails = (billId) => async (dispatch) => {
-  console.log("Fetching details for bill ID:", billId);
-
-  try {
-    const token = localStorage.getItem("jwt");
-
-    const { data } = await axios.get(`${API_URL}/getBillDetails/${billId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
-      },
-    });
-    console.log("Bill Details: ", data);
-
-    dispatch({ type: GET_BILL_DETAILS, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getServices = (departmentId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1027,6 +1020,26 @@ export const approveAdmissionRequestsAdmin =
       }
     }
   };
+
+// BILLING
+export const getBillDetails = (billId) => async (dispatch) => {
+  // console.log("Fetching details for bill ID:", billId);
+
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/getBillDetails/${billId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+      },
+    });
+    // console.log("Bill Details: ", data);
+
+    dispatch({ type: GET_BILL_DETAILS, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const editBill = (payload, id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1061,7 +1074,6 @@ export const addToBill = (payload, id) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    dispatch({ type: ADD_TO_BILL, payload: data });
     // console.log("Edit Bill Response:", data);
     toast.success("Added to bill successfully!", {
       position: "bottom-right",
@@ -1077,7 +1089,112 @@ export const addToBill = (payload, id) => async (dispatch) => {
     toast.error(error?.response?.data?.message || "Add failed");
   }
 };
+export const searchServiceSubCategories = (query) => async (dispatch) => {
+  try {
+    if (!query || query.length < 2) {
+      dispatch({ type: CLEAR_SERVICE_SUBCATEGORIES });
+      return;
+    }
 
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/searchServiceSubCategories`, {
+      params: { query },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Search Results:", data);
+
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: data?.results || [],
+    });
+  } catch (error) {
+    console.error("Search service subcategories error:", error);
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: [],
+    });
+  }
+};
+export const refundBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/refundBill/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // dispatch({ type: ADD_TO_BILL, payload: data });
+    console.log("REFUND Bill Response:", data);
+    toast.success("Bill refunded successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    //  dispatch to refresh data
+    dispatch(getBillDetails(id));
+  } catch (error) {
+    console.error("Error refunding bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
+export const addDiscount = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+      `${API_URL}/applyDiscount/${id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    // console.log("Discount Bill Response:", data);
+
+    toast.success("Discount added to bill successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error adding Discount to bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
+export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.post(
+      `${API_URL}/addPayment/${billId}`,
+      paymentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log("Payment Response: ", data);
+    dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
+    toast.success("Payment added successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+    // Optionally refresh bill details
+    // dispatch(getBillDetails(billId));
+  } catch (error) {
+    console.error("Error adding payment to bill:", error);
+    toast.error("Failed to add payment. Please try again.", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  }
+};
 export const getDoctorRequests = (status) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1222,7 +1339,7 @@ export const getInsuranceCompanies = () => async (dispatch) => {
       },
     });
 
-    // console.log("Insurance Companies : ",data)
+    // console.log("Insurance Companies : ", data);
 
     dispatch({ type: GET_INSURANCE_COMPANIES, payload: data });
   } catch (error) {
@@ -1626,35 +1743,6 @@ export const addInsuranceAfterAdmission =
     }
   };
 
-export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const { data } = await axios.post(
-      `${API_URL}/addPayment/${billId}`,
-      paymentData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    // console.log("Payment Response: ", data);
-    dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
-    toast.success("Payment added successfully!", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-    // Optionally refresh bill details
-    // dispatch(getBillDetails(billId));
-  } catch (error) {
-    console.error("Error adding payment to bill:", error);
-    toast.error("Failed to add payment. Please try again.", {
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-  }
-};
 export const getAppointmentData = (filter) => async (dispatch) => {
   // console.log("here");
   try {
@@ -1698,3 +1786,42 @@ export const editBed = (bedId, updates) => async (dispatch) => {
     });
   }
 };
+
+export const getTPAReport =
+  ({ year, month, company }) =>
+  async (dispatch) => {
+    // console.log("TPA ACTION CALLED", { year, month, company });
+
+    dispatch({ type: TPA_REQUEST });
+
+    try {
+      const token = localStorage.getItem("jwt");
+
+      let url = month
+        ? `${API_URL}/tpa/monthly?year=${year}&month=${month}`
+        : `${API_URL}/tpa/yearly?year=${year}`;
+
+      if (company) {
+        url += `&company=${encodeURIComponent(company)}`;
+      }
+
+      // /console.log("TPA API URL:", url);
+
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // console.log("TPA API RESPONSE:", data);
+
+      dispatch({ type: TPA_SUCCESS, payload: data });
+      return data;
+    } catch (error) {
+      console.error("TPA ERROR:", error);
+      dispatch({
+        type: TPA_FAIL,
+        payload: error?.response?.data?.message || "TPA fetch failed",
+      });
+    }
+  };

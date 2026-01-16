@@ -1,0 +1,149 @@
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 1rem;
+  font-family: "Karla", sans-serif;
+  overflow-y: auto;
+  height: 68vh;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.title {
+  font-size: 2.8vh;
+  color: #25307f;
+  font-weight: 550;
+  margin-top: -2vh;
+  margin-bottom: 3vh;
+}
+
+.table {
+  margin-top: 3vh;
+  height: 50vh;
+  overflow-y: auto;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.tableHead {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  text-align: center;
+  font-weight: 600;
+  font-size: 2.6vh;
+  margin-bottom: 0vh;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 1vh 0;
+  text-align: center;
+  background: #f7f9ff;
+  font-size: 2.2vh;
+  color: #25307f;
+
+  &:hover {
+    background: #e6eeff;
+  }
+}
+.categoryHeader {
+  padding: 0.5vh 0.5vw;
+  background: #eef2ff;
+  margin-top: 1vh;
+  display: flex;
+  justify-content: space-between;
+}
+.categoryName {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 600;
+}
+.subtotalRow {
+  display: flex;
+  gap: 1vw;
+  font-weight: 500;
+  background: #e9edff;
+  color: #25307f;
+  border-top: 1px solid #d3daff;
+}
+.grandTotalRow {
+  display: flex;
+  gap: 1vw;
+  font-weight: 600;
+  background: #e3e9ff;
+  color: #1f2a60;
+  border-top: 2px solid #c5cfff;
+}
+.crossContainer {
+  display: flex;
+  justify-content: flex-end;
+  color: #5461be;
+
+  :hover {
+    background: #ed4301;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.container {
+  padding: 1rem;
+  font-family: "Karla", sans-serif;
+  overflow-y: auto;
+  height: 68vh;
+  /* Hide scrollbar for Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.title {
+  font-size: 2.4vh;
+  color: #25307f;
+  font-weight: 550;
+  margin-bottom: 3vh;
+}
+
+.openBill,
+.viewBill {
+  display: flex;
+  align-items: center;
+}
+
+.openBillBtn,
+.viewBillBtn {
+  background: #fff;
+  color: #25307f;
+  border: 1px solid #25307f;
+}

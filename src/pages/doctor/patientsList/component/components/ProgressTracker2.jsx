@@ -24,7 +24,7 @@ const ProgressTracker2 = ({
 
   const progressTracker = useSelector((store) => store.doctor.progressTracker);
 
-  console.log("Tracker: ",progressTracker)
+  // console.log("Tracker: ",progressTracker)
   const isLoadingGetProgressTracker = useSelector(
     (store) => store.doctor.isLoadingGetProgressTracker
   );

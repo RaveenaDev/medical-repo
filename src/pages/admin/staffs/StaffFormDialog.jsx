@@ -46,7 +46,18 @@ const StaffFormDialog = ({
           sx={{ width: 60, height: 60, cursor: "pointer", mb: 2 }}
           onClick={pickImage}
         />
-
+        <TextField
+          error={!!errors.email}
+          helperText={errors.email}
+          required
+          margin="dense"
+          label="Email"
+          type="text"
+          fullWidth
+          variant="outlined"
+          value={form.email}
+          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+        />
         <TextField
           margin="dense"
           label="Staff Id"

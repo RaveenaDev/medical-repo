@@ -6,7 +6,7 @@ import RecoveryLink from "./pages/login/recoveryLink";
 import UpdatePassword from "./pages/login/updatePassword";
 import Logo from "./components/Logo";
 import Receptionist from "./pages/receptionist";
-import AIBot from "./pages/receptionist/AIBot/AIBot.jsx" // Bot new addeed
+import AIBot from "./pages/receptionist/AIBot/AIBot.jsx"; // Bot new addeed
 import { Routes, Route, useLocation } from "react-router-dom";
 import Departments from "./pages/receptionist/departments/Departments.jsx";
 import DepartDetails from "./pages/receptionist/departments/DepartDetails/DepartDetails.jsx";
@@ -93,6 +93,7 @@ function App() {
   ].includes(location.pathname);
 
   const isHomePage = "/".includes(location.pathname);
+  const isIpdRoute = location.pathname.startsWith("/ipd");
 
   useEffect(() => {
     if (location.pathname === "/" || location.pathname === "/ipd") {
@@ -104,16 +105,15 @@ function App() {
     <>
       <ToastContainer />
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
-        {shouldShowSidebar && (
+        {shouldShowSidebar && !isIpdRoute && (
           <div
             style={{
               width: "20%",
               backgroundColor: "white",
               height: "100vh",
               position: "fixed",
-              top: 0, // Ensure it sticks to the top
-              left: 0, // Position it on the left side
-              // overflowY: "auto", // Allows scrolling inside the sidebar if needed
+              top: 0,
+              left: 0,
             }}
           >
             {!isHomePage && (
@@ -121,11 +121,8 @@ function App() {
                 <Logo />
               </div>
             )}
-            {!isLoginPage && (
-              <div>
-                <Sidebar role={role} />
-              </div>
-            )}
+
+            {!isLoginPage && <Sidebar role={role} />}
           </div>
         )}
 
@@ -142,7 +139,7 @@ function App() {
               isSignUpOrLogin ? styles.loginPageActive : styles.otherPages
             }`}
             style={{
-              marginLeft: shouldShowSidebar ? "20%" : "0",
+              marginLeft: shouldShowSidebar && !isIpdRoute ? "20%" : "0",
               height: "100%",
               overflow: "auto",
             }} // Prevent content from going under the sidebar
@@ -210,8 +207,8 @@ function App() {
                 }
               />
 
-                {/* Bot new changes */}
-                <Route
+              {/* Bot new changes */}
+              <Route
                 path="/receptionist/bot"
                 element={
                   <ProtectedRoute allowedRoles={["receptionist"]}>

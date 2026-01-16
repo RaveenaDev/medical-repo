@@ -121,7 +121,7 @@
 
         .billing-amount-details {
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
           gap: 0rem;
           padding: 1.5rem;
           justify-items: center;
@@ -129,7 +129,13 @@
           div {
             display: flex;
             flex-direction: column;
+
             gap: 0.5rem;
+
+            div {
+              flex-direction: row;
+              align-items: center;
+            }
           }
         }
 
@@ -249,6 +255,7 @@
 .billing-edited-save-btn {
   display: flex;
   justify-content: center;
+  gap: 2vw;
   margin: 2vh;
   button {
     background-color: #25307f;
@@ -352,7 +359,7 @@
 .no-records {
   text-align: center;
   color: #555;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   margin-top: 2rem;
 }
 
@@ -362,11 +369,33 @@
   font-weight: bold;
   padding-bottom: 0.5rem;
 }
-
+.refund-list-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  font-weight: bold;
+  padding-bottom: 0.5rem;
+}
 .payment-heading {
   font-size: 1.25rem;
   font-weight: bold;
 }
+.refund-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  .print-refund-btn {
+    background-color: #25307f;
+    color: white;
+    width: fit-content;
+    border: none;
+    padding: 0.5vh 1vw;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75vw;
+  }
+}
+
 .billing-insurance-details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -387,5 +416,17 @@
       font-weight: 600;
       color: #000;
     }
+  }
+}
+
+.noBill {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  p {
+    font-size: 3vh;
+    color: #25307f;
+    font-weight: 600;
   }
 }

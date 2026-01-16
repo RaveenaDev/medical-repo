@@ -125,6 +125,8 @@ const Login = (props) => {
       navigate("/admin");
     } else if (auth?.role === "doctor") {
       navigate("/doctor");
+    } else if (auth?.role === "staff") {
+      navigate("/ipd");
     }
   }, [auth?.role, navigate]);
 

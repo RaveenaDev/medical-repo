@@ -58,7 +58,7 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
   };
 
   const patientDetails = useSelector((store) => store.doctor.patientDetails);
-  console.log("patientDetails: ", patientDetails);
+  // console.log("patientDetails: ", patientDetails);
   // Check if there's a stored value in localStorage on initial load
   const savedStatus = localStorage.getItem(`status-${patientId}`);
 
@@ -79,6 +79,49 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
     setOpenStatus(false);
 
     dispatch(updatePatientStatus(patientId, status));
+  };
+  const formatDate = (iso) => {
+    if (!iso) return "N/A";
+    const d = new Date(iso);
+    return isNaN(d) ? "N/A" : d.toLocaleDateString("en-IN");
+  };
+
+  const patientInfo = {
+    /* ---------- Identity ---------- */
+    id: patientDetails?.patId ?? "N/A",
+
+    name: patientDetails?.name ?? "Unknown Patient",
+
+    gender: patientDetails?.gender ?? "N/A",
+
+    age: patientDetails?.age ?? patientDetails?.Age ?? "N/A",
+
+    /* ---------- Hospital / Admission ---------- */
+    admissionDate: formatDate(patientDetails?.admissionDate) || "N/A",
+
+    admissionStatus: patientDetails?.admissionStatus ?? "N/A",
+
+    typeVisit: patientDetails?.typeVisit ?? "N/A",
+
+    hospitalId: patientDetails?.hospital ?? "N/A",
+
+    /* ---------- Medical Context ---------- */
+    condition: patientDetails?.condition ?? "Not specified",
+
+    healthStatus: patientDetails?.healthStatus ?? "N/A",
+
+    /* ---------- Doctor / Care ---------- */
+    doctorName: patientDetails?.createdByName ?? "N/A",
+
+    /* ---------- Contact ---------- */
+    contact: patientDetails?.phone ?? patientDetails?.contact ?? "N/A",
+
+    emergencyContact: patientDetails?.emergencyContact ?? "N/A",
+
+    /* ---------- Clinical Meta ---------- */
+    mrn: patientDetails?.MRN ?? "N/A",
+
+    bloodGroup: patientDetails?.bloodGroup ?? "N/A",
   };
 
   return (
@@ -403,9 +446,15 @@ const PatientProfile = ({ patientId, isFollowUpStatus }) => {
           </div>
           <div className={styles.content}>
             {activeTab === "medical admin" && (
-              <MedAdminRecord patientId={patientId} caseId={caseId} />
+              <MedAdminRecord
+                patientId={patientId}
+                caseId={caseId}
+                patientInfo={patientInfo}
+              />
             )}
-            {activeTab === "nursing" && <Nursing patientId={patientId} />}
+            {activeTab === "nursing" && (
+              <Nursing patientId={patientId} patientDetails={patientInfo} />
+            )}
             {activeTab === "past reports" && (
               <PastReportsAndDischarge patientId={patientId} />
             )}

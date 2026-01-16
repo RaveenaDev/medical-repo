@@ -10,6 +10,7 @@ import {
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   ADD_TO_BILL,
+  CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
   DELETE_ROOM,
@@ -55,6 +56,10 @@ import {
   GET_WAITING_APPOINTMENTS,
   LOADING_PATIENTS,
   NULL_ESTIMATED_BILL,
+  SEARCH_SERVICE_SUBCATEGORIES,
+  TPA_FAIL,
+  TPA_REQUEST,
+  TPA_SUCCESS,
   UPDATE_ADMISSION_INSURANCE,
   UPDATE_DOCTORS,
   UPDATE_EXPENSE,
@@ -129,6 +134,10 @@ const initialState = {
   isLoadingDoctors: false,
   isLoadingStaffs: false,
   isLoadingRooms: false,
+  tpaloading: false,
+  tpadata: null,
+  tpaerror: null,
+  serviceSearch: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -657,10 +666,25 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         billingRecord: action.payload.bill,
       };
-    case ADD_TO_BILL:
+
+    case TPA_REQUEST:
+      return { ...state, tpaloading: true, tpaerror: null };
+
+    case TPA_SUCCESS:
+      return { ...state, tpaloading: false, tpadata: action.payload };
+
+    case TPA_FAIL:
+      return { ...state, tpaloading: false, tpaerror: action.payload };
+    case SEARCH_SERVICE_SUBCATEGORIES:
       return {
         ...state,
-        billingRecord: action.payload.bill,
+        serviceSearch: action.payload,
+      };
+
+    case CLEAR_SERVICE_SUBCATEGORIES:
+      return {
+        ...state,
+        serviceSearch: [],
       };
     default:
       return state;

@@ -74,7 +74,6 @@ const Patients = () => {
             <span>Phone No.</span>
             <span>Policy No.</span>
             <span>Company</span>
-
             <span>Status</span>
             <span></span>
           </div>

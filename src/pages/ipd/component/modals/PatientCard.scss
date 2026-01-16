@@ -1,0 +1,114 @@
+.patientCard {
+  background: #f2f5ff;
+  border-radius: 5px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+
+  .patientInfo {
+    .patientHeader {
+      display: flex;
+
+      justify-content: space-between;
+    }
+    .patientDetailsContainer {
+      display: flex;
+      align-items: center;
+
+      .patientAvatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+
+        margin-right: 10px;
+      }
+      .patientName {
+        font-family: "Karla", "sans-serif";
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #000000;
+        margin-bottom: 5px;
+      }
+      .patientAge {
+        font-family: "Karla", "sans-serif";
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #333333;
+      }
+    }
+    .patientCardDetails {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-family: "Karla", "sans-serif";
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      vertical-align: middle;
+      color: #333333;
+
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .reason-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px; // Adjust to suit layout
+        display: inline-block;
+        text-align: right;
+      }
+    }
+  }
+
+  .actionButtons {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .statusDot {
+    width: 17px; /* base size */
+    height: 17px;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Outer circle by type (used only if healthStatus !== Critical) */
+  .followup {
+    background-color: #2e823b; // green
+  }
+
+  .admitted-followup {
+    background-color: #eaa000; // orange
+  }
+  .admitted {
+    background-color: #eaa000; // orange
+  }
+
+  /* Outer circle override if Critical */
+  .critical-outer {
+    background-color: #e5b5b8; // redish outer
+  }
+
+  /* Red inner circle */
+  .innerCircle {
+    width: 9px;
+    height: 9px;
+    background-color: #f44336;
+    border-radius: 50%;
+  }
+}

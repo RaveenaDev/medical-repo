@@ -4,6 +4,7 @@ import {
   ADD_ROOM,
   ADD_TO_BILL,
   BOOK_APPOINTMENT,
+  CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_ROOM,
   EDIT_BILL,
   GET_ALL_DEPARTMENTS,
@@ -38,6 +39,7 @@ import {
   LOADING_PATIENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
+  SEARCH_SERVICE_SUBCATEGORIES,
   SET_LOADING_APPOINTMENTS,
   START_CONSULTATION,
   SUBMIT_CONSULTATION,
@@ -904,6 +906,30 @@ export const addToBill = (payload, id) => async (dispatch) => {
     toast.error(error?.response?.data?.message || "Add failed");
   }
 };
+export const addDiscount = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(
+      `${API_URL}/applyDiscount/${id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    // console.log("Discount Bill Response:", data);
+
+    toast.success("Discount added to bill successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Error adding Discount to bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
 export const editBill = (payload, id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1045,6 +1071,60 @@ export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
     toast.error("Failed to add payment. Please try again.", {
       position: "bottom-right",
       autoClose: 2000,
+    });
+  }
+};
+export const refundBill = (payload, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.post(`${API_URL}/refundBill/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // dispatch({ type: ADD_TO_BILL, payload: data });
+    console.log("REFUND Bill Response:", data);
+    toast.success("Bill refunded successfully!", {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+
+    //  dispatch to refresh data
+    dispatch(getBillDetails(id));
+  } catch (error) {
+    console.error("Error refunding bill:", error);
+    toast.error(error?.response?.data?.message || "Add failed");
+  }
+};
+
+export const searchServiceSubCategories = (query) => async (dispatch) => {
+  try {
+    if (!query || query.length < 2) {
+      dispatch({ type: CLEAR_SERVICE_SUBCATEGORIES });
+      return;
+    }
+
+    const token = localStorage.getItem("jwt");
+
+    const { data } = await axios.get(`${API_URL}/searchServiceSubCategories`, {
+      params: { query },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Search Results:", data);
+
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: data?.results || [],
+    });
+  } catch (error) {
+    console.error("Search service subcategories error:", error);
+    dispatch({
+      type: SEARCH_SERVICE_SUBCATEGORIES,
+      payload: [],
     });
   }
 };

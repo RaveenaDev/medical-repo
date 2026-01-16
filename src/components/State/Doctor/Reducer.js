@@ -1,6 +1,7 @@
 import {
   ADD_PROGRESS_TRACKER_PHASE,
   APPROVE_APPOINTMENT,
+  CLEAR_SERVICE_SUBCATEGORIES,
   CREATE_DOCTOR_NOTE,
   CREATE_DOCTOR_REQUESTS,
   CREATE_NEW_CONSULTATION_FORM,
@@ -12,6 +13,7 @@ import {
   GET_ADMITTED_PATIENTS,
   GET_ALL_DEPARTMENTS,
   GET_ALL_DOCTORS,
+  GET_ALL_STAFF,
   GET_ALL_USER_CONSULTATION_FORMS,
   GET_APPOINTMENT_HISTORY,
   GET_APPOINTMENT_REQUESTS,
@@ -21,6 +23,7 @@ import {
   GET_APPROVED_ADMISSIONS,
   GET_AVAILABLE_BEDS,
   GET_AVAILABLE_ROOMS,
+  GET_BILL_DETAILS,
   GET_COMPLETED_APPOINTMENTS,
   GET_CRITICAL_PATIENTS,
   GET_DOCTOR_NOTES,
@@ -38,6 +41,7 @@ import {
   GET_MONTHLY_EVENTS,
   GET_MOST_COMMON_DIAGNOSIS,
   GET_ONGOING_APPOINTMENTS,
+  GET_ONGOING_BILL,
   GET_PATIENT_BED_INFO,
   GET_PATIENT_BILLS,
   GET_PATIENT_DETAILS_BY_PAT_ID,
@@ -61,6 +65,7 @@ import {
   LOADING_ROOMS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
+  SEARCH_SERVICE_SUBCATEGORIES,
   SUBMIT_CONSULTATION,
   UPDATE_ADMISSION_INSURANCE,
 } from "./ActionType.js";
@@ -120,6 +125,7 @@ const initialState = {
   isLoadingDoctors: true,
   doctorsByDepartment: [],
   staff: [],
+  allStaff: [],
   isLoadingStaffs: true,
   inventoryData: [],
   isLoadingInventoryData: true,
@@ -161,6 +167,10 @@ const initialState = {
   bedsAvailable: [],
   autoCompletePatientSearch: [],
   isLoadingAppointments: true,
+  billingRecord: null,
+  serviceSearch: [],
+  ongoingBill: null,
+  isLoadingPatientBill: true,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -257,7 +267,11 @@ export const doctorReducer = (state = initialState, action) => {
         staff: action.payload.staff,
         isLoadingStaffs: false,
       };
-
+    case GET_ALL_STAFF:
+      return {
+        ...state,
+        allStaff: action.payload.staff,
+      };
     case GET_INVENTORY_DATA:
       return {
         ...state,
@@ -579,6 +593,29 @@ export const doctorReducer = (state = initialState, action) => {
         admissionRequests: state.admissionRequests.map((request) =>
           request._id === action.payload._id ? action.payload : request
         ),
+      };
+
+    case GET_BILL_DETAILS:
+      return {
+        ...state,
+        billingRecord: action.payload,
+        isLoadingPatientBill: false,
+      };
+    case SEARCH_SERVICE_SUBCATEGORIES:
+      return {
+        ...state,
+        serviceSearch: action.payload,
+      };
+
+    case CLEAR_SERVICE_SUBCATEGORIES:
+      return {
+        ...state,
+        serviceSearch: [],
+      };
+    case GET_ONGOING_BILL:
+      return {
+        ...state,
+        ongoingBill: action.payload,
       };
     default:
       return state;

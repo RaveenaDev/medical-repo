@@ -4,6 +4,7 @@ import {
   ADD_ROOM,
   ADD_TO_BILL,
   BOOK_APPOINTMENT,
+  CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_ROOM,
   EDIT_BILL,
   GET_ALL_DEPARTMENTS,
@@ -39,6 +40,7 @@ import {
   LOADING_PATIENTS,
   REJECT_APPOINTMENT_REQUESTS,
   REMOVE_BOOK_APPOINTMENT_DATA,
+  SEARCH_SERVICE_SUBCATEGORIES,
   SET_LOADING_APPOINTMENTS,
   UPDATE_PATIENT,
   UPDATE_ROOM,
@@ -101,6 +103,7 @@ const initialState = {
   patientFiles: [],
   servicesByDepartment: [],
   billingRecord: null,
+  serviceSearch: [],
 };
 
 export const receptionistReducer = (state = initialState, action) => {
@@ -405,7 +408,17 @@ export const receptionistReducer = (state = initialState, action) => {
         ...state,
         billingRecord: action.payload.bill,
       };
+    case SEARCH_SERVICE_SUBCATEGORIES:
+      return {
+        ...state,
+        serviceSearch: action.payload,
+      };
 
+    case CLEAR_SERVICE_SUBCATEGORIES:
+      return {
+        ...state,
+        serviceSearch: [],
+      };
     default:
       return state;
   }

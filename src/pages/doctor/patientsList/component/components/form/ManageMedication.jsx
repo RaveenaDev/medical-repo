@@ -3,6 +3,7 @@ import styles from "./ManageMedication.module.scss";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import {
+  getAllStaff,
   getStaff,
   updateMedicationAdministration,
 } from "../../../../../../components/State/Doctor/Action";
@@ -16,10 +17,11 @@ const ManageMedication = ({ onClose, recordId, patientId, caseId }) => {
   const [notes, setNotes] = useState("");
   const [givenBy, setGivenBy] = useState("");
   useEffect(() => {
-    dispatch(getStaff());
+    dispatch(getAllStaff());
   }, []);
 
-  const staff = useSelector((state) => state.doctor.staff);
+  const staff = useSelector((state) => state.doctor.allStaff);
+  // console.log("STAFF", staff);
   const handleAction = async (actionType) => {
     try {
       const body = {
@@ -40,7 +42,8 @@ const ManageMedication = ({ onClose, recordId, patientId, caseId }) => {
           toast.error("Please select both new date and time");
           return;
         }
-        body.newTime = combineDateAndTimeString(newDate, newTime);
+        body.newDate = newDate;
+        body.newTime = newTime;
         if (notes.trim()) body.notes = notes.trim();
       }
 
@@ -107,7 +110,7 @@ const ManageMedication = ({ onClose, recordId, patientId, caseId }) => {
             <div className={styles.part1}>
               <div className={styles.part1Left}>
                 <label className={styles.label2}>Given By</label>
-                <label className={styles.label2}>Notes</label>
+                <label className={styles.label2}>Special Instructions</label>
               </div>
               <div className={styles.part1Right}>
                 <select

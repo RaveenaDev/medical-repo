@@ -10,14 +10,17 @@ import {
   Calendar,
   AlertTriangle,
   Plus,
+  Printer,
 } from "lucide-react";
 import UpdateNursing from "./form/UpdateNursing";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientVitals } from "../../../../../components/State/Doctor/Action";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import printJS from "print-js";
+import PrintVitals from "./printVitals/PrintVitals";
 
-const Nursing = ({ patientId }) => {
+const Nursing = ({ patientId, patientDetails }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -89,11 +92,84 @@ const Nursing = ({ patientId }) => {
     return units[key] || "";
   };
 
+  const handlePrintVitals = () => {
+    printJS({
+      printable: "print-vitals",
+      type: "html",
+      scanStyles: false,
+      style: `
+      @page { size: A4; margin: 6mm; }
+
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        color: #000;
+      }
+
+      .pv-wrap {
+        border: 1px solid #000;
+        padding: 8px;
+      }
+
+      .pv-header h2 {
+        text-align: center;
+        font-size: 14px;
+        margin: 0 0 6px;
+      }
+
+      .pv-info {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        border: 1px solid #000;
+        padding: 6px;
+        margin-bottom: 8px;
+      }
+
+      .pv-info span {
+        font-size: 9px;
+        color: #444;
+      }
+
+      .pv-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .pv-table th,
+      .pv-table td {
+        border: 1px solid #000;
+        padding: 4px 6px;
+        font-size: 10px;
+        text-align: center;
+      }
+
+      .pv-table th {
+        background: #f3f3f3;
+        font-weight: 600;
+      }
+    `,
+    });
+  };
+
   return (
     <div className={styles.container}>
       <header>
         <p>Vitals Tracker</p>
+
+        {/* Hidden print container */}
+        <div style={{ display: "none" }}>
+          <PrintVitals
+            patient={patientDetails}
+            vitals={patientVitals}
+            vitalKeys={allVitalKeys}
+          />
+        </div>
+
         <div className={styles.buttons}>
+          <button className={styles.printBtn} onClick={handlePrintVitals}>
+            <Printer size={"2vh"} /> Print Vitals
+          </button>
           <button className={styles.updateBtn} onClick={openUpdate}>
             <Plus style={{ height: "2.2vh" }} />
             Record New Vitals
@@ -105,7 +181,11 @@ const Nursing = ({ patientId }) => {
         <>
           <div className={styles.backdropOverlay} onClick={closeModal} />
           <div className={styles.updateModal}>
-            <UpdateNursing onClose={closeModal} patientId={patientId} />
+            <UpdateNursing
+              onClose={closeModal}
+              patientId={patientId}
+              vitalDefinitions={allVitalKeys}
+            />
           </div>
         </>
       )}
