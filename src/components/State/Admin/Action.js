@@ -159,11 +159,16 @@ export const addDoctor = (doctorData) => async (dispatch) => {
   try {
     dispatch({ type: "LOADING_DOCTORS", payload: true });
     const token = localStorage.getItem("jwt");
+
+    const hospitalName = localStorage.getItem("hospitalName");
+
+    const payload = { ...doctorData, hospitalName: hospitalName };
+
     if (!token) {
       throw new Error("Authorization token is missing");
     }
 
-    const response = await axios.post(`${API_URL}/register`, doctorData, {
+    const response = await axios.post(`${API_URL}/register`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
