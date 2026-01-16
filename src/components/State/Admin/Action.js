@@ -175,7 +175,7 @@ export const addDoctor = (doctorData) => async (dispatch) => {
       },
     });
 
-    dispatch({ type: ADD_DOCTORS, payload: response.data });
+    dispatch(getDoctors());
 
     toast.success("Doctor Added Successfully!", {
       position: "bottom-right", // Use string for position
@@ -206,7 +206,7 @@ export const updateDoctor = (doctorId, updatedData) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: UPDATE_DOCTORS, payload: data });
+    dispatch(getDoctors());
 
     toast.success("Doctor Updated Successfully!", {
       position: "bottom-right", // Use string for position
@@ -232,7 +232,7 @@ export const deleteDoctor = (doctorId) => async (dispatch) => {
         Authorization: `Bearer ${token}`, // Includes the token in the authorization header
       },
     });
-    dispatch({ type: DELETE_DOCTORS, payload: data });
+    dispatch(getDoctors());
     toast.success("Doctor Deleted Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
