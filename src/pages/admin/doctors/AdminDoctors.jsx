@@ -69,7 +69,7 @@ const AdminDoctors = (props) => {
     profile: "s",
     name: "",
     email: "",
-    password: "",
+
     phone: "",
     specialization: "",
     status: "",
@@ -134,7 +134,7 @@ const AdminDoctors = (props) => {
         profile: selectedDoctor.profile,
         name: selectedDoctor.name,
         email: selectedDoctor.email,
-        password: selectedDoctor.password,
+
         phone: selectedDoctor.phone,
         specialization: selectedDoctor.specialization,
         status: selectedDoctor.status,
