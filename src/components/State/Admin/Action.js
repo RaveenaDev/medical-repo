@@ -38,6 +38,7 @@ import {
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_EARNINGS,
+  GET_EARNINGS_GRAPH,
   GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
@@ -79,7 +80,7 @@ export const getEarnings =
     try {
       const token = localStorage.getItem("jwt");
 
-      const { data } = await axios.get(`${API_URL}/reports/doctors/`, {
+      const { data } = await axios.get(`${API_URL}/reports/doctors/earnings`, {
         params,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -94,6 +95,30 @@ export const getEarnings =
       return data;
     } catch (error) {
       console.error("Get earnings error:", error);
+      throw error;
+    }
+  };
+export const getGraphData =
+  (params = {}) =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/earningsOverviewReport`, {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(data);
+      dispatch({
+        type: GET_EARNINGS_GRAPH,
+        payload: data,
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Get earnings graph error:", error);
       throw error;
     }
   };

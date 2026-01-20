@@ -15,6 +15,7 @@ import {
   getAllDepartments,
   getBillingRecords,
   getDoctors,
+  getGraphData,
   getPatients,
   getRooms,
   getStaffs,
@@ -59,9 +60,12 @@ const CommonPanel = ({
     dispatch(getRooms());
     dispatch(getAllDepartments());
     dispatch(getBillingRecords());
+    dispatch(getGraphData());
   }, [dispatch]);
 
   const admin = useSelector((store) => store.admin);
+
+  const totalEarnings = admin.totalEarnings;
 
   const noOfDoctors = admin.totalDoctors;
   const doctors = admin.doctors;
@@ -167,7 +171,7 @@ const CommonPanel = ({
           >
             <Card
               title="Total Earnings"
-              subtitle="80000"
+              subtitle={totalEarnings ?? 0}
               handleClickCb={() => navigate(`/admin/earnings`)}
             />
           </Grid>

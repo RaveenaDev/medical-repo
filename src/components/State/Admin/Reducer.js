@@ -34,6 +34,7 @@ import {
   GET_DOCTOR_REQUESTS,
   GET_DOCTORS,
   GET_EARNINGS,
+  GET_EARNINGS_GRAPH,
   GET_ESTIMATED_BILL,
   GET_EXPENSES,
   GET_FILTERED_DOCTORS,
@@ -138,6 +139,10 @@ const initialState = {
   tpadata: null,
   tpaerror: null,
   serviceSearch: [],
+  cardPatients: [],
+  cardEarnings: [],
+  graphEarnings: [],
+  graphPatients: [],
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -145,8 +150,16 @@ export const adminReducer = (state = initialState, action) => {
     case GET_EARNINGS:
       return {
         ...state,
-        totalEarnings: action.payload.totalRevenue,
         monthlyEarnings: action.payload.monthlyRevenue,
+      };
+    case GET_EARNINGS_GRAPH:
+      return {
+        ...state,
+        totalEarnings: action.payload.earnings?.totalEarnings,
+        graphEarnings: action.payload.trends?.earnings,
+        graphPatients: action.payload.trends?.patients,
+        cardEarnings: action.payload.earnings,
+        cardPatients: action.payload.patients,
       };
     case GET_APPOINTMENT_COUNTS:
       return {
@@ -183,7 +196,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         doctors: state.doctors.filter(
-          (doctor) => doctor._id !== action.payload.resource._id
+          (doctor) => doctor._id !== action.payload.resource._id,
         ),
         totalDoctors: state.totalDoctors - 1,
       };
@@ -193,7 +206,7 @@ export const adminReducer = (state = initialState, action) => {
         doctors: state.doctors.map((doctor) =>
           doctor._id === action.payload.resource._id
             ? action.payload.resource
-            : doctor
+            : doctor,
         ),
       };
     case GET_ALL_DEPARTMENTS:
@@ -299,7 +312,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         staffs: state.staffs.filter(
-          (staff) => staff._id !== action.payload.resource._id
+          (staff) => staff._id !== action.payload.resource._id,
         ),
         totalStaffs: state.totalStaffs - 1,
       };
@@ -358,7 +371,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         rooms: state.rooms.filter(
-          (room) => room._id !== action.payload.resource._id
+          (room) => room._id !== action.payload.resource._id,
         ),
         totalRooms: state.totalRooms - 1,
       };
@@ -389,7 +402,7 @@ export const adminReducer = (state = initialState, action) => {
         expenses: state.expenses.map((expense) =>
           expense._id === action.payload.resource._id
             ? action.payload.resource
-            : expense
+            : expense,
         ),
       };
 
@@ -397,7 +410,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         expenses: state.expenses.filter(
-          (expense) => expense._id !== action.payload.resource._id
+          (expense) => expense._id !== action.payload.resource._id,
         ),
       };
     case GET_BILLING_RECORDS:
@@ -478,7 +491,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         services: state.services.filter(
-          (service) => service._id !== action.payload
+          (service) => service._id !== action.payload,
         ),
       };
 
@@ -490,10 +503,10 @@ export const adminReducer = (state = initialState, action) => {
             ? {
                 ...service,
                 categories: service.categories.filter(
-                  (category) => category._id !== action.payload.categoryId
+                  (category) => category._id !== action.payload.categoryId,
                 ),
               }
-            : service
+            : service,
         ),
       };
 
@@ -513,7 +526,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         doctorRequests: state.doctorRequests.filter(
-          (request) => request._id !== action.payload
+          (request) => request._id !== action.payload,
         ),
       };
 
@@ -545,7 +558,7 @@ export const adminReducer = (state = initialState, action) => {
         insuranceCompanies: state.insuranceCompanies.map((company) =>
           company._id === action.payload._id
             ? { ...company, services: action.payload.services }
-            : company
+            : company,
         ),
       };
 
@@ -561,13 +574,13 @@ export const adminReducer = (state = initialState, action) => {
                     ? {
                         ...service,
                         categories: service.categories.filter(
-                          (cat) => cat._id !== action.payload.categoryId
+                          (cat) => cat._id !== action.payload.categoryId,
                         ),
                       }
-                    : service
+                    : service,
                 ),
               }
-            : company
+            : company,
         ),
       };
 
@@ -579,10 +592,10 @@ export const adminReducer = (state = initialState, action) => {
             ? {
                 ...company,
                 services: company.services.filter(
-                  (service) => service._id !== action.payload.serviceId
+                  (service) => service._id !== action.payload.serviceId,
                 ),
               }
-            : company
+            : company,
         ),
       };
 
@@ -596,10 +609,10 @@ export const adminReducer = (state = initialState, action) => {
                 services: company.services.map((service) =>
                   service._id === action.payload.updatedService._id
                     ? action.payload.updatedService // replace with updated service from backend
-                    : service
+                    : service,
                 ),
               }
-            : company
+            : company,
         ),
       };
 
@@ -653,7 +666,7 @@ export const adminReducer = (state = initialState, action) => {
       return {
         ...state,
         admissionRequests: state.admissionRequests.map((request) =>
-          request._id === action.payload._id ? action.payload : request
+          request._id === action.payload._id ? action.payload : request,
         ),
       };
     case ADD_PAYMENT_TO_BILL:
