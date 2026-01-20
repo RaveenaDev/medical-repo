@@ -8,6 +8,7 @@ import {
   CREATE_NEW_EVENT,
   GENERATE_NEW_PRESCRIPTIONS_WITH_AI,
   GENERATE_PRESCRIPTIONS_WITH_AI,
+  GET_ADMISSION_FORMS,
   GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_TO_APPROVE,
   GET_ADMITTED_PATIENTS,
@@ -171,6 +172,9 @@ const initialState = {
   serviceSearch: [],
   ongoingBill: null,
   isLoadingPatientBill: true,
+  admissionForms: [],
+  admissionFormsCount: null,
+  isLoadingGetAdmissionForms: false,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -417,7 +421,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentRequests: state.appointmentRequests.filter(
-          (request) => request._id !== action.payload
+          (request) => request._id !== action.payload,
         ),
       };
 
@@ -425,7 +429,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentRequests: state.appointmentRequests.filter(
-          (request) => request._id !== action.payload
+          (request) => request._id !== action.payload,
         ),
       };
 
@@ -591,7 +595,7 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         admissionRequests: state.admissionRequests.map((request) =>
-          request._id === action.payload._id ? action.payload : request
+          request._id === action.payload._id ? action.payload : request,
         ),
       };
 
@@ -616,6 +620,13 @@ export const doctorReducer = (state = initialState, action) => {
       return {
         ...state,
         ongoingBill: action.payload,
+      };
+    case GET_ADMISSION_FORMS:
+      return {
+        ...state,
+        admissionForms: action.payload.requests,
+        admissionFormsCount: action.payload.totalRequests,
+        isLoadingGetAdmissionForms: false,
       };
     default:
       return state;

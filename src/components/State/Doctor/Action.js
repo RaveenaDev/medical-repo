@@ -18,6 +18,7 @@ import {
   EDIT_DOCTOR_NOTE,
   GENERATE_NEW_PRESCRIPTIONS_WITH_AI,
   GENERATE_PRESCRIPTIONS_WITH_AI,
+  GET_ADMISSION_FORMS,
   GET_ADMISSION_REQUESTS,
   GET_ADMISSION_REQUESTS_TO_APPROVE,
   GET_ADMITTED_PATIENTS,
@@ -426,7 +427,7 @@ export const approveAppointment = (appointmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Approved Successfully : ", data);
@@ -457,7 +458,7 @@ export const rejectAppointment = (appointmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Rejected Successfully : ", data);
@@ -664,7 +665,7 @@ export const getDoctorsByDepartment = () => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     dispatch({ type: GET_DOCTORS, payload: data });
@@ -684,7 +685,7 @@ export const getDoctorsByDepartment1 = (departId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     dispatch({ type: GET_DOCTORS_BY_DEPARTMENT1, payload: data });
@@ -706,7 +707,7 @@ export const getStaff = () => async (dispatch) => {
         params: {
           departmentId,
         },
-      }
+      },
     );
 
     dispatch({ type: GET_STAFF, payload: data });
@@ -744,7 +745,7 @@ export const getInventoryData = () => async (dispatch) => {
         params: {
           departmentId,
         },
-      }
+      },
     );
 
     dispatch({ type: GET_INVENTORY_DATA, payload: data });
@@ -764,7 +765,7 @@ export const assignPatient = (assignmentData) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     // console.log("Created New Assignment:", data);
@@ -831,7 +832,7 @@ export const editDoctorNote = (updatedNote, noteId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Edited Doctor Note: ", data);
@@ -878,7 +879,7 @@ export const createCategory = (categoryData) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     toast.success("Category created successfully!", {
       position: "bottom-right",
@@ -1003,7 +1004,7 @@ export const generatePrescriptionsWithAI =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       // console.log("Generated With AI : ", data.data);
@@ -1057,7 +1058,7 @@ export const deleteInventoryItem = (itemId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     toast.success("Item Deleted successfully!", {
       position: "bottom-right",
@@ -1085,7 +1086,7 @@ export const updateInventoryItem = (itemId, itemData) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     toast.success("Item Updated successfully!", {
       position: "bottom-right",
@@ -1158,7 +1159,7 @@ export const getProgressTrackerDetails =
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       // console.log("Progress Tracker: ", data);
@@ -1182,7 +1183,7 @@ export const submitConsultation =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       console.log("Consultation from Backend : ", data);
@@ -1269,7 +1270,7 @@ export const createAdmissionRequest =
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       // dispatch({ type: CREATE_ADMISSION_REQUEST, payload: data.request });
@@ -1284,7 +1285,7 @@ export const createAdmissionRequest =
     } catch (error) {
       console.error(
         "Error creating admission request:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
       toast.error("Failed to create admission request", {
         position: "bottom-right",
@@ -1370,7 +1371,7 @@ export const createNewConsultationForm =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       // console.log("Consultation Template Creation from Backend : ", data);
@@ -1419,7 +1420,7 @@ export const admitPatient = (requestId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     // console.log("Patient Admitted Successfully", data);
@@ -1446,7 +1447,7 @@ export const getPatientVitals = (patientId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("Patient Vitals:", data);
 
@@ -1468,7 +1469,7 @@ export const recordPatientVitals = (vitalsPayload) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("vitals recorded", data);
     dispatch(getPatientVitals(patient));
@@ -1490,7 +1491,7 @@ export const getPatientHistory = (patientId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("History:", data);
     dispatch({ type: GET_PATIENT_HISTORY, payload: data.history });
@@ -1512,7 +1513,7 @@ export const getPatientMedicalRecords = (patientId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("getMedicalRecords", data);
     dispatch({ type: GET_PATIENT_MEDICAL_RECORDS, payload: data.records });
@@ -1554,7 +1555,7 @@ export const updateMedicationAdministration =
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       // console.log("Update medicinal administration recorded", data);
       dispatch(getPatientMedicalRecords(patientId));
@@ -1580,7 +1581,7 @@ export const getPatientBedInfo = (patientId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("BED INFO", data);
     dispatch({ type: GET_PATIENT_BED_INFO, payload: data });
@@ -1603,7 +1604,7 @@ export const addProgressTrackerPhase =
             Authorization: `Bearer ${token}`,
             // "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       dispatch({ type: ADD_PROGRESS_TRACKER_PHASE });
@@ -1648,7 +1649,7 @@ export const dischargePatient = (payload) => async (dispatch) => {
 function getFilename(disposition) {
   if (!disposition) return "discharge-summary.pdf";
   const match = /filename\*?=(?:UTF-8'')?["']?([^\"';]+)["']?/i.exec(
-    disposition
+    disposition,
   );
   try {
     return match ? decodeURIComponent(match[1]) : "discharge-summary.pdf";
@@ -1665,7 +1666,7 @@ export const dischargePdfDownload = (dischargeId) => async (dispatch) => {
       {
         headers: { Authorization: `Bearer ${token}` },
         responseType: "blob", // << important
-      }
+      },
     );
 
     // Guard: if server sent JSON error instead of PDF
@@ -1706,7 +1707,7 @@ export const approveAdmissionRequestWithSignature =
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       // console.log("Approval Response:", data);
       toast.success("Approval submitted successfully!", {
@@ -1722,7 +1723,7 @@ export const approveAdmissionRequestWithSignature =
       // Check for specific error code (413)
       if (error?.response?.status === 413) {
         toast.error(
-          "The image being sent is too large. Please reduce the size and try again."
+          "The image being sent is too large. Please reduce the size and try again.",
         );
       } else {
         // Generic error message for other types of errors
@@ -1741,7 +1742,7 @@ export const getAvailableRooms = () => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("ROOM INFO", data);
     dispatch({ type: GET_AVAILABLE_ROOMS, payload: data.rooms });
@@ -1766,7 +1767,7 @@ export const updatePatientStatus = (patientId, status) => async (dispatch) => {
         params: {
           status, // Include status in params if needed
         },
-      }
+      },
     );
     // console.log(data);
     toast.success("Patient status updated Successfully!", {
@@ -1813,7 +1814,7 @@ export const setReschedule = (appointmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Rescheduled app. successful : ", data);
@@ -1841,7 +1842,7 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("Bill INFO", data);
     dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
@@ -1862,7 +1863,7 @@ export const updateProgressTrackerPhase =
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       // console.log("Progress phase UPDATED", data);
       dispatch(getProgressTrackerDetails(patientId, caseId));
@@ -1890,7 +1891,7 @@ export const transferPatientToBed =
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       // console.log("Patient transferred to bed:", data);
@@ -1921,7 +1922,7 @@ export const getPatientDetailsByPatId = (patId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("Patient Details INFO", data);
     dispatch({ type: GET_PATIENT_DETAILS_BY_PAT_ID, payload: data });
@@ -1944,7 +1945,7 @@ export const addInsuranceAfterAdmission =
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       // console.log("Response after adding insurance:", data);
@@ -1982,6 +1983,31 @@ export const getAdmissionRequests =
       console.log("Admission Requests:", data);
 
       dispatch({ type: GET_ADMISSION_REQUESTS, payload: data });
+    } catch (error) {
+      console.error("Error fetching admission requests:", error);
+    }
+  };
+
+export const getAdmissionRequestsAll =
+  (search, page, rowsPerPage) => async (dispatch) => {
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequestsAll`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          search: search,
+          page: page + 1,
+          limit: rowsPerPage,
+        }, // Only send if provided
+      });
+
+      // console.log("Admission Requests:", data);
+
+      dispatch({ type: GET_ADMISSION_FORMS, payload: data });
     } catch (error) {
       console.error("Error fetching admission requests:", error);
     }
@@ -2082,7 +2108,7 @@ export const addDiscount = (payload, id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     // console.log("Discount Bill Response:", data);
 
@@ -2106,7 +2132,7 @@ export const editBill = (payload, id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     // console.log("Edit Bill Response:", data);
     toast.success("Bill edited successfully!", {
@@ -2209,7 +2235,7 @@ export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("Payment Response: ", data);
     // dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });

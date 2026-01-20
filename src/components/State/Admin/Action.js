@@ -137,14 +137,14 @@ export const fetchDoctorsByDepartment =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       dispatch({ type: GET_FILTERED_DOCTORS, payload: data });
     } catch (error) {
       console.error(
         "Error filtering doctor:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
 
       toast.error("Error  filtering Doctor!", {
@@ -184,7 +184,7 @@ export const addDoctor = (doctorData) => async (dispatch) => {
   } catch (error) {
     console.error(
       "Error adding doctor:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
 
     toast.error("Error adding Doctor!", {
@@ -425,7 +425,7 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     dispatch({ type: GET_DEPARTMENT_BY_ID, payload: data });
@@ -444,7 +444,7 @@ export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Services: ",data)
@@ -853,7 +853,7 @@ export const updateService = (updatedData, serviceId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
     // console.log("Updated Service Data:", data);
     dispatch({ type: UPDATE_SERVICE, payload: data });
@@ -881,7 +881,7 @@ export const deleteServiceCategory =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
       dispatch({
         type: DELETE_SERVICE_CATEGORY,
@@ -909,7 +909,7 @@ export const deleteService = (serviceId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
     dispatch({ type: DELETE_SERVICE, payload: serviceId });
     toast.success("Service Deleted Successfully!", {
@@ -1002,7 +1002,7 @@ export const approveAdmissionRequestsAdmin =
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       // console.log("Approval Response:", data);
       toast.success("Approval submitted successfully!", {
@@ -1017,7 +1017,7 @@ export const approveAdmissionRequestsAdmin =
       // Check for specific error code (413)
       if (error?.response?.status === 413) {
         toast.error(
-          "The image being sent is too large. Please reduce the size and try again."
+          "The image being sent is too large. Please reduce the size and try again.",
         );
       } else {
         // Generic error message for other types of errors
@@ -1056,7 +1056,7 @@ export const editBill = (payload, id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     // console.log("Edit Bill Response:", data);
     toast.success("Bill edited successfully!", {
@@ -1158,7 +1158,7 @@ export const addDiscount = (payload, id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     // console.log("Discount Bill Response:", data);
 
@@ -1182,7 +1182,7 @@ export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("Payment Response: ", data);
     dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
@@ -1248,7 +1248,7 @@ export const getInsuredPatients = () => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Data: ",data)
@@ -1278,7 +1278,7 @@ export const updateStatusOfInsuredPatients =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       // console.log("Updated Data: ",data)
@@ -1313,7 +1313,7 @@ export const editInsuredPatients =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       // console.log("Updated Data: ",data)
@@ -1365,7 +1365,7 @@ export const addInsuranceCompany = (formData) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Insurance Company Added : ",data)
@@ -1395,7 +1395,7 @@ export const addServiceToCompany = (id, serviceData) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Service Added To Company : ",data)
@@ -1424,7 +1424,7 @@ export const deleteTPAServiceCategory =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
       dispatch({
         type: DELETE_TPA_SERVICE_CATEGORY,
@@ -1452,7 +1452,7 @@ export const deleteTPAService = (companyId, serviceId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
     dispatch({ type: DELETE_TPA_SERVICE, payload: { companyId, serviceId } });
     toast.success("Service Deleted Successfully!", {
@@ -1479,7 +1479,7 @@ export const editTPAService =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       console.log("Edited Data: ", data);
@@ -1508,7 +1508,7 @@ export const addEstimatedBill = (serviceData) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Backend : ",data)
@@ -1538,7 +1538,7 @@ export const editEstimatedBill = (id, serviceData) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Service Added To Company : ",data)
@@ -1606,7 +1606,7 @@ export const getProgressTrackerDetails =
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       //  console.log("Progress Tracker: ", data);
@@ -1694,7 +1694,7 @@ export const getAdmissionRequests =
     try {
       const token = localStorage.getItem("jwt");
 
-      const { data } = await axios.get(`${API_URL}/getAdmissionRequests`, {
+      const { data } = await axios.get(`${API_URL}/getAdmissionRequestsAll`, {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
@@ -1729,7 +1729,7 @@ export const addInsuranceAfterAdmission =
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       // console.log("Response after adding insurance:", data);
