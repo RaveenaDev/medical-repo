@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./AddmissionForms.module.scss";
 import ActionMenu from "./components/ActionMenu.jsx"; // Custom menu component for actions
 import { Search } from "lucide-react";
-import { getAdmissionRequests } from "../../../../../components/State/Doctor/Action.js";
+import { getAdmissionRequestsAll } from "../../../../../components/State/Doctor/Action.js";
 import useDebounce from "../../../../../hooks/useDebounce.js";
 
 const AdmissionForms = () => {
@@ -32,14 +32,17 @@ const AdmissionForms = () => {
 
   // Redux store: inpatients
   const admin = useSelector((store) => store.doctor);
-  const totalAdmissionRequests = admin.admissionRequestsCount;
-  const admissionRequests = admin.admissionRequests;
-  const isLoadingAdmissionRequests = admin.isLoadingGetAdmissionRequests;
+
+  const totalAdmissionRequests = admin.admissionFormsCount;
+  const admissionRequests = admin.admissionForms;
+  const isLoadingAdmissionRequests = admin.isLoadingGetAdmissionForms;
   const debouncedSearch = useDebounce(searchQuery, 500);
 
   // Fetch patients whenever filters/pagination change
   useEffect(() => {
-    dispatch(getAdmissionRequests(debouncedSearch, page, rowsPerPage, filters));
+    dispatch(
+      getAdmissionRequestsAll(debouncedSearch, page, rowsPerPage, filters),
+    );
   }, [dispatch, debouncedSearch, page, rowsPerPage, filters]);
 
   useEffect(() => {
@@ -156,7 +159,7 @@ const AdmissionForms = () => {
                         <td className={styles.patientId}>
                           {truncateText(
                             patient?.patient?.patId || "Not Assigned",
-                            12
+                            12,
                           )}
                         </td>
                         <td className={styles.patientInfo}>
@@ -165,14 +168,14 @@ const AdmissionForms = () => {
                               {truncateText(
                                 patient?.admissionDetails?.name ||
                                   "Not Assigned",
-                                25
+                                25,
                               )}
                             </div>
                             <div className={styles.patientEmail}>
                               {truncateText(
                                 patient?.admissionDetails?.contact ||
                                   "Not Assigned",
-                                15
+                                15,
                               )}
                             </div>
                           </div>

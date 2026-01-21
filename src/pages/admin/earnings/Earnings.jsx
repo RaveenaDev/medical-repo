@@ -13,7 +13,10 @@ import {
 } from "recharts";
 
 import CommonPanel from "../Components/CommonPanel.jsx";
-import { getEarnings } from "../../../components/State/Admin/Action.js";
+import {
+  getEarnings,
+  getGraphData,
+} from "../../../components/State/Admin/Action.js";
 
 /* ---------------- THEME ---------------- */
 
@@ -23,70 +26,41 @@ const THEME = {
   bg: "#F1F1F1",
 };
 
+const GRAPH_RANGES = [
+  { label: "Today", value: "today" },
+  { label: "Last 7 Days", value: "last_7_days" },
+  { label: "This Week", value: "this_week" },
+  { label: "Last Week", value: "last_week" },
+  { label: "This Month", value: "this_month" },
+  { label: "This Year", value: "this_year" },
+];
+
 /* ---------------- MAIN ---------------- */
 
 const Earnings = ({ setIsSignUpOrLogin }) => {
   const dispatch = useDispatch();
 
-  const [timeFilter, setTimeFilter] = useState("monthly");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  // Graph (charts + summary)
+  const [graphRange, setGraphRange] = useState("this_month");
+
+  // Doctor table
+  const [doctorRange, setDoctorRange] = useState("monthly");
+  const [doctorFromDate, setDoctorFromDate] = useState("");
+  const [doctorToDate, setDoctorToDate] = useState("");
+
   const [search, setSearch] = useState("");
-
-  const applyTimeFilter = (data) => {
-    const now = new Date();
-
-    if (timeFilter === "daily") {
-      return data.filter((d) => d.date.toDateString() === now.toDateString());
-    }
-
-    if (timeFilter === "weekly") {
-      const start = new Date();
-      start.setDate(now.getDate() - 7);
-      return data.filter((d) => d.date >= start && d.date <= now);
-    }
-
-    if (timeFilter === "monthly") {
-      return data.filter(
-        (d) =>
-          d.date.getMonth() === now.getMonth() &&
-          d.date.getFullYear() === now.getFullYear()
-      );
-    }
-
-    if (timeFilter === "custom" && fromDate && toDate) {
-      const from = new Date(fromDate);
-      const to = new Date(toDate);
-      return data.filter((d) => d.date >= from && d.date <= to);
-    }
-
-    return data;
-  };
-  const generateTodayHourlyData = () => {
-    const data = [];
-    const today = new Date();
-
-    for (let h = 0; h < 24; h++) {
-      const date = new Date(today);
-      date.setHours(h, 0, 0, 0);
-
-      data.push({
-        date,
-        label: `${h}:00`,
-        opd: Math.floor(200 + Math.random() * 300),
-        ipd: Math.floor(400 + Math.random() * 600),
-      });
-    }
-
-    return data;
-  };
   const [doctorRows, setDoctorRows] = useState([]);
+
+  // Graphs
+  useEffect(() => {
+    dispatch(getGraphData({ range: graphRange }));
+  }, [graphRange, dispatch]);
 
   useEffect(() => {
     const params = {};
     const now = new Date();
 
-    if (timeFilter === "daily") {
+    if (doctorRange === "daily") {
       const start = new Date();
       start.setHours(0, 0, 0, 0);
 
@@ -97,7 +71,7 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
       params.endDate = end.toISOString();
     }
 
-    if (timeFilter === "weekly") {
+    if (doctorRange === "weekly") {
       const start = new Date();
       start.setDate(now.getDate() - 7);
 
@@ -105,21 +79,21 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
       params.endDate = now.toISOString();
     }
 
-    if (timeFilter === "monthly") {
+    if (doctorRange === "monthly") {
       const start = new Date(now.getFullYear(), now.getMonth(), 1);
 
       params.startDate = start.toISOString();
       params.endDate = now.toISOString();
     }
 
-    if (timeFilter === "yearly") {
+    if (doctorRange === "yearly") {
       const start = new Date(now.getFullYear(), 0, 1);
 
       params.startDate = start.toISOString();
       params.endDate = now.toISOString();
     }
 
-    if (timeFilter === "custom" && fromDate && toDate) {
+    if (doctorRange === "custom" && fromDate && toDate) {
       params.startDate = fromDate;
       params.endDate = toDate;
     }
@@ -127,62 +101,35 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
     dispatch(getEarnings(params)).then((res) => {
       setDoctorRows(res?.doctors || []);
     });
-  }, [timeFilter, fromDate, toDate, dispatch]);
+  }, [doctorRange, doctorFromDate, doctorToDate, dispatch]);
 
   useEffect(() => {
     setIsSignUpOrLogin?.(false);
-  }, [dispatch]);
+  }, []);
 
-  const filteredTrend = useMemo(() => {
-    if (timeFilter === "daily") {
-      return generateTodayHourlyData();
+  const { cardEarnings, graphEarnings, cardPatients, graphPatients } =
+    useSelector((state) => state.admin);
+
+  const xAxisKey = useMemo(() => {
+    switch (graphRange) {
+      case "today":
+        return "hour";
+
+      case "this_month":
+        return "week";
+      case "this_year":
+        return "month";
+      default:
+        return "day";
     }
-
-    return applyTimeFilter(earningsTrend);
-  }, [timeFilter, fromDate, toDate]);
-
-  const filteredPatientTrend = filteredTrend.map((d) => ({
-    ...d,
-    opd: Math.floor(200 + Math.random() * 200),
-    ipd: Math.floor(100 + Math.random() * 100),
-  }));
-
-  const earningsSummary = useMemo(() => {
-    return filteredTrend.reduce(
-      (acc, d) => {
-        acc.opd += d.opd;
-        acc.ipd += d.ipd;
-        acc.total += d.opd + d.ipd;
-        return acc;
-      },
-      { opd: 0, ipd: 0, total: 0 }
-    );
-  }, [filteredTrend]);
-  const patientSummary = useMemo(() => {
-    return filteredPatientTrend.reduce(
-      (acc, d) => {
-        acc.opd += d.opd;
-        acc.ipd += d.ipd;
-        acc.total += d.opd + d.ipd;
-        return acc;
-      },
-      { opd: 0, ipd: 0, total: 0 }
-    );
-  }, [filteredPatientTrend]);
+  }, [graphRange]);
 
   return (
     <PageWrapper>
       <Header />
 
       <Content>
-        <FilterBar
-          timeFilter={timeFilter}
-          setTimeFilter={setTimeFilter}
-          fromDate={fromDate}
-          toDate={toDate}
-          setFromDate={setFromDate}
-          setToDate={setToDate}
-        />
+        <FilterBar timeFilter={graphRange} setTimeFilter={setGraphRange} />
 
         {/* ===== Earnings ===== */}
         <Section title="Earnings Overview">
@@ -190,17 +137,17 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
             items={[
               {
                 label: "Total Earnings",
-                value: `₹${earningsSummary.total.toLocaleString("en-IN")}`,
+                value: `₹${cardEarnings?.totalEarnings?.toLocaleString("en-IN") || 0}`,
                 color: THEME.primary,
               },
               {
                 label: "OPD Earnings",
-                value: `₹${earningsSummary.opd.toLocaleString("en-IN")}`,
+                value: `₹${cardEarnings?.opdEarnings?.toLocaleString("en-IN") || 0}`,
                 color: THEME.primary,
               },
               {
                 label: "IPD Earnings",
-                value: `₹${earningsSummary.ipd.toLocaleString("en-IN")}`,
+                value: `₹${cardEarnings?.ipdEarnings?.toLocaleString("en-IN") || 0}`,
                 color: THEME.secondary,
               },
             ]}
@@ -208,8 +155,9 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
           <ChartCard
             title="Earnings Trend (OPD vs IPD)"
-            data={filteredTrend}
-          ></ChartCard>
+            data={graphEarnings || []}
+            xAxisKey={xAxisKey}
+          />
         </Section>
 
         {/* ===== Patients ===== */}
@@ -218,17 +166,17 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
             items={[
               {
                 label: "Total Patients",
-                value: patientSummary.total,
+                value: cardPatients?.totalPatients || 0,
                 color: THEME.primary,
               },
               {
                 label: "OPD Patients",
-                value: patientSummary.opd,
+                value: cardPatients?.opdPatients || 0,
                 color: THEME.primary,
               },
               {
                 label: "IPD Patients",
-                value: patientSummary.ipd,
+                value: cardPatients?.ipdPatients || 0,
                 color: THEME.secondary,
               },
             ]}
@@ -236,8 +184,9 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
           <ChartCard
             title="Patient Trend (OPD vs IPD)"
-            data={filteredPatientTrend}
-          ></ChartCard>
+            data={graphPatients || []}
+            xAxisKey={xAxisKey}
+          />
         </Section>
 
         {/* ===== Doctor-wise Summary ===== */}
@@ -246,12 +195,12 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
             rows={doctorRows}
             search={search}
             setSearch={setSearch}
-            timeFilter={timeFilter}
-            setTimeFilter={setTimeFilter}
-            fromDate={fromDate}
-            toDate={toDate}
-            setFromDate={setFromDate}
-            setToDate={setToDate}
+            timeFilter={doctorRange}
+            setTimeFilter={setDoctorRange}
+            fromDate={doctorFromDate}
+            toDate={doctorToDate}
+            setFromDate={setDoctorFromDate}
+            setToDate={setDoctorToDate}
           />
         </Section>
       </Content>
@@ -301,14 +250,7 @@ const Content = ({ children }) => (
 
 /* ---------------- FILTERS ---------------- */
 
-const FilterBar = ({
-  timeFilter,
-  setTimeFilter,
-  fromDate,
-  toDate,
-  setFromDate,
-  setToDate,
-}) => (
+const FilterBar = ({ timeFilter, setTimeFilter }) => (
   <Box
     sx={{
       position: "sticky",
@@ -330,33 +272,12 @@ const FilterBar = ({
       value={timeFilter}
       onChange={(e) => setTimeFilter(e.target.value)}
     >
-      <MenuItem value="daily">Today</MenuItem>
-      <MenuItem value="weekly">This Week</MenuItem>
-      <MenuItem value="monthly">This Month</MenuItem>
-      <MenuItem value="yearly">This Year</MenuItem>
-      <MenuItem value="custom">Custom</MenuItem>
+      {GRAPH_RANGES.map((r) => (
+        <MenuItem key={r.value} value={r.value}>
+          {r.label}
+        </MenuItem>
+      ))}
     </TextField>
-
-    {timeFilter === "custom" && (
-      <>
-        <TextField
-          size="small"
-          type="date"
-          label="From"
-          InputLabelProps={{ shrink: true }}
-          value={fromDate}
-          onChange={(e) => setFromDate(e.target.value)}
-        />
-        <TextField
-          size="small"
-          type="date"
-          label="To"
-          InputLabelProps={{ shrink: true }}
-          value={toDate}
-          onChange={(e) => setToDate(e.target.value)}
-        />
-      </>
-    )}
   </Box>
 );
 
@@ -389,7 +310,7 @@ const SummaryRow = ({ items }) => (
   </Grid>
 );
 
-const ChartCard = ({ title, data, children }) => (
+const ChartCard = ({ title, data, xAxisKey }) => (
   <Box
     sx={{
       background: THEME.bg,
@@ -404,7 +325,11 @@ const ChartCard = ({ title, data, children }) => (
     {data?.length ? (
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
-          <XAxis dataKey="label" />
+          <XAxis
+            dataKey={xAxisKey}
+            tick={{ fontSize: 12 }}
+            interval="preserveStartEnd"
+          />
 
           <YAxis />
           <Tooltip />
@@ -452,7 +377,7 @@ const DoctorTable = ({
   setToDate,
 }) => {
   const filteredRows = rows.filter((r) =>
-    r.doctorName.toLowerCase().includes(search.toLowerCase())
+    r.doctorName.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -560,59 +485,5 @@ const EmptyState = ({ text }) => (
   </Box>
 );
 
-const format = (v, currency) => (currency ? `₹${v}` : v);
 const th = { padding: 10, textAlign: "left" };
 const td = { padding: 10, borderBottom: "1px solid #eee" };
-
-/* ---------------- DUMMY DATA ---------------- */
-
-const earningsTrend = (() => {
-  const data = [];
-  const today = new Date();
-
-  for (let i = 0; i < 90; i++) {
-    const date = new Date();
-    date.setDate(today.getDate() - i);
-
-    data.push({
-      date,
-      label: date.toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-      }),
-      opd: Math.floor(3000 + Math.random() * 5000),
-      ipd: Math.floor(6000 + Math.random() * 9000),
-    });
-  }
-
-  return data.reverse();
-})();
-
-const patientTrend = earningsTrend.map((m) => ({
-  month: m.month,
-  opd: Math.floor(200 + Math.random() * 200),
-  ipd: Math.floor(100 + Math.random() * 100),
-}));
-
-const doctors = Array.from({ length: 15 }, (_, i) => {
-  const records = [];
-
-  for (let d = 0; d < 90; d++) {
-    const date = new Date();
-    date.setDate(date.getDate() - d);
-
-    records.push({
-      date,
-      opdEarnings: Math.floor(2000 + Math.random() * 4000),
-      ipdEarnings: Math.floor(5000 + Math.random() * 8000),
-      opdPatients: Math.floor(5 + Math.random() * 15),
-      ipdPatients: Math.floor(2 + Math.random() * 8),
-    });
-  }
-
-  return {
-    doctorId: `doc_${i + 1}`,
-    name: `Dr. Doctor ${i + 1}`,
-    records,
-  };
-});
