@@ -129,8 +129,8 @@ const Rate = () => {
     dispatch(
       deleteServiceCategory(
         selectedService.service.serviceId,
-        selectedService.category.categoryId
-      )
+        selectedService.category.categoryId,
+      ),
     );
   };
 
@@ -168,7 +168,7 @@ const Rate = () => {
 
   const paginatedServices = services.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
 
   console.log(" Services: ", services);
@@ -344,9 +344,9 @@ const Rate = () => {
       </Box>
       <div className="rate-table" style={{ position: "relative" }}>
         <div className="rate-table-header">
-          <span>Service Name</span>
+          <span>Service Category</span>
 
-          <span>Category</span>
+          <span>Name</span>
           <span>Rate Type</span>
           <span>Current Rate</span>
 
@@ -358,7 +358,7 @@ const Rate = () => {
             paginatedServices
               .filter(
                 (service) =>
-                  !selectedFilter || service.serviceName === selectedFilter
+                  !selectedFilter || service.serviceName === selectedFilter,
               )
               .map((service, ayu) => (
                 <div key={ayu} className="service-container">
@@ -408,7 +408,7 @@ const Rate = () => {
                             day: "2-digit",
                             month: "2-digit",
                             year: "numeric",
-                          }
+                          },
                         )}
                       </span>
                       <button
@@ -438,8 +438,8 @@ const Rate = () => {
                         anchorEl={anchorE2}
                         open={Boolean(
                           anchorE2 &&
-                            selectedService?.category?.categoryId ===
-                              category.categoryId
+                          selectedService?.category?.categoryId ===
+                            category.categoryId,
                         )}
                         onClose={handleCloseMenu}
                       >
@@ -824,7 +824,7 @@ const Rate = () => {
                             </td>
                             <td>{value ?? "—"}</td>
                           </tr>
-                        )
+                        ),
                       )}
                     </tbody>
                   </Box>

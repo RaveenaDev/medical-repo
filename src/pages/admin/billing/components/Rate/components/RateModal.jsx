@@ -20,20 +20,22 @@ import "react-toastify/dist/ReactToastify.css";
 import { Trash2Icon } from "lucide-react";
 
 const RateModal = ({ open, handleClose }) => {
+  const today = new Date().toISOString().split("T")[0];
+
   const [serviceDetails, setServiceDetails] = useState({
     name: "",
     departmentNames: [], // now an array
     subCategoryName: "",
-    rateType: "",
+    rateType: "per service",
     rate: "",
-    amenities: "",
-    effectiveDate: "",
+    amenities: "N/A",
+    effectiveDate: today,
     additionaldetails: [],
   });
 
   const [errors, setErrors] = useState({});
   const [lastUpdated, setLastUpdated] = useState(
-    new Date().toISOString().split("T")[0]
+    new Date().toISOString().split("T")[0],
   );
 
   const dispatch = useDispatch();
@@ -51,6 +53,15 @@ const RateModal = ({ open, handleClose }) => {
 
   const handleDepartmentChange = (e) => {
     const { value } = e.target;
+
+    if (value.includes("ALL")) {
+      setServiceDetails((prev) => ({
+        ...prev,
+        departmentNames: isAllSelected ? [] : allDepartmentNames,
+      }));
+      return;
+    }
+
     setServiceDetails((prev) => ({
       ...prev,
       departmentNames: typeof value === "string" ? value.split(",") : value,
@@ -115,21 +126,21 @@ const RateModal = ({ open, handleClose }) => {
       rate: finalRate,
       additionaldetails: serviceDetails.additionaldetails.reduce(
         (acc, item) => ({ ...acc, [item.key]: item.value }),
-        {}
+        {},
       ),
     };
 
-    console.log("Final Service Details to be submitted:", finalServiceDetails);
+    // console.log("Final Service Details to be submitted:", finalServiceDetails);
 
     dispatch(addService(finalServiceDetails));
     setServiceDetails({
       name: "",
       departmentNames: [],
       subCategoryName: "",
-      rateType: "",
+      rateType: "per service",
       rate: "",
-      amenities: "",
-      effectiveDate: "",
+      amenities: "N/A",
+      effectiveDate: today,
       additionaldetails: [],
     });
     setErrors({});
@@ -140,16 +151,22 @@ const RateModal = ({ open, handleClose }) => {
     serviceDetails.additionaldetails.length > 0
       ? serviceDetails.additionaldetails.reduce(
           (acc, item) => acc + item.value,
-          0
+          0,
         )
       : serviceDetails.rate;
+
+  const allDepartmentNames = departments.map((d) => d.departmentName);
+
+  const isAllSelected =
+    allDepartmentNames.length > 0 &&
+    serviceDetails.departmentNames.length === allDepartmentNames.length;
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>Add Service</DialogTitle>
       <DialogContent>
         <TextField
-          label="Service Name"
+          label="Service Category"
           fullWidth
           margin="dense"
           name="name"
@@ -166,7 +183,6 @@ const RateModal = ({ open, handleClose }) => {
           label="Departments"
           fullWidth
           margin="dense"
-          name="departmentNames"
           SelectProps={{
             multiple: true,
             value: serviceDetails.departmentNames,
@@ -174,11 +190,17 @@ const RateModal = ({ open, handleClose }) => {
             renderValue: (selected) => selected.join(", "),
           }}
         >
+          {/* ✅ Select All Option */}
+          <MenuItem value="ALL">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="Select All" />
+          </MenuItem>
+
           {departments.map((department, index) => (
             <MenuItem key={index} value={department.departmentName}>
               <Checkbox
                 checked={serviceDetails.departmentNames.includes(
-                  department.departmentName
+                  department.departmentName,
                 )}
               />
               <ListItemText primary={department.departmentName} />
@@ -187,7 +209,7 @@ const RateModal = ({ open, handleClose }) => {
         </TextField>
 
         <TextField
-          label="Category Name"
+          label="Name"
           fullWidth
           margin="dense"
           name="subCategoryName"
@@ -261,7 +283,7 @@ const RateModal = ({ open, handleClose }) => {
                       handleAdditionalDetailChange(
                         index,
                         "value",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   />
