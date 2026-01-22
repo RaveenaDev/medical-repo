@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   TextField,
   Button,
-  IconButton,
   Grid2,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +30,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
   });
 
   const [lastUpdated, setLastUpdated] = useState(
-    new Date().toISOString().split("T")[0]
+    new Date().toISOString().split("T")[0],
   );
 
   const handleChange = (e) => {
@@ -64,9 +63,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
       ...serviceDetails,
       additionaldetails: {
         ...serviceDetails.additionaldetails,
-        [`Detail_${
-          Object.keys(serviceDetails.additionaldetails).length + 1
-        }`]: 0,
+        [`Detail_${Object.keys(serviceDetails.additionaldetails).length + 1}`]: 0,
       },
     });
   };
@@ -124,7 +121,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
     Object.keys(serviceDetails.additionaldetails || {}).length > 0
       ? Object.values(serviceDetails.additionaldetails || {}).reduce(
           (acc, val) => acc + (parseFloat(val) || 0),
-          0
+          0,
         )
       : serviceDetails.rate;
 
@@ -133,7 +130,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
       <DialogTitle>Edit Service</DialogTitle>
       <DialogContent>
         <TextField
-          label="Service Name"
+          label="Service Category"
           fullWidth
           margin="dense"
           name="name"
@@ -150,7 +147,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
           }}
         >
           <TextField
-            label="Category Name"
+            label="Name"
             fullWidth
             margin="dense"
             name="subCategoryName"
@@ -202,7 +199,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
                           handleAdditionalDetailChange(
                             key,
                             e.target.value,
-                            value
+                            value,
                           )
                         }
                       />
@@ -218,7 +215,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
                           handleAdditionalDetailChange(
                             key,
                             key,
-                            parseFloat(e.target.value)
+                            parseFloat(e.target.value),
                           )
                         }
                       />
@@ -236,7 +233,7 @@ const EditRateModal = ({ open, handleClose, service }) => {
                       />
                     </Grid2>
                   </Grid2>
-                )
+                ),
               )}
             </Grid2>
             <Button
