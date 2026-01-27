@@ -66,7 +66,7 @@ const BillDetailsAdmin = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  // console.log("original Bill", bill);
+  console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -98,13 +98,15 @@ const BillDetailsAdmin = (props) => {
     setAddForm({ category: "", quantity: "1", rate: "0", details: "" });
   };
 
-  // ---- Add Payment Dialog ----
+  // ---- ---- Add Payment Dialog ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
   const [addPaymentOpen, setAddPaymentOpen] = useState(false);
   const [addPaymentLoading, setAddPaymentLoading] = useState(false);
   const [addPaymentForm, setAddPaymentForm] = useState({
     amount: "",
     mode: "",
     reference: "",
+    hasTds: "no",
+    tds: "",
   });
   const [addPaymentErrors, setAddPaymentErrors] = useState({});
 
@@ -112,7 +114,14 @@ const BillDetailsAdmin = (props) => {
   const closeAddPayment = () => {
     setAddPaymentOpen(false);
     setAddPaymentErrors({});
-    setAddPaymentForm({ amount: "", mode: "", reference: "", billId: billId });
+    setAddPaymentForm({
+      amount: "",
+      mode: "",
+      reference: "",
+      billId: billId,
+      hasTds: "no",
+      tds: "",
+    });
   };
   // Validation function
   const validateAddPaymentForm = (form) => {
@@ -124,6 +133,16 @@ const BillDetailsAdmin = (props) => {
 
     if (!form.mode) {
       errors.mode = "Select a payment mode";
+    }
+
+    if (form.hasTds === "yes") {
+      if (!form.tds || isNaN(form.tds) || Number(form.tds) <= 0) {
+        errors.tds = "Enter valid TDS amount";
+      }
+
+      if (Number(form.tds) >= Number(form.amount)) {
+        errors.tds = "TDS cannot be greater than amount";
+      }
     }
 
     return errors;
@@ -140,9 +159,21 @@ const BillDetailsAdmin = (props) => {
     try {
       setAddPaymentLoading(true);
 
-      await dispatch(addPaymentToBill(billId, addPaymentForm));
+      const payload = {
+        amount: Number(addPaymentForm.amount),
+        mode: addPaymentForm.mode,
+        reference: addPaymentForm.reference,
+      };
 
-      closeAddPayment(); // reset & close if success
+      if (addPaymentForm.hasTds === "yes") {
+        payload.tds = Number(addPaymentForm.tds);
+        payload.total =
+          Number(addPaymentForm.amount) + Number(addPaymentForm.tds);
+      }
+
+      await dispatch(addPaymentToBill(billId, payload));
+
+      closeAddPayment();
     } catch (err) {
       console.error(err);
       setAddPaymentErrors({ general: "Failed to add payment" });
@@ -151,6 +182,7 @@ const BillDetailsAdmin = (props) => {
     }
   };
 
+  //  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
   const handleAddChange = (field) => (e) => {
     let value = e.target.value;
     if (field === "quantity" || field === "rate") {
@@ -428,7 +460,8 @@ const BillDetailsAdmin = (props) => {
     acc[category].push(row);
     return acc;
   }, {});
-  // DISCOUNT
+
+  //------------------ DISCOUNT -------------------------------------------------
 
   const [discountOpen, setDiscountOpen] = useState(false);
   const [discountLoading, setDiscountLoading] = useState(false);
@@ -438,7 +471,24 @@ const BillDetailsAdmin = (props) => {
     reason: "",
   });
   const [discountErrors, setDiscountErrors] = useState({});
-  const openDiscount = () => setDiscountOpen(true);
+  const openDiscount = () => {
+    if (bill?.insurance?.discount) {
+      setDiscountForm({
+        type: bill.insurance.discount.type || "Flat",
+        value: bill.insurance.discount.value,
+        reason: bill.insurance.discountReason || "Insurance discount",
+      });
+    } else {
+      setDiscountForm({
+        type: "Flat",
+        value: "",
+        reason: "",
+      });
+    }
+
+    setDiscountErrors({});
+    setDiscountOpen(true);
+  };
 
   const closeDiscount = () => {
     setDiscountOpen(false);
@@ -481,7 +531,7 @@ const BillDetailsAdmin = (props) => {
     }
   };
 
-  // REFUNDS
+  // ------------------------------------------------- REFUNDS -------------------------------------------------
 
   const [refundOpen, setRefundOpen] = useState(false);
   const [refundLoading, setRefundLoading] = useState(false);
@@ -547,7 +597,7 @@ const BillDetailsAdmin = (props) => {
     });
   };
 
-  // AUTOFILL FOR ADD TO BILL
+  // ------------------------------------------------- AUTOFILL FOR ADD TO BILL -------------------------------------------------
   const [serviceInput, setServiceInput] = useState("");
   const debouncedServiceInput = useDebounce(serviceInput, 300);
   useEffect(() => {
@@ -558,7 +608,7 @@ const BillDetailsAdmin = (props) => {
     (state) => state.receptionist.serviceSearch,
   );
 
-  // DELETE SERVICE LINE
+  //  -------------------------------------------------DELETE BILL LINE -------------------------------------------------
   const handleDeleteService = (index) => async () => {
     const service = editableBill?.services?.[index];
     if (!service?._id) {
@@ -628,7 +678,7 @@ const BillDetailsAdmin = (props) => {
     );
   };
 
-  // PRINT PAYMENT
+  // ------------------------------------------------- PRINT PAYMENT -------------------------------------------------
 
   const printPaymentFromHistory = (payment) => {
     if (!payment) return;
@@ -1657,6 +1707,60 @@ const BillDetailsAdmin = (props) => {
               fullWidth
             />
 
+            <TextField
+              label="TDS Applicable?"
+              select
+              value={addPaymentForm.hasTds}
+              onChange={(e) =>
+                setAddPaymentForm((p) => ({
+                  ...p,
+                  hasTds: e.target.value,
+                  tds: "",
+                }))
+              }
+              fullWidth
+            >
+              <MenuItem value="no">No</MenuItem>
+              <MenuItem value="yes">Yes</MenuItem>
+            </TextField>
+            {addPaymentForm.hasTds === "yes" && (
+              <TextField
+                label="TDS Amount"
+                value={addPaymentForm.tds}
+                onChange={(e) =>
+                  setAddPaymentForm((p) => ({
+                    ...p,
+                    tds: e.target.value === "" ? "" : Number(e.target.value),
+                  }))
+                }
+                error={!!addPaymentErrors.tds}
+                helperText={addPaymentErrors.tds}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ),
+                  inputProps: { inputMode: "numeric", pattern: "[0-9]*" },
+                }}
+              />
+            )}
+            {addPaymentForm.hasTds === "yes" && (
+              <TextField
+                label="Total (Amount + TDS)"
+                value={
+                  Number(addPaymentForm.amount || 0) +
+                  Number(addPaymentForm.tds || 0)
+                }
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ),
+                  readOnly: true,
+                }}
+              />
+            )}
+
             {/* General error (like API failure) */}
             {addPaymentErrors.general && (
               <Typography color="error" variant="body2">
@@ -1804,7 +1908,6 @@ const BillDetailsAdmin = (props) => {
       </div>
 
       {/* Hidden Refund Printable Section */}
-
       <div style={{ display: "none" }}>
         <div id="refund-print" className="bill-wrap">
           {/* Header */}
