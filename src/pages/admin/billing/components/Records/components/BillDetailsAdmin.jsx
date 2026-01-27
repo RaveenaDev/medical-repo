@@ -2,12 +2,13 @@ import {
   addDiscount,
   addPaymentToBill,
   addToBill,
+  deleteBillItem,
   editBill,
   getBillDetails,
   refundBill,
   searchServiceSubCategories,
 } from "../../../../../../components/State/Admin/Action";
-
+import { toast } from "react-toastify";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
@@ -33,7 +34,7 @@ import printJS from "print-js"; // Import print-js
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Printer } from "lucide-react";
+import { Printer, Trash2Icon } from "lucide-react";
 import useDebounce from "../../../../../../hooks/useDebounce";
 
 const BillDetailsAdmin = (props) => {
@@ -338,8 +339,8 @@ const BillDetailsAdmin = (props) => {
     const gstPct = Number.isFinite(+row.gstPct)
       ? +row.gstPct
       : Number.isFinite(+row.details?.gstPct)
-      ? +row.details.gstPct
-      : 0;
+        ? +row.details.gstPct
+        : 0;
 
     const gstAmt = +((base * gstPct) / 100).toFixed(2);
     const lineTotal = +(base + gstAmt).toFixed(2);
@@ -383,12 +384,12 @@ const BillDetailsAdmin = (props) => {
   const roundOff = +(Math.round(grossTotal) - grossTotal).toFixed(2);
   const netPayable = +(grossTotal + roundOff).toFixed(2);
   const discountAmt = safeNum(
-    editableBill?.discount?.amount ?? bill?.discount?.amount ?? 0
+    editableBill?.discount?.amount ?? bill?.discount?.amount ?? 0,
   );
 
   const paidAmt = safeNum(editableBill?.paidAmount ?? bill?.paidAmount ?? 0);
   const balanceDue = safeNum(
-    editableBill?.outstanding ?? bill?.outstanding ?? 0
+    editableBill?.outstanding ?? bill?.outstanding ?? 0,
   );
 
   // Hospital/patient convenience fields
@@ -554,8 +555,79 @@ const BillDetailsAdmin = (props) => {
   }, [debouncedServiceInput, dispatch]);
 
   const serviceOptions = useSelector(
-    (state) => state.receptionist.serviceSearch
+    (state) => state.receptionist.serviceSearch,
   );
+
+  // DELETE SERVICE LINE
+  const handleDeleteService = (index) => async () => {
+    const service = editableBill?.services?.[index];
+    if (!service?._id) {
+      toast.error("Service ID not found");
+      return;
+    }
+
+    let deleting = false;
+
+    toast.info(
+      ({ closeToast }) => (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <strong>Delete this service?</strong>
+
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              style={{
+                padding: "6px 12px",
+                background: deleting ? "#aaa" : "#d9534f",
+                color: "#fff",
+                borderRadius: "6px",
+                border: "none",
+                cursor: deleting ? "not-allowed" : "pointer",
+              }}
+              disabled={deleting}
+              onClick={async () => {
+                if (deleting) return;
+                deleting = true;
+
+                try {
+                  const billId = editableBill?._id;
+                  const serviceId = service._id;
+
+                  await dispatch(deleteBillItem(billId, serviceId));
+
+                  setEditableBill((prev) => ({
+                    ...prev,
+                    services: prev.services.filter((s) => s._id !== serviceId),
+                  }));
+
+                  closeToast();
+                } catch (err) {
+                  deleting = false;
+                  console.error(err);
+                }
+              }}
+            >
+              Yes, Delete
+            </button>
+
+            <button
+              style={{
+                padding: "6px 12px",
+                background: "#6c757d",
+                color: "#fff",
+                borderRadius: "6px",
+                border: "none",
+              }}
+              onClick={closeToast}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      { autoClose: false },
+    );
+  };
+
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -662,11 +734,11 @@ const BillDetailsAdmin = (props) => {
                     <span>
                       {bill.insurance.insuranceStartDate
                         ? `${new Date(
-                            bill.insurance.insuranceStartDate
+                            bill.insurance.insuranceStartDate,
                           ).toLocaleDateString("en-IN")} — ${
                             bill.insurance.insuranceExpiryDate
                               ? new Date(
-                                  bill.insurance.insuranceExpiryDate
+                                  bill.insurance.insuranceExpiryDate,
                                 ).toLocaleDateString("en-IN")
                               : "N/A"
                           }`
@@ -677,7 +749,7 @@ const BillDetailsAdmin = (props) => {
                     <span className={styles["bold"]}>Approval Status</span>
                     <span
                       className={`${styles["status"]} ${String(
-                        bill.insurance.insuranceApproved || ""
+                        bill.insurance.insuranceApproved || "",
                       ).toLowerCase()}`}
                     >
                       {bill.insurance.insuranceApproved || "Pending"}
@@ -688,7 +760,7 @@ const BillDetailsAdmin = (props) => {
                     <span>
                       ₹
                       {(bill.insurance.amountApproved ?? 0).toLocaleString(
-                        "en-IN"
+                        "en-IN",
                       )}
                     </span>
                   </div>
@@ -754,7 +826,7 @@ const BillDetailsAdmin = (props) => {
                     return "name"; // fallback
                   };
 
-                  // console.log("service", row);
+                  console.log("service", row);
                   return (
                     <div key={i} className={styles["billing-category"]}>
                       <div className={styles["billing-description"]}>
@@ -766,14 +838,14 @@ const BillDetailsAdmin = (props) => {
                             value={desc}
                             onChange={(e) => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].category = e.target.value;
                               setEditableBill(updated);
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].category =
                                 updated.services[i].category || "";
@@ -794,7 +866,7 @@ const BillDetailsAdmin = (props) => {
                             value={name}
                             onChange={(e) => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
 
                               if (!updated.services[i].details) {
@@ -802,7 +874,7 @@ const BillDetailsAdmin = (props) => {
                               }
 
                               const key = getEditableNameKey(
-                                updated.services[i].details
+                                updated.services[i].details,
                               );
                               updated.services[i].details[key] = e.target.value; // ✅ dynamic field
 
@@ -810,7 +882,7 @@ const BillDetailsAdmin = (props) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
 
                               if (!updated.services[i].details) {
@@ -818,7 +890,7 @@ const BillDetailsAdmin = (props) => {
                               }
 
                               const key = getEditableNameKey(
-                                updated.services[i].details
+                                updated.services[i].details,
                               );
                               updated.services[i].details[key] =
                                 updated.services[i].details[key] || "";
@@ -849,7 +921,7 @@ const BillDetailsAdmin = (props) => {
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D+/g, "");
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].quantity =
                                 v === "" ? "" : Number(v);
@@ -857,7 +929,7 @@ const BillDetailsAdmin = (props) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].quantity =
                                 Number(updated.services[i].quantity) || 0;
@@ -880,7 +952,7 @@ const BillDetailsAdmin = (props) => {
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D+/g, "");
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].rate =
                                 v === "" ? "" : Number(v);
@@ -888,7 +960,7 @@ const BillDetailsAdmin = (props) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].rate =
                                 Number(updated.services[i].rate) || 0;
@@ -897,6 +969,19 @@ const BillDetailsAdmin = (props) => {
                           />
                         ) : (
                           <div>₹{rate.toLocaleString("en-IN")}</div>
+                        )}
+                      </div>
+
+                      <div>
+                        {isEditing ? (
+                          <div
+                            className={styles["billing-delete-icon"]}
+                            onClick={handleDeleteService(i)}
+                          >
+                            <Trash2Icon />
+                          </div>
+                        ) : (
+                          <div></div>
                         )}
                       </div>
                     </div>
@@ -914,7 +999,7 @@ const BillDetailsAdmin = (props) => {
                     const pr = Number.isFinite(+r.rate) ? +r.rate : 0;
                     return sum + q * pr;
                   },
-                  0
+                  0,
                 );
                 return (
                   <div className={styles["billing-total"]}>
@@ -952,8 +1037,8 @@ const BillDetailsAdmin = (props) => {
                   ₹
                   {isEditing
                     ? computedGrand
-                    : editableBill?.totalAmount.toLocaleString("en-IN") ??
-                      bill.totalAmount.toLocaleString("en-IN")}
+                    : (editableBill?.totalAmount.toLocaleString("en-IN") ??
+                      bill.totalAmount.toLocaleString("en-IN"))}
                 </div>
               </div>
               {bill?.discount?.amount > 0 && (
@@ -1021,7 +1106,7 @@ const BillDetailsAdmin = (props) => {
                       value={editableBill?.status ?? bill.status}
                       onChange={(e) => {
                         const updated = JSON.parse(
-                          JSON.stringify(editableBill)
+                          JSON.stringify(editableBill),
                         );
                         updated.status = e.target.value;
                         setEditableBill(updated);
@@ -1069,7 +1154,7 @@ const BillDetailsAdmin = (props) => {
                                 day: "2-digit",
                                 month: "2-digit",
                                 year: "numeric",
-                              }
+                              },
                             )}
                           </span>
                         </p>

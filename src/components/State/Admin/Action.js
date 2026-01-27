@@ -1095,6 +1095,32 @@ export const editBill = (payload, id) => async (dispatch) => {
     toast.error(error?.response?.data?.message || "Edit failed");
   }
 };
+
+export const deleteBillItem = (billId, serviceId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.delete(
+      `${API_URL}/deleteBillServiceEntry/${billId}/services/${serviceId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      },
+    );
+
+    getBillDetails(billId);
+    toast.success("Bill Item Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Failed to delete Bill Item:", error);
+    toast.error("Failed to delete Bill Item!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  }
+};
 export const addToBill = (payload, id) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");

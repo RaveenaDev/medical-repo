@@ -101,7 +101,7 @@
           .billing-table-header,
           .billing-category {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 0.75fr 0.75fr 0.75fr 0.9fr;
+            grid-template-columns: 1.5fr 1fr 0.75fr 0.75fr 0.75fr 0.9fr 0.25fr;
           }
         }
 
@@ -332,7 +332,9 @@
   border: 1px solid #25307f;
   color: #25307f;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
 }
 
 .view-details-btn:hover {
