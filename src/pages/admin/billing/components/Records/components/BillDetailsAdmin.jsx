@@ -628,6 +628,52 @@ const BillDetailsAdmin = (props) => {
     );
   };
 
+  // PRINT PAYMENT
+
+  const printPaymentFromHistory = (payment) => {
+    if (!payment) return;
+
+    document.getElementById("payment-amount").innerText = Number(
+      payment.amount,
+    ).toLocaleString("en-IN");
+
+    document.getElementById("payment-mode").innerText = payment.mode || "—";
+
+    document.getElementById("payment-ref").innerText = payment.reference || "—";
+
+    document.getElementById("payment-amount-words").innerText =
+      amountInWordsINR(payment.amount);
+    printJS({
+      printable: "payment-print",
+      type: "html",
+      scanStyles: false,
+      style: `
+      @page { size: A4; margin: 6mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { font-family: Arial, sans-serif; font-size: 12px; color: #111; }
+      .bill-wrap { border: 1px solid #222; padding: 10px; }
+      .bill-head { display: flex; justify-content: center; align-items: center; gap: 12px; }
+      .logo { width: 64px; height: 64px; object-fit: contain; }
+      .titleblock { text-align: center; }
+    
+      .bill-title { font-size: 16px; font-weight: 700; text-align: center; margin: 10px 0 14px; }
+      .muted { color: #555; }
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 8px; }
+      .box { border: 1px solid #999; padding: 8px; border-radius: 2px; margin-top: 10px; }
+      .section-title { font-weight: 700; margin-bottom: 6px; }
+      table.bill { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      table.bill th, table.bill td { border: 1px solid #000; padding: 6px; }
+      table.bill th { background: #f2f2f2; }
+      .center { text-align: center; }
+      .right { text-align: right; }
+      .amount-words { border: 1px dashed #999; padding: 8px; margin-top: 10px; font-style: italic; }
+      .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+      .sig-box { height: 64px; border: 1px solid #999; padding: 8px; display: flex; align-items: flex-end; justify-content: space-between; }
+      .footnote { margin-top: 16px; text-align: center; font-size: 11px; color: #444; }
+    `,
+    });
+  };
+
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -826,7 +872,7 @@ const BillDetailsAdmin = (props) => {
                     return "name"; // fallback
                   };
 
-                  console.log("service", row);
+                  // console.log("service", row);
                   return (
                     <div key={i} className={styles["billing-category"]}>
                       <div className={styles["billing-description"]}>
@@ -1125,7 +1171,7 @@ const BillDetailsAdmin = (props) => {
             <div className={styles["billing-history"]}>
               <div className={styles["payment-heading"]}>Payment History</div>
               {bill.payments && bill.payments.length > 0 ? (
-                <div>
+                <div className={styles["payment-summary"]}>
                   <div className={styles["payment-list-header"]}>
                     <div className={styles["payment-list-header-item"]}>
                       <span>Date</span>
@@ -1139,40 +1185,48 @@ const BillDetailsAdmin = (props) => {
                     <div className={styles["payment-list-header-item"]}>
                       <span>Reference</span>
                     </div>
+                    <div className={styles["payment-list-header-item"]}>
+                      <span>Action</span>
+                    </div>
                   </div>
-                  <div className={styles["payment-list"]}>
-                    {bill.payments.map((payment) => (
-                      <div
-                        className={styles["billing-summary"]}
-                        key={payment._id}
-                      >
-                        <p>
-                          <span>
-                            {new Date(payment.date).toLocaleDateString(
-                              "en-IN",
-                              {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "numeric",
-                              },
-                            )}
-                          </span>
-                        </p>
-                        <p>
-                          <span>₹{payment.amount.toLocaleString("en-IN")}</span>
-                        </p>
-                        <p>
-                          <span>
-                            <span> {payment?.mode}</span>
-                          </span>
-                        </p>
 
-                        <p>
-                          <span> {payment?.reference || "N/A"}</span>
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  {bill.payments.map((payment) => (
+                    <div
+                      className={styles["payment-details"]}
+                      key={payment._id}
+                    >
+                      <p>
+                        <span>
+                          {new Date(payment.date).toLocaleDateString("en-IN", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </p>
+                      <p>
+                        <span>₹{payment.amount.toLocaleString("en-IN")}</span>
+                      </p>
+                      <p>
+                        <span>
+                          <span> {payment?.mode}</span>
+                        </span>
+                      </p>
+
+                      <p>
+                        <span> {payment?.reference || "N/A"}</span>
+                      </p>
+                      {/* Print Button */}
+                      <button
+                        size="small"
+                        onClick={() => printPaymentFromHistory(payment)}
+                        className={styles["print-refund-btn"]}
+                      >
+                        <Printer />
+                        Print
+                      </button>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className={styles["no-records"]}>
@@ -1628,6 +1682,126 @@ const BillDetailsAdmin = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Hidden Payment Printable Section */}
+      <div style={{ display: "none" }}>
+        <div id="payment-print" className="bill-wrap">
+          {/* Header */}
+          <div className="bill-head">
+            {logoUrl && (
+              <img className="logo" src={logoUrl} alt="Hospital Logo" />
+            )}
+
+            <div className="titleblock">
+              <div style={{ fontSize: 18, fontWeight: 700 }}>
+                {hospitalName}
+              </div>
+              <div>{hospitalAddr}</div>
+              <div>{hospitalPhone}</div>
+
+              {(hospitalGstin || hospitalPan) && (
+                <div className="muted">
+                  {hospitalGstin && <>GSTIN: {hospitalGstin} </>}
+                  {hospitalPan && <>| PAN: {hospitalPan}</>}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Title */}
+          <div className="bill-title">PAYMENT RECEIPT</div>
+
+          {/* Patient + Payment Info */}
+          <div className="grid-2">
+            <div className="box">
+              <div className="section-title">Patient Details</div>
+
+              <div>
+                <b>Patient Name:</b> {bill?.patient?.name || "—"}
+              </div>
+              <div>
+                <b>Patient ID:</b> {bill?.patient?.patId || "—"}
+              </div>
+              <div>
+                <b>Phone:</b> {bill?.patient?.phone || "—"}
+              </div>
+            </div>
+
+            <div className="box">
+              <div className="section-title">Receipt Details</div>
+              <div>
+                <b>Invoice No:</b> {bill?.invoiceNumber}
+              </div>
+              <div>
+                <b>Payment Date:</b>{" "}
+                {new Date().toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Table */}
+          <table className="bill">
+            <thead>
+              <tr>
+                <th className="center" style={{ width: 60 }}>
+                  #
+                </th>
+                <th>Description</th>
+                <th className="center" style={{ width: 120 }}>
+                  Mode
+                </th>
+                <th className="right" style={{ width: 150 }}>
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="center">1</td>
+                <td>Payment received against Invoice #{bill?.invoiceNumber}</td>
+                <td className="center">
+                  <span id="payment-mode" />
+                </td>
+                <td className="right">
+                  ₹<span id="payment-amount" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Reference */}
+          <div className="box">
+            <b>Reference:</b> <span id="payment-ref">—</span>
+          </div>
+
+          {/* Amount in Words */}
+          <div className="amount-words">
+            <b>Amount in words:</b> <span id="payment-amount-words" />
+          </div>
+
+          {/* Signatures */}
+          <div className="signatures">
+            <div className="sig-box">
+              <span>Patient / Authorized Signatory</span>
+              <span style={{ opacity: 0.6 }}>Signature</span>
+            </div>
+            <div className="sig-box">
+              <span>For {hospitalName}</span>
+              <span style={{ opacity: 0.6 }}>Authorized Signatory</span>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="footnote">
+            This is a system-generated payment receipt. Thank you for choosing{" "}
+            <b>{hospitalName}</b>.
+          </div>
+        </div>
+      </div>
 
       {/* Hidden Refund Printable Section */}
 
