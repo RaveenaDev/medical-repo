@@ -1332,7 +1332,7 @@ export const updateStatusOfInsuredPatients =
         },
       );
 
-      // console.log("Updated Data: ",data)
+      console.log("Updated Data: ", data);
 
       dispatch({ type: UPDATE_STATUS_OF_INSURED_PATIENTS, payload: data });
       dispatch(getInsuredPatients());

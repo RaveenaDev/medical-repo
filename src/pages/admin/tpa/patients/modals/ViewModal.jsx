@@ -19,15 +19,20 @@ const ViewModal = ({ onClose, record }) => {
   const statusOptions = ["Approved", "Rejected", "Pending"];
   const [openStatus, setOpenStatus] = useState(false);
 
+  // ---------- Discount state ----------
+  const [hasDiscount, setHasDiscount] = useState(false); // yes / no
+  const [discountType, setDiscountType] = useState(""); // Flat | Percentage
+  const [discountValue, setDiscountValue] = useState("");
+  // ------------------------------------
   const [selectedStatus, setSelectedStatus] = useState(
     record.admissionDetails.insurance.insuranceApproved
       .charAt(0)
       .toUpperCase() +
-      record.admissionDetails.insurance.insuranceApproved.slice(1)
+      record.admissionDetails.insurance.insuranceApproved.slice(1),
   );
 
   const [approvedAmount, setApprovedAmount] = useState(
-    record.admissionDetails.insurance.amountApproved || ""
+    record.admissionDetails.insurance.amountApproved || "",
   );
 
   // ---------- helpers ----------
@@ -55,10 +60,10 @@ const ViewModal = ({ onClose, record }) => {
     employeeCode: record?.admissionDetails?.insurance?.employeeCode || "",
     policyNumber: record?.admissionDetails?.insurance?.policyNumber || "",
     insuranceStartDate: formatDateInput(
-      record?.admissionDetails?.insurance?.insuranceStartDate
+      record?.admissionDetails?.insurance?.insuranceStartDate,
     ),
     insuranceExpiryDate: formatDateInput(
-      record?.admissionDetails?.insurance?.insuranceExpiryDate
+      record?.admissionDetails?.insurance?.insuranceExpiryDate,
     ),
   });
   // --------------------------------------------------------
@@ -69,6 +74,14 @@ const ViewModal = ({ onClose, record }) => {
     dispatch(getEstimatedBill(record._id));
   }, [dispatch, record._id]);
 
+  useEffect(() => {
+    if (selectedStatus !== "Approved") {
+      setHasDiscount(false);
+      setDiscountType("");
+      setDiscountValue("");
+    }
+  }, [selectedStatus]);
+
   const estimatedBill = useSelector((store) => store.admin.estimatedBill);
 
   const handleClick = (option) => {
@@ -77,9 +90,21 @@ const ViewModal = ({ onClose, record }) => {
   };
 
   const handleSave = () => {
-    // Saves insurance status/approved amount (existing flow)
-    const payload = { status: selectedStatus.toLowerCase() };
-    if (selectedStatus === "Approved") payload.approvedAmount = approvedAmount;
+    const payload = {
+      status: selectedStatus.toLowerCase(),
+    };
+
+    if (selectedStatus === "Approved") {
+      payload.approvedAmount = Number(approvedAmount || 0);
+
+      if (hasDiscount && discountType && discountValue) {
+        payload.discount = {
+          type: discountType,
+          value: Number(discountValue),
+        };
+      }
+    }
+
     dispatch(updateStatusOfInsuredPatients(record._id, payload));
     onClose();
   };
@@ -138,10 +163,10 @@ const ViewModal = ({ onClose, record }) => {
         employeeCode: record?.admissionDetails?.insurance?.employeeCode || "",
         policyNumber: record?.admissionDetails?.insurance?.policyNumber || "",
         insuranceStartDate: formatDateInput(
-          record?.admissionDetails?.insurance?.insuranceStartDate
+          record?.admissionDetails?.insurance?.insuranceStartDate,
         ),
         insuranceExpiryDate: formatDateInput(
-          record?.admissionDetails?.insurance?.insuranceExpiryDate
+          record?.admissionDetails?.insurance?.insuranceExpiryDate,
         ),
       });
     }
@@ -341,7 +366,7 @@ const ViewModal = ({ onClose, record }) => {
               <p className={styles.value}>
                 {record?.admissionDetails?.insurance?.insuranceStartDate &&
                   new Date(
-                    record.admissionDetails.insurance.insuranceStartDate
+                    record.admissionDetails.insurance.insuranceStartDate,
                   ).toLocaleDateString()}
               </p>
             )}
@@ -362,7 +387,7 @@ const ViewModal = ({ onClose, record }) => {
               <p className={styles.value}>
                 {record?.admissionDetails?.insurance?.insuranceExpiryDate &&
                   new Date(
-                    record.admissionDetails.insurance.insuranceExpiryDate
+                    record.admissionDetails.insurance.insuranceExpiryDate,
                   ).toLocaleDateString()}
               </p>
             )}
@@ -395,8 +420,8 @@ const ViewModal = ({ onClose, record }) => {
                   selectedStatus === "Rejected"
                     ? styles.rejected
                     : selectedStatus === "Approved"
-                    ? styles.ongoing
-                    : styles.pending
+                      ? styles.ongoing
+                      : styles.pending
                 } `}
                 onClick={() => setOpenStatus((prev) => !prev)}
               >
@@ -433,6 +458,70 @@ const ViewModal = ({ onClose, record }) => {
                 value={formattedAmount}
                 onChange={handleApprovedAmountChange}
                 placeholder="Enter approved amount"
+              />
+            </div>
+          )}
+
+          {/* Discount section (only when Approved) */}
+          {selectedStatus === "Approved" && (
+            <div className={styles.data}>
+              <p className={styles.label}>Apply Discount?</p>
+
+              <div style={{ display: "flex", gap: "10px" }}>
+                <label>
+                  <input
+                    type="radio"
+                    name="discount"
+                    checked={hasDiscount === true}
+                    onChange={() => setHasDiscount(true)}
+                  />{" "}
+                  Yes
+                </label>
+
+                <label>
+                  <input
+                    type="radio"
+                    name="discount"
+                    checked={hasDiscount === false}
+                    onChange={() => setHasDiscount(false)}
+                  />{" "}
+                  No
+                </label>
+              </div>
+            </div>
+          )}
+          {selectedStatus === "Approved" && hasDiscount && (
+            <div className={styles.data}>
+              <p className={styles.label}>Discount Type</p>
+              <select
+                className={styles.input}
+                value={discountType}
+                onChange={(e) => {
+                  setDiscountType(e.target.value);
+                  setDiscountValue("");
+                }}
+              >
+                <option value="">Select</option>
+                <option value="Flat">Flat</option>
+                <option value="Percentage">Percentage</option>
+              </select>
+            </div>
+          )}
+          {selectedStatus === "Approved" && hasDiscount && discountType && (
+            <div className={styles.data}>
+              <p className={styles.label}>
+                {discountType === "Flat"
+                  ? "Discount Amount"
+                  : "Discount Percentage"}
+              </p>
+              <input
+                type="number"
+                className={styles.input}
+                value={discountValue}
+                onChange={(e) => setDiscountValue(e.target.value)}
+                placeholder={
+                  discountType === "Flat" ? "Enter amount" : "Enter percentage"
+                }
               />
             </div>
           )}

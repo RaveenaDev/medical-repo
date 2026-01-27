@@ -1418,6 +1418,7 @@ const BillDetailsAdmin = (props) => {
               select
               label="Discount Type"
               value={discountForm.type}
+              disabled={!!bill?.insurance}
               onChange={(e) =>
                 setDiscountForm((p) => ({ ...p, type: e.target.value }))
               }
@@ -1441,6 +1442,7 @@ const BillDetailsAdmin = (props) => {
               }
               error={!!discountErrors.value}
               helperText={discountErrors.value}
+              disabled={!!bill?.insurance}
               fullWidth
               InputProps={{
                 startAdornment:
