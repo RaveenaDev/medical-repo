@@ -105,7 +105,7 @@ const BillDetailsAdmin = (props) => {
     amount: "",
     mode: "",
     reference: "",
-    hasTds: "no",
+
     tds: "",
   });
   const [addPaymentErrors, setAddPaymentErrors] = useState({});
@@ -119,7 +119,7 @@ const BillDetailsAdmin = (props) => {
       mode: "",
       reference: "",
       billId: billId,
-      hasTds: "no",
+
       tds: "",
     });
   };
@@ -135,7 +135,7 @@ const BillDetailsAdmin = (props) => {
       errors.mode = "Select a payment mode";
     }
 
-    if (form.hasTds === "yes") {
+    if (form.mode === "Insurance") {
       if (!form.tds || isNaN(form.tds) || Number(form.tds) <= 0) {
         errors.tds = "Enter valid TDS amount";
       }
@@ -165,7 +165,7 @@ const BillDetailsAdmin = (props) => {
         reference: addPaymentForm.reference,
       };
 
-      if (addPaymentForm.hasTds === "yes") {
+      if (addPaymentForm.mode === "Insurance") {
         payload.tds = Number(addPaymentForm.tds);
         payload.total =
           Number(addPaymentForm.amount) + Number(addPaymentForm.tds);
@@ -1662,8 +1662,13 @@ const BillDetailsAdmin = (props) => {
               label="Mode"
               value={addPaymentForm.mode}
               onChange={(e) => {
-                setAddPaymentForm((p) => ({ ...p, mode: e.target.value }));
-                setAddPaymentErrors((prev) => ({ ...prev, mode: "" })); // clear error
+                const mode = e.target.value;
+                setAddPaymentForm((p) => ({
+                  ...p,
+                  mode,
+                  tds: mode === "Insurance" ? p.tds : "",
+                }));
+                setAddPaymentErrors((prev) => ({ ...prev, mode: "" }));
               }}
               onBlur={() => {
                 if (!addPaymentForm.mode) {
@@ -1682,6 +1687,7 @@ const BillDetailsAdmin = (props) => {
               <MenuItem value="UPI">UPI</MenuItem>
               <MenuItem value="Card">Card</MenuItem>
               <MenuItem value="Net Banking">Net Banking</MenuItem>
+              <MenuItem value="Insurance">Insurance</MenuItem>
             </TextField>
 
             {/* Reference ID */}
@@ -1709,23 +1715,7 @@ const BillDetailsAdmin = (props) => {
               fullWidth
             />
 
-            <TextField
-              label="TDS Applicable?"
-              select
-              value={addPaymentForm.hasTds}
-              onChange={(e) =>
-                setAddPaymentForm((p) => ({
-                  ...p,
-                  hasTds: e.target.value,
-                  tds: "",
-                }))
-              }
-              fullWidth
-            >
-              <MenuItem value="no">No</MenuItem>
-              <MenuItem value="yes">Yes</MenuItem>
-            </TextField>
-            {addPaymentForm.hasTds === "yes" && (
+            {addPaymentForm.mode === "Insurance" && (
               <TextField
                 label="TDS Amount"
                 value={addPaymentForm.tds}
@@ -1746,7 +1736,8 @@ const BillDetailsAdmin = (props) => {
                 }}
               />
             )}
-            {addPaymentForm.hasTds === "yes" && (
+
+            {addPaymentForm.mode === "Insurance" && (
               <TextField
                 label="Total (Amount + TDS)"
                 value={
