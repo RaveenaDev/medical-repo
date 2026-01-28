@@ -1,0 +1,117 @@
+import { Box, Typography, Chip, IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useState } from "react";
+
+const MobileAppointmentCard = ({ appointment, onMenuClick }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Ongoing":
+        return "#3DB461";
+      case "Completed":
+        return "#EAA000";
+      case "Scheduled":
+        return "#25307F";
+      case "Waiting":
+        return "#757575";
+      default:
+        return "#999";
+    }
+  };
+
+  return (
+    <Box
+      onClick={() => setExpanded((p) => !p)}
+      sx={{
+        background: "#fff",
+        borderRadius: "12px",
+        p: 1.5,
+        mb: 1.2,
+        boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+      }}
+    >
+      {/* Header */}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        gap={1}
+      >
+        <Box
+          sx={{
+            minWidth: 0,
+            flex: 1, // take remaining space
+          }}
+        >
+          <Typography fontSize="15px" fontWeight={600}>
+            {appointment.patient.name}
+          </Typography>
+          <Typography fontSize="12px" color="gray">
+            Case: {appointment.caseId}
+          </Typography>
+        </Box>
+
+        {/* Status + 3-dot menu */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexShrink: 0,
+            gap: "4px",
+          }}
+        >
+          <Chip
+            label={appointment.status}
+            size="small"
+            sx={{
+              bgcolor: getStatusColor(appointment.status),
+              color: "white",
+              fontSize: "11px",
+              fontWeight: 600,
+            }}
+          />
+
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation(); // prevent expand toggle
+              onMenuClick(e, appointment);
+            }}
+          >
+            <MoreVertIcon fontSize="small" />
+          </IconButton>
+        </Box>
+      </Box>
+
+      {/* Meta */}
+      <Typography fontSize="13px" mt={0.5}>
+        {appointment.doctor?.name || "—"} •{" "}
+        {appointment?.tokenDate
+          ? new Date(appointment.tokenDate).toLocaleTimeString("en-IN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
+          : "N/A"}
+      </Typography>
+
+      {/* Expanded info */}
+      {expanded && (
+        <Box mt={1}>
+          <Typography fontSize="13px">
+            <b>Department:</b> {appointment.department?.name || "—"}
+          </Typography>
+          <Typography fontSize="13px">
+            <b>Visit:</b> {appointment.typeVisit || "—"}
+          </Typography>
+          <Typography fontSize="13px">
+            <b>Token:</b> {appointment.tokenNumber || "N/A"}
+          </Typography>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default MobileAppointmentCard;

@@ -52,8 +52,11 @@ import TPA from "./pages/admin/tpa/TPA.jsx";
 import SingleCompanyDetails from "./pages/admin/tpa/companies/singleCompanyDetails/SingleCompanyDetails.jsx";
 import BillDetailsAdmin from "./pages/admin/billing/components/Records/components/BillDetailsAdmin.jsx";
 import BillDetailsReception from "./pages/receptionist/billing/bill/BillDetailsReception.jsx";
+import { useMediaQuery } from "@mui/material";
 
 function App() {
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
   const [entity, setEntity] = useState("");
   const [role, setRole] = useState(""); // Role state
@@ -61,11 +64,6 @@ function App() {
 
   // Hook to get the current location
   const location = useLocation();
-
-  const RedirectToLanding = () => {
-    window.location.href = "https://landingpage.stepcare.tech";
-    return null; // Prevents rendering anything
-  };
 
   // Determine role based on the route
   useEffect(() => {
@@ -100,12 +98,13 @@ function App() {
       setShouldShowSidebar(false);
     }
   }, [location.pathname]);
+  const [isBookAppointment, setIsBookAppointment] = useState(false);
 
   return (
     <>
       <ToastContainer />
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
-        {shouldShowSidebar && !isIpdRoute && (
+        {shouldShowSidebar && !isIpdRoute && !isMobile && (
           <div
             style={{
               width: "20%",
@@ -125,7 +124,13 @@ function App() {
             {!isLoginPage && <Sidebar role={role} />}
           </div>
         )}
-
+        {/* MOBILE BOTTOM NAV (inside Sidebar) */}
+        {shouldShowSidebar && !isIpdRoute && isMobile && !isLoginPage && (
+          <Sidebar
+            role={role}
+            onOpenAppointment={() => setIsBookAppointment(true)}
+          />
+        )}
         {location.pathname === "/" ? (
           <Routes>
             <Route
@@ -139,7 +144,8 @@ function App() {
               isSignUpOrLogin ? styles.loginPageActive : styles.otherPages
             }`}
             style={{
-              marginLeft: shouldShowSidebar && !isIpdRoute ? "20%" : "0",
+              marginLeft:
+                shouldShowSidebar && !isMobile && !isIpdRoute ? "20%" : "0",
               height: "100%",
               overflow: "auto",
             }} // Prevent content from going under the sidebar
@@ -202,6 +208,8 @@ function App() {
                       setIsSignUpOrLogin={setIsSignUpOrLogin}
                       setEntity={setEntity}
                       entity={entity}
+                      isBookAppointment={isBookAppointment}
+                      setIsBookAppointment={setIsBookAppointment}
                     />
                   </ProtectedRoute>
                 }
