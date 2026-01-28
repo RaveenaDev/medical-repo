@@ -1324,6 +1324,7 @@ export const updateStatusOfInsuredPatients =
         {
           insuranceApproved: payload.status,
           amountApproved: payload.approvedAmount,
+          discount: payload.discount,
         },
         {
           headers: {
