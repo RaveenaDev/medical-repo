@@ -1108,7 +1108,8 @@ export const deleteBillItem = (billId, serviceId) => async (dispatch) => {
       },
     );
 
-    getBillDetails(billId);
+    dispatch(getBillDetails(billId));
+
     toast.success("Bill Item Deleted Successfully!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,

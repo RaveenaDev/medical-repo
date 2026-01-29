@@ -66,7 +66,7 @@ const BillDetailsAdmin = (props) => {
       setEditableBill(JSON.parse(JSON.stringify(bill)));
     }
   }, [bill]);
-  console.log("original Bill", bill);
+  // console.log("original Bill", bill);
   // console.log("editable Bill", billId);
   const [isEditing, setIsEditing] = useState(false);
   const printRef = useRef(); // Reference for print container
@@ -611,8 +611,8 @@ const BillDetailsAdmin = (props) => {
   //  -------------------------------------------------DELETE BILL LINE -------------------------------------------------
   const handleDeleteService = (index) => async () => {
     const service = editableBill?.services?.[index];
-    if (!service?._id) {
-      toast.error("Service ID not found");
+    if (!service?.billServiceId) {
+      toast.error("Item ID not found");
       return;
     }
 
@@ -621,7 +621,7 @@ const BillDetailsAdmin = (props) => {
     toast.info(
       ({ closeToast }) => (
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <strong>Delete this service?</strong>
+          <strong>Delete this Bill Item?</strong>
 
           <div style={{ display: "flex", gap: "10px" }}>
             <button
@@ -639,8 +639,8 @@ const BillDetailsAdmin = (props) => {
                 deleting = true;
 
                 try {
-                  const billId = editableBill?._id;
-                  const serviceId = service._id;
+                  const billId = bill._id;
+                  const serviceId = service.billServiceId;
 
                   await dispatch(deleteBillItem(billId, serviceId));
 
@@ -1068,13 +1068,13 @@ const BillDetailsAdmin = (props) => {
                         )}
                       </div>
 
-                      <div>
+                      <div className={styles["billing-delete-icon"]}>
                         {isEditing ? (
                           <div
                             className={styles["billing-delete-icon"]}
                             onClick={handleDeleteService(i)}
                           >
-                            <Trash2Icon />
+                            <Trash2Icon color="red" />
                           </div>
                         ) : (
                           <div></div>
