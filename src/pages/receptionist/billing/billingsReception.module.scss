@@ -26,7 +26,6 @@
     .title-wrapper {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
     }
 
     h2 {
@@ -42,7 +41,7 @@
         width: 24px;
         height: 24px;
       }
-      padding: 0 8px;
+      padding: 0 4px;
 
       &:focus,
       &:active {

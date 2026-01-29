@@ -81,7 +81,7 @@ const Billings = (props) => {
         style={{
           position: "fixed",
           top: "0px",
-          padding: "15px 10px 0 0",
+          padding: isMobile ? "0" : "15px 10px 0 0",
           width: isMobile ? "90%" : "75%",
           background: " #F1F1F1",
           zIndex: 100,
