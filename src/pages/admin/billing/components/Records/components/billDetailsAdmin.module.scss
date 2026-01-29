@@ -101,7 +101,7 @@
           .billing-table-header,
           .billing-category {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 0.75fr 0.75fr 0.75fr 0.9fr;
+            grid-template-columns: 1.5fr 1fr 0.75fr 0.75fr 0.75fr 0.9fr 0.25fr;
           }
         }
 
@@ -332,7 +332,9 @@
   border: 1px solid #25307f;
   color: #25307f;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
 }
 
 .view-details-btn:hover {
@@ -365,7 +367,7 @@
 
 .payment-list-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   font-weight: bold;
   padding-bottom: 0.5rem;
 }
@@ -396,6 +398,27 @@
   }
 }
 
+.payment-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.payment-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  .print-refund-btn {
+    background-color: #25307f;
+    color: white;
+    width: fit-content;
+    border: none;
+    padding: 0.5vh 1vw;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75vw;
+  }
+}
 .billing-insurance-details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -429,4 +452,11 @@
     color: #25307f;
     font-weight: 600;
   }
+}
+
+.billing-delete-icon {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

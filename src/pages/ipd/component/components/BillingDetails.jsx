@@ -333,8 +333,8 @@ const BillingDetails = ({ onClose }) => {
     const gstPct = Number.isFinite(+row.gstPct)
       ? +row.gstPct
       : Number.isFinite(+row.details?.gstPct)
-      ? +row.details.gstPct
-      : 0;
+        ? +row.details.gstPct
+        : 0;
 
     const gstAmt = +((base * gstPct) / 100).toFixed(2);
     const lineTotal = +(base + gstAmt).toFixed(2);
@@ -342,6 +342,7 @@ const BillingDetails = ({ onClose }) => {
     const desc = row.category || row.service || row.details?.description || "—";
     const name =
       row.details?.doctorName ||
+      row.details?.bedNumber ||
       row.details?.bedType ||
       row.details?.name ||
       row.category ||
@@ -378,12 +379,12 @@ const BillingDetails = ({ onClose }) => {
   const roundOff = +(Math.round(grossTotal) - grossTotal).toFixed(2);
   const netPayable = +(grossTotal + roundOff).toFixed(2);
   const discountAmt = safeNum(
-    editableBill?.discount?.amount ?? bill?.discount?.amount ?? 0
+    editableBill?.discount?.amount ?? bill?.discount?.amount ?? 0,
   );
 
   const paidAmt = safeNum(editableBill?.paidAmount ?? bill?.paidAmount ?? 0);
   const balanceDue = safeNum(
-    editableBill?.outstanding ?? bill?.outstanding ?? 0
+    editableBill?.outstanding ?? bill?.outstanding ?? 0,
   );
 
   // Hospital/patient convenience fields
@@ -549,7 +550,7 @@ const BillingDetails = ({ onClose }) => {
   }, [debouncedServiceInput, dispatch]);
 
   const serviceOptions = useSelector(
-    (state) => state.receptionist.serviceSearch
+    (state) => state.receptionist.serviceSearch,
   );
 
   if (loading) {
@@ -662,11 +663,11 @@ const BillingDetails = ({ onClose }) => {
                     <span>
                       {bill.insurance.insuranceStartDate
                         ? `${new Date(
-                            bill.insurance.insuranceStartDate
+                            bill.insurance.insuranceStartDate,
                           ).toLocaleDateString("en-IN")} — ${
                             bill.insurance.insuranceExpiryDate
                               ? new Date(
-                                  bill.insurance.insuranceExpiryDate
+                                  bill.insurance.insuranceExpiryDate,
                                 ).toLocaleDateString("en-IN")
                               : "N/A"
                           }`
@@ -677,7 +678,7 @@ const BillingDetails = ({ onClose }) => {
                     <span className={styles["bold"]}>Approval Status</span>
                     <span
                       className={`${styles["status"]} ${String(
-                        bill.insurance.insuranceApproved || ""
+                        bill.insurance.insuranceApproved || "",
                       ).toLowerCase()}`}
                     >
                       {bill.insurance.insuranceApproved || "Pending"}
@@ -688,7 +689,7 @@ const BillingDetails = ({ onClose }) => {
                     <span>
                       ₹
                       {(bill.insurance.amountApproved ?? 0).toLocaleString(
-                        "en-IN"
+                        "en-IN",
                       )}
                     </span>
                   </div>
@@ -766,14 +767,14 @@ const BillingDetails = ({ onClose }) => {
                             value={desc}
                             onChange={(e) => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].category = e.target.value;
                               setEditableBill(updated);
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].category =
                                 updated.services[i].category || "";
@@ -794,7 +795,7 @@ const BillingDetails = ({ onClose }) => {
                             value={name}
                             onChange={(e) => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
 
                               if (!updated.services[i].details) {
@@ -802,7 +803,7 @@ const BillingDetails = ({ onClose }) => {
                               }
 
                               const key = getEditableNameKey(
-                                updated.services[i].details
+                                updated.services[i].details,
                               );
                               updated.services[i].details[key] = e.target.value; // ✅ dynamic field
 
@@ -810,7 +811,7 @@ const BillingDetails = ({ onClose }) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
 
                               if (!updated.services[i].details) {
@@ -818,7 +819,7 @@ const BillingDetails = ({ onClose }) => {
                               }
 
                               const key = getEditableNameKey(
-                                updated.services[i].details
+                                updated.services[i].details,
                               );
                               updated.services[i].details[key] =
                                 updated.services[i].details[key] || "";
@@ -849,7 +850,7 @@ const BillingDetails = ({ onClose }) => {
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D+/g, "");
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].quantity =
                                 v === "" ? "" : Number(v);
@@ -857,7 +858,7 @@ const BillingDetails = ({ onClose }) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].quantity =
                                 Number(updated.services[i].quantity) || 0;
@@ -880,7 +881,7 @@ const BillingDetails = ({ onClose }) => {
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D+/g, "");
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].rate =
                                 v === "" ? "" : Number(v);
@@ -888,7 +889,7 @@ const BillingDetails = ({ onClose }) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].rate =
                                 Number(updated.services[i].rate) || 0;
@@ -914,7 +915,7 @@ const BillingDetails = ({ onClose }) => {
                     const pr = Number.isFinite(+r.rate) ? +r.rate : 0;
                     return sum + q * pr;
                   },
-                  0
+                  0,
                 );
                 return (
                   <div className={styles["billing-total"]}>
@@ -1020,7 +1021,7 @@ const BillingDetails = ({ onClose }) => {
                       value={editableBill?.status ?? bill.status}
                       onChange={(e) => {
                         const updated = JSON.parse(
-                          JSON.stringify(editableBill)
+                          JSON.stringify(editableBill),
                         );
                         updated.status = e.target.value;
                         setEditableBill(updated);
@@ -1068,7 +1069,7 @@ const BillingDetails = ({ onClose }) => {
                                 day: "2-digit",
                                 month: "2-digit",
                                 year: "numeric",
-                              }
+                              },
                             )}
                           </span>
                         </p>

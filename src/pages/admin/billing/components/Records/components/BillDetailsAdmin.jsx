@@ -2,12 +2,13 @@ import {
   addDiscount,
   addPaymentToBill,
   addToBill,
+  deleteBillItem,
   editBill,
   getBillDetails,
   refundBill,
   searchServiceSubCategories,
 } from "../../../../../../components/State/Admin/Action";
-
+import { toast } from "react-toastify";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
@@ -33,7 +34,7 @@ import printJS from "print-js"; // Import print-js
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Printer } from "lucide-react";
+import { Printer, Trash2Icon } from "lucide-react";
 import useDebounce from "../../../../../../hooks/useDebounce";
 
 const BillDetailsAdmin = (props) => {
@@ -97,13 +98,14 @@ const BillDetailsAdmin = (props) => {
     setAddForm({ category: "", quantity: "1", rate: "0", details: "" });
   };
 
-  // ---- Add Payment Dialog ----
+  // ---- ---- Add Payment Dialog ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
   const [addPaymentOpen, setAddPaymentOpen] = useState(false);
   const [addPaymentLoading, setAddPaymentLoading] = useState(false);
   const [addPaymentForm, setAddPaymentForm] = useState({
     amount: "",
     mode: "",
     reference: "",
+    tds: "",
   });
   const [addPaymentErrors, setAddPaymentErrors] = useState({});
 
@@ -111,7 +113,13 @@ const BillDetailsAdmin = (props) => {
   const closeAddPayment = () => {
     setAddPaymentOpen(false);
     setAddPaymentErrors({});
-    setAddPaymentForm({ amount: "", mode: "", reference: "", billId: billId });
+    setAddPaymentForm({
+      amount: "",
+      mode: "",
+      reference: "",
+      billId: billId,
+      tds: "",
+    });
   };
   // Validation function
   const validateAddPaymentForm = (form) => {
@@ -123,6 +131,16 @@ const BillDetailsAdmin = (props) => {
 
     if (!form.mode) {
       errors.mode = "Select a payment mode";
+    }
+
+    if (form.mode === "Insurance") {
+      if (!form.tds || isNaN(form.tds) || Number(form.tds) <= 0) {
+        errors.tds = "Enter valid TDS amount";
+      }
+
+      if (Number(form.tds) >= Number(form.amount)) {
+        errors.tds = "TDS cannot be greater than amount";
+      }
     }
 
     return errors;
@@ -139,9 +157,21 @@ const BillDetailsAdmin = (props) => {
     try {
       setAddPaymentLoading(true);
 
-      await dispatch(addPaymentToBill(billId, addPaymentForm));
+      const payload = {
+        amount: Number(addPaymentForm.amount),
+        mode: addPaymentForm.mode,
+        reference: addPaymentForm.reference,
+      };
 
-      closeAddPayment(); // reset & close if success
+      if (addPaymentForm.mode === "Insurance") {
+        payload.tds = Number(addPaymentForm.tds);
+        payload.total =
+          Number(addPaymentForm.amount) + Number(addPaymentForm.tds);
+      }
+
+      await dispatch(addPaymentToBill(billId, payload));
+
+      closeAddPayment();
     } catch (err) {
       console.error(err);
       setAddPaymentErrors({ general: "Failed to add payment" });
@@ -150,6 +180,7 @@ const BillDetailsAdmin = (props) => {
     }
   };
 
+  //  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
   const handleAddChange = (field) => (e) => {
     let value = e.target.value;
     if (field === "quantity" || field === "rate") {
@@ -338,8 +369,8 @@ const BillDetailsAdmin = (props) => {
     const gstPct = Number.isFinite(+row.gstPct)
       ? +row.gstPct
       : Number.isFinite(+row.details?.gstPct)
-      ? +row.details.gstPct
-      : 0;
+        ? +row.details.gstPct
+        : 0;
 
     const gstAmt = +((base * gstPct) / 100).toFixed(2);
     const lineTotal = +(base + gstAmt).toFixed(2);
@@ -347,6 +378,7 @@ const BillDetailsAdmin = (props) => {
     const desc = row.category || row.service || row.details?.description || "—";
     const name =
       row.details?.doctorName ||
+      row.details?.bedNumber ||
       row.details?.bedType ||
       row.details?.name ||
       row.category ||
@@ -383,12 +415,12 @@ const BillDetailsAdmin = (props) => {
   const roundOff = +(Math.round(grossTotal) - grossTotal).toFixed(2);
   const netPayable = +(grossTotal + roundOff).toFixed(2);
   const discountAmt = safeNum(
-    editableBill?.discount?.amount ?? bill?.discount?.amount ?? 0
+    editableBill?.discount?.amount ?? bill?.discount?.amount ?? 0,
   );
 
   const paidAmt = safeNum(editableBill?.paidAmount ?? bill?.paidAmount ?? 0);
   const balanceDue = safeNum(
-    editableBill?.outstanding ?? bill?.outstanding ?? 0
+    editableBill?.outstanding ?? bill?.outstanding ?? 0,
   );
 
   // Hospital/patient convenience fields
@@ -427,7 +459,8 @@ const BillDetailsAdmin = (props) => {
     acc[category].push(row);
     return acc;
   }, {});
-  // DISCOUNT
+
+  //------------------ DISCOUNT -------------------------------------------------
 
   const [discountOpen, setDiscountOpen] = useState(false);
   const [discountLoading, setDiscountLoading] = useState(false);
@@ -437,7 +470,24 @@ const BillDetailsAdmin = (props) => {
     reason: "",
   });
   const [discountErrors, setDiscountErrors] = useState({});
-  const openDiscount = () => setDiscountOpen(true);
+  const openDiscount = () => {
+    if (bill?.insurance?.discount) {
+      setDiscountForm({
+        type: bill.insurance.discount.type || "Flat",
+        value: bill.insurance.discount.value,
+        reason: bill.insurance.discountReason || "Insurance discount",
+      });
+    } else {
+      setDiscountForm({
+        type: "Flat",
+        value: "",
+        reason: "",
+      });
+    }
+
+    setDiscountErrors({});
+    setDiscountOpen(true);
+  };
 
   const closeDiscount = () => {
     setDiscountOpen(false);
@@ -480,7 +530,7 @@ const BillDetailsAdmin = (props) => {
     }
   };
 
-  // REFUNDS
+  // ------------------------------------------------- REFUNDS -------------------------------------------------
 
   const [refundOpen, setRefundOpen] = useState(false);
   const [refundLoading, setRefundLoading] = useState(false);
@@ -546,7 +596,7 @@ const BillDetailsAdmin = (props) => {
     });
   };
 
-  // AUTOFILL FOR ADD TO BILL
+  // ------------------------------------------------- AUTOFILL FOR ADD TO BILL -------------------------------------------------
   const [serviceInput, setServiceInput] = useState("");
   const debouncedServiceInput = useDebounce(serviceInput, 300);
   useEffect(() => {
@@ -554,8 +604,125 @@ const BillDetailsAdmin = (props) => {
   }, [debouncedServiceInput, dispatch]);
 
   const serviceOptions = useSelector(
-    (state) => state.receptionist.serviceSearch
+    (state) => state.receptionist.serviceSearch,
   );
+
+  //  -------------------------------------------------DELETE BILL LINE -------------------------------------------------
+  const handleDeleteService = (index) => async () => {
+    const service = editableBill?.services?.[index];
+    if (!service?.billServiceId) {
+      toast.error("Item ID not found");
+      return;
+    }
+
+    let deleting = false;
+
+    toast.info(
+      ({ closeToast }) => (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <strong>Delete this Bill Item?</strong>
+
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              style={{
+                padding: "6px 12px",
+                background: deleting ? "#aaa" : "#d9534f",
+                color: "#fff",
+                borderRadius: "6px",
+                border: "none",
+                cursor: deleting ? "not-allowed" : "pointer",
+              }}
+              disabled={deleting}
+              onClick={async () => {
+                if (deleting) return;
+                deleting = true;
+
+                try {
+                  const billId = bill._id;
+                  const serviceId = service.billServiceId;
+
+                  await dispatch(deleteBillItem(billId, serviceId));
+
+                  setEditableBill((prev) => ({
+                    ...prev,
+                    services: prev.services.filter((s) => s._id !== serviceId),
+                  }));
+
+                  closeToast();
+                } catch (err) {
+                  deleting = false;
+                  console.error(err);
+                }
+              }}
+            >
+              Yes, Delete
+            </button>
+
+            <button
+              style={{
+                padding: "6px 12px",
+                background: "#6c757d",
+                color: "#fff",
+                borderRadius: "6px",
+                border: "none",
+              }}
+              onClick={closeToast}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      { autoClose: false },
+    );
+  };
+
+  // ------------------------------------------------- PRINT PAYMENT -------------------------------------------------
+
+  const printPaymentFromHistory = (payment) => {
+    if (!payment) return;
+
+    document.getElementById("payment-amount").innerText = Number(
+      payment.amount,
+    ).toLocaleString("en-IN");
+
+    document.getElementById("payment-mode").innerText = payment.mode || "—";
+
+    document.getElementById("payment-ref").innerText = payment.reference || "—";
+
+    document.getElementById("payment-amount-words").innerText =
+      amountInWordsINR(payment.amount);
+    printJS({
+      printable: "payment-print",
+      type: "html",
+      scanStyles: false,
+      style: `
+      @page { size: A4; margin: 6mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { font-family: Arial, sans-serif; font-size: 12px; color: #111; }
+      .bill-wrap { border: 1px solid #222; padding: 10px; }
+      .bill-head { display: flex; justify-content: center; align-items: center; gap: 12px; }
+      .logo { width: 64px; height: 64px; object-fit: contain; }
+      .titleblock { text-align: center; }
+    
+      .bill-title { font-size: 16px; font-weight: 700; text-align: center; margin: 10px 0 14px; }
+      .muted { color: #555; }
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 8px; }
+      .box { border: 1px solid #999; padding: 8px; border-radius: 2px; margin-top: 10px; }
+      .section-title { font-weight: 700; margin-bottom: 6px; }
+      table.bill { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      table.bill th, table.bill td { border: 1px solid #000; padding: 6px; }
+      table.bill th { background: #f2f2f2; }
+      .center { text-align: center; }
+      .right { text-align: right; }
+      .amount-words { border: 1px dashed #999; padding: 8px; margin-top: 10px; font-style: italic; }
+      .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+      .sig-box { height: 64px; border: 1px solid #999; padding: 8px; display: flex; align-items: flex-end; justify-content: space-between; }
+      .footnote { margin-top: 16px; text-align: center; font-size: 11px; color: #444; }
+    `,
+    });
+  };
+
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -662,11 +829,11 @@ const BillDetailsAdmin = (props) => {
                     <span>
                       {bill.insurance.insuranceStartDate
                         ? `${new Date(
-                            bill.insurance.insuranceStartDate
+                            bill.insurance.insuranceStartDate,
                           ).toLocaleDateString("en-IN")} — ${
                             bill.insurance.insuranceExpiryDate
                               ? new Date(
-                                  bill.insurance.insuranceExpiryDate
+                                  bill.insurance.insuranceExpiryDate,
                                 ).toLocaleDateString("en-IN")
                               : "N/A"
                           }`
@@ -677,7 +844,7 @@ const BillDetailsAdmin = (props) => {
                     <span className={styles["bold"]}>Approval Status</span>
                     <span
                       className={`${styles["status"]} ${String(
-                        bill.insurance.insuranceApproved || ""
+                        bill.insurance.insuranceApproved || "",
                       ).toLowerCase()}`}
                     >
                       {bill.insurance.insuranceApproved || "Pending"}
@@ -688,7 +855,7 @@ const BillDetailsAdmin = (props) => {
                     <span>
                       ₹
                       {(bill.insurance.amountApproved ?? 0).toLocaleString(
-                        "en-IN"
+                        "en-IN",
                       )}
                     </span>
                   </div>
@@ -766,14 +933,14 @@ const BillDetailsAdmin = (props) => {
                             value={desc}
                             onChange={(e) => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].category = e.target.value;
                               setEditableBill(updated);
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].category =
                                 updated.services[i].category || "";
@@ -794,7 +961,7 @@ const BillDetailsAdmin = (props) => {
                             value={name}
                             onChange={(e) => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
 
                               if (!updated.services[i].details) {
@@ -802,7 +969,7 @@ const BillDetailsAdmin = (props) => {
                               }
 
                               const key = getEditableNameKey(
-                                updated.services[i].details
+                                updated.services[i].details,
                               );
                               updated.services[i].details[key] = e.target.value; // ✅ dynamic field
 
@@ -810,7 +977,7 @@ const BillDetailsAdmin = (props) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
 
                               if (!updated.services[i].details) {
@@ -818,7 +985,7 @@ const BillDetailsAdmin = (props) => {
                               }
 
                               const key = getEditableNameKey(
-                                updated.services[i].details
+                                updated.services[i].details,
                               );
                               updated.services[i].details[key] =
                                 updated.services[i].details[key] || "";
@@ -849,7 +1016,7 @@ const BillDetailsAdmin = (props) => {
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D+/g, "");
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].quantity =
                                 v === "" ? "" : Number(v);
@@ -857,7 +1024,7 @@ const BillDetailsAdmin = (props) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].quantity =
                                 Number(updated.services[i].quantity) || 0;
@@ -880,7 +1047,7 @@ const BillDetailsAdmin = (props) => {
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D+/g, "");
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].rate =
                                 v === "" ? "" : Number(v);
@@ -888,7 +1055,7 @@ const BillDetailsAdmin = (props) => {
                             }}
                             onBlur={() => {
                               const updated = JSON.parse(
-                                JSON.stringify(editableBill)
+                                JSON.stringify(editableBill),
                               );
                               updated.services[i].rate =
                                 Number(updated.services[i].rate) || 0;
@@ -897,6 +1064,19 @@ const BillDetailsAdmin = (props) => {
                           />
                         ) : (
                           <div>₹{rate.toLocaleString("en-IN")}</div>
+                        )}
+                      </div>
+
+                      <div className={styles["billing-delete-icon"]}>
+                        {isEditing ? (
+                          <div
+                            className={styles["billing-delete-icon"]}
+                            onClick={handleDeleteService(i)}
+                          >
+                            <Trash2Icon color="red" />
+                          </div>
+                        ) : (
+                          <div></div>
                         )}
                       </div>
                     </div>
@@ -914,7 +1094,7 @@ const BillDetailsAdmin = (props) => {
                     const pr = Number.isFinite(+r.rate) ? +r.rate : 0;
                     return sum + q * pr;
                   },
-                  0
+                  0,
                 );
                 return (
                   <div className={styles["billing-total"]}>
@@ -952,8 +1132,8 @@ const BillDetailsAdmin = (props) => {
                   ₹
                   {isEditing
                     ? computedGrand
-                    : editableBill?.totalAmount.toLocaleString("en-IN") ??
-                      bill.totalAmount.toLocaleString("en-IN")}
+                    : (editableBill?.totalAmount.toLocaleString("en-IN") ??
+                      bill.totalAmount.toLocaleString("en-IN"))}
                 </div>
               </div>
               {bill?.discount?.amount > 0 && (
@@ -1021,7 +1201,7 @@ const BillDetailsAdmin = (props) => {
                       value={editableBill?.status ?? bill.status}
                       onChange={(e) => {
                         const updated = JSON.parse(
-                          JSON.stringify(editableBill)
+                          JSON.stringify(editableBill),
                         );
                         updated.status = e.target.value;
                         setEditableBill(updated);
@@ -1040,7 +1220,7 @@ const BillDetailsAdmin = (props) => {
             <div className={styles["billing-history"]}>
               <div className={styles["payment-heading"]}>Payment History</div>
               {bill.payments && bill.payments.length > 0 ? (
-                <div>
+                <div className={styles["payment-summary"]}>
                   <div className={styles["payment-list-header"]}>
                     <div className={styles["payment-list-header-item"]}>
                       <span>Date</span>
@@ -1054,40 +1234,48 @@ const BillDetailsAdmin = (props) => {
                     <div className={styles["payment-list-header-item"]}>
                       <span>Reference</span>
                     </div>
+                    <div className={styles["payment-list-header-item"]}>
+                      <span>Action</span>
+                    </div>
                   </div>
-                  <div className={styles["payment-list"]}>
-                    {bill.payments.map((payment) => (
-                      <div
-                        className={styles["billing-summary"]}
-                        key={payment._id}
-                      >
-                        <p>
-                          <span>
-                            {new Date(payment.date).toLocaleDateString(
-                              "en-IN",
-                              {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "numeric",
-                              }
-                            )}
-                          </span>
-                        </p>
-                        <p>
-                          <span>₹{payment.amount.toLocaleString("en-IN")}</span>
-                        </p>
-                        <p>
-                          <span>
-                            <span> {payment?.mode}</span>
-                          </span>
-                        </p>
 
-                        <p>
-                          <span> {payment?.reference || "N/A"}</span>
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  {bill.payments.map((payment) => (
+                    <div
+                      className={styles["payment-details"]}
+                      key={payment._id}
+                    >
+                      <p>
+                        <span>
+                          {new Date(payment.date).toLocaleDateString("en-IN", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </p>
+                      <p>
+                        <span>₹{payment.amount.toLocaleString("en-IN")}</span>
+                      </p>
+                      <p>
+                        <span>
+                          <span> {payment?.mode}</span>
+                        </span>
+                      </p>
+
+                      <p>
+                        <span> {payment?.reference || "N/A"}</span>
+                      </p>
+                      {/* Print Button */}
+                      <button
+                        size="small"
+                        onClick={() => printPaymentFromHistory(payment)}
+                        className={styles["print-refund-btn"]}
+                      >
+                        <Printer />
+                        Print
+                      </button>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className={styles["no-records"]}>
@@ -1229,6 +1417,7 @@ const BillDetailsAdmin = (props) => {
               select
               label="Discount Type"
               value={discountForm.type}
+              disabled={!!bill?.insurance}
               onChange={(e) =>
                 setDiscountForm((p) => ({ ...p, type: e.target.value }))
               }
@@ -1252,6 +1441,7 @@ const BillDetailsAdmin = (props) => {
               }
               error={!!discountErrors.value}
               helperText={discountErrors.value}
+              disabled={!!bill?.insurance}
               fullWidth
               InputProps={{
                 startAdornment:
@@ -1471,8 +1661,13 @@ const BillDetailsAdmin = (props) => {
               label="Mode"
               value={addPaymentForm.mode}
               onChange={(e) => {
-                setAddPaymentForm((p) => ({ ...p, mode: e.target.value }));
-                setAddPaymentErrors((prev) => ({ ...prev, mode: "" })); // clear error
+                const mode = e.target.value;
+                setAddPaymentForm((p) => ({
+                  ...p,
+                  mode,
+                  tds: mode === "Insurance" ? p.tds : "",
+                }));
+                setAddPaymentErrors((prev) => ({ ...prev, mode: "" }));
               }}
               onBlur={() => {
                 if (!addPaymentForm.mode) {
@@ -1491,6 +1686,7 @@ const BillDetailsAdmin = (props) => {
               <MenuItem value="UPI">UPI</MenuItem>
               <MenuItem value="Card">Card</MenuItem>
               <MenuItem value="Net Banking">Net Banking</MenuItem>
+              <MenuItem value="Insurance">Insurance</MenuItem>
             </TextField>
 
             {/* Reference ID */}
@@ -1518,6 +1714,45 @@ const BillDetailsAdmin = (props) => {
               fullWidth
             />
 
+            {addPaymentForm.mode === "Insurance" && (
+              <TextField
+                label="TDS Amount"
+                value={addPaymentForm.tds}
+                onChange={(e) =>
+                  setAddPaymentForm((p) => ({
+                    ...p,
+                    tds: e.target.value === "" ? "" : Number(e.target.value),
+                  }))
+                }
+                error={!!addPaymentErrors.tds}
+                helperText={addPaymentErrors.tds}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ),
+                  inputProps: { inputMode: "numeric", pattern: "[0-9]*" },
+                }}
+              />
+            )}
+
+            {addPaymentForm.mode === "Insurance" && (
+              <TextField
+                label="Total (Amount + TDS)"
+                value={
+                  Number(addPaymentForm.amount || 0) +
+                  Number(addPaymentForm.tds || 0)
+                }
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ),
+                  readOnly: true,
+                }}
+              />
+            )}
+
             {/* General error (like API failure) */}
             {addPaymentErrors.general && (
               <Typography color="error" variant="body2">
@@ -1544,8 +1779,127 @@ const BillDetailsAdmin = (props) => {
         </DialogActions>
       </Dialog>
 
-      {/* Hidden Refund Printable Section */}
+      {/* Hidden Payment Printable Section */}
+      <div style={{ display: "none" }}>
+        <div id="payment-print" className="bill-wrap">
+          {/* Header */}
+          <div className="bill-head">
+            {logoUrl && (
+              <img className="logo" src={logoUrl} alt="Hospital Logo" />
+            )}
 
+            <div className="titleblock">
+              <div style={{ fontSize: 18, fontWeight: 700 }}>
+                {hospitalName}
+              </div>
+              <div>{hospitalAddr}</div>
+              <div>{hospitalPhone}</div>
+
+              {(hospitalGstin || hospitalPan) && (
+                <div className="muted">
+                  {hospitalGstin && <>GSTIN: {hospitalGstin} </>}
+                  {hospitalPan && <>| PAN: {hospitalPan}</>}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Title */}
+          <div className="bill-title">PAYMENT RECEIPT</div>
+
+          {/* Patient + Payment Info */}
+          <div className="grid-2">
+            <div className="box">
+              <div className="section-title">Patient Details</div>
+
+              <div>
+                <b>Patient Name:</b> {bill?.patient?.name || "—"}
+              </div>
+              <div>
+                <b>Patient ID:</b> {bill?.patient?.patId || "—"}
+              </div>
+              <div>
+                <b>Phone:</b> {bill?.patient?.phone || "—"}
+              </div>
+            </div>
+
+            <div className="box">
+              <div className="section-title">Receipt Details</div>
+              <div>
+                <b>Invoice No:</b> {bill?.invoiceNumber}
+              </div>
+              <div>
+                <b>Payment Date:</b>{" "}
+                {new Date().toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Table */}
+          <table className="bill">
+            <thead>
+              <tr>
+                <th className="center" style={{ width: 60 }}>
+                  #
+                </th>
+                <th>Description</th>
+                <th className="center" style={{ width: 120 }}>
+                  Mode
+                </th>
+                <th className="right" style={{ width: 150 }}>
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="center">1</td>
+                <td>Payment received against Invoice #{bill?.invoiceNumber}</td>
+                <td className="center">
+                  <span id="payment-mode" />
+                </td>
+                <td className="right">
+                  ₹<span id="payment-amount" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Reference */}
+          <div className="box">
+            <b>Reference:</b> <span id="payment-ref">—</span>
+          </div>
+
+          {/* Amount in Words */}
+          <div className="amount-words">
+            <b>Amount in words:</b> <span id="payment-amount-words" />
+          </div>
+
+          {/* Signatures */}
+          <div className="signatures">
+            <div className="sig-box">
+              <span>Patient / Authorized Signatory</span>
+              <span style={{ opacity: 0.6 }}>Signature</span>
+            </div>
+            <div className="sig-box">
+              <span>For {hospitalName}</span>
+              <span style={{ opacity: 0.6 }}>Authorized Signatory</span>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="footnote">
+            This is a system-generated payment receipt. Thank you for choosing{" "}
+            <b>{hospitalName}</b>.
+          </div>
+        </div>
+      </div>
+
+      {/* Hidden Refund Printable Section */}
       <div style={{ display: "none" }}>
         <div id="refund-print" className="bill-wrap">
           {/* Header */}

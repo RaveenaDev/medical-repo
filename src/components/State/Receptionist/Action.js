@@ -345,7 +345,7 @@ export const getDepartmentById = (departmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     dispatch({ type: GET_DEPARTMENT_BY_ID, payload: data });
@@ -364,7 +364,7 @@ export const getServicesByDepartmentId = (departmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     // console.log("Services: ",data)
@@ -472,7 +472,7 @@ export const cancelAppointment = (appointmentId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
     // console.log("App. Cancelled : ",data)
     toast.success("Appointment Cancelled Successfully", {
@@ -607,7 +607,7 @@ export const acceptAppointmentRequests = (id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     dispatch({ type: ACCEPT_APPOINTMENT_REQUESTS, payload: id });
@@ -628,7 +628,7 @@ export const rejectAppointmentRequests = (id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     dispatch({ type: REJECT_APPOINTMENT_REQUESTS, payload: id });
@@ -685,7 +685,7 @@ export const getDoctorsByDepartment = (departId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     dispatch({ type: GET_DOCTORS_BY_DEPARTMENT, payload: data });
@@ -710,14 +710,14 @@ export const fetchDoctorsByDepartment =
           headers: {
             Authorization: `Bearer ${token}`, // Includes the token in the authorization header
           },
-        }
+        },
       );
 
       dispatch({ type: GET_FILTERED_DOCTORS, payload: data });
     } catch (error) {
       console.error(
         "Error filtering doctor:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
 
       toast.error("Error  filtering Doctor!", {
@@ -770,7 +770,7 @@ export const getProgressTrackerDetails =
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       //console.log("Progress Tracker: ", data);
@@ -792,7 +792,7 @@ export const getBillsByPatientId = (patientId) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("Bill INFO", data);
     dispatch({ type: GET_PATIENT_BILLS, payload: data.bills });
@@ -815,7 +815,7 @@ export const startConsultation = (patientId) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`, // Includes the token in the authorization header
         },
-      }
+      },
     );
 
     console.log("Ongoing app. successful : ", data);
@@ -867,7 +867,7 @@ export const submitConsultation = (consultationData) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           // Don't set Content-Type; browser will set multipart boundary.
         },
-      }
+      },
     );
 
     dispatch({ type: SUBMIT_CONSULTATION, payload: data });
@@ -917,7 +917,7 @@ export const addDiscount = (payload, id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     // console.log("Discount Bill Response:", data);
 
@@ -941,7 +941,7 @@ export const editBill = (payload, id) => async (dispatch) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     dispatch({ type: EDIT_BILL, payload: data });
@@ -1056,7 +1056,7 @@ export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     // console.log("Payment Response: ", data);
     dispatch({ type: ADD_PAYMENT_TO_BILL, payload: data });
@@ -1070,6 +1070,33 @@ export const addPaymentToBill = (billId, paymentData) => async (dispatch) => {
     console.error("Error adding payment to bill:", error);
     toast.error("Failed to add payment. Please try again.", {
       position: "bottom-right",
+      autoClose: 2000,
+    });
+  }
+};
+
+export const deleteBillItem = (billId, serviceId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.delete(
+      `${API_URL}/deleteBillServiceEntry/${billId}/services/${serviceId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Includes the token in the authorization header
+        },
+      },
+    );
+
+    dispatch(getBillDetails(billId));
+
+    toast.success("Bill Item Deleted Successfully!", {
+      position: "bottom-right", // Use string for position
+      autoClose: 2000,
+    });
+  } catch (error) {
+    console.error("Failed to delete Bill Item:", error);
+    toast.error("Failed to delete Bill Item!", {
+      position: "bottom-right", // Use string for position
       autoClose: 2000,
     });
   }
