@@ -22,6 +22,9 @@ const DateSelector = ({ selectedDate, setSelectedDate }) => {
   return (
     <div
       className={shreyStyles.todayRow}
+      style={{
+        width: "75%",
+      }}
       onClick={openCalendar} //  whole row opens calendar
     >
       <div className={shreyStyles.calendarWrapperIn}>

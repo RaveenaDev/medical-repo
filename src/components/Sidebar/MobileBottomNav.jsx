@@ -23,7 +23,14 @@ const MobileBottomNav = ({
   };
 
   return (
-    <>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        pointerEvents: "none",
+        zIndex: 1300,
+      }}
+    >
       {/* PLUS FAB */}
       <Fab
         color="primary"
@@ -34,13 +41,21 @@ const MobileBottomNav = ({
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 1300,
+          pointerEvents: "auto",
         }}
       >
         <AddIcon />
       </Fab>
 
       <Paper
-        sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1200,
+          pointerEvents: "auto",
+        }}
         elevation={12}
       >
         <BottomNavigation value={getValue()}>
@@ -72,7 +87,7 @@ const MobileBottomNav = ({
           />
         </BottomNavigation>
       </Paper>
-    </>
+    </div>
   );
 };
 
