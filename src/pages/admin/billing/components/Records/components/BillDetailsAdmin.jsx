@@ -105,7 +105,6 @@ const BillDetailsAdmin = (props) => {
     amount: "",
     mode: "",
     reference: "",
-
     tds: "",
   });
   const [addPaymentErrors, setAddPaymentErrors] = useState({});
@@ -119,7 +118,6 @@ const BillDetailsAdmin = (props) => {
       mode: "",
       reference: "",
       billId: billId,
-
       tds: "",
     });
   };
@@ -380,6 +378,7 @@ const BillDetailsAdmin = (props) => {
     const desc = row.category || row.service || row.details?.description || "—";
     const name =
       row.details?.doctorName ||
+      row.details?.bedNumber ||
       row.details?.bedType ||
       row.details?.name ||
       row.category ||
