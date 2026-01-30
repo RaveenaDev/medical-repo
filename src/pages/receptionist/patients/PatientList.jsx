@@ -30,6 +30,7 @@ import {
   DialogTitle,
   TextField,
   TablePagination,
+  useMediaQuery,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
@@ -45,7 +46,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CircularProgress from "@mui/material/CircularProgress";
 import styles from "./PatientList.module.scss";
 import useDebounce from "../../../hooks/useDebounce.js";
-import { Cross, Search, X } from "lucide-react";
+import { Cross, MoreVertical, Phone, Search, X } from "lucide-react";
 
 const PatientList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -150,313 +151,510 @@ const PatientList = () => {
 
   const receptionist = useSelector((store) => store.receptionist);
   const loading = useSelector(
-    (store) => store.receptionist.isLoadingFilteredPatients
+    (store) => store.receptionist.isLoadingFilteredPatients,
   );
   const noOfPatients = receptionist.totalFilteredPatients;
   const totalPatients = receptionist.filteredPatients;
 
   // console.log("Total :", totalPatients);
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   return (
     <div>
       <Box
         sx={{
-          padding: "2vh 2vh 1.5vh 2vh",
+          padding: isMobile ? 0 : "2vh 2vh 1.5vh 2vh",
           display: "flex",
           flexDirection: "column",
           height: "100vh",
           minHeight: 0,
         }}
       >
-        {/* Header Section */}
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderTop: "0.5px solid #4A4A4A8C",
-            borderBottom: "0.5px solid #4A4A4A8C",
-            paddingY: 1.5,
+            position: { xs: "sticky" },
+            top: 0,
+            zIndex: 100,
+            backgroundColor: "#F1F1F1",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <span className={styles.patientCount}>
-              {noOfPatients} <span>Patients</span>
-            </span>
-
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography
-                variant="body1"
-                sx={{ marginRight: 1, color: "#25307F" }}
-              >
-                Sort by:
-              </Typography>
-              <Select
-                value={sortOrder}
-                onChange={handleSortChange}
-                size="small"
-                sx={{
-                  minWidth: 180,
-                  background: "#fff",
-                  color: "#4A4A4A",
-                  boxShadow: "0px 4px 4px 0px #BDBDBD1C",
-                  border: "1px solid transparent",
-                  outline: "none",
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "inherit", // Removes hover effect
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent", // Hides the border
-                  },
+          {/* Header Section */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderTop: "0.5px solid #4A4A4A8C",
+              borderBottom: "0.5px solid #4A4A4A8C",
+              py: 1.5,
+              flexDirection: { xs: "column", md: "row" },
+              gap: { xs: 1.5, md: 0 },
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" }, // FIX
+                alignItems: { xs: "flex-start", md: "center" },
+                gap: { xs: 1, md: 2 },
+                width: "100%",
+              }}
+            >
+              {/* PATIENT COUNT */}
+              <span
+                className={styles.patientCount}
+                style={{
+                  fontSize: isMobile ? "22px" : "28px",
+                  lineHeight: 1.2,
                 }}
               >
-                <MenuItem value="desc">Newest to Oldest</MenuItem>
-                <MenuItem value="asc">Oldest to Newest</MenuItem>
-              </Select>
-            </Box>
-          </Box>
+                {noOfPatients} <span>Patients</span>
+              </span>
 
-          <Box className={styles.filterSearch}>
-            <div className={styles["search-wrapper"]}>
-              <Search size={18} className={styles["search-icon"]} />
-              <input
-                type="text"
-                placeholder="Search Patients..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles["search-input"]}
-              />
-              <X
-                strokeWidth={1.2}
-                className={styles["cross-icon"]}
-                onClick={() => setSearchQuery("")}
-              />
-            </div>
-            <Button
-              startIcon={<FilterAltIcon />}
-              sx={{
-                textTransform: "none",
-                padding: "6px 20px",
-                backgroundColor: "white",
-                borderRadius: "5px",
-                fontSize: "15px",
-                color: "#25307F",
-                "&:focus": {
-                  outline: "none",
-                  boxShadow: "none",
+              {/* SORT */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  width: { xs: "80%", md: "auto" },
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#25307F",
+                    minWidth: "52px", // keeps alignment neat
+                    fontWeight: 500,
+                  }}
+                >
+                  Sort by:
+                </Typography>
+
+                <Select
+                  value={sortOrder}
+                  onChange={handleSortChange}
+                  size="small"
+                  sx={{
+                    flex: { xs: 1, md: "unset" }, // 👈 fills row on mobile
+                    minWidth: { xs: "100%", md: 180 },
+                    background: "#fff",
+                    color: "#4A4A4A",
+                    boxShadow: "0px 4px 4px 0px #BDBDBD1C",
+                    borderRadius: "8px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "transparent",
+                    },
+                  }}
+                >
+                  <MenuItem value="desc">Newest to Oldest</MenuItem>
+                  <MenuItem value="asc">Oldest to Newest</MenuItem>
+                </Select>
+              </Box>
+            </Box>
+
+            <Box className={styles.filterSearch}>
+              <div className={styles["search-wrapper"]}>
+                <Search size={18} className={styles["search-icon"]} />
+                <input
+                  type="text"
+                  placeholder="Search Patients..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={styles["search-input"]}
+                />
+                <X
+                  strokeWidth={1.2}
+                  className={styles["cross-icon"]}
+                  onClick={() => setSearchQuery("")}
+                />
+              </div>
+              <Button
+                startIcon={<FilterAltIcon />}
+                sx={{
+                  textTransform: "none",
+                  padding: "6px 20px",
                   backgroundColor: "white",
-                },
-              }}
-              onClick={() => setFilterDrawerOpen(true)}
-            >
-              Filter
-            </Button>
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  color: "#25307F",
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "none",
+                    backgroundColor: "white",
+                  },
+                }}
+                onClick={() => setFilterDrawerOpen(true)}
+              >
+                Filter
+              </Button>
+            </Box>
           </Box>
         </Box>
         {/* Table Section */}
-        <TableContainer
-          className={styles.tableContainer}
-          sx={{
-            flex: "1 1 auto",
-            minHeight: 0,
-            overflowY: "auto",
-            position: "relative",
-          }}
-        >
-          {loading && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                background: "rgba(255, 255, 255, 0.6)",
-                backdropFilter: "blur(2px)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: 20,
-              }}
-            >
-              <CircularProgress sx={{ color: "#25307F" }} />
-            </Box>
-          )}
-
-          <Table
+        {!isMobile ? (
+          /* ================= DESKTOP TABLE ================= */
+          <TableContainer
+            className={styles.tableContainer}
             sx={{
-              borderCollapse: "separate",
-              borderSpacing: "0 10px",
-              background: "#F1F1F1",
-              marginBottom: "0px",
+              flex: "1 1 auto",
+              minHeight: 0,
+              overflowY: "auto",
+              position: "relative",
             }}
           >
-            <TableHead
+            {loading && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  backdropFilter: "blur(2px)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: 20,
+                }}
+              >
+                <CircularProgress sx={{ color: "#25307F" }} />
+              </Box>
+            )}
+
+            <Table
               sx={{
-                position: "sticky",
-                backgroundColor: "#f1f1f1",
-                top: 0,
-                zIndex: 10, // Keep it above other elements
+                borderCollapse: "separate",
+                borderSpacing: "0 10px",
+                background: "#F1F1F1",
+                marginBottom: "0px",
               }}
             >
-              <TableRow>
-                <TableCell>Pat Id</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone Number</TableCell>
-                <TableCell>Type Visit</TableCell>
+              <TableHead
+                sx={{
+                  position: "sticky",
+                  backgroundColor: "#f1f1f1",
+                  top: 0,
+                  zIndex: 10, // Keep it above other elements
+                }}
+              >
+                <TableRow>
+                  <TableCell>Pat Id</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Phone Number</TableCell>
+                  <TableCell>Type Visit</TableCell>
 
-                <TableCell>Registration Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {totalPatients.length > 0 ? (
-                totalPatients.map((patient, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      background: "#fff",
-                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                      borderRadius: "8px",
-                      "&:hover": {
-                        backgroundColor: "#f9f9f9",
-                      },
-                      "& > *": {
-                        borderBottom: "unset",
-                      },
-                    }}
-                  >
-                    <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
-                      {patient?.patId || "Not Assigned"}
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          fontWeight: "bold",
-                          cursor: "pointer",
-                          color: "#25307F",
-                        }}
-                        onClick={() => handleClick(patient)}
-                      >
-                        {truncateText(patient?.name, 18)}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {truncateText(patient?.email, 18)}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{patient.phone}</TableCell>
-                    <TableCell>
-                      {patient?.typeVisit || "Not Assigned"}
-                    </TableCell>
+                  <TableCell>Registration Date</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {totalPatients.length > 0 ? (
+                  totalPatients.map((patient, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        background: "#fff",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                        {patient?.patId || "Not Assigned"}
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: "bold",
+                            cursor: "pointer",
+                            color: "#25307F",
+                          }}
+                          onClick={() => handleClick(patient)}
+                        >
+                          {truncateText(patient?.name, 18)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {truncateText(patient?.email, 18)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{patient.phone}</TableCell>
+                      <TableCell>
+                        {patient?.typeVisit || "Not Assigned"}
+                      </TableCell>
 
-                    <TableCell>
-                      {new Date(patient.registrationDate).toLocaleDateString(
-                        "en-IN",
-                        {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        }
-                      )}
-                    </TableCell>
-                    <TableCell align="left">
-                      <Chip
-                        label={
-                          patient.status.charAt(0).toUpperCase() +
-                          patient.status.slice(1)
-                        }
-                        color={
-                          patient.status.toLowerCase() === "active"
-                            ? "success"
-                            : "default"
-                        }
-                        size="small"
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          bgcolor:
-                            patient.status.toLowerCase() === "active"
-                              ? "#d4edda"
-                              : "#f0f0f0",
-                          color:
-                            patient.status.toLowerCase() === "active"
-                              ? "#155724"
-                              : "#757575",
-                          fontWeight: "bold",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        sx={{
-                          "&:focus": {
-                            outline: "none",
-                            boxShadow: "none",
+                      <TableCell>
+                        {new Date(patient.registrationDate).toLocaleDateString(
+                          "en-IN",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
                           },
-                        }}
-                        onClick={(event) => handleMenuOpen(event, patient)}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
+                        )}
+                      </TableCell>
+                      <TableCell align="left">
+                        <Chip
+                          label={
+                            patient.status.charAt(0).toUpperCase() +
+                            patient.status.slice(1)
+                          }
+                          color={
+                            patient.status.toLowerCase() === "active"
+                              ? "success"
+                              : "default"
+                          }
+                          size="small"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            bgcolor:
+                              patient.status.toLowerCase() === "active"
+                                ? "#d4edda"
+                                : "#f0f0f0",
+                            color:
+                              patient.status.toLowerCase() === "active"
+                                ? "#155724"
+                                : "#757575",
+                            fontWeight: "bold",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          sx={{
+                            "&:focus": {
+                              outline: "none",
+                              boxShadow: "none",
+                            },
+                          }}
+                          onClick={(event) => handleMenuOpen(event, patient)}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={8}
+                      align="center"
+                      sx={{
+                        background: "#fff",
+                        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f9f9f9",
+                        },
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      No Patients found!
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={8}
-                    align="center"
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          /* ================= MOBILE CARDS ================= */
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+              flex: 1,
+              overflowY: "auto",
+              WebkitOverflowScrolling: "touch",
+              mt: 1.5, //  spacing below sticky header
+              pb: "180px", // bottom nav + pagination
+            }}
+          >
+            {totalPatients.length > 0 ? (
+              totalPatients.map((patient) => (
+                <Box
+                  key={patient._id}
+                  sx={{
+                    background: "#fff",
+                    borderRadius: "12px",
+                    p: 1.2,
+                    boxShadow: "0px 2px 6px rgba(0,0,0,0.08)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.6,
+                    position: "relative", // 👈 for top-right menu
+                  }}
+                >
+                  {/* TOP RIGHT MENU */}
+                  <IconButton
+                    onClick={(e) => handleMenuOpen(e, patient)}
+                    size="small"
                     sx={{
-                      background: "#fff",
-                      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-                      borderRadius: "8px",
-                      "&:hover": {
-                        backgroundColor: "#f9f9f9",
-                      },
-                      "& > *": {
-                        borderBottom: "unset",
-                      },
+                      position: "absolute",
+                      top: 6,
+                      right: 6,
+                      color: "#555",
                     }}
                   >
-                    No Patients found!
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-          <TablePagination
-            component="div"
-            count={noOfPatients}
-            page={page} // current page
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage} // items per page
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[5, 10, 20, 50, 100]} // 👈 Custom options
+                    <MoreVertical size={18} />
+                  </IconButton>
+
+                  {/* PATIENT ID */}
+                  <Typography
+                    sx={{
+                      fontSize: "0.7rem",
+                      color: "#888",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Pat ID: {patient?.patId || "—"}
+                  </Typography>
+
+                  {/* NAME */}
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      color: "#25307F",
+                      fontSize: "0.95rem",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleClick(patient)}
+                  >
+                    {patient.name}
+                  </Typography>
+
+                  {/* PHONE */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
+                    <Phone size={14} color="#666" />
+                    <Typography sx={{ fontSize: "0.85rem", color: "#555" }}>
+                      {patient.phone}
+                    </Typography>
+                  </Box>
+
+                  {/* META ROW */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mt: 0.5,
+                    }}
+                  >
+                    <Typography sx={{ fontSize: "0.75rem", color: "#777" }}>
+                      {new Date(patient.registrationDate).toLocaleDateString(
+                        "en-IN",
+                      )}
+                    </Typography>
+
+                    <Chip
+                      label={patient.status}
+                      size="small"
+                      sx={{
+                        bgcolor:
+                          patient.status === "active" ? "#d4edda" : "#f0f0f0",
+                        color:
+                          patient.status === "active" ? "#155724" : "#757575",
+                        fontWeight: 600,
+                        height: 22,
+                      }}
+                    />
+                  </Box>
+                </Box>
+              ))
+            ) : (
+              <Typography align="center">No Patients found!</Typography>
+            )}
+          </Box>
+        )}
+        {isMobile ? (
+          <Box
             sx={{
-              position: "sticky",
-              bottom: 0,
-              backgroundColor: "#fff",
-              borderTop: "2px solid #ddd",
-              zIndex: 11,
+              position: "fixed",
+              bottom: 58, // above bottom nav
+              left: 0,
+              right: 0,
+              background: "#fff",
+              borderTop: "1px solid #ddd",
+              borderBottom: "1px solid #ddd",
+              zIndex: 1200,
             }}
-          />
-        </TableContainer>
+          >
+            <TablePagination
+              component="div"
+              count={noOfPatients}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]} // hide rows-per-page
+              labelRowsPerPage=""
+            />
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              mt: 0.5,
+              display: "flex",
+              justifyContent: "flex-end",
+              backgroundColor: "#f1f1f1",
+            }}
+          >
+            <TablePagination
+              component="div"
+              count={noOfPatients}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]}
+            />
+          </Box>
+        )}
+
         {/* Actions Menu */}
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleEdit}>
-            <ListItemIcon>
-              <EditIcon fontSize="small" />
+          <MenuItem
+            onClick={handleEdit}
+            sx={{
+              py: isMobile ? 0.75 : 1,
+              px: isMobile ? 1.5 : 2,
+              minHeight: isMobile ? 36 : 48,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: isMobile ? 32 : 40,
+                color: "#25307F",
+              }}
+            >
+              <EditIcon fontSize={isMobile ? "small" : "medium"} />
             </ListItemIcon>
-            <ListItemText>Edit</ListItemText>
+
+            <ListItemText
+              primary="Edit"
+              primaryTypographyProps={{
+                fontSize: isMobile ? "0.85rem" : "0.95rem",
+                fontWeight: 500,
+              }}
+            />
           </MenuItem>
         </Menu>
+
         {/* // Edit Patient Dialog */}
         <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
           <DialogTitle>Edit Patient</DialogTitle>

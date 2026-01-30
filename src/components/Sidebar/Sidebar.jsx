@@ -45,7 +45,7 @@ const mobileReceptionistNav = [
   { title: "Logout", action: "logout", key: "logout" },
 ];
 
-const Sidebar = ({ role, onOpenAppointment }) => {
+const Sidebar = ({ role, onOpenAppointment, onCloseAppointment }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -143,6 +143,7 @@ const Sidebar = ({ role, onOpenAppointment }) => {
           onNavigate={navigate}
           onLogout={() => setIsLogout(true)}
           onOpenAppointment={onOpenAppointment}
+          onCloseAppointment={onCloseAppointment}
         />
       ) : (
         <div

@@ -129,6 +129,7 @@ function App() {
           <Sidebar
             role={role}
             onOpenAppointment={() => setIsBookAppointment(true)}
+            onCloseAppointment={() => setIsBookAppointment(false)}
           />
         )}
         {location.pathname === "/" ? (

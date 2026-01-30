@@ -12,10 +12,20 @@
   display: flex;
   align-items: center;
   gap: 1vw;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    gap: 8px;
+  }
+}
+
+.search-wrapper {
+  @media (max-width: 768px) {
+    flex: 1;
+  }
 }
 
 .patientCount {
-  font-size: 28px;
   font-weight: 600;
   color: #0c1b72;
 
@@ -52,4 +62,13 @@
   height: 21px;
   color: #ef4444;
   cursor: pointer;
+}
+@media (max-width: 768px) {
+  .tableContainer {
+    scrollbar-width: none;
+  }
+
+  .tableContainer::-webkit-scrollbar {
+    display: none;
+  }
 }

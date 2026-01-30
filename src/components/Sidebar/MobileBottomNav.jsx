@@ -15,6 +15,7 @@ const MobileBottomNav = ({
   onNavigate,
   onLogout,
   onOpenAppointment,
+  onCloseAppointment,
 }) => {
   const getValue = () => {
     if (activePath.includes("billing")) return 1;
@@ -49,7 +50,7 @@ const MobileBottomNav = ({
         }}
         sx={{
           position: "fixed",
-          bottom: 30,
+          bottom: 25,
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 1300,
@@ -74,7 +75,10 @@ const MobileBottomNav = ({
           <BottomNavigationAction
             label="Overview"
             icon={<DashboardIcon />}
-            onClick={() => onNavigate("/receptionist")}
+            onClick={() => {
+              onCloseAppointment?.(); // close modal if open
+              onNavigate("/receptionist");
+            }}
           />
 
           <BottomNavigationAction
