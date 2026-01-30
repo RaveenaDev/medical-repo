@@ -34,7 +34,19 @@ const MobileBottomNav = ({
       {/* PLUS FAB */}
       <Fab
         color="primary"
-        onClick={onOpenAppointment}
+        onClick={() => {
+          // Always go to receptionist root first
+          if (!activePath.startsWith("/receptionist")) {
+            onNavigate("/receptionist");
+          } else if (activePath !== "/receptionist") {
+            onNavigate("/receptionist");
+          }
+
+          // Open appointment after navigation
+          setTimeout(() => {
+            onOpenAppointment();
+          }, 0);
+        }}
         sx={{
           position: "fixed",
           bottom: 30,
