@@ -32,10 +32,10 @@ const ProgressTracker = ({ patient }) => {
   }, [dispatch, patient, caseId]);
 
   const progressTracker = useSelector(
-    (store) => store.receptionist.progressTracker
+    (store) => store.receptionist.progressTracker,
   );
   const isLoadingProgressTracker = useSelector(
-    (store) => store.receptionist.isLoadingProgressTracker
+    (store) => store.receptionist.isLoadingProgressTracker,
   );
   //console.log("progressTracker details: ", progressTracker);
   return (
@@ -78,7 +78,7 @@ const ProgressTracker = ({ patient }) => {
         </Box>
       ) : (
         <div
-          className={styles.tableContainer}
+          className={styles.tableContainerReception}
           style={{ marginTop: "0px", paddingRight: "22px" }}
         >
           {/* Header row */}
@@ -135,8 +135,8 @@ const ProgressTracker = ({ patient }) => {
                       step.status === "completed"
                         ? "#EAA000"
                         : step.status === "ongoing"
-                        ? "#2E823B"
-                        : "black",
+                          ? "#2E823B"
+                          : "black",
                   }}
                 >
                   {step?.status

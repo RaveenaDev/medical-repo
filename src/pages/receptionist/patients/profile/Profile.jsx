@@ -7,7 +7,7 @@ import PersonalInfo from "./PersonalInfo";
 import MedicalInfo from "./MedicalInfo/MedicalInfo.jsx";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ProgressTracker from "./ProgressTracker";
-import { Typography } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import PatientHeader from "./components/PatientHeader.jsx";
 import Dialog from "@mui/material/Dialog";
@@ -34,7 +34,7 @@ const Profile = (props) => {
   const handleSendEmail = () => {
     window.open(
       `mailto:${patient?.email}?subject=Appointment Details&body=Hello, here are your appointment details.`,
-      "_blank"
+      "_blank",
     );
     setShowModal(false);
   };
@@ -42,7 +42,7 @@ const Profile = (props) => {
   const handleSendWhatsApp = () => {
     window.open(
       `https://wa.me/${patient?.phone}?text=Hello, here are your appointment details.`,
-      "_blank"
+      "_blank",
     );
     setShowModal(false);
   };
@@ -77,10 +77,10 @@ const Profile = (props) => {
   // console.log("Det: ", patDetails);
 
   const upcoming = patient.appointments?.filter(
-    (app) => app.status === "Scheduled"
+    (app) => app.status === "Scheduled",
   ).length;
   const completed = patient.appointments?.filter(
-    (app) => app.status === "Completed"
+    (app) => app.status === "Completed",
   ).length;
   // console.log(patient);
   // Close modal when clicking outside of it
@@ -94,6 +94,7 @@ const Profile = (props) => {
     return <p>No patient data found!</p>;
   }
 
+  const isMobile = useMediaQuery("(max-width: 700px)");
   return (
     <>
       <div>
@@ -108,16 +109,17 @@ const Profile = (props) => {
               <div
                 style={{
                   display: "flex",
+                  flexDirection: isMobile ? "column" : "row",
                   justifyContent: "space-between",
                   gap: "20px",
                   padding: "5px 0",
-                  width: "75vw", // Optional
+                  width: isMobile ? "100%" : "75vw", // Optional
                 }}
               >
                 {/* Box 1 - Profile Card */}
                 <div
                   style={{
-                    width: "25%",
+                    width: isMobile ? "100%" : "25%",
                     padding: "20px 0",
                     backgroundColor: "#FFFFFF",
                     height: "auto",
@@ -312,8 +314,8 @@ const Profile = (props) => {
                 {/* Box 2 - Personal Info (Middle Section) */}
                 <div
                   style={{
-                    width: "50%",
-                    minWidth: "400px",
+                    width: isMobile ? "90%" : "50%",
+                    minWidth: isMobile ? "10px" : "400px",
                     backgroundColor: "#ffffff",
                     padding: "20px",
                     borderRadius: "2px",
@@ -326,9 +328,10 @@ const Profile = (props) => {
                 {/* Box 3 - Medical Info */}
                 <div
                   style={{
-                    width: "28%",
+                    width: isMobile ? "96%" : "28%",
                     backgroundColor: "#ffffff",
                     height: "auto",
+                    minHeight: "150px",
                     padding: "4px 8px 12px 8px",
                     borderRadius: "2px",
                     boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
@@ -352,7 +355,7 @@ const Profile = (props) => {
                     backgroundColor: "#FFFFFF", // Set the background color to white
                     padding: "16px 0", // Optional padding for content spacing
                     borderRadius: "8px", // Optional rounded corners
-                    width: "75vw", // Optional
+                    width: isMobile ? "100%" : "75vw", // Optional
                   }}
                 >
                   <div style={{ paddingLeft: "38px" }}>
