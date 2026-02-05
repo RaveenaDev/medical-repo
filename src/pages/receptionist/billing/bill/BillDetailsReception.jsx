@@ -292,6 +292,50 @@ const BillDetailsReception = (props) => {
   // ---- Helpers for print ----
   const safeNum = (v) => (Number.isFinite(+v) ? +v : 0);
 
+  // Date Format: DD-MM-YYYY
+  const formatToDDMMYYYY = (input) => {
+    if (!input) return "—";
+
+    let date;
+
+    // Already a Date object
+    if (input instanceof Date) {
+      date = input;
+    }
+
+    // String handling
+    if (!date && typeof input === "string") {
+      // ISO or JS-parsable
+      const isoTry = new Date(input);
+      if (!isNaN(isoTry)) {
+        date = isoTry;
+      } else {
+        // DD-MM-YYYY or DD/MM/YYYY
+        const dmY = input.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
+        if (dmY) {
+          const [, d, m, y] = dmY;
+          date = new Date(y, m - 1, d);
+        }
+
+        // YYYY-MM-DD or YYYY/MM/DD
+        const yMd = input.match(/^(\d{4})[-/](\d{2})[-/](\d{2})$/);
+        if (!date && yMd) {
+          const [, y, m, d] = yMd;
+          date = new Date(y, m - 1, d);
+        }
+      }
+    }
+
+    if (!date || isNaN(date)) return "—";
+
+    // Force DD/MM/YYYY
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yyyy = date.getFullYear();
+
+    return `${dd}/${mm}/${yyyy}`;
+  };
+
   // Convert 0..99,99,99,999 into Indian words (rupees only)
   const amountInWordsINR = (num) => {
     num = Math.round(safeNum(num));
@@ -369,8 +413,8 @@ const BillDetailsReception = (props) => {
     const gstPct = Number.isFinite(+row.gstPct)
       ? +row.gstPct
       : Number.isFinite(+row.details?.gstPct)
-        ? +row.details.gstPct
-        : 0;
+      ? +row.details.gstPct
+      : 0;
 
     const gstAmt = +((base * gstPct) / 100).toFixed(2);
     const lineTotal = +(base + gstAmt).toFixed(2);
@@ -976,7 +1020,7 @@ const BillDetailsReception = (props) => {
                               const key = getEditableNameKey(
                                 updated.services[i].details,
                               );
-                              updated.services[i].details[key] = e.target.value; // ✅ dynamic field
+                              updated.services[i].details[key] = e.target.value; //  dynamic field
 
                               setEditableBill(updated);
                             }}
@@ -1006,9 +1050,7 @@ const BillDetailsReception = (props) => {
                         <div>{type ? type : "—"}</div>
                       </div>
                       <div className={styles["billing-date"]}>
-                        <div>
-                          {date ? new Date(date).toLocaleDateString() : "—"}
-                        </div>
+                        <div>{formatToDDMMYYYY(date)}</div>
                       </div>
                       <div className={styles["billing-quantity"]}>
                         {isEditing ? (
@@ -1139,8 +1181,8 @@ const BillDetailsReception = (props) => {
                   ₹
                   {isEditing
                     ? computedGrand
-                    : (editableBill?.totalAmount.toLocaleString("en-IN") ??
-                      bill.totalAmount.toLocaleString("en-IN"))}
+                    : editableBill?.totalAmount.toLocaleString("en-IN") ??
+                      bill.totalAmount.toLocaleString("en-IN")}
                 </div>
               </div>
               {bill?.discount?.amount > 0 && (
