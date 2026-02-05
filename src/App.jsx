@@ -53,8 +53,12 @@ import SingleCompanyDetails from "./pages/admin/tpa/companies/singleCompanyDetai
 import BillDetailsAdmin from "./pages/admin/billing/components/Records/components/BillDetailsAdmin.jsx";
 import BillDetailsReception from "./pages/receptionist/billing/bill/BillDetailsReception.jsx";
 import { useMediaQuery } from "@mui/material";
+import { SplashScreen } from "@capacitor/splash-screen";
 
 function App() {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   const isMobile = useMediaQuery("(max-width:768px)");
 
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
@@ -129,13 +133,21 @@ function App() {
           <Sidebar
             role={role}
             onOpenAppointment={() => setIsBookAppointment(true)}
+            onCloseAppointment={() => setIsBookAppointment(false)}
           />
         )}
         {location.pathname === "/" ? (
           <Routes>
             <Route
               path="/"
-              element={<Base setIsSignUpOrLogin={setIsSignUpOrLogin} />}
+              element={
+                <>
+                  {/* Hide for desktop */}
+                  <Navigate to="/login" replace />
+                  {/* Hide for mobile */}
+                  {/* <Base setIsSignUpOrLogin={setIsSignUpOrLogin} /> */}
+                </>
+              }
             />
           </Routes>
         ) : (

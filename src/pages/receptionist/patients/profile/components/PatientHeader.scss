@@ -1,4 +1,4 @@
-.patient-header {
+.patient-header-reception {
   display: flex;
   justify-content: space-between;
   color: black;
@@ -11,6 +11,9 @@
   z-index: 10;
   background-color: #f1f1f1;
 
+  @media (max-width: 700px) {
+    width: 92%;
+  }
   .patient-info {
     display: flex;
     align-items: center;
@@ -22,6 +25,10 @@
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
       color: #25307f;
+
+      @media (max-width: 700px) {
+        font-size: 12px;
+      }
     }
 
     p {
@@ -31,6 +38,9 @@
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
       color: #878787;
+      @media (max-width: 700px) {
+        font-size: 12px;
+      }
     }
   }
 

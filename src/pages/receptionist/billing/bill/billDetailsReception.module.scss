@@ -2,12 +2,12 @@
   width: 100%;
   font-size: 1rem;
   margin: 0vh;
-
+  z-index: 30;
   .billing-modal-content {
     background-color: #f1f1f1;
     padding-top: 1rem;
     height: 98dvh;
-    padding: 1vh 1vw;
+    padding: 2vh 1vw;
 
     .billing-modal-header {
       display: flex;
@@ -16,6 +16,14 @@
       color: black;
       padding: 0;
       height: 12vh;
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        height: auto;
+      }
+
       h2 {
         font-weight: 600;
         padding-bottom: 0;
@@ -62,6 +70,7 @@
       overflow-y: auto;
       padding: 0;
       gap: 1rem;
+      padding-bottom: 80px;
 
       .billing-invoice-details {
         background: white;
@@ -125,7 +134,11 @@
           gap: 0rem;
           padding: 1.5rem;
           justify-items: center;
-
+          @media (max-width: 600px) {
+            grid-template-columns: repeat(2, 1fr); // 2-column grid
+            gap: 1rem;
+            padding: 1rem;
+          }
           div {
             display: flex;
             flex-direction: column;
@@ -238,11 +251,22 @@
   padding: 1vh 1vw;
   font-size: 1.8vh;
   border-radius: 18px;
+  @media (max-width: 600px) {
+    flex: 1;
+    font-size: 0.9rem;
+    padding: 8px;
+  }
 }
 .heading-right {
   display: flex;
   align-items: center;
   gap: 0.5vw;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
 }
 
 .billing-edited-save-btn {
@@ -250,6 +274,7 @@
   justify-content: center;
   margin: 2vh;
   gap: 2vw;
+
   button {
     background-color: #25307f;
     color: white;
@@ -257,6 +282,11 @@
     font-size: 2vh;
     border-radius: 24px;
     border: none;
+
+    @media (max-width: 600px) {
+      padding: 6px 18px;
+      font-size: 0.8rem;
+    }
   }
 }
 
@@ -437,4 +467,272 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+@media (max-width: 640px) {
+  /* 1️⃣ Hide table header */
+  .billing-table-header-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 0;
+  }
+
+  /* 2️⃣ Convert each row into a card */
+  .billing-category {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  /* 3️⃣ Make each cell label-value */
+  .billing-description,
+  .billing-name,
+  .billing-date,
+  .billing-quantity,
+  .billing-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  /* 4️⃣ Labels using pseudo-elements */
+  .billing-description::before {
+    content: "Category";
+    font-weight: 600;
+    color: #555;
+  }
+
+  .billing-name:nth-of-type(1)::before {
+    content: "Name";
+    font-weight: 600;
+    color: #555;
+  }
+
+  .billing-name:nth-of-type(2)::before {
+    content: "Type";
+    font-weight: 600;
+    color: #555;
+  }
+
+  .billing-date::before {
+    content: "Date";
+    font-weight: 600;
+    color: #555;
+  }
+
+  .billing-quantity::before {
+    content: "Qty";
+    font-weight: 600;
+    color: #555;
+  }
+
+  .billing-price::before {
+    content: "Price";
+    font-weight: 600;
+    color: #555;
+  }
+
+  /* 5️⃣ Inputs full width on mobile */
+  .inputDescription,
+  .inputQuantity,
+  .inputPrice {
+    width: 60%;
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
+  /* 6️⃣ Delete icon alignment */
+  .billing-delete-icon {
+    align-self: flex-end;
+    margin-top: 0.25rem;
+  }
+
+  /* 7️⃣ Total row */
+  .billing-total {
+    flex-direction: row;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .billing-amount-details > div {
+    align-items: flex-start;
+
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    width: 100%;
+  }
+
+  .billing-amount-details .bold {
+    font-size: 0.85rem;
+    color: #555;
+  }
+
+  .billing-amount-details > div > div:last-child {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /* Status dropdown / text */
+  .status,
+  .statusSelect {
+    align-self: flex-start;
+    margin-top: 0.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Hide table header */
+  .payment-list-header {
+    display: none;
+  }
+
+  /* Convert list into stacked cards */
+  .payment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .payment-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+  }
+
+  /* Each <p> becomes a row */
+  .payment-summary p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  /* Labels using :before */
+  .payment-summary p:nth-child(1)::before {
+    content: "Date";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .payment-summary p:nth-child(2)::before {
+    content: "Amount";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .payment-summary p:nth-child(3)::before {
+    content: "Mode";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .payment-summary p:nth-child(4)::before {
+    content: "Reference";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  /* Print button full-width */
+  .payment-summary button {
+    grid-column: span 2;
+    justify-self: flex-end;
+    padding: 0.4rem 0.75rem;
+    border-radius: 10px;
+  }
+
+  .payment-summary .print-refund-btn {
+    font-size: 0.85rem;
+    padding: 6px 20px;
+  }
+}
+@media (max-width: 600px) {
+  /* Hide refund table header */
+  .refund-list-header {
+    display: none;
+  }
+
+  /* Stack refund cards */
+  .billing-history {
+    gap: 0.75rem;
+  }
+
+  .refund-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    background: #fafafa;
+  }
+
+  .refund-summary p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  /* Labels */
+  .refund-summary p:nth-child(1)::before {
+    content: "Date";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .refund-summary p:nth-child(2)::before {
+    content: "Amount";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .refund-summary p:nth-child(3)::before {
+    content: "Mode";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .refund-summary p:nth-child(4)::before {
+    content: "Reference";
+    font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  /* Print button */
+  .refund-summary button {
+    grid-column: span 2;
+    justify-self: flex-end;
+    padding: 0.4rem 0.75rem;
+    border-radius: 10px;
+  }
+
+  .refund-summary .print-refund-btn {
+    font-size: 0.85rem;
+    padding: 6px 20px;
+  }
 }

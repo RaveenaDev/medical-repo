@@ -12,11 +12,13 @@ import {
   IconButton,
   Stack,
   DialogTitle,
+  useMediaQuery,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientFiles } from "../../../../../components/State/Receptionist/Action.js";
+import { ArrowBackIosNew } from "@mui/icons-material";
 
 /* -------------------- helpers -------------------- */
 const palette = ["#5461BE", "#2E823B", "#EAA000", "#F14400"];
@@ -120,13 +122,19 @@ const isPdfFile = (f) => {
 };
 
 /** JSON pretty renderer */
+const isRecordObject = (obj) =>
+  isPlainObject(obj) &&
+  Object.values(obj).every(
+    (v) => typeof v === "string" || typeof v === "number",
+  );
+
 const JSONValue = ({ value }) => {
   if (value === null || value === undefined || value === "")
     return <span style={{ color: "#888" }}>N/A</span>;
 
+  // ✅ Arrays stay as-is
   if (Array.isArray(value)) {
-    if (value.length === 0)
-      return <span style={{ color: "#888" }}>No items</span>;
+    if (!value.length) return <span style={{ color: "#888" }}>No items</span>;
     return (
       <ul className="kv-list">
         {value.map((v, i) => (
@@ -142,9 +150,25 @@ const JSONValue = ({ value }) => {
     );
   }
 
+  // ✅ NEW: record-style object (Doctor Visit)
+  if (isRecordObject(value)) {
+    return (
+      <div className="record-block">
+        {Object.entries(value).map(([k, v]) => (
+          <div className="record-row" key={k}>
+            <span className="record-key">{prettifyKey(k)}</span>
+            <span className="record-val">{String(v)}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // ✅ Generic object fallback
   if (isPlainObject(value)) {
     if (isEmptyObject(value))
       return <span style={{ color: "#888" }}>No data</span>;
+
     return (
       <div className="kv-table">
         {Object.entries(value).map(([k, v]) => (
@@ -160,6 +184,19 @@ const JSONValue = ({ value }) => {
   }
 
   return <span>{String(value)}</span>;
+};
+
+const CompactObject = ({ value }) => {
+  return (
+    <div className="kv-compact">
+      {Object.entries(value).map(([k, v]) => (
+        <div className="kv-compact-row" key={k}>
+          <span className="kv-compact-key">{prettifyKey(k)}</span>
+          <span className="kv-compact-val">{String(v)}</span>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 /* -------------------- FileGrid -------------------- */
@@ -202,7 +239,7 @@ const FileGrid = ({ files = [] }) => {
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                     e.currentTarget.parentElement.classList.add(
-                      "file-thumb-broken"
+                      "file-thumb-broken",
                     );
                   }}
                 />
@@ -474,8 +511,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     const cmList = Array.isArray(cmRoot?.currentMedications)
       ? cmRoot.currentMedications
       : Array.isArray(cmRoot)
-      ? cmRoot
-      : [];
+        ? cmRoot
+        : [];
 
     // Diagnosis + vitals bundle
     const dx = data?.diagnosisVitals || {};
@@ -484,8 +521,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       "Dx Pain": dx?.dxPain?.hasPain
         ? "Has Pain"
         : dx?.dxPain?.hasPain === false
-        ? "No Pain"
-        : undefined,
+          ? "No Pain"
+          : undefined,
       "Dx Pain Details": pruneDeep({
         Location: dx?.dxPain?.location,
         Severity: dx?.dxPain?.severity,
@@ -554,7 +591,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             {c?.followUpRequired !== undefined
               ? renderStack(
                   "Follow-up Required",
-                  c.followUpRequired ? "Yes" : "No"
+                  c.followUpRequired ? "Yes" : "No",
                 )
               : null}
             {c?.treatment?.note
@@ -595,7 +632,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
                     cmList.map((m, i) => {
                       if (isPlainObject(m)) return m; // JSONValue will render nicely
                       return String(m ?? "");
-                    })
+                    }),
                   )}
               </div>
             </>
@@ -695,7 +732,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             const pairs = Object.entries(data || {})
               .filter(
                 ([k]) =>
-                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k)
+                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k),
               )
               .map(([k, v]) => [k, pruneDeep(v)])
               .filter(([, v]) => !isEmptyValue(v));
@@ -743,6 +780,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       return new Date(da) - new Date(db);
     });
 
+    // console.log("Sorted Phases: ", sorted);
     return (
       <div className="phases-stack">
         {sorted.map((p, idx) => {
@@ -761,7 +799,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             "notes",
           ]);
           const dynamicPairs = Object.entries(pdata).filter(
-            ([k]) => !FIXED.has(k)
+            ([k]) => !FIXED.has(k),
           );
 
           return (
@@ -913,7 +951,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
       ? (c.fileSize / 1024).toFixed(2) + " KB"
       : "Unknown";
     const uploadDate = new Date(
-      c?.uploadedAt || item?.dateISO
+      c?.uploadedAt || item?.dateISO,
     ).toLocaleString();
 
     const isImage = c?.fileType?.startsWith("image/");
@@ -1049,6 +1087,9 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     return null;
   };
 
+  const isMobile = useMediaQuery("(max-width:768px)");
+  const [mobileView, setMobileView] = useState("list"); // "list" | "details"
+
   /* -------------------- render -------------------- */
   return (
     <div>
@@ -1065,89 +1106,204 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
         </Box>
       ) : (
         <div className="patient-previous-record-container-rep">
-          <div className="patient-records-container-rep">
-            {/* LEFT LIST */}
-            <section className="patient-visits">
-              <div className="visit-header">
-                <h3>Past Records</h3>
+          <div className="patient-records-container-rep-rep">
+            {/* DESKTOP → show both */}
+            {!isMobile && (
+              <>
+                {/* LEFT LIST */}
+                <section className="patient-visits">
+                  <div className="visit-header">
+                    <h3>Past Records</h3>
 
-                <div className="searchContainerPPR">
-                  <svg
-                    width="1vw"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="searchIconPPR"
-                  >
-                    <path
-                      d="M22.1333 24L13.7333 15.6C13.0667 16.1333 12.3 16.5556 11.4333 16.8667C10.5667 17.1778 9.64445 17.3333 8.66667 17.3333C6.24445 17.3333 4.19467 16.4942 2.51733 14.816C0.840001 13.1378 0.000889594 11.088 7.05467e-07 8.66667C-0.000888183 6.24533 0.838223 4.19556 2.51733 2.51733C4.19645 0.839111 6.24622 0 8.66667 0C11.0871 0 13.1373 0.839111 14.8173 2.51733C16.4973 4.19556 17.336 6.24533 17.3333 8.66667C17.3333 9.64444 17.1778 10.5667 16.8667 11.4333C16.5556 12.3 16.1333 13.0667 15.6 13.7333L24 22.1333L22.1333 24ZM8.66667 14.6667C10.3333 14.6667 11.7502 14.0836 12.9173 12.9173C14.0844 11.7511 14.6676 10.3342 14.6667 8.66667C14.6658 6.99911 14.0827 5.58267 12.9173 4.41733C11.752 3.252 10.3351 2.66844 8.66667 2.66667C6.99822 2.66489 5.58178 3.24844 4.41733 4.41733C3.25289 5.58622 2.66933 7.00267 2.66667 8.66667C2.664 10.3307 3.24756 11.7476 4.41733 12.9173C5.58711 14.0871 7.00356 14.6702 8.66667 14.6667Z"
-                      fill="#878787"
-                    />
-                  </svg>
-                  <input
-                    type="search"
-                    className="search_bar"
-                    placeholder="Search Records.."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="visit-list">
-                {filtered.map((item, index) => (
-                  <VisitCard
-                    key={item.id}
-                    date={item.displayDate}
-                    description={item.description}
-                    doctor={item.doctorName}
-                    typeofVisit={item.typeofVisit}
-                    department={item.departmentName}
-                    color={palette[index % palette.length]}
-                    departmentbgColor={
-                      item.kind === "admission" ? "#F7F8FC" : undefined
-                    }
-                    departmentColor={
-                      item.kind === "admission" ? "#5461BE" : undefined
-                    }
-                    status={
-                      item.kind === "admission" ? item.raw?.status : undefined
-                    }
-                    kind={item.kind}
-                    onClick={() => setSelectedItem(item)}
-                  />
-                ))}
-
-                {filtered.length === 0 && (
-                  <div style={{ color: "#888", fontSize: 14, padding: "12px" }}>
-                    No records match your search.
+                    <div className="searchContainerPPR">
+                      <svg
+                        width="1vw"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="searchIconPPR"
+                      >
+                        <path
+                          d="M22.1333 24L13.7333 15.6C13.0667 16.1333 12.3 16.5556 11.4333 16.8667C10.5667 17.1778 9.64445 17.3333 8.66667 17.3333C6.24445 17.3333 4.19467 16.4942 2.51733 14.816C0.840001 13.1378 0.000889594 11.088 7.05467e-07 8.66667C-0.000888183 6.24533 0.838223 4.19556 2.51733 2.51733C4.19645 0.839111 6.24622 0 8.66667 0C11.0871 0 13.1373 0.839111 14.8173 2.51733C16.4973 4.19556 17.336 6.24533 17.3333 8.66667C17.3333 9.64444 17.1778 10.5667 16.8667 11.4333C16.5556 12.3 16.1333 13.0667 15.6 13.7333L24 22.1333L22.1333 24ZM8.66667 14.6667C10.3333 14.6667 11.7502 14.0836 12.9173 12.9173C14.0844 11.7511 14.6676 10.3342 14.6667 8.66667C14.6658 6.99911 14.0827 5.58267 12.9173 4.41733C11.752 3.252 10.3351 2.66844 8.66667 2.66667C6.99822 2.66489 5.58178 3.24844 4.41733 4.41733C3.25289 5.58622 2.66933 7.00267 2.66667 8.66667C2.664 10.3307 3.24756 11.7476 4.41733 12.9173C5.58711 14.0871 7.00356 14.6702 8.66667 14.6667Z"
+                          fill="#878787"
+                        />
+                      </svg>
+                      <input
+                        type="search"
+                        className="search_bar"
+                        placeholder="Search Records.."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
                   </div>
-                )}
-              </div>
-            </section>
 
-            {/* RIGHT DETAILS */}
-            <div className="patient_records_details-rep">
-              <div
-                className="records_details_header"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <div className="patient-records-heading">
-                  {selectedItem
-                    ? selectedItem.kind === "consultation"
-                      ? "Consultation Details"
-                      : selectedItem.kind === "documents"
-                      ? "Records Uploaded"
-                      : "Admission Request"
-                    : "Details"}
+                  <div className="visit-list">
+                    {filtered.map((item, index) => (
+                      <VisitCard
+                        key={item.id}
+                        date={item.displayDate}
+                        description={item.description}
+                        doctor={item.doctorName}
+                        typeofVisit={item.typeofVisit}
+                        department={item.departmentName}
+                        color={palette[index % palette.length]}
+                        departmentbgColor={
+                          item.kind === "admission" ? "#F7F8FC" : undefined
+                        }
+                        departmentColor={
+                          item.kind === "admission" ? "#5461BE" : undefined
+                        }
+                        status={
+                          item.kind === "admission"
+                            ? item.raw?.status
+                            : undefined
+                        }
+                        kind={item.kind}
+                        onClick={() => {
+                          setSelectedItem(item);
+                          if (isMobile) setMobileView("details");
+                        }}
+                      />
+                    ))}
+
+                    {filtered.length === 0 && (
+                      <div
+                        style={{ color: "#888", fontSize: 14, padding: "12px" }}
+                      >
+                        No records match your search.
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                {/* RIGHT DETAILS */}
+                <div className="patient_records_details-rep">
+                  <div
+                    className="records_details_header"
+                    style={{ backgroundColor: "#ffffff" }}
+                  >
+                    <div className="patient-records-heading">
+                      {selectedItem
+                        ? selectedItem.kind === "consultation"
+                          ? "Consultation Details"
+                          : selectedItem.kind === "documents"
+                            ? "Records Uploaded"
+                            : "Admission Request"
+                        : "Details"}
+                    </div>
+                  </div>
+
+                  <div className="records_details_body">
+                    {renderRightDetails(selectedItem)}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* MOBILE → LEFT LIST */}
+            {isMobile && mobileView === "list" && (
+              <section className="patient-visits">
+                <div className="visit-header">
+                  <h3>Past Records</h3>
+
+                  <div className="searchContainerPPR_mobile">
+                    <svg
+                      width="1vw"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="searchIconPPR_mobile"
+                    >
+                      <path
+                        d="M22.1333 24L13.7333 15.6C13.0667 16.1333 12.3 16.5556 11.4333 16.8667C10.5667 17.1778 9.64445 17.3333 8.66667 17.3333C6.24445 17.3333 4.19467 16.4942 2.51733 14.816C0.840001 13.1378 0.000889594 11.088 7.05467e-07 8.66667C-0.000888183 6.24533 0.838223 4.19556 2.51733 2.51733C4.19645 0.839111 6.24622 0 8.66667 0C11.0871 0 13.1373 0.839111 14.8173 2.51733C16.4973 4.19556 17.336 6.24533 17.3333 8.66667C17.3333 9.64444 17.1778 10.5667 16.8667 11.4333C16.5556 12.3 16.1333 13.0667 15.6 13.7333L24 22.1333L22.1333 24ZM8.66667 14.6667C10.3333 14.6667 11.7502 14.0836 12.9173 12.9173C14.0844 11.7511 14.6676 10.3342 14.6667 8.66667C14.6658 6.99911 14.0827 5.58267 12.9173 4.41733C11.752 3.252 10.3351 2.66844 8.66667 2.66667C6.99822 2.66489 5.58178 3.24844 4.41733 4.41733C3.25289 5.58622 2.66933 7.00267 2.66667 8.66667C2.664 10.3307 3.24756 11.7476 4.41733 12.9173C5.58711 14.0871 7.00356 14.6702 8.66667 14.6667Z"
+                        fill="#878787"
+                      />
+                    </svg>
+                    <input
+                      type="search"
+                      className="search_bar_rep"
+                      placeholder="Search Records.."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="visit-list">
+                  {filtered.map((item, index) => (
+                    <VisitCard
+                      key={item.id}
+                      date={item.displayDate}
+                      description={item.description}
+                      doctor={item.doctorName}
+                      typeofVisit={item.typeofVisit}
+                      department={item.departmentName}
+                      color={palette[index % palette.length]}
+                      departmentbgColor={
+                        item.kind === "admission" ? "#F7F8FC" : undefined
+                      }
+                      departmentColor={
+                        item.kind === "admission" ? "#5461BE" : undefined
+                      }
+                      status={
+                        item.kind === "admission" ? item.raw?.status : undefined
+                      }
+                      kind={item.kind}
+                      onClick={() => {
+                        setSelectedItem(item);
+                        if (isMobile) setMobileView("details");
+                      }}
+                    />
+                  ))}
+
+                  {filtered.length === 0 && (
+                    <div
+                      style={{ color: "#888", fontSize: 14, padding: "12px" }}
+                    >
+                      No records match your search.
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* MOBILE → RIGHT DETAILS */}
+            {isMobile && mobileView === "details" && (
+              <div className="patient_records_details-rep">
+                <div className="records_details_header">
+                  <button
+                    onClick={() => setMobileView("list")}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#25307F",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      padding: 0,
+                    }}
+                  >
+                    <ArrowBackIosNew fontSize="small" />
+                  </button>
+
+                  <div className="patient-records-heading">
+                    {selectedItem
+                      ? selectedItem.kind === "consultation"
+                        ? "Consultation Details"
+                        : selectedItem.kind === "documents"
+                          ? "Records Uploaded"
+                          : "Admission Request"
+                      : "Details"}
+                  </div>
+                </div>
+
+                <div className="records_details_body">
+                  {renderRightDetails(selectedItem)}
                 </div>
               </div>
-
-              <div className="records_details_body">
-                {renderRightDetails(selectedItem)}
-              </div>
-            </div>
+            )}
           </div>
         </div>
       )}

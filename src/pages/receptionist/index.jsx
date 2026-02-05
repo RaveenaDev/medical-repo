@@ -416,7 +416,7 @@ function Receptionist(props) {
                       >
                         {departments.length > 0 &&
                           (isMobile ? (
-                            // 📱 MOBILE LAYOUT
+                            //  MOBILE LAYOUT
                             <Box
                               px={1.5}
                               py={1}
@@ -445,7 +445,7 @@ function Receptionist(props) {
                               </Box>
                             </Box>
                           ) : (
-                            // 🖥 DESKTOP (UNCHANGED)
+                            //  DESKTOP
                             <Grid
                               container
                               spacing={2}
@@ -579,14 +579,11 @@ function Receptionist(props) {
                               pb: 2,
                               overflowY: "auto",
                               maxHeight: "calc(100dvh - 220px)",
-
                               overscrollBehavior: "contain",
 
                               /* Hide scrollbar */
-                              scrollbarWidth: "none", // Firefox
-                              "&::-webkit-scrollbar": {
-                                display: "none", // Chrome / Safari
-                              },
+                              scrollbarWidth: "none",
+                              "&::-webkit-scrollbar": { display: "none" },
                             }}
                           >
                             {appointments.map((appointment) => (
@@ -596,54 +593,66 @@ function Receptionist(props) {
                                 onMenuClick={openRowMenu}
                               />
                             ))}
+
+                            {/* INLINE PAGINATION */}
                             <Box
                               sx={{
-                                position: "fixed",
-                                left: 0,
-                                right: 0,
-                                bottom: 60, // above FAB + BottomNav
-                                backgroundColor: "#fff",
-                                zIndex: 20,
-                                borderTop: "1px solid #e6e6e6",
-                                boxShadow: "0 -2px 6px rgba(0,0,0,0.04)",
+                                mt: 1.5,
+                                mb: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                px: 1,
                               }}
                             >
-                              <TablePagination
-                                component="div"
-                                count={totalAppointmentsCount ?? 0}
-                                page={page}
-                                onPageChange={handleChangePage}
-                                rowsPerPage={rowsPerPage}
-                                onRowsPerPageChange={() => {}}
-                                rowsPerPageOptions={[]}
-                                labelDisplayedRows={({ page, count }) =>
-                                  `Page ${page + 1} of ${Math.max(
-                                    1,
-                                    Math.ceil(count / rowsPerPage),
-                                  )}`
-                                }
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                disabled={page === 0}
+                                onClick={() => handleChangePage(null, page - 1)}
                                 sx={{
-                                  "& .MuiTablePagination-toolbar": {
-                                    minHeight: 40,
-                                    px: 2,
-                                    justifyContent: "space-between",
-                                  },
-
-                                  "& .MuiTablePagination-displayedRows": {
-                                    fontSize: "13px",
-                                    fontWeight: 500,
-                                    marginLeft: "12px", //  shift text right slightly
-                                  },
-
-                                  "& .MuiTablePagination-actions": {
-                                    marginLeft: 0,
-                                  },
-
-                                  "& .MuiIconButton-root": {
-                                    padding: "6px",
-                                  },
+                                  minWidth: 80,
+                                  borderRadius: "10px",
+                                  textTransform: "none",
                                 }}
-                              />
+                              >
+                                Prev
+                              </Button>
+
+                              <Typography
+                                sx={{
+                                  fontSize: "13px",
+                                  fontWeight: 600,
+                                  color: "#555",
+                                }}
+                              >
+                                Page {page + 1} /{" "}
+                                {Math.max(
+                                  1,
+                                  Math.ceil(
+                                    totalAppointmentsCount / rowsPerPage,
+                                  ),
+                                )}
+                              </Typography>
+
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                disabled={
+                                  page + 1 >=
+                                  Math.ceil(
+                                    totalAppointmentsCount / rowsPerPage,
+                                  )
+                                }
+                                onClick={() => handleChangePage(null, page + 1)}
+                                sx={{
+                                  minWidth: 80,
+                                  borderRadius: "10px",
+                                  textTransform: "none",
+                                }}
+                              >
+                                Next
+                              </Button>
                             </Box>
                           </Box>
                         ) : (
@@ -885,12 +894,12 @@ function Receptionist(props) {
                                                     "Ongoing"
                                                       ? "white"
                                                       : appointment.status ===
-                                                          "Completed"
-                                                        ? "#EAA000"
-                                                        : appointment.status ===
-                                                            "Scheduled"
-                                                          ? "#25307F"
-                                                          : "#757575",
+                                                        "Completed"
+                                                      ? "#EAA000"
+                                                      : appointment.status ===
+                                                        "Scheduled"
+                                                      ? "#25307F"
+                                                      : "#757575",
                                                   fontWeight: "600",
                                                   px: 0.7,
                                                 }}

@@ -14,6 +14,7 @@ import {
   CircularProgress,
   MenuItem,
   Autocomplete,
+  useMediaQuery,
 } from "@mui/material";
 
 import styles from "./billDetailsReception.module.scss";
@@ -719,6 +720,8 @@ const BillDetailsReception = (props) => {
       `,
     });
   };
+
+  const isMobile = useMediaQuery("(max-width:600px)");
   if (loading) {
     return (
       <div className={styles.loaderWrap}>
@@ -776,7 +779,7 @@ const BillDetailsReception = (props) => {
                 <span>{bill?.invoiceNumber}</span>
               </div>
               <div>
-                <span className={styles["bold"]}>Patient Number</span>
+                <span className={styles["bold"]}>Phone Number</span>
                 <span>{bill?.patient?.phone || "Not provided"}</span>
               </div>
 
@@ -863,27 +866,33 @@ const BillDetailsReception = (props) => {
             <div className={styles["billing-invoice-amount"]}>
               <div className={styles["billing-desc"]}>
                 {/* Header row (unchanged) */}
-                <div className={styles["billing-table-header"]}>
-                  <div className={styles["billing-description"]}>
-                    <p className={styles["bold"]}>Category</p>
-                  </div>
-                  <div className={styles["billing-name"]}>
-                    <p className={styles["bold"]}>Name</p>
-                  </div>
-                  <div className={styles["billing-name"]}>
-                    <p className={styles["bold"]}>Type</p>
-                  </div>
-                  <div className={styles["billing-date"]}>
-                    <p className={styles["bold"]}>Date</p>
-                  </div>
-                  <div className={styles["billing-quantity"]}>
-                    <p className={styles["bold"]}>Quantity</p>
-                  </div>
+                {!isMobile ? (
+                  <div className={styles["billing-table-header"]}>
+                    <div className={styles["billing-description"]}>
+                      <p className={styles["bold"]}>Category</p>
+                    </div>
+                    <div className={styles["billing-name"]}>
+                      <p className={styles["bold"]}>Name</p>
+                    </div>
+                    <div className={styles["billing-name"]}>
+                      <p className={styles["bold"]}>Type</p>
+                    </div>
+                    <div className={styles["billing-date"]}>
+                      <p className={styles["bold"]}>Date</p>
+                    </div>
+                    <div className={styles["billing-quantity"]}>
+                      <p className={styles["bold"]}>Quantity</p>
+                    </div>
 
-                  <div className={styles["billing-price"]}>
-                    <p className={styles["bold"]}>Price</p>
+                    <div className={styles["billing-price"]}>
+                      <p className={styles["bold"]}>Price</p>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className={styles["billing-table-header-mobile"]}>
+                    Bill
+                  </div>
+                )}
 
                 {/* Render each service as one line */}
                 {(editableBill?.services || []).map((row, i) => {
@@ -1118,8 +1127,11 @@ const BillDetailsReception = (props) => {
               Apply Discount
             </Button>
           </div>
-          {/* Totals  */}
+
+          {/* SECOND ROW */}
+
           <div className={styles["billing-amount"]}>
+            {/* Totals  */}
             <div className={styles["billing-amount-details"]}>
               <div>
                 <div className={styles["bold"]}>Total Amount</div>
@@ -1212,6 +1224,8 @@ const BillDetailsReception = (props) => {
               </div>
             </div>
             <div className={styles["billing-divider"]}></div>
+
+            {/* Payments  */}
             <div className={styles["billing-history"]}>
               <div className={styles["payment-heading"]}>Payment History</div>
               {bill.payments && bill.payments.length > 0 ? (
@@ -1269,7 +1283,11 @@ const BillDetailsReception = (props) => {
                           onClick={() => printPaymentFromHistory(payment)}
                           className={styles["print-refund-btn"]}
                         >
-                          <Printer />
+                          {!isMobile ? (
+                            <Printer />
+                          ) : (
+                            <div style={{ fontSize: "12px" }}>Print</div>
+                          )}
                         </button>
                       </div>
                     ))}
@@ -1282,7 +1300,7 @@ const BillDetailsReception = (props) => {
               )}
             </div>
             <div className={styles["billing-divider"]}></div>
-
+            {/* REFUNDS  */}
             <div className={styles["billing-history"]}>
               <div className={styles["payment-heading"]}>Refund History</div>
 

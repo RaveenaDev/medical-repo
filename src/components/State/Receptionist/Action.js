@@ -639,6 +639,7 @@ export const rejectAppointmentRequests = (id) => async (dispatch) => {
 };
 
 export const getBills = (page, rowsPerPage, search) => async (dispatch) => {
+  dispatch({ type: "LOADING_ALL_BILLS", payload: true });
   try {
     const token = localStorage.getItem("jwt");
 

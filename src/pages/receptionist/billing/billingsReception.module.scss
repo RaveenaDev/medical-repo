@@ -1,9 +1,13 @@
 .billingsReception-container {
   background: #f1f1f1;
-  height: 96dvh; // Make the entire div take up the full viewport height
-  overflow: "hidden"; // Prevent scrolling on the rest of the page
+  min-height: 100dvh;
+  overflow: hidden;
   padding: 10px;
   color: black;
+
+  @media (max-width: 768px) {
+    padding: 10px 0;
+  }
 
   .header-Reception {
     display: flex;
@@ -19,6 +23,11 @@
     align-items: center;
     margin-top: 1rem;
 
+    .title-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
     h2 {
       font-size: 24px;
       font-weight: 600;
@@ -32,7 +41,7 @@
         width: 24px;
         height: 24px;
       }
-      padding: 0 8px;
+      padding: 0 4px;
 
       &:focus,
       &:active {
@@ -141,5 +150,226 @@
     outline: none;
     font-size: 0.9rem;
     background: transparent;
+  }
+}
+@media (max-width: 768px) {
+  .billings-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+
+    h2 {
+      font-size: 18px;
+    }
+  }
+
+  .search-wrapper {
+    width: 100%;
+    margin-left: 0;
+    padding: 8px 12px;
+  }
+
+  .search-input {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+}
+@media (max-width: 768px) {
+  .table-header {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .billings-table {
+    margin-top: 70px;
+    max-height: calc(100dvh - 160px);
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background: white;
+    margin-bottom: 0.75rem;
+  }
+
+  .table-row span {
+    padding-left: 0;
+    font-size: 0.85rem;
+  }
+
+  /* Labels */
+  .table-row span:nth-child(1)::before {
+    content: "Case ID";
+    display: block;
+    font-size: 0.7rem;
+    color: #666;
+    font-weight: 600;
+  }
+
+  .table-row span:nth-child(2)::before {
+    content: "Name";
+  }
+
+  .table-row span:nth-child(3)::before {
+    content: "Phone";
+  }
+
+  .table-row span:nth-child(4)::before {
+    content: "Date";
+  }
+
+  .table-row span:nth-child(5)::before {
+    content: "Amount";
+  }
+
+  .table-row span:nth-child(6)::before {
+    content: "Status";
+  }
+
+  .table-row span:nth-child(n)::before {
+    display: block;
+    font-size: 0.7rem;
+    color: #666;
+    font-weight: 600;
+  }
+
+  /* Action button */
+  .table-row button {
+    grid-column: span 2;
+    justify-self: flex-end;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ===== MOBILE BILL CARDS  ===== */
+@media (max-width: 768px) {
+  .bill-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 0 10px 10px;
+    border: 1px solid rgba(37, 48, 127, 0.12);
+    box-shadow: none; // 🔥 desktop-like
+  }
+
+  .bill-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .bill-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .bill-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #25307f;
+  }
+
+  .bill-amount {
+    font-size: 0.9rem;
+    color: #444;
+    font-weight: 500;
+  }
+
+  /* Status pill – same logic as desktop */
+  .status {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+    border: 1px solid transparent;
+  }
+
+  .status.paid {
+    color: #3db461;
+    background: rgba(61, 180, 97, 0.12);
+    border-color: rgba(61, 180, 97, 0.25);
+  }
+
+  .status.unpaid {
+    color: #ff4d4f;
+    background: rgba(255, 77, 79, 0.12);
+    border-color: rgba(255, 77, 79, 0.25);
+  }
+
+  /* EXPANDED DETAILS */
+  .bill-card-details {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(37, 48, 127, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bill-card-details div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+
+  .bill-card-details span:first-child {
+    color: #666;
+    font-weight: 500;
+  }
+
+  .bill-card-details span:last-child {
+    color: #222;
+    font-weight: 500;
+  }
+
+  .view-btn {
+    align-self: flex-end;
+    margin-top: 6px;
+    border-radius: 18px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    background: white;
+    color: #25307f;
+    border: 1px solid #25307f;
+    text-transform: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .billings-table {
+    margin-top: 70px;
+    max-height: calc(100dvh - 70px - 72px - 56px);
+
+    overflow-y: auto;
+    padding-bottom: 90px;
+    /* Firefox */
+    scrollbar-width: none;
+
+    /* IE / Edge */
+    -ms-overflow-style: none;
+  }
+
+  /* Chrome, Safari, Edge (WebKit) */
+  .billings-table::-webkit-scrollbar {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .MuiTablePagination-toolbar {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .MuiTablePagination-selectLabel,
+  .MuiTablePagination-select,
+  .MuiTablePagination-input {
+    display: none; // extra safety
   }
 }
