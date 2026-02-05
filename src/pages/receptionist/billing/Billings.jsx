@@ -5,6 +5,7 @@ import {
   Button,
   CircularProgress,
   TablePagination,
+  Typography,
   useMediaQuery,
 } from "@mui/material";
 
@@ -17,9 +18,6 @@ import { Search } from "lucide-react";
 import useDebounce from "../../../hooks/useDebounce.js";
 
 const Billings = (props) => {
-  const [selectedBill, setSelectedBill] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -37,16 +35,6 @@ const Billings = (props) => {
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
-
-  // const handleViewClick = (bill) => {
-  //   setSelectedBill(bill);
-  //   setOpenModal(true);
-  // };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedBill(null);
-  };
 
   const navigate = useNavigate();
   const handleClose = () => {
@@ -270,6 +258,7 @@ const Billings = (props) => {
             </div>
 
             {!isMobile ? (
+              // DESKTOP PAGINATION
               <Box
                 sx={{
                   width: "100%",
@@ -291,38 +280,62 @@ const Billings = (props) => {
                 />
               </Box>
             ) : (
+              // MOBILE PAGINATION
               <Box
                 sx={{
-                  position: "fixed",
-                  bottom: 60, // height of BottomNavigation
-                  left: 0,
-                  right: 0,
-                  backgroundColor: "#fff",
-                  borderTop: "1px solid #ddd",
-                  zIndex: 1200,
+                  mt: 1.5,
+                  mb: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  px: 1,
                 }}
               >
-                <TablePagination
-                  component="div"
-                  count={billsCount ?? 0}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage}
-                  rowsPerPageOptions={[]} //  removes rows-per-page
-                  labelRowsPerPage="" //  removes label space
-                  onRowsPerPageChange={() => {}}
-                />
+                <Button
+                  size="small"
+                  variant="outlined"
+                  disabled={page === 0}
+                  onClick={() => handleChangePage(null, page - 1)}
+                  sx={{
+                    minWidth: 80,
+                    borderRadius: "10px",
+                    textTransform: "none",
+                  }}
+                >
+                  Prev
+                </Button>
+
+                <Typography
+                  sx={{
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    color: "#555",
+                  }}
+                >
+                  Page {page + 1} /{" "}
+                  {Math.max(1, Math.ceil((billsCount ?? 0) / rowsPerPage))}
+                </Typography>
+
+                <Button
+                  size="small"
+                  variant="outlined"
+                  disabled={
+                    page + 1 >= Math.ceil((billsCount ?? 0) / rowsPerPage)
+                  }
+                  onClick={() => handleChangePage(null, page + 1)}
+                  sx={{
+                    minWidth: 80,
+                    borderRadius: "10px",
+                    textTransform: "none",
+                  }}
+                >
+                  Next
+                </Button>
               </Box>
             )}
           </>
         )}
       </div>
-      {/* <BillingModal
-        open={openModal}
-        bill={selectedBill}
-        onClose={handleCloseModal}
-        billId={selectedBill?._id}
-      /> */}
     </div>
   );
 };

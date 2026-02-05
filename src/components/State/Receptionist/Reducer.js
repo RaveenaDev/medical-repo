@@ -144,7 +144,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         filteredPatients: state.filteredPatients.map((patient) =>
-          patient._id === action.payload._id ? action.payload : patient
+          patient._id === action.payload._id ? action.payload : patient,
         ),
       };
     case GET_INPATIENTS:
@@ -235,7 +235,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         rooms: state.rooms.map((room) =>
-          room._id === action.payload._id ? action.payload : room
+          room._id === action.payload._id ? action.payload : room,
         ),
       };
 
@@ -243,7 +243,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         rooms: state.rooms.filter(
-          (room) => room._id !== action.payload.resource._id
+          (room) => room._id !== action.payload.resource._id,
         ),
         totalRooms: state.totalRooms - 1,
       };
@@ -336,7 +336,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentRequests: state.appointmentRequests.filter(
-          (request) => request._id !== action.payload
+          (request) => request._id !== action.payload,
         ),
       };
 
@@ -344,7 +344,7 @@ export const receptionistReducer = (state = initialState, action) => {
       return {
         ...state,
         appointmentRequests: state.appointmentRequests.filter(
-          (request) => request._id !== action.payload
+          (request) => request._id !== action.payload,
         ),
       };
 
@@ -354,6 +354,12 @@ export const receptionistReducer = (state = initialState, action) => {
         allBills: action.payload.bills,
         allBillsCount: action.payload.totalBills,
         isLoadingAllBills: false,
+      };
+
+    case "LOADING_ALL_BILLS":
+      return {
+        ...state,
+        isLoadingAllBills: action.payload,
       };
 
     case GET_BILL_BY_ID:
