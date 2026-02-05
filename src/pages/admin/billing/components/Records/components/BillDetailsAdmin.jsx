@@ -2200,7 +2200,7 @@ const BillDetailsAdmin = (props) => {
                       <td>{r.name}</td>
                       {hasGST && <td className="center">{r.hsn || "—"}</td>}
                       <td className="center">
-                        {r.date ? new Date(r.date).toLocaleDateString() : "—"}
+                        {r.date ? formatToDDMMYYYY(r.date) : "—"}
                       </td>
                       <td className="center">{r.qty}</td>
                       <td className="right">
