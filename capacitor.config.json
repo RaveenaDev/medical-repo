@@ -2,6 +2,15 @@
   "appId": "tech.stepcare.hms",
   "appName": "Stepcare",
   "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    }
+  },
   "server": {
     "cleartext": true
   }
