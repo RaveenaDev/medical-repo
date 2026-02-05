@@ -1,0 +1,100 @@
+/* Root container */
+.dateSelector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+
+  padding: 8px 12px;
+  height: 40px;
+  width: 100%;
+  max-width: 260px;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Left: calendar icon */
+.calendarWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .calendarIcon {
+    font-size: 20px;
+    color: #1a2a85;
+  }
+
+  /* Invisible but clickable date input */
+  input[type="date"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* Right: text */
+.text {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  flex: 1;
+  min-width: 0; /* prevents overflow on small screens */
+}
+
+.label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #000;
+  line-height: 1.2;
+}
+
+.date {
+  font-size: 13px;
+  color: #999;
+  line-height: 1.2;
+}
+
+/* ===== Mobile tweaks ===== */
+@media (max-width: 768px) {
+  .dateSelector {
+    height: 42px;
+    max-width: 100%;
+  }
+}
+
+/* Small phones */
+@media (max-width: 360px) {
+  .label {
+    font-size: 13px;
+  }
+
+  .date {
+    font-size: 12px;
+  }
+
+  .calendarWrapper .calendarIcon {
+    font-size: 18px;
+  }
+}
+
+/* Ultra-small devices (≈ 320–330px) */
+@media (max-width: 330px) {
+  .dateSelector {
+    padding: 6px 10px;
+    height: 38px;
+  }
+
+  .label {
+    font-size: 12px;
+  }
+
+  .date {
+    font-size: 11px;
+  }
+}

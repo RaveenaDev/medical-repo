@@ -416,7 +416,7 @@ function Receptionist(props) {
                       >
                         {departments.length > 0 &&
                           (isMobile ? (
-                            // 📱 MOBILE LAYOUT
+                            //  MOBILE LAYOUT
                             <Box
                               px={1.5}
                               py={1}
@@ -445,7 +445,7 @@ function Receptionist(props) {
                               </Box>
                             </Box>
                           ) : (
-                            // 🖥 DESKTOP (UNCHANGED)
+                            //  DESKTOP
                             <Grid
                               container
                               spacing={2}
@@ -885,12 +885,12 @@ function Receptionist(props) {
                                                     "Ongoing"
                                                       ? "white"
                                                       : appointment.status ===
-                                                          "Completed"
-                                                        ? "#EAA000"
-                                                        : appointment.status ===
-                                                            "Scheduled"
-                                                          ? "#25307F"
-                                                          : "#757575",
+                                                        "Completed"
+                                                      ? "#EAA000"
+                                                      : appointment.status ===
+                                                        "Scheduled"
+                                                      ? "#25307F"
+                                                      : "#757575",
                                                   fontWeight: "600",
                                                   px: 0.7,
                                                 }}

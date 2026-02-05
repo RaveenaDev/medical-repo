@@ -3,6 +3,7 @@ import {
   BottomNavigationAction,
   Paper,
   Fab,
+  useMediaQuery,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
@@ -17,6 +18,8 @@ const MobileBottomNav = ({
   onOpenAppointment,
   onCloseAppointment,
 }) => {
+  const isSmallMobile = useMediaQuery("(max-width:360px)");
+
   const getValue = () => {
     if (activePath.includes("billing")) return 1;
     if (activePath.includes("patients")) return 2;
@@ -32,35 +35,37 @@ const MobileBottomNav = ({
         zIndex: 1300,
       }}
     >
-      {/* PLUS FAB */}
+      {/* FAB */}
       <Fab
         color="primary"
+        size={isSmallMobile ? "medium" : "large"}
         onClick={() => {
-          // Always go to receptionist root first
           if (!activePath.startsWith("/receptionist")) {
             onNavigate("/receptionist");
           } else if (activePath !== "/receptionist") {
             onNavigate("/receptionist");
           }
 
-          // Open appointment after navigation
-          setTimeout(() => {
+          requestAnimationFrame(() => {
             onOpenAppointment();
-          }, 0);
+          });
         }}
         sx={{
           position: "fixed",
-          bottom: 25,
+          bottom: 28,
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 1300,
           pointerEvents: "auto",
+          boxShadow: "0px 6px 16px rgba(0,0,0,0.25)",
         }}
       >
         <AddIcon />
       </Fab>
 
+      {/* Bottom Nav */}
       <Paper
+        elevation={12}
         sx={{
           position: "fixed",
           bottom: 0,
@@ -68,37 +73,56 @@ const MobileBottomNav = ({
           right: 0,
           zIndex: 1200,
           pointerEvents: "auto",
+          paddingBottom: "env(safe-area-inset-bottom)",
         }}
-        elevation={12}
       >
-        <BottomNavigation value={getValue()}>
+        <BottomNavigation
+          value={getValue()}
+          showLabels
+          sx={{
+            height: 56,
+            "& .MuiBottomNavigationAction-root": {
+              minWidth: 0,
+              padding: "6px 0",
+            },
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
           <BottomNavigationAction
             label="Overview"
-            icon={<DashboardIcon />}
+            icon={<DashboardIcon fontSize="small" />}
             onClick={() => {
-              onCloseAppointment?.(); // close modal if open
+              onCloseAppointment?.();
               onNavigate("/receptionist");
             }}
           />
 
           <BottomNavigationAction
             label="Billing"
-            icon={<ReceiptLongIcon />}
+            icon={<ReceiptLongIcon fontSize="small" />}
             onClick={() => onNavigate("/receptionist/billing")}
           />
 
-          {/* FAB space */}
-          <BottomNavigationAction disabled />
+          {/* FAB spacer (visual only) */}
+          <BottomNavigationAction
+            disabled
+            sx={{
+              opacity: 0,
+              pointerEvents: "none",
+            }}
+          />
 
           <BottomNavigationAction
             label="Patients"
-            icon={<PeopleIcon />}
+            icon={<PeopleIcon fontSize="small" />}
             onClick={() => onNavigate("/receptionist/patients")}
           />
 
           <BottomNavigationAction
             label="Logout"
-            icon={<LogoutIcon />}
+            icon={<LogoutIcon fontSize="small" />}
             onClick={onLogout}
           />
         </BottomNavigation>
