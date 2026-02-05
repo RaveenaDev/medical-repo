@@ -1,0 +1,8 @@
+{
+  "appId": "tech.stepcare.hms",
+  "appName": "Stepcare",
+  "webDir": "dist",
+  "server": {
+    "cleartext": true
+  }
+}

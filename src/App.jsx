@@ -136,7 +136,12 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={<Base setIsSignUpOrLogin={setIsSignUpOrLogin} />}
+              element={
+                <>
+                  {/* <Navigate to="/login" replace /> */}
+                  <Base setIsSignUpOrLogin={setIsSignUpOrLogin} />
+                </>
+              }
             />
           </Routes>
         ) : (

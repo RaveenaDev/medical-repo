@@ -8,6 +8,10 @@
     //margin-top: 10%;
     margin-right: 15%;
     //height: 400px;
+
+    @media (max-width: 600px) {
+      margin-right: 0;
+    }
   }
   &.otherPages {
     flex-basis: 80%;
