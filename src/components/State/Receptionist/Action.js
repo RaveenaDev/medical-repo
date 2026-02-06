@@ -120,6 +120,7 @@ export const getPatients = () => async (dispatch) => {
 export const getFilteredPatients =
   (filteredData, page, rowsPerPage, search) => async (dispatch) => {
     // console.log("Fil:",filteredData)
+
     try {
       dispatch({ type: LOADING_PATIENTS, payload: true });
       const token = localStorage.getItem("jwt");
