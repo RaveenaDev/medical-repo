@@ -517,7 +517,7 @@ const BillDetailsReception = (props) => {
     if (bill?.insurance?.discount) {
       setDiscountForm({
         type: bill.insurance.discount.type || "Flat",
-        value: bill.insurance.discount.value,
+        value: bill.insurance.discount.value?.toString() || "",
         reason: bill.insurance.discountReason || "Insurance discount",
       });
     } else {
@@ -539,16 +539,17 @@ const BillDetailsReception = (props) => {
   const validateDiscount = () => {
     const errors = {};
     const gross = bill?.grossAmount || bill?.totalAmount || 0;
+    const valueNum = Number(discountForm.value);
 
-    if (!discountForm.value || discountForm.value <= 0) {
+    if (!discountForm.value || valueNum <= 0) {
       errors.value = "Enter a valid value";
     }
 
-    if (discountForm.type === "Percentage" && discountForm.value > 100) {
+    if (discountForm.type === "Percentage" && valueNum > 100) {
       errors.value = "Percentage cannot exceed 100";
     }
 
-    if (discountForm.type === "Flat" && discountForm.value > gross) {
+    if (discountForm.type === "Flat" && valueNum > gross) {
       errors.value = "Discount cannot exceed total amount";
     }
 
@@ -1483,6 +1484,8 @@ const BillDetailsReception = (props) => {
 
             {/* Value */}
             <TextField
+              type="number"
+              inputProps={{ min: 0 }}
               label={
                 discountForm.type === "Percentage" ? "Percentage (%)" : "Amount"
               }
@@ -1490,7 +1493,7 @@ const BillDetailsReception = (props) => {
               onChange={(e) =>
                 setDiscountForm((p) => ({
                   ...p,
-                  value: Number(e.target.value),
+                  value: e.target.value,
                 }))
               }
               error={!!discountErrors.value}
