@@ -236,10 +236,11 @@ const PatientList = () => {
                   onChange={handleSortChange}
                   size="small"
                   sx={{
-                    flex: { xs: 1, md: "unset" }, // 👈 fills row on mobile
+                    flex: { xs: 1, md: "unset" }, // fills row on mobile
                     minWidth: { xs: "100%", md: 180 },
                     background: "#fff",
                     color: "#4A4A4A",
+                    fontSize: { xs: "11px", md: "14px" },
                     boxShadow: "0px 4px 4px 0px #BDBDBD1C",
                     borderRadius: "8px",
                     "& .MuiOutlinedInput-notchedOutline": {
@@ -255,14 +256,16 @@ const PatientList = () => {
 
             <Box className={styles.filterSearch}>
               <div className={styles["search-wrapper"]}>
-                <Search size={18} className={styles["search-icon"]} />
-                <input
-                  type="text"
-                  placeholder="Search Patients..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={styles["search-input"]}
-                />
+                <div className={styles["search-input-wrapper"]}>
+                  <Search size={18} className={styles["search-icon"]} />
+                  <input
+                    type="text"
+                    placeholder="Search Patients..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={styles["search-input"]}
+                  />
+                </div>
                 <X
                   strokeWidth={1.2}
                   className={styles["cross-icon"]}
@@ -273,10 +276,10 @@ const PatientList = () => {
                 startIcon={<FilterAltIcon />}
                 sx={{
                   textTransform: "none",
-                  padding: "6px 20px",
+                  padding: isMobile ? "6px 12px" : "6px 20px",
                   backgroundColor: "white",
                   borderRadius: "5px",
-                  fontSize: "15px",
+                  fontSize: { xs: "11px", sm: "14px" },
                   color: "#25307F",
                   "&:focus": {
                     outline: "none",
@@ -477,131 +480,189 @@ const PatientList = () => {
               gap: 1,
               flex: 1,
               overflowY: "auto",
+              pb: 16,
               WebkitOverflowScrolling: "touch",
               mt: 1.5, //  spacing below sticky header
-              pb: "180px", // bottom nav + pagination
+              /* Hide scrollbar */
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // IE 10+
+
+              "&::-webkit-scrollbar": {
+                display: "none", // Chrome / Safari
+              },
             }}
           >
-            {totalPatients.length > 0 ? (
-              totalPatients.map((patient) => (
-                <Box
-                  key={patient._id}
-                  sx={{
-                    background: "#fff",
-                    borderRadius: "12px",
-                    p: 1.2,
-                    boxShadow: "0px 2px 6px rgba(0,0,0,0.08)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 0.6,
-                    position: "relative", // 👈 for top-right menu
-                  }}
-                >
-                  {/* TOP RIGHT MENU */}
-                  <IconButton
-                    onClick={(e) => handleMenuOpen(e, patient)}
-                    size="small"
-                    sx={{
-                      position: "absolute",
-                      top: 6,
-                      right: 6,
-                      color: "#555",
-                    }}
-                  >
-                    <MoreVertical size={18} />
-                  </IconButton>
-
-                  {/* PATIENT ID */}
-                  <Typography
-                    sx={{
-                      fontSize: "0.7rem",
-                      color: "#888",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Pat ID: {patient?.patId || "—"}
-                  </Typography>
-
-                  {/* NAME */}
-                  <Typography
-                    sx={{
-                      fontWeight: 600,
-                      color: "#25307F",
-                      fontSize: "0.95rem",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => handleClick(patient)}
-                  >
-                    {patient.name}
-                  </Typography>
-
-                  {/* PHONE */}
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
-                    <Phone size={14} color="#666" />
-                    <Typography sx={{ fontSize: "0.85rem", color: "#555" }}>
-                      {patient.phone}
-                    </Typography>
-                  </Box>
-
-                  {/* META ROW */}
+            {loading && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  backdropFilter: "blur(2px)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: 20,
+                }}
+              >
+                <CircularProgress sx={{ color: "#25307F" }} />
+              </Box>
+            )}
+            <>
+              {totalPatients.length > 0 ? (
+                totalPatients.map((patient) => (
                   <Box
+                    key={patient._id}
                     sx={{
+                      background: "#fff",
+                      borderRadius: "12px",
+                      p: 1.2,
+                      boxShadow: "0px 2px 6px rgba(0,0,0,0.08)",
                       display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      mt: 0.5,
+                      flexDirection: "column",
+                      gap: 0.6,
+                      position: "relative", // 👈 for top-right menu
                     }}
                   >
-                    <Typography sx={{ fontSize: "0.75rem", color: "#777" }}>
-                      {new Date(patient.registrationDate).toLocaleDateString(
-                        "en-IN",
-                      )}
-                    </Typography>
-
-                    <Chip
-                      label={patient.status}
+                    {/* TOP RIGHT MENU */}
+                    <IconButton
+                      onClick={(e) => handleMenuOpen(e, patient)}
                       size="small"
                       sx={{
-                        bgcolor:
-                          patient.status === "active" ? "#d4edda" : "#f0f0f0",
-                        color:
-                          patient.status === "active" ? "#155724" : "#757575",
-                        fontWeight: 600,
-                        height: 22,
+                        position: "absolute",
+                        top: 6,
+                        right: 6,
+                        color: "#555",
                       }}
-                    />
+                    >
+                      <MoreVertical size={18} />
+                    </IconButton>
+
+                    {/* PATIENT ID */}
+                    <Typography
+                      sx={{
+                        fontSize: "0.7rem",
+                        color: "#888",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Pat ID: {patient?.patId || "—"}
+                    </Typography>
+
+                    {/* NAME */}
+                    <Typography
+                      sx={{
+                        fontWeight: 600,
+                        color: "#25307F",
+                        fontSize: "0.95rem",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleClick(patient)}
+                    >
+                      {patient.name}
+                    </Typography>
+
+                    {/* PHONE */}
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", gap: 0.6 }}
+                    >
+                      <Phone size={14} color="#666" />
+                      <Typography sx={{ fontSize: "0.85rem", color: "#555" }}>
+                        {patient.phone}
+                      </Typography>
+                    </Box>
+
+                    {/* META ROW */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mt: 0.5,
+                      }}
+                    >
+                      <Typography sx={{ fontSize: "0.75rem", color: "#777" }}>
+                        {new Date(patient.registrationDate).toLocaleDateString(
+                          "en-IN",
+                        )}
+                      </Typography>
+
+                      <Chip
+                        label={patient.status}
+                        size="small"
+                        sx={{
+                          bgcolor:
+                            patient.status === "active" ? "#d4edda" : "#f0f0f0",
+                          color:
+                            patient.status === "active" ? "#155724" : "#757575",
+                          fontWeight: 600,
+                          height: 22,
+                        }}
+                      />
+                    </Box>
                   </Box>
-                </Box>
-              ))
-            ) : (
-              <Typography align="center">No Patients found!</Typography>
-            )}
+                ))
+              ) : (
+                <Typography align="center">No Patients found!</Typography>
+              )}
+            </>
+            {/* MOBILE PAGINATION */}
+            <Box
+              sx={{
+                mt: 1.5,
+                mb: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                px: 1,
+              }}
+            >
+              <Button
+                size="small"
+                variant="outlined"
+                disabled={page === 0}
+                onClick={() => handleChangePage(null, page - 1)}
+                sx={{
+                  minWidth: 80,
+                  borderRadius: "10px",
+                  textTransform: "none",
+                }}
+              >
+                Prev
+              </Button>
+
+              <Typography
+                sx={{
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  color: "#555",
+                }}
+              >
+                Page {page + 1} /{" "}
+                {Math.max(1, Math.ceil(noOfPatients / rowsPerPage))}
+              </Typography>
+
+              <Button
+                size="small"
+                variant="outlined"
+                disabled={page + 1 >= Math.ceil(noOfPatients / rowsPerPage)}
+                onClick={() => handleChangePage(null, page + 1)}
+                sx={{
+                  minWidth: 80,
+                  borderRadius: "10px",
+                  textTransform: "none",
+                }}
+              >
+                Next
+              </Button>
+            </Box>
           </Box>
         )}
-        {isMobile ? (
-          <Box
-            sx={{
-              position: "fixed",
-              bottom: 58, // above bottom nav
-              left: 0,
-              right: 0,
-              background: "#fff",
-              borderTop: "1px solid #ddd",
-              borderBottom: "1px solid #ddd",
-              zIndex: 1200,
-            }}
-          >
-            <TablePagination
-              component="div"
-              count={noOfPatients}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              rowsPerPageOptions={[]} // hide rows-per-page
-              labelRowsPerPage=""
-            />
-          </Box>
-        ) : (
+        {!isMobile && (
+          // PAGINATION FOR DESKTOP
           <Box
             sx={{
               mt: 0.5,

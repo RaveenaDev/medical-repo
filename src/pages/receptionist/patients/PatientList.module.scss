@@ -39,11 +39,21 @@
 .search-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 10px 6px 10px 10px;
+
+  @media (max-width: 360px) {
+    padding: 6px 6px 6px 10px;
+  }
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
 
   .search-icon {
     color: #666;
@@ -55,6 +65,10 @@
     outline: none;
     font-size: 0.9rem;
     background: transparent;
+
+    @media (max-width: 360px) {
+      font-size: 11px;
+    }
   }
 }
 

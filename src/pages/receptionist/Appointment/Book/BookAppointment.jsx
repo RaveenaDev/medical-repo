@@ -7,6 +7,7 @@ import {
   Modal,
   Box,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -104,12 +105,12 @@ const BookAppointment = ({
 
   const departments = useSelector((store) => store.receptionist.departments);
   const doctorsByDepartment = useSelector(
-    (store) => store.receptionist.doctorsByDepartment
+    (store) => store.receptionist.doctorsByDepartment,
   );
   // console.log("doctorsByDepartment:", doctorsByDepartment);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const bookingSuccess = useSelector(
-    (store) => store.receptionist.bookAppointment
+    (store) => store.receptionist.bookAppointment,
   );
 
   useEffect(() => {
@@ -203,7 +204,7 @@ const BookAppointment = ({
     // setLoadingBtn(false)
 
     dispatch(bookAppointment(payload, onClose)).finally(() =>
-      setLoadingBtn(false)
+      setLoadingBtn(false),
     );
   };
 
@@ -212,10 +213,22 @@ const BookAppointment = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    width: {
+      xs: "80%", // ≤ 360px
+      sm: 360, // phones
+      md: 420, // desktop
+    },
+
     bgcolor: "background.paper",
+    borderRadius: "14px",
     boxShadow: 24,
-    p: 4,
+
+    p: {
+      xs: 2,
+      sm: 3,
+    },
+
+    outline: "none",
   };
 
   const handleDateChange = (date) => {
@@ -224,6 +237,8 @@ const BookAppointment = ({
       date: date,
     }));
   };
+
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   return (
     <>
@@ -237,18 +252,19 @@ const BookAppointment = ({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: "28px",
+              gap: { xs: 2, sm: 3 },
+              textAlign: "center",
             }}
           >
             <svg
-              width="70"
-              height="70"
+              width={isMobile ? 56 : 70}
+              height={isMobile ? 56 : 70}
               viewBox="0 0 80 80"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -259,6 +275,7 @@ const BookAppointment = ({
               />
             </svg>
             <Button
+              fullWidth
               onClick={() => {
                 onClose();
                 setShowSuccessModal(false);
@@ -267,6 +284,13 @@ const BookAppointment = ({
               sx={{
                 backgroundColor: "#25307F",
                 color: "white",
+                textTransform: "none",
+                fontSize: { xs: "14px", sm: "15px" },
+                py: 1.2,
+                borderRadius: "10px",
+                "&:hover": {
+                  backgroundColor: "#1f2766",
+                },
                 "&:focus": {
                   outline: "none",
                   boxShadow: "none",
@@ -275,7 +299,7 @@ const BookAppointment = ({
             >
               Appointment Confirmed
             </Button>
-          </div>
+          </Box>
         </Box>
       </Modal>
 
