@@ -22,7 +22,7 @@ const MobileBottomNav = ({
 
   const getValue = () => {
     if (activePath.includes("billing")) return 1;
-    if (activePath.includes("patients")) return 2;
+    if (activePath.includes("patients")) return 3;
     return 0;
   };
 
@@ -52,7 +52,7 @@ const MobileBottomNav = ({
         }}
         sx={{
           position: "fixed",
-          bottom: 28,
+          bottom: "calc(28px + env(safe-area-inset-bottom))",
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 1300,
@@ -73,7 +73,8 @@ const MobileBottomNav = ({
           right: 0,
           zIndex: 1200,
           pointerEvents: "auto",
-          paddingBottom: "env(safe-area-inset-bottom)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 2px)",
+          backgroundColor: "#fff",
         }}
       >
         <BottomNavigation
