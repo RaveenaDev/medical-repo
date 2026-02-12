@@ -54,8 +54,32 @@ import BillDetailsAdmin from "./pages/admin/billing/components/Records/component
 import BillDetailsReception from "./pages/receptionist/billing/bill/BillDetailsReception.jsx";
 import { useMediaQuery } from "@mui/material";
 import { SplashScreen } from "@capacitor/splash-screen";
+import { getItem } from "./utils/storage.js";
+import { useDispatch } from "react-redux";
+import { LOGIN } from "./components/State/Authentication/ActionType.js";
 
 function App() {
+  const [authChecked, setAuthChecked] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const restoreAuth = async () => {
+      const token = await getItem("jwt");
+      const role = await getItem("role");
+
+      if (token && role) {
+        dispatch({
+          type: LOGIN,
+          payload: { token, role },
+        });
+      }
+
+      setAuthChecked(true); // VERY IMPORTANT
+    };
+
+    restoreAuth();
+  }, []);
+
   useEffect(() => {
     SplashScreen.hide();
   }, []);
@@ -103,7 +127,10 @@ function App() {
     }
   }, [location.pathname]);
   const [isBookAppointment, setIsBookAppointment] = useState(false);
-
+  if (!authChecked) {
+    return null;
+    // or return splash screen / loader
+  }
   return (
     <>
       <ToastContainer />

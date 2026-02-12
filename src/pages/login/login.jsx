@@ -119,16 +119,15 @@ const Login = (props) => {
 
   const auth = useSelector((store) => store.authentication);
   useEffect(() => {
-    if (auth?.role === "receptionist") {
-      navigate("/receptionist");
-    } else if (auth?.role === "hospitalAdmin") {
-      navigate("/admin");
-    } else if (auth?.role === "doctor") {
-      navigate("/doctor");
-    } else if (auth?.role === "staff") {
-      navigate("/ipd");
+    if (auth?.role) {
+      if (auth.role === "receptionist")
+        navigate("/receptionist", { replace: true });
+      else if (auth.role === "hospitalAdmin")
+        navigate("/admin", { replace: true });
+      else if (auth.role === "doctor") navigate("/doctor", { replace: true });
+      else if (auth.role === "staff") navigate("/ipd", { replace: true });
     }
-  }, [auth?.role, navigate]);
+  }, [auth?.role]);
 
   const isMobile = useMediaQuery("(max-width:600px)");
 
