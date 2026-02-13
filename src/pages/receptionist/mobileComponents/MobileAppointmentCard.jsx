@@ -50,6 +50,28 @@ const MobileAppointmentCard = ({ appointment, onMenuClick }) => {
           <Typography fontSize="12px" color="gray">
             Case: {appointment.caseId}
           </Typography>
+          <Typography
+            fontSize="12px"
+            color="gray"
+            sx={{ display: "flex", alignItems: "center", gap: "4px" }}
+          >
+            Bill Status:
+            <Typography
+              fontSize="12px"
+              sx={{
+                color:
+                  appointment.billStatus === "Paid"
+                    ? "white"
+                    : appointment.billStatus === "Pending"
+                    ? "#EAA000"
+                    : appointment.billStatus === "No Bill"
+                    ? "#25307F"
+                    : "#757575",
+              }}
+            >
+              {appointment.billStatus || "N/A"}
+            </Typography>
+          </Typography>
         </Box>
 
         {/* Status + 3-dot menu */}

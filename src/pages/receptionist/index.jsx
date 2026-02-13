@@ -49,8 +49,10 @@ import RescheduleToday from "./components/RescheduleToday.jsx";
 import { useMediaQuery } from "@mui/material";
 import MobileAppointmentCard from "./mobileComponents/MobileAppointmentCard.jsx";
 import DateSelector from "./mobileComponents/DateSelector.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Receptionist(props) {
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:768px)");
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [tableIndex, setTableIndex] = useState(null);
@@ -348,7 +350,12 @@ function Receptionist(props) {
       setPage(0);
     }
   }, [isMobile]);
-
+  const handleClick = (patient) => {
+    const latestAppointment =
+      patient.appointments?.[patient.appointments.length - 1];
+    const caseId = latestAppointment?.caseId || "Not Assigned";
+    navigate("/receptionist/patients/profile", { state: { patient, caseId } });
+  };
   return (
     <div
       style={{
@@ -719,6 +726,12 @@ function Receptionist(props) {
                                     Token No.
                                   </TableCell>
                                   <TableCell
+                                    align="center"
+                                    sx={{ color: "#000", fontSize: "16px" }}
+                                  >
+                                    Bill Status
+                                  </TableCell>
+                                  <TableCell
                                     align="left"
                                     sx={{
                                       color: "#000",
@@ -808,6 +821,9 @@ function Receptionist(props) {
                                                 cursor: "pointer",
                                                 color: "#25307F",
                                               }}
+                                              onClick={() =>
+                                                handleClick(appointment.patient)
+                                              }
                                             >
                                               {appointment.patient.name}
                                             </Typography>
@@ -869,7 +885,39 @@ function Receptionist(props) {
                                           >
                                             {appointment?.tokenNumber || "N/A"}
                                           </TableCell>
-
+                                          <TableCell
+                                            sx={{
+                                              color: "#747474",
+                                              fontWeight: 600,
+                                            }}
+                                            align="center"
+                                          >
+                                            <Chip
+                                              label={appointment.billStatus}
+                                              size="small"
+                                              sx={{
+                                                textTransform: "capitalize",
+                                                bgcolor:
+                                                  appointment.billStatus ===
+                                                  "Paid"
+                                                    ? "#3DB461"
+                                                    : "#fCfAf6",
+                                                color:
+                                                  appointment.billStatus ===
+                                                  "Paid"
+                                                    ? "white"
+                                                    : appointment.billStatus ===
+                                                      "Pending"
+                                                    ? "#EAA000"
+                                                    : appointment.billStatus ===
+                                                      "No Bill"
+                                                    ? "#25307F"
+                                                    : "#757575",
+                                                fontWeight: "600",
+                                                px: 0.7,
+                                              }}
+                                            />
+                                          </TableCell>
                                           <TableCell align="right">
                                             <Box
                                               sx={{
