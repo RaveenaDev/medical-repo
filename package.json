@@ -13,6 +13,7 @@
   "dependencies": {
     "@canvasjs/react-charts": "^1.0.2",
     "@capacitor/android": "^8.0.2",
+    "@capacitor/camera": "^8.0.0",
     "@capacitor/cli": "^8.0.2",
     "@capacitor/core": "^8.0.2",
     "@capacitor/ios": "^8.0.2",

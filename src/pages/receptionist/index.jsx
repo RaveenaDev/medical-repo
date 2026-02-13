@@ -134,7 +134,7 @@ function Receptionist(props) {
     (store) => store.receptionist.scheduledAppointments,
   );
 
-  // console.log('Ses: ',scheduledAppointments)
+  // console.log("Ses: ", scheduledAppointments);
   const scheduledCount = useSelector((store) => store.admin.scheduledCount);
 
   const ongoingAppointments = useSelector(
