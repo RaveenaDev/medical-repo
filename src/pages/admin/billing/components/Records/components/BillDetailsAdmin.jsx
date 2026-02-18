@@ -1540,7 +1540,7 @@ const BillDetailsAdmin = (props) => {
                 typeof option === "string" ? option : option.subCategoryName
               }
               onInputChange={(e, value) => {
-                setServiceInput(value); // 👈 debounce source
+                setServiceInput(value); //  debounce source
                 setAddForm((p) => ({ ...p, details: value }));
               }}
               onChange={(e, value) => {

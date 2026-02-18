@@ -114,7 +114,7 @@ const AdmissionFormsStaff = () => {
                 <Search size={18} className={styles["search-icon"]} />
                 <input
                   type="text"
-                  placeholder="Search inpatients..."
+                  placeholder="Search forms..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={styles["search-input"]}
@@ -160,7 +160,7 @@ const AdmissionFormsStaff = () => {
                         <td className={styles.patientId}>
                           {truncateText(
                             patient?.patient?.patId || "Not Assigned",
-                            12
+                            12,
                           )}
                         </td>
                         <td className={styles.patientInfo}>
@@ -169,14 +169,14 @@ const AdmissionFormsStaff = () => {
                               {truncateText(
                                 patient?.admissionDetails?.name ||
                                   "Not Assigned",
-                                25
+                                25,
                               )}
                             </div>
                             <div className={styles.patientEmail}>
                               {truncateText(
                                 patient?.admissionDetails?.contact ||
                                   "Not Assigned",
-                                15
+                                15,
                               )}
                             </div>
                           </div>

@@ -22,7 +22,7 @@ import printJS from "print-js"; // Import print-js
 
 import { useLocation } from "react-router-dom";
 import styles from "./BillingDetails.module.scss";
-import { ChevronLeft, Printer } from "lucide-react";
+import { ChevronLeft, Printer, Trash2Icon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBillsByPatientId,
@@ -30,19 +30,21 @@ import {
   addToBill,
   editBill,
   getBillDetails,
+  deleteBillItem,
   refundBill,
   searchServiceSubCategories,
   addDiscount,
 } from "../../../../components/State/Doctor/Action";
 
 import useDebounce from "../../../../hooks/useDebounce.js";
+import { toast } from "react-toastify";
 
 const BillingDetails = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const lastestbill = useSelector((state) => state.doctor.ongoingBill) || {};
   const billId = lastestbill?._id;
-  // console.log("Latest Bill", lastestbill);
+  // console.log("Latest Bill", billId);
   useEffect(() => {
     if (lastestbill && lastestbill._id) {
       dispatch(getBillDetails(lastestbill._id));
@@ -97,6 +99,7 @@ const BillingDetails = ({ onClose }) => {
     amount: "",
     mode: "",
     reference: "",
+    tds: "",
   });
   const [addPaymentErrors, setAddPaymentErrors] = useState({});
 
@@ -104,7 +107,13 @@ const BillingDetails = ({ onClose }) => {
   const closeAddPayment = () => {
     setAddPaymentOpen(false);
     setAddPaymentErrors({});
-    setAddPaymentForm({ amount: "", mode: "", reference: "", billId: billId });
+    setAddPaymentForm({
+      amount: "",
+      mode: "",
+      tds: "",
+      reference: "",
+      billId: billId,
+    });
   };
   // Validation function
   const validateAddPaymentForm = (form) => {
@@ -116,6 +125,16 @@ const BillingDetails = ({ onClose }) => {
 
     if (!form.mode) {
       errors.mode = "Select a payment mode";
+    }
+
+    if (form.mode === "Insurance") {
+      if (!form.tds || isNaN(form.tds) || Number(form.tds) <= 0) {
+        errors.tds = "Enter valid TDS amount";
+      }
+
+      if (Number(form.tds) >= Number(form.amount)) {
+        errors.tds = "TDS cannot be greater than amount";
+      }
     }
 
     return errors;
@@ -132,7 +151,19 @@ const BillingDetails = ({ onClose }) => {
     try {
       setAddPaymentLoading(true);
 
-      await dispatch(addPaymentToBill(billId, addPaymentForm));
+      const payload = {
+        amount: Number(addPaymentForm.amount),
+        mode: addPaymentForm.mode,
+        reference: addPaymentForm.reference,
+      };
+
+      if (addPaymentForm.mode === "Insurance") {
+        payload.tds = Number(addPaymentForm.tds);
+        payload.total =
+          Number(addPaymentForm.amount) + Number(addPaymentForm.tds);
+      }
+
+      await dispatch(addPaymentToBill(billId, payload));
 
       closeAddPayment(); // reset & close if success
     } catch (err) {
@@ -153,9 +184,13 @@ const BillingDetails = ({ onClose }) => {
 
   const validateAdd = () => {
     const errs = {};
-    if (!addForm.category.trim()) errs.category = "Category is required";
+
+    if (!addForm.category?.trim()) errs.category = "Category is required";
+
     if (parseIntSafe(addForm.quantity) <= 0) errs.quantity = "Must be > 0";
+
     if (parseIntSafe(addForm.rate) < 0) errs.rate = "Cannot be negative";
+
     setAddErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -255,7 +290,49 @@ const BillingDetails = ({ onClose }) => {
   const safeNum = (v) => (Number.isFinite(+v) ? +v : 0);
   const formatINR = (v) =>
     Number.isFinite(Number(v)) ? Number(v).toLocaleString("en-IN") : "0";
+  // Date Format: DD-MM-YYYY
+  const formatToDDMMYYYY = (input) => {
+    if (!input) return "—";
 
+    let date;
+
+    // Already a Date object
+    if (input instanceof Date) {
+      date = input;
+    }
+
+    // String handling
+    if (!date && typeof input === "string") {
+      // ISO or JS-parsable
+      const isoTry = new Date(input);
+      if (!isNaN(isoTry)) {
+        date = isoTry;
+      } else {
+        // DD-MM-YYYY or DD/MM/YYYY
+        const dmY = input.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
+        if (dmY) {
+          const [, d, m, y] = dmY;
+          date = new Date(y, m - 1, d);
+        }
+
+        // YYYY-MM-DD or YYYY/MM/DD
+        const yMd = input.match(/^(\d{4})[-/](\d{2})[-/](\d{2})$/);
+        if (!date && yMd) {
+          const [, y, m, d] = yMd;
+          date = new Date(y, m - 1, d);
+        }
+      }
+    }
+
+    if (!date || isNaN(date)) return "—";
+
+    // Force DD/MM/YYYY
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yyyy = date.getFullYear();
+
+    return `${dd}/${mm}/${yyyy}`;
+  };
   // Convert 0..99,99,99,999 into Indian words (rupees only)
   const amountInWordsINR = (num) => {
     num = Math.round(safeNum(num));
@@ -333,8 +410,8 @@ const BillingDetails = ({ onClose }) => {
     const gstPct = Number.isFinite(+row.gstPct)
       ? +row.gstPct
       : Number.isFinite(+row.details?.gstPct)
-        ? +row.details.gstPct
-        : 0;
+      ? +row.details.gstPct
+      : 0;
 
     const gstAmt = +((base * gstPct) / 100).toFixed(2);
     const lineTotal = +(base + gstAmt).toFixed(2);
@@ -423,7 +500,8 @@ const BillingDetails = ({ onClose }) => {
     acc[category].push(row);
     return acc;
   }, {});
-  // DISCOUNT
+
+  //------------------ DISCOUNT -------------------------------------------------
 
   const [discountOpen, setDiscountOpen] = useState(false);
   const [discountLoading, setDiscountLoading] = useState(false);
@@ -433,7 +511,24 @@ const BillingDetails = ({ onClose }) => {
     reason: "",
   });
   const [discountErrors, setDiscountErrors] = useState({});
-  const openDiscount = () => setDiscountOpen(true);
+  const openDiscount = () => {
+    if (bill?.insurance?.discount) {
+      setDiscountForm({
+        type: bill.insurance.discount.type || "Flat",
+        value: bill.insurance.discount.value?.toString() || "",
+        reason: bill.insurance.discountReason || "Insurance discount",
+      });
+    } else {
+      setDiscountForm({
+        type: "Flat",
+        value: "",
+        reason: "",
+      });
+    }
+
+    setDiscountErrors({});
+    setDiscountOpen(true);
+  };
 
   const closeDiscount = () => {
     setDiscountOpen(false);
@@ -443,16 +538,17 @@ const BillingDetails = ({ onClose }) => {
   const validateDiscount = () => {
     const errors = {};
     const gross = bill?.grossAmount || bill?.totalAmount || 0;
+    const valueNum = Number(discountForm.value);
 
-    if (!discountForm.value || discountForm.value <= 0) {
+    if (!discountForm.value || valueNum <= 0) {
       errors.value = "Enter a valid value";
     }
 
-    if (discountForm.type === "Percentage" && discountForm.value > 100) {
+    if (discountForm.type === "Percentage" && valueNum > 100) {
       errors.value = "Percentage cannot exceed 100";
     }
 
-    if (discountForm.type === "Flat" && discountForm.value > gross) {
+    if (discountForm.type === "Flat" && valueNum > gross) {
       errors.value = "Discount cannot exceed total amount";
     }
 
@@ -475,8 +571,7 @@ const BillingDetails = ({ onClose }) => {
       setDiscountLoading(false);
     }
   };
-
-  // REFUNDS
+  // ------------------------------------------------- REFUNDS -------------------------------------------------
 
   const [refundOpen, setRefundOpen] = useState(false);
   const [refundLoading, setRefundLoading] = useState(false);
@@ -541,17 +636,130 @@ const BillingDetails = ({ onClose }) => {
     `,
     });
   };
-
-  // AUTOFILL FOR ADD TO BILL
+  // ------------------------------------------------- AUTOFILL FOR ADD TO BILL -------------------------------------------------
   const [serviceInput, setServiceInput] = useState("");
   const debouncedServiceInput = useDebounce(serviceInput, 300);
   useEffect(() => {
     dispatch(searchServiceSubCategories(debouncedServiceInput));
   }, [debouncedServiceInput, dispatch]);
 
-  const serviceOptions = useSelector(
-    (state) => state.receptionist.serviceSearch,
-  );
+  const serviceOptions = useSelector((state) => state.doctor.serviceSearch);
+
+  //  -------------------------------------------------DELETE BILL LINE -------------------------------------------------
+  const handleDeleteService = (index) => async () => {
+    const service = editableBill?.services?.[index];
+    if (!service?.billServiceId) {
+      toast.error("Item ID not found");
+      return;
+    }
+
+    let deleting = false;
+
+    toast.info(
+      ({ closeToast }) => (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <strong>Delete this Bill Item?</strong>
+
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              style={{
+                padding: "6px 12px",
+                background: deleting ? "#aaa" : "#d9534f",
+                color: "#fff",
+                borderRadius: "6px",
+                border: "none",
+                cursor: deleting ? "not-allowed" : "pointer",
+              }}
+              disabled={deleting}
+              onClick={async () => {
+                if (deleting) return;
+                deleting = true;
+
+                try {
+                  const billId = bill._id;
+                  const serviceId = service.billServiceId;
+
+                  await dispatch(deleteBillItem(billId, serviceId));
+
+                  setEditableBill((prev) => ({
+                    ...prev,
+                    services: prev.services.filter((s) => s._id !== serviceId),
+                  }));
+
+                  closeToast();
+                } catch (err) {
+                  deleting = false;
+                  console.error(err);
+                }
+              }}
+            >
+              Yes, Delete
+            </button>
+
+            <button
+              style={{
+                padding: "6px 12px",
+                background: "#6c757d",
+                color: "#fff",
+                borderRadius: "6px",
+                border: "none",
+              }}
+              onClick={closeToast}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      { autoClose: false },
+    );
+  };
+
+  // ------------------------------------------------- PRINT PAYMENT -------------------------------------------------
+
+  const printPaymentFromHistory = (payment) => {
+    if (!payment) return;
+
+    document.getElementById("payment-amount").innerText = Number(
+      payment.amount,
+    ).toLocaleString("en-IN");
+
+    document.getElementById("payment-mode").innerText = payment.mode || "—";
+
+    document.getElementById("payment-ref").innerText = payment.reference || "—";
+
+    document.getElementById("payment-amount-words").innerText =
+      amountInWordsINR(payment.amount);
+    printJS({
+      printable: "payment-print",
+      type: "html",
+      scanStyles: false,
+      style: `
+        @page { size: A4; margin: 6mm; }
+        * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        body { font-family: Arial, sans-serif; font-size: 12px; color: #111; }
+        .bill-wrap { border: 1px solid #222; padding: 10px; }
+        .bill-head { display: flex; justify-content: center; align-items: center; gap: 12px; }
+        .logo { width: 64px; height: 64px; object-fit: contain; }
+        .titleblock { text-align: center; }
+      
+        .bill-title { font-size: 16px; font-weight: 700; text-align: center; margin: 10px 0 14px; }
+        .muted { color: #555; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 8px; }
+        .box { border: 1px solid #999; padding: 8px; border-radius: 2px; margin-top: 10px; }
+        .section-title { font-weight: 700; margin-bottom: 6px; }
+        table.bill { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        table.bill th, table.bill td { border: 1px solid #000; padding: 6px; }
+        table.bill th { background: #f2f2f2; }
+        .center { text-align: center; }
+        .right { text-align: right; }
+        .amount-words { border: 1px dashed #999; padding: 8px; margin-top: 10px; font-style: italic; }
+        .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+        .sig-box { height: 64px; border: 1px solid #999; padding: 8px; display: flex; align-items: flex-end; justify-content: space-between; }
+        .footnote { margin-top: 16px; text-align: center; font-size: 11px; color: #444; }
+      `,
+    });
+  };
 
   if (loading) {
     return (
@@ -835,9 +1043,7 @@ const BillingDetails = ({ onClose }) => {
                         <div>{type ? type : "—"}</div>
                       </div>
                       <div className={styles["billing-date"]}>
-                        <div>
-                          {date ? new Date(date).toLocaleDateString() : "—"}
-                        </div>
+                        <div>{formatToDDMMYYYY(date)}</div>
                       </div>
                       <div className={styles["billing-quantity"]}>
                         {isEditing ? (
@@ -898,6 +1104,19 @@ const BillingDetails = ({ onClose }) => {
                           />
                         ) : (
                           <div>₹{rate.toLocaleString("en-IN")}</div>
+                        )}
+                      </div>
+
+                      <div className={styles["billing-delete-icon"]}>
+                        {isEditing ? (
+                          <div
+                            className={styles["billing-delete-icon"]}
+                            onClick={handleDeleteService(i)}
+                          >
+                            <Trash2Icon color="red" />
+                          </div>
+                        ) : (
+                          <div></div>
                         )}
                       </div>
                     </div>
@@ -1040,7 +1259,7 @@ const BillingDetails = ({ onClose }) => {
             <div className={styles["billing-history"]}>
               <div className={styles["payment-heading"]}>Payment History</div>
               {bill.payments && bill.payments.length > 0 ? (
-                <div>
+                <div className={styles["payment-summary"]}>
                   <div className={styles["payment-list-header"]}>
                     <div className={styles["payment-list-header-item"]}>
                       <span>Date</span>
@@ -1054,40 +1273,48 @@ const BillingDetails = ({ onClose }) => {
                     <div className={styles["payment-list-header-item"]}>
                       <span>Reference</span>
                     </div>
+                    <div className={styles["payment-list-header-item"]}>
+                      <span>Action</span>
+                    </div>
                   </div>
-                  <div className={styles["payment-list"]}>
-                    {bill.payments.map((payment) => (
-                      <div
-                        className={styles["billing-summary"]}
-                        key={payment._id}
-                      >
-                        <p>
-                          <span>
-                            {new Date(payment.date).toLocaleDateString(
-                              "en-IN",
-                              {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "numeric",
-                              },
-                            )}
-                          </span>
-                        </p>
-                        <p>
-                          <span>₹{payment.amount.toLocaleString("en-IN")}</span>
-                        </p>
-                        <p>
-                          <span>
-                            <span> {payment?.mode}</span>
-                          </span>
-                        </p>
 
-                        <p>
-                          <span> {payment?.reference || "N/A"}</span>
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  {bill.payments.map((payment) => (
+                    <div
+                      className={styles["payment-details"]}
+                      key={payment._id}
+                    >
+                      <p>
+                        <span>
+                          {new Date(payment.date).toLocaleDateString("en-IN", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </p>
+                      <p>
+                        <span>₹{payment.amount.toLocaleString("en-IN")}</span>
+                      </p>
+                      <p>
+                        <span>
+                          <span> {payment?.mode}</span>
+                        </span>
+                      </p>
+
+                      <p>
+                        <span> {payment?.reference || "N/A"}</span>
+                      </p>
+                      {/* Print Button */}
+                      <button
+                        size="small"
+                        onClick={() => printPaymentFromHistory(payment)}
+                        className={styles["print-refund-btn"]}
+                      >
+                        <Printer />
+                        Print
+                      </button>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className={styles["no-records"]}>
@@ -1240,6 +1467,8 @@ const BillingDetails = ({ onClose }) => {
 
             {/* Value */}
             <TextField
+              type="number"
+              inputProps={{ min: 0 }}
               label={
                 discountForm.type === "Percentage" ? "Percentage (%)" : "Amount"
               }
@@ -1247,11 +1476,12 @@ const BillingDetails = ({ onClose }) => {
               onChange={(e) =>
                 setDiscountForm((p) => ({
                   ...p,
-                  value: Number(e.target.value),
+                  value: e.target.value,
                 }))
               }
               error={!!discountErrors.value}
               helperText={discountErrors.value}
+              // disabled={!!bill?.insurance}
               fullWidth
               InputProps={{
                 startAdornment:
@@ -1307,7 +1537,7 @@ const BillingDetails = ({ onClose }) => {
                 typeof option === "string" ? option : option.subCategoryName
               }
               onInputChange={(e, value) => {
-                setServiceInput(value); // 👈 debounce source
+                setServiceInput(value); //  debounce source
                 setAddForm((p) => ({ ...p, details: value }));
               }}
               onChange={(e, value) => {
@@ -1437,16 +1667,21 @@ const BillingDetails = ({ onClose }) => {
               label="Amount"
               value={addPaymentForm.amount}
               onChange={(e) => {
-                setAddPaymentForm((p) => ({
-                  ...p,
-                  amount: e.target.value === "" ? "" : Number(e.target.value),
-                }));
-                setAddPaymentErrors((prev) => ({ ...prev, amount: "" })); // clear error while typing
+                const value = e.target.value;
+
+                // Allow only digits
+                if (/^\d*$/.test(value)) {
+                  setAddPaymentForm((p) => ({
+                    ...p,
+                    amount: value,
+                  }));
+
+                  setAddPaymentErrors((prev) => ({ ...prev, amount: "" }));
+                }
               }}
               onBlur={() => {
                 if (
                   !addPaymentForm.amount ||
-                  isNaN(addPaymentForm.amount) ||
                   Number(addPaymentForm.amount) <= 0
                 ) {
                   setAddPaymentErrors((prev) => ({
@@ -1462,7 +1697,7 @@ const BillingDetails = ({ onClose }) => {
                 startAdornment: (
                   <InputAdornment position="start">₹</InputAdornment>
                 ),
-                inputProps: { inputMode: "numeric", pattern: "[0-9]*" },
+                inputProps: { inputMode: "numeric" },
               }}
             />
 
@@ -1471,8 +1706,13 @@ const BillingDetails = ({ onClose }) => {
               label="Mode"
               value={addPaymentForm.mode}
               onChange={(e) => {
-                setAddPaymentForm((p) => ({ ...p, mode: e.target.value }));
-                setAddPaymentErrors((prev) => ({ ...prev, mode: "" })); // clear error
+                const mode = e.target.value;
+                setAddPaymentForm((p) => ({
+                  ...p,
+                  mode,
+                  tds: mode === "Insurance" ? p.tds : "",
+                }));
+                setAddPaymentErrors((prev) => ({ ...prev, mode: "" }));
               }}
               onBlur={() => {
                 if (!addPaymentForm.mode) {
@@ -1491,6 +1731,7 @@ const BillingDetails = ({ onClose }) => {
               <MenuItem value="UPI">UPI</MenuItem>
               <MenuItem value="Card">Card</MenuItem>
               <MenuItem value="Net Banking">Net Banking</MenuItem>
+              <MenuItem value="Insurance">Insurance</MenuItem>
             </TextField>
 
             {/* Reference ID */}
@@ -1517,7 +1758,44 @@ const BillingDetails = ({ onClose }) => {
               helperText={addPaymentErrors.reference}
               fullWidth
             />
+            {addPaymentForm.mode === "Insurance" && (
+              <TextField
+                label="TDS Amount"
+                value={addPaymentForm.tds}
+                onChange={(e) =>
+                  setAddPaymentForm((p) => ({
+                    ...p,
+                    tds: e.target.value === "" ? "" : Number(e.target.value),
+                  }))
+                }
+                error={!!addPaymentErrors.tds}
+                helperText={addPaymentErrors.tds}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ),
+                  inputProps: { inputMode: "numeric", pattern: "[0-9]*" },
+                }}
+              />
+            )}
 
+            {addPaymentForm.mode === "Insurance" && (
+              <TextField
+                label="Total (Amount + TDS)"
+                value={
+                  Number(addPaymentForm.amount || 0) +
+                  Number(addPaymentForm.tds || 0)
+                }
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₹</InputAdornment>
+                  ),
+                  readOnly: true,
+                }}
+              />
+            )}
             {/* General error (like API failure) */}
             {addPaymentErrors.general && (
               <Typography color="error" variant="body2">
@@ -1544,6 +1822,125 @@ const BillingDetails = ({ onClose }) => {
         </DialogActions>
       </Dialog>
 
+      {/* Hidden Payment Printable Section */}
+      <div style={{ display: "none" }}>
+        <div id="payment-print" className="bill-wrap">
+          {/* Header */}
+          <div className="bill-head">
+            {logoUrl && (
+              <img className="logo" src={logoUrl} alt="Hospital Logo" />
+            )}
+
+            <div className="titleblock">
+              <div style={{ fontSize: 18, fontWeight: 700 }}>
+                {hospitalName}
+              </div>
+              <div>{hospitalAddr}</div>
+              <div>{hospitalPhone}</div>
+
+              {(hospitalGstin || hospitalPan) && (
+                <div className="muted">
+                  {hospitalGstin && <>GSTIN: {hospitalGstin} </>}
+                  {hospitalPan && <>| PAN: {hospitalPan}</>}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Title */}
+          <div className="bill-title">PAYMENT RECEIPT</div>
+
+          {/* Patient + Payment Info */}
+          <div className="grid-2">
+            <div className="box">
+              <div className="section-title">Patient Details</div>
+
+              <div>
+                <b>Patient Name:</b> {bill?.patient?.name || "—"}
+              </div>
+              <div>
+                <b>Patient ID:</b> {bill?.patient?.patId || "—"}
+              </div>
+              <div>
+                <b>Phone:</b> {bill?.patient?.phone || "—"}
+              </div>
+            </div>
+
+            <div className="box">
+              <div className="section-title">Receipt Details</div>
+              <div>
+                <b>Invoice No:</b> {bill?.invoiceNumber}
+              </div>
+              <div>
+                <b>Payment Date:</b>{" "}
+                {new Date().toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Table */}
+          <table className="bill">
+            <thead>
+              <tr>
+                <th className="center" style={{ width: 60 }}>
+                  #
+                </th>
+                <th>Description</th>
+                <th className="center" style={{ width: 120 }}>
+                  Mode
+                </th>
+                <th className="right" style={{ width: 150 }}>
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="center">1</td>
+                <td>Payment received against Invoice #{bill?.invoiceNumber}</td>
+                <td className="center">
+                  <span id="payment-mode" />
+                </td>
+                <td className="right">
+                  ₹<span id="payment-amount" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Reference */}
+          <div className="box">
+            <b>Reference:</b> <span id="payment-ref">—</span>
+          </div>
+
+          {/* Amount in Words */}
+          <div className="amount-words">
+            <b>Amount in words:</b> <span id="payment-amount-words" />
+          </div>
+
+          {/* Signatures */}
+          <div className="signatures">
+            <div className="sig-box">
+              <span>Patient / Authorized Signatory</span>
+              <span style={{ opacity: 0.6 }}>Signature</span>
+            </div>
+            <div className="sig-box">
+              <span>For {hospitalName}</span>
+              <span style={{ opacity: 0.6 }}>Authorized Signatory</span>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="footnote">
+            This is a system-generated payment receipt. Thank you for choosing{" "}
+            <b>{hospitalName}</b>.
+          </div>
+        </div>
+      </div>
       {/* Hidden Refund Printable Section */}
 
       <div style={{ display: "none" }}>
@@ -1811,7 +2208,7 @@ const BillingDetails = ({ onClose }) => {
                       <td>{r.name}</td>
                       {hasGST && <td className="center">{r.hsn || "—"}</td>}
                       <td className="center">
-                        {r.date ? new Date(r.date).toLocaleDateString() : "—"}
+                        {r.date ? formatToDDMMYYYY(r.date) : "—"}
                       </td>
                       <td className="center">{r.qty}</td>
                       <td className="right">
