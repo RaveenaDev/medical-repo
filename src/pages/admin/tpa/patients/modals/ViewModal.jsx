@@ -420,8 +420,8 @@ const ViewModal = ({ onClose, record }) => {
                   selectedStatus === "Rejected"
                     ? styles.rejected
                     : selectedStatus === "Approved"
-                      ? styles.ongoing
-                      : styles.pending
+                    ? styles.ongoing
+                    : styles.pending
                 } `}
                 onClick={() => setOpenStatus((prev) => !prev)}
               >

@@ -33,8 +33,26 @@ const groupByCategory = (services = []) => {
 
 const ViewBill = ({ record, onClose }) => {
   const dispatch = useDispatch();
-  const billId = record?.latestLiveBillId;
 
+  // console.log("Bill details:", record);
+  const billId = record?.latestLiveBillId;
+  if (!billId) {
+    return (
+      <div>
+        <div className={styles.crossContainer}>
+          <X size={20} onClick={onClose} />
+        </div>
+
+        <div className={styles.container}>
+          <h1 className={styles.title}>Patient Bill</h1>
+
+          <div className={styles.emptyContent}>
+            <p>No ongoing bill available for this patient.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
   useEffect(() => {
     if (billId) dispatch(getBillDetails(billId));
   }, [dispatch, billId]);

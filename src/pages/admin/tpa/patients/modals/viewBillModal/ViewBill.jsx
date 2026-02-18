@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import styles from "./ViewBill.module.scss";
 import printJS from "print-js";
 import { useSelector } from "react-redux";
+import { formatToDDMMYYYY } from "../../../../../../utils/dateFormatter";
 
 const ViewBill = ({ record, onClose, estimatedBill }) => {
   const billRef = useRef(null);
@@ -24,7 +25,7 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
     }).format(Number(amount || 0));
   };
 
-  console.log("Estimated Bill Data: ", estimatedBill);
+  // console.log("Estimated Bill Data: ", estimatedBill);
   const handlePrint = () => {
     printJS({
       printable: "printable-bill",
@@ -322,13 +323,13 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                 {cat.items?.map((item, itemIndex) => (
                   <div key={itemIndex} className={styles.tableRow}>
                     <div>
-                      <span>{item.description}</span>
+                      <span>{item.category}</span>
                     </div>
                     <div>
-                      <span>{item.ward}</span>
+                      <span>{item.name}</span>
                     </div>
                     <div>
-                      <span>{item.package}</span>
+                      <span>{item.type}</span>
                     </div>
                     <div>
                       <span>{item.rate}</span>
@@ -336,17 +337,11 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                     <div>
                       <span>
                         {" "}
-                        {item.date
-                          ? new Date(item.date).toLocaleDateString("en-GB", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
-                          : "N/A"}
+                        {item.date ? formatToDDMMYYYY(item.date) : "N/A"}
                       </span>
                     </div>
                     <div>
-                      <span>{item.unit}</span>
+                      <span>{item.quantity}</span>
                     </div>
                     <div>
                       <span>{item.total}</span>
@@ -430,10 +425,11 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                   <tr>
                     <th style={{ width: "5%" }}>#</th>
                     <th>Description</th>
+                    <th style={{ width: "12%" }}>Type</th>
                     <th style={{ width: "12%" }}>Date</th>
                     <th style={{ width: "8%" }}>Qty</th>
-                    <th style={{ width: "12%" }}>Rate</th>
-                    <th style={{ width: "15%" }}>Total</th>
+                    <th style={{ width: "10%" }}>Rate</th>
+                    <th style={{ width: "14%" }}>Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -448,11 +444,10 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                       {cat.items.map((item, index) => (
                         <tr key={index}>
                           <td>{index + 1}</td>
-                          <td>{item.category}</td>
+                          <td>{item.name}</td>
+                          <td>{item.type}</td>
                           <td>
-                            {item.date
-                              ? new Date(item.date).toLocaleDateString("en-GB")
-                              : "-"}
+                            {item.date ? formatToDDMMYYYY(item.date) : "-"}
                           </td>
                           <td style={{ textAlign: "center" }}>
                             {item.quantity}
@@ -465,7 +460,7 @@ const ViewBill = ({ record, onClose, estimatedBill }) => {
                       ))}
 
                       <tr className="subtotal-row">
-                        <td colSpan="5" style={{ textAlign: "right" }}>
+                        <td colSpan="6" style={{ textAlign: "right" }}>
                           Subtotal ({cat.categoryName})
                         </td>
                         <td>{formatCurrency(cat.subtotal)}</td>

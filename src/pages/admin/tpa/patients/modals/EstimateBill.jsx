@@ -7,6 +7,7 @@ import {
   editEstimatedBill,
   getPackage,
 } from "../../../../../components/State/Admin/Action.js";
+import { formatToDDMMYYYY } from "../../../../../utils/dateFormatter.js";
 
 const emptyEntry = () => ({
   id: crypto.randomUUID(),
@@ -489,7 +490,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                         <span>{Number(r.rate || 0)}</span>
                       </div>
                       <div>
-                        <span>{r.date}</span>
+                        <span>{formatToDDMMYYYY(r.date)}</span>
                       </div>
                       <div>
                         <span>{Number(r.quantity || 0)}</span>
