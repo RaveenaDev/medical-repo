@@ -1,8 +1,10 @@
 import { Box, Typography, Chip, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MobileAppointmentCard = ({ appointment, onMenuClick }) => {
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
   const getStatusColor = (status) => {
@@ -19,7 +21,12 @@ const MobileAppointmentCard = ({ appointment, onMenuClick }) => {
         return "#999";
     }
   };
-
+  const handleClick = (patient) => {
+    const latestAppointment =
+      patient.appointments?.[patient.appointments.length - 1];
+    const caseId = latestAppointment?.caseId || "Not Assigned";
+    navigate("/receptionist/patients/profile", { state: { patient, caseId } });
+  };
   return (
     <Box
       onClick={() => setExpanded((p) => !p)}
@@ -44,7 +51,12 @@ const MobileAppointmentCard = ({ appointment, onMenuClick }) => {
             flex: 1, // take remaining space
           }}
         >
-          <Typography fontSize="15px" fontWeight={600}>
+          <Typography
+            fontSize="15px"
+            fontWeight={600}
+            onClick={() => handleClick(appointment.patient)}
+            sx={{ cursor: "pointer" }}
+          >
             {appointment.patient.name}
           </Typography>
           <Typography fontSize="12px" color="gray">

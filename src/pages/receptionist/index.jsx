@@ -430,9 +430,10 @@ function Receptionist(props) {
                               display="flex"
                               gap={1}
                               alignItems="center"
+                              justifyContent="space-between"
                             >
                               {/* Date selector */}
-                              <Box flex={1}>
+                              <Box>
                                 <DateSelector
                                   selectedDate={selectedDate}
                                   setSelectedDate={setSelectedDate}
@@ -440,7 +441,7 @@ function Receptionist(props) {
                               </Box>
 
                               {/* Department filter */}
-                              <Box flex={1}>
+                              <Box>
                                 <Select
                                   inputId="input-department"
                                   selectId="select-department"

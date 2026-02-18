@@ -86,8 +86,8 @@ const ViewBill = ({ record, onClose }) => {
           {/* Table Head (7 columns – matches your grid) */}
           <div className={styles.tableHead}>
             <div>Category</div>
-            <div>Name</div>
             <div>Type</div>
+            <div>Name</div>
             <div>Date</div>
             <div>Quantity</div>
             <div></div>

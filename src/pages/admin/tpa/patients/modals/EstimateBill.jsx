@@ -8,31 +8,33 @@ import {
   getPackage,
 } from "../../../../../components/State/Admin/Action.js";
 
-const emptyRow = () => ({
+const emptyEntry = () => ({
   id: crypto.randomUUID(),
-  description: "",
-  ward: "",
-  package: "",
+  category: "",
+  name: "",
+  type: "",
   rate: "",
-  unit: "",
-  date: new Date().toISOString().split("T")[0], // default today
+  quantity: "",
+  date: new Date().toISOString().split("T")[0],
 });
 
 const mapOldEstimateToState = (estimateOld) => {
   if (!estimateOld || !Array.isArray(estimateOld.categories)) return [];
+
   return estimateOld.categories.map((cat) => ({
     id: crypto.randomUUID(),
     name: cat?.categoryName ?? "",
     rows: Array.isArray(cat?.items)
       ? cat.items.map((item) => ({
           id: crypto.randomUUID(),
-          description: item?.description ?? "",
-          ward: item?.ward ?? "",
-          package: item?.package ?? "",
+          category: item?.category ?? "",
+          name: item?.name ?? "",
+          type: item?.type ?? "",
           rate: item?.rate ?? "",
-          unit: item?.unit ?? "",
+          quantity: item?.quantity ?? "",
+          date: item?.date ?? new Date().toISOString().split("T")[0],
         }))
-      : [emptyRow()],
+      : [emptyEntry()],
   }));
 };
 
@@ -49,30 +51,11 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
   const [draftCategory, setDraftCategory] = useState({
     id: null, // null for new category, actual id for editing
     name: "",
-    rows: [emptyRow()],
+    rows: [emptyEntry()],
   });
 
   // Warning text state
   const [warningText, setWarningText] = useState("");
-
-  const [openPackageRowId, setOpenPackageRowId] = useState(null);
-  // Package dropdown (per draft row, optional; here one global dropdown)
-  const wardOptions = ["option1", "option2", "option3"];
-  const [openWardRowId, setOpenWardRowId] = useState(null);
-
-  // Add this handler after handleSelectPackage
-  const handleSelectWard = (rowId, value) => {
-    updateDraftRow(rowId, "ward", value);
-    setOpenWardRowId(null);
-  };
-
-  useEffect(() => {
-    dispatch(getPackage());
-  }, [dispatch]);
-
-  const packages = useSelector((store) => store.admin.packages);
-
-  // console.log("pac:", packages);
 
   // ✅ Prefill from estimateOld if provided, else keep empty
   useEffect(() => {
@@ -84,21 +67,19 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
       setCategories(mapOldEstimateToState(estimateOld));
       // ensure modal/draft are reset when loading old bill
       setActiveModal(null);
-      setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+      setDraftCategory({ id: null, name: "", rows: [emptyEntry()] });
       setWarningText("");
-      setOpenPackageRowId(null);
     } else {
       // new bill: start clean
       setCategories([]);
       setActiveModal(null);
-      setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+      setDraftCategory({ id: null, name: "", rows: [emptyEntry()] });
       setWarningText("");
-      setOpenPackageRowId(null);
     }
   }, [estimateOld]);
 
   const openCreate = () => {
-    setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+    setDraftCategory({ id: null, name: "", rows: [emptyEntry()] });
     setWarningText(""); // Clear warning when opening
     setActiveModal("createCategory");
   };
@@ -129,7 +110,6 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
 
   const closeCreate = () => {
     setActiveModal(null);
-    setOpenPackageRowId(null);
     setWarningText(""); // Clear warning when closing
   };
 
@@ -144,7 +124,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
   const addDraftRow = () => {
     setDraftCategory((prev) => ({
       ...prev,
-      rows: [...prev.rows, emptyRow()],
+      rows: [...prev.rows, emptyEntry()],
     }));
     setWarningText(""); // Clear warning when adding row
   };
@@ -172,18 +152,12 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
     }
   };
 
-  const handleSelectPackage = (rowId, value) => {
-    updateDraftRow(rowId, "package", value.subCategoryName);
-    updateDraftRow(rowId, "rate", value.rate);
-    setOpenPackageRowId(null);
-  };
-
   // Compute numeric total for a row
   const rowTotal = (row) => {
     const rate = Number(row.rate || 0);
-    const unit = Number(row.unit || 0);
-    if (Number.isNaN(rate) || Number.isNaN(unit)) return 0;
-    return rate * unit;
+    const quantity = Number(row.quantity || 0);
+    if (Number.isNaN(rate) || Number.isNaN(quantity)) return 0;
+    return rate * quantity;
   };
 
   const handleDone = () => {
@@ -202,10 +176,9 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
       .map((r) => ({
         ...r,
         rate: r.rate === "" ? 0 : Number(r.rate),
-        unit: r.unit === "" ? 0 : Number(r.unit),
+        quantity: r.quantity === "" ? 0 : Number(r.quantity),
       }))
-      // Optional: filter out completely empty rows (if desired)
-      .filter((r) => r.description || r.ward || r.package || r.rate || r.unit);
+      .filter((r) => r.category || r.name || r.type || r.rate || r.quantity);
 
     if (cleanRows.length === 0) {
       setWarningText("Please fill at least one row.");
@@ -230,17 +203,15 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
     }
 
     // Reset and close modal
-    setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+    setDraftCategory({ id: null, name: "", rows: [emptyEntry()] });
     setActiveModal(null);
-    setOpenPackageRowId(null);
     setWarningText(""); // Clear warning on success
   };
 
   const handleDeleteCurrentDraft = () => {
     // Reset and close modal without saving
-    setDraftCategory({ id: null, name: "", rows: [emptyRow()] });
+    setDraftCategory({ id: null, name: "", rows: [emptyEntry()] });
     setActiveModal(null);
-    setOpenPackageRowId(null);
     setWarningText(""); // Clear warning when deleting
   };
 
@@ -252,21 +223,22 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
 
   let estimateBill = {
     admissionRequestId: record._id,
-    grandTotal: grandTotal,
+    grandTotal,
     categories: categories.map((cat) => ({
       categoryName: cat.name,
       subtotal: cat.rows.reduce((s, r) => s + rowTotal(r), 0),
       items: cat.rows.map((row) => ({
-        description: row.description,
-        ward: row.ward,
-        package: row.package,
+        category: row.category,
+        name: row.name,
+        type: row.type,
         rate: Number(row.rate || 0),
-        unit: Number(row.unit || 0),
+        quantity: Number(row.quantity || 0),
         total: rowTotal(row),
         date: row.date || new Date().toISOString().split("T")[0],
       })),
     })),
   };
+
   const handleSave = () => {
     if (categories.length === 0) {
       setWarningText("Please add at least one category before saving.");
@@ -324,104 +296,48 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                 </div>
 
                 <div className={styles.formRow}>
-                  <p>Category Name</p>
+                  <p>Group Name</p>
                   <input
                     type="text"
                     value={draftCategory.name}
                     onChange={handleDraftName}
-                    placeholder="e.g., Consultants"
+                    placeholder="e.g., Consultation, Lab Tests, etc."
                   />
                 </div>
 
                 {draftCategory.rows.map((row) => (
                   <div key={row.id} className={styles.categoryContent}>
                     <div>
-                      <p>Description</p>
+                      <p>Category</p>
                       <input
                         type="text"
-                        value={row.description}
+                        value={row.category}
                         onChange={(e) =>
-                          updateDraftRow(row.id, "description", e.target.value)
+                          updateDraftRow(row.id, "category", e.target.value)
                         }
                       />
                     </div>
 
                     <div>
-                      <p>Ward</p>
-                      <div className={styles.dropdown}>
-                        <button
-                          className={styles.trigger}
-                          onClick={() =>
-                            setOpenWardRowId((prev) =>
-                              prev === row.id ? null : row.id
-                            )
-                          }
-                          type="button"
-                        >
-                          <p>{row.ward || "Select Ward"}</p>
-                          {openWardRowId === row.id ? (
-                            <ChevronUp />
-                          ) : (
-                            <ChevronDown />
-                          )}
-                        </button>
-                        {openWardRowId === row.id && (
-                          <ul className={styles.menu}>
-                            {wardOptions.map((option) => (
-                              <li
-                                key={option}
-                                onClick={() => handleSelectWard(row.id, option)}
-                                className={`${styles.item} ${
-                                  row.ward === option ? styles.active : ""
-                                }`}
-                              >
-                                {option}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
+                      <p>Name</p>
+                      <input
+                        type="text"
+                        value={row.name}
+                        onChange={(e) =>
+                          updateDraftRow(row.id, "name", e.target.value)
+                        }
+                      />
                     </div>
 
                     <div>
-                      <p>Package</p>
-                      <div className={styles.dropdown}>
-                        <button
-                          className={styles.trigger}
-                          onClick={() =>
-                            setOpenPackageRowId((prev) =>
-                              prev === row.id ? null : row.id
-                            )
-                          }
-                          type="button"
-                        >
-                          <p>{row.package || "Select Package"}</p>
-                          {openPackageRowId === row.id ? (
-                            <ChevronUp />
-                          ) : (
-                            <ChevronDown />
-                          )}
-                        </button>
-                        {openPackageRowId === row.id && (
-                          <ul className={styles.menu}>
-                            {packages.map((option) => (
-                              <li
-                                key={option._id || option.subCategoryName}
-                                onClick={() =>
-                                  handleSelectPackage(row.id, option)
-                                }
-                                className={`${styles.item} ${
-                                  row.package === option.subCategoryName
-                                    ? styles.active
-                                    : ""
-                                }`}
-                              >
-                                {option.subCategoryName}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
+                      <p>Type</p>
+                      <input
+                        type="text"
+                        value={row.type}
+                        onChange={(e) =>
+                          updateDraftRow(row.id, "type", e.target.value)
+                        }
+                      />
                     </div>
 
                     <div>
@@ -437,13 +353,13 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                     </div>
 
                     <div>
-                      <p>Unit</p>
+                      <p>Quantity</p>
                       <input
                         type="number"
                         min="0"
-                        value={row.unit}
+                        value={row.quantity}
                         onChange={(e) =>
-                          updateDraftRow(row.id, "unit", e.target.value)
+                          updateDraftRow(row.id, "quantity", e.target.value)
                         }
                       />
                     </div>
@@ -502,13 +418,13 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
           {/* Table header */}
           <div className={styles.tableHead}>
             <div>
-              <span>Description</span>
+              <span>Category</span>
             </div>
             <div>
-              <span>Ward</span>
+              <span>Name</span>
             </div>
             <div>
-              <span>Package</span>
+              <span>Type</span>
             </div>
             <div>
               <span>Rate</span>
@@ -517,7 +433,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
               <span>Date</span>
             </div>
             <div>
-              <span>Unit</span>
+              <span>Quantity</span>
             </div>
             <div>
               <span>Total</span>
@@ -561,13 +477,13 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                   {cat.rows.map((r) => (
                     <div key={r.id} className={styles.tableRow}>
                       <div>
-                        <span>{r.description}</span>
+                        <span>{r.category}</span>
                       </div>
                       <div>
-                        <span>{r.ward}</span>
+                        <span>{r.name}</span>
                       </div>
                       <div>
-                        <span>{r.package}</span>
+                        <span>{r.type}</span>
                       </div>
                       <div>
                         <span>{Number(r.rate || 0)}</span>
@@ -576,7 +492,7 @@ const EstimateBill = ({ record, onClose, estimateOld }) => {
                         <span>{r.date}</span>
                       </div>
                       <div>
-                        <span>{Number(r.unit || 0)}</span>
+                        <span>{Number(r.quantity || 0)}</span>
                       </div>
                       <div>
                         <span>{rowTotal(r)}</span>
