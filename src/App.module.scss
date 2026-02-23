@@ -1,5 +1,27 @@
+.pageSwitcher {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0;
+
+  button {
+    border: 1px solid #25307f;
+    background: #ffffff;
+    color: #25307f;
+    border-radius: 6px;
+    padding: 8px 12px;
+    text-transform: capitalize;
+    cursor: pointer;
+  }
+
+  &__active {
+    background: #25307f !important;
+    color: #ffffff !important;
+  }
+}
+
 .register {
-  // height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;

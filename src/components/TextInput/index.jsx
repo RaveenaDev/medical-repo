@@ -1,16 +1,22 @@
-import * as React from 'react';
+/* eslint-disable react/prop-types */
 import TextField from '@mui/material/TextField';
 
-export default function TextFieldHiddenLabel(props) {
+export default function TextFieldHiddenLabel({
+  id,
+  value = '',
+  type = 'text',
+  style,
+  placeholder = '',
+}) {
   return (
-      <TextField
-        hiddenLabel
-        id={props?.id}
-        defaultValue={props?.value || ""}
-        variant="outlined"
-        type={props?.type || "text"}
-        sx={props?.style}
-        placeholder={props?.placeholder || ""}
-      />
+    <TextField
+      hiddenLabel
+      id={id}
+      defaultValue={value}
+      variant="outlined"
+      type={type}
+      sx={style}
+      placeholder={placeholder}
+    />
   );
 }

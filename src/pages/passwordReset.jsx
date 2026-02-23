@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from '../styles/pages/login.module.scss';
 import TextFieldHiddenLabel from '../components/TextInput';
 import Stack from '@mui/material/Stack';
