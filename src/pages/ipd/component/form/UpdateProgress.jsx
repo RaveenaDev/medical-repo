@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./UpdateProgress.module.scss";
-import { X, Trash2, PenLine, Eraser } from "lucide-react";
+import { X, Trash2, PenLine, Eraser, Mic } from "lucide-react";
 import {
   addProgressTrackerPhase,
   formatImageWithAI,
+  formatWithAI,
   getAllDoctors,
   getPatientDetailsByID,
 } from "../../../../components/State/Doctor/Action";
 import { useDispatch, useSelector } from "react-redux";
+import ScribblePad from "./scribblepad/ScribblePad";
 
 const UpdateProgress = ({ onClose, patientId, caseId }) => {
   const dispatch = useDispatch();
@@ -261,11 +263,109 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       const dpr = window.devicePixelRatio || 1;
       ctx.scale(dpr, dpr);
 
-      // Draw using CSS size (🔥 key fix)
+      // Draw using CSS size
       ctx.drawImage(img, 0, 0, width, height);
     };
 
     img.src = imageSrc;
+  };
+  // MIC
+  const [showMicModal, setShowMicModal] = useState(false);
+  const [micText, setMicText] = useState("");
+  const [formattedMicText, setFormattedMicText] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [isFormattingMic, setIsFormattingMic] = useState(false);
+  const [showFormattedMic, setShowFormattedMic] = useState(false);
+
+  const recognitionRef = useRef(null);
+  const isListeningRef = useRef(false);
+
+  useEffect(() => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+
+    const rec = new SR();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = "en-IN";
+
+    rec.onresult = (e) => {
+      let finalChunk = "";
+
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const transcript = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalChunk += transcript + " ";
+      }
+
+      if (finalChunk) {
+        setMicText((prev) =>
+          prev ? prev + " " + finalChunk.trim() : finalChunk.trim(),
+        );
+      }
+    };
+
+    rec.onend = () => {
+      if (isListeningRef.current) {
+        try {
+          rec.start();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+
+    rec.onerror = (e) => {
+      console.error("Speech error:", e.error);
+      setIsListening(false);
+    };
+
+    recognitionRef.current = rec;
+
+    return () => rec.abort();
+  }, []);
+  useEffect(() => {
+    isListeningRef.current = isListening;
+  }, [isListening]);
+  const toggleMic = () => {
+    const rec = recognitionRef.current;
+    if (!rec) return;
+
+    if (isListening) {
+      setIsListening(false);
+      rec.stop();
+    } else {
+      setIsListening(true);
+      try {
+        rec.start();
+      } catch (err) {
+        console.error(err);
+        setIsListening(false);
+      }
+    }
+  };
+  const formatMicWithAI = async () => {
+    if (!micText.trim()) {
+      alert("Please record something first");
+      return;
+    }
+
+    setIsFormattingMic(true);
+
+    try {
+      const data = await formatWithAI({ rawText: micText });
+
+      if (data?.formattedText) {
+        setFormattedMicText(data.formattedText);
+        setShowFormattedMic(true);
+      } else {
+        alert("Formatting failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("AI formatting failed.");
+    } finally {
+      setIsFormattingMic(false);
+    }
   };
 
   return (
@@ -382,15 +482,26 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
             <div className={styles.descHeader}>
               <p className={styles.label}>Description</p>
 
-              <button
-                className={styles.scribbleBtn}
-                onClick={() => {
-                  setDescMode("whiteboard");
-                  setShowScribbleModal(true);
-                }}
-              >
-                <PenLine size={16} />
-              </button>
+              <div className={styles.btnGroup}>
+                <button
+                  className={styles.scribbleBtn}
+                  onClick={() => {
+                    setDescMode("whiteboard");
+                    setShowScribbleModal(true);
+                  }}
+                >
+                  <PenLine size={16} />
+                </button>
+                <button
+                  className={styles.scribbleBtn}
+                  onClick={() => {
+                    setDescMode("mic");
+                    setShowMicModal(true);
+                  }}
+                >
+                  <Mic size={16} />
+                </button>
+              </div>
             </div>
 
             <textarea
@@ -477,69 +588,84 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
         </div>
       </div>
       {showScribbleModal && (
+        <ScribblePad
+          onClose={() => setShowScribbleModal(false)}
+          onSave={({ image, text }) => {
+            setScribbleImage(image);
+            if (text) setDescription(text);
+            setShowScribbleModal(false);
+          }}
+        />
+      )}
+      {showMicModal && (
         <div className={styles.scribbleModalOverlay}>
           <div className={styles.scribbleModal}>
             {/* Header */}
             <div className={styles.modalHeader}>
-              <h3>Write Progress</h3>
+              <h3>Record Progress</h3>
               <X
                 size={20}
                 className={styles.closeIcon}
-                onClick={() => setShowScribbleModal(false)}
+                onClick={() => {
+                  setShowMicModal(false);
+                  setIsListening(false);
+                }}
               />
             </div>
 
-            {/* Canvas */}
-            <div ref={containerRef} className={styles.modalCanvasWrapper}>
-              {showAIText ? (
-                <textarea
-                  className={styles.aiTextArea}
-                  value={aiDescription}
-                  onChange={(e) => setAiDescription(e.target.value)}
-                  placeholder="AI formatted text..."
-                />
-              ) : (
-                <canvas ref={canvasRef} />
-              )}
+            {/* Body */}
+            <div className={styles.modalCanvasWrapper}>
+              <textarea
+                className={styles.aiTextArea}
+                value={showFormattedMic ? formattedMicText : micText}
+                onChange={(e) =>
+                  showFormattedMic
+                    ? setFormattedMicText(e.target.value)
+                    : setMicText(e.target.value)
+                }
+                placeholder="Speak or edit text here..."
+              />
             </div>
 
-            {/* Footer actions */}
+            {/* Footer */}
             <div className={styles.modalActions}>
-              {!showAIText && (
-                <button
-                  className={styles.secondaryBtn}
-                  onClick={() => {
-                    const ctx = canvasRef.current.getContext("2d");
-                    ctx.fillStyle = "#fff";
-                    ctx.fillRect(
-                      0,
-                      0,
-                      canvasRef.current.width,
-                      canvasRef.current.height
-                    );
-                    setScribbleImage(null);
-                  }}
-                >
-                  <Eraser size={16} /> Clear
-                </button>
-              )}
+              {/* Mic Button */}
+              <button className={styles.secondaryBtn} onClick={toggleMic}>
+                {isListening ? "Stop Mic" : "Start Mic"}
+              </button>
 
-              {!showAIText && (
+              {/* Format Button */}
+              {!showFormattedMic && micText && (
                 <button
                   className={styles.aiBtn}
-                  onClick={convertScribbleToText}
-                  disabled={isAIProcessing}
+                  onClick={formatMicWithAI}
+                  disabled={isFormattingMic}
                 >
-                  {isAIProcessing ? "Reading..." : "Convert with AI"}
+                  {isFormattingMic ? "Formatting..." : "Format with AI"}
                 </button>
               )}
 
+              {/* Toggle Raw / AI */}
+              {formattedMicText && (
+                <button
+                  className={styles.secondaryBtn}
+                  onClick={() => setShowFormattedMic(!showFormattedMic)}
+                >
+                  {showFormattedMic ? "View Raw Text" : "View AI Result"}
+                </button>
+              )}
+
+              {/* Done */}
               <button
                 className={styles.primaryBtn}
                 onClick={() => {
-                  if (aiDescription) setDescription(aiDescription);
-                  setShowScribbleModal(false);
-                  setShowAIText(false);
+                  const finalText = showFormattedMic
+                    ? formattedMicText
+                    : micText;
+
+                  setDescription(finalText);
+                  setShowMicModal(false);
+                  setShowFormattedMic(false);
                 }}
               >
                 Done
