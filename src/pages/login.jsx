@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import styles from '../styles/pages/login.module.scss';
 import TextFieldHiddenLabel from '../components/TextInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -11,7 +11,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const Login = () => {
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {event.preventDefault();};
     const handleMouseUpPassword = (event) => {event.preventDefault();};
