@@ -868,6 +868,34 @@ export const addService = (serviceData) => async (dispatch) => {
   }
 };
 
+export const uploadServicesExcel = (file) => async (dispatch) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data } = await axios.post(
+      `${API_URL}/uploadHospitalServices`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    // console.log("Upload response:", data);
+
+    toast.success(
+      `Upload Complete ✅ Created: ${data.createdServices}, Skipped: ${data.skipped}, Updated: ${data.updatedServices}`,
+    );
+
+    return data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Upload failed");
+    throw error;
+  }
+};
+
 export const updateService = (updatedData, serviceId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1404,6 +1432,32 @@ export const getInsuranceCompanies = () => async (dispatch) => {
     console.log(error);
 
     dispatch({ type: GET_INSURANCE_COMPANIES, payload: { companies: 0 } });
+  }
+};
+
+export const uploadInsuranceCompaniesExcel = (file) => async (dispatch) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data } = await axios.post(
+      `${API_URL}/uploadInsuranceCompanies`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    toast.success(
+      `Upload Complete ✅ Created: ${data.created}, Skipped: ${data.skipped}`,
+    );
+
+    return data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Upload failed");
+    throw error;
   }
 };
 

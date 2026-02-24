@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -29,13 +30,14 @@ import {
   deleteServiceCategory,
   getAllDepartments,
   getServices,
+  uploadServicesExcel,
 } from "../../../../../components/State/Admin/Action.js";
 import EditRateModal from "./components/EditRateModal.jsx";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Alert, Snackbar } from "@mui/material";
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert, Upload } from "lucide-react";
 
 const Rate = () => {
   const [filters, setFilters] = useState({
@@ -171,14 +173,32 @@ const Rate = () => {
     page * rowsPerPage + rowsPerPage,
   );
 
-  console.log(" Services: ", services);
-  console.log(" Data: ", viewData);
+  // console.log(" Services: ", services);
+  // console.log(" Data: ", viewData);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page when rows per page changes
+  };
+
+  const [uploading, setUploading] = useState(false);
+  const handleExcelUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+
+      const result = await dispatch(uploadServicesExcel(file));
+      dispatch(getServices(filters.department));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setUploading(false);
+      e.target.value = ""; //  allows re-uploading same file
+    }
   };
   return (
     <div className="rate-container">
@@ -189,11 +209,17 @@ const Rate = () => {
           alignItems: "center",
           borderTop: "0.5px solid #4A4A4A8C",
           borderBottom: "0.5px solid #4A4A4A8C",
-          paddingY: 1.5,
-          marginBottom: 1,
+          py: { xs: 1, md: 1.2, lg: 1.5 },
+          mb: 1,
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: { xs: 1, md: 1.5, lg: 2 },
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -206,31 +232,32 @@ const Rate = () => {
               variant="h4"
               sx={{
                 fontWeight: "bold",
-
                 color: "black",
+                fontSize: { xs: "1.4rem", md: "1.7rem", lg: "2rem" },
               }}
             >
               {services.length}
             </Typography>
             <Typography
               component="span"
-              variant="body1"
-              sx={{ fontWeight: "normal", color: "#878787", marginLeft: 1 }}
+              sx={{
+                fontWeight: "normal",
+                color: "#878787",
+                ml: 1,
+                fontSize: { xs: "0.8rem", md: "0.9rem", lg: "1rem" },
+              }}
             >
               Services
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography
-              variant="body1"
               sx={{
-                marginRight: 1,
+                mr: 1,
                 color: "#0B0B0B",
                 fontFamily: "Inter",
                 fontWeight: "500",
-                fontSize: "1.25rem",
-                lineHeight: " 100%",
-                letterSpacing: " 0%",
+                fontSize: { xs: "0.7rem", md: "1rem", lg: "1.25rem" },
               }}
             >
               Sort by:
@@ -240,7 +267,7 @@ const Rate = () => {
               onChange={handleSortChange}
               size="small"
               sx={{
-                minWidth: 160,
+                minWidth: { xs: 120, md: 140, lg: 160 },
                 background: "#fff",
                 boxShadow: "0px 4px 4px 0px #BDBDBD1C",
                 border: "1px solid transparent",
@@ -270,7 +297,13 @@ const Rate = () => {
           </Box>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: { xs: 1, md: 1.25, lg: 2 },
+          }}
+        >
           <Button
             variant="filled"
             sx={{
@@ -278,6 +311,9 @@ const Rate = () => {
               backgroundColor: "#25307F",
               color: "white",
               boxShadow: "0px 4px 4px 0px #C2C2C240",
+              px: { xs: 1.5, md: 2, lg: 2.5 },
+              py: { xs: 0.6, md: 0.8, lg: 1 },
+              fontSize: { xs: "0.7rem", md: "0.8rem", lg: "1rem" },
               "&:hover": {
                 background: "#AEC3FF",
               },
@@ -317,17 +353,55 @@ const Rate = () => {
             </svg>
             ADD SERVICE
           </Button>
+
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              textTransform: "none",
+              backgroundColor: "#25307F",
+              color: "white",
+
+              px: { xs: 1.5, md: 2, lg: 2.5 },
+              py: { xs: 0.6, md: 0.8, lg: 1 },
+              fontSize: { xs: "0.7rem", md: "0.8rem", lg: "1rem" },
+              "&:hover": { background: "#AEC3FF" },
+            }}
+            disabled={uploading}
+          >
+            {uploading ? (
+              <CircularProgress size={20} sx={{ color: "#25307F" }} />
+            ) : (
+              <>
+                <Upload />
+                Upload Excel
+              </>
+            )}
+
+            <input
+              type="file"
+              accept=".xlsx, .xls"
+              hidden
+              onChange={handleExcelUpload}
+            />
+          </Button>
+
           {/* Filter Button with Dropdown */}
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
-              startIcon={<FilterAltIcon sx={{ color: "#878787" }} />}
+              startIcon={
+                <FilterAltIcon
+                  sx={{ color: "#878787", fontSize: { xs: 18, md: 20 } }}
+                />
+              }
               sx={{
                 textTransform: "none",
-                padding: "6px 20px",
+                px: { xs: 1.5, md: 2 },
+                py: { xs: 0.5, md: 0.7 },
+                fontSize: { xs: "0.7rem", md: "0.75rem", lg: "1rem" },
                 backgroundColor: "white",
                 borderRadius: "5px",
-                fontSize: "16px",
                 color: "#4A4A4A",
                 "&:focus": {
                   outline: "none",
@@ -438,8 +512,8 @@ const Rate = () => {
                         anchorEl={anchorE2}
                         open={Boolean(
                           anchorE2 &&
-                          selectedService?.category?.categoryId ===
-                            category.categoryId,
+                            selectedService?.category?.categoryId ===
+                              category.categoryId,
                         )}
                         onClose={handleCloseMenu}
                       >
