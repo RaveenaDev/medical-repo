@@ -77,6 +77,7 @@ const BillDetailsReception = (props) => {
   };
   const [addOpen, setAddOpen] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
+
   const [addForm, setAddForm] = useState({
     category: "",
     quantity: "1",
@@ -1411,7 +1412,6 @@ const BillDetailsReception = (props) => {
             <TextField
               label="Refund Amount"
               value={Math.max(bill.paidAmount - bill.totalAmount, 0)}
-              disabled
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">₹</InputAdornment>
@@ -1563,7 +1563,7 @@ const BillDetailsReception = (props) => {
                     details: value.subCategoryName,
                     rate: String(value.rate || 0),
                     rateType: value.rateType,
-                    category: value.category,
+                    category: value.serviceName,
                   }));
                 }
               }}
