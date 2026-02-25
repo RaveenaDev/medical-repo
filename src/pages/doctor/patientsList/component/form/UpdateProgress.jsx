@@ -121,7 +121,7 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       // errors are already logged in the action; show a basic alert here if you want
       console.error(err);
     } finally {
-      setSaving(false); // 👈 stop loader
+      setSaving(false); //  stop loader
     }
   };
 
@@ -227,35 +227,6 @@ const UpdateProgress = ({ onClose, patientId, caseId }) => {
       canvas.removeEventListener("pointerleave", stop);
     };
   }, [showScribbleModal]);
-
-  const convertScribbleToText = async () => {
-    if (!scribbleImage) {
-      alert("Please write something first");
-      return;
-    }
-
-    setIsAIProcessing(true);
-    try {
-      const blob = await fetch(scribbleImage).then((r) => r.blob());
-      const formData = new FormData();
-      formData.append("image", blob, "progress.png");
-
-      const data = await formatImageWithAI(formData);
-
-      if (data?.formattedText) {
-        setDescription(data.formattedText);
-        setAiDescription(data.formattedText);
-        setShowAIText(true);
-      } else {
-        alert("AI could not read handwriting");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to process handwriting");
-    } finally {
-      setIsAIProcessing(false);
-    }
-  };
 
   const redrawCanvasFromImage = (imageSrc) => {
     if (!imageSrc) return;
