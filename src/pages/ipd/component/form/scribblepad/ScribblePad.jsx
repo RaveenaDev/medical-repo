@@ -3,6 +3,7 @@ import styles from "./ScribblePad.module.scss";
 import { X, Undo2, Eraser, PenLine, Trash2, Sparkles } from "lucide-react";
 import { createPortal } from "react-dom";
 import { formatImageWithAI } from "../../../../../components/State/Doctor/Action";
+import { useSelector } from "react-redux";
 
 const INITIAL_HEIGHT = 2000; // starting canvas height
 const EXPAND_BY = 1000; // expand amount when near bottom
