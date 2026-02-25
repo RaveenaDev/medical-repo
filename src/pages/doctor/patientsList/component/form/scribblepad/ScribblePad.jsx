@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 const INITIAL_HEIGHT = 2000; // starting canvas height
 const EXPAND_BY = 1000; // expand amount when near bottom
 
-const ScribblePad = ({ onClose, onSave }) => {
+const ScribblePad = ({ onClose, onSave, patient, doctor }) => {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -21,6 +21,20 @@ const ScribblePad = ({ onClose, onSave }) => {
   const [isProcessingAI, setIsProcessingAI] = useState(false);
 
   const currentStroke = useRef([]);
+  /* ----------------  Hospital details  ---------------- */
+  const { hospital } = useSelector((state) => state.auth || {});
+
+  const hospitalName = hospital?.name || "SAI ASHA HOSPITAL";
+
+  const hospitalAddr =
+    hospital?.address ||
+    "MEDICINE / ORTHOPAEDIC / SURGERY / MATERNITY / PAEDIATRIC / DENTAL";
+
+  const hospitalPhone =
+    hospital?.phone ||
+    "05, 1ST FLOOR, LAXCON PLAZA, PLOT NO.20 & 21, SECTOR-19, NERUL";
+
+  const doctorName = doctor?.name || "Dr. ________";
 
   /* ---------------- Prevent Background Scroll ---------------- */
   useEffect(() => {
@@ -55,19 +69,51 @@ const ScribblePad = ({ onClose, onSave }) => {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
 
-    const spacing = window.innerWidth <= 1024 ? 40 : 32;
+    // ---------- HOSPITAL HEADER ----------
+    ctx.fillStyle = "#000";
+    ctx.textAlign = "center";
 
-    ctx.strokeStyle = "#eef2f7";
+    ctx.font = "bold 20px Arial";
+    ctx.fillText(hospitalName, width / 2, 30);
+
+    ctx.font = "13px Arial";
+    ctx.fillText(hospitalAddr, width / 2, 50);
+    ctx.fillText(hospitalPhone, width / 2, 68);
+
+    ctx.textAlign = "left";
+    ctx.font = "14px Arial";
+
+    const startY = 100;
+
+    ctx.fillText(`Patient Name: ${patient?.name || "-"}`, 20, startY);
+    ctx.fillText(`PAT ID: ${patient?._id || "-"}`, width - 250, startY);
+
+    ctx.fillText(`Doctor: ${doctorName}`, 20, startY + 20);
+    ctx.fillText(
+      `Date: ${new Date().toLocaleDateString()}`,
+      width - 250,
+      startY + 20,
+    );
+
+    // Separator Line
+    ctx.beginPath();
+    ctx.moveTo(20, startY + 35);
+    ctx.lineTo(width - 20, startY + 35);
+    ctx.strokeStyle = "#000";
     ctx.lineWidth = 1;
+    ctx.stroke();
 
-    for (let y = 60; y < height; y += spacing) {
+    // ---------- RULED LINES ----------
+    const spacing = window.innerWidth <= 1024 ? 40 : 32;
+    ctx.strokeStyle = "#eef2f7";
+
+    for (let y = startY + 60; y < height; y += spacing) {
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(width, y);
       ctx.stroke();
     }
   };
-
   /* ---------------- Redraw ---------------- */
   const redrawCanvas = () => {
     const canvas = canvasRef.current;
