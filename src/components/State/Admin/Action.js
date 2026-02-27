@@ -1900,37 +1900,86 @@ export const editBed = (bedId, updates) => async (dispatch) => {
 };
 
 export const getTPAReport =
-  ({ year, month, company }) =>
+  ({
+    filterType,
+    yearFrom,
+    yearTo,
+    monthFrom,
+    monthTo,
+    customStart,
+    customEnd,
+    company,
+    monthYear,
+  }) =>
   async (dispatch) => {
-    // console.log("TPA ACTION CALLED", { year, month, company });
-
     dispatch({ type: TPA_REQUEST });
 
     try {
       const token = localStorage.getItem("jwt");
 
-      let url = month
-        ? `${API_URL}/tpa/monthly?year=${year}&month=${month}`
-        : `${API_URL}/tpa/yearly?year=${year}`;
+      let url = "";
+      const params = new URLSearchParams();
 
-      if (company) {
-        url += `&company=${encodeURIComponent(company)}`;
+      /* ================= YEAR ================= */
+      if (filterType === "year") {
+        url = `${API_URL}/tpa/yearly`;
+
+        if (yearTo) {
+          params.append("startDate", `${yearFrom}-01-01`);
+          params.append("endDate", `${yearTo}-12-31`);
+        } else {
+          params.append("year", yearFrom);
+        }
       }
 
-      // /console.log("TPA API URL:", url);
+      /* ================= MONTH ================= */
+      if (filterType === "month") {
+        url = `${API_URL}/tpa/monthly`;
 
-      const { data } = await axios.get(url, {
+        if (monthTo) {
+          const lastDay = new Date(monthYear, monthTo, 0).getDate();
+
+          params.append(
+            "startDate",
+            `${monthYear}-${String(monthFrom).padStart(2, "0")}-01`,
+          );
+
+          params.append(
+            "endDate",
+            `${monthYear}-${String(monthTo).padStart(2, "0")}-${lastDay}`,
+          );
+        } else {
+          params.append("year", monthYear);
+          params.append("month", monthFrom);
+        }
+      }
+
+      /* ================= CUSTOM ================= */
+      if (filterType === "custom" && customStart && customEnd) {
+        url = `${API_URL}/tpa/yearly`;
+        params.append("startDate", customStart);
+        params.append("endDate", customEnd);
+      }
+
+      /* ================= COMPANY ================= */
+      if (company) {
+        params.append("company", company);
+      }
+
+      const finalUrl = `${url}?${params.toString()}`;
+
+      console.log("Final TPA Report URL: ", finalUrl);
+
+      const { data } = await axios.get(finalUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // console.log("TPA API RESPONSE:", data);
-
       dispatch({ type: TPA_SUCCESS, payload: data });
+      console.log("TPA Report Data: ", data);
       return data;
     } catch (error) {
-      console.error("TPA ERROR:", error);
       dispatch({
         type: TPA_FAIL,
         payload: error?.response?.data?.message || "TPA fetch failed",
