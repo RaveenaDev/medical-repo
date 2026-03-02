@@ -75,6 +75,9 @@ import {
   LOADING_ROOMS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
+  SEARCH_MEDICINES_FAIL,
+  SEARCH_MEDICINES_REQUEST,
+  SEARCH_MEDICINES_SUCCESS,
   SEARCH_SERVICE_SUBCATEGORIES,
   SET_ONGOING,
   SET_RESCHEDULE,
@@ -2276,6 +2279,34 @@ export const deleteBillItem = (billId, serviceId) => async (dispatch) => {
     toast.error("Failed to delete Bill Item!", {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
+    });
+  }
+};
+export const medicinesAutocomplete = (query) => async (dispatch) => {
+  if (!query || query.length < 2) return;
+
+  try {
+    dispatch({ type: SEARCH_MEDICINES_REQUEST });
+    const token = localStorage.getItem("jwt");
+    const { data } = await axios.get(
+      `${API_URL}/searchMedicines?query=${query}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    dispatch({
+      type: SEARCH_MEDICINES_SUCCESS,
+      payload: data?.medicines || [],
+    });
+
+    // console.log("Search Medicines Results:", data);
+  } catch (error) {
+    dispatch({
+      type: SEARCH_MEDICINES_FAIL,
+      payload: error.message,
     });
   }
 };

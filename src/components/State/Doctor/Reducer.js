@@ -66,6 +66,9 @@ import {
   LOADING_ROOMS,
   REJECT_APPOINTMENT,
   REMOVE_PRESCRIPTIONS_WITH_AI,
+  SEARCH_MEDICINES_FAIL,
+  SEARCH_MEDICINES_REQUEST,
+  SEARCH_MEDICINES_SUCCESS,
   SEARCH_SERVICE_SUBCATEGORIES,
   SUBMIT_CONSULTATION,
   UPDATE_ADMISSION_INSURANCE,
@@ -175,6 +178,9 @@ const initialState = {
   admissionForms: [],
   admissionFormsCount: null,
   isLoadingGetAdmissionForms: false,
+  isLoadingSearchMedicines: false,
+  searchMedicines: [],
+  searchMedicinesError: null,
 };
 
 export const doctorReducer = (state = initialState, action) => {
@@ -628,6 +634,24 @@ export const doctorReducer = (state = initialState, action) => {
         admissionFormsCount: action.payload.totalRequests,
         isLoadingGetAdmissionForms: false,
       };
+
+    case SEARCH_MEDICINES_REQUEST:
+      return { ...state, isLoadingSearchMedicines: true };
+
+    case SEARCH_MEDICINES_SUCCESS:
+      return {
+        ...state,
+        isLoadingSearchMedicines: false,
+        searchMedicines: action.payload,
+      };
+
+    case SEARCH_MEDICINES_FAIL:
+      return {
+        ...state,
+        isLoadingSearchMedicines: false,
+        searchMedicinesError: action.payload,
+      };
+
     default:
       return state;
   }
