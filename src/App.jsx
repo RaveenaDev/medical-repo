@@ -57,6 +57,7 @@ import { SplashScreen } from "@capacitor/splash-screen";
 import { getItem } from "./utils/storage.js";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "./components/State/Authentication/ActionType.js";
+import Reports from "./pages/admin/reports/Reports.jsx";
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -676,6 +677,19 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
                     <Expenses
+                      setIsSignUpOrLogin={setIsSignUpOrLogin}
+                      setEntity={setEntity}
+                      entity={entity}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/reports"
+                element={
+                  <ProtectedRoute allowedRoles={["hospitalAdmin"]}>
+                    <Reports
                       setIsSignUpOrLogin={setIsSignUpOrLogin}
                       setEntity={setEntity}
                       entity={entity}

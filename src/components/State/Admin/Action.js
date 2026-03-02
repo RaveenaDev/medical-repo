@@ -11,6 +11,9 @@ import {
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   ADD_TO_BILL,
+  BEDS_REPORT_FAIL,
+  BEDS_REPORT_REQUEST,
+  BEDS_REPORT_SUCCESS,
   CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -110,7 +113,7 @@ export const getGraphData =
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(data);
+      console.log(data);
       dispatch({
         type: GET_EARNINGS_GRAPH,
         payload: data,
@@ -1983,6 +1986,36 @@ export const getTPAReport =
       dispatch({
         type: TPA_FAIL,
         payload: error?.response?.data?.message || "TPA fetch failed",
+      });
+    }
+  };
+
+export const getRoomsAndBedsReport =
+  (params = {}) =>
+  async (dispatch) => {
+    dispatch({ type: BEDS_REPORT_REQUEST });
+
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/roomBedReport`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params,
+      });
+
+      dispatch({
+        type: BEDS_REPORT_SUCCESS,
+        payload: data,
+      });
+
+      console.log("Rooms and Beds Report Data: ", data);
+      return data;
+    } catch (error) {
+      dispatch({
+        type: BEDS_REPORT_FAIL,
+        payload: error?.response?.data?.message || "Report fetch failed",
       });
     }
   };
