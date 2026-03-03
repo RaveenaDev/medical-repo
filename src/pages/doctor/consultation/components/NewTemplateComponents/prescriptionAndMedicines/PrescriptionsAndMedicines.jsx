@@ -53,6 +53,7 @@ const PrescriptionAndMedicines = ({
   const dispatch = useDispatch();
 
   const [selected, setSelected] = useState({
+    diagnosis: [],
     medications: [],
     injectionsTherapies: [],
     nonDrugRecommendations: [],
@@ -73,6 +74,7 @@ const PrescriptionAndMedicines = ({
 
         //  Validate the shape (ensure all arrays exist)
         const safeData = {
+          diagnosis: parsed.diagnosis || [],
           medications: parsed.medications || [],
           injectionsTherapies: parsed.injectionsTherapies || [],
           nonDrugRecommendations: parsed.nonDrugRecommendations || [],
@@ -92,6 +94,7 @@ const PrescriptionAndMedicines = ({
     if (existingData?.[selectedComponent]) {
       const data = existingData[selectedComponent];
       const safeData = {
+        diagnosis: data.diagnosis || [],
         medications: data.medications || [],
         injectionsTherapies: data.injectionsTherapies || [],
         nonDrugRecommendations: data.nonDrugRecommendations || [],
@@ -145,7 +148,8 @@ const PrescriptionAndMedicines = ({
   });
 
   const hasSelection =
-    selected.medications.length +
+    selected.diagnosis.length +
+      selected.medications.length +
       selected.injectionsTherapies.length +
       selected.nonDrugRecommendations.length +
       selected.lifestyle.length +
@@ -166,6 +170,22 @@ const PrescriptionAndMedicines = ({
   };
 
   // ===== Add from AI into selected =====
+
+  const addDiagnosisFromAI = () => {
+    const lines = [];
+
+    if (aiData.problemStatement)
+      lines.push(`Diagnosis: ${aiData.problemStatement}`);
+
+    if (aiData.icdCode) lines.push(`ICD: ${aiData.icdCode}`);
+
+    if (!lines.length) return;
+
+    setSelected((s) => ({
+      ...s,
+      diagnosis: [...s.diagnosis, ...lines],
+    }));
+  };
   const addMedsFromAI = () => {
     const meds =
       generatedPrescriptions?.aiGeneratedText?.medications ||
@@ -527,6 +547,10 @@ const PrescriptionAndMedicines = ({
   // console.log(typeof searchMedicines, searchMedicines);
   // console.log("AI Data:", aiData);
 
+  // console.log("patient:", patient);
+
+  console.log("COmplete data", completeData);
+  console.log("Existinf data", existingData);
   return (
     <div>
       <div className={styles.container1}>
@@ -1056,6 +1080,37 @@ const PrescriptionAndMedicines = ({
 
                 {/* Medications */}
                 <div className={styles.selectedSection}>
+                  <div className={styles.selectedSection}>
+                    <div className={styles.sectionHeader}>
+                      <h4>Diagnosis</h4>
+                      <button
+                        className={styles.addBtn}
+                        onClick={addDiagnosisFromAI}
+                      >
+                        + Add From AI
+                      </button>
+                    </div>
+
+                    {selected.diagnosis.length === 0 && (
+                      <div className={styles.emptyNote}>
+                        No diagnosis added.
+                      </div>
+                    )}
+
+                    {selected.diagnosis.map((v, i) => (
+                      <div className={styles.selRow} key={`diag-${i}`}>
+                        <div>{v}</div>
+                        <div className={styles.rowActions}>
+                          <button
+                            className={styles.removeBtn}
+                            onClick={() => removeFromArray("diagnosis", i)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   <div className={styles.sectionHeader}>
                     <h4>Medications</h4>
                     <button
@@ -1673,6 +1728,7 @@ const PrescriptionAndMedicines = ({
         ref={printRef}
         prescriptions={selected}
         patient={patient}
+        summary={existingData?.medicalHistory}
       />
     </div>
   );

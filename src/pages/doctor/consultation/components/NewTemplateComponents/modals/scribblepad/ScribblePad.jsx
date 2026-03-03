@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const INITIAL_HEIGHT = 2000; // starting canvas height
 const EXPAND_BY = 1000; // expand amount when near bottom
+const MAX_HEIGHT = 6000;
 
 const ScribblePad = ({ onClose, onSave, patient, doctor }) => {
   const canvasRef = useRef(null);
@@ -153,35 +154,42 @@ const ScribblePad = ({ onClose, onSave, patient, doctor }) => {
     const ctx = canvas.getContext("2d");
     const dpr = window.devicePixelRatio || 1;
 
-    const threshold = canvas.height - 300 * dpr;
+    const currentHeight = canvas.height / dpr;
 
-    if (y * dpr > threshold) {
+    //  Stop if max height reached
+    if (currentHeight >= MAX_HEIGHT) return;
+
+    const threshold = currentHeight - 300;
+
+    if (y > threshold) {
       const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-      canvas.height += EXPAND_BY * dpr;
-      canvas.style.height = parseInt(canvas.style.height) + EXPAND_BY + "px";
+      const newHeight = Math.min(currentHeight + EXPAND_BY, MAX_HEIGHT);
 
+      canvas.height = newHeight * dpr;
+      canvas.style.height = newHeight + "px";
+
+      //  Reset transform before scaling again
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
+
       ctx.putImageData(image, 0, 0);
 
       redrawCanvas();
     }
   };
-
   /* ---------------- Drawing ---------------- */
   useEffect(() => {
     const canvas = canvasRef.current;
 
     const getPos = (e) => {
       const rect = canvas.getBoundingClientRect();
-      const scrollTop = containerRef.current.scrollTop;
 
       return {
         x: e.clientX - rect.left,
-        y: e.clientY - rect.top + scrollTop,
+        y: e.clientY - rect.top,
       };
     };
-
     const down = (e) => {
       e.preventDefault();
       canvas.setPointerCapture(e.pointerId);
@@ -255,7 +263,7 @@ const ScribblePad = ({ onClose, onSave, patient, doctor }) => {
 
   /* ---------------- AI Conversion ---------------- */
   const convertWithAI = async () => {
-    const image = canvasRef.current.toDataURL("image/png");
+    const image = canvasRef.current.toDataURL("image/jpeg", 0.7);
     const blob = await fetch(image).then((r) => r.blob());
     const formData = new FormData();
     formData.append("image", blob, "note.png");
@@ -278,7 +286,7 @@ const ScribblePad = ({ onClose, onSave, patient, doctor }) => {
   };
 
   const handleSave = () => {
-    const image = canvasRef.current.toDataURL("image/png");
+    const image = canvasRef.current.toDataURL("image/jpeg", 0.7);
     onSave({ image, text: aiText });
   };
 
