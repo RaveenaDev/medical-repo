@@ -266,7 +266,7 @@ const ScribblePad = ({ onClose, onSave, patient, doctor }) => {
     const image = canvasRef.current.toDataURL("image/jpeg", 0.7);
     const blob = await fetch(image).then((r) => r.blob());
     const formData = new FormData();
-    formData.append("image", blob, "note.png");
+    formData.append("image", blob, "note.jpeg");
 
     try {
       setIsProcessingAI(true);
