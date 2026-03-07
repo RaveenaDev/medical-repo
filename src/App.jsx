@@ -57,7 +57,7 @@ import { SplashScreen } from "@capacitor/splash-screen";
 import { getItem } from "./utils/storage.js";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "./components/State/Authentication/ActionType.js";
-import Reports from "./pages/admin/reports/Reports.jsx";
+import Reports from "./pages/admin/reports/Reports";
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
