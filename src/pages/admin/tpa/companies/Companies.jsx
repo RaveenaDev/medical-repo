@@ -12,14 +12,18 @@ import {
 } from "@mui/material";
 import styles from "./Companies.module.scss";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getInsuranceCompanies } from "../../../../components/State/Admin/Action.js";
+import {
+  getInsuranceCompanies,
+  uploadInsuranceCompaniesExcel,
+} from "../../../../components/State/Admin/Action.js";
 
 import CompanyRateModal from "./CompanyRateModal.jsx";
 
 const Companies = () => {
   const [modalOpen, setModalOpen] = useState(false); // State for modal
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -29,7 +33,7 @@ const Companies = () => {
 
   const companies = useSelector((store) => store.admin.insuranceCompanies);
   const loading = useSelector(
-    (store) => store.admin.isLoadingInsuranceCompanies
+    (store) => store.admin.isLoadingInsuranceCompanies,
   );
   // console.log("Comp: ", companies);
 
@@ -52,15 +56,29 @@ const Companies = () => {
     setPage(0);
   };
 
+  const handleExcelUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+
+      const result = await dispatch(uploadInsuranceCompaniesExcel(file));
+      dispatch(getInsuranceCompanies());
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setUploading(false);
+      e.target.value = ""; //  allows re-uploading same file
+    }
+  };
   return (
     <div className={styles.billingsContainer}>
       <div className={styles.header}>
         <Button
-          style={{ marginTop: "8px" }}
           variant="contained"
+          className={styles.btnHeader}
           sx={{
-            display: "flex",
-            gap: 1.5,
             textTransform: "none",
             backgroundColor: "#25307F",
             color: "white",
@@ -70,6 +88,36 @@ const Companies = () => {
         >
           <Plus className={styles.plusIcon} />
           ADD COMPANY
+        </Button>
+
+        <Button
+          variant="contained"
+          component="label"
+          className={styles.btnHeader}
+          sx={{
+            textTransform: "none",
+            backgroundColor: "#25307F",
+            color: "white",
+            marginLeft: "1vw",
+            "&:hover": { background: "#AEC3FF" },
+          }}
+          disabled={uploading}
+        >
+          {uploading ? (
+            <CircularProgress size={20} sx={{ color: "#25307F" }} />
+          ) : (
+            <>
+              <Upload className={styles.plusIcon} />
+              Upload Excel
+            </>
+          )}
+
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            hidden
+            onChange={handleExcelUpload}
+          />
         </Button>
       </div>
       {loading ? (
@@ -90,6 +138,8 @@ const Companies = () => {
           <div className={styles.tableHeader}>
             <span>Company ID</span>
             <span style={{ textAlign: "center" }}>Company Name</span>
+            <span style={{ textAlign: "center" }}>TPA</span>
+            <span style={{ textAlign: "center" }}>Tie-up</span>
             <span></span>
           </div>
 
@@ -112,12 +162,28 @@ const Companies = () => {
                 .map((company) => (
                   <div className={styles.tableRow} key={company._id}>
                     <span className={styles.blue}>{company.id}</span>
+
                     <span
                       style={{ textAlign: "center" }}
                       className={styles.blue}
                     >
                       {company.name}
                     </span>
+
+                    <span
+                      style={{ textAlign: "center" }}
+                      className={styles.grey}
+                    >
+                      {company.TPA || "-"}
+                    </span>
+
+                    <span
+                      style={{ textAlign: "center" }}
+                      className={styles.grey}
+                    >
+                      {company.tieup || "-"}
+                    </span>
+
                     <div
                       style={{
                         display: "flex",

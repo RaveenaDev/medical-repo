@@ -11,6 +11,9 @@ import {
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   ADD_TO_BILL,
+  BEDS_REPORT_FAIL,
+  BEDS_REPORT_REQUEST,
+  BEDS_REPORT_SUCCESS,
   CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -110,7 +113,7 @@ export const getGraphData =
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(data);
+      console.log(data);
       dispatch({
         type: GET_EARNINGS_GRAPH,
         payload: data,
@@ -868,6 +871,34 @@ export const addService = (serviceData) => async (dispatch) => {
   }
 };
 
+export const uploadServicesExcel = (file) => async (dispatch) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data } = await axios.post(
+      `${API_URL}/uploadHospitalServices`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    // console.log("Upload response:", data);
+
+    toast.success(
+      `Upload Complete ✅ Created: ${data.createdServices}, Skipped: ${data.skipped}, Updated: ${data.updatedServices}`,
+    );
+
+    return data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Upload failed");
+    throw error;
+  }
+};
+
 export const updateService = (updatedData, serviceId) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1407,6 +1438,32 @@ export const getInsuranceCompanies = () => async (dispatch) => {
   }
 };
 
+export const uploadInsuranceCompaniesExcel = (file) => async (dispatch) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data } = await axios.post(
+      `${API_URL}/uploadInsuranceCompanies`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    toast.success(
+      `Upload Complete ✅ Created: ${data.created}, Skipped: ${data.skipped}`,
+    );
+
+    return data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Upload failed");
+    throw error;
+  }
+};
+
 export const addInsuranceCompany = (formData) => async (dispatch) => {
   try {
     const token = localStorage.getItem("jwt");
@@ -1846,40 +1903,119 @@ export const editBed = (bedId, updates) => async (dispatch) => {
 };
 
 export const getTPAReport =
-  ({ year, month, company }) =>
+  ({
+    filterType,
+    yearFrom,
+    yearTo,
+    monthFrom,
+    monthTo,
+    customStart,
+    customEnd,
+    company,
+    monthYear,
+  }) =>
   async (dispatch) => {
-    // console.log("TPA ACTION CALLED", { year, month, company });
-
     dispatch({ type: TPA_REQUEST });
 
     try {
       const token = localStorage.getItem("jwt");
 
-      let url = month
-        ? `${API_URL}/tpa/monthly?year=${year}&month=${month}`
-        : `${API_URL}/tpa/yearly?year=${year}`;
+      let url = "";
+      const params = new URLSearchParams();
 
-      if (company) {
-        url += `&company=${encodeURIComponent(company)}`;
+      /* ================= YEAR ================= */
+      if (filterType === "year") {
+        url = `${API_URL}/tpa/yearly`;
+
+        if (yearTo) {
+          params.append("startDate", `${yearFrom}-01-01`);
+          params.append("endDate", `${yearTo}-12-31`);
+        } else {
+          params.append("year", yearFrom);
+        }
       }
 
-      // /console.log("TPA API URL:", url);
+      /* ================= MONTH ================= */
+      if (filterType === "month") {
+        url = `${API_URL}/tpa/monthly`;
 
-      const { data } = await axios.get(url, {
+        if (monthTo) {
+          const lastDay = new Date(monthYear, monthTo, 0).getDate();
+
+          params.append(
+            "startDate",
+            `${monthYear}-${String(monthFrom).padStart(2, "0")}-01`,
+          );
+
+          params.append(
+            "endDate",
+            `${monthYear}-${String(monthTo).padStart(2, "0")}-${lastDay}`,
+          );
+        } else {
+          params.append("year", monthYear);
+          params.append("month", monthFrom);
+        }
+      }
+
+      /* ================= CUSTOM ================= */
+      if (filterType === "custom" && customStart && customEnd) {
+        url = `${API_URL}/tpa/yearly`;
+        params.append("startDate", customStart);
+        params.append("endDate", customEnd);
+      }
+
+      /* ================= COMPANY ================= */
+      if (company) {
+        params.append("company", company);
+      }
+
+      const finalUrl = `${url}?${params.toString()}`;
+
+      console.log("Final TPA Report URL: ", finalUrl);
+
+      const { data } = await axios.get(finalUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // console.log("TPA API RESPONSE:", data);
-
       dispatch({ type: TPA_SUCCESS, payload: data });
+      console.log("TPA Report Data: ", data);
       return data;
     } catch (error) {
-      console.error("TPA ERROR:", error);
       dispatch({
         type: TPA_FAIL,
         payload: error?.response?.data?.message || "TPA fetch failed",
+      });
+    }
+  };
+
+export const getRoomsAndBedsReport =
+  (params = {}) =>
+  async (dispatch) => {
+    dispatch({ type: BEDS_REPORT_REQUEST });
+
+    try {
+      const token = localStorage.getItem("jwt");
+
+      const { data } = await axios.get(`${API_URL}/roomBedReport`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params,
+      });
+
+      dispatch({
+        type: BEDS_REPORT_SUCCESS,
+        payload: data,
+      });
+
+      console.log("Rooms and Beds Report Data: ", data);
+      return data;
+    } catch (error) {
+      dispatch({
+        type: BEDS_REPORT_FAIL,
+        payload: error?.response?.data?.message || "Report fetch failed",
       });
     }
   };

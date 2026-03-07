@@ -75,13 +75,16 @@ const BillDetailsAdmin = (props) => {
 
   const [addOpen, setAddOpen] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
+
+  const today = new Date().toISOString().split("T")[0];
   const [addForm, setAddForm] = useState({
     category: "",
     quantity: "1",
     rate: "0",
     details: "",
-    date: "",
+    date: today,
   });
+
   const [addErrors, setAddErrors] = useState({});
 
   const parseIntSafe = (v, fallback = 0) => {
@@ -1396,7 +1399,6 @@ const BillDetailsAdmin = (props) => {
             <TextField
               label="Refund Amount"
               value={Math.max(bill.paidAmount - bill.totalAmount, 0)}
-              disabled
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">₹</InputAdornment>
@@ -1540,7 +1542,7 @@ const BillDetailsAdmin = (props) => {
                 typeof option === "string" ? option : option.subCategoryName
               }
               onInputChange={(e, value) => {
-                setServiceInput(value); // 👈 debounce source
+                setServiceInput(value); //  debounce source
                 setAddForm((p) => ({ ...p, details: value }));
               }}
               onChange={(e, value) => {
@@ -1550,7 +1552,7 @@ const BillDetailsAdmin = (props) => {
                     details: value.subCategoryName,
                     rate: String(value.rate || 0),
                     rateType: value.rateType,
-                    category: value.category,
+                    category: value.serviceName,
                   }));
                 }
               }}

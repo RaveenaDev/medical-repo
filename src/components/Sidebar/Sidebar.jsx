@@ -21,6 +21,7 @@ const roleOptions = {
     { title: "Reception", path: "/admin/reception" },
     { title: "Departments", path: "/admin/departments" },
     { title: "TPA", path: "/admin/tpa" },
+    { title: "Reports", path: "/admin/reports" },
     { title: "Expenses", path: "/admin/expenses" },
     { title: "Settings", path: "/admin/settings" },
   ],

@@ -1,15 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./PrescriptionAndMedicines.module.scss";
 import PNMLoader from "../../PNMLoader.jsx";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   chatWithAI,
   generateNewPrescriptionsWithAI,
+  medicinesAutocomplete,
 } from "../../../../../../components/State/Doctor/Action.js";
 import ManualPrescriptionForm from "../../manual/ManualPrescriptionForm.jsx";
 import { useReactToPrint } from "react-to-print";
 import PrescriptionAndMedicinesPrint from "../../print/PrescriptionAndMedicinesPrint.jsx";
 import { MicOff } from "lucide-react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Grid,
+  IconButton,
+  Autocomplete,
+  CircularProgress,
+  InputAdornment,
+} from "@mui/material";
+
+import { X, Pill, Syringe, Clock, FileText } from "lucide-react";
+import useDebounce from "../../../../../../hooks/useDebounce.js";
 
 const PrescriptionAndMedicines = ({
   patient,
@@ -31,11 +48,12 @@ const PrescriptionAndMedicines = ({
   const isListeningRef = useRef(false);
 
   const [isManualMode, setIsManualMode] = useState(
-    () => localStorage.getItem("prescriptionMode") === "manual"
+    () => localStorage.getItem("prescriptionMode") === "manual",
   );
   const dispatch = useDispatch();
 
   const [selected, setSelected] = useState({
+    diagnosis: [],
     medications: [],
     injectionsTherapies: [],
     nonDrugRecommendations: [],
@@ -56,6 +74,7 @@ const PrescriptionAndMedicines = ({
 
         //  Validate the shape (ensure all arrays exist)
         const safeData = {
+          diagnosis: parsed.diagnosis || [],
           medications: parsed.medications || [],
           injectionsTherapies: parsed.injectionsTherapies || [],
           nonDrugRecommendations: parsed.nonDrugRecommendations || [],
@@ -75,6 +94,7 @@ const PrescriptionAndMedicines = ({
     if (existingData?.[selectedComponent]) {
       const data = existingData[selectedComponent];
       const safeData = {
+        diagnosis: data.diagnosis || [],
         medications: data.medications || [],
         injectionsTherapies: data.injectionsTherapies || [],
         nonDrugRecommendations: data.nonDrugRecommendations || [],
@@ -128,7 +148,8 @@ const PrescriptionAndMedicines = ({
   });
 
   const hasSelection =
-    selected.medications.length +
+    selected.diagnosis.length +
+      selected.medications.length +
       selected.injectionsTherapies.length +
       selected.nonDrugRecommendations.length +
       selected.lifestyle.length +
@@ -149,6 +170,22 @@ const PrescriptionAndMedicines = ({
   };
 
   // ===== Add from AI into selected =====
+
+  const addDiagnosisFromAI = () => {
+    const lines = [];
+
+    if (aiData.problemStatement)
+      lines.push(`Diagnosis: ${aiData.problemStatement}`);
+
+    if (aiData.icdCode) lines.push(`ICD: ${aiData.icdCode}`);
+
+    if (!lines.length) return;
+
+    setSelected((s) => ({
+      ...s,
+      diagnosis: [...s.diagnosis, ...lines],
+    }));
+  };
   const addMedsFromAI = () => {
     const meds =
       generatedPrescriptions?.aiGeneratedText?.medications ||
@@ -172,7 +209,7 @@ const PrescriptionAndMedicines = ({
         s.injectionsTherapies,
         generatedPrescriptions?.aiGeneratedText?.injectionsTherapies ||
           generatedPrescriptions?.aiPrescription?.injectionsTherapies ||
-          []
+          [],
       ),
     }));
 
@@ -183,7 +220,7 @@ const PrescriptionAndMedicines = ({
         s.nonDrugRecommendations,
         generatedPrescriptions?.aiGeneratedText?.nonDrugRecommendations ||
           generatedPrescriptions?.aiPrescription?.nonDrugRecommendations ||
-          []
+          [],
       ),
     }));
 
@@ -194,7 +231,7 @@ const PrescriptionAndMedicines = ({
         s.lifestyle,
         generatedPrescriptions?.aiGeneratedText?.lifestyle ||
           generatedPrescriptions?.aiPrescription?.lifestyleDiet ||
-          []
+          [],
       ),
     }));
 
@@ -210,7 +247,7 @@ const PrescriptionAndMedicines = ({
     } else if (
       Array.isArray(
         generatedPrescriptions?.aiGeneratedText?.followUp ||
-          generatedPrescriptions?.aiPrescription?.followUp
+          generatedPrescriptions?.aiPrescription?.followUp,
       )
     ) {
       // fallback if you ever return an array
@@ -268,7 +305,7 @@ const PrescriptionAndMedicines = ({
     setSelected((s) => ({
       ...s,
       [stateKey]: s[stateKey].map((v, i) =>
-        i === editIdx[section] ? editBuf : v
+        i === editIdx[section] ? editBuf : v,
       ),
     }));
     setEditIdx((prev) => ({ ...prev, [section]: null }));
@@ -291,7 +328,7 @@ const PrescriptionAndMedicines = ({
     setSelected((s) => ({
       ...s,
       medications: s.medications.map((m, i) =>
-        i === aiMedEditIdx ? { ...m, text: aiMedBuf.trim() } : m
+        i === aiMedEditIdx ? { ...m, text: aiMedBuf.trim() } : m,
       ),
     }));
     setAiMedEditIdx(null);
@@ -332,7 +369,7 @@ const PrescriptionAndMedicines = ({
       setSelected((s) => ({
         ...s,
         medications: s.medications.map((m, i) =>
-          i === editingMedIndex ? payload : m
+          i === editingMedIndex ? payload : m,
         ),
       }));
     }
@@ -494,7 +531,26 @@ const PrescriptionAndMedicines = ({
     generatedPrescriptions?.aiPrescription ||
     {};
 
+  const { searchMedicines, isLoadingSearchMedicines } = useSelector(
+    (state) => state.doctor,
+  );
+
+  const [searchText, setSearchText] = useState("");
+
+  const debouncedSearch = useDebounce(searchText, 400);
+
+  useEffect(() => {
+    if (debouncedSearch.length >= 2) {
+      dispatch(medicinesAutocomplete(debouncedSearch));
+    }
+  }, [debouncedSearch, dispatch]);
+  // console.log(typeof searchMedicines, searchMedicines);
   // console.log("AI Data:", aiData);
+
+  // console.log("patient:", patient);
+
+  console.log("COmplete data", completeData);
+  console.log("Existinf data", existingData);
   return (
     <div>
       <div className={styles.container1}>
@@ -788,7 +844,7 @@ const PrescriptionAndMedicines = ({
                             <span style={{ marginRight: 10 }}>&#8226;</span>
                             <p style={{ margin: 0 }}>{text}</p>
                           </div>
-                        )
+                        ),
                       )}
                     </div>
                     <div
@@ -1024,6 +1080,37 @@ const PrescriptionAndMedicines = ({
 
                 {/* Medications */}
                 <div className={styles.selectedSection}>
+                  <div className={styles.selectedSection}>
+                    <div className={styles.sectionHeader}>
+                      <h4>Diagnosis</h4>
+                      <button
+                        className={styles.addBtn}
+                        onClick={addDiagnosisFromAI}
+                      >
+                        + Add From AI
+                      </button>
+                    </div>
+
+                    {selected.diagnosis.length === 0 && (
+                      <div className={styles.emptyNote}>
+                        No diagnosis added.
+                      </div>
+                    )}
+
+                    {selected.diagnosis.map((v, i) => (
+                      <div className={styles.selRow} key={`diag-${i}`}>
+                        <div>{v}</div>
+                        <div className={styles.rowActions}>
+                          <button
+                            className={styles.removeBtn}
+                            onClick={() => removeFromArray("diagnosis", i)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   <div className={styles.sectionHeader}>
                     <h4>Medications</h4>
                     <button
@@ -1495,89 +1582,141 @@ const PrescriptionAndMedicines = ({
             </div>
 
             {/* Manual Medication Modal */}
-            {medModalOpen && (
-              <div className={styles.modalBackdrop} onClick={closeMedModal}>
-                <div
-                  className={styles.modalCard}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className={styles.modalHeader}>
-                    <h3>
-                      {medModalMode === "add"
-                        ? "Add Medicine"
-                        : "Edit Medicine"}
-                    </h3>
-                    <button
-                      className={styles.modalClose}
-                      onClick={closeMedModal}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <form onSubmit={submitMedModal} className={styles.modalBody}>
-                    <label>
-                      Name
-                      <input
-                        className={styles.modalInput}
-                        value={medForm.name}
-                        onChange={(e) =>
-                          setMedForm((v) => ({ ...v, name: e.target.value }))
+            <Dialog
+              open={medModalOpen}
+              onClose={closeMedModal}
+              fullWidth
+              maxWidth="sm"
+            >
+              <DialogTitle
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  fontWeight: 600,
+                }}
+              >
+                {medModalMode === "add" ? "Add Medicine" : "Edit Medicine"}
+
+                <IconButton onClick={closeMedModal}>
+                  <X size={18} />
+                </IconButton>
+              </DialogTitle>
+
+              <DialogContent dividers>
+                <Grid container spacing={2}>
+                  {/* Medicine Name Autocomplete */}
+                  <Grid item xs={12}>
+                    <Autocomplete
+                      freeSolo
+                      options={searchMedicines || []}
+                      loading={isLoadingSearchMedicines}
+                      inputValue={searchText}
+                      onInputChange={(e, value) => {
+                        setSearchText(value);
+                        setMedForm((v) => ({ ...v, name: value }));
+                      }}
+                      onChange={(e, value) => {
+                        if (value) {
+                          setMedForm((v) => ({ ...v, name: value }));
                         }
-                        required
-                      />
-                    </label>
-                    <label>
-                      Dosage
-                      <input
-                        className={styles.modalInput}
-                        value={medForm.dosage}
-                        onChange={(e) =>
-                          setMedForm((v) => ({ ...v, dosage: e.target.value }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Duration
-                      <input
-                        className={styles.modalInput}
-                        value={medForm.duration}
-                        onChange={(e) =>
-                          setMedForm((v) => ({
-                            ...v,
-                            duration: e.target.value,
-                          }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Instructions
-                      <input
-                        className={styles.modalInput}
-                        value={medForm.instructions}
-                        onChange={(e) =>
-                          setMedForm((v) => ({
-                            ...v,
-                            instructions: e.target.value,
-                          }))
-                        }
-                      />
-                    </label>
-                    <div className={styles.modalFooter}>
-                      <button
-                        type="button"
-                        className={styles.cancelBtn}
-                        onClick={closeMedModal}
-                      >
-                        Cancel
-                      </button>
-                      <button type="submit" className={styles.saveBtn}>
-                        {medModalMode === "add" ? "Add" : "Save"}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Medicine Name"
+                          fullWidth
+                          InputProps={{
+                            ...params.InputProps,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Pill size={18} />
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <>
+                                {isLoadingSearchMedicines && (
+                                  <CircularProgress size={18} />
+                                )}
+                                {params.InputProps.endAdornment}
+                              </>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Dosage"
+                      fullWidth
+                      value={medForm.dosage}
+                      onChange={(e) =>
+                        setMedForm((v) => ({ ...v, dosage: e.target.value }))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Syringe size={16} />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Duration"
+                      fullWidth
+                      value={medForm.duration}
+                      onChange={(e) =>
+                        setMedForm((v) => ({ ...v, duration: e.target.value }))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Clock size={16} />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Instructions"
+                      fullWidth
+                      multiline
+                      minRows={2}
+                      value={medForm.instructions}
+                      onChange={(e) =>
+                        setMedForm((v) => ({
+                          ...v,
+                          instructions: e.target.value,
+                        }))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <FileText size={16} />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+
+              <DialogActions sx={{ p: 2 }}>
+                <Button onClick={closeMedModal} variant="outlined">
+                  Cancel
+                </Button>
+                <Button onClick={submitMedModal} variant="contained">
+                  {medModalMode === "add" ? "Add Medicine" : "Save Changes"}
+                </Button>
+              </DialogActions>
+            </Dialog>
           </>
         ) : (
           <PNMLoader patient={patient} />
@@ -1589,6 +1728,7 @@ const PrescriptionAndMedicines = ({
         ref={printRef}
         prescriptions={selected}
         patient={patient}
+        summary={existingData?.medicalHistory}
       />
     </div>
   );

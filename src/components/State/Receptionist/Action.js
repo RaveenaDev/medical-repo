@@ -899,6 +899,7 @@ export const addToBill = (payload, id) => async (dispatch) => {
     });
     // console.log("Edit Bill Response:", data);
     dispatch({ type: ADD_TO_BILL, payload: data });
+    dispatch(getBillDetails(id));
     toast.success("Added to bill successfully!", {
       position: "bottom-right",
       autoClose: 2000,

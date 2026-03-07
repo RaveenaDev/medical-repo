@@ -12,6 +12,7 @@ import {
   CardContent,
   Stack,
   Typography,
+  TextField,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -256,7 +257,7 @@ const FileGrid = ({ files = [] }) => {
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                     e.currentTarget.parentElement.classList.add(
-                      "file-thumb-broken"
+                      "file-thumb-broken",
                     ); // handled via :global in SCSS
                   }}
                 />
@@ -375,6 +376,9 @@ export const MedicalHistory = ({
   const [aiSummary, setAiSummary] = useState("");
   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
 
+  const [isEditingSummary, setIsEditingSummary] = useState(false);
+  const [editedSummary, setEditedSummary] = useState("");
+
   const consultations = Array.isArray(patientDetails?.consultations)
     ? patientDetails.consultations
     : [];
@@ -392,9 +396,11 @@ export const MedicalHistory = ({
         .replace(/\*\*$/, "")
         .replace(/^Patient Summary:\s*/i, "")
         .trim();
+
       setAiSummary(cleanedSummary);
+      setEditedSummary(cleanedSummary); //  important
     }
-  }, [patientDetails, aiSummary]);
+  }, [patientDetails]);
 
   const combined = useMemo(() => {
     const normConsultations = consultations.map((c) => ({
@@ -478,11 +484,12 @@ export const MedicalHistory = ({
   /* ---------- AI Summary Handler ---------- */
   const handleConfirmSummary = () => {
     const medicalHistory = {
-      description: aiSummary || "No data found",
+      description: editedSummary || "No data found",
       previousHistoryData: {
         combined: combined,
       },
     };
+
     onConfirmSummary?.(medicalHistory);
   };
 
@@ -505,7 +512,7 @@ export const MedicalHistory = ({
   );
 
   const ConsultationDetail = ({ item }) => {
-    console.log("ConsultationDetail item:", item);
+    // console.log("ConsultationDetail item:", item);
     const c = item?.raw || {};
     const data = c?.consultationData || {};
 
@@ -627,7 +634,7 @@ export const MedicalHistory = ({
             {c?.followUpRequired !== undefined
               ? renderStack(
                   "Follow-up Required",
-                  c.followUpRequired ? "Yes" : "No"
+                  c.followUpRequired ? "Yes" : "No",
                 )
               : null}
             {c?.treatment?.note
@@ -668,7 +675,7 @@ export const MedicalHistory = ({
                     cmList.map((m, i) => {
                       if (isPlainObject(m)) return m; // JSONValue will render nicely
                       return String(m ?? "");
-                    })
+                    }),
                   )}
               </div>
             </>
@@ -770,7 +777,7 @@ export const MedicalHistory = ({
             const pairs = Object.entries(data || {})
               .filter(
                 ([k]) =>
-                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k)
+                  !OMIT.has(k) && !["prescriptionAndMedicines"].includes(k),
               )
               .map(([k, v]) => [k, pruneDeep(v)])
               .filter(([, v]) => !isEmptyValue(v));
@@ -865,7 +872,7 @@ export const MedicalHistory = ({
       ? (c.fileSize / 1024).toFixed(2) + " KB"
       : "Unknown";
     const uploadDate = new Date(
-      c?.uploadedAt || item?.dateISO
+      c?.uploadedAt || item?.dateISO,
     ).toLocaleString();
     const isImage = c?.fileType?.startsWith("image/");
 
@@ -1018,7 +1025,7 @@ export const MedicalHistory = ({
             "notes",
           ]);
           const dynamicPairs = Object.entries(pdata).filter(
-            ([k]) => !FIXED.has(k)
+            ([k]) => !FIXED.has(k),
           );
 
           return (
@@ -1131,33 +1138,89 @@ export const MedicalHistory = ({
       <section className={styles.container}>
         {/* AI Summary Section */}
         <div className={styles.aiSummarySection}>
-          <div className={styles.aiSummaryHeader}>
-            <h4>AI Medical Summary</h4>
-            <Button
-              variant="contained"
-              onClick={handleConfirmSummary}
-              disabled={isSummaryLoading}
-              sx={{
-                backgroundColor: "#5461BE",
-                textTransform: "none",
-                borderRadius: "8px",
-                padding: "6px 16px",
-                "&:hover": { backgroundColor: "#3d4a9f" },
-              }}
-            >
-              Confirm Summary
-            </Button>
+          {/* HEADER */}
+          <div
+            className={styles.aiSummaryHeader}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <h4 style={{ margin: 0 }}>AI Medical Summary</h4>
+
+            <div style={{ display: "flex", gap: 8 }}>
+              {!isEditingSummary && (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => setIsEditingSummary(true)}
+                >
+                  Edit
+                </Button>
+              )}
+
+              {isEditingSummary && (
+                <>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => {
+                      setAiSummary(editedSummary);
+                      setIsEditingSummary(false);
+                    }}
+                  >
+                    Save
+                  </Button>
+
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      setEditedSummary(aiSummary);
+                      setIsEditingSummary(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              )}
+
+              <Button
+                variant="contained"
+                onClick={handleConfirmSummary}
+                disabled={isSummaryLoading}
+                sx={{
+                  backgroundColor: "#5461BE",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  padding: "6px 16px",
+                  "&:hover": { backgroundColor: "#3d4a9f" },
+                }}
+              >
+                Confirm Summary
+              </Button>
+            </div>
           </div>
-          <div className={styles.aiSummaryContent}>
+
+          {/* CONTENT */}
+          <div className={styles.aiSummaryContent} style={{ marginTop: 12 }}>
             {isSummaryLoading ? (
               <div className={styles.summaryLoading}>
                 <CircularProgress size={24} />
                 <span>Generating AI summary...</span>
               </div>
-            ) : aiSummary ? (
-              <p>{aiSummary}</p>
+            ) : isEditingSummary ? (
+              <TextField
+                multiline
+                fullWidth
+                minRows={5}
+                value={editedSummary}
+                onChange={(e) => setEditedSummary(e.target.value)}
+                variant="outlined"
+              />
             ) : (
-              <p className={styles.noData}>No data found</p>
+              <p style={{ margin: 0 }}>{editedSummary || "No data found"}</p>
             )}
           </div>
         </div>

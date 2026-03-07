@@ -3,127 +3,161 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogActions,
   TextField,
   Button,
   MenuItem,
   Grid,
+  Divider,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Trash2Icon } from "lucide-react";
-import {
-  addInsuranceCompany,
-  getAllDepartments,
-} from "../../../../components/State/Admin/Action.js";
-
-/* ------- Helpers: Indian-format display + raw parsing (no commas kept in state) ------- */
-const formatIndian = (val) => {
-  if (val === "" || val == null) return "";
-  const s = String(val);
-  const [rawInt = "", rawDec = ""] = s.split(".");
-  const intOnly = rawInt.replace(/\D/g, "");
-  const decOnly = rawDec.replace(/\D/g, "");
-  if (!intOnly) return decOnly ? `0.${decOnly}` : "";
-
-  const last3 = intOnly.slice(-3);
-  const head = intOnly.slice(0, -3);
-  const headWithCommas = head.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
-  const withCommas = (head ? headWithCommas + "," : "") + last3;
-  return decOnly ? `${withCommas}.${decOnly}` : withCommas;
-};
-
-// keep only digits and a single dot; normalize leading '.' → '0.'
-const parseToRaw = (input) => {
-  const stripped = String(input)
-    .replace(/,/g, "")
-    .replace(/[^\d.]/g, "");
-  if (!stripped) return "";
-  const parts = stripped.split(".");
-  const intPart = parts[0].replace(/^0+(?=\d)/, "");
-  const decPart = parts.slice(1).join("");
-  let raw = intPart || "0";
-  if (decPart.length) raw += "." + decPart;
-  if (stripped.startsWith(".")) raw = "0." + decPart;
-  return raw;
-};
-/* ---------------------------------------------------------------------- */
+import { addInsuranceCompany } from "../../../../components/State/Admin/Action.js";
 
 const CompanyRateModal = ({ open, handleClose }) => {
   const [companyData, setCompanyData] = useState({
     id: "",
     name: "",
+    TPA: "",
+    tieup: "",
   });
 
-  const [errors, setErrors] = useState({});
-  const [lastUpdated] = useState(new Date().toISOString().split("T")[0]);
-
   const dispatch = useDispatch();
-  const departments = useSelector((store) => store.admin.departments) || [];
 
-  useEffect(() => {
-    dispatch(getAllDepartments());
-  }, [dispatch]);
+  const handleChange = (e) => {
+    setCompanyData({
+      ...companyData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSaveCompany = () => {
     const payload = {
       id: companyData.id,
       name: companyData.name,
+      TPA: companyData.TPA,
+      tieup: companyData.tieup,
     };
 
     dispatch(addInsuranceCompany(payload));
 
-    setCompanyData({ id: "", name: "" });
+    setCompanyData({
+      id: "",
+      name: "",
+      TPA: "",
+      tieup: "",
+    });
+
     handleClose();
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle style={{ fontWeight: 600, color: "#25307F" }}>
-        Add Company
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="sm"
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          padding: 1,
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          fontWeight: 600,
+          color: "#25307F",
+          textAlign: "center",
+        }}
+      >
+        Add Insurance Company
       </DialogTitle>
+
+      <Divider sx={{ mb: 2 }} />
+
       <DialogContent>
-        {/* Company Info (2 columns) */}
-        <Grid container spacing={1}>
+        <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
               label="Company ID"
-              fullWidth
-              margin="dense"
               name="id"
+              fullWidth
+              size="small"
               value={companyData.id}
-              onChange={(e) =>
-                setCompanyData({ ...companyData, id: e.target.value })
-              }
+              onChange={handleChange}
             />
           </Grid>
+
           <Grid item xs={12} md={6}>
             <TextField
               label="Company Name"
-              fullWidth
-              margin="dense"
               name="name"
+              fullWidth
+              size="small"
               value={companyData.name}
-              onChange={(e) =>
-                setCompanyData({ ...companyData, name: e.target.value })
-              }
+              onChange={handleChange}
             />
           </Grid>
-        </Grid>
 
-        {/* Buttons */}
-        <Grid container spacing={2}>
-          <Grid item>
-            <Button
-              onClick={handleSaveCompany}
-              variant="contained"
-              sx={{ background: "#25307F" }}
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="TPA"
+              name="TPA"
+              fullWidth
+              size="small"
+              value={companyData.TPA}
+              onChange={handleChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Tie-up Type"
+              name="tieup"
+              select
+              fullWidth
+              size="small"
+              value={companyData.tieup}
+              onChange={handleChange}
             >
-              Save Company
-            </Button>
+              <MenuItem value="company">Company</MenuItem>
+              <MenuItem value="tpa">TPA</MenuItem>
+              <MenuItem value="corporate">Corporate</MenuItem>
+            </TextField>
           </Grid>
         </Grid>
       </DialogContent>
+
+      <DialogActions sx={{ justifyContent: "space-between", px: 3, pb: 2 }}>
+        <Button
+          onClick={handleClose}
+          variant="outlined"
+          sx={{
+            borderColor: "#25307F",
+            color: "#25307F",
+            "&:hover": {
+              borderColor: "#1b245f",
+              background: "rgba(37,48,127,0.04)",
+            },
+          }}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          onClick={handleSaveCompany}
+          variant="contained"
+          sx={{
+            backgroundColor: "#25307F",
+            "&:hover": {
+              backgroundColor: "#1b245f",
+            },
+            px: 4,
+          }}
+        >
+          Save Company
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

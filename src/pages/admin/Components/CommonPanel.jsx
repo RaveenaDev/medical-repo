@@ -60,7 +60,7 @@ const CommonPanel = ({
     dispatch(getRooms());
     dispatch(getAllDepartments());
     dispatch(getBillingRecords());
-    dispatch(getGraphData());
+    dispatch(getGraphData({ range: "this_month" }));
   }, [dispatch]);
 
   const admin = useSelector((store) => store.admin);
@@ -99,6 +99,7 @@ const CommonPanel = ({
     "/admin/departments",
     "/admin/reception",
     "/admin/expenses",
+    "/admin/earnings",
     // "/admin/reception/appointments",
   ];
 

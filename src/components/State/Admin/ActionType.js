@@ -1,10 +1,19 @@
 /* =======================
-   EARNINGS & REPORTS
+   EARNINGS 
 ======================= */
 export const GET_EARNINGS = "GET_EARNINGS";
 export const GET_EARNINGS_GRAPH = "GET_EARNINGS_GRAPH";
 export const GET_APPOINTMENT_COUNTS = "GET_APPOINTMENT_COUNTS";
 export const GET_PROGRESS_TRACKER = "GET_PROGRESS_TRACKER";
+
+/* =======================
+   REPORTS
+======================= */
+
+// BEDS REPORT
+export const BEDS_REPORT_REQUEST = "BEDS_REPORT_REQUEST";
+export const BEDS_REPORT_SUCCESS = "BEDS_REPORT_SUCCESS";
+export const BEDS_REPORT_FAIL = "BEDS_REPORT_FAIL";
 
 /* =======================
    DOCTORS

@@ -8,6 +8,8 @@ import AdmissionRequests from "./inPatients/AdmissionRequests";
 import ayu from "../departments/departments.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import TPAReports from "./reports/TPAReports";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const TPA = (props) => {
   useEffect(() => {
@@ -88,7 +90,11 @@ const TPA = (props) => {
         {selectedTab === "companies" && <Companies />}
         {selectedTab === "patients" && <Patients />}
         {selectedTab === "admissionRequests" && <AdmissionRequests />}
-        {selectedTab === "reports" && <TPAReports />}
+        {selectedTab === "reports" && (
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <TPAReports />
+          </LocalizationProvider>
+        )}
       </div>
     </div>
   );

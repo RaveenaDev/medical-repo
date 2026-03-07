@@ -5,16 +5,11 @@
   color: #222;
   background: #fff;
 
-  /* Ensure the layout fills the page but adjusts based on content */
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  min-height: 100vh; /* Ensure content stretches to fill the page */
-  padding: 15mm 20mm; /* Adjust padding as necessary */
+  width: 210mm; /* A4 width */
+  min-height: 297mm; /* A4 height */
+  margin: 0 auto;
   box-sizing: border-box;
 }
-
 .pdfHeader {
   display: flex;
   justify-content: space-between;
@@ -54,11 +49,11 @@
 .patientInfo {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 13px;
 
   p {
     font-size: 11pt;
-    margin: 2px 0;
+    margin: 4px 0;
   }
 }
 
@@ -70,13 +65,13 @@
 
 /* Section */
 .section {
-  margin-top: 12px;
+  margin-top: 16px;
   page-break-inside: avoid; /* Prevent sections from breaking across pages */
 
   .sectionTitle {
     font-size: 13pt;
     color: #25307f;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     border-left: 4px solid #25307f;
     padding-left: 6px;
     font-weight: 600;
@@ -87,7 +82,7 @@
 .pdfTable {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   font-size: 11pt;
   page-break-inside: avoid; /* Prevent page break in the middle of a table */
 
@@ -110,20 +105,29 @@
     page-break-inside: avoid; /* Keep rows together */
   }
 }
+.pdfTable {
+  margin-top: 6px;
 
+  th,
+  td {
+    padding: 6px 8px;
+  }
+}
 /* Footer */
 .footer {
   text-align: center;
-  margin-top: auto; /* Push footer to the bottom */
+  margin-top: 30px;
+  padding-top: 10px;
 
   .note {
     font-size: 9pt;
     font-style: italic;
-    margin-bottom: 5mm;
+    margin-bottom: 8mm;
   }
 
   .signatureBox {
     text-align: right;
+    margin-top: 20mm;
     p {
       margin-bottom: 3px;
       font-weight: 500;
@@ -142,5 +146,23 @@
 .printOnly {
   @media screen {
     display: none;
+  }
+}
+.printPage {
+  padding: 18mm 18mm 20mm 18mm; /* balanced margins */
+  box-sizing: border-box;
+}
+
+.pageBreak {
+  page-break-after: always;
+}
+
+@media print {
+  .printPage {
+    page-break-inside: avoid;
+  }
+
+  .pageBreak {
+    page-break-after: always;
   }
 }

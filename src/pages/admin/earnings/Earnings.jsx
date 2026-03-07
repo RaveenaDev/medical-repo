@@ -33,6 +33,7 @@ const GRAPH_RANGES = [
   { label: "Last Week", value: "last_week" },
   { label: "This Month", value: "this_month" },
   { label: "This Year", value: "this_year" },
+  { label: "Custom", value: "custom" },
 ];
 
 /* ---------------- MAIN ---------------- */
@@ -42,6 +43,9 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
   // Graph (charts + summary)
   const [graphRange, setGraphRange] = useState("this_month");
+
+  const [graphFromDate, setGraphFromDate] = useState("");
+  const [graphToDate, setGraphToDate] = useState("");
 
   // Doctor table
   const [doctorRange, setDoctorRange] = useState("monthly");
@@ -53,8 +57,19 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
   // Graphs
   useEffect(() => {
-    dispatch(getGraphData({ range: graphRange }));
-  }, [graphRange, dispatch]);
+    if (graphRange === "custom") {
+      if (!graphFromDate || !graphToDate) return;
+
+      dispatch(
+        getGraphData({
+          startDate: graphFromDate,
+          endDate: graphToDate,
+        }),
+      );
+    } else {
+      dispatch(getGraphData({ range: graphRange }));
+    }
+  }, [graphRange, graphFromDate, graphToDate, dispatch]);
 
   useEffect(() => {
     const params = {};
@@ -74,6 +89,7 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
     if (doctorRange === "weekly") {
       const start = new Date();
       start.setDate(now.getDate() - 7);
+      start.setHours(0, 0, 0, 0);
 
       params.startDate = start.toISOString();
       params.endDate = now.toISOString();
@@ -81,6 +97,7 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
     if (doctorRange === "monthly") {
       const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      start.setHours(0, 0, 0, 0);
 
       params.startDate = start.toISOString();
       params.endDate = now.toISOString();
@@ -88,14 +105,17 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
 
     if (doctorRange === "yearly") {
       const start = new Date(now.getFullYear(), 0, 1);
+      start.setHours(0, 0, 0, 0);
 
       params.startDate = start.toISOString();
       params.endDate = now.toISOString();
     }
 
-    if (doctorRange === "custom" && fromDate && toDate) {
-      params.startDate = fromDate;
-      params.endDate = toDate;
+    if (doctorRange === "custom") {
+      if (!doctorFromDate || !doctorToDate) return;
+
+      params.startDate = doctorFromDate;
+      params.endDate = doctorToDate;
     }
 
     dispatch(getEarnings(params)).then((res) => {
@@ -129,7 +149,14 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
       <Header />
 
       <Content>
-        <FilterBar timeFilter={graphRange} setTimeFilter={setGraphRange} />
+        <FilterBar
+          timeFilter={graphRange}
+          setTimeFilter={setGraphRange}
+          fromDate={graphFromDate}
+          toDate={graphToDate}
+          setFromDate={setGraphFromDate}
+          setToDate={setGraphToDate}
+        />
 
         {/* ===== Earnings ===== */}
         <Section title="Earnings Overview">
@@ -137,17 +164,23 @@ const Earnings = ({ setIsSignUpOrLogin }) => {
             items={[
               {
                 label: "Total Earnings",
-                value: `₹${cardEarnings?.totalEarnings?.toLocaleString("en-IN") || 0}`,
+                value: `₹${
+                  cardEarnings?.totalEarnings?.toLocaleString("en-IN") || 0
+                }`,
                 color: THEME.primary,
               },
               {
                 label: "OPD Earnings",
-                value: `₹${cardEarnings?.opdEarnings?.toLocaleString("en-IN") || 0}`,
+                value: `₹${
+                  cardEarnings?.opdEarnings?.toLocaleString("en-IN") || 0
+                }`,
                 color: THEME.primary,
               },
               {
                 label: "IPD Earnings",
-                value: `₹${cardEarnings?.ipdEarnings?.toLocaleString("en-IN") || 0}`,
+                value: `₹${
+                  cardEarnings?.ipdEarnings?.toLocaleString("en-IN") || 0
+                }`,
                 color: THEME.secondary,
               },
             ]}
@@ -213,7 +246,7 @@ export default Earnings;
 /* ---------------- LAYOUT ---------------- */
 
 const PageWrapper = ({ children }) => (
-  <div style={{ background: THEME.bg, minHeight: "100vh", marginTop: "180px" }}>
+  <div style={{ background: THEME.bg, minHeight: "100vh", marginTop: "130px" }}>
     {children}
   </div>
 );
@@ -250,7 +283,14 @@ const Content = ({ children }) => (
 
 /* ---------------- FILTERS ---------------- */
 
-const FilterBar = ({ timeFilter, setTimeFilter }) => (
+const FilterBar = ({
+  timeFilter,
+  setTimeFilter,
+  fromDate,
+  toDate,
+  setFromDate,
+  setToDate,
+}) => (
   <Box
     sx={{
       position: "sticky",
@@ -263,6 +303,7 @@ const FilterBar = ({ timeFilter, setTimeFilter }) => (
       display: "flex",
       gap: 2,
       flexWrap: "wrap",
+      alignItems: "center",
     }}
   >
     <TextField
@@ -278,6 +319,27 @@ const FilterBar = ({ timeFilter, setTimeFilter }) => (
         </MenuItem>
       ))}
     </TextField>
+
+    {/* CUSTOM DATE PICKERS */}
+    {timeFilter === "custom" && (
+      <>
+        <TextField
+          size="small"
+          type="date"
+          value={fromDate}
+          onChange={(e) => setFromDate(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+
+        <TextField
+          size="small"
+          type="date"
+          value={toDate}
+          onChange={(e) => setToDate(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+      </>
+    )}
   </Box>
 );
 
@@ -317,13 +379,13 @@ const ChartCard = ({ title, data, xAxisKey }) => (
       p: 2,
       borderRadius: 2,
       mb: 3,
-      width: "100%",
+      width: "97%",
       minHeight: 320,
     }}
   >
     <p style={{ fontWeight: 500 }}>{title}</p>
     {data?.length ? (
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="97%" height={280}>
         <AreaChart data={data}>
           <XAxis
             dataKey={xAxisKey}
@@ -486,4 +548,4 @@ const EmptyState = ({ text }) => (
 );
 
 const th = { padding: 10, textAlign: "left" };
-const td = { padding: 10, borderBottom: "1px solid #eee" };
+const td = { padding: 10, borderBottom: "1px solid #eee", textAlign: "left" };

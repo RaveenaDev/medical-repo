@@ -3,6 +3,9 @@
   "appName": "Stepcare",
   "webDir": "dist",
   "plugins": {
+    "StatusBar": {
+      "overlaysWebView": false
+    },
     "SplashScreen": {
       "launchShowDuration": 2000,
       "launchAutoHide": false,

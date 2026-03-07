@@ -1,5 +1,5 @@
 import "./PatientsList.scss";
-import { ChevronLeft, Plus } from "lucide-react";
+import { ChevronLeft, LogOutIcon, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import PatientCard from "./component/modals/PatientCard.jsx";
@@ -20,11 +20,13 @@ import { Box } from "@mui/material";
 import AddPatientForm from "./component/form/AddPatient/AddPatientForm.jsx";
 import { GET_PATIENT_DETAILS_BY_PAT_ID } from "../../components/State/Doctor/ActionType.js";
 import EmptyState from "./component/emptyState/EmptyState.jsx";
+import Logout from "../../pages/receptionist/Settings/Logout.jsx";
 
 const IpdOverview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [admittingPatientId, setAdmittingPatientId] = useState(null);
+  const [isLogout, setIsLogout] = useState(false);
 
   useEffect(() => {
     dispatch(getAdmissionRequests());
@@ -32,19 +34,19 @@ const IpdOverview = () => {
   }, [dispatch]);
 
   const patientsAdmitted = useSelector(
-    (store) => store.doctor.admittedPatients
+    (store) => store.doctor.admittedPatients,
   );
 
   const admissionRequests = useSelector(
-    (store) => store.doctor.admissionRequests
+    (store) => store.doctor.admissionRequests,
   );
 
   const isLoadingGetAdmissionRequests = useSelector(
-    (store) => store.doctor.isLoadingGetAdmissionRequests
+    (store) => store.doctor.isLoadingGetAdmissionRequests,
   );
 
   const isLoadingGetAdmittedPatients = useSelector(
-    (store) => store.doctor.isLoadingGetAdmittedPatients
+    (store) => store.doctor.isLoadingGetAdmittedPatients,
   );
   const [filter, setFilter] = useState(() => {
     const saved = sessionStorage.getItem("pld_pagination");
@@ -151,7 +153,7 @@ const IpdOverview = () => {
   };
 
   const [selectedDate, setSelectedDate] = useState(
-    dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD"),
   );
 
   const [page, setPage] = useState(() => {
@@ -166,7 +168,7 @@ const IpdOverview = () => {
   useEffect(() => {
     sessionStorage.setItem(
       "pld_pagination",
-      JSON.stringify({ page, rowsPerPage, filter })
+      JSON.stringify({ page, rowsPerPage, filter }),
     );
   }, [page, rowsPerPage, filter]);
 
@@ -178,7 +180,7 @@ const IpdOverview = () => {
 
   const currentPatients = filteredPatients.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -205,6 +207,14 @@ const IpdOverview = () => {
             onClick={() => navigate("admission-forms")}
           >
             Admission Forms
+          </div>
+          <div
+            className="addButton"
+            onClick={() => {
+              setIsLogout(true);
+            }}
+          >
+            <LogOutIcon size={20} />
           </div>
         </div>
       </div>
@@ -349,7 +359,7 @@ const IpdOverview = () => {
                             const sendToSet = new Set(
                               tokens
                                 .map((t) => t.trim().toLowerCase())
-                                .filter(Boolean)
+                                .filter(Boolean),
                             );
 
                             const showDoctor =
@@ -478,6 +488,7 @@ const IpdOverview = () => {
         </div>
       </section>
       {/* Conditionally Render Form */}
+      {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout} />}
       {showForm && <AddPatientForm onClose={handleCloseForm} />}
     </div>
   );

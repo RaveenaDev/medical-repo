@@ -10,6 +10,9 @@ import {
   ADD_SERVICE_TO_COMPANY,
   ADD_STAFFS,
   ADD_TO_BILL,
+  BEDS_REPORT_FAIL,
+  BEDS_REPORT_REQUEST,
+  BEDS_REPORT_SUCCESS,
   CLEAR_SERVICE_SUBCATEGORIES,
   DELETE_DOCTORS,
   DELETE_EXPENSE,
@@ -143,6 +146,8 @@ const initialState = {
   cardEarnings: [],
   graphEarnings: [],
   graphPatients: [],
+  bedReport: [],
+  isLoadingBedReport: false,
 };
 
 export const adminReducer = (state = initialState, action) => {
@@ -699,6 +704,16 @@ export const adminReducer = (state = initialState, action) => {
         ...state,
         serviceSearch: [],
       };
+
+    case BEDS_REPORT_REQUEST:
+      return { ...state, isLoadingBedReport: true };
+
+    case BEDS_REPORT_SUCCESS:
+      return { ...state, bedReport: action.payload, isLoadingBedReport: false };
+
+    case BEDS_REPORT_FAIL:
+      return { ...state, isLoadingBedReport: false };
+
     default:
       return state;
   }

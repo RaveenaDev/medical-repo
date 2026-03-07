@@ -7,21 +7,31 @@ import {
   RESET_PASSWORD,
 } from "./ActionType.js";
 import { toast } from "react-toastify";
-
+import { setItem } from "../../../utils/storage.js";
+import { clearStorage } from "../../../utils/storage.js";
 export const login = (data) => async (dispatch) => {
   try {
     const response = await axios.post(`${API_URL}/login`, data);
     // console.log("Res: ", response.data);
 
     if (response.data.token) {
-      localStorage.setItem("jwt", response.data.token);
-      localStorage.setItem("hospitalName", response.data.hospitalName);
-      localStorage.setItem("role", response.data.role);
-      localStorage.setItem("userId", response.data.userId);
-      localStorage.setItem("departmentId", response.data.departmentIds);
-      localStorage.setItem("departmentName", response.data.departmentNames);
-      localStorage.setItem("username", response.data.username);
-      localStorage.setItem("hospitalImage", response.data?.hospitalImage);
+      //   localStorage.setItem("jwt", response.data.token);
+      //   localStorage.setItem("hospitalName", response.data.hospitalName);
+      //   localStorage.setItem("role", response.data.role);
+      //   localStorage.setItem("userId", response.data.userId);
+      //   localStorage.setItem("departmentId", response.data.departmentIds);
+      //   localStorage.setItem("departmentName", response.data.departmentNames);
+      //   localStorage.setItem("username", response.data.username);
+      //   localStorage.setItem("hospitalImage", response.data?.hospitalImage);
+      //
+      await setItem("jwt", response.data.token);
+      await setItem("hospitalName", response.data.hospitalName);
+      await setItem("role", response.data.role);
+      await setItem("userId", response.data.userId);
+      await setItem("departmentId", response.data.departmentIds);
+      await setItem("departmentName", response.data.departmentNames);
+      await setItem("username", response.data.username);
+      await setItem("hospitalImage", response.data?.hospitalImage);
     }
     dispatch({ type: LOGIN, payload: response.data });
 
@@ -42,7 +52,9 @@ export const login = (data) => async (dispatch) => {
 
 export const Logout = () => async (dispatch) => {
   try {
-    localStorage.clear(); // Remove jwt token from localStorage when we logOut...
+    // localStorage.clear(); // Remove jwt token from localStorage when we logOut...
+
+    await clearStorage();
     dispatch({ type: LOGOUT });
     // Show success toast
     toast.success("Logout Successful!", {
@@ -107,6 +119,22 @@ export const resetPassword = (newData, token, navigate) => async (dispatch) => {
     toast.error(err, {
       position: "bottom-right", // Use string for position
       autoClose: 2000,
+    });
+  }
+};
+export const restoreAuth = () => (dispatch) => {
+  const token = localStorage.getItem("jwt");
+  const role = localStorage.getItem("role");
+  const userId = localStorage.getItem("userId");
+
+  if (token && role) {
+    dispatch({
+      type: LOGIN,
+      payload: {
+        token,
+        role,
+        userId,
+      },
     });
   }
 };
