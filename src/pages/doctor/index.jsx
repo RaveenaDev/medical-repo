@@ -106,7 +106,7 @@ const DoctorOverview = ({ todayAppointments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Default to today's date if props are not provided
   const [internalSelectedDate, setInternalSelectedDate] = useState(
-    dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD"),
   );
   const navigate = useNavigate();
 
@@ -239,11 +239,11 @@ const DoctorOverview = ({ todayAppointments }) => {
 
         start = dayjs(
           `${date.format("YYYY-MM-DD")} ${safeStartTime}`,
-          "YYYY-MM-DD hh:mm A"
+          "YYYY-MM-DD hh:mm A",
         );
         end = dayjs(
           `${date.format("YYYY-MM-DD")} ${safeEndTime}`,
-          "YYYY-MM-DD hh:mm A"
+          "YYYY-MM-DD hh:mm A",
         );
 
         const now = dayjs();
@@ -363,22 +363,22 @@ const DoctorOverview = ({ todayAppointments }) => {
 
   const doctor = useSelector((store) => store.doctor);
   const isLoadingAdmissionRequestToApprove = useSelector(
-    (store) => store.doctor.isLoadingAdmissionRequestToApprove
+    (store) => store.doctor.isLoadingAdmissionRequestToApprove,
   );
   const isLoadingMostCommonDiagnosis = useSelector(
-    (store) => store.doctor.isLoadingMostCommonDiagnosis
+    (store) => store.doctor.isLoadingMostCommonDiagnosis,
   );
   const isLoadingCriticalPatients = useSelector(
-    (store) => store.doctor.isLoadingCriticalPatients
+    (store) => store.doctor.isLoadingCriticalPatients,
   );
   const isLoadingAppointments = useSelector(
-    (store) => store.doctor.isLoadingAppointments
+    (store) => store.doctor.isLoadingAppointments,
   );
   const isLoadingUpcomingEvents = useSelector(
-    (store) => store.doctor.isLoadingUpcomingEvents
+    (store) => store.doctor.isLoadingUpcomingEvents,
   );
   const [EVENTS, setEVENTS] = useState(() =>
-    processEvents(doctor.events || [])
+    processEvents(doctor.events || []),
   );
   useEffect(() => {
     const processed = processEvents(doctor.events || []);
@@ -411,7 +411,7 @@ const DoctorOverview = ({ todayAppointments }) => {
   const doctorId = localStorage.getItem("userId");
 
   const totalAppointments = doctor.totalAppointments?.filter(
-    (appt) => appt.doctor._id === doctorId
+    (appt) => appt.doctor._id === doctorId,
   );
 
   // console.log("Total : ", totalAppointments);
@@ -426,7 +426,7 @@ const DoctorOverview = ({ todayAppointments }) => {
   const buildDateTime = (dateObj, timeStr) =>
     dayjs(
       `${dayjs(dateObj).format("YYYY-MM-DD")} ${timeStr}`,
-      "YYYY-MM-DD hh:mm A"
+      "YYYY-MM-DD hh:mm A",
     );
 
   // Return how many events are "left" relative to NOW if the selected day is today.
@@ -553,12 +553,12 @@ const DoctorOverview = ({ todayAppointments }) => {
   }, [activeModal]);
 
   const requestsToApprove = useSelector(
-    (state) => state.doctor.requestsToApprove
+    (state) => state.doctor.requestsToApprove,
   );
   const filteredRequests = requestsToApprove.filter(
     (req) =>
       (req.sendTo === "Both" || req.sendTo === "Doctor") &&
-      req.approval?.doctor?.approved === false
+      req.approval?.doctor?.approved === false,
   );
 
   // Merge the day-scoped EVENTS with cached all-day events, then filter by selectedEventsDate
@@ -585,12 +585,12 @@ const DoctorOverview = ({ todayAppointments }) => {
   const isSelectedToday = dayjs(selectedEventsDate).isSame(dayjs(), "day");
   const eventsHeaderCount = countEventsForHeader(
     visibleEvents,
-    selectedEventsDate
+    selectedEventsDate,
   );
   const eventsHeaderText = isSelectedToday
     ? `${eventsHeaderCount} events left today`
     : `${eventsHeaderCount} events on ${dayjs(selectedEventsDate).format(
-        "DD MMM YYYY"
+        "DD MMM YYYY",
       )}`;
 
   return (
@@ -652,6 +652,51 @@ const DoctorOverview = ({ todayAppointments }) => {
                   </p>
                   <ChevronRight className={styles.rightArrow} />
                 </button>
+                <>
+                  {/* Backdrop Overlay */}
+                  <div
+                    style={{
+                      display:
+                        activeModal === "admitNewPatient" ? "block" : "none",
+                      position: "fixed",
+                      top: 0,
+                      left: 0,
+                      width: "100vw",
+                      height: "100vh",
+                      backgroundColor: "rgba(0, 0, 0, 0.02)",
+                      zIndex: 50,
+                    }}
+                    onClick={closeModal}
+                  />
+
+                  {/* Modal Panel */}
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: 0,
+                      right: 0,
+                      height: "100vh",
+                      width: "38vw",
+                      background: "#fff",
+                      zIndex: 60,
+                      boxShadow: "-4px 0 24px rgba(0, 0, 0, 0.1)",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "transform 0.3s ease-in-out",
+                      transform:
+                        activeModal === "admitNewPatient"
+                          ? "translateX(0)"
+                          : "translateX(100%)",
+                    }}
+                    onClick={(e) => e.stopPropagation()} // ✅ Prevent click from closing modal
+                  >
+                    <AdmitNewPatient
+                      onClose={closeModal}
+                      requests={filteredRequests}
+                      loading={isLoadingAdmissionRequestToApprove}
+                    />
+                  </div>
+                </>
               </div>
             </Grid>
             {/* <Grid
@@ -1201,7 +1246,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                                   >
                                     {truncateText(
                                       row?.tokenNumber || "N/A",
-                                      13
+                                      13,
                                     )}
                                   </TableCell>
                                   <TableCell
