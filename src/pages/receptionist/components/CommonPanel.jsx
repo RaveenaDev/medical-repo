@@ -128,7 +128,7 @@ const CommonPanel = ({
             size={3}
             sx={{
               borderBottom: isActive("/receptionist/patients")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
@@ -142,7 +142,7 @@ const CommonPanel = ({
             size={3}
             sx={{
               borderBottom: isActive("/receptionist/inPatients")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
@@ -159,7 +159,7 @@ const CommonPanel = ({
             size={3}
             sx={{
               borderBottom: isActive("/receptionist/doctors")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
@@ -178,7 +178,7 @@ const CommonPanel = ({
             size={3}
             sx={{
               borderBottom: isActive("/receptionist/rooms")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
@@ -321,10 +321,10 @@ const CommonPanel = ({
                     sm: "0px 10px",
                     md: "0px 10px",
                   }, // Adjust padding
-                  backgroundColor: "#25307F",
+                  backgroundColor: "#00a378",
                   boxShadow: "0px 4px 4px 0px #C2C2C240",
                   "&:hover": {
-                    background: "#AEC3FF",
+                    background: "#ccf4ea",
                     boxShadow: "none",
                   },
                   "&:active": {

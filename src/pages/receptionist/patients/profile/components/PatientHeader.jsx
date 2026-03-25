@@ -36,7 +36,7 @@ const PatientHeader = ({
           onClick={() => navigate(-1)}
           style={{
             transform: "translateY(4px)",
-            color: "#25307F",
+            color: "#00a378",
             cursor: "pointer",
           }}
         >
@@ -123,7 +123,7 @@ const PatientHeader = ({
             className="box"
             style={{
               cursor: "pointer",
-              background: "#25307f",
+              background: "#00a378",
               padding: "2px 16px",
             }}
             onClick={onClickBtn}

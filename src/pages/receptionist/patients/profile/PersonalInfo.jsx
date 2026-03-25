@@ -46,7 +46,7 @@ const PersonalInfo = ({ patient }) => {
             height: "36vh", // or full height you need
           }}
         >
-          <CircularProgress sx={{ color: "#25307F" }} size={45} />
+          <CircularProgress sx={{ color: "#00a378" }} size={45} />
         </Box>
       ) : (
         <>

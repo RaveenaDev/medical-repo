@@ -223,7 +223,7 @@ const PatientList = () => {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "#25307F",
+                    color: "#00a378",
                     minWidth: "52px", // keeps alignment neat
                     fontWeight: 500,
                   }}
@@ -280,7 +280,7 @@ const PatientList = () => {
                   backgroundColor: "white",
                   borderRadius: "5px",
                   fontSize: { xs: "11px", sm: "14px" },
-                  color: "#25307F",
+                  color: "#00a378",
                   "&:focus": {
                     outline: "none",
                     boxShadow: "none",
@@ -322,7 +322,7 @@ const PatientList = () => {
                   zIndex: 20,
                 }}
               >
-                <CircularProgress sx={{ color: "#25307F" }} />
+                <CircularProgress sx={{ color: "#00a378" }} />
               </Box>
             )}
 
@@ -370,7 +370,7 @@ const PatientList = () => {
                         },
                       }}
                     >
-                      <TableCell sx={{ color: "#25307F", fontWeight: "bold" }}>
+                      <TableCell sx={{ color: "#00a378", fontWeight: "bold" }}>
                         {patient?.patId || "Not Assigned"}
                       </TableCell>
                       <TableCell>
@@ -379,7 +379,7 @@ const PatientList = () => {
                           sx={{
                             fontWeight: "bold",
                             cursor: "pointer",
-                            color: "#25307F",
+                            color: "#00a378",
                           }}
                           onClick={() => handleClick(patient)}
                         >
@@ -508,7 +508,7 @@ const PatientList = () => {
                   zIndex: 20,
                 }}
               >
-                <CircularProgress sx={{ color: "#25307F" }} />
+                <CircularProgress sx={{ color: "#00a378" }} />
               </Box>
             )}
             <>

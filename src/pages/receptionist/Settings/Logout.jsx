@@ -28,7 +28,7 @@ const logout = ({ isLogout, setIsLogout }) => {
         <Box sx={{ display: 'flex' ,flexDirection: "column",justifyContent:'center', marginTop: 3, gap: 2}}>
           <div>
               <Button variant="outlined" onClick={handleClose}
-                      sx={{color:"#878787",textTransform:'none', backgroundColor: "white", borderColor: "#25037F",
+                      sx={{color:"#878787",textTransform:'none', backgroundColor: "white", borderColor: "#00a378",
                           width:'70%',
                           "&:focus": {
                               outline: "none",
@@ -38,7 +38,7 @@ const logout = ({ isLogout, setIsLogout }) => {
               </Button>
           </div>
           <div>
-              <Button variant="contained" color="error" onClick={handleClick} sx={{color:"white",textTransform:'none', backgroundColor: "#25037F",
+              <Button variant="contained" color="error" onClick={handleClick} sx={{color:"white",textTransform:'none', backgroundColor: "#00a378",
                   width:'70%',
                   "&:focus": {
                       outline: "none",

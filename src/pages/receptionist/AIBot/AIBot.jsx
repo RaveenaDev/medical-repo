@@ -831,9 +831,9 @@ const AIBot = ({
                   onClick={toggleListening}
                   size="large"
                   sx={{
-                    bgcolor: listening ? "#d32f2f" : "#25307F",
+                    bgcolor: listening ? "#d32f2f" : "#00a378",
                     color: "white",
-                    "&:hover": { bgcolor: listening ? "#b71c1c" : "#1b235f" },
+                    "&:hover": { bgcolor: listening ? "#b71c1c" : "#00a378" },
                   }}
                 >
                   {listening ? <MicOffIcon /> : <MicIcon />}

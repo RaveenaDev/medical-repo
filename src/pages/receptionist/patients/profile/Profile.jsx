@@ -150,7 +150,7 @@ const Profile = (props) => {
                         borderRadius: "50%",
                         marginBottom: "2px",
                         fontSize: "2rem",
-                        color: "#25307F",
+                        color: "#00a378",
                         bgcolor: "#e3e3e3",
                       }}
                     >
@@ -161,7 +161,7 @@ const Profile = (props) => {
                         margin: "2px 0",
                         fontSize: "20px",
                         fontWeight: 500,
-                        color: "#25307F",
+                        color: "#00a378",
                       }}
                     >
                       {patient.name}
@@ -185,7 +185,7 @@ const Profile = (props) => {
                       }}
                     >
                       <div>
-                        <h5 style={{ color: "#25307F", fontSize: "24px" }}>
+                        <h5 style={{ color: "#00a378", fontSize: "24px" }}>
                           {completed}
                         </h5>
                         <p style={{ fontSize: "14px", color: "#878787" }}>
@@ -193,7 +193,7 @@ const Profile = (props) => {
                         </p>
                       </div>
                       <div>
-                        <h5 style={{ fontSize: "24px", color: "#25307F" }}>
+                        <h5 style={{ fontSize: "24px", color: "#00a378" }}>
                           {upcoming}
                         </h5>
                         <p style={{ fontSize: "14px", color: "#878787" }}>
@@ -207,9 +207,9 @@ const Profile = (props) => {
                         marginTop: "16px",
                         padding: "12px 10px",
                         width: "100%",
-                        border: "2px solid #25307F",
+                        border: "2px solid #00a378",
                         backgroundColor: "transparent",
-                        color: "#25307F",
+                        color: "#00a378",
                         fontSize: "14px",
                         fontWeight: "bold",
                         borderRadius: "6px",
@@ -217,12 +217,12 @@ const Profile = (props) => {
                         transition: "all 0.3s ease",
                       }}
                       onMouseOver={(e) => {
-                        e.target.style.backgroundColor = "#25307F";
+                        e.target.style.backgroundColor = "#00a378";
                         e.target.style.color = "#ffffff";
                       }}
                       onMouseOut={(e) => {
                         e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "#25307F";
+                        e.target.style.color = "#00a378";
                       }}
                       onClick={() => setShowModal(true)}
                     >
@@ -278,10 +278,10 @@ const Profile = (props) => {
                           startIcon={<Email />}
                           sx={{
                             backgroundColor: "#fff",
-                            color: "#007bff",
-                            border: "1px solid #007bff",
+                            color: "#00a378",
+                            border: "1px solid #00a378",
                             "&:hover": {
-                              backgroundColor: "#007bff",
+                              backgroundColor: "#00a378",
                               color: "#fff",
                             },
                           }}
@@ -295,11 +295,11 @@ const Profile = (props) => {
                         <Button
                           onClick={() => setShowModal(false)}
                           sx={{
-                            color: "#25307F",
-                            border: "1px solid #25307F",
+                            color: "#00a378",
+                            border: "1px solid #00a378",
                             boxShadow: "0px 4px 4px 0px #C2C2C240",
                             "&:hover": {
-                              backgroundColor: "#25307F",
+                              backgroundColor: "#00a378",
                               color: "#fff",
                             },
                           }}
