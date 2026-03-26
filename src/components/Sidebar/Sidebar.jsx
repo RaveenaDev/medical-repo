@@ -233,7 +233,7 @@ const Sidebar = ({ role, onOpenAppointment, onCloseAppointment }) => {
                   ref={buttonRef}
                   onClick={() => setShowDoctorNotes((prev) => !prev)}
                   style={{
-                    backgroundColor: "#DAE4FF",
+                    backgroundColor: "#cde8e1",
                     color: "#25307F",
                     height: "140px",
                     border: "none",

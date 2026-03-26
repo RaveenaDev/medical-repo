@@ -196,7 +196,7 @@ const Departments1 = (props) => {
               height: "50vh", // or full height you need
             }}
           >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
+            <CircularProgress sx={{ color: "#00a378" }} size={58} />
           </Box>
         ) : (
           <>
@@ -223,10 +223,10 @@ const Departments1 = (props) => {
                       sm: "0px 10px",
                       md: "4px 10px",
                     }, // Adjust padding
-                    backgroundColor: "#25307F",
+                    backgroundColor: "#00a378",
                     boxShadow: "0px 4px 4px 0px #C2C2C240",
                     "&:hover": {
-                      background: "#AEC3FF",
+                      background: "#8bbdb0",
                     },
                     "&:active": {
                       backgroundColor: "#181F52",

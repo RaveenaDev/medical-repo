@@ -131,7 +131,7 @@ const PatientProfile = () => {
                   borderRadius: "50%",
                   marginBottom: "2px",
                   fontSize: "2rem",
-                  color: "#25307F",
+                  color: "#00a378",
                   bgcolor: "#e3e3e3",
                 }}
               >
