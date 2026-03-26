@@ -64,7 +64,7 @@
       box-sizing: border-box;
     }
 
-    h3 { font-weight: 500; color: #0f1955; margin: 4px 0; }
+    h3 { font-weight: 500; color: #00a378; margin: 4px 0; }
     .MuiTextField-root { width: 100%; }
   }
 
@@ -73,9 +73,9 @@
     grid-template-columns: 1fr;
     gap: 12px;
 
-    p { margin: 0; font-weight: 500; color: #0f1955; }
-    .submit-btn { background: #25307f; color: #fff; }
-    .submit-btn:hover { background: #1e2a6a; }
+    p { margin: 0; font-weight: 500; color: #00a378; }
+    .submit-btn { background: #00a378; color: #fff; }
+    .submit-btn:hover { background: #00a378; }
   }
 
   /* Calendar Styles */
@@ -105,12 +105,12 @@
     &:hover { background: #eef2ff !important; }
   }
   .react-calendar__tile--active {
-    background: #25307f !important;
+    background: #00a378 !important;
     color: black !important;
   }
   .react-calendar__tile--now {
     background: #f6f7ff !important;
-    border: 1.5px solid #25307f !important;
+    border: 1.5px solid #00a378 !important;
   }
   .react-calendar__tile:disabled {
     background: #fafbff !important;
@@ -140,7 +140,7 @@
   .bar {
     width: 4px;
     height: 8px;
-    color: #25307f; /* bot */
+    color: #00a378; /* bot */
     
     background-image: radial-gradient(circle at center, currentColor 2px, transparent 2.5px);
     background-size: 4px 7px;

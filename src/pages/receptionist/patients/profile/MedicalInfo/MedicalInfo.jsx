@@ -87,7 +87,7 @@ const MedicalInfo = ({
   if (!haveAny) {
     return (
       <>
-        <h3 style={{ color: "#25307F", fontWeight: 500 }}>Medical Info</h3>
+        <h3 style={{ color: "#00a378", fontWeight: 500 }}>Medical Info</h3>
         <div
           style={{
             width: "100%",
@@ -172,7 +172,7 @@ const MedicalInfo = ({
                       fontSize: 13,
                     }}
                   >
-                    <div style={{ fontWeight: 600, color: "#25307F" }}>
+                    <div style={{ fontWeight: 600, color: "#00a378" }}>
                       {e.type === "consultation"
                         ? "Consulted At"
                         : "Admitted At"}
@@ -224,7 +224,7 @@ const MedicalInfo = ({
                     backgroundColor: "white",
                     borderRadius: "50%",
                     padding: "1px",
-                    color: "#25307F",
+                    color: "#00a378",
                   }}
                 />
               }
@@ -232,10 +232,10 @@ const MedicalInfo = ({
               sx={{
                 padding: "6px 15px",
                 gap: "28px",
-                borderColor: "#25307F",
+                borderColor: "#00a378",
                 borderRadius: "20px",
                 textTransform: "none",
-                backgroundColor: "#25307F",
+                backgroundColor: "#00a378",
                 fontSize: "12px",
                 color: "#ffffff",
               }}

@@ -248,7 +248,7 @@ const Login = (props) => {
       ) : (
         <div style={{ display: "flex", alignItems: "center", height: "100vh" }}>
           <div className={styles.login}>
-            <p className={styles.login__title}>Login</p>
+            <p className={styles.login__title} style={{color:'#1A8168'}}>LOGIN</p>
             <Stack component="form" spacing={3} noValidate autoComplete="off">
               <TextField
                 id="user_id"
@@ -276,6 +276,7 @@ const Login = (props) => {
                     },
                     "&.Mui-focused fieldset": {
                       borderWidth: "2px", // Keep bold on focus
+                      borderColor: "black",
                     },
                   },
                 }}
@@ -319,6 +320,7 @@ const Login = (props) => {
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     borderWidth: "2px", // Keep bold on focus
+                    borderColor: "black",
                   },
                 }}
               />
@@ -345,11 +347,12 @@ const Login = (props) => {
                 <Grid size={6} sx={{ display: "flex" }}>
                   <Box
                     sx={{
-                      backgroundColor: "#25307F",
-                      color: "white",
+                      backgroundColor: "#ffffff",
+                      color: "#000000",
                       padding: "10px 2px",
                       paddingLeft: "12px",
                       borderRadius: "8px",
+                      border: '2px solid #b4b4b4',
                       textAlign: "center",
                       fontSize: "3vh", // Bigger font size
                       letterSpacing: "0.8rem", // Gap between digits
@@ -404,6 +407,7 @@ const Login = (props) => {
                         },
                         "&.Mui-focused fieldset": {
                           borderWidth: "2px", // Keep bold on focus
+                          borderColor: "black",
                         },
                       },
                     }}
@@ -429,12 +433,12 @@ const Login = (props) => {
                   fontSize: "24px",
                   height: "55px",
                   textTransform: "capitalize",
-                  backgroundColor: "#25307F",
+                  backgroundColor: "#00a378",
                   borderRadius: "8px",
                   border: "none", // Remove any border
                   boxShadow: "none", // Remove any box shadow that might look like a border
                   "&:hover": {
-                    backgroundColor: "#1F276B", // Optional: adjust hover color without border
+                    backgroundColor: "#007C5E", // Optional: adjust hover color without border
                     boxShadow: "none", // Remove hover shadow
                   },
                 }}
@@ -472,7 +476,7 @@ const Login = (props) => {
                     variant="text"
                     sx={{
                       fontSize: "17px",
-                      color: "#0150EA",
+                      color: "#00a378",
                       textTransform: "capitalize",
                       padding: "0px",
                       fontWeight: 300,

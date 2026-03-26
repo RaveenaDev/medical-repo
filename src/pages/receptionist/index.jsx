@@ -496,7 +496,7 @@ function Receptionist(props) {
 
                                   backgroundColor:
                                     activeBox === box.id
-                                      ? "#D6E4FF"
+                                      ? "#ccf4ea"
                                       : "#F1F1F1",
                                   px: { sm: 3, md: 5, lg: 7 },
                                   height: 55,
@@ -508,7 +508,7 @@ function Receptionist(props) {
                                   cursor: "pointer",
                                   borderBottom:
                                     activeBox === box.id
-                                      ? "3.5px solid #25307F"
+                                      ? "3.5px solid #00a378"
                                       : "none",
                                   transition: "all 0.3s ease-in-out",
                                 }}
@@ -520,7 +520,7 @@ function Receptionist(props) {
                                     fontWeight: 600,
                                     color:
                                       activeBox === box.id
-                                        ? "#25307F"
+                                        ? "#00a378"
                                         : " #4A4A4A",
                                   }}
                                 >

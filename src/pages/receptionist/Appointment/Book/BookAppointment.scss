@@ -117,7 +117,7 @@
       gap: 10px;
 
       .submit-btn {
-        background: #25307f;
+        background: #00a378;
       }
 
       .submit-btn:hover {
@@ -132,7 +132,7 @@
     }
   }
   .react-calendar {
-    background: #eaecff !important;
+    background: #e3f7f2 !important;
     border: none;
     border-radius: 8px;
     padding: 10px;
@@ -145,7 +145,7 @@
   }
 
   .react-calendar__tile {
-    color: #181f52 !important; // Change text color
+    color: #00a378 !important; // Change text color
     font-weight: 500;
     @media (max-width: 768px) {
       padding: 8px 0;
@@ -156,17 +156,17 @@
   }
 
   .react-calendar__tile--active {
-    background: #181f52 !important;
+    background: #00a378 !important;
     color: #ffffff !important;
     border-radius: 5px;
   }
 
   .react-calendar__tile:hover {
-    background: #aeb4ff !important;
+    background: #e3f7f2 !important;
     border-radius: 5px;
   }
   .react-calendar__tile:disabled {
-    background: #eaecff !important; /* Same background as regular tiles */
+    background: #e3f7f2 !important; /* Same background as regular tiles */
     color: gray !important; /* Make text gray */
     opacity: 1 !important; /* Prevent faded look */
     cursor: not-allowed !important;
@@ -178,7 +178,7 @@
   }
 
   .react-calendar__tile--now {
-    background: #eaecff;
-    border: 1.5px solid #181f52;
+    background: #e3f7f2;
+    border: 1.5px solid #00a378;
   }
 }

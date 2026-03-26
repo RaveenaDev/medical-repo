@@ -282,14 +282,14 @@ const BookAppointment = ({
                 dispatch(removeBookAppointmentData());
               }}
               sx={{
-                backgroundColor: "#25307F",
+                backgroundColor: "#00a378",
                 color: "white",
                 textTransform: "none",
                 fontSize: { xs: "14px", sm: "15px" },
                 py: 1.2,
                 borderRadius: "10px",
                 "&:hover": {
-                  backgroundColor: "#1f2766",
+                  backgroundColor: "#ccf4ea",
                 },
                 "&:focus": {
                   outline: "none",
