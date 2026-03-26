@@ -249,7 +249,7 @@ const EditPatient = ({ onClose, patientDetails }) => {
         >
           <path
             d="M10 23.1075L16.5538 16.5538L23.1075 23.1075M23.1075 10L16.5525 16.5538L10 10"
-            stroke="#5461BE"
+            stroke="#00a378"
             strokeWidth="1.875"
             strokeLinecap="round"
             strokeLinejoin="round"

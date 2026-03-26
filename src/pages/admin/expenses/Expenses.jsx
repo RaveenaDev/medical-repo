@@ -109,7 +109,7 @@ const Expenses = ({ setIsSignUpOrLogin }) => {
               height: "50vh",
             }}
           >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
+            <CircularProgress sx={{ color: "#00a378" }} size={58} />
           </Box>
         ) : (
           <>

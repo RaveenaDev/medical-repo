@@ -350,7 +350,7 @@ function Admin(props) {
             <Box
               sx={{
                 width: "95%",
-                backgroundColor: "#25307F",
+                backgroundColor: "#469983",
                 // px: 3,
                 paddingLeft: 1,
                 marginLeft: 1,
@@ -405,7 +405,7 @@ function Admin(props) {
                         width: 12,
                         height: 12,
                         borderRadius: "50%",
-                        backgroundColor: "#3DB461",
+                        backgroundColor: "#cbefd6",
                       }}
                     />
                     <p style={{ color: "#fff" }}>Completed</p>
@@ -556,7 +556,7 @@ function Admin(props) {
                       {visibleBars.completed && (
                         <Bar
                           dataKey="completed"
-                          fill="#3DB461"
+                          fill="#cbefd6"
                           radius={[10, 10, 0, 0]}
                           barSize={10}
                         />
@@ -635,25 +635,25 @@ function Admin(props) {
                         type="monotone"
                         dataKey="uv"
                         stroke="none"
-                        fill="#D7DCFF"
+                        fill="#81c9b6"
                       />
                       <Area
                         type="monotone"
                         dataKey="pv"
                         stroke="none"
-                        fill="#7A8AFF"
+                        fill="#2dcba1"
                       />
                       <Area
                         type="monotone"
                         dataKey="amt"
                         stroke="none"
-                        fill="#25307F"
+                        fill="#00a378"
                       />
                       <Area
                         type="monotone"
                         dataKey="ayu"
                         stroke="none"
-                        fill="#1F2659"
+                        fill="#004a36"
                       />
 
                       {/* Move Grid Here to Appear Above */}

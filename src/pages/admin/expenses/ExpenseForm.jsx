@@ -79,7 +79,7 @@ const ExpenseForm = () => {
         onClick={() => setOpen(true)}
         sx={{
           color: "#fff",
-          backgroundColor: "#25307F",
+          backgroundColor: "#00a378",
 
           "&:hover": { background: "#AEC3FF" },
         }}

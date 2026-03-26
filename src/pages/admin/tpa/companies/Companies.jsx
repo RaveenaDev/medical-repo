@@ -80,9 +80,9 @@ const Companies = () => {
           className={styles.btnHeader}
           sx={{
             textTransform: "none",
-            backgroundColor: "#25307F",
+            backgroundColor: "#00a378",
             color: "white",
-            "&:hover": { background: "#AEC3FF" },
+            "&:hover": { background: "#98c3b8" },
           }}
           onClick={() => setModalOpen(true)}
         >
@@ -96,15 +96,15 @@ const Companies = () => {
           className={styles.btnHeader}
           sx={{
             textTransform: "none",
-            backgroundColor: "#25307F",
+            backgroundColor: "#00a378",
             color: "white",
             marginLeft: "1vw",
-            "&:hover": { background: "#AEC3FF" },
+            "&:hover": { background: "#98c3b8" },
           }}
           disabled={uploading}
         >
           {uploading ? (
-            <CircularProgress size={20} sx={{ color: "#25307F" }} />
+            <CircularProgress size={20} sx={{ color: "#00a378" }} />
           ) : (
             <>
               <Upload className={styles.plusIcon} />
@@ -130,7 +130,7 @@ const Companies = () => {
             bgcolor: "#F1F1F1",
           }}
         >
-          <CircularProgress sx={{ color: "#25307F" }} size={55} />
+          <CircularProgress sx={{ color: "#00a378" }} size={55} />
         </Box>
       ) : (
         <div className={styles.billingsTable} style={{ position: "relative" }}>

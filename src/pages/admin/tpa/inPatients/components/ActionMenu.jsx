@@ -24,7 +24,7 @@ const ActionMenu = ({ patient }) => {
   return (
     <>
       {/* Action Menu Icon */}
-      <IconButton onClick={handleClick} size="small" sx={{ color: "#25307F" }}>
+      <IconButton onClick={handleClick} size="small" sx={{ color: "#00a378" }}>
         <EllipsisVertical size={20} />
       </IconButton>
 

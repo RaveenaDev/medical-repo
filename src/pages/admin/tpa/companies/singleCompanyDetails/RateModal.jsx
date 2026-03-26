@@ -415,7 +415,7 @@ const RateModal = ({ companyId, open, handleClose }) => {
         <Button
           onClick={handleSubmit}
           variant="contained"
-          sx={{ mt: 1, background: "#25307F" }}
+          sx={{ mt: 1, background: "#00a378" }}
         >
           Done
         </Button>

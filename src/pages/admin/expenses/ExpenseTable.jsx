@@ -63,7 +63,7 @@ const ExpenseTable = ({
         <TableBody>
           {expenses.length ? (
             expenses.map((exp) => (
-              <TableRow key={exp._id} sx={{ backgroundColor: "#F1F5FF" }}>
+              <TableRow key={exp._id} sx={{ backgroundColor: "#e1f5f0" }}>
                 <TableCell>{exp.expenseType}</TableCell>
                 <TableCell align="center">
                   {exp.amount

@@ -19,8 +19,9 @@ const Logo = () => {
           marginTop: "0rem",
           marginBottom: "0",
         }}
-        src="/newlogo.png"
-//         src="/sidebar_logo.jpg"
+        // src="/newlogo.png"
+        src={`${import.meta.env.BASE_URL}newlogo.png`}
+        // src="/sidebar_logo.jpg"
       />
     </div>
   );

@@ -372,7 +372,7 @@ const EditRateModal = ({ companyId, open, handleClose, service }) => {
                 <Button
                     onClick={handleSubmit}
                     variant="contained"
-                    sx={{ mt: 2, background: "#25307F" }}
+                    sx={{ mt: 2, background: "#00a378" }}
                 >
                     Done
                 </Button>
