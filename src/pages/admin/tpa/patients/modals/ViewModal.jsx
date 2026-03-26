@@ -585,11 +585,32 @@ const ViewModal = ({ onClose, record }) => {
               onClick={() => setActiveModal(null)}
             />
             <div className={styles.billModal}>
-              <ViewBill
-                record={record}
-                onClose={closeBill}
-                estimatedBill={estimatedBill}
-              />
+              {estimatedBill?.categories?.length > 0 ? (
+                <ViewBill
+                  record={record}
+                  onClose={closeBill}
+                  estimatedBill={estimatedBill}
+                />
+              ) : (
+                <div>
+                  <div className={styles.crossContainer}>
+                    <X size={20} onClick={closeBill} />
+                  </div>
+                  <div className={styles.container}>
+                    <div
+                      style={{
+                        padding: "5rem 2rem",
+                        textAlign: "center",
+                        fontSize: "32px",
+                        color: "#666",
+                      }}
+                    >
+                      {" "}
+                      No Bill Available
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </>
         )}
