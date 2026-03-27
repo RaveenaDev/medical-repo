@@ -264,7 +264,7 @@ const PatientsList = () => {
               height: "36vh", // or full height you need
             }}
           >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
+            <CircularProgress sx={{ color: "#00a378" }} size={58} />
           </Box>
         ) : (
           <div className=" toAdmitSliderWrapper">

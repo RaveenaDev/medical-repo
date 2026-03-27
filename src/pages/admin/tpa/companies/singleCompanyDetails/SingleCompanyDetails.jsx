@@ -180,7 +180,7 @@ const SingleCompanyDetails = (props) => {
                   display: "flex",
                   gap: 1.5,
                   textTransform: "none",
-                  backgroundColor: "#25307F",
+                  backgroundColor: "#00a378",
                   color: "white",
                   "&:hover": { background: "#AEC3FF" },
                 }}
@@ -270,8 +270,8 @@ const SingleCompanyDetails = (props) => {
                           {/*</span>*/}
                           <button
                             style={{
-                              border: "1px solid #25307F",
-                              color: "#25307F",
+                              border: "1px solid #00a378",
+                              color: "#00a378",
                               fontSize: "1rem",
                               backgroundColor: "transparent",
                               padding: "4px",

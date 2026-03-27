@@ -70,7 +70,7 @@ const ProgressTracker = ({ patient }) => {
             height: "50vh", // or full height you need
           }}
         >
-          <CircularProgress sx={{ color: "#25307F" }} size={50} />
+          <CircularProgress sx={{ color: "#00a378" }} size={50} />
         </Box>
       ) : (
         <div

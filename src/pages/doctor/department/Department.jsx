@@ -56,7 +56,7 @@ const getDateRange = (filterType) => {
 };
 
 /* A simple color palette for the Pie chart slices */
-const COLORS = ["#25307F", "#5461BE", "#586EB4", "#DAE4FF"];
+const COLORS = ["#00a378", "#3a9e83", "#4d796d", "#DAE4FF"];
 const dynamicData = null; // using for Alerts and Notifs
 
 const Department = () => {
@@ -569,7 +569,7 @@ const Department = () => {
           )}
           <div className={style.center}>
             {/*** Card 1: Number of medical procedures ***/}
-            <div className={style.card} style={{ backgroundColor: "#25307F" }}>
+            <div className={style.card} style={{ backgroundColor: "#259476" }}>
               <div className={style.cardHeader}>
                 <h3>Number of medical procedures</h3>
                 <div className={style.filter}>
@@ -707,7 +707,7 @@ const Department = () => {
                     height: "36vh", // or full height you need
                   }}
                 >
-                  <CircularProgress sx={{ color: "#25307F" }} size={50} />
+                  <CircularProgress sx={{ color: "#00a378" }} size={50} />
                 </Box>
               ) : (
                 <div className={style.cardContent}>

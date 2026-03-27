@@ -79,7 +79,7 @@ const ExpenseForm = () => {
         onClick={() => setOpen(true)}
         sx={{
           color: "#fff",
-          backgroundColor: "#25307F",
+          backgroundColor: "#00a378",
 
           "&:hover": { background: "#AEC3FF" },
         }}
@@ -155,10 +155,10 @@ const ExpenseForm = () => {
               onClick={handleSubmit}
               sx={{
                 color: "#fff",
-                backgroundColor: "#25307F",
+                backgroundColor: "#00a378",
                 height: "45px",
                 mt: 2,
-                "&:hover": { background: "#AEC3FF" },
+                "&:hover": { background: "#abd7cc" },
               }}
             >
               Submit Expense
