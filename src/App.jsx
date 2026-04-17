@@ -82,7 +82,13 @@ function App() {
   }, []);
 
   useEffect(() => {
-    SplashScreen.hide();
+    const hideSplash = async () => {
+      setTimeout(async () => {
+        await SplashScreen.hide();
+      }, 800); // small delay for smooth UX
+    };
+
+    hideSplash();
   }, []);
   const isMobile = useMediaQuery("(max-width:768px)");
 
