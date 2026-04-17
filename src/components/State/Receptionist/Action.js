@@ -883,6 +883,7 @@ export const submitConsultation = (consultationData) => async (dispatch) => {
     const msg =
       error?.response?.data?.message ||
       error?.response?.data?.error ||
+      error.message ||
       "Please confirm all the fields!";
     toast.error(msg, { position: "bottom-right", autoClose: 2000 });
     throw error;

@@ -228,7 +228,7 @@ function Receptionist(props) {
     setCompleteOpen(true);
   };
 
-  // ✅ NEW: helper to refresh all buckets
+  //  NEW: helper to refresh all buckets
   const refreshAllBuckets = () => {
     const startDateISO = selectedDate.startOf("day").toISOString();
     const endDateISO = selectedDate.endOf("day").toISOString();

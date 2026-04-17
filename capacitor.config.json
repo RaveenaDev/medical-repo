@@ -9,8 +9,9 @@
     "SplashScreen": {
       "launchShowDuration": 2000,
       "launchAutoHide": false,
-      "backgroundColor": "#F1F1F1",
-      "androidScaleType": "CENTER_INSIDE",
+      "backgroundColor": "#00a378",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
       "showSpinner": false
     }
   },

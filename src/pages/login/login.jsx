@@ -189,7 +189,7 @@ const Login = (props) => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  background: "#25307F",
+                  background: "#00a378",
                   color: "white",
                   borderRadius: "8px",
                   px: 2,
@@ -222,7 +222,7 @@ const Login = (props) => {
                 sx={{
                   mt: 1,
                   height: "48px",
-                  backgroundColor: "#25307F",
+                  backgroundColor: "#00a378",
                   borderRadius: "8px",
                   fontSize: "16px",
                 }}
@@ -237,7 +237,11 @@ const Login = (props) => {
 
               <Button
                 variant="text"
-                sx={{ fontSize: "14px", alignSelf: "flex-end" }}
+                sx={{
+                  fontSize: "14px",
+                  alignSelf: "flex-end",
+                  color: "#00a378",
+                }}
                 onClick={handleForgetPassword}
               >
                 Forgot password?
@@ -248,7 +252,9 @@ const Login = (props) => {
       ) : (
         <div style={{ display: "flex", alignItems: "center", height: "100vh" }}>
           <div className={styles.login}>
-            <p className={styles.login__title} style={{color:'#1A8168'}}>LOGIN</p>
+            <p className={styles.login__title} style={{ color: "#1A8168" }}>
+              LOGIN
+            </p>
             <Stack component="form" spacing={3} noValidate autoComplete="off">
               <TextField
                 id="user_id"
@@ -352,7 +358,7 @@ const Login = (props) => {
                       padding: "10px 2px",
                       paddingLeft: "12px",
                       borderRadius: "8px",
-                      border: '2px solid #b4b4b4',
+                      border: "2px solid #b4b4b4",
                       textAlign: "center",
                       fontSize: "3vh", // Bigger font size
                       letterSpacing: "0.8rem", // Gap between digits

@@ -41,6 +41,10 @@ const CompleteAppointmentModal = ({
 
   const handleSubmit = async () => {
     if (!isReady || submitting) return;
+    if (!file || file.size === 0) {
+      alert("Please upload a valid image");
+      return;
+    }
     try {
       setSubmitting(true);
       await onComplete?.({ file, note, appointment });
@@ -65,11 +69,26 @@ const CompleteAppointmentModal = ({
               Upload Image / File <span style={{ color: "#d32f2f" }}>*</span>
             </Typography>
             <input
+              id="upload-input"
               type="file"
-              accept="image/*,application/pdf"
-              capture="environment"
+              accept="image/*"
+              capture="camera"
+              style={{ display: "none" }}
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             />
+
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => document.getElementById("upload-input").click()}
+              sx={{
+                textTransform: "none",
+                borderRadius: 2,
+                py: 1.2,
+              }}
+            >
+              {file ? "Change Image" : "Upload Image"}
+            </Button>
             {file && (
               <Typography variant="caption" sx={{ display: "block", mt: 0.5 }}>
                 Selected: {file.name}

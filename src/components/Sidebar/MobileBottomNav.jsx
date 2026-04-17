@@ -37,7 +37,6 @@ const MobileBottomNav = ({
     >
       {/* FAB */}
       <Fab
-        color="primary"
         size={isSmallMobile ? "medium" : "large"}
         onClick={() => {
           if (!activePath.startsWith("/receptionist")) {
@@ -51,6 +50,7 @@ const MobileBottomNav = ({
           });
         }}
         sx={{
+          bgcolor: "#00a378",
           position: "fixed",
           bottom: "calc(28px + env(safe-area-inset-bottom))",
           left: "50%",
@@ -60,7 +60,7 @@ const MobileBottomNav = ({
           boxShadow: "0px 6px 16px rgba(0,0,0,0.25)",
         }}
       >
-        <AddIcon />
+        <AddIcon sx={{ color: "#FFFFFF" }} />
       </Fab>
 
       {/* Bottom Nav */}
@@ -88,6 +88,13 @@ const MobileBottomNav = ({
             },
             "& .MuiBottomNavigationAction-label": {
               fontSize: "0.7rem",
+            },
+            "& .Mui-selected": {
+              color: "#00a378",
+            },
+
+            "& .Mui-selected .MuiSvgIcon-root": {
+              color: "#00a378",
             },
           }}
         >
