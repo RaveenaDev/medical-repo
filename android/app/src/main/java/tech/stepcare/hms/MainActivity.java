@@ -1,4 +1,4 @@
-package tech.healthismplus.clinic;
+package tech.healthismPlus.clinic;
 
 import com.getcapacitor.BridgeActivity;
 

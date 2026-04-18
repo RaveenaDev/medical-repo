@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "tech.healthismplus.clinic",
+  "applicationId": "tech.healthismPlus.clinic",
   "variantName": "release",
   "elements": [
     {

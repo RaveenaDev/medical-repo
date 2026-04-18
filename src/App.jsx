@@ -177,9 +177,9 @@ function App() {
               element={
                 <>
                   {/* Hide for desktop */}
-                  {/* <Navigate to="/login" replace /> */}
+                  <Navigate to="/login" replace />
                   {/* Hide for mobile */}
-                  <Base setIsSignUpOrLogin={setIsSignUpOrLogin} />
+                  {/* <Base setIsSignUpOrLogin={setIsSignUpOrLogin} /> */}
                 </>
               }
             />
