@@ -1,4 +1,4 @@
-package tech.stepcare.hms;
+package tech.healthismplus.clinic;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Stepcare</string>
-    <string name="title_activity_main">Stepcare</string>
-    <string name="package_name">tech.stepcare.hms</string>
-    <string name="custom_url_scheme">tech.stepcare.hms</string>
+    <string name="app_name">HealthismPlus Clinic</string>
+    <string name="title_activity_main">HealthismPlus Clinic</string>
+    <string name="package_name">tech.healthismPlus.clinic</string>
+    <string name="custom_url_scheme">tech.healthismPlus.clinic</string>
 </resources>

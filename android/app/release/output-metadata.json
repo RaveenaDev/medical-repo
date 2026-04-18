@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "tech.stepcare.hms",
+  "applicationId": "tech.healthismplus.clinic",
   "variantName": "release",
   "elements": [
     {

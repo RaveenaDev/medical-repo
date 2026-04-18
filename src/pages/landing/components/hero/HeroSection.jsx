@@ -23,7 +23,7 @@ const HeroSection = () => {
             <h2>AI-Powered Hospital Management System</h2>
             <h2>for Smarter Care Delivery</h2>
             <p>
-              Transform hospital operations with StepCare — the intelligent HMS
+              Transform hospital operations with HealthismPlus Clinic — the intelligent HMS
               software built to optimize scheduling, streamline workflows, and
               enhance patient care through automation and real-time insights.{" "}
             </p>

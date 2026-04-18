@@ -1,6 +1,6 @@
 {
-  "appId": "tech.stepcare.hms",
-  "appName": "Stepcare",
+  "appId": "tech.healthismplus.clinic",
+  "appName": "HealthismPlus Clinic",
   "webDir": "dist",
   "plugins": {
     "StatusBar": {

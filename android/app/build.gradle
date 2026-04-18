@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "tech.stepcare.hms"
+    namespace = "tech.healthismPlus.clinic"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "tech.stepcare.hms"
+        applicationId "tech.healthismPlus.clinic"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
