@@ -47,7 +47,7 @@ const InPatients = (props) => {
   const totalFilteredInPatients = doctor.totalFilteredInpatients;
   const filteredInPatients = doctor.filteredInPatients;
   const isLoadingFilteredInPatients = useSelector(
-    (store) => store.receptionist.isLoadingFilteredInPatients
+    (store) => store.receptionist.isLoadingFilteredInPatients,
   );
 
   const debouncedSearch = useDebounce(searchQuery, 300);
@@ -57,7 +57,7 @@ const InPatients = (props) => {
 
   useEffect(() => {
     dispatch(
-      getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch)
+      getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch),
     );
   }, [dispatch, sortOrder, page, rowsPerPage, filters, debouncedSearch]);
 
@@ -95,7 +95,7 @@ const InPatients = (props) => {
   const handleSearchResults = () => {
     // admin = null;
     dispatch(
-      getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch)
+      getFilteredInpatients(filters, page, rowsPerPage, debouncedSearch),
     );
     setFilterDrawerOpen(false);
   };
@@ -141,9 +141,22 @@ const InPatients = (props) => {
   );
 
   return (
-    <>
-      <div style={{ position: "relative", top: "7px", paddingLeft: "8px",width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "2rem" : 0, }}>
+    <div
+      style={{
+        background: "#f1f1f1",
+        height: "99dvh",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          top: "7px",
+          paddingLeft: "8px",
+          width: isTablet ? "90%" : "98%",
+          marginLeft: isTablet ? "2rem" : 0,
+        }}
+      >
         <CommonPanel />
       </div>
       <div className={styles.patientsHeader}>
@@ -160,11 +173,11 @@ const InPatients = (props) => {
         </div>
         <hr />
         <div className={styles.headerBottom}>
-          <span className={styles.patientCount}>
-            {totalFilteredInPatients} <span>Inpatients</span>
-          </span>
-          <div className={styles.verticalDivider}></div>
-          <div className={styles.sortFilterSection}>
+          <div className={styles.leftHeaderSection}>
+            <span className={styles.patientCount}>
+              {totalFilteredInPatients} <span>Inpatients</span>
+            </span>
+            <div className={styles.verticalDivider}></div>
             <div className={styles.sortBy}>
               <span>Sort by:</span>
               <Select
@@ -190,7 +203,8 @@ const InPatients = (props) => {
                 <MenuItem value="asc">Oldest to Newest</MenuItem>
               </Select>
             </div>
-
+          </div>
+          <div className={styles.sortFilterSection}>
             <div className={styles.filterSearch}>
               <div className={styles["search-wrapper"]}>
                 <Search size={18} className={styles["search-icon"]} />
@@ -211,7 +225,7 @@ const InPatients = (props) => {
                 onClick={() => setFilterDrawerOpen(true)}
                 className={`${styles.filter} ${styles.boxStyle}`}
               >
-                <FiFilter fill="#25307f" />
+                <FiFilter fill="#00a378" />
                 <span>Filter</span>
               </div>
             </div>
@@ -260,13 +274,13 @@ const InPatients = (props) => {
                             <div className={styles.patientName}>
                               {truncateText(
                                 patient?.name || "Not Assigned",
-                                15
+                                15,
                               )}
                             </div>
                             <div className={styles.patientEmail}>
                               {truncateText(
                                 patient?.phone || "Not Assigned",
-                                15
+                                15,
                               )}
                             </div>
                           </div>
@@ -295,9 +309,6 @@ const InPatients = (props) => {
                             {patient?.status}
                           </span>
                         </td>
-                        {/*<td className={styles.actions}>*/}
-                        {/*    <BsThreeDotsVertical className={styles.menuIcon}/>*/}
-                        {/*</td>*/}
                       </tr>
                     ))}
                   </tbody>
@@ -435,7 +446,7 @@ const InPatients = (props) => {
                       sx={{
                         color: "#878787", // Default color
                         "&.Mui-checked": {
-                          color: "#25307F", // Selected dot color
+                          color: "#00a378", // Selected dot color
                         },
                       }}
                     />
@@ -449,7 +460,7 @@ const InPatients = (props) => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#25307F",
+                backgroundColor: "#00a378",
                 textTransform: "none", // Prevents uppercase transformation
                 borderRadius: "16px",
                 padding: "6px 35px",
@@ -462,7 +473,7 @@ const InPatients = (props) => {
           </Box>
         </Drawer>
       </div>
-    </>
+    </div>
   );
 };
 

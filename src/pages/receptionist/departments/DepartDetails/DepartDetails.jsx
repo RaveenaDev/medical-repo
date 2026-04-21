@@ -64,8 +64,16 @@ const DepartDetails = (props) => {
       <div className={styles.receptionist}>
         {!props.entity ? (
           <>
-            <div className={ayu.headerContainer} style={{marginTop:'8px',width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "2.5rem" : 0,}}>
+            <div
+              className={ayu.headerContainer}
+              style={{
+                marginTop: "8px",
+                width: isTablet ? "90%" : "77%",
+                marginLeft: isTablet ? "2.5rem" : 0,
+                position: "relative",
+                zIndex: 10000,
+              }}
+            >
               <Button
                 sx={{
                   outline: "none",

@@ -101,16 +101,11 @@ const CommonPanel = ({
   };
 
   const appointmentRequests = useSelector(
-    (store) => store.receptionist.appointmentRequests
+    (store) => store.receptionist.appointmentRequests,
   );
   return (
     <>
       <div className={ayu.patients}>
-        {/*<div className={ayu.patientHeader}>*/}
-        {/*  <Searchbar />*/}
-        {/*  <Notifications />*/}
-        {/*</div>*/}
-
         <div className={ayu.cardhandling}>
           <h3 className={ayu.heading}>Dashboard Overview</h3>
         </div>

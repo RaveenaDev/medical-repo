@@ -47,9 +47,6 @@ $blue: #00a378;
   }
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-
     .backButton,
     .forwardButton {
       font-size: 16px;
