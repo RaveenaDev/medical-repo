@@ -11,7 +11,7 @@ import {
 } from "../../../components/State/Receptionist/Action.js";
 
 import CircularProgress from "@mui/material/CircularProgress";
-import { Box, TablePagination } from "@mui/material";
+import { Box, TablePagination, useMediaQuery } from "@mui/material";
 
 const Departments = (props) => {
   const [page, setPage] = useState(0);
@@ -45,7 +45,8 @@ const Departments = (props) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page when changing rows per page
   };
-
+  
+const isTablet = useMediaQuery("(max-width: 1080px)");
   return (
     <div className={ayu.container}>
       <div className={styles.receptionist}>
@@ -57,6 +58,8 @@ const Departments = (props) => {
             width: "77%",
             background: " #F1F1F1",
             zIndex: 100,
+            width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2rem" : 0,
           }}
         >
           <CommonPanel />

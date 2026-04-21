@@ -157,7 +157,8 @@ const PatientList = () => {
   const totalPatients = receptionist.filteredPatients;
 
   // console.log("Total :", totalPatients);
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const isMobile = useMediaQuery("(max-width:480px)");
+  const isTablet = useMediaQuery("(max-width:1080px)");
 
   return (
     <div>
@@ -183,30 +184,29 @@ const PatientList = () => {
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: { xs: "flex-start", md: "center" },
               borderTop: "0.5px solid #4A4A4A8C",
               borderBottom: "0.5px solid #4A4A4A8C",
               py: 1.5,
-              flexDirection: { xs: "column", md: "row" },
-              gap: { xs: 1.5, md: 0 },
+              px: { xs: 1, md: 0 },
+              flexDirection: { xs: "column", lg: "row" },  // ← column until lg (1200px)
+              gap: { xs: 1.5, lg: 0 },
             }}
           >
+            {/* LEFT: count + sort */}
             <Box
               sx={{
                 display: "flex",
-                flexDirection: { xs: "column", md: "row" }, // FIX
-                alignItems: { xs: "flex-start", md: "center" },
-                gap: { xs: 1, md: 2 },
+                flexDirection: { xs: "column", sm: "row" },
+                alignItems: { xs: "flex-start", sm: "center" },
+                gap: { xs: 1, sm: 2 },
                 width: "100%",
               }}
             >
               {/* PATIENT COUNT */}
               <span
                 className={styles.patientCount}
-                style={{
-                  fontSize: isMobile ? "22px" : "28px",
-                  lineHeight: 1.2,
-                }}
+                style={{ fontSize: isMobile ? "22px" : "28px", lineHeight: 1.2, whiteSpace: "nowrap" }}
               >
                 {noOfPatients} <span>Patients</span>
               </span>
@@ -217,16 +217,12 @@ const PatientList = () => {
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
-                  width: { xs: "80%", md: "auto" },
+                  width: { xs: "100%", sm: "auto" },
                 }}
               >
                 <Typography
                   variant="body2"
-                  sx={{
-                    color: "#00a378",
-                    minWidth: "52px", // keeps alignment neat
-                    fontWeight: 500,
-                  }}
+                  sx={{ color: "#00a378", minWidth: "52px", fontWeight: 500, whiteSpace: "nowrap" }}
                 >
                   Sort by:
                 </Typography>
@@ -236,16 +232,15 @@ const PatientList = () => {
                   onChange={handleSortChange}
                   size="small"
                   sx={{
-                    flex: { xs: 1, md: "unset" }, // fills row on mobile
-                    minWidth: { xs: "100%", md: 180 },
+                    flex: { xs: 1, sm: "unset" },
+                    minWidth: { xs: 0, sm: 180 },
+                    width: { xs: "100%", sm: "auto" },
                     background: "#fff",
                     color: "#4A4A4A",
                     fontSize: { xs: "11px", md: "14px" },
                     boxShadow: "0px 4px 4px 0px #BDBDBD1C",
                     borderRadius: "8px",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "transparent",
-                    },
+                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "transparent" },
                   }}
                 >
                   <MenuItem value="desc">Newest to Oldest</MenuItem>
@@ -254,8 +249,20 @@ const PatientList = () => {
               </Box>
             </Box>
 
-            <Box className={styles.filterSearch}>
-              <div className={styles["search-wrapper"]}>
+            {/* RIGHT: search + filter */}
+            <Box
+              className={styles.filterSearch}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                width: { xs: "100%", lg: "auto" },   // ← full width on tablet/mobile
+              }}
+            >
+              <div
+                className={styles["search-wrapper"]}
+                style={{ flex: 1 }}               // ← search grows to fill available space
+              >
                 <div className={styles["search-input-wrapper"]}>
                   <Search size={18} className={styles["search-icon"]} />
                   <input
@@ -272,15 +279,18 @@ const PatientList = () => {
                   onClick={() => setSearchQuery("")}
                 />
               </div>
+
               <Button
                 startIcon={<FilterAltIcon />}
                 sx={{
                   textTransform: "none",
-                  padding: isMobile ? "6px 12px" : "6px 20px",
+                  padding: "6px 16px",
                   backgroundColor: "white",
                   borderRadius: "5px",
                   fontSize: { xs: "11px", sm: "14px" },
                   color: "#00a378",
+                  whiteSpace: "nowrap",            // ← prevents "Filter" from wrapping
+                  flexShrink: 0,                   // ← never squish the button
                   "&:focus": {
                     outline: "none",
                     boxShadow: "none",

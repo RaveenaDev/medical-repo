@@ -15,6 +15,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import ayu from "../doctors/doctors.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -34,6 +35,7 @@ const Rooms = (props) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [addDialogOpen1, setAddDialogOpen1] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
+  const isTablet = useMediaQuery("(max-width:1080px)");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -81,6 +83,8 @@ const Rooms = (props) => {
             width: "77%",
             background: " #F1F1F1",
             zIndex: 100,
+            width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2rem" : 0,
           }}
         >
           <CommonPanel />

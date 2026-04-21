@@ -14,27 +14,27 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import { WhatsApp, Email, Close } from "@mui/icons-material";
+import { WhatsApp, Email } from "@mui/icons-material";
 import { getPatientDetailsById } from "../../../../components/State/Receptionist/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
 const Profile = (props) => {
-  // const { state: patient } = useLocation(); // Retrieve the patient data passed from PatientList
   const location = useLocation();
   const patient = location.state?.patient;
   const dispatch = useDispatch();
 
-  // console.log("Pat: ",patient)
-
   const [medicalHistory, setMedicalHistory] = useState([]);
   const [currentMedications, setCurrentMedications] = useState([]);
-
   const [showModal, setShowModal] = useState(false);
+  const [tableIndex, setTableIndex] = useState(null);
+
+  const isMobile = useMediaQuery("(max-width:480px)");
+  const isTablet = useMediaQuery("(max-width:1024px)");
 
   const handleSendEmail = () => {
     window.open(
       `mailto:${patient?.email}?subject=Appointment Details&body=Hello, here are your appointment details.`,
-      "_blank",
+      "_blank"
     );
     setShowModal(false);
   };
@@ -42,29 +42,24 @@ const Profile = (props) => {
   const handleSendWhatsApp = () => {
     window.open(
       `https://wa.me/${patient?.phone}?text=Hello, here are your appointment details.`,
-      "_blank",
+      "_blank"
     );
     setShowModal(false);
   };
 
-  const [tableIndex, setTableIndex] = useState(null);
   useEffect(() => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
   useEffect(() => {
-    // Simulate fetching data from the backend
     const fetchData = async () => {
-      // backend response structure
       const response = {
         medicalHistory: patient.medicalHistory,
         currentMedications: patient.currentMedication,
       };
-
       setMedicalHistory(response.medicalHistory);
       setCurrentMedications(response.currentMedications);
     };
-
     fetchData();
   }, []);
 
@@ -74,71 +69,56 @@ const Profile = (props) => {
 
   const patDetails = useSelector((store) => store.receptionist.patientDetails);
 
-  // console.log("Det: ", patDetails);
-
-  const upcoming = patient.appointments?.filter(
-    (app) => app.status === "Scheduled",
+  const upcoming = patient?.appointments?.filter(
+    (app) => app.status === "Scheduled"
   ).length;
-  const completed = patient.appointments?.filter(
-    (app) => app.status === "Completed",
+  const completed = patient?.appointments?.filter(
+    (app) => app.status === "Completed"
   ).length;
-  // console.log(patient);
-  // Close modal when clicking outside of it
-  const handleOverlayClick = (e) => {
-    if (e.target.id === "modal-overlay") {
-      setShowModal(false);
-    }
-  };
 
-  if (!patient) {
-    return <p>No patient data found!</p>;
-  }
+  if (!patient) return <p>No patient data found!</p>;
 
-  const isMobile = useMediaQuery("(max-width: 700px)");
   return (
     <>
       <div>
         {!props.entity ? (
           <>
             <PatientHeader patient={patient} />
-            <Grid
-              container
-              spacing={2}
-              sx={{ marginBottom: "1rem", marginTop: "60px" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: isMobile ? "column" : "row",
-                  justifyContent: "space-between",
-                  gap: "20px",
-                  padding: "5px 0",
-                  width: isMobile ? "100%" : "75vw", // Optional
+
+            <Box sx={{ mt: "60px", mb: 2, px: { xs: 1, sm: 2, md: 0 } }}>
+              {/* 3-column card row */}
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    lg: "1fr 2fr 1fr",
+                  },
+                  gap: 2,
+                  mb: 2,
                 }}
               >
                 {/* Box 1 - Profile Card */}
-                <div
-                  style={{
-                    width: isMobile ? "100%" : "25%",
-                    padding: "20px 0",
-                    backgroundColor: "#FFFFFF",
-                    height: "auto",
+                <Box
+                  sx={{
+                    backgroundColor: "#fff",
+                    borderRadius: "2px",
+                    boxShadow: "0 2px 5px rgba(31,23,23,0.1)",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    borderRadius: "2px",
-                    boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
-                    textAlign: "center",
-                    color: "black",
+                    p: "20px 0",
+                    gridColumn: { xs: "1 / -1", sm: "1 / -1", lg: "auto" },
                   }}
                 >
-                  <div
-                    style={{
+                  <Box
+                    sx={{
                       width: "80%",
                       display: "flex",
                       flexDirection: "column",
-                      justifyContent: "center",
                       alignItems: "center",
+                      textAlign: "center",
                     }}
                   >
                     <Avatar
@@ -148,7 +128,7 @@ const Profile = (props) => {
                         width: 80,
                         height: 80,
                         borderRadius: "50%",
-                        marginBottom: "2px",
+                        mb: "2px",
                         fontSize: "2rem",
                         color: "#00a378",
                         bgcolor: "#e3e3e3",
@@ -156,6 +136,7 @@ const Profile = (props) => {
                     >
                       {patient.name[0].toUpperCase()}
                     </Avatar>
+
                     <h4
                       style={{
                         margin: "2px 0",
@@ -176,12 +157,12 @@ const Profile = (props) => {
                       {patient.email}
                     </p>
 
-                    <div
-                      style={{
+                    <Box
+                      sx={{
                         display: "flex",
                         justifyContent: "space-around",
                         width: "100%",
-                        marginTop: "10px",
+                        mt: 1,
                       }}
                     >
                       <div>
@@ -200,7 +181,7 @@ const Profile = (props) => {
                           Upcoming
                         </p>
                       </div>
-                    </div>
+                    </Box>
 
                     <button
                       style={{
@@ -218,7 +199,7 @@ const Profile = (props) => {
                       }}
                       onMouseOver={(e) => {
                         e.target.style.backgroundColor = "#00a378";
-                        e.target.style.color = "#ffffff";
+                        e.target.style.color = "#fff";
                       }}
                       onMouseOut={(e) => {
                         e.target.style.backgroundColor = "transparent";
@@ -228,8 +209,8 @@ const Profile = (props) => {
                     >
                       Send Message
                     </button>
-                    {/* Modal UI */}
 
+                    {/* Dialog */}
                     <Dialog
                       open={showModal}
                       onClose={() => setShowModal(false)}
@@ -237,8 +218,8 @@ const Profile = (props) => {
                         "& .MuiPaper-root": {
                           borderRadius: "10px",
                           padding: "10px",
-                          width: "400px", // Increased width
-                          maxWidth: "90%", // Ensures responsiveness
+                          width: "400px",
+                          maxWidth: "90%",
                         },
                       }}
                     >
@@ -251,10 +232,7 @@ const Profile = (props) => {
                       >
                         Send Message Via
                       </DialogTitle>
-
-                      <DialogContent
-                        sx={{ textAlign: "center", padding: "20px" }}
-                      >
+                      <DialogContent sx={{ textAlign: "center", padding: "20px" }}>
                         <Button
                           fullWidth
                           startIcon={<WhatsApp />}
@@ -262,7 +240,7 @@ const Profile = (props) => {
                             backgroundColor: "#fff",
                             color: "#25D366",
                             border: "1px solid #25D366",
-                            marginBottom: "10px",
+                            mb: "10px",
                             "&:hover": {
                               backgroundColor: "#25D366",
                               color: "#fff",
@@ -272,7 +250,6 @@ const Profile = (props) => {
                         >
                           WhatsApp
                         </Button>
-
                         <Button
                           fullWidth
                           startIcon={<Email />}
@@ -290,7 +267,6 @@ const Profile = (props) => {
                           Email
                         </Button>
                       </DialogContent>
-
                       <DialogActions sx={{ justifyContent: "center" }}>
                         <Button
                           onClick={() => setShowModal(false)}
@@ -308,33 +284,31 @@ const Profile = (props) => {
                         </Button>
                       </DialogActions>
                     </Dialog>
-                  </div>
-                </div>
+                  </Box>
+                </Box>
 
-                {/* Box 2 - Personal Info (Middle Section) */}
-                <div
-                  style={{
-                    width: isMobile ? "90%" : "50%",
-                    minWidth: isMobile ? "10px" : "400px",
-                    backgroundColor: "#ffffff",
-                    padding: "20px",
+                {/* Box 2 - Personal Info */}
+                <Box
+                  sx={{
+                    backgroundColor: "#fff",
+                    p: "20px",
                     borderRadius: "2px",
-                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+                    minWidth: 0,
                   }}
                 >
                   <PersonalInfo patient={patient} />
-                </div>
+                </Box>
 
                 {/* Box 3 - Medical Info */}
-                <div
-                  style={{
-                    width: isMobile ? "96%" : "28%",
-                    backgroundColor: "#ffffff",
-                    height: "auto",
-                    minHeight: "150px",
-                    padding: "4px 8px 12px 8px",
+                <Box
+                  sx={{
+                    backgroundColor: "#fff",
+                    p: "4px 8px 12px 8px",
                     borderRadius: "2px",
-                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+                    minHeight: "150px",
+                    minWidth: 0,
                   }}
                 >
                   <MedicalInfo
@@ -342,43 +316,33 @@ const Profile = (props) => {
                     medicalHistory={medicalHistory}
                     currentMedications={currentMedications}
                     patDetails={patDetails}
-                    showSymptoms={false} // Hide Symptoms section
-                    showHistory={false} // Hide Social History section
+                    showSymptoms={false}
+                    showHistory={false}
                   />
-                </div>
-              </div>
-
-              {/* Progress Tracker  */}
-              <Grid xs={12}>
-                <Box
-                  sx={{
-                    backgroundColor: "#FFFFFF", // Set the background color to white
-                    padding: "16px 0", // Optional padding for content spacing
-                    borderRadius: "8px", // Optional rounded corners
-                    width: isMobile ? "100%" : "75vw", // Optional
-                  }}
-                >
-                  <div style={{ paddingLeft: "38px" }}>
-                    <Typography
-                      variant="h3"
-                      sx={{ color: "#4A4A4A", fontSize: "20px" }}
-                    >
-                      Progress Tracker
-                    </Typography>
-
-                    <Box
-                      sx={{
-                        height: "1px",
-                        //   backgroundColor: "#8787877A",
-                        my: 2, // Adds top and bottom margin (equivalent to padding)
-                      }}
-                    />
-                  </div>
-
-                  <ProgressTracker patient={patient} />
                 </Box>
-              </Grid>
-            </Grid>
+              </Box>
+
+              {/* Progress Tracker */}
+              <Box
+                sx={{
+                  backgroundColor: "#fff",
+                  p: { xs: "16px 12px", md: "16px 0" },
+                  borderRadius: "8px",
+                  width: "100%",
+                }}
+              >
+                <Box sx={{ pl: { xs: 1, md: "38px" } }}>
+                  <Typography
+                    variant="h3"
+                    sx={{ color: "#4A4A4A", fontSize: "20px" }}
+                  >
+                    Progress Tracker
+                  </Typography>
+                  <Box sx={{ height: "1px", my: 2 }} />
+                </Box>
+                <ProgressTracker patient={patient} />
+              </Box>
+            </Box>
           </>
         ) : (
           <EntityBasedTable entity={props?.entity} tableIndex={tableIndex} />

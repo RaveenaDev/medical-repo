@@ -28,9 +28,11 @@ const PatientHeader = ({
     };
   }, [activeModal]);
 
-  const isMobile = useMediaQuery("(max-width: 700px)");
+  const isMobile = useMediaQuery("(max-width: 480px)");
+  const isTablet = useMediaQuery("(max-width:1080px)");
   return (
-    <div className="patient-header-reception">
+    <div className="patient-header-reception" style={{
+              marginLeft : isTablet ? "3rem" : 0, zIndex: isTablet ? '10000' : '' }}>
       <div className="patient-info">
         <span
           onClick={() => navigate(-1)}

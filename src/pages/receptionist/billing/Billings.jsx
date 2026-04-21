@@ -62,7 +62,8 @@ const Billings = (props) => {
   // console.log("allBills", allBills);
   const [expandedBillId, setExpandedBillId] = useState(null);
 
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery("(max-width:480px)");
+  const isTablet = useMediaQuery("(max-width:1080px)");
   return (
     <div className={styles["billingsReception-container"]}>
       <div
@@ -73,6 +74,8 @@ const Billings = (props) => {
           width: isMobile ? "90%" : "75%",
           background: " #F1F1F1",
           zIndex: 100,
+          width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2rem" : 0,
         }}
       >
         <div className={styles["billings-header"]}>

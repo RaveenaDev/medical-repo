@@ -62,6 +62,8 @@ import Reports from "./pages/admin/reports/Reports";
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
   const dispatch = useDispatch();
+  // Add this near the top with your other hooks
+const isTablet = useMediaQuery("(min-width:481px) and (max-width:1024px)");
 
   useEffect(() => {
     const restoreAuth = async () => {
@@ -90,7 +92,7 @@ function App() {
 
     hideSplash();
   }, []);
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const isMobile = useMediaQuery("(max-width:480px)");
 
   const [isSignUpOrLogin, setIsSignUpOrLogin] = useState(true);
   const [entity, setEntity] = useState("");
@@ -142,7 +144,7 @@ function App() {
     <>
       <ToastContainer />
       <div className={`${isSignUpOrLogin ? "" : styles.crmApp}`}>
-        {shouldShowSidebar && !isIpdRoute && !isMobile && (
+        {shouldShowSidebar && !isIpdRoute && !isMobile && !isTablet &&(
           <div
             style={{
               width: "20%",
@@ -162,6 +164,12 @@ function App() {
             {!isLoginPage && <Sidebar role={role} />}
           </div>
         )}
+
+        {/* TABLET sidebar (no wrapper div — Sidebar manages its own fixed positioning) */}
+        {shouldShowSidebar && !isIpdRoute && isTablet && !isLoginPage && (
+          <Sidebar role={role} />
+        )}
+
         {/* MOBILE BOTTOM NAV (inside Sidebar) */}
         {shouldShowSidebar && !isIpdRoute && isMobile && !isLoginPage && (
           <Sidebar
@@ -191,7 +199,8 @@ function App() {
             }`}
             style={{
               marginLeft:
-                shouldShowSidebar && !isMobile && !isIpdRoute ? "20%" : "0",
+                shouldShowSidebar && !isMobile && !isTablet && !isIpdRoute ? "20%" : "0",
+              paddingTop: isTablet ? "56px !important" : "0 !important",   // ← space for the fixed top bar
               height: "100%",
               overflow: "auto",
             }} // Prevent content from going under the sidebar

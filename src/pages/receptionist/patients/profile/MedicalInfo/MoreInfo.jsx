@@ -650,6 +650,7 @@ const MoreInfo = (props) => {
             anchor="right"
             open={drawerOpen}
             onClose={handleDrawerClose}
+            sx={{ zIndex: 100001 }}
             PaperProps={{
               sx: {
                 width: { xs: "90%", sm: "480px" },

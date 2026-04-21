@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.scss";
-import { Box, Button, Tooltip } from "@mui/material";
+import { Box, Button, Tooltip, useMediaQuery } from "@mui/material";
 import EntityBasedTable from "../../EntityBasedTable/index.jsx";
 import ayu from "../departments.module.scss";
 import avi from "./departDetails.module.scss";
@@ -31,6 +31,7 @@ const DepartDetails = (props) => {
   }, []);
 
   const [age, setAge] = React.useState("");
+  const isTablet = useMediaQuery("(max-width:1080px)");
 
   const location = useLocation();
   const { departmentId } = location.state || {};
@@ -63,7 +64,8 @@ const DepartDetails = (props) => {
       <div className={styles.receptionist}>
         {!props.entity ? (
           <>
-            <div className={ayu.headerContainer}>
+            <div className={ayu.headerContainer} style={{marginTop:'8px',width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2.5rem" : 0,}}>
               <Button
                 sx={{
                   outline: "none",

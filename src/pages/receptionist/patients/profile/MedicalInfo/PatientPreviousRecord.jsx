@@ -1087,7 +1087,8 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
     return null;
   };
 
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const isMobile = useMediaQuery("(max-width:480px)");
+  const isTablet = useMediaQuery("(max-width:1080px)");
   const [mobileView, setMobileView] = useState("list"); // "list" | "details"
 
   /* -------------------- render -------------------- */
@@ -1111,7 +1112,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
             {!isMobile && (
               <>
                 {/* LEFT LIST */}
-                <section className="patient-visits">
+                <section className="patient-visits" style={{marginTop: isTablet ? '1rem' : '0'}}>
                   <div className="visit-header">
                     <h3>Past Records</h3>
 
@@ -1179,7 +1180,7 @@ const PatientPreviousRecord = ({ patientDetails = {}, loading }) => {
                 </section>
 
                 {/* RIGHT DETAILS */}
-                <div className="patient_records_details-rep">
+                <div className="patient_records_details-rep" style={{marginTop: isTablet ? '1rem' : '0'}}>
                   <div
                     className="records_details_header"
                     style={{ backgroundColor: "#ffffff" }}

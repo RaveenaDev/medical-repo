@@ -238,7 +238,7 @@ const BookAppointment = ({
     }));
   };
 
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery("(max-width:480px)");
 
   return (
     <>

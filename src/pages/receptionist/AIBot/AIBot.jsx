@@ -12,6 +12,7 @@ import {
   Chip,
   Paper,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -282,6 +283,7 @@ const AIBot = ({
     setIsSignUpOrLogin(false);
   }, []);
   const dispatch = useDispatch();
+  const isTablet = useMediaQuery("(max-width:1080px)");
   const navigate = useNavigate();
   const [lang, setLang] = useState("en");
   const T = I18N[lang].ui;
@@ -865,6 +867,10 @@ const AIBot = ({
           className={`book-appointment-AI ${
             isFromDoctor ? "from-doctor" : "default"
           }`}
+          style={{
+              marginLeft : isTablet ? "2rem" : 0,
+              width: isTablet ? "95%" : ""            
+            }}
         >
           <div className="book-header">
             <h2 style={{ fontWeight: 500, marginTop: 3 }}>{T.title}</h2>

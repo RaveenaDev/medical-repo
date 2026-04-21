@@ -20,6 +20,7 @@ import {
   Select,
   TablePagination,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,6 +71,7 @@ const InPatients = (props) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const isTablet = useMediaQuery("(max-width:1080px)");
 
   const handleAppointmentRequests = () => {
     // Any other logic before opening the modal
@@ -140,7 +142,8 @@ const InPatients = (props) => {
 
   return (
     <>
-      <div style={{ position: "relative", top: "7px", paddingLeft: "8px" }}>
+      <div style={{ position: "relative", top: "7px", paddingLeft: "8px",width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2rem" : 0, }}>
         <CommonPanel />
       </div>
       <div className={styles.patientsHeader}>

@@ -7,6 +7,9 @@ import Logout from "../../pages/receptionist/Settings/Logout.jsx";
 import DoctorNotesPopup from "./DoctorNotesPopup.jsx";
 import { useMediaQuery } from "@mui/material";
 import MobileBottomNav from "./MobileBottomNav.jsx";
+import { Menu, X } from "lucide-react";
+import Logo from "../Logo/index.jsx";
+import { height, margin, width } from "@mui/system";
 
 const roleOptions = {
   receptionist: [
@@ -47,7 +50,11 @@ const mobileReceptionistNav = [
 ];
 
 const Sidebar = ({ role, onOpenAppointment, onCloseAppointment }) => {
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const isMobile = useMediaQuery("(max-width:480px)");
+
+  const isTablet = useMediaQuery("(min-width:481px) and (max-width:1024px)");
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
@@ -101,12 +108,13 @@ const Sidebar = ({ role, onOpenAppointment, onCloseAppointment }) => {
   // Runs whenever the route changes
 
   const handleClick = (index, option) => {
-    if (option.action === "logout") {
-      setIsLogout(true);
-      return;
-    }
-    navigate(option.path);
-  };
+  if (option.action === "logout") {
+    setIsLogout(true);
+    return;
+  }
+  navigate(option.path);
+  if (isTablet) setIsDrawerOpen(false);  // ← add this
+};
 
   const [activeSub, setActiveSub] = useState("");
 
@@ -147,17 +155,43 @@ const Sidebar = ({ role, onOpenAppointment, onCloseAppointment }) => {
           onCloseAppointment={onCloseAppointment}
         />
       ) : (
-        <div
-          className={styles.sidebar}
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            height: "86.7vh",
-            overflowY: "auto",
-          }}
-        >
+        <>
+         {/* Tablet hamburger top bar */}
+          {isTablet && (
+            <div className={styles.tabletTopBar}>
+              <button
+                className={styles.hamburgerBtn}
+                onClick={() => setIsDrawerOpen(prev => !prev)}
+              >
+                {isDrawerOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          )}
+
+          {/* Backdrop overlay (tablet only) */}
+          {isTablet && isDrawerOpen && (
+            <div
+              className={styles.overlay}
+              onClick={() => setIsDrawerOpen(false)}
+            />
+          )}
+
+          {/* Sidebar — normal on desktop, drawer on tablet */}
+          <div
+            className={`${styles.sidebar} ${
+              isTablet ? styles.drawerSidebar : ""
+            } ${isTablet && isDrawerOpen ? styles.open : ""}`}
+            style={{
+              width: isTablet ? undefined : "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: isTablet ? "100vh" : "86.7vh",
+              overflowY: "auto",
+            }}
+          >
+           {isTablet && <Logo style={{}}/>}
+                            
           <div>
             {sideOptions.map((option, index) => (
               <div
@@ -346,6 +380,7 @@ const Sidebar = ({ role, onOpenAppointment, onCloseAppointment }) => {
             )}
           </div>
         </div>
+        </>
       )}
       {isLogout && <Logout isLogout={isLogout} setIsLogout={setIsLogout} />}
     </>

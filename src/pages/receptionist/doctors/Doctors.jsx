@@ -21,6 +21,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import BookAppointment from "../Appointment/Book/BookAppointment.jsx";
@@ -69,6 +70,7 @@ const Doctors = (props) => {
   const [isBookAppointment, setIsBookAppointment] = useState(false); // State to toggle between components
 
   const [isFromDoctor, setIsFromDoctor] = useState(true);
+  const isTablet = useMediaQuery("(max-width:1080px)");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const handleBookAppointment = (doctor) => {
     setSelectedDoctor(doctor);
@@ -120,6 +122,8 @@ const Doctors = (props) => {
             width: "77%",
             background: " #F1F1F1",
             zIndex: 100,
+            width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2rem" : 0,
           }}
         >
           <CommonPanel />
@@ -137,7 +141,7 @@ const Doctors = (props) => {
             <CircularProgress sx={{ color: "#25307F" }} size={50} />
           </Box>
         ) : (
-          <div style={{ marginTop: "18vh" }}>
+          <div style={{marginTop : isTablet ? "23vh" : "18vh", }}>
             {isBookAppointment ? (
               <BookAppointment
                 isOpen={isBookAppointment}
@@ -153,6 +157,8 @@ const Doctors = (props) => {
                     borderBottom: "1px solid #87878782",
                     paddingBottom: 0.5,
                     marginBottom: 1,
+                    
+              
                   }}
                 >
                   <div className={ayu.headerContainer}>

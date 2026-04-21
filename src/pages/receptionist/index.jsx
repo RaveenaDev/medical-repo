@@ -53,7 +53,8 @@ import { useNavigate } from "react-router-dom";
 
 function Receptionist(props) {
   const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const isMobile = useMediaQuery("(max-width:480px)");
+  const isTablet = useMediaQuery("(max-width:1080px)");
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [tableIndex, setTableIndex] = useState(null);
 
@@ -371,7 +372,8 @@ function Receptionist(props) {
               position: "fixed",
               top: "0px",
               padding: "6px 10px",
-              width: "77%",
+              width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2rem" : 0,
               background: " #F1F1F1",
               zIndex: 100,
             }}

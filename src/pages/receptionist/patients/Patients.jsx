@@ -15,7 +15,8 @@ const Patients = (props) => {
     props?.setIsSignUpOrLogin(false);
   }, []);
 
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width: 480px)");
+  const isTablet = useMediaQuery("(max-width: 1080px)");
   return (
     <div
       className={styles.patients}
@@ -35,6 +36,8 @@ const Patients = (props) => {
               width: "77%",
               background: " #F1F1F1",
               zIndex: 100,
+              width: isTablet ? "90%" : "77%",
+              marginLeft : isTablet ? "2rem" : 0,
             }}
           >
             <CommonPanel />
