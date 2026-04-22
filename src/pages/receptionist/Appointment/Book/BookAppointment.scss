@@ -15,18 +15,18 @@
   &.default {
     max-height: 70vh; // Prevent overflowing the screen
 
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
       max-height: 90dvh;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
 
-    /* 👇 CRITICAL */
+    /*  CRITICAL */
     bottom: 64px; // reserve space for BottomNav
     height: auto; // let bottom control height
 
@@ -118,6 +118,7 @@
 
       .submit-btn {
         background: #00a378;
+        margin-bottom: 3rem;
       }
 
       .submit-btn:hover {
