@@ -59,7 +59,7 @@ const Doctors = (props) => {
   const doctors = useSelector((state) => state.receptionist.doctors);
   const departments = useSelector((state) => state.receptionist.departments);
   const isLoadingDoctors = useSelector(
-    (state) => state.receptionist.isLoadingDoctors
+    (state) => state.receptionist.isLoadingDoctors,
   );
 
   const noOfDoctors = useSelector((state) => state.receptionist.doctorCount);
@@ -119,11 +119,11 @@ const Doctors = (props) => {
             position: "fixed",
             top: "0px",
             padding: "10px",
-            width: "77%",
+
             background: " #F1F1F1",
             zIndex: 100,
             width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "2rem" : 0,
+            marginLeft: isTablet ? "2rem" : 0,
           }}
         >
           <CommonPanel />
@@ -141,7 +141,7 @@ const Doctors = (props) => {
             <CircularProgress sx={{ color: "#25307F" }} size={50} />
           </Box>
         ) : (
-          <div style={{marginTop : isTablet ? "23vh" : "18vh", }}>
+          <div style={{ marginTop: isTablet ? "20vh" : "18vh" }}>
             {isBookAppointment ? (
               <BookAppointment
                 isOpen={isBookAppointment}
@@ -157,8 +157,6 @@ const Doctors = (props) => {
                     borderBottom: "1px solid #87878782",
                     paddingBottom: 0.5,
                     marginBottom: 1,
-                    
-              
                   }}
                 >
                   <div className={ayu.headerContainer}>
@@ -237,19 +235,55 @@ const Doctors = (props) => {
                       }}
                     >
                       <TableRow>
-                        <TableCell sx={{ color: "#000000" }}>Profile</TableCell>
+                        <TableCell
+                          sx={{
+                            color: "#000000",
+                            fontSize: "clamp(11px, 1vw, 13px)",
+                          }}
+                        >
+                          Profile
+                        </TableCell>
 
-                        <TableCell sx={{ color: "#000000" }}>Name</TableCell>
-                        <TableCell sx={{ color: "#000000" }}>
+                        <TableCell
+                          sx={{
+                            color: "#000000",
+                            fontSize: "clamp(11px, 1vw, 13px)",
+                          }}
+                        >
+                          Name
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "#000000",
+                            fontSize: "clamp(11px, 1vw, 13px)",
+                          }}
+                        >
                           Phone Number
                         </TableCell>
-                        <TableCell sx={{ color: "#000000" }}>
+                        <TableCell
+                          sx={{
+                            color: "#000000",
+                            fontSize: "clamp(11px, 1vw, 13px)",
+                          }}
+                        >
                           Department
                         </TableCell>
-                        <TableCell sx={{ color: "#000000" }} align="center">
+                        <TableCell
+                          sx={{
+                            color: "#000000",
+                            fontSize: "clamp(11px, 1vw, 13px)",
+                          }}
+                          align="center"
+                        >
                           Status
                         </TableCell>
-                        <TableCell sx={{ color: "#000000" }} align="center">
+                        <TableCell
+                          sx={{
+                            color: "#000000",
+                            fontSize: "clamp(11px, 1vw, 13px)",
+                          }}
+                          align="center"
+                        >
                           Booking
                         </TableCell>
                       </TableRow>
@@ -275,25 +309,40 @@ const Doctors = (props) => {
                               <Avatar
                                 src={patient.profile}
                                 alt="Profile"
-                                sx={{ width: 40, height: 40 }} // Adjust size
+                                sx={{
+                                  width: "clamp(28px, 3vw, 40px)",
+                                  height: "clamp(28px, 3vw, 40px)",
+                                }}
                               />
                             </TableCell>
 
                             <TableCell>
                               <Typography
                                 variant="body1"
-                                sx={{ color: "#25307F", fontWeight: "bold" }}
+                                sx={{
+                                  color: "#00a378",
+                                  fontWeight: "bold",
+                                  fontSize: "clamp(12px, 1.2vw, 14px)",
+                                }}
                               >
                                 {truncateText(patient?.name, 13)}
                               </Typography>
                             </TableCell>
                             <TableCell
-                              sx={{ color: "#747474", fontWeight: "bold" }}
+                              sx={{
+                                color: "#747474",
+                                fontWeight: "bold",
+                                fontSize: "clamp(11px, 1vw, 13px)",
+                              }}
                             >
                               {patient.phone}
                             </TableCell>
                             <TableCell
-                              sx={{ color: "#747474", fontWeight: "bold" }}
+                              sx={{
+                                color: "#747474",
+                                fontWeight: "bold",
+                                fontSize: "clamp(11px, 1vw, 13px)",
+                              }}
                             >
                               {patient?.departments?.[0]?.name ||
                                 "Not Assigned"}
@@ -332,7 +381,7 @@ const Doctors = (props) => {
                                       : patient.status === "With Patient"
                                       ? "#2E823B"
                                       : undefined,
-                                  width: "9rem",
+                                  width: "clamp(90px, 8vw, 140px)",
                                   border:
                                     patient.status === "Emergency Room"
                                       ? "1px solid #2E823B"
@@ -348,6 +397,7 @@ const Doctors = (props) => {
 
                                   // fontSize: "12px"
                                   py: 1.7,
+                                  fontSize: "clamp(11px, 1vw, 13px)",
                                 }}
                               />
                             </TableCell>
@@ -359,7 +409,9 @@ const Doctors = (props) => {
                                   borderRadius: "18px", // Rounded corners
                                   color: " #25307F",
                                   textTransform: "none", // Prevents uppercase text
-                                  fontSize: "12px", // Adjust text size if needed
+                                  fontSize: "clamp(10px, 1vw, 12px)",
+                                  padding:
+                                    "clamp(4px, 0.8vw, 8px) clamp(8px, 1.2vw, 14px)",
                                 }}
                                 onClick={() => handleBookAppointment(patient)}
                               >

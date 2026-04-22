@@ -1,31 +1,33 @@
 .headerContainer {
   display: flex;
   align-items: center;
-  //justify-content: space-between;
-  // margin-bottom: 5px;
+  gap: clamp(6px, 1vw, 12px); // spacing scales
 
   .backButton {
-    //margin-right: 2px;  // Space between button and h2
-    margin-top: 9px;
+    margin-top: clamp(4px, 0.6vw, 9px);
     color: black;
     background-color: #f1f1f1;
     font-weight: bold;
-    font-size: 20px;
+
+    font-size: clamp(14px, 1.4vw, 20px); //  responsive icon size
     padding: 0;
     cursor: pointer;
   }
 
   .departmentTitle {
-    margin: 0; // Remove default margin of h2
+    margin: 0;
     color: black;
     font-weight: 500;
-    margin-bottom: 1px;
+
+    font-size: clamp(14px, 1.6vw, 20px); //  main title
   }
 
   .departmentTitleDetails {
-    margin: 0; // Remove default margin of h2
+    margin: 0;
     color: #747474;
     font-weight: 500;
-    margin-left: 8px;
+    margin-left: clamp(4px, 0.8vw, 8px);
+
+    font-size: clamp(13px, 1.4vw, 18px); //  secondary text
   }
 }

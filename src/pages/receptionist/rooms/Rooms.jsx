@@ -42,10 +42,10 @@ const Rooms = (props) => {
 
   const rooms = useSelector((state) => state.receptionist.filteredRooms);
   const totalRooms = useSelector(
-    (state) => state.receptionist.totalFilteredRooms
+    (state) => state.receptionist.totalFilteredRooms,
   );
   const loading = useSelector(
-    (state) => state.receptionist.isLoadingFilteredRooms
+    (state) => state.receptionist.isLoadingFilteredRooms,
   );
 
   useEffect(() => {
@@ -80,17 +80,17 @@ const Rooms = (props) => {
             position: "fixed",
             top: "0px",
             padding: "10px",
-            width: "77%",
+
             background: " #F1F1F1",
             zIndex: 100,
             width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "2rem" : 0,
+            marginLeft: isTablet ? "2rem" : 0,
           }}
         >
           <CommonPanel />
         </div>
 
-        <div style={{ marginTop: "160px" }}>
+        <div style={{ marginTop: "140px" }}>
           {loading ? (
             <Box
               sx={{
@@ -286,19 +286,49 @@ const Rooms = (props) => {
                     }}
                   >
                     <TableRow>
-                      <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                      <TableCell
+                        sx={{
+                          fontWeight: "600",
+                          width: "25%",
+                          fontSize: "clamp(11px, 1vw, 13px)",
+                        }}
+                      >
                         Room ID
                       </TableCell>
-                      <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                      <TableCell
+                        sx={{
+                          fontWeight: "600",
+                          width: "25%",
+                          fontSize: "clamp(11px, 1vw, 13px)",
+                        }}
+                      >
                         Room Type
                       </TableCell>
-                      <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                      <TableCell
+                        sx={{
+                          fontWeight: "600",
+                          width: "25%",
+                          fontSize: "clamp(11px, 1vw, 13px)",
+                        }}
+                      >
                         Name
                       </TableCell>
-                      <TableCell sx={{ fontWeight: "600", width: "25%" }}>
+                      <TableCell
+                        sx={{
+                          fontWeight: "600",
+                          width: "25%",
+                          fontSize: "clamp(11px, 1vw, 13px)",
+                        }}
+                      >
                         Status
                       </TableCell>
-                      <TableCell sx={{ fontWeight: "600", minWidth: "8rem" }}>
+                      <TableCell
+                        sx={{
+                          fontWeight: "600",
+                          minWidth: "8rem",
+                          fontSize: "clamp(11px, 1vw, 13px)",
+                        }}
+                      >
                         Doctor Assigned
                       </TableCell>
                     </TableRow>
@@ -319,18 +349,20 @@ const Rooms = (props) => {
                         >
                           <TableCell
                             sx={{
-                              color: "#25307F",
+                              color: "#00a378",
                               fontWeight: "bold",
                               width: "25%",
+                              fontSize: "clamp(11px, 1vw, 13px)",
                             }}
                           >
                             {room.roomID}
                           </TableCell>
                           <TableCell
                             sx={{
-                              color: "#25307F",
+                              color: "#00a378",
                               fontWeight: "bold",
                               width: "25%",
+                              fontSize: "clamp(11px, 1vw, 13px)",
                             }}
                           >
                             {room?.roomType}
@@ -340,16 +372,22 @@ const Rooms = (props) => {
                               variant="body1"
                               sx={{
                                 fontWeight: "bold",
-                                color: "#25307F",
+                                color: "#00a378",
                                 whiteSpace: "nowrap",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
+                                fontSize: "clamp(11px, 1vw, 13px)",
                               }}
                             >
                               {room.name}
                             </Typography>
                           </TableCell>
-                          <TableCell sx={{ width: "25%" }}>
+                          <TableCell
+                            sx={{
+                              width: "25%",
+                              fontSize: "clamp(11px, 1vw, 13px)",
+                            }}
+                          >
                             <Box display="flex" alignItems="center" gap={1}>
                               <Box
                                 sx={{
@@ -371,7 +409,12 @@ const Rooms = (props) => {
                                 : "Available"}
                             </Box>
                           </TableCell>
-                          <TableCell sx={{ width: "25%" }}>
+                          <TableCell
+                            sx={{
+                              width: "25%",
+                              fontSize: "clamp(11px, 1vw, 13px)",
+                            }}
+                          >
                             {room.assignedDoctor?.name || "Not Assigned"}
                           </TableCell>
                         </TableRow>
