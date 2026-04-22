@@ -34,7 +34,7 @@ const Departments = (props) => {
 
   const paginatedDepartments = allDepartments.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
 
   const handleChangePage = (event, newPage) => {
@@ -45,8 +45,8 @@ const Departments = (props) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to first page when changing rows per page
   };
-  
-const isTablet = useMediaQuery("(max-width: 1080px)");
+
+  const isTablet = useMediaQuery("(max-width: 1080px)");
   return (
     <div className={ayu.container}>
       <div className={styles.receptionist}>
@@ -55,11 +55,11 @@ const isTablet = useMediaQuery("(max-width: 1080px)");
             position: "fixed",
             top: "0px",
             padding: "10px 10px 0px 10px",
-            width: "77%",
+
             background: " #F1F1F1",
             zIndex: 100,
             width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "2rem" : 0,
+            marginLeft: isTablet ? "2rem" : 0,
           }}
         >
           <CommonPanel />
@@ -95,35 +95,36 @@ const isTablet = useMediaQuery("(max-width: 1080px)");
                 />
 
                 {/* Cards */}
-
-                <div className={ayu.superCardContainer}>
-                  {paginatedDepartments.length ? (
-                    paginatedDepartments.map((department, index) => (
-                      <DepartCard
-                        key={index}
-                        department={department}
-                        index={index}
-                      />
-                    ))
-                  ) : (
-                    <div>No departments found.</div>
-                  )}
+                <div className={ayu.scrollSection}>
+                  <div className={ayu.superCardContainer}>
+                    {paginatedDepartments.length ? (
+                      paginatedDepartments.map((department, index) => (
+                        <DepartCard
+                          key={index}
+                          department={department}
+                          index={index}
+                        />
+                      ))
+                    ) : (
+                      <div>No departments found.</div>
+                    )}
+                  </div>
+                  <TablePagination
+                    component="div"
+                    count={allDepartments.length}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    rowsPerPageOptions={[6, 12, 24, 60, 120]}
+                    sx={{
+                      width: "100%",
+                      backgroundColor: "#fff",
+                      borderTop: "2px solid #ddd",
+                      marginTop: 2,
+                    }}
+                  />
                 </div>
-                <TablePagination
-                  component="div"
-                  count={allDepartments.length}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[6, 12, 24, 60, 120]}
-                  sx={{
-                    width: "100%",
-                    backgroundColor: "#fff",
-                    borderTop: "2px solid #ddd",
-                    marginTop: 2,
-                  }}
-                />
               </div>
             </div>
           )}

@@ -373,7 +373,7 @@ function Receptionist(props) {
               top: "0px",
               padding: "6px 10px",
               width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "2rem" : 0,
+              marginLeft: isTablet ? "2rem" : 0,
               background: " #F1F1F1",
               zIndex: 100,
             }}
@@ -476,7 +476,7 @@ function Receptionist(props) {
                             </Grid>
                           ))}
 
-                        {!isMobile && (
+                        {!isMobile && !isTablet && (
                           <div
                             style={{
                               marginBottom: "0.8rem",
@@ -555,29 +555,30 @@ function Receptionist(props) {
                             ))}
                           </div>
                         )}
-                        {isMobile && (
-                          <Box px={1.5} py={1}>
-                            <Select2
-                              fullWidth
-                              size="small"
-                              value={activeBox}
-                              onChange={(e) =>
-                                handleBoxClick(Number(e.target.value))
-                              }
-                              sx={{
-                                background: "#F1F1F1",
-                                fontSize: "14px",
-                                borderRadius: "8px",
-                              }}
-                            >
-                              {boxData.map((box) => (
-                                <MenuItem key={box.id} value={box.id}>
-                                  {box.label} ({box.count})
-                                </MenuItem>
-                              ))}
-                            </Select2>
-                          </Box>
-                        )}
+                        {isMobile ||
+                          (isTablet && (
+                            <Box px={1.5} py={1}>
+                              <Select2
+                                fullWidth
+                                size="small"
+                                value={activeBox}
+                                onChange={(e) =>
+                                  handleBoxClick(Number(e.target.value))
+                                }
+                                sx={{
+                                  background: "#F1F1F1",
+                                  fontSize: "14px",
+                                  borderRadius: "8px",
+                                }}
+                              >
+                                {boxData.map((box) => (
+                                  <MenuItem key={box.id} value={box.id}>
+                                    {box.label} ({box.count})
+                                  </MenuItem>
+                                ))}
+                              </Select2>
+                            </Box>
+                          ))}
                       </div>
 
                       {/* Table */}

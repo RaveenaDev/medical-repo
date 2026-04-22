@@ -194,3 +194,8 @@ $blue: #00a378;
     max-width: 120px;
   }
 }
+.scrollSection {
+  height: calc(100vh - 220px); //  adjust based on your header height
+  overflow-y: auto;
+  padding-right: 4px; // optional (for scrollbar spacing)
+}

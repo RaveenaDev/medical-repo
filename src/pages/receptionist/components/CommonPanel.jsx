@@ -37,6 +37,7 @@ const CommonPanel = ({
   const currentSelectedDate = selectedDate || internalSelectedDate;
 
   const handleDateChange = (event) => {
+    if (!event.target.value) return; // ignore clear
     const newDate = dayjs(event.target.value);
 
     if (setSelectedDate) {
