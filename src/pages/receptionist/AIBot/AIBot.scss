@@ -1,6 +1,21 @@
+:root {
+  /* Font scale (slightly smaller for your UI) */
+  --fs-xs: clamp(10px, 0.9vw, 12px);
+  --fs-sm: clamp(12px, 1vw, 13px);
+  --fs-md: clamp(13px, 1.2vw, 15px);
+  --fs-lg: clamp(15px, 1.5vw, 18px);
+  --fs-xl: clamp(17px, 2vw, 22px);
+
+  /* Spacing */
+  --space-xs: clamp(4px, 0.5vw, 8px);
+  --space-sm: clamp(8px, 1vw, 12px);
+  --space-md: clamp(12px, 1.5vw, 18px);
+  --space-lg: clamp(16px, 2vw, 24px);
+}
+
 .book-appointment-AI {
   margin: auto;
-  padding: 15px;
+  padding: var(--space-md);
   background: #fff;
   color: #000;
   display: flex;
@@ -9,8 +24,12 @@
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
   overflow: hidden;
 
-  &.from-doctor { max-height: 75vh; }
-  &.default { max-height: 100vh; }
+  &.from-doctor {
+    max-height: 75vh;
+  }
+  &.default {
+    max-height: 100vh;
+  }
 
   .book-header {
     position: sticky;
@@ -18,11 +37,14 @@
     z-index: 10;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-sm);
     background: #fff;
-    padding: 6px 0 4px;
+    padding: var(--space-xs) 0;
 
-    h2 { font-size: 1.25rem; margin: 0 4px; }
+    h2 {
+      font-size: var(--fs-lg);
+      margin: 0 var(--space-xs);
+    }
   }
 
   .divider {
@@ -35,12 +57,12 @@
   .content {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px;
-    margin-top: 10px;
+    gap: var(--space-lg);
+    margin-top: var(--space-sm);
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
-    margin-bottom: 24px;
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
   }
 
   .left-panel,
@@ -52,7 +74,7 @@
   .left-panel {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--space-sm);
 
     .wave-slot {
       height: 40px;
@@ -60,22 +82,44 @@
       isolation: isolate;
       contain: layout paint;
       transform: translateZ(0);
-      margin-bottom: 6px;
+      margin-bottom: var(--space-xs);
       box-sizing: border-box;
     }
 
-    h3 { font-weight: 500; color: #00a378; margin: 4px 0; }
-    .MuiTextField-root { width: 100%; }
+    h3 {
+      font-weight: 500;
+      color: #00a378;
+      margin: var(--space-xs) 0;
+      font-size: var(--fs-md);
+    }
+
+    .MuiTextField-root {
+      width: 100%;
+      font-size: var(--fs-sm) !important;
+    }
   }
 
   .right-panel {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: var(--space-sm);
 
-    p { margin: 0; font-weight: 500; color: #00a378; }
-    .submit-btn { background: #00a378; color: #fff; }
-    .submit-btn:hover { background: #00a378; }
+    p {
+      margin: 0;
+      font-weight: 500;
+      color: #00a378;
+      font-size: var(--fs-sm);
+    }
+
+    .submit-btn {
+      background: #00a378;
+      color: #fff;
+      font-size: var(--fs-sm);
+    }
+
+    .submit-btn:hover {
+      background: #00a378;
+    }
   }
 
   /* Calendar Styles */
@@ -83,35 +127,50 @@
     background: #ffffff !important;
     border: 1px solid #e2e8ff;
     border-radius: 12px;
-    padding: 10px;
+    padding: var(--space-sm);
     width: 100%;
     box-shadow: 0 8px 20px rgba(37, 48, 127, 0.06);
     will-change: opacity;
+    font-size: var(--fs-sm);
   }
+
   .react-calendar__navigation {
     background: transparent;
-    margin-bottom: 6px;
+    margin-bottom: var(--space-xs);
+
     button {
       min-height: 34px;
       border-radius: 8px;
-      &:hover { background: #f3f6ff; }
+      font-size: var(--fs-sm);
+
+      &:hover {
+        background: #f3f6ff;
+      }
     }
   }
+
   .react-calendar__tile {
     color: #0f1955 !important;
     font-weight: 500;
     border-radius: 10px;
+    font-size: var(--fs-sm);
     transition: transform 120ms ease, background 120ms ease;
-    &:hover { background: #eef2ff !important; }
+
+    &:hover {
+      background: #eef2ff !important;
+    }
   }
+
   .react-calendar__tile--active {
     background: #00a378 !important;
     color: black !important;
   }
+
   .react-calendar__tile--now {
     background: #f6f7ff !important;
     border: 1.5px solid #00a378 !important;
   }
+
   .react-calendar__tile:disabled {
     background: #fafbff !important;
     color: #a0a6c0 !important;
@@ -119,7 +178,6 @@
     cursor: not-allowed !important;
     pointer-events: none;
   }
-  .MuiTextField-root { font-size: 14px !important; }
 }
 
 /* ===== Speech wave ===== */
@@ -131,7 +189,8 @@
   height: 100%;
   width: 100%;
   position: absolute;
-  left: 0; top: 0;
+  left: 0;
+  top: 0;
   pointer-events: none;
   transform: translateZ(0);
   padding-bottom: 4px;
@@ -140,9 +199,12 @@
   .bar {
     width: 4px;
     height: 8px;
-    color: #00a378; /* bot */
-    
-    background-image: radial-gradient(circle at center, currentColor 2px, transparent 2.5px);
+    color: #00a378;
+    background-image: radial-gradient(
+      circle at center,
+      currentColor 2px,
+      transparent 2.5px
+    );
     background-size: 4px 7px;
     background-position: center bottom;
     background-repeat: repeat-y;
@@ -151,41 +213,23 @@
     transform: translateZ(0);
     will-change: transform, height;
   }
-  
+
   &[data-listening="true"] .bar {
-    color: #0d338c; /* user hint */
+    color: #0d338c;
   }
 
   &[data-active="true"] {
     .bar {
-      /* Increased duration slightly for a smoother sweep */
       animation: waveHeight 800ms infinite ease-in-out,
-                 waveShake 1000ms infinite ease-in-out;
+        waveShake 1000ms infinite ease-in-out;
     }
-    
-    /* SCSS loop to generate a cascading delay from left to right */
+
     @for $i from 1 through 20 {
       .bar:nth-child(#{$i}) {
-        /* The delay increases for each bar, creating the sweep effect */
         animation-delay: (($i - 1) * 35ms), (($i - 1) * 30ms);
       }
     }
   }
-}
-
-@keyframes waveHeight {
-  0%   { height: 8px; }
-  25%  { height: 22px; }
-  50%  { height: 32px; }
-  75%  { height: 20px; }
-  100% { height: 8px; }
-}
-
-@keyframes waveShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(0.8px); }
-  50% { transform: translateX(-0.8px); }
-  75% { transform: translateX(0.5px); }
 }
 
 /* Top controls */
@@ -194,29 +238,44 @@
   right: 100px;
   top: 10px;
   display: flex;
-  gap: 12px;
+  gap: var(--space-sm);
   align-items: center;
   z-index: 999;
 
   .live-transcript {
-    padding: 8px 12px;
-    background: rgba(0,0,0,0.72);
+    padding: var(--space-sm);
+    background: rgba(0, 0, 0, 0.72);
     color: #fff;
     border-radius: 16px;
     max-width: 420px;
+    font-size: var(--fs-sm);
   }
 }
 
-/* Responsive */
+/* Responsive tweaks */
 @media (max-width: 1024px) {
-  .book-appointment-AI .content { grid-template-columns: 1fr; }
-  .top-controls { right: 16px; }
+  .book-appointment-AI .content {
+    grid-template-columns: 1fr;
+  }
+
+  .top-controls {
+    right: 16px;
+  }
 }
+
 @media (max-width: 640px) {
-  .book-appointment-AI { padding: 10px; }
-  .book-appointment-AI .content { padding: 12px; gap: 16px; }
+  .book-appointment-AI {
+    padding: var(--space-sm);
+  }
+
+  .book-appointment-AI .content {
+    padding: var(--space-sm);
+    gap: var(--space-md);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .voice-wave .bar { animation: none !important; }
+  .voice-wave .bar {
+    animation: none !important;
+  }
 }

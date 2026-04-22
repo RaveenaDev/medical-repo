@@ -157,7 +157,7 @@ const PatientList = () => {
   const totalPatients = receptionist.filteredPatients;
 
   // console.log("Total :", totalPatients);
-  const isMobile = useMediaQuery("(max-width:480px)");
+  const isMobile = useMediaQuery("(max-width:770px)");
   const isTablet = useMediaQuery("(max-width:1080px)");
 
   return (
@@ -189,7 +189,7 @@ const PatientList = () => {
               borderBottom: "0.5px solid #4A4A4A8C",
               py: 1.5,
               px: { xs: 1, md: 0 },
-              flexDirection: { xs: "column", lg: "row" },  // ← column until lg (1200px)
+              flexDirection: { xs: "column", lg: "row" }, // ← column until lg (1200px)
               gap: { xs: 1.5, lg: 0 },
             }}
           >
@@ -206,7 +206,11 @@ const PatientList = () => {
               {/* PATIENT COUNT */}
               <span
                 className={styles.patientCount}
-                style={{ fontSize: isMobile ? "22px" : "28px", lineHeight: 1.2, whiteSpace: "nowrap" }}
+                style={{
+                  fontSize: isMobile ? "22px" : "28px",
+                  lineHeight: 1.2,
+                  whiteSpace: "nowrap",
+                }}
               >
                 {noOfPatients} <span>Patients</span>
               </span>
@@ -222,7 +226,12 @@ const PatientList = () => {
               >
                 <Typography
                   variant="body2"
-                  sx={{ color: "#00a378", minWidth: "52px", fontWeight: 500, whiteSpace: "nowrap" }}
+                  sx={{
+                    color: "#00a378",
+                    minWidth: "52px",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                  }}
                 >
                   Sort by:
                 </Typography>
@@ -240,7 +249,9 @@ const PatientList = () => {
                     fontSize: { xs: "11px", md: "14px" },
                     boxShadow: "0px 4px 4px 0px #BDBDBD1C",
                     borderRadius: "8px",
-                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "transparent" },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "transparent",
+                    },
                   }}
                 >
                   <MenuItem value="desc">Newest to Oldest</MenuItem>
@@ -256,12 +267,12 @@ const PatientList = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
-                width: { xs: "100%", lg: "auto" },   // ← full width on tablet/mobile
+                width: { xs: "100%", lg: "auto" }, // ← full width on tablet/mobile
               }}
             >
               <div
                 className={styles["search-wrapper"]}
-                style={{ flex: 1 }}               // ← search grows to fill available space
+                style={{ flex: 1 }} // ← search grows to fill available space
               >
                 <div className={styles["search-input-wrapper"]}>
                   <Search size={18} className={styles["search-icon"]} />
@@ -289,8 +300,8 @@ const PatientList = () => {
                   borderRadius: "5px",
                   fontSize: { xs: "11px", sm: "14px" },
                   color: "#00a378",
-                  whiteSpace: "nowrap",            // ← prevents "Filter" from wrapping
-                  flexShrink: 0,                   // ← never squish the button
+                  whiteSpace: "nowrap", // ← prevents "Filter" from wrapping
+                  flexShrink: 0, // ← never squish the button
                   "&:focus": {
                     outline: "none",
                     boxShadow: "none",
