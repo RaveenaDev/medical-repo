@@ -129,7 +129,7 @@ const CommonPanel = ({
             }}
           >
             <Card
-              title="Total Patient"
+              title="Patients"
               subtitle={noOfPatients ?? 0}
               handleClickCb={() => navigate(`/receptionist/patients`)}
             />
@@ -146,7 +146,7 @@ const CommonPanel = ({
               customStyle={{
                 backgroundColor: "#EAA000",
               }}
-              title="Total Inpatients"
+              title="Inpatients"
               subtitle={noOfInpatients ?? 0}
               handleClickCb={() => navigate(`/receptionist/inPatients`)}
             />
@@ -163,7 +163,7 @@ const CommonPanel = ({
               customStyle={{
                 backgroundColor: "#2E823B",
               }}
-              title="Total Doctors"
+              title="Doctors"
               subtitle={noOfDoctors ?? 0}
               handleClickCb={() =>
                 navigate(`/receptionist/doctors`, { state: { doctors } })
@@ -182,7 +182,7 @@ const CommonPanel = ({
               customStyle={{
                 backgroundColor: "#66A7B4",
               }}
-              title="Total Rooms"
+              title="Rooms"
               subtitle={noOfRooms ?? 0}
               handleClickCb={() =>
                 navigate(`/receptionist/rooms`, {

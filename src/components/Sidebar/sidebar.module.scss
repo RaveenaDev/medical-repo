@@ -42,10 +42,11 @@
     height: 56px;
     background: transparent;
     position: fixed;
+    pointer-events: none;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100; // ← bump this way up
+    z-index: 9999; // ← bump this way up
     // helps it visually separate
   }
 }
@@ -58,7 +59,8 @@
   display: flex;
   align-items: center;
   color: #00a378;
-  z-index: 9999;
+
+  pointer-events: auto;
 }
 
 // Sidebar drawer on tablet

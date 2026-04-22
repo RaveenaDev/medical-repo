@@ -31,8 +31,13 @@ const PatientHeader = ({
   const isMobile = useMediaQuery("(max-width: 480px)");
   const isTablet = useMediaQuery("(max-width:1080px)");
   return (
-    <div className="patient-header-reception" style={{
-              marginLeft : isTablet ? "3rem" : 0, zIndex: isTablet ? '10000' : '' }}>
+    <div
+      className="patient-header-reception"
+      style={{
+        paddingLeft: isTablet && !isMobile ? "3rem" : 0,
+        zIndex: isTablet ? "1000" : "",
+      }}
+    >
       <div className="patient-info">
         <span
           onClick={() => navigate(-1)}
