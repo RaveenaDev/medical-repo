@@ -75,7 +75,7 @@ const Billings = (props) => {
           background: " #F1F1F1",
           zIndex: 100,
           width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "2rem" : 0,
+          marginLeft: isTablet && !isMobile ? "2rem" : 0,
         }}
       >
         <div className={styles["billings-header"]}>

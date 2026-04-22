@@ -767,7 +767,7 @@ const BillDetailsReception = (props) => {
     });
   };
 
-  const isMobile = useMediaQuery("(max-width:480px)");
+  const isMobile = useMediaQuery("(max-width:640px)");
   const isTablet = useMediaQuery("(max-width:1080px)");
   if (loading) {
     return (
@@ -782,8 +782,13 @@ const BillDetailsReception = (props) => {
     <div className={`${styles["billing-modal-overlay"]}`}>
       <div className={`${styles["billing-modal-content"]} `}>
         <div className={styles["billing-modal-header"]}>
-          <div className={styles["header-content"]} style={{width: isTablet ? "90%" : "77%",
-              marginLeft : isTablet ? "1.5rem" : 0,}}>
+          <div
+            className={styles["header-content"]}
+            style={{
+              width: isTablet ? "90%" : "77%",
+              marginLeft: isTablet ? "1.5rem" : 0,
+            }}
+          >
             <button
               className={styles["close-btn"]}
               onClick={() => navigate(-1)}

@@ -45,8 +45,8 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 9999;        // ← bump this way up
-  // helps it visually separate
+    z-index: 100; // ← bump this way up
+    // helps it visually separate
   }
 }
 
@@ -57,7 +57,8 @@
   padding: 6px;
   display: flex;
   align-items: center;
-  color: #25307F;
+  color: #00a378;
+  z-index: 9999;
 }
 
 // Sidebar drawer on tablet
@@ -67,8 +68,8 @@
     top: 0;
     left: 0;
     height: 100vh !important;
-    width: 28%;            // ← changed from 220px to 20%
-    z-index: 10002;        // ← higher than overlay
+    width: 28%; // ← changed from 220px to 20%
+    z-index: 10002; // ← higher than overlay
     background: #fff;
     box-shadow: 4px 0 16px rgba(0, 0, 0, 0.12);
     transform: translateX(-100%);
@@ -90,7 +91,7 @@
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);  // ← slightly darker looks better
-    z-index: 10001;                      // ← below drawer (10000), above content
+    background: rgba(0, 0, 0, 0.45); // ← slightly darker looks better
+    z-index: 10001; // ← below drawer (10000), above content
   }
 }
