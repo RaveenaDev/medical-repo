@@ -161,15 +161,13 @@ const InPatients = (props) => {
       </div>
       <div className={styles.patientsHeader}>
         <div className={styles.headerTop}>
-          <div className={styles.headerLeft} style={{ marginTop: "2px" }}>
-            <ChevronLeft
-              size={28}
-              strokeWidth={1.7}
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate(-1)}
-            />
-            <span className={styles.backText}>Inpatient List</span>
-          </div>
+          <ChevronLeft
+            size={28}
+            strokeWidth={1.7}
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate(-1)}
+          />
+          <span className={styles.backText}>Inpatient List</span>
         </div>
         <hr />
         <div className={styles.headerBottom}>
@@ -185,22 +183,59 @@ const InPatients = (props) => {
                 onChange={handleSortChange}
                 size="small"
                 sx={{
-                  minWidth: 180,
+                  minWidth: { xs: 110, sm: 130, md: 160 }, //  responsive width
+                  height: { xs: 30, sm: 32, md: 36 },
+
                   background: "#fff",
                   color: "#4A4A4A",
-                  boxShadow: "0px 4px 4px 0px #BDBDBD1C",
-                  border: "1px solid transparent",
-                  outline: "none",
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "inherit", // Removes hover effect
+                  fontSize: {
+                    xs: "11px",
+                    sm: "12px",
+                    md: "13px",
                   },
+
+                  boxShadow: "0px 2px 4px rgba(0,0,0,0.06)", // lighter
+                  border: "1px solid transparent",
+
+                  "& .MuiSelect-select": {
+                    padding: {
+                      xs: "2px 6px",
+                      sm: "4px 8px",
+                      md: "6px 10px",
+                    },
+                    display: "flex",
+                    alignItems: "center",
+                  },
+
+                  "& .MuiSvgIcon-root": {
+                    fontSize: {
+                      xs: "16px",
+                      sm: "18px",
+                    },
+                  },
+
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent",
+                  },
+
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent", // Hides the border
+                    borderColor: "transparent",
                   },
                 }}
               >
-                <MenuItem value="desc">Newest to Oldest</MenuItem>
-                <MenuItem value="asc">Oldest to Newest</MenuItem>
+                <MenuItem
+                  value="desc"
+                  sx={{ fontSize: "12px", minHeight: "32px" }}
+                >
+                  Newest
+                </MenuItem>
+
+                <MenuItem
+                  value="asc"
+                  sx={{ fontSize: "12px", minHeight: "32px" }}
+                >
+                  Oldest
+                </MenuItem>
               </Select>
             </div>
           </div>
@@ -260,7 +295,6 @@ const InPatients = (props) => {
                       <th style={{ backgroundColor: "#F1F1F1" }}>Wing/Floor</th>
                       <th style={{ backgroundColor: "#F1F1F1" }}>Doctor</th>
                       <th style={{ backgroundColor: "#F1F1F1" }}>Status</th>
-                      {/*<th></th>*/}
                     </tr>
                   </thead>
                   <tbody>
