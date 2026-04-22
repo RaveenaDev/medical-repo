@@ -45,3 +45,31 @@
     }
   }
 }
+@media (max-width: 768px) {
+  .todayRow {
+    width: 100%; // take full width
+    max-width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+
+    .text {
+      gap: 2px;
+    }
+
+    .label {
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .date {
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .calendarWrapperIn {
+      .calendarIcon {
+        font-size: 18px;
+      }
+    }
+  }
+}

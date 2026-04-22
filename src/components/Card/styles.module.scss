@@ -46,3 +46,39 @@
     }
   }
 }
+@media (max-width: 720px) {
+  .card {
+    &__contentWrap {
+      padding: 12px;
+      flex-direction: column; // stack content
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    &__left {
+      align-items: flex-start; // better text alignment
+    }
+
+    &__rect {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px; // FIX: remove negative offset
+      margin-right: 8px;
+    }
+
+    &__title {
+      font-size: 12px;
+    }
+
+    &__subtitle {
+      font-size: 15px;
+      line-height: 1.3;
+    }
+
+    &__right {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end; // if you add icons later
+    }
+  }
+}
