@@ -63,10 +63,6 @@ const PatientCard = ({ patient }) => {
         </div>
         <div className="patientCardDetails">
           <div>
-            <div> Upcoming Appointments: </div>
-            <div className="value">19 Feb 2025</div>
-          </div>
-          <div>
             <div>Admission Date: </div>
             <div className="value">
               {patient?.date

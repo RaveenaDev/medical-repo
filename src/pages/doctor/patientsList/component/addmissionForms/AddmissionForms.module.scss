@@ -21,7 +21,11 @@
     h2 {
       font-size: 28px;
       font-weight: 500;
-      color: #0c1b72;
+      color: #00a378;
+    }
+
+    @media (max-width: 1024px) {
+      padding-left: 2rem;
     }
   }
   .headerBottom {
@@ -32,7 +36,7 @@
     .patientCount {
       font-size: 28px;
       font-weight: 600;
-      color: #0c1b72;
+      color: #00a378;
 
       span {
         font-size: 16px;
@@ -52,7 +56,7 @@
         display: flex;
         align-items: center;
         gap: 1vw;
-        color: #0c1b72;
+        color: #00a378;
 
         select {
           padding: 4px 8px;
@@ -68,11 +72,11 @@
         gap: 6px;
         cursor: pointer;
         font-weight: 500;
-        color: #0c1b72;
+        color: #00a378;
 
         svg {
           font-size: 16px;
-          color: #0c1b72;
+          color: #00a378;
         }
       }
     }
@@ -162,7 +166,7 @@
           // }
 
           &.patientId {
-            color: #0c1b72;
+            color: #00a378;
             font-weight: 500;
             //font-family: monospace;
           }
@@ -170,7 +174,7 @@
           &.patientInfo {
             .patientName {
               font-weight: 500;
-              color: #0c1b72;
+              color: #00a378;
               margin-bottom: 4px;
             }
 
@@ -181,7 +185,7 @@
           }
 
           &.bedNumber {
-            color: #0c1b72;
+            color: #00a378;
             font-weight: 500;
           }
 
@@ -386,4 +390,75 @@
   display: flex;
   align-items: center;
   gap: 1vw;
+}
+/*  Tablet (≤768px) */
+@media (max-width: 768px) {
+  .headerBottom {
+    gap: 10px;
+  }
+
+  .headerBottom .verticalDivider {
+    margin-left: 0;
+  }
+
+  .headerBottom .patientCount {
+    font-size: clamp(18px, 2.5vw, 22px);
+  }
+
+  .headerBottom .patientCount span {
+    font-size: 13px;
+  }
+
+  .headerBottom .sortFilterSection {
+    margin-left: 0 !important;
+    gap: 8px;
+  }
+
+  .headerBottom .sortBy {
+    width: 100%;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .headerBottom .filterSearch {
+    width: 100%;
+    display: flex;
+    gap: 6px;
+  }
+
+  .headerBottom .search-wrapper {
+    flex: 1;
+    padding: 6px 8px;
+  }
+
+  .headerBottom .search-input {
+    font-size: 12px;
+  }
+}
+
+/*  Mobile (≤480px) */
+@media (max-width: 480px) {
+  .headerBottom {
+    gap: 8px;
+  }
+
+  .headerBottom .patientCount {
+    font-size: 16px;
+  }
+
+  .headerBottom .patientCount span {
+    font-size: 12px;
+  }
+
+  .headerBottom .sortBy span {
+    font-size: 12px;
+  }
+
+  .headerBottom .search-wrapper {
+    padding: 5px 6px;
+  }
+
+  .headerBottom .search-input {
+    font-size: 11.5px;
+  }
 }

@@ -13,7 +13,7 @@ import { getAppointmentByDate } from "../../../components/State/Doctor/Action.js
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 export const Consultation = () => {
   const [activeModal, setActiveModal] = useState(null);
 
@@ -28,7 +28,7 @@ export const Consultation = () => {
   const closeModal = () => setActiveModal(null);
 
   const [selectedDate, setSelectedDate] = useState(
-    dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD"),
   );
 
   const handleChange = (e) => {
@@ -73,13 +73,13 @@ export const Consultation = () => {
 
   const appointments = useSelector((store) => store.doctor.appointmentsByDate);
   const isLoadingAppointmentsByDate = useSelector(
-    (store) => store.doctor.isLoadingAppointmentsByDate
+    (store) => store.doctor.isLoadingAppointmentsByDate,
   );
 
   // console.log("Appointments: ",appointments)
 
   const ongoingAppointment = appointments.find(
-    (app) => app.status === "Ongoing"
+    (app) => app.status === "Ongoing",
   );
 
   const handleApplyForm = (form) => {
@@ -87,11 +87,13 @@ export const Consultation = () => {
     setSelectedForm(form);
   };
 
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
   return (
     <div>
       <div>
-        <CommonPanelMini />
-
+        <div style={{ paddingLeft: isLaptop ? "3rem" : "" }}>
+          <CommonPanelMini />
+        </div>
         {/* Header 1 */}
         <div className={styles["header-1"]}>
           <div className={styles["header-left"]}>

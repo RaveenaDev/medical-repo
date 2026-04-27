@@ -13,7 +13,7 @@ import ManageMedication from "./form/ManageMedication";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientMedicalRecords } from "../../../../../components/State/Doctor/Action";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import printJS from "print-js";
 import PrintMAR from "./printMAR/PrintMAR";
 export const combineDateAndTime = (dateStr, timeStr) => {
@@ -49,10 +49,10 @@ const MedAdminRecord = ({ patientId, caseId, patientInfo }) => {
   }, [dispatch, patientId]);
 
   const medicalRecords = useSelector(
-    (store) => store.doctor.patientMedicalRecords
+    (store) => store.doctor.patientMedicalRecords,
   );
   const isLoading = useSelector(
-    (store) => store.doctor.isLoadingGetPatientMedicalRecords
+    (store) => store.doctor.isLoadingGetPatientMedicalRecords,
   );
   // console.log("PATIENT MEDICAL RECODS", medicalRecords);
 

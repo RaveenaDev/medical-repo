@@ -70,6 +70,10 @@
 .table,
 .tbody {
   width: 76vw;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 }
 
 .th {

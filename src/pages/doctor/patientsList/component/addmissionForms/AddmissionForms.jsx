@@ -94,13 +94,23 @@ const AdmissionForms = () => {
                 onChange={handleSortChange}
                 size="small"
                 sx={{
-                  minWidth: 180,
+                  minWidth: { xs: 110, sm: 130, md: 180 },
+                  height: { xs: 32, sm: 34, md: 40 },
+                  fontSize: { xs: "12px", sm: "13px", md: "14px" },
                   background: "#fff",
                   color: "#4A4A4A",
                   boxShadow: "0px 4px 4px 0px #BDBDBD1C",
                   border: "1px solid transparent",
                   "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: "transparent",
+                  },
+
+                  "& .MuiSelect-select": {
+                    padding: {
+                      xs: "6px 8px",
+                      sm: "6px 10px",
+                      md: "8px 12px",
+                    },
                   },
                 }}
               >

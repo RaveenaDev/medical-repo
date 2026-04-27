@@ -407,6 +407,10 @@
   width: 45.6vw;
   margin-left: 1.5vw;
   margin-top: 1.5vh;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 }
 
 .lp-7 {

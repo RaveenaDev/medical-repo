@@ -364,12 +364,12 @@ const Sidebar = ({ role, onOpenAppointment, onCloseAppointment }) => {
                   }}
                 >
                   <div style={{ display: "flex", gap: 12, marginLeft: "25px" }}>
-                    <img
+                    {/* <img
                       style={{ width: "3.8rem", height: "3.8rem" }}
                       src={hospitalImage}
                       alt="Sai Asha"
-                    />
-                    <div style={{ paddingTop: "9px" }}>
+                    /> */}
+                    <div style={{ padding: "9px" }}>
                       <p
                         style={{
                           color: "#25307F",

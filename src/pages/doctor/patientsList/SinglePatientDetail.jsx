@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import BillingDetails from "./component/components/BillingDetails.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientDetailsByID } from "../../../components/State/Doctor/Action.js";
+import { useMediaQuery } from "@mui/material";
 const SinglePatientDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const SinglePatientDetail = () => {
   // console.log("Pat Details: ", patientDetails);
 
   const isLoading = useSelector(
-    (store) => store.doctor.isLoadingPatientDetails
+    (store) => store.doctor.isLoadingPatientDetails,
   );
 
   // console.log("GOTCHA: ",patientDetails)
@@ -52,9 +53,13 @@ const SinglePatientDetail = () => {
 
   const openBilling = () => setActiveModal("billing");
   const closeModal = () => setActiveModal(null);
+
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
   return (
     <main>
-      <CommonPanelMini />
+      <div style={{ paddingLeft: isLaptop ? "3rem" : "" }}>
+        <CommonPanelMini />
+      </div>
       <div className={styles.container}>
         <header className={styles.header}>
           <div className={styles.headerLeft}>

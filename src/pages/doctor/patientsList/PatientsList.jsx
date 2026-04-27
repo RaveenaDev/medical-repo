@@ -17,7 +17,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import dayjs from "dayjs";
-import { Avatar, TablePagination, Tooltip } from "@mui/material";
+import { Avatar, TablePagination, Tooltip, useMediaQuery } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
 import AddPatientForm from "./component/form/AddPatient/AddPatientForm.jsx";
@@ -34,19 +34,19 @@ const PatientsList = () => {
   }, [dispatch]);
 
   const patientsAdmitted = useSelector(
-    (store) => store.doctor.admittedPatients
+    (store) => store.doctor.admittedPatients,
   );
 
   const admissionRequests = useSelector(
-    (store) => store.doctor.admissionRequests
+    (store) => store.doctor.admissionRequests,
   );
 
   const isLoadingGetAdmissionRequests = useSelector(
-    (store) => store.doctor.isLoadingGetAdmissionRequests
+    (store) => store.doctor.isLoadingGetAdmissionRequests,
   );
 
   const isLoadingGetAdmittedPatients = useSelector(
-    (store) => store.doctor.isLoadingGetAdmittedPatients
+    (store) => store.doctor.isLoadingGetAdmittedPatients,
   );
   // replace your current page/rowsPerPage/filter state with this:
   const [filter, setFilter] = useState(() => {
@@ -154,7 +154,7 @@ const PatientsList = () => {
   };
 
   const [selectedDate, setSelectedDate] = useState(
-    dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD"),
   );
 
   useEffect(() => {
@@ -183,8 +183,8 @@ const PatientsList = () => {
 
   useEffect(() => {
     sessionStorage.setItem(
-        "pld_pagination",
-        JSON.stringify({ page, rowsPerPage, filter })
+      "pld_pagination",
+      JSON.stringify({ page, rowsPerPage, filter }),
     );
   }, [page, rowsPerPage, filter]);
 
@@ -196,7 +196,7 @@ const PatientsList = () => {
 
   const currentPatients = filteredPatients.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -209,11 +209,6 @@ const PatientsList = () => {
 
   return (
     <div className="patientsListDoctorContainer">
-      {/*<div className="listHeader">*/}
-      {/*  <Searchbar />*/}
-      {/*  <Notifications />*/}
-      {/*</div>*/}
-
       <div className="greeting">
         <h4 className="heading">Hello, Dr. {doctorName}</h4>
         <p>
@@ -227,7 +222,7 @@ const PatientsList = () => {
           <ChevronLeft
             size={25}
             strokeWidth={1.7}
-            style={{ cursor: "pointer",color:'#25307F' }}
+            style={{ cursor: "pointer", color: "#25307F" }}
             onClick={() => {
               navigate("/doctor");
             }}
@@ -383,7 +378,7 @@ const PatientsList = () => {
                           const sendToSet = new Set(
                             tokens
                               .map((t) => t.trim().toLowerCase())
-                              .filter(Boolean)
+                              .filter(Boolean),
                           );
 
                           const showDoctor =
