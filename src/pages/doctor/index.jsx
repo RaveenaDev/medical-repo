@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useMediaQuery,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
@@ -122,7 +123,16 @@ const DoctorOverview = ({ todayAppointments }) => {
   };
 
   const handleDateChange = (e) => {
-    setInternalSelectedDate(e.target.value);
+    const value = e.target.value;
+    if (!value) {
+      setSelectedDate(dayjs());
+      return;
+    }
+    const parsed = dayjs(value);
+
+    if (parsed.isValid()) {
+      setInternalSelectedDate(parsed);
+    }
   };
 
   const shapeStyles = { bgcolor: "#25307f", width: 30, height: 26 };
@@ -593,6 +603,9 @@ const DoctorOverview = ({ todayAppointments }) => {
         "DD MMM YYYY",
       )}`;
 
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
+  const isTablet = useMediaQuery("(max-width: 768px)");
+
   return (
     <>
       <div>
@@ -601,8 +614,9 @@ const DoctorOverview = ({ todayAppointments }) => {
             position: "fixed",
             zIndex: 10,
             top: 0,
-            width: "77.6vw",
+            width: isLaptop ? "100vw" : "77.6vw",
             background: " #F1F1F1",
+            padding: isLaptop ? "0 5vw" : "0",
             paddingBottom: "1rem",
           }}
         >
@@ -647,7 +661,7 @@ const DoctorOverview = ({ todayAppointments }) => {
                   onClick={openAdmitNewPatient}
                 >
                   <p>
-                    <span className={styles.greenDot} />{" "}
+                    <span className={styles.greenDot} />
                     <span>{filteredRequests.length} Addmission Requests </span>
                   </p>
                   <ChevronRight className={styles.rightArrow} />
@@ -831,7 +845,7 @@ const DoctorOverview = ({ todayAppointments }) => {
           </Grid>
         </div>
 
-        <div style={{ marginTop: "28vh" }}>
+        <div style={{ marginTop: isTablet ? "30vh" : "28vh" }}>
           <div className={styles.parent1}>
             <div>
               <div className={styles.child1}>

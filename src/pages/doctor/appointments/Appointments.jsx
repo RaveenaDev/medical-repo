@@ -12,6 +12,7 @@ import {
   Chip,
   Typography,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CommonPanel from "../components/CommonPanel";
@@ -30,6 +31,8 @@ const Appointments = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
+    if (!selectedDate || !dayjs(selectedDate).isValid()) return;
+
     const startDate = selectedDate.startOf("day").toISOString();
     const endDate = selectedDate.endOf("day").toISOString();
 
@@ -37,13 +40,22 @@ const Appointments = () => {
 
     ["Scheduled", "Ongoing", "Waiting", "completed"].forEach((status) => {
       dispatch(
-        getAllAppointments(status, startDate, endDate, page, rowsPerPage)
+        getAllAppointments(status, startDate, endDate, page, rowsPerPage),
       );
     });
   }, [dispatch, selectedDate, page, rowsPerPage]);
 
   const handleDateChange = (e) => {
-    setSelectedDate(dayjs(e.target.value));
+    const value = e.target.value;
+    if (!value) {
+      setSelectedDate(dayjs());
+      return;
+    }
+    const parsed = dayjs(value);
+
+    if (parsed.isValid()) {
+      setSelectedDate(parsed);
+    }
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
@@ -57,26 +69,26 @@ const Appointments = () => {
   // Appointments
   const scheduledAppointments = useSelector((store) =>
     store.doctor.scheduledAppointments?.filter(
-      (appt) => appt.doctor._id === doctorId
-    )
+      (appt) => appt.doctor._id === doctorId,
+    ),
   );
 
   const ongoingAppointments = useSelector((store) =>
     store.doctor.ongoingAppointments?.filter(
-      (appt) => appt.doctor._id === doctorId
-    )
+      (appt) => appt.doctor._id === doctorId,
+    ),
   );
 
   const waitingAppointments = useSelector((store) =>
     store.doctor.waitingAppointments?.filter(
-      (appt) => appt.doctor._id === doctorId
-    )
+      (appt) => appt.doctor._id === doctorId,
+    ),
   );
 
   const completedAppointments = useSelector((store) =>
     store.doctor.completedAppointments?.filter(
-      (appt) => appt.doctor._id === doctorId
-    )
+      (appt) => appt.doctor._id === doctorId,
+    ),
   );
 
   const isLoading = useSelector((store) => store.doctor.isLoadingAppointments);
@@ -85,29 +97,29 @@ const Appointments = () => {
   const scheduledCount = useSelector(
     (store) =>
       store.doctor.scheduledAppointments?.filter(
-        (appt) => appt.doctor._id === doctorId
-      ).length
+        (appt) => appt.doctor._id === doctorId,
+      ).length,
   );
 
   const ongoingCount = useSelector(
     (store) =>
       store.doctor.ongoingAppointments?.filter(
-        (appt) => appt.doctor._id === doctorId
-      ).length
+        (appt) => appt.doctor._id === doctorId,
+      ).length,
   );
 
   const waitingCount = useSelector(
     (store) =>
       store.doctor.waitingAppointments?.filter(
-        (appt) => appt.doctor._id === doctorId
-      ).length
+        (appt) => appt.doctor._id === doctorId,
+      ).length,
   );
 
   const completedCount = useSelector(
     (store) =>
       store.doctor.completedAppointments?.filter(
-        (appt) => appt.doctor._id === doctorId
-      ).length
+        (appt) => appt.doctor._id === doctorId,
+      ).length,
   );
 
   const boxData = [
@@ -133,7 +145,7 @@ const Appointments = () => {
 
   const activeLabel = useMemo(
     () => boxData.find((box) => box.id === activeBox)?.label,
-    [activeBox]
+    [activeBox],
   );
 
   switch (activeLabel) {
@@ -156,25 +168,27 @@ const Appointments = () => {
     default:
       appointments = [];
   }
+
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
+  const isTablet = useMediaQuery("(max-width: 768px)");
+
   return (
     <div style={{ height: "99dvh", overflow: "hidden", background: "#F1F1F1" }}>
       <div
         style={{
           position: "fixed",
           top: 0,
-          width: "77%",
+          width: isLaptop ? "100%" : "77%",
           background: "#F1F1F1",
           zIndex: 100,
+          padding: isLaptop ? "0 2rem" : "0",
         }}
       >
         <CommonPanel />
       </div>
 
-      <div style={{ marginTop: "22vh" }}>
-        <div
-          className={styles.todayRow}
-          style={{ padding: "6px 9px", width: "10vw" }}
-        >
+      <div style={{ marginTop: isTablet ? "22vh" : "20vh" }}>
+        <div className={styles.todayRow}>
           <div className={styles.text}>
             <span className={styles.label} style={{ fontSize: "12px" }}>
               {selectedDate.format("YYYY-MM-DD") ===
@@ -194,7 +208,7 @@ const Appointments = () => {
             <input
               type="date"
               id="appointmentDatePicker"
-              value={selectedDate.format("YYYY-MM-DD")}
+              value={selectedDate ? selectedDate.format("YYYY-MM-DD") : ""}
               onChange={handleDateChange}
             />
           </div>
@@ -229,10 +243,11 @@ const Appointments = () => {
                     color: "#25307F",
                     paddingBottom: "4px",
                     cursor: "pointer",
+                    display: "flex",
                   }}
                   onClick={handleBack}
                 >
-                  <ArrowBackIosIcon sx={{ verticalAlign: "middle" }} />{" "}
+                  <ArrowBackIosIcon sx={{ verticalAlign: "middle" }} />
                   Appointments
                 </h3>
               </Grid>
@@ -244,6 +259,9 @@ const Appointments = () => {
                 padding: "0 2rem",
                 display: "flex",
                 gap: "1rem",
+                overflowX: "auto", //  scroll instead of wrap
+                whiteSpace: "nowrap", //  prevent breaking
+                scrollbarWidth: "none", // Firefox
               }}
             >
               {boxData.map((box) => (
@@ -257,12 +275,15 @@ const Appointments = () => {
                     height: 48,
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                     borderRadius: 1,
                     cursor: "pointer",
                     borderBottom:
                       activeBox === box.id ? "3px solid #25307F" : "none",
                     transition: "all 0.3s ease-in-out",
+
+                    minWidth: "140px", // fixed compact size
+                    flexShrink: 0, //  prevent shrinking
                   }}
                   onClick={() => handleBoxClick(box.id)}
                 >

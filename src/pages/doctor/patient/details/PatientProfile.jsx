@@ -32,7 +32,7 @@ const PatientProfile = () => {
   const handleSendEmail = () => {
     window.open(
       `mailto:${patient?.email}?subject=Appointment Details&body=Hello, here are your appointment details.`,
-      "_blank"
+      "_blank",
     );
     setShowModal(false);
   };
@@ -40,7 +40,7 @@ const PatientProfile = () => {
   const handleSendWhatsApp = () => {
     window.open(
       `https://wa.me/${patient?.phone}?text=Hello, here are your appointment details.`,
-      "_blank"
+      "_blank",
     );
     setShowModal(false);
   };
@@ -70,10 +70,10 @@ const PatientProfile = () => {
   // console.log("Det: ", patDetails);
 
   const upcoming = patient.appointments?.filter(
-    (app) => app.status === "Scheduled"
+    (app) => app.status === "Scheduled",
   ).length;
   const completed = patient.appointments?.filter(
-    (app) => app.status === "Completed"
+    (app) => app.status === "Completed",
   ).length;
 
   if (!patient) {
@@ -83,43 +83,40 @@ const PatientProfile = () => {
   return (
     <>
       <PatientHeader patient={patient} />
-      <Grid
-        container
-        spacing={2}
-        sx={{ marginBottom: "1rem", marginTop: "60px" }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "20px",
-            padding: "5px 0",
-            width: "75vw", // Optional
+      <Box sx={{ mt: "60px", mb: 2, px: { xs: 1, sm: 2, md: 0 } }}>
+        {/* 3-column card row */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "1fr 1fr",
+              lg: "1fr 2fr 1fr",
+            },
+            gap: 2,
+            mb: 2,
           }}
         >
           {/* Box 1 - Profile Card */}
-          <div
-            style={{
-              width: "25%",
-              padding: "20px 0",
-              backgroundColor: "#FFFFFF",
-              height: "auto",
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+              borderRadius: "2px",
+              boxShadow: "0 2px 5px rgba(31,23,23,0.1)",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              borderRadius: "2px",
-              boxShadow: "0 2px 5px rgba(31, 23, 23, 0.1)",
-              textAlign: "center",
-              color: "black",
+              p: "20px 0",
+              gridColumn: { xs: "1 / -1", sm: "1 / -1", lg: "auto" },
             }}
           >
-            <div
-              style={{
+            <Box
+              sx={{
                 width: "80%",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "center",
                 alignItems: "center",
+                textAlign: "center",
               }}
             >
               <Avatar
@@ -129,7 +126,7 @@ const PatientProfile = () => {
                   width: 80,
                   height: 80,
                   borderRadius: "50%",
-                  marginBottom: "2px",
+                  mb: "2px",
                   fontSize: "2rem",
                   color: "#00a378",
                   bgcolor: "#e3e3e3",
@@ -137,12 +134,13 @@ const PatientProfile = () => {
               >
                 {patient.name[0].toUpperCase()}
               </Avatar>
+
               <h4
                 style={{
                   margin: "2px 0",
                   fontSize: "20px",
                   fontWeight: 500,
-                  color: "#25307F",
+                  color: "#00a378",
                 }}
               >
                 {patient.name}
@@ -157,16 +155,16 @@ const PatientProfile = () => {
                 {patient.email}
               </p>
 
-              <div
-                style={{
+              <Box
+                sx={{
                   display: "flex",
                   justifyContent: "space-around",
                   width: "100%",
-                  marginTop: "10px",
+                  mt: 1,
                 }}
               >
                 <div>
-                  <h5 style={{ color: "#25307F", fontSize: "24px" }}>
+                  <h5 style={{ color: "#00a378", fontSize: "24px" }}>
                     {completed}
                   </h5>
                   <p style={{ fontSize: "14px", color: "#878787" }}>
@@ -174,21 +172,21 @@ const PatientProfile = () => {
                   </p>
                 </div>
                 <div>
-                  <h5 style={{ fontSize: "24px", color: "#25307F" }}>
+                  <h5 style={{ fontSize: "24px", color: "#00a378" }}>
                     {upcoming}
                   </h5>
                   <p style={{ fontSize: "14px", color: "#878787" }}>Upcoming</p>
                 </div>
-              </div>
+              </Box>
 
               <button
                 style={{
                   marginTop: "16px",
                   padding: "12px 10px",
                   width: "100%",
-                  border: "2px solid #25307F",
+                  border: "2px solid #00a378",
                   backgroundColor: "transparent",
-                  color: "#25307F",
+                  color: "#00a378",
                   fontSize: "14px",
                   fontWeight: "bold",
                   borderRadius: "6px",
@@ -196,19 +194,19 @@ const PatientProfile = () => {
                   transition: "all 0.3s ease",
                 }}
                 onMouseOver={(e) => {
-                  e.target.style.backgroundColor = "#25307F";
-                  e.target.style.color = "#ffffff";
+                  e.target.style.backgroundColor = "#00a378";
+                  e.target.style.color = "#fff";
                 }}
                 onMouseOut={(e) => {
                   e.target.style.backgroundColor = "transparent";
-                  e.target.style.color = "#25307F";
+                  e.target.style.color = "#00a378";
                 }}
                 onClick={() => setShowModal(true)}
               >
                 Send Message
               </button>
-              {/* Modal UI */}
 
+              {/* Dialog */}
               <Dialog
                 open={showModal}
                 onClose={() => setShowModal(false)}
@@ -216,8 +214,8 @@ const PatientProfile = () => {
                   "& .MuiPaper-root": {
                     borderRadius: "10px",
                     padding: "10px",
-                    width: "400px", // Increased width
-                    maxWidth: "90%", // Ensures responsiveness
+                    width: "400px",
+                    maxWidth: "90%",
                   },
                 }}
               >
@@ -230,7 +228,6 @@ const PatientProfile = () => {
                 >
                   Send Message Via
                 </DialogTitle>
-
                 <DialogContent sx={{ textAlign: "center", padding: "20px" }}>
                   <Button
                     fullWidth
@@ -239,7 +236,7 @@ const PatientProfile = () => {
                       backgroundColor: "#fff",
                       color: "#25D366",
                       border: "1px solid #25D366",
-                      marginBottom: "10px",
+                      mb: "10px",
                       "&:hover": {
                         backgroundColor: "#25D366",
                         color: "#fff",
@@ -249,16 +246,15 @@ const PatientProfile = () => {
                   >
                     WhatsApp
                   </Button>
-
                   <Button
                     fullWidth
                     startIcon={<Email />}
                     sx={{
                       backgroundColor: "#fff",
-                      color: "#007bff",
-                      border: "1px solid #007bff",
+                      color: "#00a378",
+                      border: "1px solid #00a378",
                       "&:hover": {
-                        backgroundColor: "#007bff",
+                        backgroundColor: "#00a378",
                         color: "#fff",
                       },
                     }}
@@ -267,16 +263,15 @@ const PatientProfile = () => {
                     Email
                   </Button>
                 </DialogContent>
-
                 <DialogActions sx={{ justifyContent: "center" }}>
                   <Button
                     onClick={() => setShowModal(false)}
                     sx={{
-                      color: "#25307F",
-                      border: "1px solid #25307F",
+                      color: "#00a378",
+                      border: "1px solid #00a378",
                       boxShadow: "0px 4px 4px 0px #C2C2C240",
                       "&:hover": {
-                        backgroundColor: "#25307F",
+                        backgroundColor: "#00a378",
                         color: "#fff",
                       },
                     }}
@@ -285,32 +280,31 @@ const PatientProfile = () => {
                   </Button>
                 </DialogActions>
               </Dialog>
-            </div>
-          </div>
+            </Box>
+          </Box>
 
-          {/* Box 2 - Personal Info (Middle Section) */}
-          <div
-            style={{
-              width: "50%",
-              minWidth: "400px",
-              backgroundColor: "#ffffff",
-              padding: "20px",
+          {/* Box 2 - Personal Info */}
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+              p: "20px",
               borderRadius: "2px",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+              minWidth: 0,
             }}
           >
             <PersonalInfo patient={patient} />
-          </div>
+          </Box>
 
           {/* Box 3 - Medical Info */}
-          <div
-            style={{
-              width: "28%",
-              backgroundColor: "#ffffff",
-              height: "auto",
-              padding: "4px 8px 12px 8px",
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+              p: "4px 8px 12px 8px",
               borderRadius: "2px",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+              minHeight: "150px",
+              minWidth: 0,
             }}
           >
             <MedicalInfo
@@ -318,43 +312,33 @@ const PatientProfile = () => {
               medicalHistory={medicalHistory}
               currentMedications={currentMedications}
               patDetails={patDetails}
-              showSymptoms={false} // Hide Symptoms section
-              showHistory={false} // Hide Social History section
+              showSymptoms={false}
+              showHistory={false}
             />
-          </div>
-        </div>
-
-        {/* Progress Tracker  */}
-        <Grid xs={12}>
-          <Box
-            sx={{
-              backgroundColor: "#FFFFFF", // Set the background color to white
-              padding: "16px 0", // Optional padding for content spacing
-              borderRadius: "8px", // Optional rounded corners
-              width: "75vw", // Optional
-            }}
-          >
-            <div style={{ paddingLeft: "38px" }}>
-              <Typography
-                variant="h3"
-                sx={{ color: "#4A4A4A", fontSize: "20px" }}
-              >
-                Progress Tracker
-              </Typography>
-
-              <Box
-                sx={{
-                  height: "1px",
-                  //   backgroundColor: "#8787877A",
-                  my: 2, // Adds top and bottom margin (equivalent to padding)
-                }}
-              />
-            </div>
-
-            <ProgressTracker patient={patient} />
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+
+        {/* Progress Tracker */}
+        <Box
+          sx={{
+            backgroundColor: "#fff",
+            p: { xs: "16px 12px", md: "16px 0" },
+            borderRadius: "8px",
+            width: "100%",
+          }}
+        >
+          <Box sx={{ pl: { xs: 1, md: "38px" } }}>
+            <Typography
+              variant="h3"
+              sx={{ color: "#4A4A4A", fontSize: "20px" }}
+            >
+              Progress Tracker
+            </Typography>
+            <Box sx={{ height: "1px", my: 2 }} />
+          </Box>
+          <ProgressTracker patient={patient} />
+        </Box>
+      </Box>
     </>
   );
 };

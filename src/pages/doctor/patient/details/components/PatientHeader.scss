@@ -11,6 +11,10 @@
   z-index: 10;
   background-color: #f1f1f1;
 
+  @media (max-width: 1080px) {
+    width: 92%;
+  }
+
   .patient-info {
     display: flex;
     align-items: center;
@@ -21,7 +25,11 @@
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
-      color: #25307f;
+      color: #00a378;
+
+      @media (max-width: 700px) {
+        font-size: 12px;
+      }
     }
 
     p {
@@ -31,12 +39,16 @@
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
       color: #878787;
+      @media (max-width: 700px) {
+        font-size: 12px;
+      }
     }
   }
 
   .patient-actions {
     display: flex;
     gap: 1rem;
+    margin-right: 1rem;
 
     .box {
       display: flex;

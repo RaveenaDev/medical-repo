@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import RecordModal from "./components/RecordsModal.jsx";
 import { getBillsByPatientId } from "../../../../../components/State/Receptionist/Action.js";
 import { useDispatch, useSelector } from "react-redux";
+import { useMediaQuery } from "@mui/material";
 
 const PatientHeader = ({
   showEditPatients = true,
@@ -26,14 +27,23 @@ const PatientHeader = ({
       document.body.style.overflow = "auto";
     };
   }, [activeModal]);
+
+  const isMobile = useMediaQuery("(max-width: 480px)");
+  const isTablet = useMediaQuery("(max-width:1080px)");
   return (
-    <div className="patient-header">
+    <div
+      className="patient-header"
+      style={{
+        paddingLeft: isTablet && !isMobile ? "3rem" : 0,
+        zIndex: isTablet ? "1000" : "",
+      }}
+    >
       <div className="patient-info">
         <span
           onClick={() => navigate(-1)}
           style={{
             transform: "translateY(4px)",
-            color: "#25307F",
+            color: " #00a378",
             cursor: "pointer",
           }}
         >

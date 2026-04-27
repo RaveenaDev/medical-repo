@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getMonthlyEvents } from "../../../components/State/Doctor/Action.js";
 import Avatar from "@mui/material/Avatar";
+import { useMediaQuery } from "@mui/material";
 
 const Calender = () => {
   const monthOptions = [
@@ -35,7 +36,7 @@ const Calender = () => {
   const [currentTimeTop, setCurrentTimeTop] = useState("0px");
   const [hoveredEventId, setHoveredEventId] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(
-    monthOptions[dayjs().month()]
+    monthOptions[dayjs().month()],
   );
 
   const handleBackBtn = () => {
@@ -177,7 +178,7 @@ const Calender = () => {
       const calendarH = slotHeight * 28;
       const minsFrom9 = now.diff(
         now.startOf("day").add(startHour, "hour"),
-        "minute"
+        "minute",
       );
       const clamped = Math.max(0, Math.min(minsFrom9, totalMins));
       const px = (clamped / totalMins) * calendarH;
@@ -191,7 +192,7 @@ const Calender = () => {
   const getTop = (startTime) => {
     const minsFrom9 = startTime.diff(
       startTime.startOf("day").add(9, "hour"),
-      "minute"
+      "minute",
     );
     return (minsFrom9 / 30) * slotHeight;
   };
@@ -228,10 +229,13 @@ const Calender = () => {
     return now.isAfter(event.startTime) && now.isBefore(event.endTime);
   });
 
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
   return (
     <>
       <div style={{ position: "relative" }}>
-        <CommonPanel />
+        <div style={{ padding: isLaptop ? "0 2rem " : "" }}>
+          <CommonPanel />
+        </div>
         <div className="header">
           <div className="title">
             <div className="chevron-icon" onClick={handleBackBtn}>
@@ -366,7 +370,7 @@ const Calender = () => {
                       .filter(
                         (ev) =>
                           ev.startTime.format("DD-MM-YYYY") ===
-                          day.format("DD-MM-YYYY")
+                          day.format("DD-MM-YYYY"),
                       )
                       .map((event) => {
                         const color = getColorById(event.id);

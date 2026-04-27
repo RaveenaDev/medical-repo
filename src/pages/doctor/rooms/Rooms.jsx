@@ -26,6 +26,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import ayu from "../rooms/Rooms.module.scss";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -94,16 +95,6 @@ const Rooms = () => {
   const totalFilteredRooms = doctor.totalFilteredRooms;
   const filteredRooms = doctor.filteredRooms;
 
-  const handleSortChange = (event) => {
-    // admin = null;
-    setSortOrder(event.target.value);
-    setFilters({
-      ...filters,
-      sort: event.target.value,
-    });
-    // console.log(event.target.value)
-  };
-
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -166,13 +157,6 @@ const Rooms = () => {
     setCurrentRoom(room);
   };
 
-  // Handle Menu Open
-  const handleMenuOpen = (event, room) => {
-    event.stopPropagation(); // Prevent interference with other clicks
-    setAnchorEl(event.currentTarget);
-    setSelectedRoom(room);
-  };
-
   // Handle Menu Close
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -197,10 +181,6 @@ const Rooms = () => {
     status: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const navigate = useNavigate();
 
   // const rooms = useSelector((state) => state.admin.rooms);
@@ -214,6 +194,8 @@ const Rooms = () => {
   const loading = doctor.isLoadingFilteredRooms;
   const doctors = useSelector((state) => state.admin.doctors);
 
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
+
   return (
     <div
       style={{
@@ -226,10 +208,10 @@ const Rooms = () => {
         style={{
           position: "fixed",
           top: "0px",
-          width: "77%",
+          width: isLaptop ? "90%" : "77%",
           background: " #F1F1F1",
           zIndex: 100,
-          padding: "4px 0",
+          padding: isLaptop ? "4px 3rem" : "4px 0",
         }}
       >
         <CommonPanel />
@@ -244,7 +226,7 @@ const Rooms = () => {
               height: "50vh", // or full height you need
             }}
           >
-            <CircularProgress sx={{ color: "#25307F" }} size={58} />
+            <CircularProgress sx={{ color: "#00a378" }} size={58} />
           </Box>
         ) : (
           <>
@@ -321,7 +303,7 @@ const Rooms = () => {
                       onClick={() => setFilterDrawerOpen(true)}
                       className={`${styles.filter} ${styles.boxStyle}`}
                     >
-                      <FiFilter fill="#25307f" />
+                      <FiFilter fill="#00a378" />
                       <p>Filter</p>
                     </div>
                   </Box>
@@ -486,7 +468,7 @@ const Rooms = () => {
                       >
                         <TableCell
                           sx={{
-                            color: "#25307F",
+                            color: "#00a378",
                             fontWeight: "bold",
                             width: "25%",
                           }}
@@ -495,7 +477,7 @@ const Rooms = () => {
                         </TableCell>
                         <TableCell
                           sx={{
-                            color: "#25307F",
+                            color: "#00a378",
                             fontWeight: "bold",
                             width: "25%",
                           }}
@@ -507,7 +489,7 @@ const Rooms = () => {
                             variant="body1"
                             sx={{
                               fontWeight: "bold",
-                              color: "#25307F",
+                              color: "#00a378",
                               cursor: "pointer",
                             }}
                           >

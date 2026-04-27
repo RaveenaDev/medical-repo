@@ -500,3 +500,92 @@
     }
   }
 }
+
+@media (max-width: 1024px) {
+  .totalLabel {
+    left: 11.2rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .totalLabel {
+    left: 10.2rem !important;
+  }
+}
+/*  FULL RESPONSIVE FIX */
+
+@media (max-width: 768px) {
+  .parent .gridContainer {
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+  }
+
+  .parent .gridContainer .right {
+    grid-column: span 2; /* take full width */
+  }
+  .parent {
+    margin-top: 21vh; /* reduce big top gap */
+  }
+
+  .parent .gridContainer {
+    grid-template-columns: 1fr; /*  stack everything */
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .parent .gridContainer .center {
+    padding: 0;
+  }
+
+  .parent .gridContainer .left,
+  .parent .gridContainer .center,
+  .parent .gridContainer .right {
+    width: 100%;
+  }
+
+  /* cards tighter */
+  .parent .gridContainer .center .card {
+    border-radius: 6px;
+  }
+
+  /* fix text scaling */
+  .heading {
+    font-size: clamp(14px, 2vw, 18px);
+  }
+
+  .sectionTitle {
+    font-size: clamp(13px, 2vw, 16px);
+  }
+
+  .name {
+    font-size: 13px;
+  }
+
+  .role {
+    font-size: 11px;
+  }
+
+  /* fix overview cards */
+  .overviewCards {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .overviewCards .card {
+    width: 30%;
+    padding: 6px;
+  }
+
+  /* fix stats */
+  .statItem {
+    padding: 6px 10px;
+  }
+
+  /* fix alerts */
+  .alertsList {
+    gap: 6px;
+  }
+
+  .alertItem {
+    width: 48%;
+  }
+}

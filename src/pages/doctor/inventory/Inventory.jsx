@@ -13,7 +13,7 @@ import {
   deleteInventoryItem,
   getInventoryByDepartment,
 } from "../../../components/State/Doctor/Action.js";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import { MoreVertical } from "lucide-react";
 import {
   Dialog,
@@ -37,11 +37,11 @@ const Inventory = () => {
 
   const rawInventoryData = useSelector((state) => state.doctor.inventory.data);
   const isLoadingInventory = useSelector(
-    (state) => state.doctor.isLoadingInventory
+    (state) => state.doctor.isLoadingInventory,
   );
   const inventoryData = useMemo(
     () => rawInventoryData || [],
-    [rawInventoryData]
+    [rawInventoryData],
   );
   const [selectedCategory, setSelectedCategory] = useState("");
   useEffect(() => {
@@ -60,7 +60,7 @@ const Inventory = () => {
     "#66A7B487",
   ];
   const departmentName = useSelector(
-    (state) => state.authentication.departmentName
+    (state) => state.authentication.departmentName,
   );
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -98,10 +98,13 @@ const Inventory = () => {
   const handleCancelDelete = () => {
     setOpenDeleteDialog(false);
   };
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
+
   return (
     <div className={inventoryStyles.wrapper}>
-      <CommonPanelMini />
-
+      <div style={{ padding: isLaptop ? "0 2rem" : "" }}>
+        <CommonPanelMini />
+      </div>
       <div className={inventoryStyles.categorySection}>
         <div className={inventoryStyles.headingRow}>
           <div className={inventoryStyles.heading}>
@@ -184,13 +187,13 @@ const Inventory = () => {
 
               const totalQuantity = items.reduce(
                 (sum, item) => sum + (item.quantity || 0),
-                0
+                0,
               );
               const avgUsage =
                 items.length > 0
                   ? items.reduce(
                       (sum, item) => sum + (parseFloat(item.usage) || 0),
-                      0
+                      0,
                     ) / items.length
                   : 0;
 
@@ -336,7 +339,7 @@ const Inventory = () => {
           <div className={inventoryStyles.tableBody}>
             {(
               inventoryData.find(
-                (cat) => cat.category.name === selectedCategory
+                (cat) => cat.category.name === selectedCategory,
               )?.items || []
             )
               .filter((item) => {

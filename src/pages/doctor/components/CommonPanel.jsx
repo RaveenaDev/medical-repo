@@ -22,7 +22,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
 
   const isActive = (path) => location.pathname.startsWith(path);
   const [selectedDate, setSelectedDate] = useState(
-    dayjs().format("YYYY-MM-DD")
+    dayjs().format("YYYY-MM-DD"),
   );
 
   useEffect(() => {
@@ -104,12 +104,12 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
             size={3}
             sx={{
               borderBottom: isActive("/doctor/patient")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
             <Card
-              title="Total Patients"
+              title="Patients"
               subtitle={noOfPatients}
               handleClickCb={() => handlePatientsClick(patients)}
             />
@@ -118,7 +118,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
             size={3}
             sx={{
               borderBottom: isActive("/doctor/inpatients")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
@@ -126,7 +126,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
               customStyle={{
                 backgroundColor: "#EAA000",
               }}
-              title="Total Inpatients"
+              title="Inpatients"
               subtitle={noOfInpatients}
               handleClickCb={() => handleInpatientsClick(inPatients)}
             />
@@ -135,7 +135,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
             size={3}
             sx={{
               borderBottom: isActive("/doctor/surgeries")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
@@ -143,7 +143,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
               customStyle={{
                 backgroundColor: "#2E823B",
               }}
-              title="Total Surgeries"
+              title="Surgeries"
               subtitle={noOfSurgeries}
               handleClickCb={() => handleSurgeriesClick(surgeries)}
             />
@@ -152,7 +152,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
             size={3}
             sx={{
               borderBottom: isActive("/doctor/rooms")
-                ? "3px solid #25307F"
+                ? "3px solid #00a378"
                 : "none",
             }}
           >
@@ -160,7 +160,7 @@ const CommonPanel = ({ setSelectedDepartment, selectedDepartment }) => {
               customStyle={{
                 backgroundColor: "#66A7B4",
               }}
-              title="Total Rooms"
+              title="Rooms"
               subtitle={noOfRooms}
               handleClickCb={() => handleRoomsClick(rooms)}
             />

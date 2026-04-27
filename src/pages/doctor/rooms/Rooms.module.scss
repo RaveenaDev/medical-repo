@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     span {
       transform: translateY(6px);
@@ -15,14 +16,14 @@
     .departmentTitle {
       color: black;
       font-weight: 500;
-      font-size: 1.3rem;
+      font-size: clamp(16px, 2vw, 20px);
     }
 
     .departmentTitleDetails {
       color: #747474;
       font-weight: 500;
       margin-left: 8px;
-      font-size: 1.3rem;
+      font-size: clamp(16px, 2vw, 20px);
     }
   }
 }
@@ -33,11 +34,11 @@
   gap: 6px;
   cursor: pointer;
   font-weight: 500;
-  color: #0c1b72;
-
+  color: #00a378;
+  font-size: clamp(12px, 1.2vw, 14px);
   svg {
-    font-size: 16px;
-    color: #0c1b72;
+    font-size: clamp(14px, 1.5vw, 16px);
+    color: #00a378;
   }
 }
 
@@ -47,4 +48,30 @@
   border-radius: 6px;
   padding: 6px 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: clamp(12px, 1.2vw, 14px);
+}
+/*  Responsive Table Fix (Tablet + Mobile) */
+@media (max-width: 768px) {
+  .patientsTableContainer {
+    overflow-x: auto;
+  }
+
+  .patientsTable th,
+  .patientsTable td {
+    font-size: 12px;
+    padding: 8px 6px;
+    white-space: normal;
+    word-break: break-word;
+    max-width: 120px;
+  }
+
+  .patientsTable tbody tr {
+    border-radius: 6px;
+  }
+
+  /* optional: hide less important column */
+  .patientsTable th:nth-child(5),
+  .patientsTable td:nth-child(5) {
+    display: none;
+  }
 }

@@ -34,7 +34,7 @@ import {
   endOfYear,
 } from "date-fns";
 import AssignOverlay from "./components/AssignOverlay.jsx";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 import { flex } from "@mui/system";
 import Avatar from "@mui/material/Avatar";
 
@@ -193,24 +193,24 @@ const Department = () => {
   }, [dispatch, dateRange, filter2]);
 
   const isLoadingDoctors = useSelector(
-    (state) => state.doctor.isLoadingDoctors
+    (state) => state.doctor.isLoadingDoctors,
   );
   const isLoadingStaffs = useSelector((state) => state.doctor.isLoadingStaffs);
   const isLoadingMedicalProcedureStats = useSelector(
-    (state) => state.doctor.isLoadingMedicalProcedureStats
+    (state) => state.doctor.isLoadingMedicalProcedureStats,
   );
   const isLoadingInventoryData = useSelector(
-    (state) => state.doctor.isLoadingInventoryData
+    (state) => state.doctor.isLoadingInventoryData,
   );
 
   const isLoadingHospitalStats = useSelector(
-    (state) => state.doctor.isLoadingHospitalStats
+    (state) => state.doctor.isLoadingHospitalStats,
   );
   const isLoadingPatientOverview = useSelector(
-    (state) => state.doctor.isLoadingPatientOverview
+    (state) => state.doctor.isLoadingPatientOverview,
   );
   const hospitalStatistics = useSelector(
-    (state) => state.doctor.hospitalStatistics
+    (state) => state.doctor.hospitalStatistics,
   );
 
   const totalPatients = hospitalStatistics?.availableBeds || 0;
@@ -229,7 +229,7 @@ const Department = () => {
     totalCases > 0 ? (totalInpatientsCount / totalCases) * 100 : 0;
 
   const procedureStats = useSelector(
-    (state) => state.doctor.medicalProcedureStats
+    (state) => state.doctor.medicalProcedureStats,
   );
 
   // Fallback color palette for the chart bars
@@ -273,7 +273,7 @@ const Department = () => {
 
   const handleAssignClick = () => {
     const selectedDoctorObjects = doctors.filter((doc) =>
-      selectedDoctors.has(doc._id)
+      selectedDoctors.has(doc._id),
     );
     setAssignedDoctors(selectedDoctorObjects);
     setShowAssignModal(true);
@@ -281,7 +281,7 @@ const Department = () => {
 
   const handleAssignClickStaff = () => {
     const selectedStaffObjects = staff.filter((staff) =>
-      selectedStaff.has(staff._id)
+      selectedStaff.has(staff._id),
     );
     setAssignedStaff(selectedStaffObjects);
     setShowAssignModalStaff(true);
@@ -297,11 +297,11 @@ const Department = () => {
 
   const othersTotal = others.reduce(
     (sum, item) => sum + (item.quantity || 0),
-    0
+    0,
   );
   const total = [...top3, ...others].reduce(
     (sum, item) => sum + (item.quantity || 0),
-    0
+    0,
   );
 
   const graphData = [
@@ -371,6 +371,8 @@ const Department = () => {
     return null;
   };
   // console.log("Patient Overview: ", departmentName);
+
+  const isLaptop = useMediaQuery("(max-width: 1024px)");
   return (
     <>
       <div
@@ -378,8 +380,9 @@ const Department = () => {
           position: "fixed",
           zIndex: 1000,
           top: 0,
-          width: "77.6vw",
+          width: isLaptop ? "90%" : "77.6vw",
           background: "#F1F1F1",
+          padding: isLaptop ? "0rem 3rem" : "0",
         }}
       >
         <CommonPanel />

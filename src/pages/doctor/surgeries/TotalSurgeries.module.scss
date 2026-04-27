@@ -21,7 +21,7 @@
       .userIcon {
         font-size: 20px;
         margin-right: 8px;
-        color: #0c1b72;
+        color: #00a378;
       }
     }
   }
@@ -40,7 +40,7 @@
     .patientCount {
       font-size: 28px;
       font-weight: 600;
-      color: #0c1b72;
+      color: #00a378;
 
       span {
         font-size: 16px;
@@ -60,7 +60,7 @@
         display: flex;
         align-items: center;
         gap: 1vw;
-        color: #0c1b72;
+        color: #00a378;
 
         select {
           padding: 4px 8px;
@@ -76,11 +76,11 @@
         gap: 6px;
         cursor: pointer;
         font-weight: 500;
-        color: #0c1b72;
+        color: #00a378;
 
         svg {
           font-size: 16px;
-          color: #0c1b72;
+          color: #00a378;
         }
       }
     }
@@ -171,14 +171,14 @@
           // }
 
           &.patientId {
-            color: #0c1b72;
+            color: #00a378;
             font-weight: 500;
           }
 
           &.patientInfo {
             .patientName {
               font-weight: 500;
-              color: #0c1b72;
+              color: #00a378;
               margin-bottom: 4px;
             }
 
@@ -189,7 +189,7 @@
           }
 
           &.bedNumber {
-            color: #0c1b72;
+            color: #00a378;
             font-weight: 500;
           }
 
