@@ -252,6 +252,10 @@
       color: #25307f;
     }
   }
+
+  @media (max-width: 1024px) {
+    padding: 1rem;
+  }
 }
 
 .lp-1 {

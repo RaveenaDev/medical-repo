@@ -165,6 +165,10 @@
     font-style: italic;
     border-radius: 25px;
     width: 8vw;
+
+    @media (max-width: 768px) {
+      width: auto;
+    }
   }
 }
 

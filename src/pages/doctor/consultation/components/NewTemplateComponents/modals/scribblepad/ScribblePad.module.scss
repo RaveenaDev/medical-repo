@@ -202,3 +202,41 @@ canvas {
   font-family: "Karla", sans-serif;
   overflow-y: auto;
 }
+@media (max-width: 768px) {
+  .toolbar {
+    height: auto;
+    padding: 10px;
+  }
+
+  .toolBtn,
+  .iconBtn,
+  .doneBtn,
+  .aiBtn,
+  .closeBtn {
+    height: 36px;
+    padding: 0;
+  }
+
+  .iconBtn,
+  .closeBtn {
+    width: 36px;
+  }
+
+  .toolBtn {
+    padding: 0 10px;
+  }
+
+  .toolBtn span {
+    display: none; /* biggest space saver */
+  }
+
+  .aiBtn,
+  .doneBtn {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .sliderGroup input {
+    width: 100px;
+  }
+}
